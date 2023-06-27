@@ -14,7 +14,7 @@
 ![tailwind](https://img.shields.io/static/v1?label&logo=tailwindcss&logoColor=white&message=tailwind&color=38B2AC)
 ![version](https://img.shields.io/github/package-json/v/pooltogether/pooltogether-client-monorepo?filename=apps%2Fapp%2Fpackage.json&color=brightgreen)
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/cd2c8609-de0a-488d-9692-84c6392feebd/deploy-status)](https://app.netlify.com/sites/mvp-pt-app/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/14d8d86e-76de-4d74-85eb-f9dee98d1bf7/deploy-status)](https://app.netlify.com/sites/mvp-pt-app/deploys)
 
 # 🏆 &nbsp; Overview
 
