@@ -1,0 +1,49 @@
+{
+  "name": "@pooltogether/hyperstructure-react-hooks",
+  "version": "0.1.2",
+  "license": "MIT",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "prepare": "pnpm build",
+    "clean": "rm -rf dist"
+  },
+  "tsup": {
+    "dts": true,
+    "entry": [
+      "src/index.ts"
+    ],
+    "format": [
+      "esm"
+    ]
+  },
+  "dependencies": {
+    "@pooltogether/hyperstructure-client-js": "workspace:*"
+  },
+  "devDependencies": {
+    "@tanstack/react-query": "^4.24.10",
+    "@types/node": "^17.0.45",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "jotai": "^1.13.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tsup": "^6.6.3",
+    "typescript": "^5.0.4",
+    "viem": "^0.3.30",
+    "wagmi": "^1.0.5"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^4.24.10",
+    "jotai": "^1.13.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "viem": "^0.3.30",
+    "wagmi": "^1.0.5"
+  }
+}

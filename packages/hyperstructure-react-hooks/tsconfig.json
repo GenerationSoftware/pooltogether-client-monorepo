@@ -1,0 +1,10 @@
+{
+  "extends": "../../shared/config/base.tsconfig.json",
+  "include": ["."],
+  "exclude": ["dist", "node_modules"],
+  "compilerOptions": {
+    "lib": ["dom", "esnext"],
+    "rootDirs": ["./src", "../../shared"],
+    "outDir": "dist"
+  }
+}

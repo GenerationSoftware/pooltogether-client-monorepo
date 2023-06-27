@@ -1,0 +1,8 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "tailwindCSS.experimental.configFile": "./shared/config/tailwind.config.js",
+  "files.associations": {
+    "*.css": "tailwindcss"
+  }
+}

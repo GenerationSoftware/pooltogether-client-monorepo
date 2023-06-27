@@ -1,0 +1,42 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "turbo run build --include-dependencies",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "clean": "turbo run clean",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "@hcaptcha/react-hcaptcha": "^1.8.1",
+    "@heroicons/react": "^2.0.16",
+    "@pooltogether/hyperstructure-client-js": "workspace:*",
+    "@pooltogether/hyperstructure-react-hooks": "workspace:*",
+    "@tanstack/react-query": "^4.24.10",
+    "@trivago/prettier-plugin-sort-imports": "^4.1.0",
+    "@types/node": "^17.0.45",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "ajv": "^8.12.0",
+    "axios": "^1.4.0",
+    "classnames": "^2.3.2",
+    "fathom-client": "^3.5.0",
+    "flowbite": "1.6.5",
+    "flowbite-react": "0.4.7",
+    "framer-motion": "^10.12.16",
+    "jotai": "^1.13.1",
+    "prettier": "^2.8.4",
+    "prettier-plugin-tailwindcss": "^0.2.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.43.2",
+    "sonner": "^0.4.0",
+    "tailwindcss": "^3.3.1",
+    "tslib": "^2.5.0",
+    "turbo": "latest",
+    "typescript": "^5.0.4",
+    "viem": "^0.3.30",
+    "wagmi": "^1.0.5"
+  },
+  "packageManager": "pnpm@7.15.0"
+}

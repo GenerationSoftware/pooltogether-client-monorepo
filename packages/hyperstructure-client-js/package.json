@@ -1,0 +1,41 @@
+{
+  "name": "@pooltogether/hyperstructure-client-js",
+  "version": "0.1.2",
+  "license": "MIT",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "prepare": "pnpm build",
+    "clean": "rm -rf dist"
+  },
+  "tsup": {
+    "dts": true,
+    "entry": [
+      "src/index.ts"
+    ],
+    "format": [
+      "esm"
+    ]
+  },
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "axios": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.45",
+    "fathom-client": "^3.5.0",
+    "tslib": "^2.5.0",
+    "tsup": "^6.6.3",
+    "typescript": "^5.0.4",
+    "viem": "^0.3.30"
+  },
+  "peerDependencies": {
+    "fathom-client": "^3.5.0",
+    "viem": "^0.3.30"
+  }
+}

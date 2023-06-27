@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Default",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "es2020",
+    "composite": false,
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "inlineSources": false,
+    "isolatedModules": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noUnusedLocals": false,
+    "noUnusedParameters": true,
+    "preserveWatchOutput": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "paths": {
+      "@pooltogether/hyperstructure-client-js": ["../../packages/hyperstructure-client-js/src"],
+      "@pooltogether/hyperstructure-react-hooks": ["../../packages/hyperstructure-react-hooks/src"],
+      "@shared/config/*": ["../../shared/config/*"],
+      "@shared/generic-react-hooks": ["../../shared/generic-react-hooks"],
+      "@shared/react-components": ["../../shared/react-components"],
+      "@shared/types": ["../../shared/types"],
+      "@shared/ui": ["../../shared/ui"],
+      "@shared/utilities": ["../../shared/utilities"]
+    }
+  },
+  "exclude": ["node_modules"]
+}
