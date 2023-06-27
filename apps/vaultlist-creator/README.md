@@ -6,19 +6,16 @@
 
 <br />
 
-# 💻 &nbsp; PoolTogether App
+# 💻 &nbsp; PoolTogether VaultList Creator App
 
 ![next](https://img.shields.io/static/v1?label&logo=nextdotjs&logoColor=white&message=Next.js&color=black)
 ![ts](https://img.shields.io/badge/typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white)
-![viem](https://img.shields.io/static/v1?label&logo=v&logoColor=white&message=Viem&color=gray)
 ![tailwind](https://img.shields.io/static/v1?label&logo=tailwindcss&logoColor=white&message=tailwind&color=38B2AC)
-![version](https://img.shields.io/github/package-json/v/GenerationSoftware/pooltogether-client-monorepo?filename=apps%2Fapp%2Fpackage.json&color=brightgreen)
-
-[![Netlify Status](https://api.netlify.com/api/v1/badges/14d8d86e-76de-4d74-85eb-f9dee98d1bf7/deploy-status)](https://app.netlify.com/sites/mvp-pt-app/deploys)
+![version](https://img.shields.io/github/package-json/v/GenerationSoftware/pooltogether-client-monorepo?filename=apps%2Fvaultlist-creator%2Fpackage.json&color=brightgreen)
 
 # 🏆 &nbsp; Overview
 
-App w/ core PoolTogether Hyperstructure functionality.
+App to easily create, edit and distribute PoolTogether vault lists.
 
 ## 🏎️ &nbsp; Quickstart
 
@@ -26,7 +23,7 @@ App w/ core PoolTogether Hyperstructure functionality.
 
 Run the development server through `pnpm dev`.
 
-Open [http://localhost:3000](http://localhost:3000) on your browser to see the resulting app.
+Open [http://localhost:3001](http://localhost:3001) on your browser to see the resulting app.
 
 ### App Structure
 
@@ -36,15 +33,6 @@ The app follows the following structure:
 - `components` - React components that make up the contents of the pages.
 - `hooks` - App-specific hooks not included in other hook packages.
 - `constants` - Constant values, references and configurations to deploy and run this app.
-- `vaultLists` - Any default vault lists for the app.
-
-### Data Configuration
-
-Most of the data on the app comes from the `useSelectedVaults()` hook from the `hyperstructure-react-hooks` package. That hook returns a `Vaults` object from `hyperstructure-client-js`.
-
-Using various other hooks from `hyperstructure-react-hooks`, the app uses these `Vaults` or `Vault` objects to query all necessary data.
-
-Viem Clients are configured through `wagmi` in the `/pages/_app.tsx` file. These can be fetched throughout the app with the `usePublicClient()` or `usePublicClients()` hooks.
 
 ### Environment Setup
 
