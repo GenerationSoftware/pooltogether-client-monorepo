@@ -15,13 +15,6 @@ export const prizePool = [
   },
   {
     inputs: [{ internalType: 'uint8', name: '_tier', type: 'uint8' }],
-    name: 'calculatePrizeSize',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [{ internalType: 'uint8', name: '_tier', type: 'uint8' }],
     name: 'calculateTierTwabTimestamps',
     outputs: [
       { internalType: 'uint64', name: 'startTimestamp', type: 'uint64' },
@@ -80,21 +73,14 @@ export const prizePool = [
     type: 'function'
   },
   {
-    inputs: [],
-    name: 'claimOwnership',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function'
-  },
-  {
     inputs: [
-      { internalType: 'address', name: '_winner', type: 'address' },
       { internalType: 'uint8', name: '_tier', type: 'uint8' },
-      { internalType: 'address', name: '_to', type: 'address' },
-      { internalType: 'uint96', name: '_fee', type: 'uint96' },
+      { internalType: 'address[]', name: '_winners', type: 'address[]' },
+      { internalType: 'uint32[][]', name: '_prizeIndices', type: 'uint32[][]' },
+      { internalType: 'uint96', name: '_feePerPrizeClaim', type: 'uint96' },
       { internalType: 'address', name: '_feeRecipient', type: 'address' }
     ],
-    name: 'claimPrize',
+    name: 'claimPrizes',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'nonpayable',
     type: 'function'
@@ -102,7 +88,7 @@ export const prizePool = [
   {
     inputs: [{ internalType: 'uint256', name: 'winningRandomNumber_', type: 'uint256' }],
     name: 'completeAndStartNextDraw',
-    outputs: [{ internalType: 'uint32', name: '', type: 'uint32' }],
+    outputs: [{ internalType: 'uint16', name: '', type: 'uint16' }],
     stateMutability: 'nonpayable',
     type: 'function'
   },
@@ -114,6 +100,13 @@ export const prizePool = [
     name: 'contributePrizeTokens',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'drawManager',
+    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    stateMutability: 'view',
     type: 'function'
   },
   {
@@ -140,8 +133,8 @@ export const prizePool = [
   {
     inputs: [
       { internalType: 'address', name: '_vault', type: 'address' },
-      { internalType: 'uint32', name: '_startDrawIdInclusive', type: 'uint32' },
-      { internalType: 'uint32', name: '_endDrawIdInclusive', type: 'uint32' }
+      { internalType: 'uint16', name: '_startDrawIdInclusive', type: 'uint16' },
+      { internalType: 'uint16', name: '_endDrawIdInclusive', type: 'uint16' }
     ],
     name: 'getContributedBetween',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
@@ -158,7 +151,7 @@ export const prizePool = [
   {
     inputs: [],
     name: 'getNextDrawId',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    outputs: [{ internalType: 'uint16', name: '', type: 'uint16' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -172,21 +165,28 @@ export const prizePool = [
   {
     inputs: [{ internalType: 'uint8', name: '_tier', type: 'uint8' }],
     name: 'getTierAccrualDurationInDraws',
-    outputs: [{ internalType: 'uint32', name: '', type: 'uint32' }],
+    outputs: [{ internalType: 'uint16', name: '', type: 'uint16' }],
     stateMutability: 'view',
     type: 'function'
   },
   {
     inputs: [{ internalType: 'uint8', name: '_tier', type: 'uint8' }],
     name: 'getTierPrizeCount',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-    stateMutability: 'pure',
+    outputs: [{ internalType: 'uint32', name: '', type: 'uint32' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [{ internalType: 'uint8', name: '_tier', type: 'uint8' }],
+    name: 'getTierPrizeSize',
+    outputs: [{ internalType: 'uint96', name: '', type: 'uint96' }],
+    stateMutability: 'view',
     type: 'function'
   },
   {
     inputs: [
-      { internalType: 'uint32', name: '_startDrawIdInclusive', type: 'uint32' },
-      { internalType: 'uint32', name: '_endDrawIdInclusive', type: 'uint32' }
+      { internalType: 'uint16', name: '_startDrawIdInclusive', type: 'uint16' },
+      { internalType: 'uint16', name: '_endDrawIdInclusive', type: 'uint16' }
     ],
     name: 'getTotalContributedBetween',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
@@ -210,8 +210,8 @@ export const prizePool = [
   {
     inputs: [
       { internalType: 'address', name: '_vault', type: 'address' },
-      { internalType: 'uint32', name: 'startDrawId', type: 'uint32' },
-      { internalType: 'uint32', name: 'endDrawId', type: 'uint32' }
+      { internalType: 'uint16', name: '_startDrawId', type: 'uint16' },
+      { internalType: 'uint16', name: '_endDrawId', type: 'uint16' }
     ],
     name: 'getVaultPortion',
     outputs: [{ internalType: 'SD59x18', name: '', type: 'int256' }],
@@ -242,7 +242,7 @@ export const prizePool = [
   {
     inputs: [],
     name: 'grandPrizePeriodDraws',
-    outputs: [{ internalType: 'uint32', name: '', type: 'uint32' }],
+    outputs: [{ internalType: 'uint16', name: '', type: 'uint16' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -257,7 +257,8 @@ export const prizePool = [
     inputs: [
       { internalType: 'address', name: '_vault', type: 'address' },
       { internalType: 'address', name: '_user', type: 'address' },
-      { internalType: 'uint8', name: '_tier', type: 'uint8' }
+      { internalType: 'uint8', name: '_tier', type: 'uint8' },
+      { internalType: 'uint32', name: '_prizeIndex', type: 'uint32' }
     ],
     name: 'isWinner',
     outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
@@ -273,23 +274,23 @@ export const prizePool = [
   },
   {
     inputs: [],
-    name: 'lastCompletedDrawStartedAt',
+    name: 'lastCompletedDrawAwardedAt',
     outputs: [{ internalType: 'uint64', name: '', type: 'uint64' }],
     stateMutability: 'view',
     type: 'function'
   },
   {
     inputs: [],
-    name: 'manager',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    name: 'lastCompletedDrawEndedAt',
+    outputs: [{ internalType: 'uint64', name: '', type: 'uint64' }],
     stateMutability: 'view',
     type: 'function'
   },
   {
-    inputs: [{ internalType: 'bytes[]', name: 'data', type: 'bytes[]' }],
-    name: 'multicall',
-    outputs: [{ internalType: 'bytes[]', name: 'results', type: 'bytes[]' }],
-    stateMutability: 'nonpayable',
+    inputs: [],
+    name: 'lastCompletedDrawStartedAt',
+    outputs: [{ internalType: 'uint64', name: '', type: 'uint64' }],
+    stateMutability: 'view',
     type: 'function'
   },
   {
@@ -315,20 +316,6 @@ export const prizePool = [
   },
   {
     inputs: [],
-    name: 'owner',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [],
-    name: 'pendingOwner',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [],
     name: 'prizeToken',
     outputs: [{ internalType: 'contract IERC20', name: '', type: 'address' }],
     stateMutability: 'view',
@@ -343,14 +330,14 @@ export const prizePool = [
   },
   {
     inputs: [],
-    name: 'renounceOwnership',
-    outputs: [],
-    stateMutability: 'nonpayable',
+    name: 'reserve',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
     type: 'function'
   },
   {
     inputs: [],
-    name: 'reserve',
+    name: 'reserveForNextDraw',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function'
@@ -363,9 +350,9 @@ export const prizePool = [
     type: 'function'
   },
   {
-    inputs: [{ internalType: 'address', name: '_newManager', type: 'address' }],
-    name: 'setManager',
-    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+    inputs: [{ internalType: 'address', name: '_drawManager', type: 'address' }],
+    name: 'setDrawManager',
+    outputs: [],
     stateMutability: 'nonpayable',
     type: 'function'
   },
@@ -385,16 +372,9 @@ export const prizePool = [
   },
   {
     inputs: [],
-    name: 'totalClaimedPrizes',
+    name: 'totalWithdrawn',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [{ internalType: 'address', name: '_newOwner', type: 'address' }],
-    name: 'transferOwnership',
-    outputs: [],
-    stateMutability: 'nonpayable',
     type: 'function'
   },
   {
@@ -407,7 +387,8 @@ export const prizePool = [
   {
     inputs: [
       { internalType: 'address', name: '_winner', type: 'address' },
-      { internalType: 'uint8', name: '_tier', type: 'uint8' }
+      { internalType: 'uint8', name: '_tier', type: 'uint8' },
+      { internalType: 'uint32', name: '_prizeIndex', type: 'uint32' }
     ],
     name: 'wasClaimed',
     outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
@@ -433,44 +414,5 @@ export const prizePool = [
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'uint32', name: 'drawId', type: 'uint32' },
-      { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'winner', type: 'address' },
-      { indexed: false, internalType: 'uint8', name: 'tier', type: 'uint8' },
-      { indexed: false, internalType: 'uint152', name: 'payout', type: 'uint152' },
-      { indexed: false, internalType: 'address', name: 'to', type: 'address' },
-      { indexed: false, internalType: 'uint96', name: 'fee', type: 'uint96' },
-      { indexed: false, internalType: 'address', name: 'feeRecipient', type: 'address' }
-    ],
-    name: 'ClaimedPrize',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'address', name: 'previousManager', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'newManager', type: 'address' }
-    ],
-    name: 'ManagerTransferred',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [{ indexed: true, internalType: 'address', name: 'pendingOwner', type: 'address' }],
-    name: 'OwnershipOffered',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'address', name: 'previousOwner', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'newOwner', type: 'address' }
-    ],
-    name: 'OwnershipTransferred',
-    type: 'event'
   }
 ]

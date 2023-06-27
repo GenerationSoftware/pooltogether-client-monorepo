@@ -108,64 +108,6 @@ export const getPrizePoolContributionPercentages = async (
 }
 
 /**
- * Returns prize pool wins for a given user, vault addresses and prize tiers
- * @param publicClient a public Viem client for the prize pool's chain
- * @param prizePoolAddress the prize pool's address
- * @param vaultAddresses the addresses for any vaults the user is deposited into
- * @param userAddress the user's address
- * @param tiers the prize tiers to check for wins
- * @returns
- */
-export const checkPrizePoolWins = async (
-  publicClient: PublicClient,
-  prizePoolAddress: `0x${string}`,
-  vaultAddresses: `0x${string}`[],
-  userAddress: `0x${string}`,
-  tiers: number[]
-): Promise<{
-  [vaultId: string]: number[]
-}> => {
-  const wins: { [vaultId: string]: number[] } = {}
-
-  const chainId = await publicClient.getChainId()
-
-  if (vaultAddresses.length > 0 && tiers.length > 0) {
-    const calls: { functionName: string; args?: any[] }[] = []
-
-    vaultAddresses.forEach((vaultAddress) => {
-      tiers.forEach((tier) => {
-        calls.push({
-          functionName: 'isWinner',
-          args: [vaultAddress, userAddress, tier]
-        })
-      })
-    })
-
-    const multicallResults = await getSimpleMulticallResults(
-      publicClient,
-      prizePoolAddress,
-      prizePoolAbi,
-      calls
-    )
-
-    calls.forEach((call, i) => {
-      const isWinner: boolean = multicallResults[i]
-      if (isWinner) {
-        const vaultAddress = call.args?.[0] as `0x${string}`
-        const tier = call.args?.[2] as number
-        const vaultId = getVaultId({ chainId, address: vaultAddress })
-        if (wins[vaultId] === undefined) {
-          wins[vaultId] = []
-        }
-        wins[vaultId].push(tier)
-      }
-    })
-  }
-
-  return wins
-}
-
-/**
  * Returns estimated prize amounts and frequency for any tiers of a prize pool
  * @param publicClient a public Viem client for the prize pool's chain
  * @param prizePoolAddress the prize pool's address

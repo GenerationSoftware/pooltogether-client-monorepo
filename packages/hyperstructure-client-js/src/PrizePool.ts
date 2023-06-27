@@ -1,6 +1,5 @@
 import { PrizeInfo, TokenWithSupply, TxOverrides } from '@shared/types'
 import {
-  checkPrizePoolWins,
   erc20 as erc20Abi,
   getPrizePoolAllPrizeInfo,
   getPrizePoolContributionAmounts,
@@ -262,14 +261,20 @@ export class PrizePool {
   }
 
   /**
-   * Checks if a user has won a specific prize tier while deposited in a given vault
+   * Checks if a user has won a specific prize tier and index while deposited in a given vault
    * @param vaultAddress vault address to check
    * @param userAddress user address to check prizes for
    * @param tier prize tier to check
+   * @param prizeIndex prize index to check
    * @returns
    */
-  async isTierWinner(vaultAddress: string, userAddress: string, tier: number): Promise<boolean> {
-    const source = 'Prize Pool [isTierWinner]'
+  async isWinner(
+    vaultAddress: string,
+    userAddress: string,
+    tier: number,
+    prizeIndex: number
+  ): Promise<boolean> {
+    const source = 'Prize Pool [isWinner]'
     validateAddress(vaultAddress, source)
     validateAddress(userAddress, source)
     await validateClientNetwork(this.chainId, this.publicClient, source)
@@ -277,52 +282,25 @@ export class PrizePool {
     const isWinner: boolean = await this.prizePoolContract.read.isWinner([
       vaultAddress,
       userAddress,
-      tier
+      tier,
+      prizeIndex
     ])
 
     return isWinner
   }
 
   /**
-   * Checks if a user has won any prizes on the given vaults
-   * @param vaultAddresses vault addresses to check
-   * @param userAddress user address to check prizes for
-   * @returns
-   */
-  async checkWins(
-    vaultAddresses: `0x${string}`[],
-    userAddress: `0x${string}`
-  ): Promise<{ [vaultId: string]: number[] }> {
-    const source = 'Prize Pool [isWinner]'
-    validateAddress(userAddress, source)
-    await validateClientNetwork(this.chainId, this.publicClient, source)
-
-    const numberOfTiers = await this.getNumberOfTiers()
-    const tiers = Array.from(Array(numberOfTiers).keys())
-
-    const wins = await checkPrizePoolWins(
-      this.publicClient,
-      this.address,
-      vaultAddresses,
-      userAddress,
-      tiers
-    )
-
-    return wins
-  }
-
-  /**
-   * Returns the current prize size of a given tier
+   * Returns the prize size of a given tier
    * @param tier prize tier
    * @returns
    */
-  async getCurrentPrizeSize(tier: number): Promise<bigint> {
-    const source = 'Prize Pool [getCurrentPrizeSize]'
+  async getTierPrizeSize(tier: number): Promise<bigint> {
+    const source = 'Prize Pool [getTierPrizeSize]'
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
-    const currentPrizeSize: bigint = await this.prizePoolContract.read.calculatePrizeSize([tier])
+    const tierPrizeSize: bigint = await this.prizePoolContract.read.getTierPrizeSize([tier])
 
-    return currentPrizeSize
+    return tierPrizeSize
   }
 
   /**
@@ -395,22 +373,23 @@ export class PrizePool {
   /* ============================== Write Functions ============================== */
 
   /**
-   * Submits a transaction to claim a prize from the prize pool
-   * @param userAddress the address that won the prize
+   * Submits a transaction to claim prizes from the prize pool
    * @param tier the prize tier to claim
-   * @param options optional receiver, fees and overrides for this transaction
+   * @param winners the user addresses that won a given tier's prize
+   * @param prizeIndices the indices of each prize, for each winner
+   * @param options optional fees, fee recipient and overrides for this transaction
    * @returns
    */
-  async claimPrize(
-    userAddress: `0x${string}`,
+  async claimPrizes(
     tier: number,
+    winners: `0x${string}`[],
+    prizeIndices: number[][],
     options?: {
-      receiver?: `0x${string}`
-      fee?: { amount: bigint; receiver: `0x${string}` }
+      fee?: { amount: bigint; recipient: `0x${string}` }
       overrides?: TxOverrides
     }
   ) {
-    const source = 'Prize Pool [claimPrize]'
+    const source = 'Prize Pool [claimPrizes]'
 
     if (!this.walletClient?.account) {
       throw new Error(`${source} | Invalid/Unavailable Viem Wallet Client`)
@@ -420,13 +399,13 @@ export class PrizePool {
       account: this.walletClient.account,
       address: this.address,
       abi: prizePoolAbi,
-      functionName: 'claimPrize',
+      functionName: 'claimPrizes',
       args: [
-        userAddress,
         tier,
-        options?.receiver ?? userAddress,
+        winners,
+        prizeIndices,
         options?.fee?.amount ?? 0,
-        options?.fee?.receiver ?? userAddress
+        options?.fee?.recipient ?? this.walletClient.account.address
       ],
       chain: this.walletClient.chain,
       ...options?.overrides
