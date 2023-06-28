@@ -145,6 +145,7 @@ importers:
       postcss: ^8.4.21
       react: ^18.2.0
       react-dom: ^18.2.0
+      react-hook-form: ^7.43.2
       sonner: ^0.4.0
       tailwindcss: ^3.3.1
       tslib: ^2.5.0
@@ -166,6 +167,7 @@ importers:
       next: 13.3.0_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+      react-hook-form: 7.44.3_react@18.2.0
       sonner: 0.4.0_biqbaboplfbrettd7655fr4n2y
       viem: 0.3.30_typescript@5.0.4
       wagmi: 1.0.5_jnnxaeexwikdgzuf3lvbhe6eui
