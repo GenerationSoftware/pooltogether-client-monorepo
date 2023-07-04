@@ -3,8 +3,6 @@ main = "./src/index.ts"
 compatibility_date = "2023-05-18"
 
 account_id = "<YOUR_ACCOUNT_ID_HERE>"
-
-zone_id = "<YOUR_ZONE_ID_HERE>"
 route = "<YOUR_URL_HERE>/*"
 
 kv_namespaces = [
