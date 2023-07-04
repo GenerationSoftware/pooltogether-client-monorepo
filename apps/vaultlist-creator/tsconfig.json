@@ -8,7 +8,7 @@
       "@constants/*": ["./src/constants/*"],
       "@hooks/*": ["./src/hooks/*"],
       "@pages/*": ["./src/pages/*"],
-      "@vaultLists/*": ["./src/vaultLists/*"],
+      "@views/*": ["./src/views/*"],
       "@pooltogether/hyperstructure-client-js": ["../../packages/hyperstructure-client-js"],
       "@pooltogether/hyperstructure-react-hooks": ["../../packages/hyperstructure-react-hooks"],
       "@shared/generic-react-hooks": ["../../shared/generic-react-hooks"],

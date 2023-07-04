@@ -5,9 +5,10 @@ import { usePublicClient } from 'wagmi'
 
 /**
  * Returns Viem clients
+ * @param options optional settings
  * @returns
  */
-export const usePublicClients = (): PublicClient[] => {
+export const usePublicClients = (options?: { useAll?: boolean }): PublicClient[] => {
   const { isTestnets } = useIsTestnets()
 
   const publicClients: { mainnets: PublicClient[]; testnets: PublicClient[] } = {
@@ -23,6 +24,10 @@ export const usePublicClients = (): PublicClient[] => {
     ]
   }
 
+  if (options?.useAll) {
+    return [...publicClients.mainnets, ...publicClients.testnets]
+  }
+
   if (isTestnets) {
     return publicClients.testnets
   }
@@ -32,9 +37,12 @@ export const usePublicClients = (): PublicClient[] => {
 
 /**
  * Returns Viem clients keyed by chain
+ * @param options optional settings
  * @returns
  */
-export const usePublicClientsByChain = (): Record<number, PublicClient> => {
+export const usePublicClientsByChain = (options?: {
+  useAll?: boolean
+}): Record<number, PublicClient> => {
   const { isTestnets } = useIsTestnets()
 
   const publicClients: {
@@ -51,6 +59,10 @@ export const usePublicClientsByChain = (): Record<number, PublicClient> => {
       [NETWORK.sepolia]: usePublicClient({ chainId: NETWORK.sepolia }),
       [NETWORK.mumbai]: usePublicClient({ chainId: NETWORK.mumbai })
     }
+  }
+
+  if (options?.useAll) {
+    return { ...publicClients.mainnets, ...publicClients.testnets }
   }
 
   if (isTestnets) {
