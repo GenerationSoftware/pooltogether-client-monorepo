@@ -21,7 +21,7 @@ class MyDocument extends Document {
     const keywords = 'prize savings win save protocol blockchain vaultlist'
 
     return (
-      <Html className='bg-pt-bg-purple-darker text-gray-100 overflow-x-hidden dark'>
+      <Html className='bg-pt-purple-700 text-pt-purple-50 overflow-x-hidden dark'>
         <Head>
           <link rel='icon' href='/favicon.png' type='image/x-icon' />
           <link rel='apple-touch-icon' href='/apple-touch-icon.png' />

@@ -15,7 +15,7 @@ export const Layout = (props: LayoutProps) => {
       <SimpleNavbar />
       <main
         className={classNames(
-          'w-full max-w-screen-xl relative flex flex-col flex-grow items-center mx-auto px-4 py-8 mb-40 md:px-8',
+          'w-full max-w-screen-xl relative flex flex-col flex-grow items-center mx-auto px-4',
           className
         )}
       >
@@ -28,19 +28,26 @@ export const Layout = (props: LayoutProps) => {
 
 const SimpleNavbar = () => {
   return (
-    <div className='flex items-center justify-between'>
-      <Image src='/ptLogo.svg' alt='PoolTogether Logo' width={183} height={72} priority={true} />
-      <span className=''>Vault List Creator</span>
+    <div className='flex items-center justify-between p-12'>
+      <Image
+        src='/ptLogo.svg'
+        alt='PoolTogether Logo'
+        width={183}
+        height={72}
+        priority={true}
+        className='w-28 h-auto'
+      />
+      <span className='text-4xl'>Vault List Creator</span>
     </div>
   )
 }
 
 const SimpleFooter = () => {
   return (
-    <footer className='flex justify-center'>
-      <span>
+    <footer className='flex justify-center p-12'>
+      <span className='text-sm font-medium'>
         Made with ❤️ & 🤖 by{' '}
-        <a href='https://g9software.xyz' target='_blank'>
+        <a href='https://g9software.xyz' target='_blank' className='hover:text-pt-teal'>
           Generation Software
         </a>
       </span>

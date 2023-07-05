@@ -9,7 +9,6 @@ import { MutableVaultList } from './types'
 
 /**
  * Returns a Wagmi config with the given networks and RPCs
- * @param networks the networks to support throughout the app
  * @returns
  */
 export const createCustomWagmiConfig = (): Config<
