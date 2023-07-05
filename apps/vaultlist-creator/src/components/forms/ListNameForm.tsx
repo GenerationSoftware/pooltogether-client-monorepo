@@ -30,10 +30,23 @@ export const ListNameForm = (props: ListNameFormProps) => {
 
   return (
     <FormProvider {...formMethods}>
-      <div className={classNames('', className)}>
-        <form onSubmit={formMethods.handleSubmit(onSubmit)}>
+      <div className={classNames('flex flex-col items-center', className)}>
+        <h3 className='mb-8 text-2xl font-semibold text-pt-purple-100'>Create New Vault List</h3>
+        <form
+          onSubmit={formMethods.handleSubmit(onSubmit)}
+          className='w-1/2 flex flex-col text-pt-purple-100'
+        >
+          <label htmlFor='name' className='mb-2 text-sm font-medium'>
+            Enter vault list name
+          </label>
           <Input formKey='name' />
-          <Button type='submit'>Create Vault List</Button>
+          <Button
+            type='submit'
+            color='purple'
+            className='mt-8 self-center bg-pt-purple-400 border-pt-purple-400 hover:bg-pt-purple-500'
+          >
+            <span className='text-base text-pt-purple-50'>Create Vault List</span>
+          </Button>
         </form>
       </div>
     </FormProvider>
@@ -61,7 +74,7 @@ const Input = (props: InputProps) => {
         validate: { ...basicValidation, ...validate }
       })}
       placeholder='...'
-      className='text-gray-700'
+      className='px-4 py-3 bg-pt-purple-50 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none'
     />
   )
 }
