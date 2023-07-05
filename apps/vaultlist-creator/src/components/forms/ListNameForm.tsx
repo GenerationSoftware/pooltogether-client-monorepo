@@ -1,8 +1,9 @@
-import { Button } from '@shared/ui'
 import classNames from 'classnames'
 import { useSetAtom } from 'jotai'
-import { FormProvider, useForm, useFormContext } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import { appViewAtom, listNameAtom } from 'src/atoms'
+import { PurpleButton } from '@components/PurpleButton'
+import { SimpleInput } from './SimpleInput'
 
 interface ListNameFormValues {
   name: string
@@ -39,42 +40,18 @@ export const ListNameForm = (props: ListNameFormProps) => {
           <label htmlFor='name' className='mb-2 text-sm font-medium'>
             Enter vault list name
           </label>
-          <Input formKey='name' />
-          <Button
-            type='submit'
-            color='purple'
-            className='mt-8 self-center bg-pt-purple-400 border-pt-purple-400 hover:bg-pt-purple-500'
-          >
-            <span className='text-base text-pt-purple-50'>Create Vault List</span>
-          </Button>
+          <SimpleInput
+            formKey='name'
+            validate={{
+              isNotFalsyString: (v) => !!v || 'Enter a name here!'
+            }}
+            placeholder='My Very Cool List'
+          />
+          <PurpleButton type='submit' className='mt-8 self-center'>
+            <span className='text-base'>Create Vault List</span>
+          </PurpleButton>
         </form>
       </div>
     </FormProvider>
-  )
-}
-
-interface InputProps {
-  formKey: keyof ListNameFormValues
-  validate?: { [rule: string]: (v: any) => true | string }
-}
-
-const Input = (props: InputProps) => {
-  const { formKey, validate } = props
-
-  const { register } = useFormContext<ListNameFormValues>()
-
-  const basicValidation: { [rule: string]: (v: any) => true | string } = {
-    isNotFalsyString: (v) => !!v || 'Enter a name here!'
-  }
-
-  return (
-    <input
-      id={formKey}
-      {...register(formKey, {
-        validate: { ...basicValidation, ...validate }
-      })}
-      placeholder='...'
-      className='px-4 py-3 bg-pt-purple-50 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none'
-    />
   )
 }

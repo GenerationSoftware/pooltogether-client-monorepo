@@ -1,7 +1,9 @@
+import { XMarkIcon } from '@heroicons/react/24/solid'
 import classNames from 'classnames'
 import { useAtom } from 'jotai'
-import { FormProvider, useForm, useFormContext } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import { listKeywordsAtom } from 'src/atoms'
+import { SimpleInput } from './SimpleInput'
 
 interface ListKeywordsFormValues {
   keyword: string
@@ -33,19 +35,26 @@ export const ListKeywordsForm = (props: ListKeywordsFormProps) => {
 
   const onSubmit = (data: ListKeywordsFormValues) => {
     addKeyword(data.keyword)
+    formMethods.reset()
   }
 
   return (
     <FormProvider {...formMethods}>
       <div className={classNames('', className)}>
-        <form onSubmit={formMethods.handleSubmit(onSubmit)}>
-          <Input formKey='keyword' />
-          <div className='flex gap-2'>
+        <form onSubmit={formMethods.handleSubmit(onSubmit)} className='flex flex-col gap-2'>
+          <label htmlFor='keyword' className='text-sm font-medium text-pt-purple-100'>
+            Keywords (optional)
+          </label>
+          <SimpleInput
+            formKey='keyword'
+            validate={{
+              isNotFalsyString: (v) => !!v || 'Enter a valid keyword.'
+            }}
+            placeholder='Enter a keyword'
+          />
+          <div className='flex flex-wrap gap-2'>
             {Array.from(keywords).map((keyword, i) => (
-              // TODO: enable deleting keywords
-              <span key={`${i}-${keyword.toLowerCase().replaceAll(' ', '_')}`} className=''>
-                {keyword}
-              </span>
+              <Keyword keyword={keyword} index={i} onDelete={deleteKeyword} />
             ))}
           </div>
         </form>
@@ -54,28 +63,22 @@ export const ListKeywordsForm = (props: ListKeywordsFormProps) => {
   )
 }
 
-interface InputProps {
-  formKey: keyof ListKeywordsFormValues
-  validate?: { [rule: string]: (v: any) => true | string }
+interface KeywordProps {
+  keyword: string
+  index: number
+  onDelete: (keyword: string) => void
 }
 
-const Input = (props: InputProps) => {
-  const { formKey, validate } = props
-
-  const { register } = useFormContext<ListKeywordsFormValues>()
-
-  const basicValidation: { [rule: string]: (v: any) => true | string } = {
-    isNotFalsyString: (v) => !!v || 'Enter a valid keyword.'
-  }
+const Keyword = (props: KeywordProps) => {
+  const { keyword, index, onDelete } = props
 
   return (
-    <input
-      id={formKey}
-      {...register(formKey, {
-        validate: { ...basicValidation, ...validate }
-      })}
-      placeholder='...'
-      className='text-gray-700'
-    />
+    <span
+      key={`${index}-${keyword.toLowerCase().replaceAll(' ', '_')}`}
+      className='flex items-center gap-x-[.5ch] px-1 text-sm font-medium text-gray-600 bg-gray-400 rounded'
+    >
+      {keyword}
+      <XMarkIcon className='h-3 w-3 cursor-pointer' onClick={() => onDelete(keyword)} />
+    </span>
   )
 }
