@@ -1,12 +1,14 @@
 import { NetworkBadge } from '@shared/react-components'
-import { Button } from '@shared/ui'
+import { VaultInfo } from '@shared/types'
+import { NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtom } from 'jotai'
-import { HTMLInputTypeAttribute } from 'react'
-import { FormProvider, useForm, useFormContext } from 'react-hook-form'
+import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { vaultsAtom } from 'src/atoms'
 import { isAddress } from 'viem'
+import { PurpleButton } from '@components/PurpleButton'
 import { useNetworks } from '@hooks/useNetworks'
+import { SimpleInput } from './SimpleInput'
 
 interface AddVaultFormValues {
   vaultName: string
@@ -20,6 +22,7 @@ interface AddVaultFormProps {
 
 // TODO: better validation
 // TODO: displaying errors
+// TODO: need to handle invalid vaults (wrong addresses, etc.)
 export const AddVaultForm = (props: AddVaultFormProps) => {
   const { className } = props
 
@@ -30,11 +33,21 @@ export const AddVaultForm = (props: AddVaultFormProps) => {
   const networks = useNetworks()
 
   const onSubmit = (data: AddVaultFormValues) => {
-    setVaultInfo([
-      ...vaultInfo,
-      { name: data.vaultName, address: data.vaultAddress, chainId: parseInt(data.vaultChainId) }
-    ])
-    formMethods.reset()
+    const newVault: VaultInfo = {
+      name: data.vaultName,
+      address: data.vaultAddress,
+      chainId: parseInt(data.vaultChainId)
+    }
+
+    const existingVault = vaultInfo.find(
+      (vault) => vault.chainId === newVault.chainId && vault.address === newVault.address
+    )
+    if (existingVault !== undefined) {
+      formMethods.setError('root', { message: 'Vault has already been added to the list!' })
+    } else {
+      setVaultInfo([...vaultInfo, newVault])
+      formMethods.reset()
+    }
   }
 
   // TODO: only set this to complete if all fields are filled and/or selected
@@ -42,64 +55,71 @@ export const AddVaultForm = (props: AddVaultFormProps) => {
 
   return (
     <FormProvider {...formMethods}>
-      <div className={classNames('', className)}>
-        <form onSubmit={formMethods.handleSubmit(onSubmit)}>
-          <Input
+      <form
+        onSubmit={formMethods.handleSubmit(onSubmit)}
+        className={classNames('flex flex-col gap-8', className)}
+      >
+        <div className='flex gap-6'>
+          <SimpleInput
             formKey='vaultName'
             validate={{ isNotFalsyString: (v) => !!v || 'Enter a valid keyword.' }}
+            placeholder='Wrapped Bitcorn'
+            label='Vault Name'
           />
-          <Input
+          <SimpleInput
             formKey='vaultAddress'
             validate={{ isValidAddress: (v) => isAddress(v) || 'Enter a valid address.' }}
+            placeholder='0x0000...'
+            label='Vault Address'
           />
-          {networks.map((chainId) => {
-            const id = `chain-${chainId}`
-
-            return (
-              <div key={id}>
-                <Input
-                  id={id}
-                  formKey='vaultChainId'
-                  type='radio'
-                  value={chainId}
-                  className='hidden'
-                />
-                <label htmlFor={id}>
-                  <NetworkBadge chainId={chainId} onClick={() => {}} />
-                </label>
-              </div>
-            )
-          })}
-          <Button type='submit' disabled={!isFormComplete}>
-            Add Vault
-          </Button>
-        </form>
-      </div>
+        </div>
+        <div className='flex flex-col gap-2'>
+          <span className='text-sm font-medium text-pt-purple-100'>Select Chain</span>
+          <div className='flex flex-wrap gap-4'>
+            {networks.map((chainId) => (
+              <ChainInput chainId={chainId} />
+            ))}
+          </div>
+        </div>
+        <PurpleButton type='submit' disabled={!isFormComplete} className='self-start'>
+          Add Vault
+        </PurpleButton>
+      </form>
     </FormProvider>
   )
 }
 
-interface InputProps {
-  formKey: keyof AddVaultFormValues
-  id?: string
-  validate?: { [rule: string]: (v: any) => true | string }
-  type?: HTMLInputTypeAttribute
-  value?: string | number
-  placeHolder?: string
-  className?: string
+interface ChainInputProps {
+  chainId: NETWORK
 }
 
-const Input = (props: InputProps) => {
-  const { formKey, id, validate, className, ...rest } = props
+const ChainInput = (props: ChainInputProps) => {
+  const { chainId } = props
 
   const { register } = useFormContext<AddVaultFormValues>()
 
+  const { vaultChainId } = useWatch<AddVaultFormValues>()
+
+  const id = `chain-${chainId}`
+
+  const isSelected = !!vaultChainId && chainId === parseInt(vaultChainId)
+
   return (
-    <input
-      id={id ?? formKey}
-      {...register(formKey, { validate })}
-      className={classNames('text-gray-700', className)}
-      {...rest}
-    />
+    <div key={id}>
+      <input
+        id={id}
+        {...register('vaultChainId', { validate: { isSelected: (v) => !!v || 'Select a chain!' } })}
+        type='radio'
+        value={chainId}
+        className='hidden'
+      />
+      <label htmlFor={id}>
+        <NetworkBadge
+          chainId={chainId}
+          onClick={() => {}}
+          className={classNames({ 'outline outline-1 outline-pt-purple-100': isSelected })}
+        />
+      </label>
+    </div>
   )
 }

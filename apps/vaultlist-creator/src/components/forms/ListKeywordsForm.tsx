@@ -42,15 +42,13 @@ export const ListKeywordsForm = (props: ListKeywordsFormProps) => {
     <FormProvider {...formMethods}>
       <div className={classNames('', className)}>
         <form onSubmit={formMethods.handleSubmit(onSubmit)} className='flex flex-col gap-2'>
-          <label htmlFor='keyword' className='text-sm font-medium text-pt-purple-100'>
-            Keywords (optional)
-          </label>
           <SimpleInput
             formKey='keyword'
             validate={{
               isNotFalsyString: (v) => !!v || 'Enter a valid keyword.'
             }}
             placeholder='Enter a keyword'
+            label='Keywords (optional)'
           />
           <div className='flex flex-wrap gap-2'>
             {Array.from(keywords).map((keyword, i) => (

@@ -62,7 +62,7 @@ export const Table = (props: TableProps) => {
         {/* Table Headers */}
         <div
           className={classNames(
-            'text-sm p-6 text-pt-purple-100 grid gap-3',
+            'text-sm p-6 text-pt-purple-100 grid',
             getGridCols(columns),
             headerClassName
           )}
@@ -70,10 +70,14 @@ export const Table = (props: TableProps) => {
           {Object.keys(data.headers).map((headerId) => (
             <span
               key={`${keyPrefix}-header-${headerId}`}
-              className={classNames('flex items-center', {
-                'justify-center': data.headers[headerId].position === 'center',
-                'justify-end': data.headers[headerId].position === 'right'
-              })}
+              className={classNames(
+                'flex items-center',
+                {
+                  'justify-center': data.headers[headerId].position === 'center',
+                  'justify-end': data.headers[headerId].position === 'right'
+                },
+                data.headers[headerId].className
+              )}
             >
               {data.headers[headerId].content}
             </span>

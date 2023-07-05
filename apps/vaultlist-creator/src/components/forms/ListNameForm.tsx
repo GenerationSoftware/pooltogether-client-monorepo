@@ -37,15 +37,13 @@ export const ListNameForm = (props: ListNameFormProps) => {
           onSubmit={formMethods.handleSubmit(onSubmit)}
           className='w-1/2 flex flex-col text-pt-purple-100'
         >
-          <label htmlFor='name' className='mb-2 text-sm font-medium'>
-            Enter vault list name
-          </label>
           <SimpleInput
             formKey='name'
             validate={{
               isNotFalsyString: (v) => !!v || 'Enter a name here!'
             }}
             placeholder='My Very Cool List'
+            label='Enter vault list name'
           />
           <PurpleButton type='submit' className='mt-8 self-center'>
             <span className='text-base'>Create Vault List</span>

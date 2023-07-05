@@ -1,4 +1,4 @@
-import { Vault, Vaults } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@pooltogether/hyperstructure-client-js'
 import { useVaults, useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
 import { TokenIcon } from '@shared/react-components'
 import { Spinner, Table, TableData } from '@shared/ui'
@@ -21,11 +21,11 @@ export const VaultsTable = (props: VaultsTableProps) => {
 
   const tableData: TableData = {
     headers: {
-      name: { content: 'Name' },
-      network: { content: 'Network' },
-      address: { content: 'Address' },
-      tokenSymbol: { content: 'Token Symbol' },
-      tokenAddress: { content: 'Token Address' }
+      name: { content: 'Name', className: 'pl-9' },
+      network: { content: 'Network', position: 'center' },
+      address: { content: 'Address', position: 'center' },
+      tokenSymbol: { content: 'Token Symbol', position: 'center' },
+      tokenAddress: { content: 'Token Address', position: 'center' }
     },
     rows: vaultsArray.map((vault) => ({
       id: vault.id,
@@ -33,39 +33,56 @@ export const VaultsTable = (props: VaultsTableProps) => {
         name: {
           content: <VaultNameItem vault={vault} />
         },
-        network: { content: getNiceNetworkNameByChainId(vault.chainId) },
-        address: { content: <span>{shorten(vault.address)}</span> },
-        tokenSymbol: { content: <TokenSymbolItem vault={vault} /> },
-        tokenAddress: { content: <TokenAddressItem vault={vault} /> }
+        network: {
+          content: getNiceNetworkNameByChainId(vault.chainId),
+          position: 'center'
+        },
+        address: {
+          content: <AddressDisplay address={vault.address} />,
+          position: 'center'
+        },
+        tokenSymbol: {
+          content: <TokenSymbolItem vault={vault} />,
+          position: 'center'
+        },
+        tokenAddress: {
+          content: <TokenAddressItem vault={vault} />,
+          position: 'center'
+        }
       }
     }))
   }
 
-  return <Table keyPrefix='vaultsTable' data={tableData} className={classNames('', className)} />
+  return (
+    <Table
+      keyPrefix='vaultsTable'
+      data={tableData}
+      className={classNames('px-0 pb-0 bg-transparent', className)}
+      headerClassName='px-0 pt-0 pb-6 text-center font-medium text-pt-purple-300'
+      rowClassName='px-0 pt-0 pb-0 text-sm font-medium bg-transparent'
+      gridColsClassName={`grid-cols-[minmax(0,5fr)_minmax(0,2fr)_minmax(0,3fr)_minmax(0,2fr)_minmax(0,3fr)]`}
+    />
+  )
 }
 
-interface VaultNameItemProps {
+interface ItemProps {
   vault: Vault
 }
 
-const VaultNameItem = (props: VaultNameItemProps) => {
+const VaultNameItem = (props: ItemProps) => {
   const { vault } = props
 
   const { data: tokenData, isFetched: isFetchedTokenData } = useVaultTokenData(vault)
 
   return (
-    <div className='flex items-center'>
+    <div className='flex items-center gap-3'>
       {isFetchedTokenData && !!tokenData ? <TokenIcon token={tokenData} /> : <Spinner />}
-      <span>{vault.name}</span>
+      <span className='line-clamp-2'>{vault.name}</span>
     </div>
   )
 }
 
-interface TokenSymbolItemProps {
-  vault: Vault
-}
-
-const TokenSymbolItem = (props: TokenSymbolItemProps) => {
+const TokenSymbolItem = (props: ItemProps) => {
   const { vault } = props
 
   const { data: tokenData, isFetched: isFetchedTokenData } = useVaultTokenData(vault)
@@ -77,11 +94,7 @@ const TokenSymbolItem = (props: TokenSymbolItemProps) => {
   return <span>{tokenData.symbol}</span>
 }
 
-interface TokenAddressItemProps {
-  vault: Vault
-}
-
-const TokenAddressItem = (props: TokenAddressItemProps) => {
+const TokenAddressItem = (props: ItemProps) => {
   const { vault } = props
 
   const { data: tokenData, isFetched: isFetchedTokenData } = useVaultTokenData(vault)
@@ -90,5 +103,11 @@ const TokenAddressItem = (props: TokenAddressItemProps) => {
     return <Spinner />
   }
 
-  return <span title={tokenData.address}>{shorten(tokenData.address)}</span>
+  return <AddressDisplay address={tokenData.address} />
+}
+
+const AddressDisplay = (props: { address: string }) => {
+  const { address } = props
+
+  return <span title={address}>{shorten(address)}</span>
 }
