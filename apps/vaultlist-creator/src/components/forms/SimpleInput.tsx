@@ -9,13 +9,16 @@ interface SimpleInputProps {
   validate?: { [rule: string]: (v: any) => true | string }
   placeholder?: string
   label?: ReactNode
+  hideErrorMsgs?: boolean
   className?: string
 }
 
 export const SimpleInput = (props: SimpleInputProps) => {
-  const { formKey, id, validate, placeholder, label, className } = props
+  const { formKey, id, validate, placeholder, label, hideErrorMsgs, className } = props
 
-  const { register } = useFormContext()
+  const { register, formState } = useFormContext()
+
+  const error = formState.errors[formKey]?.message as string | undefined
 
   return (
     <div className={classNames('flex flex-col gap-2', className)}>
@@ -28,8 +31,15 @@ export const SimpleInput = (props: SimpleInputProps) => {
         id={id ?? formKey}
         {...register(formKey, { validate })}
         placeholder={placeholder}
-        className='px-4 py-3 text-sm bg-pt-purple-50 text-gray-700 rounded-lg border border-gray-300 focus:outline-none'
+        className={classNames(
+          'px-4 py-3 text-sm bg-pt-purple-50 text-gray-700 rounded-lg border border-gray-300 outline outline-2',
+          {
+            'outline-pt-warning-light focus:outline-pt-warning-light': !!error,
+            'focus:outline-transparent': !error
+          }
+        )}
       />
+      {!hideErrorMsgs && <span className='text-xs text-pt-warning-light'>{error}</span>}
     </div>
   )
 }

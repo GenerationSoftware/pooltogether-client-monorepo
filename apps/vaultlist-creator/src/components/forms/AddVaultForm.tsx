@@ -5,6 +5,7 @@ import classNames from 'classnames'
 import { useAtom } from 'jotai'
 import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { vaultsAtom } from 'src/atoms'
+import { isValidChars } from 'src/utils'
 import { isAddress } from 'viem'
 import { PurpleButton } from '@components/PurpleButton'
 import { useNetworks } from '@hooks/useNetworks'
@@ -47,8 +48,20 @@ export const AddVaultForm = (props: AddVaultFormProps) => {
     }
   }
 
-  // TODO: only set this to complete if all fields are filled and/or selected
-  const isFormComplete = true
+  const getError = () => {
+    const errors = formMethods.formState.errors
+
+    if (!!errors.vaultName?.message && !!errors.vaultAddress?.message) {
+      return 'Enter a valid vault name and address.'
+    }
+
+    return (
+      errors.vaultName?.message ??
+      errors.vaultAddress?.message ??
+      errors.vaultChainId?.message ??
+      errors.root?.message
+    )
+  }
 
   return (
     <FormProvider {...formMethods}>
@@ -59,28 +72,37 @@ export const AddVaultForm = (props: AddVaultFormProps) => {
         <div className='flex gap-6'>
           <SimpleInput
             formKey='vaultName'
-            validate={{ isNotFalsyString: (v) => !!v || 'Enter a valid keyword.' }}
+            validate={{
+              isNotFalsyString: (v: string) => !!v || 'Enter a valid vault name.',
+              isValidString: (v: string) =>
+                isValidChars(v, { allowSpaces: true }) || 'Invalid characters in vault name.'
+            }}
             placeholder='Wrapped Bitcorn'
             label='Vault Name'
+            hideErrorMsgs={true}
           />
           <SimpleInput
             formKey='vaultAddress'
-            validate={{ isValidAddress: (v) => isAddress(v) || 'Enter a valid address.' }}
+            validate={{
+              isValidAddress: (v: string) => isAddress(v) || 'Enter a valid vault address.'
+            }}
             placeholder='0x0000...'
             label='Vault Address'
+            hideErrorMsgs={true}
           />
         </div>
         <div className='flex flex-col gap-2'>
-          <span className='text-sm font-medium text-pt-purple-100'>Select Chain</span>
+          <span className='text-sm font-medium text-pt-purple-100'>Select Network</span>
           <div className='flex flex-wrap gap-4'>
             {networks.map((chainId) => (
-              <ChainInput chainId={chainId} />
+              <ChainInput key={`chain-${chainId}`} chainId={chainId} />
             ))}
           </div>
         </div>
-        <PurpleButton type='submit' disabled={!isFormComplete} className='self-start'>
-          Add Vault
-        </PurpleButton>
+        <div className='flex items-center gap-4'>
+          <PurpleButton type='submit'>Add Vault</PurpleButton>
+          <span className='text-sm text-pt-warning-light'>{getError()}</span>
+        </div>
       </form>
     </FormProvider>
   )
@@ -102,10 +124,12 @@ const ChainInput = (props: ChainInputProps) => {
   const isSelected = !!vaultChainId && chainId === parseInt(vaultChainId)
 
   return (
-    <div key={id}>
+    <div>
       <input
         id={id}
-        {...register('vaultChainId', { validate: { isSelected: (v) => !!v || 'Select a chain!' } })}
+        {...register('vaultChainId', {
+          validate: { isSelected: (v: string) => !!v || 'Select a network!' }
+        })}
         type='radio'
         value={chainId}
         className='hidden'

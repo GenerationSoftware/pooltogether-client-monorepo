@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import { useSetAtom } from 'jotai'
 import { FormProvider, useForm } from 'react-hook-form'
 import { appViewAtom, listNameAtom } from 'src/atoms'
+import { isValidChars } from 'src/utils'
 import { PurpleButton } from '@components/PurpleButton'
 import { SimpleInput } from './SimpleInput'
 
@@ -38,7 +39,9 @@ export const ListNameForm = (props: ListNameFormProps) => {
           <SimpleInput
             formKey='vaultListName'
             validate={{
-              isNotFalsyString: (v) => !!v || 'Enter a name here!'
+              isNotFalsyString: (v: string) => !!v || 'Pick a name for your brand new vault list!',
+              isValidString: (v: string) =>
+                isValidChars(v, { allowSpaces: true }) || 'Invalid characters in name.'
             }}
             placeholder='My Very Cool List'
             label='Enter vault list name'

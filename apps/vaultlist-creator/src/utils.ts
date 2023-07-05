@@ -54,10 +54,10 @@ export const getFormattedVaultList = (data: {
     name: data.name,
     version: data.version ?? defaultVersion,
     timestamp: data.timestamp ?? defaultTimestamp,
-    tokens: data.tokens,
     keywords: data.keywords,
     tags: data.tags,
-    logoURI: data.logoURI
+    logoURI: data.logoURI,
+    tokens: data.tokens
   }
 
   vaultList.tokens.forEach((vaultInfo, i) => {
@@ -93,4 +93,16 @@ export const getFormattedVaultList = (data: {
   })
 
   return vaultList
+}
+
+/**
+ * Returns true if the string only include valid characters, false otherwise
+ *
+ * This includes letters, numbers, periods, underscores and dashes
+ * @param str the string to check
+ * @param options optional settings
+ * @returns
+ */
+export const isValidChars = (str: string, options?: { allowSpaces?: boolean }) => {
+  return !!str.match(options?.allowSpaces ? /^[a-z0-9._ \-]+$/i : /^[a-z0-9._\-]+$/i)
 }
