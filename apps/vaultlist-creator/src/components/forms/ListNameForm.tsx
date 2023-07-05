@@ -6,15 +6,13 @@ import { PurpleButton } from '@components/PurpleButton'
 import { SimpleInput } from './SimpleInput'
 
 interface ListNameFormValues {
-  name: string
+  vaultListName: string
 }
 
 interface ListNameFormProps {
   className?: string
 }
 
-// TODO: better string validation
-// TODO: displaying errors
 export const ListNameForm = (props: ListNameFormProps) => {
   const { className } = props
 
@@ -25,7 +23,7 @@ export const ListNameForm = (props: ListNameFormProps) => {
   const setAppView = useSetAtom(appViewAtom)
 
   const onSubmit = (data: ListNameFormValues) => {
-    setListName(data.name)
+    setListName(data.vaultListName)
     setAppView('editing')
   }
 
@@ -38,7 +36,7 @@ export const ListNameForm = (props: ListNameFormProps) => {
           className='w-1/2 flex flex-col text-pt-purple-100'
         >
           <SimpleInput
-            formKey='name'
+            formKey='vaultListName'
             validate={{
               isNotFalsyString: (v) => !!v || 'Enter a name here!'
             }}

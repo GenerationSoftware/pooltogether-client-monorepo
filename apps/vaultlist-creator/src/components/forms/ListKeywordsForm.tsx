@@ -6,14 +6,13 @@ import { listKeywordsAtom } from 'src/atoms'
 import { SimpleInput } from './SimpleInput'
 
 interface ListKeywordsFormValues {
-  keyword: string
+  vaultListKeyword: string
 }
 
 interface ListKeywordsFormProps {
   className?: string
 }
 
-// TODO: better string validation
 export const ListKeywordsForm = (props: ListKeywordsFormProps) => {
   const { className } = props
 
@@ -34,7 +33,7 @@ export const ListKeywordsForm = (props: ListKeywordsFormProps) => {
   }
 
   const onSubmit = (data: ListKeywordsFormValues) => {
-    addKeyword(data.keyword)
+    addKeyword(data.vaultListKeyword)
     formMethods.reset()
   }
 
@@ -43,7 +42,7 @@ export const ListKeywordsForm = (props: ListKeywordsFormProps) => {
       <div className={classNames('', className)}>
         <form onSubmit={formMethods.handleSubmit(onSubmit)} className='flex flex-col gap-2'>
           <SimpleInput
-            formKey='keyword'
+            formKey='vaultListKeyword'
             validate={{
               isNotFalsyString: (v) => !!v || 'Enter a valid keyword.'
             }}

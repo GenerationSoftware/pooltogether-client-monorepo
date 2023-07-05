@@ -7,7 +7,6 @@ import { useAtomValue } from 'jotai'
 import { listKeywordsAtom, listNameAtom, vaultsAtom } from 'src/atoms'
 import { getFormattedVaultList } from 'src/utils'
 
-// TODO: include token logos from coingecko
 /**
  * Returns a formatted VaultList
  * @returns

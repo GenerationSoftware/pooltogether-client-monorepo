@@ -11,7 +11,6 @@ interface VaultsTableProps {
   className?: string
 }
 
-// TODO: allow deleting vaults from table
 export const VaultsTable = (props: VaultsTableProps) => {
   const { className } = props
 

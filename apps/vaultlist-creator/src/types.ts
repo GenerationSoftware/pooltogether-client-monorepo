@@ -2,6 +2,13 @@ import { Mutable, VaultExtensions, VaultInfo, VaultList } from '@shared/types'
 
 export type AppView = 'base' | 'editing' | 'preview'
 
+export type FormKey =
+  | 'vaultListName'
+  | 'vaultListKeyword'
+  | 'vaultName'
+  | 'vaultAddress'
+  | 'vaultChainId'
+
 export type MutableVaultList = Omit<Mutable<VaultList>, 'tokens'> & {
   tokens: MutableVaultInfo[]
 }

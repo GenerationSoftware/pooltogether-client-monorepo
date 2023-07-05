@@ -31,8 +31,6 @@ export const createCustomWagmiConfig = (): Config<
   return createConfig({ publicClient })
 }
 
-// TODO: fix type inconsistencies
-// TODO: send this to shared utils
 /**
  * Returns a formatted vault list with given share and token data
  * @param data as much data as possible to format a vault list

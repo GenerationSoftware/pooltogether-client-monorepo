@@ -20,9 +20,6 @@ interface AddVaultFormProps {
   className?: string
 }
 
-// TODO: better validation
-// TODO: displaying errors
-// TODO: need to handle invalid vaults (wrong addresses, etc.)
 export const AddVaultForm = (props: AddVaultFormProps) => {
   const { className } = props
 

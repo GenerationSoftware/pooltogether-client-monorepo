@@ -34,8 +34,7 @@ class MyDocument extends Document {
           <meta property='og:title' content={title} />
           <meta property='og:description' content={description} />
           <meta property='og:site_name' content={title} />
-          {/* TODO: add og:url once deployed */}
-          {/* <meta property='og:url' content={DOMAINS.vaultListCreator} /> */}
+          <meta property='og:url' content={DOMAINS.vaultListCreator} />
           <meta property='og:type' content='website' />
           {/* TODO: add og:image */}
           {/* <meta
@@ -49,16 +48,14 @@ class MyDocument extends Document {
           <meta property='twitter:title' content={title} />
           <meta property='twitter:description' content={description} />
           <meta property='twitter:card' content='summary_large_image' />
-          <meta property='twitter:site' content={'@PoolTogether_'} />
+          <meta property='twitter:site' content={'@g9software'} />
           {/* TODO: add twitter:image:src */}
           {/* <meta
             property='twitter:image:src'
             content={`${DOMAINS.vaultListCreator}/twitter-share-image-1200-675.png`}
           /> */}
-          {/* TODO: add twitter:url once deployed */}
-          {/* <meta property='twitter:url' content={DOMAINS.vaultListCreator} /> */}
-          {/* TODO: add generation twitter handle */}
-          {/* <meta property='twitter:creator' content={''} /> */}
+          <meta property='twitter:url' content={DOMAINS.vaultListCreator} />
+          <meta property='twitter:creator' content={'@g9software'} />
 
           <link rel='manifest' href='/manifest.json' />
         </Head>

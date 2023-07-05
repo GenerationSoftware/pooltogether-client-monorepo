@@ -1,9 +1,10 @@
 import classNames from 'classnames'
 import { ReactNode } from 'react'
 import { useFormContext } from 'react-hook-form'
+import { FormKey } from 'src/types'
 
 interface SimpleInputProps {
-  formKey: string
+  formKey: FormKey
   id?: string
   validate?: { [rule: string]: (v: any) => true | string }
   placeholder?: string

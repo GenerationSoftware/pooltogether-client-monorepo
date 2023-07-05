@@ -10,7 +10,8 @@ export const DOMAINS = Object.freeze({
   governance: 'https://gov.pooltogether.com',
   poolExplorer: 'https://poolexplorer.win',
   tools: 'https://tools.pooltogether.com',
-  notion: 'https://pooltogetherdao.notion.site'
+  notion: 'https://pooltogetherdao.notion.site',
+  vaultListCreator: 'https://vaultlist-creator.netlify.app'
 })
 
 /**
