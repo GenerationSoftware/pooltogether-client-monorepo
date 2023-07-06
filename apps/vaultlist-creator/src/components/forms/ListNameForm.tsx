@@ -24,7 +24,7 @@ export const ListNameForm = (props: ListNameFormProps) => {
   const setAppView = useSetAtom(appViewAtom)
 
   const onSubmit = (data: ListNameFormValues) => {
-    setListName(data.vaultListName)
+    setListName(data.vaultListName.trim())
     setAppView('editing')
   }
 

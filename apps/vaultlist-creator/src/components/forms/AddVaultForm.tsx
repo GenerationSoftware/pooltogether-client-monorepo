@@ -32,8 +32,8 @@ export const AddVaultForm = (props: AddVaultFormProps) => {
 
   const onSubmit = (data: AddVaultFormValues) => {
     const newVault: VaultInfo = {
-      name: data.vaultName,
-      address: data.vaultAddress,
+      name: data.vaultName.trim(),
+      address: data.vaultAddress.trim() as `0x${string}`,
       chainId: parseInt(data.vaultChainId)
     }
 
@@ -86,7 +86,7 @@ export const AddVaultForm = (props: AddVaultFormProps) => {
           <SimpleInput
             formKey='vaultAddress'
             validate={{
-              isValidAddress: (v: string) => isAddress(v) || 'Enter a valid vault address.'
+              isValidAddress: (v: string) => isAddress(v.trim()) || 'Enter a valid vault address.'
             }}
             placeholder='0x0000...'
             label='Vault Address'

@@ -7,7 +7,6 @@ interface CodeSectionProps {
   className?: string
 }
 
-// TODO: custom scrollbar?
 export const CodeSection = (props: CodeSectionProps) => {
   const { className } = props
 
