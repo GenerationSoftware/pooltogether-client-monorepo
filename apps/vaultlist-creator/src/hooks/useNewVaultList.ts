@@ -1,47 +1,24 @@
-import {
-  useAllVaultShareData,
-  useAllVaultTokenData,
-  useVaults
-} from '@pooltogether/hyperstructure-react-hooks'
-import { getVaultId } from '@shared/utilities'
-import { useAtomValue } from 'jotai'
-import { listKeywordsAtom, listNameAtom, vaultsAtom } from 'src/atoms'
 import { getFormattedVaultList } from 'src/utils'
+import { useAllVaultListData } from './useAllVaultListData'
 
 /**
  * Returns a formatted VaultList
  * @returns
  */
 export const useNewVaultList = () => {
-  const vaultListName = useAtomValue(listNameAtom)
-  const vaultListKeywords = useAtomValue(listKeywordsAtom)
-  const vaultInfo = useAtomValue(vaultsAtom)
+  const { name, keywords, filteredVaultInfo, shareData, tokenData, isFetched } =
+    useAllVaultListData()
 
-  const vaults = useVaults(vaultInfo, { useAllChains: true })
-
-  const { data: allShareData, isFetched: isFetchedAllShareData } = useAllVaultShareData(vaults)
-  const { data: allTokenData, isFetched: isFetchedAllTokenData } = useAllVaultTokenData(vaults)
-
-  const isFetched =
-    isFetchedAllShareData && isFetchedAllTokenData && !!allShareData && !!allTokenData
-
-  if (!isFetched) {
+  if (!isFetched || !shareData || !tokenData) {
     return { isFetched: false }
   }
 
-  const filteredVaultInfo = vaultInfo.filter((info) => {
-    const vaultId = getVaultId(info)
-    const shareData = allShareData[vaultId]
-
-    return !isNaN(shareData.decimals) || !!shareData.symbol
-  })
-
   const vaultList = getFormattedVaultList({
-    name: vaultListName,
+    name,
     tokens: filteredVaultInfo,
-    keywords: Array.from(vaultListKeywords),
-    shareData: allShareData,
-    tokenData: allTokenData
+    keywords,
+    shareData,
+    tokenData
   })
 
   return { vaultList, isFetched }

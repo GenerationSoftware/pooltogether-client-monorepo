@@ -1,8 +1,9 @@
 import classNames from 'classnames'
-import { useAtomValue, useSetAtom } from 'jotai'
-import { appViewAtom, listNameAtom } from 'src/atoms'
+import { useSetAtom } from 'jotai'
+import { appViewAtom } from 'src/atoms'
 import { PurpleButton } from '@components/buttons/PurpleButton'
 import { ListKeywordsForm } from '@components/forms/ListKeywordsForm'
+import { useAllVaultListData } from '@hooks/useAllVaultListData'
 
 interface ListDetailsSectionProps {
   className?: string
@@ -13,10 +14,9 @@ export const ListDetailsSection = (props: ListDetailsSectionProps) => {
 
   const setAppView = useSetAtom(appViewAtom)
 
-  const listName = useAtomValue(listNameAtom)
+  const { name, filteredVaultInfo, isFetched } = useAllVaultListData()
 
-  // TODO: disable preview until list is actually ready
-  const isPreviewDisabled = false
+  const isPreviewDisabled = !isFetched || filteredVaultInfo.length === 0
 
   return (
     <section
@@ -25,7 +25,7 @@ export const ListDetailsSection = (props: ListDetailsSectionProps) => {
         className
       )}
     >
-      <h2 className='text-3xl text-pt-purple-100'>{listName}</h2>
+      <h2 className='text-3xl text-pt-purple-100'>{name}</h2>
       <span className='text-lg font-semibold text-pt-purple-300'>List Details</span>
       <ListKeywordsForm />
       <PurpleButton
