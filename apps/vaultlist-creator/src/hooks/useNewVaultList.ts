@@ -3,6 +3,7 @@ import {
   useAllVaultTokenData,
   useVaults
 } from '@pooltogether/hyperstructure-react-hooks'
+import { getVaultId } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { listKeywordsAtom, listNameAtom, vaultsAtom } from 'src/atoms'
 import { getFormattedVaultList } from 'src/utils'
@@ -28,9 +29,16 @@ export const useNewVaultList = () => {
     return { isFetched: false }
   }
 
+  const filteredVaultInfo = vaultInfo.filter((info) => {
+    const vaultId = getVaultId(info)
+    const shareData = allShareData[vaultId]
+
+    return !isNaN(shareData.decimals) || !!shareData.symbol
+  })
+
   const vaultList = getFormattedVaultList({
     name: vaultListName,
-    tokens: vaultInfo,
+    tokens: filteredVaultInfo,
     keywords: Array.from(vaultListKeywords),
     shareData: allShareData,
     tokenData: allTokenData

@@ -12,7 +12,7 @@ export const PurpleButton = (props: PurpleButtonProps) => {
     <Button
       color='purple'
       className={classNames(
-        'bg-pt-purple-400 border-pt-purple-400 hover:bg-pt-purple-500 focus:!ring-0',
+        'bg-pt-purple-400 border-pt-purple-400 hover:bg-pt-purple-500 focus:outline-transparent',
         className
       )}
       {...rest}

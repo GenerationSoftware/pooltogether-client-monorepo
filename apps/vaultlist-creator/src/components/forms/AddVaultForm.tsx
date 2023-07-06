@@ -38,7 +38,9 @@ export const AddVaultForm = (props: AddVaultFormProps) => {
     }
 
     const existingVault = vaultInfo.find(
-      (vault) => vault.chainId === newVault.chainId && vault.address === newVault.address
+      (vault) =>
+        vault.chainId === newVault.chainId &&
+        vault.address.toLowerCase() === newVault.address.toLowerCase()
     )
     if (existingVault !== undefined) {
       formMethods.setError('root', { message: 'Vault has already been added to the list!' })
