@@ -11,11 +11,11 @@ export const Layout = (props: LayoutProps) => {
   const { children, className } = props
 
   return (
-    <div className='flex flex-col min-h-screen'>
+    <div className='flex flex-col min-h-screen overflow-x-hidden'>
       <SimpleNavbar />
       <main
         className={classNames(
-          'w-full max-w-screen-xl relative flex flex-col flex-grow items-center mx-auto px-4',
+          'w-full min-h-[calc(100vh-16rem)] max-w-screen-xl relative flex flex-col items-center mx-auto px-4',
           className
         )}
       >
@@ -28,7 +28,7 @@ export const Layout = (props: LayoutProps) => {
 
 const SimpleNavbar = () => {
   return (
-    <div className='flex items-center justify-between p-12'>
+    <div className='h-36 flex items-center justify-between px-12 z-30'>
       <Image
         src='/ptLogo.svg'
         alt='PoolTogether Logo'
@@ -44,7 +44,7 @@ const SimpleNavbar = () => {
 
 const SimpleFooter = () => {
   return (
-    <footer className='flex justify-center p-12'>
+    <footer className='h-28 flex items-center justify-center mt-auto px-12 z-20'>
       <span className='text-sm font-medium'>
         Made with ❤️ & 🤖 by{' '}
         <a href='https://g9software.xyz' target='_blank' className='hover:text-pt-teal'>

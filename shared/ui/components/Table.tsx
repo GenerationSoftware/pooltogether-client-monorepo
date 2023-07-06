@@ -21,14 +21,23 @@ export interface TableProps {
   keyPrefix: string
   rounded?: boolean
   className?: string
+  innerClassName?: string
   headerClassName?: string
   rowClassName?: string
   gridColsClassName?: string
 }
 
 export const Table = (props: TableProps) => {
-  const { data, keyPrefix, rounded, className, headerClassName, rowClassName, gridColsClassName } =
-    props
+  const {
+    data,
+    keyPrefix,
+    rounded,
+    className,
+    innerClassName,
+    headerClassName,
+    rowClassName,
+    gridColsClassName
+  } = props
 
   const columns = Object.keys(data.headers).length
 
@@ -85,7 +94,7 @@ export const Table = (props: TableProps) => {
         </div>
 
         {/* Table Rows */}
-        <ul className='flex flex-col gap-4'>
+        <ul className={classNames('flex flex-col gap-4', innerClassName)}>
           {data.rows.map((row) => (
             <div
               key={`${keyPrefix}-row-${row.id}`}

@@ -9,10 +9,11 @@ import { vaultsAtom } from 'src/atoms'
 
 interface VaultsTableProps {
   className?: string
+  innerClassName?: string
 }
 
 export const VaultsTable = (props: VaultsTableProps) => {
-  const { className } = props
+  const { className, innerClassName } = props
 
   const vaultInfo = useAtomValue(vaultsAtom)
   const vaults = useVaults(vaultInfo, { useAllChains: true })
@@ -57,8 +58,9 @@ export const VaultsTable = (props: VaultsTableProps) => {
       keyPrefix='vaultsTable'
       data={tableData}
       className={classNames('px-0 pb-0 bg-transparent', className)}
-      headerClassName='px-0 pt-0 pb-6 text-center font-medium text-pt-purple-300'
-      rowClassName='px-0 pt-0 pb-0 text-sm font-medium bg-transparent'
+      innerClassName={classNames('overflow-y-auto', innerClassName)}
+      headerClassName='px-0 pt-0 pb-6 text-center font-medium text-pt-purple-300 whitespace-nowrap'
+      rowClassName='!p-0 text-sm font-medium bg-transparent'
       gridColsClassName={`grid-cols-[minmax(0,5fr)_minmax(0,2fr)_minmax(0,3fr)_minmax(0,2fr)_minmax(0,3fr)]`}
     />
   )
