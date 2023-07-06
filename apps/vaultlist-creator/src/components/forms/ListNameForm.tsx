@@ -3,7 +3,7 @@ import { useSetAtom } from 'jotai'
 import { FormProvider, useForm } from 'react-hook-form'
 import { appViewAtom, listNameAtom } from 'src/atoms'
 import { isValidChars } from 'src/utils'
-import { PurpleButton } from '@components/PurpleButton'
+import { PurpleButton } from '@components/buttons/PurpleButton'
 import { SimpleInput } from './SimpleInput'
 
 interface ListNameFormValues {

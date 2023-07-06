@@ -1,8 +1,12 @@
 import { Button, ButtonProps } from '@shared/ui'
 import classNames from 'classnames'
 
-export const PurpleButton = (props: ButtonProps) => {
-  const { children, className, ...rest } = props
+interface PurpleButtonProps extends ButtonProps {
+  innerClassName?: string
+}
+
+export const PurpleButton = (props: PurpleButtonProps) => {
+  const { children, className, innerClassName, ...rest } = props
 
   return (
     <Button
@@ -13,7 +17,7 @@ export const PurpleButton = (props: ButtonProps) => {
       )}
       {...rest}
     >
-      <span className='text-pt-purple-50'>{children}</span>
+      <span className={classNames('text-pt-purple-50', innerClassName)}>{children}</span>
     </Button>
   )
 }

@@ -1,8 +1,8 @@
 import classNames from 'classnames'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { appViewAtom, listNameAtom } from 'src/atoms'
+import { PurpleButton } from '@components/buttons/PurpleButton'
 import { ListKeywordsForm } from '@components/forms/ListKeywordsForm'
-import { PurpleButton } from '@components/PurpleButton'
 
 interface ListDetailsSectionProps {
   className?: string

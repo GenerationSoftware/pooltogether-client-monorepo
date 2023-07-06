@@ -7,7 +7,7 @@ import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form
 import { vaultsAtom } from 'src/atoms'
 import { isValidChars } from 'src/utils'
 import { isAddress } from 'viem'
-import { PurpleButton } from '@components/PurpleButton'
+import { PurpleButton } from '@components/buttons/PurpleButton'
 import { useNetworks } from '@hooks/useNetworks'
 import { SimpleInput } from './SimpleInput'
 
