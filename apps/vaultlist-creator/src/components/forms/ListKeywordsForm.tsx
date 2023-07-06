@@ -17,7 +17,7 @@ interface ListKeywordsFormProps {
 export const ListKeywordsForm = (props: ListKeywordsFormProps) => {
   const { className } = props
 
-  const formMethods = useForm<ListKeywordsFormValues>({ mode: 'onSubmit' })
+  const formMethods = useForm<ListKeywordsFormValues>({ mode: 'onChange' })
 
   const [keywords, setKeywords] = useAtom(listKeywordsAtom)
 
@@ -35,15 +35,27 @@ export const ListKeywordsForm = (props: ListKeywordsFormProps) => {
 
   const onSubmit = (data: ListKeywordsFormValues) => {
     if (!!data.vaultListKeyword) {
-      addKeyword(data.vaultListKeyword)
+      addKeyword(data.vaultListKeyword.toLowerCase().trim())
     }
     formMethods.reset()
+  }
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.key === ' ') {
+      e.preventDefault()
+      formMethods.handleSubmit(onSubmit)()
+    }
   }
 
   return (
     <FormProvider {...formMethods}>
       <div className={classNames('', className)}>
-        <form onSubmit={formMethods.handleSubmit(onSubmit)} className='flex flex-col gap-2'>
+        <form
+          onSubmit={formMethods.handleSubmit(onSubmit)}
+          onBlur={formMethods.handleSubmit(onSubmit)}
+          onKeyDown={onKeyDown}
+          className='flex flex-col gap-2'
+        >
           <SimpleInput
             formKey='vaultListKeyword'
             validate={{
@@ -56,11 +68,7 @@ export const ListKeywordsForm = (props: ListKeywordsFormProps) => {
           />
           <div className='flex flex-wrap gap-2'>
             {Array.from(keywords).map((keyword, i) => (
-              <Keyword
-                key={`${i}-${keyword.toLowerCase().replaceAll(' ', '_')}`}
-                keyword={keyword}
-                onDelete={deleteKeyword}
-              />
+              <Keyword key={`${i}-${keyword}`} keyword={keyword} onDelete={deleteKeyword} />
             ))}
           </div>
         </form>
