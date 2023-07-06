@@ -8,6 +8,7 @@ export type FormKey =
   | 'vaultName'
   | 'vaultAddress'
   | 'vaultChainId'
+  | 'text'
 
 export type MutableVaultList = Omit<Mutable<VaultList>, 'tokens'> & {
   tokens: MutableVaultInfo[]

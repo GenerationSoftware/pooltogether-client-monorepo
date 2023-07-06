@@ -1,7 +1,9 @@
 import classNames from 'classnames'
 import { useSetAtom } from 'jotai'
-import { appViewAtom } from 'src/atoms'
+import { appViewAtom, listNameAtom } from 'src/atoms'
+import { isValidChars } from 'src/utils'
 import { PurpleButton } from '@components/buttons/PurpleButton'
+import { EditableText } from '@components/EditableText'
 import { ListKeywordsForm } from '@components/forms/ListKeywordsForm'
 import { useAllVaultListData } from '@hooks/useAllVaultListData'
 
@@ -16,6 +18,12 @@ export const ListDetailsSection = (props: ListDetailsSectionProps) => {
 
   const { name, filteredVaultInfo, isFetched } = useAllVaultListData()
 
+  const setListName = useSetAtom(listNameAtom)
+
+  const handleNameUpdate = (data: { text: string }) => {
+    setListName(data.text.trim())
+  }
+
   const isPreviewDisabled = !isFetched || filteredVaultInfo.length === 0
 
   return (
@@ -25,7 +33,16 @@ export const ListDetailsSection = (props: ListDetailsSectionProps) => {
         className
       )}
     >
-      <h2 className='text-3xl text-pt-purple-100'>{name}</h2>
+      <EditableText
+        value={name}
+        onSubmit={handleNameUpdate}
+        validate={{
+          isNotFalsyString: (v: string) => !!v || 'Your vault list needs a name!',
+          isValidString: (v: string) =>
+            isValidChars(v, { allowSpaces: true }) || 'Invalid characters in name.'
+        }}
+        textClassName='!text-3xl !text-pt-purple-100'
+      />
       <span className='text-lg font-semibold text-pt-purple-300'>List Details</span>
       <ListKeywordsForm />
       <PurpleButton

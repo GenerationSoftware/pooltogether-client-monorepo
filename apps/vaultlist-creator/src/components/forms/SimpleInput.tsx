@@ -8,13 +8,29 @@ interface SimpleInputProps {
   id?: string
   validate?: { [rule: string]: (v: any) => true | string }
   placeholder?: string
+  defaultValue?: string
   label?: ReactNode
   hideErrorMsgs?: boolean
+  autoFocus?: boolean
   className?: string
+  innerClassName?: string
+  errorClassName?: string
 }
 
 export const SimpleInput = (props: SimpleInputProps) => {
-  const { formKey, id, validate, placeholder, label, hideErrorMsgs, className } = props
+  const {
+    formKey,
+    id,
+    validate,
+    placeholder,
+    defaultValue,
+    label,
+    hideErrorMsgs,
+    autoFocus,
+    className,
+    innerClassName,
+    errorClassName
+  } = props
 
   const { register, formState } = useFormContext()
 
@@ -31,12 +47,15 @@ export const SimpleInput = (props: SimpleInputProps) => {
         id={id ?? formKey}
         {...register(formKey, { validate })}
         placeholder={placeholder}
+        defaultValue={defaultValue}
+        autoFocus={autoFocus}
         className={classNames(
           'px-4 py-3 text-sm bg-pt-purple-50 text-gray-700 rounded-lg border border-gray-300 outline outline-2',
           {
-            'outline-pt-warning-light focus:outline-pt-warning-light': !!error,
-            'focus:outline-transparent': !error
-          }
+            [`outline-pt-warning-light ${errorClassName}`]: !!error,
+            'outline-transparent': !error
+          },
+          innerClassName
         )}
       />
       {!hideErrorMsgs && <span className='text-xs text-pt-warning-light'>{error}</span>}
