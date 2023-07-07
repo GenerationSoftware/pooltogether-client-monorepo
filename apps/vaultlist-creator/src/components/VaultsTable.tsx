@@ -136,7 +136,7 @@ const TokenSymbolItem = (props: ItemProps) => {
   }
 
   if (!tokenData) {
-    return '-'
+    return <>-</>
   }
 
   return <span>{tokenData.symbol}</span>
@@ -152,7 +152,7 @@ const TokenAddressItem = (props: ItemProps) => {
   }
 
   if (!tokenData) {
-    return '-'
+    return <>-</>
   }
 
   return <AddressDisplay address={tokenData.address} />
