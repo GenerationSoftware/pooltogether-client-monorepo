@@ -47,8 +47,8 @@ export const ListDetailsSection = (props: ListDetailsSectionProps) => {
         textClassName='!text-3xl !text-pt-purple-100'
       />
       <span className='text-lg font-semibold text-pt-purple-300'>List Details</span>
-      <ListKeywordsForm />
       <ListImageForm />
+      <ListKeywordsForm />
       <PurpleButton
         onClick={() => setAppView('preview')}
         className='self-start'

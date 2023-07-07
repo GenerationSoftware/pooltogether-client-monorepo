@@ -1,6 +1,7 @@
+import { BasicIcon, Spinner } from '@shared/ui'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
-import Image from 'next/image'
+import { useEffect, useState } from 'react'
 import { listImageAtom } from 'src/atoms'
 
 interface VaultListLogoProps {
@@ -13,18 +14,44 @@ export const VaultListLogo = (props: VaultListLogoProps) => {
   const rawLogoURI = useAtomValue(listImageAtom)
   const src = getSrc(rawLogoURI)
 
+  const [isLoaded, setIsLoaded] = useState<boolean>(false)
+  const [isFallbackLogo, setIsFallbackLogo] = useState<boolean>(false)
+
+  useEffect(() => {
+    setIsFallbackLogo(false)
+    setIsLoaded(false)
+  }, [src])
+
   if (!src) {
     return <></>
   }
 
   return (
-    <Image
-      src={src}
-      width={64}
-      height={64}
-      alt='Vault List Logo'
-      className={classNames('w-20 h-20 border-2 border-pt-purple-100 rounded-full', className)}
-    />
+    <>
+      <img
+        src={src}
+        width={80}
+        height={80}
+        alt='Vault List Logo'
+        onLoad={() => setIsLoaded(true)}
+        onError={() => setIsFallbackLogo(true)}
+        className={classNames(
+          'border-2 border-pt-purple-100 rounded-full',
+          { hidden: !isLoaded || isFallbackLogo },
+          className
+        )}
+      />
+      <BasicIcon
+        size='xl'
+        content={<Spinner className='after:border-y-pt-purple-800' />}
+        className={classNames({ hidden: isLoaded || isFallbackLogo }, className)}
+      />
+      <BasicIcon
+        size='xl'
+        content='?'
+        className={classNames({ hidden: isLoaded || !isFallbackLogo }, className)}
+      />
+    </>
   )
 }
 

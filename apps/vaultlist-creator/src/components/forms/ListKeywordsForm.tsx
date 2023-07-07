@@ -86,7 +86,7 @@ const Keyword = (props: KeywordProps) => {
   const { keyword, onDelete } = props
 
   return (
-    <span className='flex items-center gap-x-[.5ch] px-1 text-sm font-medium text-gray-600 bg-gray-400 rounded'>
+    <span className='flex items-center gap-x-[.5ch] px-1 text-sm font-medium text-gray-700 bg-gray-300 rounded'>
       {keyword}
       <XMarkIcon className='h-3 w-3 cursor-pointer' onClick={() => onDelete(keyword)} />
     </span>
