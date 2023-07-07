@@ -1,4 +1,4 @@
-import { VaultInfo } from '@shared/types'
+import { VaultInfo, Version } from '@shared/types'
 import { atom } from 'jotai'
 import { AppView } from './types'
 
@@ -18,9 +18,14 @@ export const listNameAtom = atom<string>('')
 export const listKeywordsAtom = atom<Set<string>>(new Set<string>())
 
 /**
- * Vault Image
+ * Vault List Image
  */
 export const listImageAtom = atom<string>('')
+
+/**
+ * Vault List Version
+ */
+export const listVersionAtom = atom<Version>({ major: 1, minor: 0, patch: 0 })
 
 /**
  * Vaults

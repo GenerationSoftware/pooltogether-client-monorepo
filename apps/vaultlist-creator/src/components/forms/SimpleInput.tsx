@@ -12,6 +12,7 @@ interface SimpleInputProps {
   label?: ReactNode
   hideErrorMsgs?: boolean
   autoFocus?: boolean
+  disabled?: boolean
   className?: string
   innerClassName?: string
   errorClassName?: string
@@ -27,6 +28,7 @@ export const SimpleInput = (props: SimpleInputProps) => {
     label,
     hideErrorMsgs,
     autoFocus,
+    disabled,
     className,
     innerClassName,
     errorClassName
@@ -49,9 +51,11 @@ export const SimpleInput = (props: SimpleInputProps) => {
         placeholder={placeholder}
         defaultValue={defaultValue}
         autoFocus={autoFocus}
+        disabled={disabled}
         className={classNames(
           'px-4 py-3 text-sm bg-pt-purple-50 text-gray-700 rounded-lg border border-gray-300 outline outline-1',
           {
+            'brightness-75': disabled,
             [`outline-red-600 ${errorClassName}`]: !!error,
             'outline-transparent': !error
           },

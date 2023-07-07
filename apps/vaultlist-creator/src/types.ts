@@ -3,6 +3,7 @@ import { Mutable, VaultExtensions, VaultInfo, VaultList } from '@shared/types'
 export type AppView = 'base' | 'editing' | 'preview'
 
 export type FormKey =
+  | 'vaultListSrc'
   | 'vaultListName'
   | 'vaultListKeyword'
   | 'vaultListImage'

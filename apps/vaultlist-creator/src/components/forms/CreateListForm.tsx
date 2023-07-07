@@ -6,24 +6,24 @@ import { isValidChars } from 'src/utils'
 import { PurpleButton } from '@components/buttons/PurpleButton'
 import { SimpleInput } from './SimpleInput'
 
-interface ListNameFormValues {
+interface CreateListFormValues {
   vaultListName: string
 }
 
-interface ListNameFormProps {
+interface CreateListFormProps {
   className?: string
 }
 
-export const ListNameForm = (props: ListNameFormProps) => {
+export const CreateListForm = (props: CreateListFormProps) => {
   const { className } = props
 
-  const formMethods = useForm<ListNameFormValues>({ mode: 'onSubmit' })
+  const formMethods = useForm<CreateListFormValues>({ mode: 'onSubmit' })
 
   const setListName = useSetAtom(listNameAtom)
 
   const setAppView = useSetAtom(appViewAtom)
 
-  const onSubmit = (data: ListNameFormValues) => {
+  const onSubmit = (data: CreateListFormValues) => {
     setListName(data.vaultListName.trim())
     setAppView('editing')
   }
