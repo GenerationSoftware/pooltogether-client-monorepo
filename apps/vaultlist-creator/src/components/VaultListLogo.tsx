@@ -35,21 +35,12 @@ export const VaultListLogo = (props: VaultListLogoProps) => {
         alt='Vault List Logo'
         onLoad={() => setIsLoaded(true)}
         onError={() => setIsFallbackLogo(true)}
-        className={classNames(
-          'border-2 border-pt-purple-100 rounded-full',
-          { hidden: !isLoaded || isFallbackLogo },
-          className
-        )}
+        className={classNames('w-20 h-20 rounded-full', { hidden: !isLoaded }, className)}
       />
       <BasicIcon
         size='xl'
-        content={<Spinner className='after:border-y-pt-purple-800' />}
-        className={classNames({ hidden: isLoaded || isFallbackLogo }, className)}
-      />
-      <BasicIcon
-        size='xl'
-        content='?'
-        className={classNames({ hidden: isLoaded || !isFallbackLogo }, className)}
+        content={isFallbackLogo ? '?' : <Spinner className='after:border-y-pt-purple-800' />}
+        className={classNames({ hidden: isLoaded }, className)}
       />
     </>
   )

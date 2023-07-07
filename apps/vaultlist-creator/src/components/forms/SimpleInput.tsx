@@ -50,9 +50,9 @@ export const SimpleInput = (props: SimpleInputProps) => {
         defaultValue={defaultValue}
         autoFocus={autoFocus}
         className={classNames(
-          'px-4 py-3 text-sm bg-pt-purple-50 text-gray-700 rounded-lg border border-gray-300 outline outline-2',
+          'px-4 py-3 text-sm bg-pt-purple-50 text-gray-700 rounded-lg border border-gray-300 outline outline-1',
           {
-            [`outline-pt-warning-light ${errorClassName}`]: !!error,
+            [`outline-red-600 ${errorClassName}`]: !!error,
             'outline-transparent': !error
           },
           innerClassName

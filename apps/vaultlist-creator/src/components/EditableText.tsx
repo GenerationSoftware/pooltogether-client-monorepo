@@ -1,4 +1,3 @@
-import { PencilIcon } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
 import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -9,16 +8,17 @@ interface TextFormValues {
 }
 
 interface EditableTextProps {
-  value: string
+  value?: string
   onSubmit: (data: TextFormValues) => void
   validate?: { [rule: string]: (v: any) => true | string }
+  disabled?: boolean
   className?: string
   textClassName?: string
-  iconClassName?: string
+  actionClassName?: string
 }
 
 export const EditableText = (props: EditableTextProps) => {
-  const { value, onSubmit, validate, className, textClassName, iconClassName } = props
+  const { value, onSubmit, validate, disabled, className, textClassName, actionClassName } = props
 
   const formMethods = useForm<TextFormValues>({ mode: 'onSubmit' })
 
@@ -32,9 +32,9 @@ export const EditableText = (props: EditableTextProps) => {
   return (
     <div
       onClick={() => setIsEditing(true)}
-      className={classNames('relative flex gap-2 items-center group', className)}
+      className={classNames('relative flex items-center group', className)}
     >
-      {isEditing && (
+      {isEditing && !disabled && (
         <FormProvider {...formMethods}>
           <form
             onSubmit={formMethods.handleSubmit(_onSubmit)}
@@ -48,7 +48,7 @@ export const EditableText = (props: EditableTextProps) => {
               hideErrorMsgs={true}
               autoFocus={true}
               innerClassName={classNames(
-                '!p-0 !bg-transparent border-current border-x-transparent border-t-transparent !outline-none !rounded-none',
+                '!py-0 !px-3 !bg-pt-transparent !border-none !outline-none !rounded',
                 textClassName
               )}
               errorClassName='!text-pt-warning-light'
@@ -58,17 +58,23 @@ export const EditableText = (props: EditableTextProps) => {
       )}
       <span
         className={classNames(
-          'self-start border-b-2 border-transparent',
-          { 'invisible w-0 line-clamp-1': isEditing },
+          'self-start',
+          { 'invisible w-0 !line-clamp-1': isEditing && !disabled },
           textClassName
         )}
       >
         {value}
       </span>
-      {!isEditing && (
-        <PencilIcon
-          className={classNames('w-5 h-5 absolute right-0 hidden group-hover:block', iconClassName)}
-        />
+      {!isEditing && !disabled && (
+        <span
+          className={classNames(
+            'text-xs text-pt-purple-300 absolute right-0 cursor-pointer',
+            'hidden group-hover:block',
+            actionClassName
+          )}
+        >
+          edit
+        </span>
       )}
     </div>
   )

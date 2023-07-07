@@ -1,4 +1,4 @@
-import { ExclamationTriangleIcon, TrashIcon } from '@heroicons/react/24/outline'
+import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { Vault } from '@pooltogether/hyperstructure-client-js'
 import { useVaults, useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
 import { TokenIcon } from '@shared/react-components'
@@ -7,6 +7,9 @@ import { getNiceNetworkNameByChainId, getVaultId, shorten } from '@shared/utilit
 import classNames from 'classnames'
 import { useAtom } from 'jotai'
 import { vaultsAtom } from 'src/atoms'
+import { MutableVaultInfo } from 'src/types'
+import { isValidChars } from 'src/utils'
+import { EditableText } from './EditableText'
 
 interface VaultsTableProps {
   className?: string
@@ -31,13 +34,13 @@ export const VaultsTable = (props: VaultsTableProps) => {
       address: { content: 'Address', position: 'center' },
       tokenSymbol: { content: 'Token Symbol', position: 'center' },
       tokenAddress: { content: 'Token Address', position: 'center' },
-      icons: { content: '' }
+      actions: { content: 'Actions', position: 'center' }
     },
-    rows: vaultsArray.map((vault) => ({
+    rows: vaultsArray.map((vault, i) => ({
       id: vault.id,
       cells: {
         name: {
-          content: <VaultNameItem vault={vault} />
+          content: <VaultNameItem vault={vault} index={i} />
         },
         network: {
           content: <VaultNetworkItem vault={vault} />,
@@ -55,8 +58,9 @@ export const VaultsTable = (props: VaultsTableProps) => {
           content: <TokenAddressItem vault={vault} />,
           position: 'center'
         },
-        icons: {
-          content: <VaultIconsItem vault={vault} onDelete={handleDeleteRow} />
+        actions: {
+          content: <VaultActionsItem vault={vault} onDelete={handleDeleteRow} />,
+          position: 'center'
         }
       }
     }))
@@ -70,7 +74,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
       innerClassName={classNames('overflow-y-auto', innerClassName)}
       headerClassName='px-0 pt-0 pb-6 text-center font-medium text-pt-purple-300 whitespace-nowrap'
       rowClassName='!p-0 text-sm font-medium bg-transparent overflow-hidden'
-      gridColsClassName={`grid-cols-[minmax(0,5fr)_minmax(0,2fr)_minmax(0,3fr)_minmax(0,2fr)_minmax(0,3fr)_minmax(0,1.2fr)]`}
+      gridColsClassName={`grid-cols-[minmax(0,5fr)_minmax(0,2fr)_minmax(0,3fr)_minmax(0,2fr)_minmax(0,3fr)_minmax(0,2fr)]`}
     />
   )
 }
@@ -79,13 +83,23 @@ interface ItemProps {
   vault: Vault
 }
 
-const VaultNameItem = (props: ItemProps) => {
-  const { vault } = props
+const VaultNameItem = (props: ItemProps & { index: number }) => {
+  const { vault, index } = props
 
   const { data: tokenData, isFetched: isFetchedTokenData } = useVaultTokenData(vault)
 
+  const [vaultInfo, setVaultInfo] = useAtom(vaultsAtom)
+
+  const handleVaultNameUpdate = (data: { text: string }) => {
+    const newVaultInfo: MutableVaultInfo[] = [...vaultInfo]
+    newVaultInfo[index].name = data.text.trim()
+    setVaultInfo(newVaultInfo)
+  }
+
+  const isDisabled = isFetchedTokenData && !tokenData
+
   return (
-    <div className='flex items-center gap-3'>
+    <div className='flex gap-3 grow items-center'>
       {!!tokenData ? (
         <TokenIcon token={tokenData} />
       ) : isFetchedTokenData ? (
@@ -93,11 +107,18 @@ const VaultNameItem = (props: ItemProps) => {
       ) : (
         <WrappedSpinner />
       )}
-      <span
-        className={classNames('line-clamp-2', { 'line-through': isFetchedTokenData && !tokenData })}
-      >
-        {vault.name}
-      </span>
+      <EditableText
+        value={vault.name}
+        onSubmit={handleVaultNameUpdate}
+        validate={{
+          isNotFalsyString: (v: string) => !!v || 'Enter a valid vault name.',
+          isValidString: (v: string) =>
+            isValidChars(v, { allowSpaces: true }) || 'Invalid characters in vault name.'
+        }}
+        disabled={isDisabled}
+        className='grow'
+        textClassName={classNames('text-pt-purple-50 line-clamp-2', { 'line-through': isDisabled })}
+      />
     </div>
   )
 }
@@ -158,18 +179,22 @@ const TokenAddressItem = (props: ItemProps) => {
   return <AddressDisplay address={tokenData.address} />
 }
 
-const VaultIconsItem = (props: ItemProps & { onDelete: (id: string) => void }) => {
+const VaultActionsItem = (props: ItemProps & { onDelete: (id: string) => void }) => {
   const { vault, onDelete } = props
 
   const { data: tokenData, isFetched: isFetchedTokenData } = useVaultTokenData(vault)
 
+  const isErrored = isFetchedTokenData && !tokenData
+
   return (
-    <div className='flex gap-2'>
-      <TrashIcon
+    <div className='flex gap-2 items-center'>
+      <span
         onClick={() => onDelete(vault.id)}
-        className='w-5 h-5 text-pt-purple-50 cursor-pointer'
-      />
-      {isFetchedTokenData && !tokenData && (
+        className={classNames('text-xs text-pt-purple-300 cursor-pointer', { 'ml-7': isErrored })}
+      >
+        delete
+      </span>
+      {isErrored && (
         <Tooltip
           content={
             <div className='w-[16ch] text-center'>
@@ -180,7 +205,7 @@ const VaultIconsItem = (props: ItemProps & { onDelete: (id: string) => void }) =
             </div>
           }
         >
-          <ExclamationTriangleIcon className='w-5 h-5 text-pt-warning-light' />
+          <ExclamationTriangleIcon className='w-5 h-5 text-red-600' />
         </Tooltip>
       )}
     </div>

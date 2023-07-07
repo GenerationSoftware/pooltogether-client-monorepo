@@ -98,11 +98,11 @@ export const getFormattedVaultList = (data: {
 /**
  * Returns true if the string only include valid characters, false otherwise
  *
- * This includes letters, numbers, periods, underscores and dashes
+ * This includes letters, numbers and some common symbols (".", "_", "-", "'")
  * @param str the string to check
  * @param options optional settings
  * @returns
  */
 export const isValidChars = (str: string, options?: { allowSpaces?: boolean }) => {
-  return !!str.match(options?.allowSpaces ? /^[a-z0-9._ \-]+$/i : /^[a-z0-9._\-]+$/i)
+  return !!str.match(options?.allowSpaces ? /^[a-z0-9._ '\-]+$/i : /^[a-z0-9._'\-]+$/i)
 }

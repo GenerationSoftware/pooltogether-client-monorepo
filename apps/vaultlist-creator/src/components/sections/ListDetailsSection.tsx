@@ -44,7 +44,7 @@ export const ListDetailsSection = (props: ListDetailsSectionProps) => {
           isValidString: (v: string) =>
             isValidChars(v, { allowSpaces: true }) || 'Invalid characters in name.'
         }}
-        textClassName='!text-3xl !text-pt-purple-100'
+        textClassName='!text-3xl !text-pt-purple-100 !rounded-lg'
       />
       <span className='text-lg font-semibold text-pt-purple-300'>List Details</span>
       <ListImageForm />

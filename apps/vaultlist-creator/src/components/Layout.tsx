@@ -15,7 +15,7 @@ export const Layout = (props: LayoutProps) => {
       <SimpleNavbar />
       <main
         className={classNames(
-          'w-full min-h-[calc(100vh-16rem)] max-w-screen-xl relative flex flex-col items-center mx-auto px-4',
+          'w-full min-h-[calc(100vh-16rem)] max-w-[1440px] relative flex flex-col items-center mx-auto px-4',
           className
         )}
       >
