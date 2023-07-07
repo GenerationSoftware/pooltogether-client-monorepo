@@ -4,7 +4,9 @@ import { appViewAtom, listNameAtom } from 'src/atoms'
 import { isValidChars } from 'src/utils'
 import { PurpleButton } from '@components/buttons/PurpleButton'
 import { EditableText } from '@components/EditableText'
+import { ListImageForm } from '@components/forms/ListImageForm'
 import { ListKeywordsForm } from '@components/forms/ListKeywordsForm'
+import { VaultListLogo } from '@components/VaultListLogo'
 import { useAllVaultListData } from '@hooks/useAllVaultListData'
 
 interface ListDetailsSectionProps {
@@ -33,6 +35,7 @@ export const ListDetailsSection = (props: ListDetailsSectionProps) => {
         className
       )}
     >
+      <VaultListLogo />
       <EditableText
         value={name}
         onSubmit={handleNameUpdate}
@@ -45,6 +48,7 @@ export const ListDetailsSection = (props: ListDetailsSectionProps) => {
       />
       <span className='text-lg font-semibold text-pt-purple-300'>List Details</span>
       <ListKeywordsForm />
+      <ListImageForm />
       <PurpleButton
         onClick={() => setAppView('preview')}
         className='self-start'

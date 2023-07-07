@@ -5,6 +5,7 @@ export type AppView = 'base' | 'editing' | 'preview'
 export type FormKey =
   | 'vaultListName'
   | 'vaultListKeyword'
+  | 'vaultListImage'
   | 'vaultName'
   | 'vaultAddress'
   | 'vaultChainId'

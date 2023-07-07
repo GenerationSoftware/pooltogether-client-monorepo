@@ -5,7 +5,7 @@ import {
 } from '@pooltogether/hyperstructure-react-hooks'
 import { getVaultId } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
-import { listKeywordsAtom, listNameAtom, vaultsAtom } from 'src/atoms'
+import { listImageAtom, listKeywordsAtom, listNameAtom, vaultsAtom } from 'src/atoms'
 
 /**
  * Returns all data to build a VaultList
@@ -16,6 +16,8 @@ export const useAllVaultListData = () => {
 
   const keywordsSet = useAtomValue(listKeywordsAtom)
   const keywords = Array.from(keywordsSet)
+
+  const logoURI = useAtomValue(listImageAtom)
 
   const vaultInfo = useAtomValue(vaultsAtom)
 
@@ -35,5 +37,15 @@ export const useAllVaultListData = () => {
       })
     : []
 
-  return { name, keywords, vaultInfo, filteredVaultInfo, vaults, shareData, tokenData, isFetched }
+  return {
+    name,
+    keywords,
+    logoURI,
+    vaultInfo,
+    filteredVaultInfo,
+    vaults,
+    shareData,
+    tokenData,
+    isFetched
+  }
 }

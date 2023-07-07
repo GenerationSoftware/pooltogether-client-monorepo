@@ -18,6 +18,11 @@ export const listNameAtom = atom<string>('')
 export const listKeywordsAtom = atom<Set<string>>(new Set<string>())
 
 /**
+ * Vault Image
+ */
+export const listImageAtom = atom<string>('')
+
+/**
  * Vaults
  */
 export const vaultsAtom = atom<VaultInfo[]>([])

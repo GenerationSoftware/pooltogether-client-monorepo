@@ -6,7 +6,7 @@ import { useAllVaultListData } from './useAllVaultListData'
  * @returns
  */
 export const useNewVaultList = () => {
-  const { name, keywords, filteredVaultInfo, shareData, tokenData, isFetched } =
+  const { name, keywords, logoURI, filteredVaultInfo, shareData, tokenData, isFetched } =
     useAllVaultListData()
 
   if (!isFetched || !shareData || !tokenData) {
@@ -17,6 +17,7 @@ export const useNewVaultList = () => {
     name,
     tokens: filteredVaultInfo,
     keywords,
+    logoURI,
     shareData,
     tokenData
   })
