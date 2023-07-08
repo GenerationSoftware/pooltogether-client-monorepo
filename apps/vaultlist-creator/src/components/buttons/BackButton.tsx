@@ -1,4 +1,5 @@
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
+import { Button } from '@shared/ui'
 import classNames from 'classnames'
 import { useSetAtom } from 'jotai'
 import { appViewAtom } from 'src/atoms'
@@ -16,12 +17,16 @@ export const BackButton = (props: BackButtonProps) => {
   const setView = useSetAtom(appViewAtom)
 
   return (
-    <div
+    <Button
       onClick={() => setView(toView)}
-      className={classNames('flex gap-2 items-center text-pt-purple-100 cursor-pointer', className)}
+      color='white'
+      outline={true}
+      className={classNames('self-start', className)}
     >
-      <ArrowLeftIcon className='w-5 h-5' />
-      <span className='text-sm'>{text}</span>
-    </div>
+      <div className='flex gap-2 items-center'>
+        <ArrowLeftIcon className='w-5 h-5' />
+        {text}
+      </div>
+    </Button>
   )
 }

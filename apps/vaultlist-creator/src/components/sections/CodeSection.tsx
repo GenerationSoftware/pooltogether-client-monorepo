@@ -25,12 +25,11 @@ export const CodeSection = (props: CodeSectionProps) => {
   }, [])
 
   return (
-    <section
-      className={classNames('relative bg-pt-bg-purple-darker rounded-2xl shadow-2xl', className)}
-    >
+    <section className={classNames('flex flex-col gap-4 items-center', className)}>
+      <h2 className='text-2xl font-medium'>Preview Your Vault List</h2>
       {isFetched && !!vaultList ? (
-        <>
-          <pre id='code' className='max-h-[45vh] p-6 overflow-auto'>
+        <div className='relative w-full bg-gray-900 rounded-2xl'>
+          <pre id='code' className='p-6 overflow-auto'>
             <code>{JSON.stringify(vaultList, null, 2)}</code>
           </pre>
           <CopyButton
@@ -43,7 +42,7 @@ export const CodeSection = (props: CodeSectionProps) => {
               'right-8': isXOverflowing
             })}
           />
-        </>
+        </div>
       ) : (
         <Spinner />
       )}

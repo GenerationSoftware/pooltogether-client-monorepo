@@ -69,7 +69,7 @@ export const AddVaultForm = (props: AddVaultFormProps) => {
     <FormProvider {...formMethods}>
       <form
         onSubmit={formMethods.handleSubmit(onSubmit)}
-        className={classNames('flex flex-col gap-8', className)}
+        className={classNames('flex flex-col gap-8 p-8 bg-pt-transparent rounded-2xl', className)}
       >
         <div className='flex gap-6'>
           <SimpleInput
