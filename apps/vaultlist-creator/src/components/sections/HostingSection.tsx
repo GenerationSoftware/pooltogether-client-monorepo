@@ -50,7 +50,8 @@ const SelfHostingCard = () => (
     <span>2. Return the vault list's JSON through your route.</span>
     <span className='ml-4 text-sm text-pt-purple-100'>
       This will also somewhat depend on your web framework of choice, but essentially just means
-      sending a response of pure JSON, without any HTML!
+      sending a response of pure JSON, without any HTML! Remember to set proper CORS headers to
+      allow others to query your vault list.
     </span>
   </InfoCard>
 )
