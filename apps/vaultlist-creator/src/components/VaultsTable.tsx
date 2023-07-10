@@ -1,6 +1,7 @@
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { Vault } from '@pooltogether/hyperstructure-client-js'
 import { useVaults, useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
+import { SCREEN_SIZES, useScreenSize } from '@shared/generic-react-hooks'
 import { TokenIcon } from '@shared/react-components'
 import { BasicIcon, Spinner, Table, TableData, Tooltip } from '@shared/ui'
 import { getNiceNetworkNameByChainId, getVaultId, shorten } from '@shared/utilities'
@@ -10,6 +11,7 @@ import { vaultsAtom } from 'src/atoms'
 import { MutableVaultInfo } from 'src/types'
 import { isValidChars } from 'src/utils'
 import { EditableText } from './EditableText'
+import { VaultCard } from './VaultCard'
 
 interface VaultsTableProps {
   className?: string
@@ -26,6 +28,9 @@ export const VaultsTable = (props: VaultsTableProps) => {
   const handleDeleteRow = (vaultId: string) => {
     setVaultInfo(vaultInfo.filter((info) => vaultId !== getVaultId(info)))
   }
+
+  const { width } = useScreenSize()
+  const isMobile = !!width && width < SCREEN_SIZES.lg
 
   const tableData: TableData = {
     headers: {
@@ -64,6 +69,16 @@ export const VaultsTable = (props: VaultsTableProps) => {
         }
       }
     }))
+  }
+
+  if (isMobile) {
+    return (
+      <div className={classNames('flex flex-col gap-2 items-center', className)}>
+        {vaultsArray.map((vault) => (
+          <VaultCard vault={vault} className='w-full max-w-xl' />
+        ))}
+      </div>
+    )
   }
 
   return (

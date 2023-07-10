@@ -53,7 +53,8 @@ export const SimpleInput = (props: SimpleInputProps) => {
         autoFocus={autoFocus}
         disabled={disabled}
         className={classNames(
-          'px-4 py-3 text-sm bg-pt-purple-50 text-gray-700 rounded-lg border border-gray-300 outline outline-1',
+          'px-3 py-2 text-sm bg-pt-purple-50 text-gray-700 rounded-lg border border-gray-300 outline outline-1',
+          'lg:px-4 lg:py-3',
           {
             'brightness-75': disabled,
             [`outline-red-600 ${errorClassName}`]: !!error,

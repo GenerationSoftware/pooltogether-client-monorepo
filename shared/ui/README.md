@@ -20,6 +20,7 @@ A stub React component library with [Tailwind CSS](https://tailwindcss.com/) use
 
 ## 🐱‍👤 &nbsp; Available Components
 
+- `Accordion`
 - `BasicIcon`
 - `Button`
 - `Card`
