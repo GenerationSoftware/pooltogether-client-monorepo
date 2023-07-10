@@ -34,7 +34,9 @@ export const getVaultList = async (src: string, publicClient?: PublicClient) => 
       ? publicClient
       : createPublicClient({ chain: mainnet, transport: http() })
     const response = await client?.getEnsText({ name: normalize(src), key: 'vaultList' })
-    vaultList = !!response ? JSON.parse(response) : undefined
+    vaultList = !!response ? await getVaultList(response) : undefined
+  } else {
+    vaultList = !!src ? JSON.parse(src) : undefined
   }
 
   return isValidVaultList(vaultList) ? vaultList : undefined
