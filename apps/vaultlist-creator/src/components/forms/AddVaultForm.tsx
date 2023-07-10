@@ -102,7 +102,7 @@ export const AddVaultForm = (props: AddVaultFormProps) => {
           <span className='px-6 text-sm font-medium text-pt-purple-100 lg:px-0'>
             Select Network
           </span>
-          <div className='flex gap-2 px-6 py-0.5 overflow-x-auto no-scrollbar lg:flex-wrap lg:gap-4 lg:px-0 lg:py-0'>
+          <div className='flex gap-2 px-6 py-0.5 overflow-x-auto no-scrollbar lg:flex-wrap lg:gap-4 lg:px-0.5'>
             {networks.map((chainId) => (
               <ChainInput key={`chain-${chainId}`} chainId={chainId} />
             ))}

@@ -73,9 +73,9 @@ export const VaultsTable = (props: VaultsTableProps) => {
 
   if (isMobile) {
     return (
-      <div className={classNames('flex flex-col gap-2', className)}>
+      <div className={classNames('flex flex-col gap-2 items-center', className)}>
         {vaultsArray.map((vault) => (
-          <VaultCard vault={vault} />
+          <VaultCard vault={vault} className='w-full max-w-xl' />
         ))}
       </div>
     )

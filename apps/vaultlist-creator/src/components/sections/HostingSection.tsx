@@ -10,7 +10,7 @@ export const HostingSection = (props: HostingSectionProps) => {
 
   return (
     <section className={classNames('flex flex-col gap-4 items-center', className)}>
-      <h2 className='text-2xl font-medium'>Host Your Vault List</h2>
+      <h2 className='text-2xl font-medium hidden lg:block'>Host Your Vault List</h2>
       <ENSCard />
       <SelfHostingCard />
     </section>
@@ -72,7 +72,7 @@ const InfoCard = (props: InfoCardProps) => {
         className
       )}
     >
-      <h3 className='text-2xl font-medium'>{title}</h3>
+      <h3 className='text-lg font-medium lg:text-2xl'>{title}</h3>
       {children}
     </div>
   )
