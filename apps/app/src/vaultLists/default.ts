@@ -1,4 +1,5 @@
 import { VaultList } from '@pooltogether/hyperstructure-client-js'
+import { LINKS } from '@shared/ui'
 
 const defaultVaultList: VaultList = {
   name: 'PoolTogether Testnet Vault List',
@@ -9,7 +10,7 @@ const defaultVaultList: VaultList = {
     patch: 0
   },
   timestamp: '2023-06-27T16:30:47.915Z',
-  logoURI: '/pooltogether-token-logo.svg',
+  logoURI: `${LINKS.app}/pooltogether-token-logo.svg`,
   tokens: [
     {
       chainId: 11155111,
