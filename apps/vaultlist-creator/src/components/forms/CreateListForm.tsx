@@ -31,10 +31,12 @@ export const CreateListForm = (props: CreateListFormProps) => {
   return (
     <FormProvider {...formMethods}>
       <div className={classNames('flex flex-col items-center', className)}>
-        <h3 className='mb-8 text-2xl font-semibold text-pt-purple-100'>Create New Vault List</h3>
+        <h3 className='mb-4 font-semibold text-pt-purple-100 lg:mb-8 lg:text-2xl'>
+          Create New Vault List
+        </h3>
         <form
           onSubmit={formMethods.handleSubmit(onSubmit)}
-          className='w-1/2 flex flex-col text-pt-purple-100'
+          className='w-4/5 max-w-md flex flex-col text-pt-purple-100 lg:w-1/2'
         >
           <SimpleInput
             formKey='vaultListName'
@@ -46,8 +48,8 @@ export const CreateListForm = (props: CreateListFormProps) => {
             placeholder='My Very Cool List'
             label='Enter vault list name'
           />
-          <PurpleButton type='submit' className='mt-8 self-center'>
-            <span className='text-base'>Create Vault List</span>
+          <PurpleButton type='submit' className='mt-6 self-center lg:mt-8'>
+            <span className='lg:text-base'>Create Vault List</span>
           </PurpleButton>
         </form>
       </div>

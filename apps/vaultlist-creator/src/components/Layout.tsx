@@ -15,7 +15,7 @@ export const Layout = (props: LayoutProps) => {
       <SimpleNavbar />
       <main
         className={classNames(
-          'w-full min-h-[calc(100vh-16rem)] max-w-[1440px] relative flex flex-col items-center mx-auto px-4',
+          'w-full min-h-[calc(100vh-16rem)] max-w-[1440px] relative flex flex-col items-center mx-auto lg:px-4',
           className
         )}
       >
@@ -28,7 +28,7 @@ export const Layout = (props: LayoutProps) => {
 
 const SimpleNavbar = () => {
   return (
-    <div className='h-36 flex items-center justify-between px-12 z-30'>
+    <div className='flex flex-col gap-6 items-center justify-between pt-6 pb-8 px-12 z-30 lg:h-36 lg:flex-row lg:pt-0 lg:pb-0'>
       <Image
         src='/ptLogo.svg'
         alt='PoolTogether Logo'
@@ -37,15 +37,15 @@ const SimpleNavbar = () => {
         priority={true}
         className='w-28 h-auto'
       />
-      <span className='text-4xl'>Vault List Creator</span>
+      <span className='text-center text-2xl lg:text-4xl'>Vault List Creator</span>
     </div>
   )
 }
 
 const SimpleFooter = () => {
   return (
-    <footer className='h-28 flex items-center justify-center mt-auto px-12 z-20'>
-      <span className='text-sm font-medium'>
+    <footer className='h-28 flex items-center justify-center mt-auto px-2 z-20 lg:px-12'>
+      <span className='text-center text-sm font-medium'>
         Made with ❤️ & 🤖 by{' '}
         <a href='https://g9software.xyz' target='_blank' className='hover:text-pt-teal'>
           Generation Software
