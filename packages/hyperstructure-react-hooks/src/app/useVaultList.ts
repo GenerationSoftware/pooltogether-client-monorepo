@@ -1,6 +1,7 @@
-import { getVaultList, VaultList } from '@pooltogether/hyperstructure-client-js'
+import { getVaultList, NETWORK, VaultList } from '@pooltogether/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
+import { usePublicClient } from 'wagmi'
 import { useCachedVaultLists, useSelectedVaultListIds } from '..'
 import { QUERY_KEYS } from '../constants'
 
@@ -12,12 +13,14 @@ import { QUERY_KEYS } from '../constants'
  * @returns
  */
 export const useVaultList = (src: string): UseQueryResult<VaultList | undefined, unknown> => {
-  const queryKey = [QUERY_KEYS.vaultList, src]
+  const publicClient = usePublicClient({ chainId: NETWORK.mainnet })
 
   const { select } = useSelectedVaultListIds()
   const { cache } = useCachedVaultLists()
 
-  return useQuery(queryKey, async () => await getVaultList(src), {
+  const queryKey = [QUERY_KEYS.vaultList, src]
+
+  return useQuery(queryKey, async () => await getVaultList(src, publicClient), {
     enabled: !!src,
     ...NO_REFETCH,
     onSuccess: (vaultList) => {

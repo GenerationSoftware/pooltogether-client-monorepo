@@ -1,6 +1,6 @@
 import { Version } from '@shared/types'
 import { Spinner } from '@shared/ui'
-import { getVaultList } from '@shared/utilities'
+import { getVaultList, NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
 import { useSetAtom } from 'jotai'
 import { useState } from 'react'
@@ -13,6 +13,7 @@ import {
   listVersionAtom,
   vaultsAtom
 } from 'src/atoms'
+import { usePublicClient } from 'wagmi'
 import { PurpleButton } from '@components/buttons/PurpleButton'
 import { SimpleInput } from './SimpleInput'
 
@@ -26,6 +27,8 @@ interface ImportListFormProps {
 
 export const ImportListForm = (props: ImportListFormProps) => {
   const { className } = props
+
+  const publicClient = usePublicClient({ chainId: NETWORK.mainnet })
 
   const formMethods = useForm<ImportListFormValues>({ mode: 'onSubmit' })
 
@@ -44,7 +47,7 @@ export const ImportListForm = (props: ImportListFormProps) => {
     formMethods.clearErrors('vaultListSrc')
 
     try {
-      const vaultList = await getVaultList(data.vaultListSrc)
+      const vaultList = await getVaultList(data.vaultListSrc, publicClient)
 
       if (!!vaultList) {
         const newVersion: Version = {
