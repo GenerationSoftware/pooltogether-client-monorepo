@@ -11,6 +11,7 @@ export { toast } from 'sonner'
 /**
  * Components
  */
+export * from './components/Accordion'
 export * from './components/BasicIcon'
 export * from './components/Button'
 export * from './components/Card'

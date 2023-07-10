@@ -69,9 +69,12 @@ export const AddVaultForm = (props: AddVaultFormProps) => {
     <FormProvider {...formMethods}>
       <form
         onSubmit={formMethods.handleSubmit(onSubmit)}
-        className={classNames('flex flex-col gap-8 p-8 bg-pt-transparent rounded-2xl', className)}
+        className={classNames(
+          'flex flex-col gap-3 rounded-2xl lg:gap-8 lg:p-8 lg:bg-pt-transparent',
+          className
+        )}
       >
-        <div className='flex gap-6'>
+        <div className='flex gap-3 justify-between px-6 lg:gap-6 lg:px-0'>
           <SimpleInput
             formKey='vaultName'
             validate={{
@@ -82,6 +85,7 @@ export const AddVaultForm = (props: AddVaultFormProps) => {
             placeholder='Wrapped Bitcorn'
             label='Vault Name'
             hideErrorMsgs={true}
+            className='max-w-[calc(50%-6px)] lg:max-w-none'
           />
           <SimpleInput
             formKey='vaultAddress'
@@ -91,17 +95,20 @@ export const AddVaultForm = (props: AddVaultFormProps) => {
             placeholder='0x0000...'
             label='Vault Address'
             hideErrorMsgs={true}
+            className='max-w-[calc(50%-6px)] lg:max-w-none'
           />
         </div>
         <div className='flex flex-col gap-2'>
-          <span className='text-sm font-medium text-pt-purple-100'>Select Network</span>
-          <div className='flex flex-wrap gap-4'>
+          <span className='px-6 text-sm font-medium text-pt-purple-100 lg:px-0'>
+            Select Network
+          </span>
+          <div className='flex gap-2 px-6 py-0.5 overflow-x-auto no-scrollbar lg:flex-wrap lg:gap-4 lg:px-0 lg:py-0'>
             {networks.map((chainId) => (
               <ChainInput key={`chain-${chainId}`} chainId={chainId} />
             ))}
           </div>
         </div>
-        <div className='flex items-center gap-4'>
+        <div className='flex flex-col items-center gap-4 justify-center mt-6 lg:flex-row lg:justify-start lg:mt-0'>
           <PurpleButton type='submit'>Add Vault</PurpleButton>
           <span className='text-sm text-pt-warning-light'>{getError()}</span>
         </div>
