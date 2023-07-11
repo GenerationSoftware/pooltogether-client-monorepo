@@ -25,7 +25,7 @@ export const CountUp = (props: CountUpProps) => {
   useEffect(() => {
     const controls = animate(count, countTo, { duration: duration ?? 1.4, ease: ease ?? 'easeOut' })
     return controls.stop
-  }, [])
+  }, [countTo])
 
   return (
     <span className={classNames('relative inline-flex flex-col', className)}>
