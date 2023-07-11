@@ -13,7 +13,6 @@ const cachedVaultListsAtom = atom<{ [id: string]: VaultList | undefined }>(
   getInitialCachedVaultLists()
 )
 
-// TODO: use service worker cache instead of localstorage to store cached vault lists
 /**
  * Returns currently cached vault lists
  *

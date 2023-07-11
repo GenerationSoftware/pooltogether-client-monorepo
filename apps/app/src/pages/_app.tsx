@@ -1,5 +1,6 @@
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
+import { getInitialIsTestnets } from '@shared/generic-react-hooks'
 import type { AppProps } from 'next/app'
 import { WagmiConfig } from 'wagmi'
 import { AppContainer } from '@components/AppContainer'
@@ -8,8 +9,7 @@ import { ptRainbowTheme } from '@constants/theme'
 import '../styles/globals.css'
 import { createCustomWagmiConfig } from '../utils'
 
-// TODO: only send mainnet networks while on normal mode, only testnets on testnet mode, etc.
-const networks = [...SUPPORTED_NETWORKS.mainnets, ...SUPPORTED_NETWORKS.testnets]
+const networks = getInitialIsTestnets() ? SUPPORTED_NETWORKS.testnets : SUPPORTED_NETWORKS.mainnets
 
 const wagmiConfig = createCustomWagmiConfig(networks)
 

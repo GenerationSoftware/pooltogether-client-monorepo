@@ -23,7 +23,6 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
       winnings: { content: 'Winnings', position: 'center' },
       info: { content: 'More Info', position: 'center' }
     },
-    // TODO: sort wins by timestamp
     rows: wins
       .map((win) => {
         const prizePool = prizePools.find((prizePool) => prizePool.chainId === win.chainId)

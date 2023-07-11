@@ -46,13 +46,12 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
   )
 }
 
-// TODO: this button should return to wherever the user came from, not just the /vaults page
 const BackButton = () => {
   const router = useRouter()
 
   return (
     <div
-      onClick={() => router.push('/vaults')}
+      onClick={() => router.back()}
       className='absolute left-0 flex items-center gap-2 text-pt-purple-100 cursor-pointer md:left-9'
     >
       <ArrowLeftIcon className='h-6 w-6 md:h-4 md:w-4' />

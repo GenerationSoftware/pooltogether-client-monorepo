@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+import Head from 'next/head'
 import Image from 'next/image'
 import { ReactNode } from 'react'
 import { AppView } from 'src/types'
@@ -14,7 +15,12 @@ export const Layout = (props: LayoutProps) => {
 
   return (
     <div className='flex flex-col min-h-screen overflow-x-hidden'>
+      <Head>
+        <title>Vault List Creator</title>
+      </Head>
+
       <SimpleNavbar />
+
       <main
         className={classNames(
           'w-full min-h-[calc(100vh-16rem)] max-w-[1440px] relative flex flex-col items-center mx-auto lg:px-4',
@@ -23,6 +29,7 @@ export const Layout = (props: LayoutProps) => {
       >
         {children}
       </main>
+
       <SimpleFooter className={classNames({ 'mb-16 lg:mb-0': appView === 'editing' })} />
     </div>
   )

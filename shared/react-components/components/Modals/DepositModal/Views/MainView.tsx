@@ -36,7 +36,7 @@ export const MainView = (props: MainViewProps) => {
       )}
       <div className='flex flex-col gap-4 mx-auto md:flex-row md:gap-9'>
         <Odds vault={vault} prizePool={prizePool} />
-        <NetworkFees vault={vault} show={['approve', 'deposit']} />
+        <NetworkFees vault={vault} show={['approve', 'deposit', 'withdraw']} />
       </div>
     </div>
   )

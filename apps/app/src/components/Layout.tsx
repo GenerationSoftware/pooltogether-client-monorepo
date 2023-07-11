@@ -25,6 +25,7 @@ import { Footer, FooterItem, LINKS, Navbar, SocialIcon, Toaster } from '@shared/
 import { getDiscordInvite } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
+import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ReactNode, useEffect, useState } from 'react'
@@ -156,12 +157,28 @@ export const Layout = (props: LayoutProps) => {
   if (isBrowser) {
     footerItems[footerItems.length - 1].content.push({
       content: `${isTestnets ? 'Disable' : 'Enable'} Testnets`,
-      onClick: () => setIsTestnets(!isTestnets)
+      onClick: () => {
+        setIsTestnets(!isTestnets)
+        router.reload()
+      }
     })
   }
 
+  const pageTitles: { [href: string]: string } = {
+    account: 'Account',
+    prizes: 'Prizes',
+    vaults: 'Vaults',
+    vault: 'Vault'
+  }
+
+  const pageTitle = pageTitles[router.pathname.split('/')[1]]
+
   return (
     <div className='flex flex-col min-h-screen'>
+      <Head>
+        <title>{`PT Hyperstructure${!!pageTitle ? ` | ${pageTitle}` : ''}`}</title>
+      </Head>
+
       <Navbar
         links={[
           { href: '/prizes', name: 'Prizes' },
