@@ -74,7 +74,7 @@ export const AddVaultForm = (props: AddVaultFormProps) => {
           className
         )}
       >
-        <div className='flex gap-3 justify-between px-6 lg:gap-6 lg:px-0'>
+        <div className='flex gap-3 justify-between px-6 lg:gap-6 lg:justify-start lg:px-0'>
           <SimpleInput
             formKey='vaultName'
             validate={{
