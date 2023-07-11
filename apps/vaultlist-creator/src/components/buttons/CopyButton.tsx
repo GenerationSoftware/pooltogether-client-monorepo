@@ -32,8 +32,8 @@ export const CopyButton = (props: CopyButtonProps) => {
       className={className}
       innerClassName='flex gap-1 items-center'
     >
-      <ClipboardIcon className='w-6 h-6' />
-      <span>{buttonText}</span>
+      <ClipboardIcon className='w-4 h-4 lg:w-6 lg:h-6' />
+      <span className='text-xs lg:text-sm'>{buttonText}</span>
     </PurpleButton>
   )
 }

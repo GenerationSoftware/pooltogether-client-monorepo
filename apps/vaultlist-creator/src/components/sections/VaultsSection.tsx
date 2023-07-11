@@ -10,9 +10,11 @@ export const VaultsSection = (props: VaultsSectionProps) => {
   const { className } = props
 
   return (
-    <section className={classNames('flex flex-col gap-8 p-4 pl-16', className)}>
+    <section
+      className={classNames('flex flex-col gap-4 py-4 lg:gap-8 lg:pl-16 lg:pr-4', className)}
+    >
       <AddVaultForm />
-      <VaultsTable className='h-full' innerClassName='max-h-[75%]' />
+      <VaultsTable className='h-full px-4 lg:px-0' innerClassName='lg:max-h-[75%]' />
     </section>
   )
 }

@@ -9,7 +9,7 @@ export default function Dashboard() {
   const appView = useAtomValue(appViewAtom)
 
   return (
-    <Layout>
+    <Layout appView={appView}>
       {appView === 'base' && <BaseView />}
       {appView === 'editing' && <EditingView />}
       {appView === 'preview' && <PreviewView />}

@@ -82,10 +82,12 @@ export const ImportListForm = (props: ImportListFormProps) => {
   return (
     <FormProvider {...formMethods}>
       <div className={classNames('flex flex-col items-center', className)}>
-        <h3 className='mb-8 text-2xl font-semibold text-pt-purple-100'>Edit Existing Vault List</h3>
+        <h3 className='mb-4 font-semibold text-pt-purple-100 lg:mb-8 lg:text-2xl'>
+          Edit Existing Vault List
+        </h3>
         <form
           onSubmit={formMethods.handleSubmit(onSubmit)}
-          className='w-1/2 flex flex-col text-pt-purple-100'
+          className='w-4/5 max-w-md flex flex-col text-pt-purple-100 lg:w-1/2'
         >
           <SimpleInput
             formKey='vaultListSrc'
@@ -106,10 +108,10 @@ export const ImportListForm = (props: ImportListFormProps) => {
           <PurpleButton
             type='submit'
             disabled={isLoading}
-            className='mt-8 self-center'
+            className='mt-6 self-center lg:mt-8'
             innerClassName='flex items-center justify-center'
           >
-            <span className={classNames('text-base', { invisible: isLoading })}>
+            <span className={classNames('lg:text-base', { invisible: isLoading })}>
               Edit Vault List
             </span>
             <Spinner className={classNames('absolute', { hidden: !isLoading })} />

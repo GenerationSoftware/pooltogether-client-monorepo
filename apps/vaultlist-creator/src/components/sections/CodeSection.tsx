@@ -26,10 +26,10 @@ export const CodeSection = (props: CodeSectionProps) => {
 
   return (
     <section className={classNames('flex flex-col gap-4 items-center', className)}>
-      <h2 className='text-2xl font-medium'>Preview Your Vault List</h2>
+      <h2 className='text-2xl font-medium hidden lg:block'>Preview Your Vault List</h2>
       {isFetched && !!vaultList ? (
-        <div className='relative w-full bg-gray-900 rounded-2xl'>
-          <pre id='code' className='p-6 overflow-auto'>
+        <div className='relative w-full bg-gray-900 rounded-2xl overflow-hidden'>
+          <pre id='code' className='max-h-56 p-6 text-xs overflow-auto lg:max-h-none lg:text-base'>
             <code>{JSON.stringify(vaultList, null, 2)}</code>
           </pre>
           <CopyButton
@@ -37,9 +37,9 @@ export const CodeSection = (props: CodeSectionProps) => {
             text='Copy Raw JSON'
             className={classNames('absolute', {
               'bottom-4': !isYOverflowing,
-              'bottom-8': isYOverflowing,
+              'bottom-4 lg:bottom-8': isYOverflowing,
               'right-4': !isXOverflowing,
-              'right-8': isXOverflowing
+              'right-4 lg:right-8': isXOverflowing
             })}
           />
         </div>

@@ -10,7 +10,7 @@ export const IntroCard = (props: IntroCardProps) => {
   return (
     <div
       className={classNames(
-        'flex flex-col p-9 text-xl bg-pt-purple-100 text-pt-purple-600 rounded-2xl',
+        'flex flex-col p-4 text-sm bg-pt-purple-100 text-pt-purple-600 rounded-2xl lg:p-9 lg:text-xl',
         className
       )}
     >
