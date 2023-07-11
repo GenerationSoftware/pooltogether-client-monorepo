@@ -35,7 +35,7 @@
     "tslib": "^2.5.0",
     "turbo": "latest",
     "typescript": "^5.0.4",
-    "viem": "^0.3.30",
+    "viem": "^1.2.12",
     "wagmi": "^1.0.5"
   },
   "packageManager": "pnpm@7.15.0"

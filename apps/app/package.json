@@ -26,7 +26,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.2",
     "sonner": "^0.4.0",
-    "viem": "^0.3.30",
+    "viem": "^1.2.12",
     "wagmi": "^1.0.5"
   },
   "devDependencies": {

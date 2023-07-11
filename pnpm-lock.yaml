@@ -30,7 +30,7 @@ importers:
       tslib: ^2.5.0
       turbo: latest
       typescript: ^5.0.4
-      viem: ^0.3.30
+      viem: ^1.2.12
       wagmi: ^1.0.5
     devDependencies:
       '@hcaptcha/react-hcaptcha': 1.8.1_biqbaboplfbrettd7655fr4n2y
@@ -58,10 +58,10 @@ importers:
       sonner: 0.4.0_biqbaboplfbrettd7655fr4n2y
       tailwindcss: 3.3.1_postcss@8.4.23
       tslib: 2.5.0
-      turbo: 1.10.6
+      turbo: 1.10.7
       typescript: 5.0.4
-      viem: 0.3.30_typescript@5.0.4
-      wagmi: 1.0.5_jnnxaeexwikdgzuf3lvbhe6eui
+      viem: 1.2.12_typescript@5.0.4
+      wagmi: 1.0.5_gf7n3xq4idfcvwgea62o7opyle
 
   apps/app:
     specifiers:
@@ -91,13 +91,13 @@ importers:
       tailwindcss: ^3.3.1
       tslib: ^2.5.0
       typescript: ^5.0.4
-      viem: ^0.3.30
+      viem: ^1.2.12
       wagmi: ^1.0.5
     dependencies:
       '@heroicons/react': 2.0.17_react@18.2.0
       '@pooltogether/hyperstructure-client-js': link:../../packages/hyperstructure-client-js
       '@pooltogether/hyperstructure-react-hooks': link:../../packages/hyperstructure-react-hooks
-      '@rainbow-me/rainbowkit': 1.0.0_xl46q462itxixahmomnsr2ko4q
+      '@rainbow-me/rainbowkit': 1.0.0_bvkxzd5inrsycpuyhumzmcomve
       '@sentry/nextjs': 7.51.0_next@13.3.0+react@18.2.0
       '@tanstack/react-query': 4.29.5_biqbaboplfbrettd7655fr4n2y
       axios: 1.4.0
@@ -112,8 +112,8 @@ importers:
       react-dom: 18.2.0_react@18.2.0
       react-hook-form: 7.44.3_react@18.2.0
       sonner: 0.4.0_biqbaboplfbrettd7655fr4n2y
-      viem: 0.3.30_typescript@5.0.4
-      wagmi: 1.0.5_jnnxaeexwikdgzuf3lvbhe6eui
+      viem: 1.2.12_typescript@5.0.4
+      wagmi: 1.0.5_gf7n3xq4idfcvwgea62o7opyle
     devDependencies:
       '@types/node': 17.0.45
       '@types/react': 18.2.8
@@ -150,7 +150,7 @@ importers:
       tailwindcss: ^3.3.1
       tslib: ^2.5.0
       typescript: ^5.0.4
-      viem: ^0.3.30
+      viem: ^1.2.12
       wagmi: ^1.0.5
     dependencies:
       '@heroicons/react': 2.0.17_react@18.2.0
@@ -169,8 +169,8 @@ importers:
       react-dom: 18.2.0_react@18.2.0
       react-hook-form: 7.44.3_react@18.2.0
       sonner: 0.4.0_biqbaboplfbrettd7655fr4n2y
-      viem: 0.3.30_typescript@5.0.4
-      wagmi: 1.0.5_jnnxaeexwikdgzuf3lvbhe6eui
+      viem: 1.2.12_typescript@5.0.4
+      wagmi: 1.0.5_gf7n3xq4idfcvwgea62o7opyle
     devDependencies:
       '@types/node': 17.0.45
       '@types/react': 18.2.8
@@ -190,7 +190,7 @@ importers:
       tslib: ^2.5.0
       tsup: ^6.6.3
       typescript: ^5.0.4
-      viem: ^0.3.30
+      viem: ^1.2.12
     dependencies:
       ajv: 8.12.0
       axios: 1.4.0
@@ -200,7 +200,7 @@ importers:
       tslib: 2.5.0
       tsup: 6.7.0_typescript@5.0.4
       typescript: 5.0.4
-      viem: 0.3.30_typescript@5.0.4
+      viem: 1.2.12_typescript@5.0.4
 
   packages/hyperstructure-react-hooks:
     specifiers:
@@ -214,7 +214,7 @@ importers:
       react-dom: ^18.2.0
       tsup: ^6.6.3
       typescript: ^5.0.4
-      viem: ^0.3.30
+      viem: ^1.2.12
       wagmi: ^1.0.5
     dependencies:
       '@pooltogether/hyperstructure-client-js': link:../hyperstructure-client-js
@@ -228,8 +228,8 @@ importers:
       react-dom: 18.2.0_react@18.2.0
       tsup: 6.7.0_typescript@5.0.4
       typescript: 5.0.4
-      viem: 0.3.30_typescript@5.0.4
-      wagmi: 1.0.5_jnnxaeexwikdgzuf3lvbhe6eui
+      viem: 1.2.12_typescript@5.0.4
+      wagmi: 1.0.5_gf7n3xq4idfcvwgea62o7opyle
 
 packages:
   /@adraffy/ens-normalize/1.9.0:
@@ -1540,7 +1540,7 @@ packages:
         integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
       }
 
-  /@rainbow-me/rainbowkit/1.0.0_xl46q462itxixahmomnsr2ko4q:
+  /@rainbow-me/rainbowkit/1.0.0_bvkxzd5inrsycpuyhumzmcomve:
     resolution:
       {
         integrity: sha512-XZBa7P1mlmNTuMa0iEw2D9wKKQjjh8iDhWGtvsyQZFBDqorOxc1/5Wy352p6kSC9J7s4P9sG3FwHnTGxJPaHmQ==
@@ -1560,8 +1560,8 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-remove-scroll: 2.5.4_i2bxsyfskhzbpjanbovidbfj7u
-      viem: 0.3.30_typescript@5.0.4
-      wagmi: 1.0.5_jnnxaeexwikdgzuf3lvbhe6eui
+      viem: 1.2.12_typescript@5.0.4
+      wagmi: 1.0.5_gf7n3xq4idfcvwgea62o7opyle
     transitivePeerDependencies:
       - '@types/react'
     dev: false
@@ -2272,19 +2272,6 @@ packages:
       '@vanilla-extract/css': 1.9.1
     dev: false
 
-  /@wagmi/chains/0.2.16_typescript@5.0.4:
-    resolution:
-      {
-        integrity: sha512-rkWaI2PxCnbD8G07ZZff5QXftnSkYL0h5f4DkHCG3fGYYr/ZDvmCL4bMae7j7A9sAif1csPPBmbCzHp3R5ogCQ==
-      }
-    peerDependencies:
-      typescript: '>=4.9.4'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      typescript: 5.0.4
-
   /@wagmi/chains/0.2.23_typescript@5.0.4:
     resolution:
       {
@@ -2298,7 +2285,20 @@ packages:
     dependencies:
       typescript: 5.0.4
 
-  /@wagmi/connectors/1.0.3_cdwq7ttxswz6wz4jhhaslzdq4u:
+  /@wagmi/chains/1.2.0_typescript@5.0.4:
+    resolution:
+      {
+        integrity: sha512-dmDRipsE54JfyudOBkuhEexqQWcrZqxn/qiujG8SBzMh/az/AH5xlJSA+j1CPWTx9+QofSMF3B7A4gb6XRmSaQ==
+      }
+    peerDependencies:
+      typescript: '>=5.0.4'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      typescript: 5.0.4
+
+  /@wagmi/connectors/1.0.3_4e52vhmopd3x6pqk33c4e5f65m:
     resolution:
       {
         integrity: sha512-5uB+dUDop8s9scdE+S4IhgcfP8oRwdULVvpJ2MusDp+C00+OgvS3SnwZM6+Pjc9tyj5pi143zqsYtDynxFrMEA==
@@ -2324,7 +2324,7 @@ packages:
       abitype: 0.8.1_typescript@5.0.4
       eventemitter3: 4.0.7
       typescript: 5.0.4
-      viem: 0.3.30_typescript@5.0.4
+      viem: 1.2.12_typescript@5.0.4
     transitivePeerDependencies:
       - '@react-native-async-storage/async-storage'
       - bufferutil
@@ -2336,7 +2336,7 @@ packages:
       - utf-8-validate
       - zod
 
-  /@wagmi/core/1.0.5_tm5tawgbsue7kl257xrwqzpawa:
+  /@wagmi/core/1.0.5_b6koolmdzcfipcytjz2fm6hnwm:
     resolution:
       {
         integrity: sha512-n8Y84WJkofGjhd4a+vpZzPPEQiHnkIGMe0uHOXfkm4eKJZyaJqvVJFPMWE6xFJkk0hxZ+1zw5xn0ZhdroHwHvg==
@@ -2349,11 +2349,11 @@ packages:
         optional: true
     dependencies:
       '@wagmi/chains': 0.2.23_typescript@5.0.4
-      '@wagmi/connectors': 1.0.3_cdwq7ttxswz6wz4jhhaslzdq4u
+      '@wagmi/connectors': 1.0.3_4e52vhmopd3x6pqk33c4e5f65m
       abitype: 0.8.1_typescript@5.0.4
       eventemitter3: 4.0.7
       typescript: 5.0.4
-      viem: 0.3.30_typescript@5.0.4
+      viem: 1.2.12_typescript@5.0.4
       zustand: 4.3.7_react@18.2.0
     transitivePeerDependencies:
       - '@react-native-async-storage/async-storage'
@@ -2820,13 +2820,13 @@ packages:
       jsonparse: 1.3.1
       through: 2.3.8
 
-  /abitype/0.8.1_typescript@5.0.4:
+  /abitype/0.8.11_typescript@5.0.4:
     resolution:
       {
-        integrity: sha512-n8Di6AWb3i7HnEkBvecU6pG0a5nj5YwMvdAIwPLsQK95ulRy/XS113s/RXvSfTX1iOQJYFrEO3/q4SMWu7OwTA==
+        integrity: sha512-bM4v2dKvX08sZ9IU38IN5BKmN+ZkOSd2oI4a9f0ejHYZQYV6cDr7j+d95ga0z2XHG36Y4jzoG5Z7qDqxp7fi/A==
       }
     peerDependencies:
-      typescript: '>=4.9.4'
+      typescript: '>=5.0.4'
       zod: ^3 >=3.19.1
     peerDependenciesMeta:
       zod:
@@ -2834,13 +2834,13 @@ packages:
     dependencies:
       typescript: 5.0.4
 
-  /abitype/0.8.2_typescript@5.0.4:
+  /abitype/0.8.1_typescript@5.0.4:
     resolution:
       {
-        integrity: sha512-B1ViNMGpfx/qjVQi0RTc2HEFHuR9uoCoTEkwELT5Y7pBPtBbctYijz9BK6+Kd0hQ3S70FhYTO2dWWk0QNUEXMA==
+        integrity: sha512-n8Di6AWb3i7HnEkBvecU6pG0a5nj5YwMvdAIwPLsQK95ulRy/XS113s/RXvSfTX1iOQJYFrEO3/q4SMWu7OwTA==
       }
     peerDependencies:
-      typescript: '>=5.0.4'
+      typescript: '>=4.9.4'
       zod: ^3 >=3.19.1
     peerDependenciesMeta:
       zod:
@@ -6264,10 +6264,10 @@ packages:
       - ts-node
     dev: true
 
-  /turbo-darwin-64/1.10.6:
+  /turbo-darwin-64/1.10.7:
     resolution:
       {
-        integrity: sha512-s2Gc7i9Ud+H9GDcrGJjPIyscJfzDGQ6il4Sl2snfvwngJs4/TaqKuBoX3HNt/7F4NiFRs7ZhlLV1/Yu9zGBRhw==
+        integrity: sha512-N2MNuhwrl6g7vGuz4y3fFG2aR1oCs0UZ5HKl8KSTn/VC2y2YIuLGedQ3OVbo0TfEvygAlF3QGAAKKtOCmGPNKA==
       }
     cpu: [x64]
     os: [darwin]
@@ -6275,10 +6275,10 @@ packages:
     dev: true
     optional: true
 
-  /turbo-darwin-arm64/1.10.6:
+  /turbo-darwin-arm64/1.10.7:
     resolution:
       {
-        integrity: sha512-tgl70t5PBLyRcNTdP9N6NjvdvQ5LUk8Z60JGUhBhnc+oCOdA4pltrDJNPyel3tQAXXt1dDpl8pp9vUrbwoVyGg==
+        integrity: sha512-WbJkvjU+6qkngp7K4EsswOriO3xrNQag7YEGRtfLoDdMTk4O4QTeU6sfg2dKfDsBpTidTvEDwgIYJhYVGzrz9Q==
       }
     cpu: [arm64]
     os: [darwin]
@@ -6286,10 +6286,10 @@ packages:
     dev: true
     optional: true
 
-  /turbo-linux-64/1.10.6:
+  /turbo-linux-64/1.10.7:
     resolution:
       {
-        integrity: sha512-h7eyAA3xtAVpamcYJYUwe0xm0LWdbv7/I7QiM09AZ67TTNpyUgqW8giFN3h793BHEQ2Rcnk9FNkpIbjWBbyamg==
+        integrity: sha512-x1CF2CDP1pDz/J8/B2T0hnmmOQI2+y11JGIzNP0KtwxDM7rmeg3DDTtDM/9PwGqfPotN9iVGgMiMvBuMFbsLhg==
       }
     cpu: [x64]
     os: [linux]
@@ -6297,10 +6297,10 @@ packages:
     dev: true
     optional: true
 
-  /turbo-linux-arm64/1.10.6:
+  /turbo-linux-arm64/1.10.7:
     resolution:
       {
-        integrity: sha512-8cZhOeLqu3QZ27yLd6bw4FNaB8y5pLdWeRLJeiWHkIb/cptKnRKJFP+keBJzJi8ovaMqdBpabrxiBRN2lhau5Q==
+        integrity: sha512-JtnBmaBSYbs7peJPkXzXxsRGSGBmBEIb6/kC8RRmyvPAMyqF8wIex0pttsI+9plghREiGPtRWv/lfQEPRlXnNQ==
       }
     cpu: [arm64]
     os: [linux]
@@ -6308,10 +6308,10 @@ packages:
     dev: true
     optional: true
 
-  /turbo-windows-64/1.10.6:
+  /turbo-windows-64/1.10.7:
     resolution:
       {
-        integrity: sha512-qx5jcfCJodN1Mh0KtSVQau7pK8CxDvtif7+joPHI2HbQPAADgdUl0LHfA5tFHh6aWgfvhxbvIXqJd6v7Mqkj9g==
+        integrity: sha512-7A/4CByoHdolWS8dg3DPm99owfu1aY/W0V0+KxFd0o2JQMTQtoBgIMSvZesXaWM57z3OLsietFivDLQPuzE75w==
       }
     cpu: [x64]
     os: [win32]
@@ -6319,10 +6319,10 @@ packages:
     dev: true
     optional: true
 
-  /turbo-windows-arm64/1.10.6:
+  /turbo-windows-arm64/1.10.7:
     resolution:
       {
-        integrity: sha512-vTQaRG3/s2XTreOBr6J9HKFtjzusvwGQg0GtuW2+9Z7fizdzP8MuhaDbN6FhKHcWC81PQPD61TBIKTVTsYOEZg==
+        integrity: sha512-D36K/3b6+hqm9IBAymnuVgyePktwQ+F0lSXr2B9JfAdFPBktSqGmp50JNC7pahxhnuCLj0Vdpe9RqfnJw5zATA==
       }
     cpu: [arm64]
     os: [win32]
@@ -6330,20 +6330,20 @@ packages:
     dev: true
     optional: true
 
-  /turbo/1.10.6:
+  /turbo/1.10.7:
     resolution:
       {
-        integrity: sha512-0/wbjw4HvmPP1abVWHTdeFRfCA9cn5oxCPP5bDixagLzvDgGWE3xfdlsyGmq779Ekr9vjtDPgC2Y4JlXEhyryw==
+        integrity: sha512-xm0MPM28TWx1e6TNC3wokfE5eaDqlfi0G24kmeHupDUZt5Wd0OzHFENEHMPqEaNKJ0I+AMObL6nbSZonZBV2HA==
       }
     hasBin: true
     requiresBuild: true
     optionalDependencies:
-      turbo-darwin-64: 1.10.6
-      turbo-darwin-arm64: 1.10.6
-      turbo-linux-64: 1.10.6
-      turbo-linux-arm64: 1.10.6
-      turbo-windows-64: 1.10.6
-      turbo-windows-arm64: 1.10.6
+      turbo-darwin-64: 1.10.7
+      turbo-darwin-arm64: 1.10.7
+      turbo-linux-64: 1.10.7
+      turbo-linux-arm64: 1.10.7
+      turbo-windows-64: 1.10.7
+      turbo-windows-arm64: 1.10.7
     dev: true
 
   /type-fest/0.7.1:
@@ -6498,28 +6498,33 @@ packages:
       react: 18.2.0
       use-sync-external-store: 1.2.0_react@18.2.0
 
-  /viem/0.3.30_typescript@5.0.4:
+  /viem/1.2.12_typescript@5.0.4:
     resolution:
       {
-        integrity: sha512-4jokEVR2vtDl6zSpZiPUaHviK2dzW6uxCAVUArlh0Jhrc4ms0dkhn5E4iwk1CWMto8+YeLFEgY4gr9P10ryoEQ==
+        integrity: sha512-TMhvqT2VaCaJyBfuNDyL1h8xPFyPDHeX6Qab66TjWscnNcTwkW0gojO4Uh+A4RuPzFxIlWSW+b5SjS8SJHlHpg==
       }
+    peerDependencies:
+      typescript: '>=5.0.4'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
     dependencies:
       '@adraffy/ens-normalize': 1.9.0
       '@noble/curves': 1.0.0
       '@noble/hashes': 1.3.0
       '@scure/bip32': 1.3.0
       '@scure/bip39': 1.2.0
-      '@wagmi/chains': 0.2.16_typescript@5.0.4
-      abitype: 0.8.2_typescript@5.0.4
+      '@wagmi/chains': 1.2.0_typescript@5.0.4
+      abitype: 0.8.11_typescript@5.0.4
       isomorphic-ws: 5.0.0_ws@8.12.0
+      typescript: 5.0.4
       ws: 8.12.0
     transitivePeerDependencies:
       - bufferutil
-      - typescript
       - utf-8-validate
       - zod
 
-  /wagmi/1.0.5_jnnxaeexwikdgzuf3lvbhe6eui:
+  /wagmi/1.0.5_gf7n3xq4idfcvwgea62o7opyle:
     resolution:
       {
         integrity: sha512-XsLhNPTD7c+QXaA9elMwDihvcNHBw4Jcu0S/otkn3N4FgWIUVSQGiUYwm3AQrm/UhON0+Q8Y3ICzxB47PSr46g==
@@ -6535,12 +6540,12 @@ packages:
       '@tanstack/query-sync-storage-persister': 4.29.5
       '@tanstack/react-query': 4.29.5_biqbaboplfbrettd7655fr4n2y
       '@tanstack/react-query-persist-client': 4.29.5_vinbbzdq6ixq2goapdtg7ymvyq
-      '@wagmi/core': 1.0.5_tm5tawgbsue7kl257xrwqzpawa
+      '@wagmi/core': 1.0.5_b6koolmdzcfipcytjz2fm6hnwm
       abitype: 0.8.1_typescript@5.0.4
       react: 18.2.0
       typescript: 5.0.4
       use-sync-external-store: 1.2.0_react@18.2.0
-      viem: 0.3.30_typescript@5.0.4
+      viem: 1.2.12_typescript@5.0.4
     transitivePeerDependencies:
       - '@react-native-async-storage/async-storage'
       - bufferutil
