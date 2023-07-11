@@ -1,7 +1,7 @@
 import { getTokenInfo, TokenWithSupply } from '@pooltogether/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query'
-import { isAddress } from 'viem'
+import { Address, isAddress } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { populateCachePerId } from '..'
 import { QUERY_KEYS } from '../constants'
@@ -16,8 +16,8 @@ import { QUERY_KEYS } from '../constants'
  */
 export const useTokens = (
   chainId: number,
-  tokenAddresses: `0x${string}`[]
-): UseQueryResult<{ [tokenAddress: `0x${string}`]: TokenWithSupply }, unknown> => {
+  tokenAddresses: Address[]
+): UseQueryResult<{ [tokenAddress: Address]: TokenWithSupply }, unknown> => {
   const queryClient = useQueryClient()
 
   const publicClient = usePublicClient({ chainId })
@@ -52,9 +52,9 @@ export const useTokens = (
  */
 export const useToken = (
   chainId: number,
-  tokenAddress: `0x${string}`
+  tokenAddress: Address
 ): { data?: TokenWithSupply } & Omit<
-  UseQueryResult<{ [tokenAddress: `0x${string}`]: TokenWithSupply }>,
+  UseQueryResult<{ [tokenAddress: Address]: TokenWithSupply }>,
   'data'
 > => {
   const result = useTokens(chainId, [tokenAddress])

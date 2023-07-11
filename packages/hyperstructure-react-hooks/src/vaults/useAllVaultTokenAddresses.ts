@@ -1,6 +1,7 @@
 import { Vaults } from '@pooltogether/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
+import { Address } from 'viem'
 import { QUERY_KEYS } from '../constants'
 
 /**
@@ -14,8 +15,8 @@ export const useAllVaultTokenAddresses = (
   vaults: Vaults
 ): UseQueryResult<
   {
-    byChain: { [chainId: number]: `0x${string}`[] }
-    byVault: { [vaultId: string]: `0x${string}` }
+    byChain: { [chainId: number]: Address[] }
+    byVault: { [vaultId: string]: Address }
   },
   unknown
 > => {

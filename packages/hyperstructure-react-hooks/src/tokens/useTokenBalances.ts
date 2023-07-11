@@ -2,7 +2,7 @@ import { getTokenBalances, TokenWithAmount } from '@pooltogether/hyperstructure-
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { useQueries, useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query'
 import { useMemo } from 'react'
-import { isAddress, PublicClient } from 'viem'
+import { Address, isAddress, PublicClient } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { populateCachePerId, usePublicClientsByChain } from '..'
 import { QUERY_KEYS } from '../constants'
@@ -19,10 +19,10 @@ import { QUERY_KEYS } from '../constants'
  */
 export const useTokenBalances = (
   chainId: number,
-  address: `0x${string}`,
-  tokenAddresses: `0x${string}`[],
+  address: Address,
+  tokenAddresses: Address[],
   refetchInterval?: number
-): UseQueryResult<{ [tokenAddress: `0x${string}`]: TokenWithAmount }, unknown> => {
+): UseQueryResult<{ [tokenAddress: Address]: TokenWithAmount }, unknown> => {
   const queryClient = useQueryClient()
 
   const publicClient = usePublicClient({ chainId })
@@ -67,11 +67,11 @@ export const useTokenBalances = (
  */
 export const useTokenBalance = (
   chainId: number,
-  address: `0x${string}`,
-  tokenAddress: `0x${string}`,
+  address: Address,
+  tokenAddress: Address,
   refetchInterval?: number
 ): { data?: TokenWithAmount } & Omit<
-  UseQueryResult<{ [tokenAddress: `0x${string}`]: TokenWithAmount }>,
+  UseQueryResult<{ [tokenAddress: Address]: TokenWithAmount }>,
   'data'
 > => {
   const result = useTokenBalances(chainId, address, [tokenAddress], refetchInterval)
@@ -87,8 +87,8 @@ export const useTokenBalance = (
  */
 export const useTokenBalancesAcrossChains = (
   chainIds: number[],
-  address: `0x${string}`,
-  tokenAddresses: { [chainId: number]: `0x${string}`[] }
+  address: Address,
+  tokenAddresses: { [chainId: number]: Address[] }
 ) => {
   const publicClients = usePublicClientsByChain()
 

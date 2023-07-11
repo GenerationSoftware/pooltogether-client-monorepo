@@ -1,6 +1,6 @@
 import { erc4626 as erc4626Abi, Vault } from '@pooltogether/hyperstructure-client-js'
 import { useEffect } from 'react'
-import { isAddress, TransactionReceipt } from 'viem'
+import { Address, isAddress, TransactionReceipt } from 'viem'
 import {
   useAccount,
   useContractWrite,
@@ -26,7 +26,7 @@ export const useSendDepositTransaction = (
   isConfirming: boolean
   isSuccess: boolean
   isError: boolean
-  txHash?: `0x${string}`
+  txHash?: Address
   txReceipt?: TransactionReceipt
   sendDepositTransaction?: () => void
 } => {
@@ -35,9 +35,9 @@ export const useSendDepositTransaction = (
 
   const { data: allowance, isFetched: isFetchedAllowance } = useTokenAllowance(
     vault?.chainId,
-    userAddress as `0x${string}`,
+    userAddress as Address,
     vault?.address,
-    vault?.tokenData?.address as `0x${string}`
+    vault?.tokenData?.address as Address
   )
 
   const enabled =
@@ -55,7 +55,7 @@ export const useSendDepositTransaction = (
     address: vault?.address,
     abi: erc4626Abi,
     functionName: 'deposit',
-    args: [amount, userAddress],
+    args: [amount, userAddress as Address],
     enabled
   })
 

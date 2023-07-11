@@ -9,18 +9,16 @@ import {
   validateAddress,
   validateClientNetwork
 } from '@shared/utilities'
-import { getContract, parseUnits, PublicClient, WalletClient } from 'viem'
+import { Address, parseUnits, PublicClient, WalletClient } from 'viem'
 
 /**
  * This class provides read and write functions to interact with a vault
  */
 export class Vault {
-  readonly vaultContract: any // TODO: get proper contract typing
   readonly id: string
   walletClient: WalletClient | undefined
   decimals: number | undefined
-  tokenAddress: `0x${string}` | undefined
-  tokenContract: any // TODO: get proper contract typing
+  tokenAddress: Address | undefined
   tokenData: TokenWithSupply | undefined
   shareData: TokenWithSupply | undefined
   exchangeRate: bigint | undefined
@@ -39,18 +37,17 @@ export class Vault {
    */
   constructor(
     public chainId: number,
-    public address: `0x${string}`,
+    public address: Address,
     public publicClient: PublicClient,
     options?: {
       walletClient?: WalletClient
       decimals?: number
-      tokenAddress?: `0x${string}`
+      tokenAddress?: Address
       name?: string
       logoURI?: string
       tokenLogoURI?: string
     }
   ) {
-    this.vaultContract = getContract({ address, abi: erc4626Abi, publicClient })
     this.id = getVaultId({ address, chainId })
 
     if (!!options?.walletClient) {
@@ -63,11 +60,6 @@ export class Vault {
 
     if (!!options?.tokenAddress) {
       this.tokenAddress = options.tokenAddress
-      this.tokenContract = getContract({
-        address: options.tokenAddress,
-        abi: erc20Abi,
-        publicClient
-      })
     }
 
     if (!!options?.name) {
@@ -89,13 +81,17 @@ export class Vault {
    * Returns the address of the vault's underlying asset
    * @returns
    */
-  async getTokenAddress(): Promise<`0x${string}`> {
+  async getTokenAddress(): Promise<Address> {
     if (this.tokenAddress !== undefined) return this.tokenAddress
 
     const source = 'Vault [getTokenAddress]'
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
-    const tokenAddress: `0x${string}` = await this.vaultContract.read.asset()
+    const tokenAddress = await this.publicClient.readContract({
+      address: this.address,
+      abi: erc4626Abi,
+      functionName: 'asset'
+    })
 
     this.tokenAddress = tokenAddress
     return this.tokenAddress
@@ -161,7 +157,7 @@ export class Vault {
 
     const tokenAddress = await this.getTokenAddress()
 
-    const tokenBalance = await getTokenBalances(this.publicClient, userAddress as `0x${string}`, [
+    const tokenBalance = await getTokenBalances(this.publicClient, userAddress as Address, [
       tokenAddress
     ])
 
@@ -178,7 +174,7 @@ export class Vault {
     validateAddress(userAddress, source)
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
-    const shareBalance = await getTokenBalances(this.publicClient, userAddress as `0x${string}`, [
+    const shareBalance = await getTokenBalances(this.publicClient, userAddress as Address, [
       this.address
     ])
 
@@ -199,7 +195,7 @@ export class Vault {
 
     const tokenAllowance = await getTokenAllowances(
       this.publicClient,
-      userAddress as `0x${string}`,
+      userAddress as Address,
       this.address,
       [tokenAddress]
     )
@@ -216,7 +212,12 @@ export class Vault {
     const source = 'Vault [getAssetsFromShares]'
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
-    const assets: bigint = await this.vaultContract.read.convertToAssets([shares])
+    const assets = await this.publicClient.readContract({
+      address: this.address,
+      abi: erc4626Abi,
+      functionName: 'convertToAssets',
+      args: [shares]
+    })
 
     return assets
   }
@@ -230,7 +231,12 @@ export class Vault {
     const source = 'Vault [getSharesFromAssets]'
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
-    const shares: bigint = await this.vaultContract.read.convertToShares([assets])
+    const shares = await this.publicClient.readContract({
+      address: this.address,
+      abi: erc4626Abi,
+      functionName: 'convertToShares',
+      args: [assets]
+    })
 
     return shares
   }
@@ -245,7 +251,11 @@ export class Vault {
 
     const tokenData = await this.getTokenData()
 
-    const totalAssets: bigint = await this.vaultContract.read.totalAssets()
+    const totalAssets = await this.publicClient.readContract({
+      address: this.address,
+      abi: erc4626Abi,
+      functionName: 'totalAssets'
+    })
 
     return { ...tokenData, amount: totalAssets }
   }
@@ -303,7 +313,7 @@ export class Vault {
    * @param overrides optional overrides for this transaction
    * @returns
    */
-  async depositTo(amount: bigint, receiver: string, overrides?: TxOverrides) {
+  async depositTo(amount: bigint, receiver: Address, overrides?: TxOverrides) {
     const source = 'User [depositTo]'
 
     if (!this.walletClient?.account) {
@@ -362,7 +372,7 @@ export class Vault {
    * @param overrides optional overrides for this transaction
    * @returns
    */
-  async withdrawTo(amount: bigint, receiver: string, overrides?: TxOverrides) {
+  async withdrawTo(amount: bigint, receiver: Address, overrides?: TxOverrides) {
     const source = 'User [withdrawTo]'
 
     if (!this.walletClient?.account) {
@@ -421,7 +431,7 @@ export class Vault {
    * @param overrides optional overrides for this transaction
    * @returns
    */
-  async redeemTo(amount: bigint, receiver: string, overrides?: TxOverrides) {
+  async redeemTo(amount: bigint, receiver: Address, overrides?: TxOverrides) {
     const source = 'User [redeemTo]'
 
     if (!this.walletClient?.account) {
@@ -494,7 +504,7 @@ export class Vault {
       address: tokenAddress,
       abi: erc20Abi,
       functionName: 'approve',
-      args: [this.address, 0],
+      args: [this.address, 0n],
       chain: this.walletClient.chain,
       ...overrides
     })
@@ -502,27 +512,5 @@ export class Vault {
     const txHash = await this.walletClient.writeContract(request)
 
     return txHash
-  }
-
-  /* =========================== Contract Initializers =========================== */
-
-  // TODO: get proper contract typing
-  /**
-   * Initializes a contract for the vault's underlying asset
-   * @returns
-   */
-  async getTokenContract(): Promise<any> {
-    if (this.tokenContract !== undefined) return this.tokenContract
-
-    const tokenAddress = await this.getTokenAddress()
-
-    const tokenContract = getContract({
-      address: tokenAddress,
-      abi: erc20Abi,
-      publicClient: this.publicClient
-    })
-
-    this.tokenContract = tokenContract
-    return this.tokenContract
   }
 }

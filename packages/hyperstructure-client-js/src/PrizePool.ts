@@ -1,6 +1,5 @@
 import { PrizeInfo, TokenWithSupply, TxOverrides } from '@shared/types'
 import {
-  erc20 as erc20Abi,
   getPrizePoolAllPrizeInfo,
   getPrizePoolContributionAmounts,
   getPrizePoolContributionPercentages,
@@ -10,17 +9,15 @@ import {
   validateAddress,
   validateClientNetwork
 } from '@shared/utilities'
-import { getContract, PublicClient, WalletClient } from 'viem'
+import { Address, PublicClient, WalletClient } from 'viem'
 
 /**
  * This class provides read and write functions to interact with a prize pool
  */
 export class PrizePool {
-  readonly prizePoolContract: any // TODO: get proper contract typing
   readonly id: string
   walletClient: WalletClient | undefined
-  prizeTokenAddress: `0x${string}` | undefined
-  prizeTokenContract: any // TODO: get proper contract typing
+  prizeTokenAddress: Address | undefined
   drawPeriodInSeconds: number | undefined
   tierShares: number | undefined
 
@@ -35,16 +32,15 @@ export class PrizePool {
    */
   constructor(
     public chainId: number,
-    public address: `0x${string}`,
+    public address: Address,
     public publicClient: PublicClient,
     options?: {
       walletClient?: WalletClient
-      prizeTokenAddress?: `0x${string}`
+      prizeTokenAddress?: Address
       drawPeriodInSeconds?: number
       tierShares?: number
     }
   ) {
-    this.prizePoolContract = getContract({ address, abi: prizePoolAbi, publicClient })
     this.id = getPrizePoolId(chainId, address)
 
     if (!!options?.walletClient) {
@@ -53,11 +49,6 @@ export class PrizePool {
 
     if (!!options?.prizeTokenAddress) {
       this.prizeTokenAddress = options.prizeTokenAddress
-      this.prizeTokenContract = getContract({
-        address: options.prizeTokenAddress,
-        abi: erc20Abi,
-        publicClient
-      })
     }
 
     if (!!options?.drawPeriodInSeconds) {
@@ -75,13 +66,17 @@ export class PrizePool {
    * Returns the address of the token awarded by the prize pool
    * @returns
    */
-  async getPrizeTokenAddress(): Promise<`0x${string}`> {
+  async getPrizeTokenAddress(): Promise<Address> {
     if (this.prizeTokenAddress !== undefined) return this.prizeTokenAddress
 
     const source = 'Vault [getPrizeTokenAddress]'
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
-    const prizeTokenAddress: `0x${string}` = await this.prizePoolContract.read.prizeToken()
+    const prizeTokenAddress = await this.publicClient.readContract({
+      address: this.address,
+      abi: prizePoolAbi,
+      functionName: 'prizeToken'
+    })
 
     this.prizeTokenAddress = prizeTokenAddress
     return this.prizeTokenAddress
@@ -112,9 +107,13 @@ export class PrizePool {
     const source = 'Prize Pool [getDrawPeriodInSeconds]'
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
-    const drawPeriodInSeconds = Number(await this.prizePoolContract.read.drawPeriodSeconds())
-    this.drawPeriodInSeconds = drawPeriodInSeconds
+    const drawPeriodInSeconds = await this.publicClient.readContract({
+      address: this.address,
+      abi: prizePoolAbi,
+      functionName: 'drawPeriodSeconds'
+    })
 
+    this.drawPeriodInSeconds = drawPeriodInSeconds
     return drawPeriodInSeconds
   }
 
@@ -128,9 +127,13 @@ export class PrizePool {
     const source = 'Prize Pool [getTierShares]'
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
-    const tierShares = Number(await this.prizePoolContract.read.tierShares())
-    this.tierShares = tierShares
+    const tierShares = await this.publicClient.readContract({
+      address: this.address,
+      abi: prizePoolAbi,
+      functionName: 'tierShares'
+    })
 
+    this.tierShares = tierShares
     return tierShares
   }
 
@@ -144,7 +147,11 @@ export class PrizePool {
     const source = 'Prize Pool [getNumberOfTiers]'
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
-    const numberOfTiers = Number(await this.prizePoolContract.read.numberOfTiers())
+    const numberOfTiers = await this.publicClient.readContract({
+      address: this.address,
+      abi: prizePoolAbi,
+      functionName: 'numberOfTiers'
+    })
 
     return numberOfTiers
   }
@@ -157,7 +164,13 @@ export class PrizePool {
     const source = 'Prize Pool [getLastDrawId]'
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
-    const lastDrawId = Number(await this.prizePoolContract.read.getLastCompletedDrawId())
+    const lastDrawId = Number(
+      await this.publicClient.readContract({
+        address: this.address,
+        abi: prizePoolAbi,
+        functionName: 'getLastCompletedDrawId'
+      })
+    )
 
     return lastDrawId
   }
@@ -172,10 +185,12 @@ export class PrizePool {
     const source = 'Prize Pool [getTotalContributedAmount]'
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
-    const totalContributedAmount: bigint = await this.prizePoolContract.getTotalContributedBetween(
-      startDrawId,
-      endDrawId
-    )
+    const totalContributedAmount = await this.publicClient.readContract({
+      address: this.address,
+      abi: prizePoolAbi,
+      functionName: 'getTotalContributedBetween',
+      args: [startDrawId, endDrawId]
+    })
 
     return totalContributedAmount
   }
@@ -188,7 +203,7 @@ export class PrizePool {
    * @returns
    */
   async getVaultContributedAmounts(
-    vaultAddresses: `0x${string}`[],
+    vaultAddresses: Address[],
     startDrawId: number,
     endDrawId: number
   ): Promise<{ [vaultId: string]: bigint }> {
@@ -216,7 +231,7 @@ export class PrizePool {
    * @returns
    */
   async getVaultContributedPercentages(
-    vaultAddresses: `0x${string}`[],
+    vaultAddresses: Address[],
     startDrawId: number,
     endDrawId: number
   ): Promise<{ [vaultId: string]: number }> {
@@ -242,7 +257,13 @@ export class PrizePool {
     const source = 'Prize Pool [getLastDrawStartTimestamp]'
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
-    const startTimestamp = Number(await this.prizePoolContract.read.lastCompletedDrawStartedAt())
+    const startTimestamp = Number(
+      await this.publicClient.readContract({
+        address: this.address,
+        abi: prizePoolAbi,
+        functionName: 'lastCompletedDrawStartedAt'
+      })
+    )
 
     return startTimestamp
   }
@@ -255,7 +276,13 @@ export class PrizePool {
     const source = 'Prize Pool [getNextDrawStartTimestamp]'
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
-    const startTimestamp = Number(await this.prizePoolContract.read.nextDrawStartsAt())
+    const startTimestamp = Number(
+      await this.publicClient.readContract({
+        address: this.address,
+        abi: prizePoolAbi,
+        functionName: 'nextDrawStartsAt'
+      })
+    )
 
     return startTimestamp
   }
@@ -269,8 +296,8 @@ export class PrizePool {
    * @returns
    */
   async isWinner(
-    vaultAddress: string,
-    userAddress: string,
+    vaultAddress: Address,
+    userAddress: Address,
     tier: number,
     prizeIndex: number
   ): Promise<boolean> {
@@ -279,12 +306,12 @@ export class PrizePool {
     validateAddress(userAddress, source)
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
-    const isWinner: boolean = await this.prizePoolContract.read.isWinner([
-      vaultAddress,
-      userAddress,
-      tier,
-      prizeIndex
-    ])
+    const isWinner = await this.publicClient.readContract({
+      address: this.address,
+      abi: prizePoolAbi,
+      functionName: 'isWinner',
+      args: [vaultAddress, userAddress, tier, prizeIndex]
+    })
 
     return isWinner
   }
@@ -298,7 +325,12 @@ export class PrizePool {
     const source = 'Prize Pool [getTierPrizeSize]'
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
-    const tierPrizeSize: bigint = await this.prizePoolContract.read.getTierPrizeSize([tier])
+    const tierPrizeSize = await this.publicClient.readContract({
+      address: this.address,
+      abi: prizePoolAbi,
+      functionName: 'getTierPrizeSize',
+      args: [tier]
+    })
 
     return tierPrizeSize
   }
@@ -312,9 +344,12 @@ export class PrizePool {
     const source = 'Prize Pool [getEstimatedTierAwardTime]'
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
-    const estimatedDraws = Number(
-      await this.prizePoolContract.read.getTierAccrualDurationInDraws([tier])
-    )
+    const estimatedDraws = await this.publicClient.readContract({
+      address: this.address,
+      abi: prizePoolAbi,
+      functionName: 'getTierAccrualDurationInDraws',
+      args: [tier]
+    })
 
     const drawPeriod = await this.getDrawPeriodInSeconds()
 
@@ -329,7 +364,11 @@ export class PrizePool {
     const source = 'Prize Pool [getEstimatedPrizeCount]'
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
-    const estimatedPrizeCount = Number(await this.prizePoolContract.read.estimatedPrizeCount())
+    const estimatedPrizeCount = await this.publicClient.readContract({
+      address: this.address,
+      abi: prizePoolAbi,
+      functionName: 'estimatedPrizeCount'
+    })
 
     return estimatedPrizeCount
   }
@@ -356,7 +395,7 @@ export class PrizePool {
    * @returns
    */
   async getVaultPrizePowers(
-    vaultAddresses: `0x${string}`[],
+    vaultAddresses: Address[],
     numDraws: number = 7
   ): Promise<{ [vaultId: string]: number }> {
     const lastDrawId = await this.getLastDrawId()
@@ -382,10 +421,10 @@ export class PrizePool {
    */
   async claimPrizes(
     tier: number,
-    winners: `0x${string}`[],
+    winners: Address[],
     prizeIndices: number[][],
     options?: {
-      fee?: { amount: bigint; recipient: `0x${string}` }
+      fee?: { amount: bigint; recipient: Address }
       overrides?: TxOverrides
     }
   ) {
@@ -404,7 +443,7 @@ export class PrizePool {
         tier,
         winners,
         prizeIndices,
-        options?.fee?.amount ?? 0,
+        options?.fee?.amount ?? 0n,
         options?.fee?.recipient ?? this.walletClient.account.address
       ],
       chain: this.walletClient.chain,
@@ -453,27 +492,5 @@ export class PrizePool {
    */
   getTierPrizeCount(tier: number): number {
     return 4 ** tier
-  }
-
-  /* =========================== Contract Initializers =========================== */
-
-  // TODO: get proper contract typing
-  /**
-   * Initializes a contract for the token awarded by the prize pool
-   * @returns
-   */
-  async getPrizeTokenContract(): Promise<any> {
-    if (this.prizeTokenContract !== undefined) return this.prizeTokenContract
-
-    const prizeTokenAddress = await this.getPrizeTokenAddress()
-
-    const prizeTokenContract = getContract({
-      address: prizeTokenAddress,
-      abi: erc20Abi,
-      publicClient: this.publicClient
-    })
-
-    this.prizeTokenContract = prizeTokenContract
-    return this.prizeTokenContract
   }
 }

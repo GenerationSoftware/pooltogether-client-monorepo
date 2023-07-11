@@ -1,6 +1,6 @@
 import { erc4626 as erc4626Abi, Vault } from '@pooltogether/hyperstructure-client-js'
 import { useEffect } from 'react'
-import { isAddress, TransactionReceipt } from 'viem'
+import { Address, isAddress, TransactionReceipt } from 'viem'
 import {
   useAccount,
   useContractWrite,
@@ -26,7 +26,7 @@ export const useSendRedeemTransaction = (
   isConfirming: boolean
   isSuccess: boolean
   isError: boolean
-  txHash?: `0x${string}`
+  txHash?: Address
   txReceipt?: TransactionReceipt
   sendRedeemTransaction?: () => void
 } => {
@@ -34,7 +34,7 @@ export const useSendRedeemTransaction = (
   const { chain } = useNetwork()
 
   const { data: vaultShareBalance, isFetched: isFetchedVaultShareBalance } =
-    useUserVaultShareBalance(vault, userAddress as `0x${string}`)
+    useUserVaultShareBalance(vault, userAddress as Address)
 
   const enabled =
     !!vault &&
@@ -50,7 +50,7 @@ export const useSendRedeemTransaction = (
     address: vault?.address,
     abi: erc4626Abi,
     functionName: 'redeem',
-    args: [amount, userAddress, userAddress],
+    args: [amount, userAddress as Address, userAddress as Address],
     enabled
   })
 

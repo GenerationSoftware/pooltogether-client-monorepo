@@ -415,4 +415,4 @@ export const prizePool = [
     stateMutability: 'nonpayable',
     type: 'function'
   }
-]
+] as const

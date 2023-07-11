@@ -7,7 +7,7 @@ import {
   Vault
 } from '@pooltogether/hyperstructure-client-js'
 import { useMemo, useState } from 'react'
-import { formatUnits } from 'viem'
+import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import {
   useAllTokenPrices,
@@ -46,7 +46,7 @@ export const useSortedVaults = (
     useAllVaultBalances(selectedVaults)
 
   const { data: allUserVaultBalances, isFetched: isFetchedAllUserVaultBalances } =
-    useAllUserVaultBalances(selectedVaults, userAddress as `0x${string}`)
+    useAllUserVaultBalances(selectedVaults, userAddress as Address)
 
   const { data: allPrizePowers, isFetched: isFetchedAllPrizePowers } = useAllVaultPrizePowers(
     selectedVaults,

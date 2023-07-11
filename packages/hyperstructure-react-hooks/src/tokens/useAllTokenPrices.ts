@@ -7,6 +7,7 @@ import {
   useCoingeckoSimpleTokenPrices,
   useCoingeckoTokenPricesAcrossChains
 } from '@shared/generic-react-hooks'
+import { Address } from 'viem'
 import { useSelectedVaults } from '..'
 
 /**
@@ -23,7 +24,7 @@ export const useAllTokenPrices = () => {
 
   const { vaults, isFetched: isFetchedVaultData } = useSelectedVaults()
 
-  const tokenAddresses: { [chainId: number]: `0x${string}`[] } = {}
+  const tokenAddresses: { [chainId: number]: Address[] } = {}
 
   // Adding vault token addresses:
   if (!!vaults.underlyingTokenAddresses) {

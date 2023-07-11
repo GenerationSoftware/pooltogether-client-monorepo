@@ -1,7 +1,7 @@
 import { getTokenAllowances } from '@pooltogether/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query'
-import { isAddress } from 'viem'
+import { Address, isAddress } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { populateCachePerId } from '..'
 import { QUERY_KEYS } from '../constants'
@@ -20,11 +20,11 @@ import { QUERY_KEYS } from '../constants'
  */
 export const useTokenAllowances = (
   chainId: number,
-  address: `0x${string}`,
-  spenderAddress: `0x${string}`,
-  tokenAddresses: `0x${string}`[],
+  address: Address,
+  spenderAddress: Address,
+  tokenAddresses: Address[],
   refetchInterval?: number
-): UseQueryResult<{ [tokenAddress: `0x${string}`]: bigint }, unknown> => {
+): UseQueryResult<{ [tokenAddress: Address]: bigint }, unknown> => {
   const queryClient = useQueryClient()
 
   const publicClient = usePublicClient({ chainId })
@@ -71,11 +71,11 @@ export const useTokenAllowances = (
  */
 export const useTokenAllowance = (
   chainId: number,
-  address: `0x${string}`,
-  spenderAddress: `0x${string}`,
-  tokenAddress: `0x${string}`,
+  address: Address,
+  spenderAddress: Address,
+  tokenAddress: Address,
   refetchInterval?: number
-): { data?: bigint } & Omit<UseQueryResult<{ [tokenAddress: `0x${string}`]: bigint }>, 'data'> => {
+): { data?: bigint } & Omit<UseQueryResult<{ [tokenAddress: Address]: bigint }>, 'data'> => {
   const result = useTokenAllowances(
     chainId,
     address,

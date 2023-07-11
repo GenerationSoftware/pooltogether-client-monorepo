@@ -3,7 +3,7 @@ import {
   getTokenPriceFromObject
 } from '@pooltogether/hyperstructure-client-js'
 import { useMemo } from 'react'
-import { formatUnits } from 'viem'
+import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import {
   useAllTokenPrices,
@@ -25,7 +25,7 @@ export const useUserTotalBalance = () => {
 
   const { data: vaultBalances, isFetched: isFetchedVaultBalances } = useAllUserVaultBalances(
     vaults,
-    userAddress as `0x${string}`
+    userAddress as Address
   )
 
   const { data: vaultExchangeRates, isFetched: isFetchedVaultExchangeRates } =
@@ -50,7 +50,7 @@ export const useUserTotalBalance = () => {
           const exchangeRate = vaultExchangeRates[vaultId]
           if (!!exchangeRate) {
             const chainId = vaultBalances[vaultId].chainId
-            const tokenAddress = vaults.underlyingTokenAddresses?.byVault[vaultId] as `0x${string}`
+            const tokenAddress = vaults.underlyingTokenAddresses?.byVault[vaultId] as Address
             const shareBalance = vaultBalances[vaultId].amount
 
             const tokenPrice = getTokenPriceFromObject(chainId, tokenAddress, tokenPrices)

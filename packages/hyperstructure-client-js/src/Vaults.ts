@@ -1,6 +1,5 @@
 import { TokenWithAmount, TokenWithSupply, VaultInfo } from '@shared/types'
 import {
-  erc20 as erc20Abi,
   getTokenBalances,
   getTokenInfo,
   getVaultAddresses,
@@ -12,7 +11,7 @@ import {
   validateAddress,
   validateClientNetwork
 } from '@shared/utilities'
-import { getContract, PublicClient } from 'viem'
+import { Address, PublicClient } from 'viem'
 import { Vault } from './Vault'
 
 /**
@@ -21,12 +20,12 @@ import { Vault } from './Vault'
 export class Vaults {
   readonly vaults: { [vaultId: string]: Vault } = {}
   readonly chainIds: number[]
-  readonly vaultAddresses: { [chainId: number]: `0x${string}`[] }
+  readonly vaultAddresses: { [chainId: number]: Address[] }
   underlyingTokenData: { [vaultId: string]: TokenWithSupply } | undefined
   underlyingTokenAddresses:
     | {
-        byChain: { [chainId: number]: `0x${string}`[] }
-        byVault: { [vaultId: string]: `0x${string}` }
+        byChain: { [chainId: number]: Address[] }
+        byVault: { [vaultId: string]: Address }
       }
     | undefined
 
@@ -172,7 +171,7 @@ export class Vaults {
             await validateClientNetwork(chainId, client, source + ` [${chainId}]`)
             const chainTokenBalances = await getTokenBalances(
               client,
-              userAddress as `0x${string}`,
+              userAddress as Address,
               underlyingTokenAddresses.byChain[chainId]
             )
             const chainVaults = getVaultsByChainId(chainId, this.allVaultInfo)
@@ -214,7 +213,7 @@ export class Vaults {
               await validateClientNetwork(chainId, client, source + ` [${chainId}]`)
               const chainShareBalances = await getTokenBalances(
                 client,
-                userAddress as `0x${string}`,
+                userAddress as Address,
                 vaultAddresses
               )
               const chainVaults = getVaultsByChainId(chainId, this.allVaultInfo)
@@ -304,14 +303,14 @@ export class Vaults {
    * @returns
    */
   async getUnderlyingTokenAddresses(): Promise<{
-    byChain: { [chainId: number]: `0x${string}`[] }
-    byVault: { [vaultId: string]: `0x${string}` }
+    byChain: { [chainId: number]: Address[] }
+    byVault: { [vaultId: string]: Address }
   }> {
     if (this.underlyingTokenAddresses !== undefined) return this.underlyingTokenAddresses
 
     const tokenAddresses: {
-      byChain: { [chainId: number]: `0x${string}`[] }
-      byVault: { [vaultId: string]: `0x${string}` }
+      byChain: { [chainId: number]: Address[] }
+      byVault: { [vaultId: string]: Address }
     } = { byChain: {}, byVault: {} }
 
     await Promise.all(
@@ -331,11 +330,6 @@ export class Vaults {
             Object.keys(chainTokenAddresses).forEach((vaultId) => {
               const tokenAddress = chainTokenAddresses[vaultId]
               this.vaults[vaultId].tokenAddress = tokenAddress
-              this.vaults[vaultId].tokenContract = getContract({
-                address: tokenAddress,
-                abi: erc20Abi,
-                publicClient: client
-              })
             })
           }
         })()

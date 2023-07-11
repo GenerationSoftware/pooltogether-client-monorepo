@@ -1,4 +1,5 @@
 import { PrizePool } from '@pooltogether/hyperstructure-client-js'
+import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { usePublicClientsByChain } from '..'
 
@@ -10,9 +11,9 @@ import { usePublicClientsByChain } from '..'
 export const usePrizePools = (
   data: {
     chainId: number
-    address: `0x${string}`
+    address: Address
     options?: {
-      prizeTokenAddress?: `0x${string}`
+      prizeTokenAddress?: Address
       drawPeriodInSeconds?: number
       tierShares?: number
     }
@@ -46,8 +47,8 @@ export const usePrizePools = (
  */
 export const usePrizePool = (
   chainId: number,
-  address: `0x${string}`,
-  options?: { prizeTokenAddress?: `0x${string}`; drawPeriodInSeconds?: number; tierShares?: number }
+  address: Address,
+  options?: { prizeTokenAddress?: Address; drawPeriodInSeconds?: number; tierShares?: number }
 ): PrizePool => {
   const publicClient = usePublicClient({ chainId })
 

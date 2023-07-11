@@ -197,4 +197,4 @@ export const erc20 = [
     name: 'Approval',
     type: 'event'
   }
-]
+] as const
