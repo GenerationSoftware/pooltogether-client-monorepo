@@ -75,18 +75,13 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
   )
 
   const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
-  const depositAmount =
-    vault.decimals !== undefined
-      ? parseUnits(
-          isValidFormInput(formTokenAmount, vault.decimals)
-            ? `${parseFloat(formTokenAmount)}`
-            : '0',
-          vault.decimals
-        )
-      : 0n
 
   const isValidFormTokenAmount =
     vault.decimals !== undefined ? isValidFormInput(formTokenAmount, vault.decimals) : false
+
+  const depositAmount = isValidFormTokenAmount
+    ? parseUnits(formTokenAmount, vault.decimals as number)
+    : 0n
 
   const {
     isWaiting: isWaitingExactApproval,

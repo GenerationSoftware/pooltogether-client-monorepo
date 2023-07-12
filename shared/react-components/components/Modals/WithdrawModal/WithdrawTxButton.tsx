@@ -62,7 +62,7 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
     vault.decimals !== undefined ? isValidFormInput(formShareAmount, vault.decimals) : false
 
   const withdrawAmount = isValidFormShareAmount
-    ? parseUnits(`${parseFloat(formShareAmount)}`, vault.decimals as number)
+    ? parseUnits(formShareAmount, vault.decimals as number)
     : 0n
 
   const {

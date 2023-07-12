@@ -20,9 +20,7 @@ export const Odds = (props: OddsProps) => {
   const { data: prizeOdds, isFetched: isFetchedPrizeOdds } = usePrizeOdds(
     prizePool,
     vault,
-    !!shareData && !!formShareAmount
-      ? parseUnits(`${parseFloat(formShareAmount)}`, shareData.decimals)
-      : 0n,
+    !!shareData && !!formShareAmount ? parseUnits(formShareAmount, shareData.decimals) : 0n,
     { isCumulative: true }
   )
 

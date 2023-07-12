@@ -69,7 +69,7 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
     ) {
       setFormTokenAmount(tokenAmount)
 
-      const tokens = parseUnits(`${parseFloat(tokenAmount)}`, vault.decimals)
+      const tokens = parseUnits(tokenAmount, vault.decimals)
       const shares = getSharesFromAssets(tokens, vaultExchangeRate, vault.decimals)
       const formattedShares = formatUnits(shares, vault.decimals)
       const slicedShares = formattedShares.endsWith('.0')
@@ -92,7 +92,7 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
     ) {
       setFormShareAmount(shareAmount)
 
-      const shares = parseUnits(`${parseFloat(shareAmount)}`, vault.decimals)
+      const shares = parseUnits(shareAmount, vault.decimals)
       const tokens = getAssetsFromShares(shares, vaultExchangeRate, vault.decimals)
       const formattedTokens = formatUnits(tokens, vault.decimals)
       const slicedTokens = formattedTokens.endsWith('.0')
