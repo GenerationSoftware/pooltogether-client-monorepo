@@ -54,60 +54,82 @@ export const VaultFilters = (props: VaultFiltersProps) => {
     !!chainId && chainId in NETWORK && setFilterId(chainId.toString())
   }, [])
 
-  const filterOnClick = (
-    id: string,
-    vaults: Vault[],
-    filter: (vaults: Vault[]) => Vault[] | undefined
-  ) => {
-    setFilterId(id)
+  const filterOnClick = (vaults: Vault[], filter: (vaults: Vault[]) => Vault[] | undefined) => {
     const filteredVaultsArray = filter(vaults.filter((vault) => !!vault.tokenAddress)) ?? []
     const filteredVaultsByChain = formatVaultsByChain(networks, filteredVaultsArray)
     setFilteredVaults(filteredVaultsByChain)
   }
 
-  const filterItems: SelectionItem[] = useMemo(
+  const filterAll = () => {
+    filterOnClick(vaultsArray, (vaults) => vaults)
+  }
+
+  const filterUserWallet = () => {
+    filterOnClick(vaultsArray, (vaults) =>
+      vaults.filter((vault) => {
+        const userWalletBalance = !!vault.tokenAddress
+          ? userTokenBalances?.[vault.chainId]?.[vault.tokenAddress]?.amount ?? 0n
+          : 0n
+        return userWalletBalance > 0n
+      })
+    )
+  }
+
+  const filterStablecoins = () => {
+    filterOnClick(vaultsArray, (vaults) =>
+      vaults.filter((vault) =>
+        STABLECOIN_ADDRESSES[vault.chainId as NETWORK].includes(
+          (vault.tokenAddress?.toLowerCase() as Lowercase<string>) ?? '?'
+        )
+      )
+    )
+  }
+
+  const filterNetwork = (chainId: NETWORK) => {
+    filterOnClick(vaultsArray, (vaults) => vaults.filter((vault) => vault.chainId === chainId))
+  }
+
+  const filterItems: (SelectionItem & { filter: () => void })[] = useMemo(
     () => [
       {
         id: 'all',
         content: 'Show All',
-        onClick: () => filterOnClick('all', vaultsArray, (vaults) => vaults),
+        onClick: () => {
+          setFilterId('all')
+          filterAll()
+        },
+        filter: filterAll,
         className: 'whitespace-nowrap'
       },
       {
         id: 'userWallet',
         content: 'In My Wallet',
         disabled: !isFetchedUserTokenBalances,
-        onClick: () =>
-          filterOnClick('userWallet', vaultsArray, (vaults) =>
-            vaults.filter((vault) => {
-              const userWalletBalance = !!vault.tokenAddress
-                ? userTokenBalances?.[vault.chainId]?.[vault.tokenAddress]?.amount ?? 0n
-                : 0n
-              return userWalletBalance > 0n
-            })
-          ),
+        onClick: () => {
+          setFilterId('userWallet')
+          filterUserWallet()
+        },
+        filter: filterUserWallet,
         className: 'whitespace-nowrap'
       },
       {
         id: 'stablecoin',
         content: 'Stablecoins',
-        onClick: () =>
-          filterOnClick('stablecoin', vaultsArray, (vaults) =>
-            vaults.filter((vault) =>
-              STABLECOIN_ADDRESSES[vault.chainId as NETWORK].includes(
-                vault.tokenAddress?.toLowerCase() as Lowercase<string> ?? '?'
-              )
-            )
-          )
+        onClick: () => {
+          setFilterId('stablecoin')
+          filterStablecoins()
+        },
+        filter: filterStablecoins
       },
       ...networks.map((network) => {
         return {
           id: network.toString(),
           content: <NetworkIcon chainId={network} className='h-5 w-5' />,
-          onClick: () =>
-            filterOnClick(network.toString(), vaultsArray, (vaults) =>
-              vaults.filter((vault) => vault.chainId === network)
-            )
+          onClick: () => {
+            setFilterId(network.toString())
+            filterNetwork(network)
+          },
+          filter: () => filterNetwork(network)
         }
       })
     ],
@@ -116,7 +138,7 @@ export const VaultFilters = (props: VaultFiltersProps) => {
 
   useEffect(() => {
     const filterItem = filterItems.find((item) => item.id === filterId)
-    !!filterItem && filterItem.onClick?.()
+    !!filterItem && filterItem.filter()
   }, [filterItems, filterId, vaultsArray])
 
   if (router.isReady) {
