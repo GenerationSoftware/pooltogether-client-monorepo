@@ -4,7 +4,8 @@ import {
   useCachedVaultLists,
   usePrizeDrawWinners,
   useSelectedVaultListIds,
-  useSelectedVaults
+  useSelectedVaults,
+  useVaultList
 } from '@pooltogether/hyperstructure-react-hooks'
 import {
   ConnectButton,
@@ -15,6 +16,7 @@ import {
 import { MODAL_KEYS, useIsModalOpen, useIsTestnets } from '@shared/generic-react-hooks'
 import {
   CaptchaModal,
+  createVaultListToast,
   DepositModal,
   DrawModal,
   SettingsModal,
@@ -72,6 +74,13 @@ export const Layout = (props: LayoutProps) => {
   const selectedDrawId = useAtomValue(drawIdAtom)
   const selectedDraw = draws?.find((draw) => draw.id === selectedDrawId)
 
+  const [urlQueryVaultListSrc, setUrlQueryVaultListSrc] = useState<string>('')
+  const {
+    isFetching: isImportingVaultList,
+    isSuccess: isSuccessVaultList,
+    isError: isErrorVaultList
+  } = useVaultList(urlQueryVaultListSrc)
+
   useEffect(() => {
     for (const key in DEFAULT_VAULT_LISTS) {
       const defaultVaultList = DEFAULT_VAULT_LISTS[key as keyof typeof DEFAULT_VAULT_LISTS]
@@ -82,6 +91,26 @@ export const Layout = (props: LayoutProps) => {
       }
     }
   }, [])
+
+  useEffect(() => {
+    const vaultListSrc = router.query['list']
+    if (!!vaultListSrc && typeof vaultListSrc === 'string') {
+      setUrlQueryVaultListSrc(vaultListSrc)
+    }
+  }, [router.query])
+
+  useEffect(() => {
+    const state = isSuccessVaultList
+      ? 'success'
+      : isErrorVaultList
+      ? 'error'
+      : isImportingVaultList
+      ? 'importing'
+      : undefined
+    if (!!state) {
+      createVaultListToast({ vaultListSrc: urlQueryVaultListSrc, state })
+    }
+  }, [isImportingVaultList, isSuccessVaultList, isErrorVaultList])
 
   // NOTE: This is necessary due to hydration errors otherwise.
   const [isBrowser, setIsBrowser] = useState(false)

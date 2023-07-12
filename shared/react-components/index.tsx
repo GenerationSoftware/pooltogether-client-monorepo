@@ -65,6 +65,7 @@ export * from './components/Time/TimeDigits'
  * Toasts
  */
 export * from './components/Toasts/TransactionToast'
+export * from './components/Toasts/VaultListToast'
 
 /**
  * Tooltips

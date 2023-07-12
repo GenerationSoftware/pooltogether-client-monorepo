@@ -19,15 +19,6 @@ import { useAccount, useWaitForTransaction } from 'wagmi'
 import { ErrorPooly } from '../Graphics/ErrorPooly'
 import { SuccessPooly } from '../Graphics/SuccessPooly'
 
-/**
- * Function to create original TX toast while confirming transaction
- *
- * This toast will then update itself on TX success or fail
- */
-export const createTxToast = (data: TransactionToastProps) => {
-  toast(<TransactionToast {...data} />, { id: data.txHash })
-}
-
 type TransactionType = 'deposit' | 'withdraw'
 
 export interface TransactionToastProps {
@@ -37,6 +28,15 @@ export interface TransactionToastProps {
   formattedAmount: string
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
+}
+
+/**
+ * Function to create original TX toast while confirming transaction
+ *
+ * This toast will then update itself on TX success or fail
+ */
+export const createTxToast = (data: TransactionToastProps) => {
+  toast(<TransactionToast {...data} />, { id: data.txHash })
 }
 
 export const TransactionToast = (props: TransactionToastProps) => {
