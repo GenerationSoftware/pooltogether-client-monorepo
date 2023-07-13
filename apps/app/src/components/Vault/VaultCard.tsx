@@ -24,7 +24,10 @@ export const VaultCard = (props: VaultCardProps) => {
   return (
     <div className='flex flex-col gap-4 bg-pt-transparent rounded-lg px-3 pt-3 pb-6'>
       <span>
-        <VaultBadge vault={vault} onClick={() => router.push(`/vault/${vault.id}`)} />
+        <VaultBadge
+          vault={vault}
+          onClick={() => router.push(`/vault/${vault.chainId}/${vault.address}`)}
+        />
       </span>
       <div className='w-full flex flex-col gap-1 px-3'>
         {!!tokenBalance && tokenBalance.amount > 0n && (

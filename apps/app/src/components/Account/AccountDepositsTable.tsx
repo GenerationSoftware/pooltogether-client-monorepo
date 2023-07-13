@@ -48,7 +48,10 @@ export const AccountDepositsTable = (props: AccountDepositsTableProps) => {
                 const cells: TableProps['data']['rows'][0]['cells'] = {
                   token: {
                     content: (
-                      <VaultBadge vault={vault} onClick={() => router.push(`/vault/${vault.id}`)} />
+                      <VaultBadge
+                        vault={vault}
+                        onClick={() => router.push(`/vault/${vault.chainId}/${vault.address}`)}
+                      />
                     )
                   },
                   odds: {

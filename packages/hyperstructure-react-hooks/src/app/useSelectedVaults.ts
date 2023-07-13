@@ -5,7 +5,8 @@ import {
   useAllVaultTokenAddresses,
   useAllVaultTokenData,
   usePublicClientsByChain,
-  useSelectedVaultLists
+  useSelectedVaultLists,
+  useVault
 } from '..'
 
 /**
@@ -93,7 +94,20 @@ export const useSelectedVault = () => {
 
   const [selectedVaultId, setSelectedVaultId] = useAtom(selectedVaultIdAtom)
 
-  const vault = selectedVaultId !== undefined ? vaults.vaults[selectedVaultId] : undefined
+  const newVault = useVault(
+    !!selectedVaultId
+      ? {
+          chainId: parseInt(selectedVaultId.split('-')[1]),
+          address: selectedVaultId.split('-')[0] as `0x${string}`
+        }
+      : { chainId: 1, address: '0x00' }
+  )
+
+  const vault = !!selectedVaultId
+    ? !!vaults.vaults[selectedVaultId]
+      ? vaults.vaults[selectedVaultId]
+      : newVault
+    : undefined
 
   return { vault, setSelectedVaultById: setSelectedVaultId }
 }
