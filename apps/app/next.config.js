@@ -11,25 +11,34 @@ module.exports = {
     if (!isServer) {
       config.resolve.fallback = { fs: false, net: false, tls: false }
     }
-    return config;
+    return config
+  },
+  i18n: {
+    locales: ['en', 'es', 'de', 'fr', 'hi', 'it', 'ko', 'pt', 'tr', 'zh', 'ru'],
+    defaultLocale: 'en'
   },
   async headers() {
-    return [{
-      source: '/api/:path*',
-      headers: [
-        { key: "Access-Control-Allow-Credentials", value: "true" },
-        { key: "Access-Control-Allow-Origin", value: "*" },
-        { key: "Access-Control-Allow-Methods", value: "GET" },
-        { key: "Access-Control-Allow-Headers", value: "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version" }
-      ]
-    }]
+    return [
+      {
+        source: '/api/:path*',
+        headers: [
+          { key: 'Access-Control-Allow-Credentials', value: 'true' },
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Access-Control-Allow-Methods', value: 'GET' },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value:
+              'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+          }
+        ]
+      }
+    ]
   }
-};
-
+}
 
 // Injected content via Sentry wizard below
 
-const { withSentryConfig } = require("@sentry/nextjs");
+const { withSentryConfig } = require('@sentry/nextjs')
 
 module.exports = withSentryConfig(
   module.exports,
@@ -40,8 +49,8 @@ module.exports = withSentryConfig(
     // Suppresses source map uploading logs during build
     silent: true,
 
-    org: "pooltogether",
-    project: "hyperstructure-app",
+    org: 'pooltogether',
+    project: 'hyperstructure-app'
   },
   {
     // For all available options, see:
@@ -54,12 +63,12 @@ module.exports = withSentryConfig(
     transpileClientSDK: true,
 
     // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
-    tunnelRoute: "/monitoring",
+    tunnelRoute: '/monitoring',
 
     // Hides source maps from generated client bundles
     hideSourceMaps: true,
 
     // Automatically tree-shake Sentry logger statements to reduce bundle size
-    disableLogger: true,
+    disableLogger: true
   }
-);
+)
