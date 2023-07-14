@@ -1,9 +1,16 @@
 import { SECONDS_PER_DAY } from '@shared/utilities'
-import { GetStaticProps } from 'next'
+import { GetStaticPaths, GetStaticProps } from 'next'
 import { useRouter } from 'next/router'
 import { getMessages } from 'src/utils'
 import { Layout } from '@components/Layout'
 import { VaultPageContent } from '@components/Vault/VaultPageContent'
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking'
+  }
+}
 
 interface VaultPageProps {
   messages: IntlMessages
@@ -18,7 +25,6 @@ export const getStaticProps: GetStaticProps<VaultPageProps> = async ({ locale })
   }
 }
 
-// TODO: display notice that external vaults aren't in the selected vaultlists somewhere on the page
 export default function VaultPage() {
   const router = useRouter()
 

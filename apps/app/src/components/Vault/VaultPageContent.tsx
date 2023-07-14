@@ -20,6 +20,7 @@ interface VaultPageContentProps {
   queryParams: ParsedUrlQuery
 }
 
+// TODO: display notice that external vaults aren't in the selected vaultlists somewhere on the page
 export const VaultPageContent = (props: VaultPageContentProps) => {
   const { queryParams } = props
 
@@ -36,10 +37,10 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
       : undefined
 
   const address =
-    !!queryParams.urlVaultAddress &&
-    typeof queryParams.urlVaultAddress === 'string' &&
-    isAddress(queryParams.urlVaultAddress)
-      ? queryParams.urlVaultAddress
+    !!queryParams.vaultAddress &&
+    typeof queryParams.vaultAddress === 'string' &&
+    isAddress(queryParams.vaultAddress)
+      ? queryParams.vaultAddress
       : undefined
 
   const vault = useMemo(() => {
