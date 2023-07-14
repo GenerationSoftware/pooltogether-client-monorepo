@@ -3,6 +3,7 @@ import {
   PrizePool,
   Vault
 } from '@pooltogether/hyperstructure-client-js'
+import { useVaultShareData } from '@pooltogether/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import { NetworkBadge } from '../../../Badges/NetworkBadge'
 import { DepositForm } from '../../../Form/DepositForm'
@@ -17,12 +18,14 @@ interface MainViewProps {
 export const MainView = (props: MainViewProps) => {
   const { vault, prizePool } = props
 
+  const { data: shareData } = useVaultShareData(vault)
+
   const networkName = getNiceNetworkNameByChainId(vault.chainId)
 
   return (
     <div className='flex flex-col gap-6'>
       <span className='text-lg font-semibold text-center'>
-        Deposit to {vault.name ?? <Spinner />}{' '}
+        Deposit to {vault.name ?? `"${shareData?.name}"` ?? <Spinner />}{' '}
         <span className='hidden md:inline-block'>on {networkName}</span>
       </span>
       <NetworkBadge
@@ -31,9 +34,7 @@ export const MainView = (props: MainViewProps) => {
         hideBorder={true}
         className='!py-1 mx-auto'
       />
-      {!!vault.shareData && !!vault.tokenData && vault.decimals !== undefined && (
-        <DepositForm vault={vault} showInputInfoRows={true} />
-      )}
+      <DepositForm vault={vault} showInputInfoRows={true} />
       <div className='flex flex-col gap-4 mx-auto md:flex-row md:gap-9'>
         <Odds vault={vault} prizePool={prizePool} />
         <NetworkFees vault={vault} show={['approve', 'deposit', 'withdraw']} />

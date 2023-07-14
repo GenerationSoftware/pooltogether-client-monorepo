@@ -47,11 +47,13 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
             </span>
           </div>
         </div>
-        <NetworkBadge
-          chainId={vault.chainId}
-          appendText='Prize Pool'
-          onClick={() => router.push(`/prizes?network=${vault.chainId}`)}
-        />
+        {(!!vault.name || !!shareData?.name) && (
+          <NetworkBadge
+            chainId={vault.chainId}
+            appendText='Prize Pool'
+            onClick={() => router.push(`/prizes?network=${vault.chainId}`)}
+          />
+        )}
       </div>
     </>
   )

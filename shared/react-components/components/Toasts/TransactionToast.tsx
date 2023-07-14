@@ -10,7 +10,8 @@ import {
   useTokenBalance,
   useUserVaultShareBalance,
   useUserVaultTokenBalance,
-  useVaultBalance
+  useVaultBalance,
+  useVaultTokenData
 } from '@pooltogether/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Spinner, toast } from '@shared/ui'
@@ -42,6 +43,8 @@ export const createTxToast = (data: TransactionToastProps) => {
 export const TransactionToast = (props: TransactionToastProps) => {
   const { type, vault, txHash, formattedAmount, addRecentTransaction, refetchUserBalances } = props
 
+  const { data: tokenData } = useVaultTokenData(vault)
+
   const { isLoading, isSuccess, isError } = useWaitForTransaction({
     chainId: vault.chainId,
     hash: txHash as `0x${string}`
@@ -52,7 +55,7 @@ export const TransactionToast = (props: TransactionToastProps) => {
   const { refetch: refetchTokenBalance } = useTokenBalance(
     vault.chainId,
     userAddress as `0x${string}`,
-    vault.tokenData?.address as `0x${string}`
+    tokenData?.address as `0x${string}`
   )
 
   const { refetch: refetchVaultBalance } = useVaultBalance(vault)
@@ -71,7 +74,7 @@ export const TransactionToast = (props: TransactionToastProps) => {
     if (isSuccess && !!txHash) {
       if (!!addRecentTransaction) {
         const networkName = getNiceNetworkNameByChainId(vault.chainId)
-        const txDescription = `${vault.tokenData?.symbol} ${
+        const txDescription = `${tokenData?.symbol} ${
           type === 'deposit' ? 'Deposit' : 'Withdrawal'
         }`
 
@@ -143,12 +146,13 @@ interface ConfirmingViewProps {
 const ConfirmingView = (props: ConfirmingViewProps) => {
   const { type, vault, txHash, formattedAmount } = props
 
+  const { data: tokenData } = useVaultTokenData(vault)
+
   return (
     <>
       <span className='flex items-center gap-2 text-pt-purple-50'>
         <Spinner className='after:border-y-pt-teal' />{' '}
-        {type === 'deposit' ? 'Depositing' : 'Withdrawing'} {formattedAmount}{' '}
-        {vault.tokenData?.symbol}...
+        {type === 'deposit' ? 'Depositing' : 'Withdrawing'} {formattedAmount} {tokenData?.symbol}...
       </span>
       <a
         href={getBlockExplorerUrl(vault.chainId, txHash, 'tx')}
@@ -171,14 +175,16 @@ interface SuccessViewProps {
 const SuccessView = (props: SuccessViewProps) => {
   const { type, vault, txHash, formattedAmount } = props
 
+  const { data: tokenData } = useVaultTokenData(vault)
+
   return (
     <>
       <SuccessPooly className='w-16 h-auto' />
       <div className='flex flex-col items-center text-center'>
         <span className='text-xl font-semibold text-pt-teal'>Success!</span>
         <span className='text-pt-purple-50'>
-          You {type === 'deposit' ? 'deposited' : 'withdrew'} {formattedAmount}{' '}
-          {vault.tokenData?.symbol} on {getNiceNetworkNameByChainId(vault.chainId)}
+          You {type === 'deposit' ? 'deposited' : 'withdrew'} {formattedAmount} {tokenData?.symbol}{' '}
+          on {getNiceNetworkNameByChainId(vault.chainId)}
         </span>
       </div>
       <a

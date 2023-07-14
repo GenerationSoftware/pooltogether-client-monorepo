@@ -1,7 +1,8 @@
 import { Vault } from '@pooltogether/hyperstructure-client-js'
 import {
   usePublicClientsByChain,
-  useSelectedVaults
+  useSelectedVaults,
+  useVaultTokenAddress
 } from '@pooltogether/hyperstructure-react-hooks'
 import { getVaultId } from '@shared/utilities'
 import { useRouter } from 'next/router'
@@ -13,9 +14,7 @@ import { VaultPageHeader } from '@components/Vault/VaultPageHeader'
 import { VaultPageInfo } from '@components/Vault/VaultPageInfo'
 import { useNetworks } from '@hooks/useNetworks'
 
-// TODO: ensure withdrawing and depositing works with external vaults
 // TODO: display notice that external vaults aren't in the selected vaultlists somewhere on the page
-// TODO: add error states to this page (invalid query, invalid vault)
 export default function VaultPage() {
   const router = useRouter()
 
@@ -42,15 +41,31 @@ export default function VaultPage() {
     }
   }, [chainId, vaultAddress, vaults])
 
+  const { data: vaultTokenAddress, isFetched: isFetchedVaultTokenAddress } = useVaultTokenAddress(
+    vault as Vault
+  )
+
+  const isInvalidVault = isFetchedVaultTokenAddress && !vaultTokenAddress
+
   if (router.isReady) {
     return (
       <Layout className='gap-12'>
-        {!!vault && (
+        {!!vault ? (
           <>
             <VaultPageHeader vault={vault} />
-            <VaultPageInfo vault={vault} />
-            <VaultPageButtons vault={vault} />
+            {!isInvalidVault ? (
+              <>
+                <VaultPageInfo vault={vault} />
+                <VaultPageButtons vault={vault} />
+              </>
+            ) : (
+              // TODO: add invalid vault state
+              <>invalid vault</>
+            )}
           </>
+        ) : (
+          // TODO: add invalid query state
+          <>invalid query</>
         )}
       </Layout>
     )
