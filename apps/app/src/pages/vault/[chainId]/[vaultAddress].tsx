@@ -4,7 +4,11 @@ import {
   useSelectedVaults,
   useVaultTokenAddress
 } from '@pooltogether/hyperstructure-react-hooks'
+import { ErrorPooly } from '@shared/react-components'
+import { Button } from '@shared/ui'
 import { getVaultId } from '@shared/utilities'
+import classNames from 'classnames'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 import { isAddress } from 'viem'
@@ -59,15 +63,31 @@ export default function VaultPage() {
                 <VaultPageButtons vault={vault} />
               </>
             ) : (
-              // TODO: add invalid vault state
-              <>invalid vault</>
+              <ErrorState />
             )}
           </>
         ) : (
-          // TODO: add invalid query state
-          <>invalid query</>
+          <ErrorState />
         )}
       </Layout>
     )
   }
+}
+
+interface ErrorStateProps {
+  className?: string
+}
+
+const ErrorState = (props: ErrorStateProps) => {
+  const { className } = props
+
+  return (
+    <div className={classNames('flex flex-col gap-6 items-center text-center', className)}>
+      <ErrorPooly className='w-full max-w-[50%]' />
+      <span>Something went wrong while querying this vault's info.</span>
+      <Link href='/vaults' passHref={true}>
+        <Button>Return to Vaults</Button>
+      </Link>
+    </div>
+  )
 }
