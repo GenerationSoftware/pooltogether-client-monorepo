@@ -1,30 +1,24 @@
+import { Intl } from '@shared/types'
 import { getNiceNetworkNameByChainId } from '@shared/utilities'
 import classNames from 'classnames'
 import { NetworkIcon } from '../Icons/NetworkIcon'
+import { NetworkBadgeProps } from './NetworkBadge'
 
-export interface NetworkBadgeProps {
-  chainId: number
-  appendText?: string
-  hideIcon?: boolean
-  hideBorder?: boolean
-  hideBg?: boolean
-  className?: string
-  iconClassName?: string
-  textClassName?: string
-  onClick?: () => void
+export interface PrizePoolBadgeProps extends Omit<NetworkBadgeProps, 'appendText'> {
+  intl?: Intl
 }
 
-export const NetworkBadge = (props: NetworkBadgeProps) => {
+export const PrizePoolBadge = (props: PrizePoolBadgeProps) => {
   const {
     chainId,
-    appendText,
     hideIcon,
     hideBorder,
     hideBg,
     className,
     iconClassName,
     textClassName,
-    onClick
+    onClick,
+    intl
   } = props
 
   const networkName = getNiceNetworkNameByChainId(chainId)
@@ -46,8 +40,7 @@ export const NetworkBadge = (props: NetworkBadgeProps) => {
         <NetworkIcon chainId={chainId} className={classNames('h-4 w-4 shrink-0', iconClassName)} />
       )}
       <span className={classNames(textClassName)}>
-        {networkName}
-        {!!appendText ? ` ${appendText}` : ''}
+        {intl?.('prizePool', { network: networkName }) ?? `${networkName} Prize Pool`}
       </span>
     </span>
   )

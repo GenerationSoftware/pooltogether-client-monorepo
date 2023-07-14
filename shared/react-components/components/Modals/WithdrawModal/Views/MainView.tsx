@@ -1,7 +1,7 @@
 import { getNiceNetworkNameByChainId, Vault } from '@pooltogether/hyperstructure-client-js'
 import { useVaultShareData } from '@pooltogether/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
-import { NetworkBadge } from '../../../Badges/NetworkBadge'
+import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 import { WithdrawForm } from '../../../Form/WithdrawForm'
 import { NetworkFees } from '../../NetworkFees'
 
@@ -22,12 +22,7 @@ export const MainView = (props: MainViewProps) => {
         Withdraw from {vault.name ?? `"${shareData?.name}"` ?? <Spinner />}{' '}
         <span className='hidden md:inline-block'>on {networkName}</span>
       </span>
-      <NetworkBadge
-        chainId={vault.chainId}
-        appendText='Prize Pool'
-        hideBorder={true}
-        className='!py-1 mx-auto'
-      />
+      <PrizePoolBadge chainId={vault.chainId} hideBorder={true} className='!py-1 mx-auto' />
       <WithdrawForm vault={vault} showInputInfoRows={true} />
       <NetworkFees vault={vault} show={['withdraw']} />
     </div>

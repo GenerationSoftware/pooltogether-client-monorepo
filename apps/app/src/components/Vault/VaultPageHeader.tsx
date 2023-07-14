@@ -1,7 +1,7 @@
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { Vault } from '@pooltogether/hyperstructure-client-js'
 import { useVaultShareData } from '@pooltogether/hyperstructure-react-hooks'
-import { NetworkBadge, TokenIcon } from '@shared/react-components'
+import { PrizePoolBadge, TokenIcon } from '@shared/react-components'
 import classNames from 'classnames'
 import { useRouter } from 'next/router'
 
@@ -48,9 +48,8 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
           </div>
         </div>
         {(!!vault.name || !!shareData?.name) && (
-          <NetworkBadge
+          <PrizePoolBadge
             chainId={vault.chainId}
-            appendText='Prize Pool'
             onClick={() => router.push(`/prizes?network=${vault.chainId}`)}
           />
         )}

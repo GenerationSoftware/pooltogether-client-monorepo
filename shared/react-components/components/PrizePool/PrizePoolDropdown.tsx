@@ -2,7 +2,7 @@ import { NETWORK } from '@pooltogether/hyperstructure-client-js'
 import { useScreenSize } from '@shared/generic-react-hooks'
 import { Dropdown, DropdownItem } from '@shared/ui'
 import { useMemo } from 'react'
-import { NetworkBadge } from '../Badges/NetworkBadge'
+import { PrizePoolBadge } from '../Badges/PrizePoolBadge'
 
 export interface PrizePoolDropdownProps {
   networks: NETWORK[]
@@ -22,9 +22,8 @@ export const PrizePoolDropdown = (props: PrizePoolDropdownProps) => {
           return {
             id: network.toString(),
             content: (
-              <NetworkBadge
+              <PrizePoolBadge
                 chainId={network}
-                appendText='Prize Pool'
                 hideBg={true}
                 className='w-full justify-center p-2 hover:!bg-pt-purple-100/40'
                 textClassName='text-pt-purple-600'
@@ -37,9 +36,8 @@ export const PrizePoolDropdown = (props: PrizePoolDropdownProps) => {
         return {
           id: network.toString(),
           content: (
-            <NetworkBadge
+            <PrizePoolBadge
               chainId={network}
-              appendText='Prize Pool'
               className='w-full justify-center py-4 border-0'
               iconClassName='h-6 w-6'
               textClassName='font-averta font-semibold text-pt-purple-100'
@@ -54,9 +52,8 @@ export const PrizePoolDropdown = (props: PrizePoolDropdownProps) => {
   return (
     <Dropdown
       label={
-        <NetworkBadge
+        <PrizePoolBadge
           chainId={selectedNetwork}
-          appendText='Prize Pool'
           hideBg={true}
           className='gap-2 pr-0'
           iconClassName='h-8 w-8'

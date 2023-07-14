@@ -1,6 +1,7 @@
 import { Button } from '@shared/ui'
 import { SECONDS_PER_DAY } from '@shared/utilities'
 import { GetStaticProps } from 'next'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { getMessages } from 'src/utils'
 import { Layout } from '@components/Layout'
@@ -21,11 +22,13 @@ export const getStaticProps: GetStaticProps<HomePageProps> = async ({ locale }) 
 }
 
 export default function HomePage() {
+  const t = useTranslations('Home')
+
   return (
     <Layout className='gap-8'>
       <LargestPrizeHeader />
       <Link href='/vaults' passHref={true}>
-        <Button>Deposit to Win</Button>
+        <Button>{t('depositToWin')}</Button>
       </Link>
       <PrizePoolCards />
     </Layout>

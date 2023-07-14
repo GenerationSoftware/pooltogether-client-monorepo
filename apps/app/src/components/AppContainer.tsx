@@ -2,6 +2,7 @@ import { useFathom } from '@shared/generic-react-hooks'
 import { useSelectedLanguage } from '@shared/generic-react-hooks'
 import { Flowbite } from '@shared/ui'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { NextIntlProvider } from 'next-intl'
 import { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import { useSentryUser } from '../hooks/useSentryUser'
@@ -36,9 +37,11 @@ export const AppContainer = (props: AppProps) => {
   return (
     <Flowbite theme={{ dark: true }}>
       <QueryClientProvider client={queryClient}>
-        <div id='modal-root' />
-        <VaultListHandler />
-        <Component {...pageProps} />
+        <NextIntlProvider messages={pageProps.messages}>
+          <div id='modal-root' />
+          <VaultListHandler />
+          <Component {...pageProps} />
+        </NextIntlProvider>
       </QueryClientProvider>
     </Flowbite>
   )

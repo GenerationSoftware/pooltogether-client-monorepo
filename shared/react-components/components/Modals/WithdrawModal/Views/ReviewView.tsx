@@ -1,7 +1,7 @@
 import { Token, TokenWithLogo, Vault } from '@pooltogether/hyperstructure-client-js'
 import { useVaultShareData, useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
 import { useAtomValue } from 'jotai'
-import { NetworkBadge } from '../../../Badges/NetworkBadge'
+import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 import {
   withdrawFormShareAmountAtom,
   withdrawFormTokenAmountAtom
@@ -25,12 +25,7 @@ export const ReviewView = (props: ReviewViewProps) => {
   return (
     <div className='flex flex-col gap-6'>
       <span className='text-xl font-semibold text-center'>Confirm Withdrawal</span>
-      <NetworkBadge
-        chainId={vault.chainId}
-        appendText='Prize Pool'
-        hideBorder={true}
-        className='!py-1 mx-auto'
-      />
+      <PrizePoolBadge chainId={vault.chainId} hideBorder={true} className='!py-1 mx-auto' />
       {!!shareData && !!tokenData && (
         <div className='flex flex-col w-full gap-1'>
           <BasicWithdrawFormInput

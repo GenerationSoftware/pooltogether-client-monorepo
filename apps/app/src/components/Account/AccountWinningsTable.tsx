@@ -1,5 +1,5 @@
 import { PrizePool, SubgraphPrizePoolAccount } from '@pooltogether/hyperstructure-client-js'
-import { NetworkBadge } from '@shared/react-components'
+import { PrizePoolBadge } from '@shared/react-components'
 import { Table, TableProps } from '@shared/ui'
 import classNames from 'classnames'
 import { useRouter } from 'next/router'
@@ -32,9 +32,8 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
             draw: { content: `Draw #${win.draw.id}` },
             prizePool: {
               content: (
-                <NetworkBadge
+                <PrizePoolBadge
                   chainId={win.chainId}
-                  appendText='Prize Pool'
                   onClick={() => router.push(`/prizes?network=${win.chainId}`)}
                 />
               ),

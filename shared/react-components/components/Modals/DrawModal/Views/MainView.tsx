@@ -8,7 +8,7 @@ import {
 } from '@pooltogether/hyperstructure-client-js'
 import { usePrizeTokenData } from '@pooltogether/hyperstructure-react-hooks'
 import { ExternalLink, Spinner } from '@shared/ui'
-import { NetworkBadge } from '../../../Badges/NetworkBadge'
+import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 
 interface MainViewProps {
   draw: SubgraphPrizePoolDraw
@@ -21,7 +21,7 @@ export const MainView = (props: MainViewProps) => {
   return (
     <div className='flex flex-col gap-6 mb-6'>
       <MainViewHeader draw={draw} />
-      <NetworkBadge chainId={prizePool.chainId} appendText='Prize Pool' className='mx-auto' />
+      <PrizePoolBadge chainId={prizePool.chainId} className='mx-auto' />
       {/* TODO: add "you were eligible for this draw" message when applicable */}
       <DrawTotals draw={draw} prizePool={prizePool} />
       <DrawWinnersTable draw={draw} prizePool={prizePool} />

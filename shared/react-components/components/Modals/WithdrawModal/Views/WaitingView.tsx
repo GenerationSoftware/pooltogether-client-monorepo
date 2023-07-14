@@ -2,7 +2,7 @@ import { formatNumberForDisplay, Vault } from '@pooltogether/hyperstructure-clie
 import { useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
 import { Button, Spinner } from '@shared/ui'
 import { useAtomValue } from 'jotai'
-import { NetworkBadge } from '../../../Badges/NetworkBadge'
+import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 import { withdrawFormTokenAmountAtom } from '../../../Form/WithdrawForm'
 
 interface WaitingViewProps {
@@ -20,12 +20,7 @@ export const WaitingView = (props: WaitingViewProps) => {
   return (
     <div className='flex flex-col gap-4 md:gap-6'>
       <span className='text-lg font-semibold text-center'>Confirm Transaction in Wallet</span>
-      <NetworkBadge
-        chainId={vault.chainId}
-        appendText='Prize Pool'
-        hideBorder={true}
-        className='!py-1 mx-auto'
-      />
+      <PrizePoolBadge chainId={vault.chainId} hideBorder={true} className='!py-1 mx-auto' />
       <span className='text-sm text-center md:text-base'>
         Withdrawing {formatNumberForDisplay(formTokenAmount)} {tokenData?.symbol}...
       </span>

@@ -23,6 +23,7 @@ export interface NavbarProps {
   onClickBrand?: () => void
   onClickSettings?: () => void
   sticky?: boolean
+  intl?: { home?: string }
   className?: string
   linkClassName?: string
   mobileBottomClassName?: string
@@ -37,6 +38,7 @@ export const Navbar = (props: NavbarProps) => {
     onClickBrand,
     onClickSettings,
     sticky,
+    intl,
     className,
     linkClassName,
     mobileBottomClassName
@@ -83,7 +85,7 @@ export const Navbar = (props: NavbarProps) => {
       </FlowbiteNavbar>
       <MobileNavbar className={classNames('z-50', mobileBottomClassName)}>
         <NavbarLinks
-          links={[{ href: '/', name: 'Home' }, ...links]}
+          links={[{ href: '/', name: intl?.home ?? 'Home' }, ...links]}
           activePage={activePage}
           Component={linksAs}
           linkClassName={linkClassName}

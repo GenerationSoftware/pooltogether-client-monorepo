@@ -22,6 +22,7 @@ A React componponent library utilizing some simpler components from the internal
 
 - `ImportedBadge`
 - `NetworkBadge`
+- `PrizePoolBadge`
 - `VaultBadge`
 
 ### Button Components

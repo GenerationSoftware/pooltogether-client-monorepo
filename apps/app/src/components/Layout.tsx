@@ -23,6 +23,7 @@ import { Footer, FooterItem, LINKS, Navbar, SocialIcon, Toaster } from '@shared/
 import { getDiscordInvite } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
+import { useTranslations } from 'next-intl'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -42,6 +43,11 @@ export const Layout = (props: LayoutProps) => {
   const { children, className } = props
 
   const router = useRouter()
+
+  const t_common = useTranslations('Common')
+  const t_nav = useTranslations('Navigation')
+  const t_settings = useTranslations('Settings')
+  const t_footer = useTranslations('Footer')
 
   const { setIsModalOpen: setIsSettingsModalOpen } = useIsModalOpen(MODAL_KEYS.settings)
   const [settingsModalView, setSettingsModalView] = useState<SettingsModalView>('menu')
@@ -76,23 +82,23 @@ export const Layout = (props: LayoutProps) => {
 
   const footerItems: FooterItem[] = [
     {
-      title: 'Get Help',
+      title: t_footer('getHelp'),
       content: [
-        { content: 'User Docs', href: LINKS.docs },
-        { content: 'FAQ', href: LINKS.faq },
-        { content: 'Developer Docs', href: LINKS.devDocs }
+        { content: t_footer('userDocs'), href: LINKS.docs },
+        { content: t_footer('faq'), href: LINKS.faq },
+        { content: t_footer('devDocs'), href: LINKS.devDocs }
       ]
     },
     {
-      title: 'Ecosystem',
+      title: t_footer('ecosystem'),
       content: [
-        { content: 'Extensions', href: '/extensions' },
-        { content: 'Governance', href: LINKS.governance },
-        { content: 'Security', href: LINKS.audits }
+        { content: t_footer('extensions'), href: '/extensions' },
+        { content: t_footer('governance'), href: LINKS.governance },
+        { content: t_footer('security'), href: LINKS.audits }
       ]
     },
     {
-      title: 'Community',
+      title: t_footer('community'),
       content: [
         {
           content: 'Twitter',
@@ -117,17 +123,17 @@ export const Layout = (props: LayoutProps) => {
       ]
     },
     {
-      title: 'Settings',
+      title: t_footer('settings'),
       content: [
         {
-          content: 'Change Currency',
+          content: t_settings('changeCurrency'),
           onClick: () => {
             setSettingsModalView('currency')
             setIsSettingsModalOpen(true)
           }
         },
         {
-          content: 'Change Language',
+          content: t_settings('changeLanguage'),
           onClick: () => {
             setSettingsModalView('language')
             setIsSettingsModalOpen(true)
@@ -139,7 +145,7 @@ export const Layout = (props: LayoutProps) => {
 
   if (isBrowser) {
     footerItems[footerItems.length - 1].content.push({
-      content: `${isTestnets ? 'Disable' : 'Enable'} Testnets`,
+      content: isTestnets ? t_footer('disableTestnets') : t_footer('enableTestnets'),
       onClick: () => {
         setIsTestnets(!isTestnets)
         router.reload()
@@ -148,10 +154,10 @@ export const Layout = (props: LayoutProps) => {
   }
 
   const pageTitles: { [href: string]: string } = {
-    account: 'Account',
-    prizes: 'Prizes',
-    vaults: 'Vaults',
-    vault: 'Vault'
+    account: t_nav('account'),
+    prizes: t_nav('prizes'),
+    vaults: t_nav('vaults'),
+    vault: t_nav('vault')
   }
 
   const pageTitle = pageTitles[router.pathname.split('/')[1]]
@@ -164,9 +170,9 @@ export const Layout = (props: LayoutProps) => {
 
       <Navbar
         links={[
-          { href: '/prizes', name: 'Prizes' },
-          { href: '/vaults', name: 'Vaults' },
-          { href: '/account', name: 'Account' }
+          { href: '/prizes', name: t_nav('prizes') },
+          { href: '/vaults', name: t_nav('vaults') },
+          { href: '/account', name: t_nav('account') }
         ]}
         activePage={router.pathname}
         // @ts-ignore
@@ -179,6 +185,7 @@ export const Layout = (props: LayoutProps) => {
           />
         }
         onClickSettings={() => setIsSettingsModalOpen(true)}
+        intl={{ home: t_nav('home') }}
         linkClassName='hover:text-pt-purple-200'
       />
 
@@ -209,7 +216,7 @@ export const Layout = (props: LayoutProps) => {
 
       <CaptchaModal
         hCaptchaSiteKey='11cdabde-af7e-42cb-ba97-76e35b7f7c39'
-        header='Join our Discord Community'
+        header={t_common('joinDiscord')}
         onVerify={getDiscordInvite}
       />
 

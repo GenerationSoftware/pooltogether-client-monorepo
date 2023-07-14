@@ -7,7 +7,7 @@ import {
 import { useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
 import { Button, ExternalLink } from '@shared/ui'
 import { useAtomValue } from 'jotai'
-import { NetworkBadge } from '../../../Badges/NetworkBadge'
+import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 import { withdrawFormTokenAmountAtom } from '../../../Form/WithdrawForm'
 import { SuccessPooly } from '../../../Graphics/SuccessPooly'
 
@@ -34,12 +34,7 @@ export const SuccessView = (props: SuccessViewProps) => {
             You withdrew {formatNumberForDisplay(formTokenAmount)} {tokenData?.symbol}
           </span>
         </div>
-        <NetworkBadge
-          chainId={vault.chainId}
-          appendText='Prize Pool'
-          hideBorder={true}
-          className='!py-1'
-        />
+        <PrizePoolBadge chainId={vault.chainId} hideBorder={true} className='!py-1' />
         <SuccessPooly className='w-40 h-auto mt-3' />
       </div>
       {!!txHash && (

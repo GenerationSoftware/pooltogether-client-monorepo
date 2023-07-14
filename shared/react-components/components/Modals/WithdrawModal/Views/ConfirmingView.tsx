@@ -7,7 +7,7 @@ import {
 import { useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
 import { Button, ExternalLink, Spinner } from '@shared/ui'
 import { useAtomValue } from 'jotai'
-import { NetworkBadge } from '../../../Badges/NetworkBadge'
+import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 import { withdrawFormTokenAmountAtom } from '../../../Form/WithdrawForm'
 
 interface ConfirmingViewProps {
@@ -26,12 +26,7 @@ export const ConfirmingView = (props: ConfirmingViewProps) => {
   return (
     <div className='flex flex-col gap-6'>
       <span className='text-lg font-semibold text-center'>Transaction Submitted</span>
-      <NetworkBadge
-        chainId={vault.chainId}
-        appendText='Prize Pool'
-        hideBorder={true}
-        className='!py-1 mx-auto'
-      />
+      <PrizePoolBadge chainId={vault.chainId} hideBorder={true} className='!py-1 mx-auto' />
       <span className='text-sm text-center md:text-base'>
         Withdrawing {formatNumberForDisplay(formTokenAmount)} {tokenData?.symbol}...
       </span>

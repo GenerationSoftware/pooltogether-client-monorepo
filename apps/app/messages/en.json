@@ -1,1 +1,50 @@
-{}
+{
+  "Common": {
+    "prizePool": "{network} Prize Pool",
+    "grandPrize": "Grand Prize",
+    "joinDiscord": "Join our Discord Community"
+  },
+  "Navigation": {
+    "home": "Home",
+    "prizes": "Prizes",
+    "vaults": "Vaults",
+    "vault": "Vault",
+    "account": "Account"
+  },
+  "Home": {
+    "depositToWin": "Deposit to Win",
+    "winUpToFirst": "Deposit for a chance to win up to",
+    "winUpToSecond": "",
+    "chanceToWin": "Deposit into prize pools for a daily chance to win.",
+    "nextDrawIn": "Next Draw In"
+  },
+  "Prizes": {},
+  "Vaults": {},
+  "Vault": {},
+  "Account": {},
+  "Footer": {
+    "getHelp": "Get Help",
+    "ecosystem": "Ecosystem",
+    "community": "Community",
+    "settings": "Settings",
+    "userDocs": "User Docs",
+    "faq": "FAQ",
+    "devDocs": "Developer Docs",
+    "extensions": "Extensions",
+    "governance": "Governance",
+    "security": "Security",
+    "enableTestnets": "Enable Testnets",
+    "disableTestnets": "Disable Testnets"
+  },
+  "Settings": {
+    "changeCurrency": "Change Currency",
+    "changeLanguage": "Change Language"
+  },
+  "Abbreviations": {
+    "days": "days",
+    "hours": "hrs",
+    "minutes": "mins",
+    "seconds": "secs"
+  },
+  "Error": {}
+}
