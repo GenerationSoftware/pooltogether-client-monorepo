@@ -1,7 +1,23 @@
 import { ExternalLink } from '@shared/ui'
+import { SECONDS_PER_DAY } from '@shared/utilities'
+import { GetStaticProps } from 'next'
+import { getMessages } from 'src/utils'
 import { Layout } from '@components/Layout'
 import { PrizePoolDisplay } from '@components/Prizes/PrizePoolDisplay'
 import { PrizePoolWinners } from '@components/Prizes/PrizePoolWinners'
+
+interface PrizesPageProps {
+  messages: IntlMessages
+}
+
+export const getStaticProps: GetStaticProps<PrizesPageProps> = async ({ locale }) => {
+  const messages = await getMessages(locale, { useDefault: true })
+
+  return {
+    props: { messages },
+    revalidate: SECONDS_PER_DAY
+  }
+}
 
 export default function PrizesPage() {
   return (

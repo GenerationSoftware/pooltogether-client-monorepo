@@ -1,11 +1,8 @@
-import { isNewerVersion, PrizePool } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@pooltogether/hyperstructure-client-js'
 import {
   useAllUserVaultBalances,
-  useCachedVaultLists,
   usePrizeDrawWinners,
-  useSelectedVaultListIds,
-  useSelectedVaults,
-  useVaultList
+  useSelectedVaults
 } from '@pooltogether/hyperstructure-react-hooks'
 import {
   ConnectButton,
@@ -16,7 +13,6 @@ import {
 import { MODAL_KEYS, useIsModalOpen, useIsTestnets } from '@shared/generic-react-hooks'
 import {
   CaptchaModal,
-  createVaultListToast,
   DepositModal,
   DrawModal,
   SettingsModal,
@@ -58,9 +54,6 @@ export const Layout = (props: LayoutProps) => {
   const { openChainModal } = useChainModal()
   const addRecentTransaction = useAddRecentTransaction()
 
-  const { cachedVaultLists, cache } = useCachedVaultLists()
-  const { select } = useSelectedVaultListIds()
-
   const { vaults } = useSelectedVaults()
   const { address: userAddress } = useAccount()
   const { refetch: refetchUserBalances } = useAllUserVaultBalances(
@@ -73,44 +66,6 @@ export const Layout = (props: LayoutProps) => {
 
   const selectedDrawId = useAtomValue(drawIdAtom)
   const selectedDraw = draws?.find((draw) => draw.id === selectedDrawId)
-
-  const [urlQueryVaultListSrc, setUrlQueryVaultListSrc] = useState<string>('')
-  const {
-    isFetching: isImportingVaultList,
-    isSuccess: isSuccessVaultList,
-    isError: isErrorVaultList
-  } = useVaultList(urlQueryVaultListSrc)
-
-  useEffect(() => {
-    for (const key in DEFAULT_VAULT_LISTS) {
-      const defaultVaultList = DEFAULT_VAULT_LISTS[key as keyof typeof DEFAULT_VAULT_LISTS]
-      const cachedVaultList = cachedVaultLists[key]
-      if (!cachedVaultList || isNewerVersion(defaultVaultList.version, cachedVaultList.version)) {
-        cache(key, defaultVaultList)
-        select(key, 'local')
-      }
-    }
-  }, [])
-
-  useEffect(() => {
-    const vaultListSrc = router.query['list']
-    if (!!vaultListSrc && typeof vaultListSrc === 'string') {
-      setUrlQueryVaultListSrc(vaultListSrc)
-    }
-  }, [router.query])
-
-  useEffect(() => {
-    const state = isSuccessVaultList
-      ? 'success'
-      : isErrorVaultList
-      ? 'error'
-      : isImportingVaultList
-      ? 'importing'
-      : undefined
-    if (!!state) {
-      createVaultListToast({ vaultListSrc: urlQueryVaultListSrc, state })
-    }
-  }, [isImportingVaultList, isSuccessVaultList, isErrorVaultList])
 
   // NOTE: This is necessary due to hydration errors otherwise.
   const [isBrowser, setIsBrowser] = useState(false)
@@ -176,8 +131,7 @@ export const Layout = (props: LayoutProps) => {
           onClick: () => {
             setSettingsModalView('language')
             setIsSettingsModalOpen(true)
-          },
-          disabled: true
+          }
         }
       ]
     }

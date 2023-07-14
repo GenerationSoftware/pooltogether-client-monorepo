@@ -1,6 +1,14 @@
 import { load } from 'fathom-client'
 import { useEffect } from 'react'
 
+type FathomEventId =
+  | 'routeChangeStart'
+  | 'beforeHistoryChange'
+  | 'routeChangeComplete'
+  | 'routeChangeError'
+  | 'hashChangeStart'
+  | 'hashChangeComplete'
+
 /**
  * Optimally paired with a next.js Router
  * @param fathomSiteId ID from Fathom Analytics dashboard
@@ -10,8 +18,8 @@ import { useEffect } from 'react'
 export const useFathom = (
   fathomSiteId: string,
   siteDomains: string[],
-  addRouteChangeListener: (id: string, method: () => void) => void,
-  removeRouteChangeListener: (id: string, method: () => void) => void
+  addRouteChangeListener: (id: FathomEventId, method: () => void) => void,
+  removeRouteChangeListener: (id: FathomEventId, method: () => void) => void
 ) => {
   useEffect(() => {
     if (fathomSiteId && !!addRouteChangeListener && !!removeRouteChangeListener) {
