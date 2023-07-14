@@ -4,6 +4,7 @@ import {
   getBlockExplorerUrl,
   Vault
 } from '@pooltogether/hyperstructure-client-js'
+import { useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
 import { Button, ExternalLink } from '@shared/ui'
 import { useAtomValue } from 'jotai'
 import { NetworkBadge } from '../../../Badges/NetworkBadge'
@@ -22,13 +23,15 @@ export const SuccessView = (props: SuccessViewProps) => {
 
   const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
 
+  const { data: tokenData } = useVaultTokenData(vault)
+
   return (
     <div className='flex flex-col gap-6 items-center'>
       <div className='flex flex-col gap-3 items-center'>
         <div className='flex flex-col items-center text-lg font-medium text-center'>
           <span className='text-pt-teal'>Success!</span>
           <span>
-            You deposited {formatNumberForDisplay(formTokenAmount)} {vault.tokenData?.symbol}
+            You deposited {formatNumberForDisplay(formTokenAmount)} {tokenData?.symbol}
           </span>
         </div>
         <NetworkBadge

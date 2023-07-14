@@ -45,7 +45,7 @@ export const WithdrawModal = (props: WithdrawModalProps) => {
   const formTokenAmount = useAtomValue(withdrawFormTokenAmountAtom)
 
   const createToast = () => {
-    if (!!vault && !!withdrawTxHash && view !== 'success' && view !== 'error') {
+    if (!!vault && !!withdrawTxHash && view === 'confirming') {
       createTxToast({
         type: 'withdraw',
         vault: vault,

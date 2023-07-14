@@ -5,7 +5,8 @@ import {
   useTokenAllowance,
   useTokenBalance,
   useUserVaultTokenBalance,
-  useVaultBalance
+  useVaultBalance,
+  useVaultTokenData
 } from '@pooltogether/hyperstructure-react-hooks'
 import { Button, Spinner } from '@shared/ui'
 import { useAtomValue } from 'jotai'
@@ -46,6 +47,10 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
   const { address: userAddress, isDisconnected } = useAccount()
   const { chain } = useNetwork()
 
+  const { data: tokenData } = useVaultTokenData(vault)
+
+  const decimals = vault.decimals ?? tokenData?.decimals
+
   const {
     data: allowance,
     isFetched: isFetchedAllowance,
@@ -54,7 +59,7 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
     vault.chainId,
     userAddress as `0x${string}`,
     vault.address,
-    vault.tokenData?.address as `0x${string}`
+    tokenData?.address as `0x${string}`
   )
 
   const {
@@ -64,7 +69,7 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
   } = useTokenBalance(
     vault.chainId,
     userAddress as `0x${string}`,
-    vault.tokenData?.address as `0x${string}`
+    tokenData?.address as `0x${string}`
   )
 
   const { refetch: refetchVaultBalance } = useVaultBalance(vault)
@@ -77,10 +82,10 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
   const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
 
   const isValidFormTokenAmount =
-    vault.decimals !== undefined ? isValidFormInput(formTokenAmount, vault.decimals) : false
+    decimals !== undefined ? isValidFormInput(formTokenAmount, decimals) : false
 
   const depositAmount = isValidFormTokenAmount
-    ? parseUnits(formTokenAmount, vault.decimals as number)
+    ? parseUnits(formTokenAmount, decimals as number)
     : 0n
 
   const {
@@ -137,7 +142,7 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
   const approvalEnabled =
     !isDisconnected &&
     !!userAddress &&
-    !!vault.tokenData &&
+    !!tokenData &&
     isFetchedUserBalance &&
     !!userBalance &&
     isFetchedAllowance &&
@@ -145,12 +150,12 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
     !!depositAmount &&
     userBalance.amount >= depositAmount &&
     isValidFormTokenAmount &&
-    vault.decimals !== undefined
+    decimals !== undefined
 
   const depositEnabled =
     !isDisconnected &&
     !!userAddress &&
-    !!vault.tokenData &&
+    !!tokenData &&
     isFetchedUserBalance &&
     !!userBalance &&
     isFetchedAllowance &&
@@ -159,7 +164,7 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
     userBalance.amount >= depositAmount &&
     allowance >= depositAmount &&
     isValidFormTokenAmount &&
-    vault.decimals !== undefined
+    decimals !== undefined
 
   if (depositAmount === 0n) {
     return (
@@ -182,15 +187,15 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
           isTxSuccess={isSuccessfulExactApproval}
           write={sendExactApproveTransaction}
           txHash={exactApprovalTxHash}
-          txDescription={`Exact ${vault.tokenData?.symbol} Approval`}
+          txDescription={`Exact ${tokenData?.symbol} Approval`}
           fullSized={true}
           disabled={!approvalEnabled}
           openConnectModal={openConnectModal}
           openChainModal={openChainModal}
           addRecentTransaction={addRecentTransaction}
         >
-          Approve exact amount of {vault.tokenData?.symbol ?? <Spinner />}
-          <ExactApprovalTooltip tokenSymbol={vault.tokenData?.symbol ?? '?'} iconClassName='ml-3' />
+          Approve exact amount of {tokenData?.symbol ?? <Spinner />}
+          <ExactApprovalTooltip tokenSymbol={tokenData?.symbol ?? '?'} iconClassName='ml-3' />
         </TransactionButton>
         <TransactionButton
           chainId={vault.chainId}
@@ -198,7 +203,7 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
           isTxSuccess={isSuccessfulInfiniteApproval}
           write={sendInfiniteApproveTransaction}
           txHash={infiniteApprovalTxHash}
-          txDescription={`Infinite ${vault.tokenData?.symbol} Approval`}
+          txDescription={`Infinite ${tokenData?.symbol} Approval`}
           fullSized={true}
           disabled={!approvalEnabled}
           openConnectModal={openConnectModal}
@@ -206,11 +211,8 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
           addRecentTransaction={addRecentTransaction}
           color='transparent'
         >
-          Approve unlimited amount of {vault.tokenData?.symbol ?? <Spinner />}
-          <InfiniteApprovalTooltip
-            tokenSymbol={vault.tokenData?.symbol ?? '?'}
-            iconClassName='ml-3'
-          />
+          Approve unlimited amount of {tokenData?.symbol ?? <Spinner />}
+          <InfiniteApprovalTooltip tokenSymbol={tokenData?.symbol ?? '?'} iconClassName='ml-3' />
         </TransactionButton>
       </div>
     )
@@ -228,7 +230,7 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
         isTxSuccess={isSuccessfulDeposit}
         write={sendDepositTransaction}
         txHash={depositTxHash}
-        txDescription={`${vault.tokenData?.symbol} Deposit`}
+        txDescription={`${tokenData?.symbol} Deposit`}
         fullSized={true}
         disabled={!depositEnabled}
         openConnectModal={openConnectModal}

@@ -4,6 +4,7 @@ import {
   getBlockExplorerUrl,
   Vault
 } from '@pooltogether/hyperstructure-client-js'
+import { useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
 import { Button, ExternalLink, Spinner } from '@shared/ui'
 import { useAtomValue } from 'jotai'
 import { NetworkBadge } from '../../../Badges/NetworkBadge'
@@ -20,6 +21,8 @@ export const ConfirmingView = (props: ConfirmingViewProps) => {
 
   const formTokenAmount = useAtomValue(withdrawFormTokenAmountAtom)
 
+  const { data: tokenData } = useVaultTokenData(vault)
+
   return (
     <div className='flex flex-col gap-6'>
       <span className='text-lg font-semibold text-center'>Transaction Submitted</span>
@@ -30,7 +33,7 @@ export const ConfirmingView = (props: ConfirmingViewProps) => {
         className='!py-1 mx-auto'
       />
       <span className='text-sm text-center md:text-base'>
-        Withdrawing {formatNumberForDisplay(formTokenAmount)} {vault.tokenData?.symbol}...
+        Withdrawing {formatNumberForDisplay(formTokenAmount)} {tokenData?.symbol}...
       </span>
       <Spinner size='lg' className='mx-auto after:border-y-pt-teal' />
       <div className='flex flex-col w-full justify-end h-24 gap-4 md:h-36 md:gap-6'>
