@@ -53,7 +53,7 @@ export const DepositModal = (props: DepositModalProps) => {
   }, [prizePools, vault])
 
   const createToast = () => {
-    if (!!vault && !!depositTxHash && view !== 'success' && view !== 'error') {
+    if (!!vault && !!depositTxHash && view === 'confirming') {
       createTxToast({
         type: 'deposit',
         vault: vault,

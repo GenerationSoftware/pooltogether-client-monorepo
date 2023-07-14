@@ -7,7 +7,9 @@ import {
   useTokenBalance,
   useUserVaultShareBalance,
   useVaultExchangeRate,
+  useVaultShareData,
   useVaultSharePrice,
+  useVaultTokenData,
   useVaultTokenPrice
 } from '@pooltogether/hyperstructure-react-hooks'
 import { atom, useSetAtom } from 'jotai'
@@ -32,10 +34,15 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
 
   const { address: userAddress } = useAccount()
 
+  const { data: shareData } = useVaultShareData(vault)
+  const { data: tokenData } = useVaultTokenData(vault)
+
+  const decimals = vault.decimals ?? shareData?.decimals
+
   const { data: tokenWithAmount, isFetched: isFetchedTokenBalance } = useTokenBalance(
     vault.chainId,
     userAddress as `0x${string}`,
-    vault.tokenData?.address as `0x${string}`
+    tokenData?.address as `0x${string}`
   )
   const tokenBalance = isFetchedTokenBalance && !!tokenWithAmount ? tokenWithAmount.amount : 0n
 
@@ -62,16 +69,12 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
   }, [])
 
   const handleTokenAmountChange = (tokenAmount: string) => {
-    if (
-      !!vaultExchangeRate &&
-      vault.decimals !== undefined &&
-      isValidFormInput(tokenAmount, vault.decimals)
-    ) {
+    if (!!vaultExchangeRate && decimals !== undefined && isValidFormInput(tokenAmount, decimals)) {
       setFormTokenAmount(tokenAmount)
 
-      const tokens = parseUnits(tokenAmount, vault.decimals)
-      const shares = getSharesFromAssets(tokens, vaultExchangeRate, vault.decimals)
-      const formattedShares = formatUnits(shares, vault.decimals)
+      const tokens = parseUnits(tokenAmount, decimals)
+      const shares = getSharesFromAssets(tokens, vaultExchangeRate, decimals)
+      const formattedShares = formatUnits(shares, decimals)
       const slicedShares = formattedShares.endsWith('.0')
         ? formattedShares.slice(0, -2)
         : formattedShares
@@ -85,16 +88,12 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
   }
 
   const handleShareAmountChange = (shareAmount: string) => {
-    if (
-      !!vaultExchangeRate &&
-      vault.decimals !== undefined &&
-      isValidFormInput(shareAmount, vault.decimals)
-    ) {
+    if (!!vaultExchangeRate && decimals !== undefined && isValidFormInput(shareAmount, decimals)) {
       setFormShareAmount(shareAmount)
 
-      const shares = parseUnits(shareAmount, vault.decimals)
-      const tokens = getAssetsFromShares(shares, vaultExchangeRate, vault.decimals)
-      const formattedTokens = formatUnits(tokens, vault.decimals)
+      const shares = parseUnits(shareAmount, decimals)
+      const tokens = getAssetsFromShares(shares, vaultExchangeRate, decimals)
+      const formattedTokens = formatUnits(tokens, decimals)
       const slicedTokens = formattedTokens.endsWith('.0')
         ? formattedTokens.slice(0, -2)
         : formattedTokens
@@ -108,30 +107,30 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
   }
 
   const shareInputData = useMemo(() => {
-    if (vault.shareData) {
+    if (!!shareData) {
       return {
-        ...vault.shareData,
+        ...shareData,
         amount: shareBalance,
         price: shareWithPrice?.price ?? 0,
         logoURI: vault.logoURI
       }
     }
-  }, [vault, shareBalance, shareWithPrice])
+  }, [vault, shareData, shareBalance, shareWithPrice])
 
   const tokenInputData = useMemo(() => {
-    if (vault.tokenData) {
+    if (!!tokenData) {
       return {
-        ...vault.tokenData,
+        ...tokenData,
         amount: tokenBalance,
         price: tokenWithPrice?.price ?? 0,
         logoURI: vault.tokenLogoURI
       }
     }
-  }, [vault, tokenBalance, tokenWithPrice])
+  }, [vault, tokenData, tokenBalance, tokenWithPrice])
 
   return (
     <div className='flex flex-col'>
-      {!!shareInputData && !!tokenInputData && vault.decimals !== undefined && (
+      {!!shareInputData && !!tokenInputData && decimals !== undefined && (
         <>
           <FormProvider {...formMethods}>
             <TxFormInput
@@ -139,11 +138,10 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
               formKey='shareAmount'
               validate={{
                 isNotGreaterThanShareBalance: (v) =>
-                  parseFloat(formatUnits(shareBalance, vault.decimals as number)) >=
-                    parseFloat(v) ||
+                  parseFloat(formatUnits(shareBalance, decimals)) >= parseFloat(v) ||
                   !isFetchedVaultBalance ||
                   !vaultBalance ||
-                  `Not enough ${vault.shareData?.symbol} in wallet`
+                  `Not enough ${shareData?.symbol} in wallet`
               }}
               onChange={handleShareAmountChange}
               showInfoRow={showInputInfoRows}

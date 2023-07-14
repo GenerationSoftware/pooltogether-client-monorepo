@@ -97,7 +97,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
           content: (
             <VaultBadge
               vault={vault}
-              onClick={() => router.push(`/vault/${vault.id}`)}
+              onClick={() => router.push(`/vault/${vault.chainId}/${vault.address}`)}
               className='max-w-full'
             />
           ),

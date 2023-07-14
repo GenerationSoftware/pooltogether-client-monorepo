@@ -3,7 +3,8 @@ import {
   useSendRedeemTransaction,
   useTokenBalance,
   useUserVaultShareBalance,
-  useVaultBalance
+  useVaultBalance,
+  useVaultTokenData
 } from '@pooltogether/hyperstructure-react-hooks'
 import { Button } from '@shared/ui'
 import { useAtomValue } from 'jotai'
@@ -42,6 +43,10 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
   const { address: userAddress, isDisconnected } = useAccount()
   const { chain } = useNetwork()
 
+  const { data: tokenData } = useVaultTokenData(vault)
+
+  const decimals = vault.decimals ?? tokenData?.decimals
+
   const {
     data: vaultShareBalance,
     isFetched: isFetchedVaultShareBalance,
@@ -51,7 +56,7 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
   const { refetch: refetchTokenBalance } = useTokenBalance(
     vault.chainId,
     userAddress as `0x${string}`,
-    vault.tokenData?.address as `0x${string}`
+    tokenData?.address as `0x${string}`
   )
 
   const { refetch: refetchVaultBalance } = useVaultBalance(vault)
@@ -59,10 +64,10 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
   const formShareAmount = useAtomValue(withdrawFormShareAmountAtom)
 
   const isValidFormShareAmount =
-    vault.decimals !== undefined ? isValidFormInput(formShareAmount, vault.decimals) : false
+    decimals !== undefined ? isValidFormInput(formShareAmount, decimals) : false
 
   const withdrawAmount = isValidFormShareAmount
-    ? parseUnits(formShareAmount, vault.decimals as number)
+    ? parseUnits(formShareAmount, decimals as number)
     : 0n
 
   const {
@@ -102,7 +107,7 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
   const withdrawEnabled =
     !isDisconnected &&
     !!userAddress &&
-    !!vault.shareData &&
+    !!tokenData &&
     isFetchedVaultShareBalance &&
     !!vaultShareBalance &&
     isValidFormShareAmount &&
@@ -130,7 +135,7 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
         isTxSuccess={isSuccessfulWithdrawal}
         write={sendRedeemTransaction}
         txHash={withdrawTxHash}
-        txDescription={`${vault.tokenData?.symbol} Withdrawal`}
+        txDescription={`${tokenData?.symbol} Withdrawal`}
         fullSized={true}
         disabled={!withdrawEnabled}
         openConnectModal={openConnectModal}

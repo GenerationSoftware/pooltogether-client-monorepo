@@ -8,7 +8,7 @@ import {
   usePrepareContractWrite,
   useWaitForTransaction
 } from 'wagmi'
-import { useTokenAllowance } from '..'
+import { useTokenAllowance, useVaultTokenAddress } from '..'
 
 /**
  * Prepares and submits a `deposit` transaction to a vault
@@ -33,16 +33,19 @@ export const useSendDepositTransaction = (
   const { address: userAddress } = useAccount()
   const { chain } = useNetwork()
 
+  const { data: tokenAddress, isFetched: isFetchedTokenAddress } = useVaultTokenAddress(vault)
+
   const { data: allowance, isFetched: isFetchedAllowance } = useTokenAllowance(
     vault?.chainId,
     userAddress as Address,
     vault?.address,
-    vault?.tokenData?.address as Address
+    tokenAddress as Address
   )
 
   const enabled =
     !!vault &&
-    !!vault.tokenData &&
+    isFetchedTokenAddress &&
+    !!tokenAddress &&
     !!userAddress &&
     isAddress(userAddress) &&
     chain?.id === vault.chainId &&

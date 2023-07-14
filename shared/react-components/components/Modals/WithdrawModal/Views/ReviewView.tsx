@@ -1,4 +1,5 @@
 import { Token, TokenWithLogo, Vault } from '@pooltogether/hyperstructure-client-js'
+import { useVaultShareData, useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
 import { useAtomValue } from 'jotai'
 import { NetworkBadge } from '../../../Badges/NetworkBadge'
 import {
@@ -18,6 +19,9 @@ export const ReviewView = (props: ReviewViewProps) => {
   const formShareAmount = useAtomValue(withdrawFormShareAmountAtom)
   const formTokenAmount = useAtomValue(withdrawFormTokenAmountAtom)
 
+  const { data: shareData } = useVaultShareData(vault)
+  const { data: tokenData } = useVaultTokenData(vault)
+
   return (
     <div className='flex flex-col gap-6'>
       <span className='text-xl font-semibold text-center'>Confirm Withdrawal</span>
@@ -27,13 +31,13 @@ export const ReviewView = (props: ReviewViewProps) => {
         hideBorder={true}
         className='!py-1 mx-auto'
       />
-      {!!vault.shareData && !!vault.tokenData && (
+      {!!shareData && !!tokenData && (
         <div className='flex flex-col w-full gap-1'>
           <BasicWithdrawFormInput
-            token={{ ...vault.shareData, amount: formShareAmount, logoURI: vault.logoURI }}
+            token={{ ...shareData, amount: formShareAmount, logoURI: vault.logoURI }}
           />
           <BasicWithdrawFormInput
-            token={{ ...vault.tokenData, amount: formTokenAmount, logoURI: vault.tokenLogoURI }}
+            token={{ ...tokenData, amount: formTokenAmount, logoURI: vault.tokenLogoURI }}
           />
         </div>
       )}

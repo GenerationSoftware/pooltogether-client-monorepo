@@ -1,6 +1,7 @@
 import { getBlockExplorerUrl, shorten, Vault } from '@pooltogether/hyperstructure-client-js'
+import { useVaultShareData, useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
 import { PrizePowerTooltip, WinChanceTooltip } from '@shared/react-components'
-import { ExternalLink } from '@shared/ui'
+import { ExternalLink, Spinner } from '@shared/ui'
 import classNames from 'classnames'
 import { ReactNode } from 'react'
 import { useAccount } from 'wagmi'
@@ -18,6 +19,9 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
   const { vault, className } = props
 
   const { address: userAddress } = useAccount()
+
+  const { data: shareData } = useVaultShareData(vault)
+  const { data: tokenData } = useVaultTokenData(vault)
 
   return (
     <div
@@ -63,11 +67,11 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
       <VaultInfoRow name='TVL' data={<VaultTotalDeposits vault={vault} />} />
       <VaultInfoRow
         name='Deposit Asset'
-        data={!!vault.tokenData && <VaultInfoToken token={vault.tokenData} />}
+        data={!!tokenData ? <VaultInfoToken token={tokenData} /> : <Spinner />}
       />
       <VaultInfoRow
         name='Prize Asset'
-        data={!!vault.shareData && <VaultInfoToken token={vault.shareData} />}
+        data={!!shareData ? <VaultInfoToken token={shareData} /> : <Spinner />}
       />
     </div>
   )
@@ -98,7 +102,7 @@ const VaultInfoToken = (props: VaultInfoTokenProps) => {
 
   return (
     <span>
-      {token.symbol} |{' '}
+      {token.symbol ?? '?'} |{' '}
       <ExternalLink
         href={getBlockExplorerUrl(token.chainId, token.address, 'token')}
         text={shorten(token.address, { short: true }) ?? ''}
