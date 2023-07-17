@@ -48,6 +48,7 @@ export const Layout = (props: LayoutProps) => {
   const t_nav = useTranslations('Navigation')
   const t_settings = useTranslations('Settings')
   const t_footer = useTranslations('Footer')
+  const t_drawModal = useTranslations('Prizes.drawModal')
   const t_formErrors = useTranslations('Error.formErrors')
 
   const { setIsModalOpen: setIsSettingsModalOpen } = useIsModalOpen(MODAL_KEYS.settings)
@@ -215,7 +216,11 @@ export const Layout = (props: LayoutProps) => {
         refetchUserBalances={refetchUserBalances}
       />
 
-      <DrawModal draw={selectedDraw} prizePool={selectedPrizePool} />
+      <DrawModal
+        draw={selectedDraw}
+        prizePool={selectedPrizePool}
+        intl={{ base: t_common, prizes: t_drawModal }}
+      />
 
       <CaptchaModal
         hCaptchaSiteKey='11cdabde-af7e-42cb-ba97-76e35b7f7c39'

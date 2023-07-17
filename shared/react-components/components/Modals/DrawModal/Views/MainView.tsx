@@ -7,34 +7,37 @@ import {
   SubgraphPrizePoolDraw
 } from '@pooltogether/hyperstructure-client-js'
 import { usePrizeTokenData } from '@pooltogether/hyperstructure-react-hooks'
+import { Intl } from '@shared/types'
 import { ExternalLink, Spinner } from '@shared/ui'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 
 interface MainViewProps {
   draw: SubgraphPrizePoolDraw
   prizePool: PrizePool
+  intl?: { base?: Intl<'prizePool' | 'drawId'>; prizes?: Intl<'drawTotal' | 'winner' | 'prize'> }
 }
 
 export const MainView = (props: MainViewProps) => {
-  const { draw, prizePool } = props
+  const { draw, prizePool, intl } = props
 
   return (
     <div className='flex flex-col gap-6 mb-6'>
-      <MainViewHeader draw={draw} />
-      <PrizePoolBadge chainId={prizePool.chainId} className='mx-auto' />
+      <MainViewHeader draw={draw} intl={intl?.base} />
+      <PrizePoolBadge chainId={prizePool.chainId} intl={intl?.base} className='mx-auto' />
       {/* TODO: add "you were eligible for this draw" message when applicable */}
-      <DrawTotals draw={draw} prizePool={prizePool} />
-      <DrawWinnersTable draw={draw} prizePool={prizePool} />
+      <DrawTotals draw={draw} prizePool={prizePool} intl={intl?.prizes} />
+      <DrawWinnersTable draw={draw} prizePool={prizePool} intl={intl?.prizes} />
     </div>
   )
 }
 
 interface MainViewHeaderProps {
   draw: SubgraphPrizePoolDraw
+  intl?: Intl<'drawId'>
 }
 
 const MainViewHeader = (props: MainViewHeaderProps) => {
-  const { draw } = props
+  const { draw, intl } = props
 
   const drawDate = new Date(parseInt(draw.prizeClaims[0].timestamp) * 1_000)
   const formattedDrawDate = drawDate.toLocaleTimeString(undefined, {
@@ -49,7 +52,9 @@ const MainViewHeader = (props: MainViewHeaderProps) => {
 
   return (
     <div className='flex flex-col mx-auto text-center'>
-      <span className='text-xl font-semibold'>Draw #{draw.id}</span>
+      <span className='text-xl font-semibold'>
+        {intl?.('drawId', { id: draw.id }) ?? `Draw #${draw.id}`}
+      </span>
       <span className='text-sm text-pt-purple-200'>{formattedDrawDate}</span>
     </div>
   )
@@ -58,10 +63,11 @@ const MainViewHeader = (props: MainViewHeaderProps) => {
 interface DrawTotalsProps {
   draw: SubgraphPrizePoolDraw
   prizePool: PrizePool
+  intl?: Intl<'drawTotal'>
 }
 
 const DrawTotals = (props: DrawTotalsProps) => {
-  const { draw, prizePool } = props
+  const { draw, prizePool, intl } = props
 
   const { data: tokenData } = usePrizeTokenData(prizePool)
 
@@ -70,14 +76,17 @@ const DrawTotals = (props: DrawTotalsProps) => {
     ? formatBigIntForDisplay(totalPrizeAmount, tokenData.decimals)
     : undefined
 
+  if (formattedTotalPrizeAmount === undefined) {
+    return <Spinner />
+  }
+
   return (
     <span className='text-center'>
-      This draw had {draw.prizeClaims.length} prizes totalling{' '}
-      {!!formattedTotalPrizeAmount ? (
-        `${formattedTotalPrizeAmount} ${tokenData?.symbol}.`
-      ) : (
-        <Spinner />
-      )}
+      {intl?.('drawTotal', {
+        numPrizes: draw.prizeClaims.length,
+        numTokens: `${formattedTotalPrizeAmount} ${tokenData?.symbol}`
+      }) ??
+        `This draw had ${draw.prizeClaims.length} prizes totalling ${formattedTotalPrizeAmount} ${tokenData?.symbol}.`}
     </span>
   )
 }
@@ -85,10 +94,11 @@ const DrawTotals = (props: DrawTotalsProps) => {
 interface DrawWinnersTableProps {
   draw: SubgraphPrizePoolDraw
   prizePool: PrizePool
+  intl?: Intl<'winner' | 'prize'>
 }
 
 const DrawWinnersTable = (props: DrawWinnersTableProps) => {
-  const { draw, prizePool } = props
+  const { draw, prizePool, intl } = props
 
   const { data: tokenData } = usePrizeTokenData(prizePool)
 
@@ -96,8 +106,8 @@ const DrawWinnersTable = (props: DrawWinnersTableProps) => {
     <div className='flex flex-col w-full gap-2 md:text-center'>
       {/* TODO: make sure table headers are aligned with content when scrollbar is active */}
       <div className='flex w-full text-pt-purple-100 font-semibold'>
-        <span className='flex-grow'>Winner</span>
-        <span className='flex-grow text-right md:text-center'>Prize</span>
+        <span className='flex-grow'>{intl?.('winner') ?? 'Winner'}</span>
+        <span className='flex-grow text-right md:text-center'>{intl?.('prize') ?? 'Prize'}</span>
       </div>
       {!!draw && !!tokenData ? (
         <div className='flex flex-col w-full max-h-52 gap-3 overflow-y-auto'>
