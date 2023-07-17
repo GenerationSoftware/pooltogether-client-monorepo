@@ -17,13 +17,13 @@ export const LargestPrizeHeader = () => {
     <>
       <div className='flex flex-col items-center gap-3'>
         <span className='w-2/3 text-2xl text-center font-averta font-semibold md:w-full md:text-4xl lg:text-5xl'>
-          {t_home('winUpToFirst')}{' '}
+          {t_home('winUpTo.beforeValue')}{' '}
           {!!gpData ? (
             <TokenValue token={gpData.token} hideZeroes={true} countUp={true} />
           ) : (
             <Spinner />
           )}{' '}
-          {t_home('winUpToSecond')}
+          {t_home('winUpTo.afterValue')}
         </span>
         <span className='hidden text-pt-purple-100 md:block'>{t_home('chanceToWin')}</span>
       </div>

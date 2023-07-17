@@ -22,7 +22,7 @@ export const getStaticProps: GetStaticProps<HomePageProps> = async ({ locale }) 
 }
 
 export default function HomePage() {
-  const t = useTranslations('Home')
+  const t = useTranslations('Common')
 
   return (
     <Layout className='gap-8'>

@@ -1,11 +1,9 @@
-import {
-  formatDailyCountToFrequency,
-  getPrizeTextFromFrequency,
-  PrizePool
-} from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@pooltogether/hyperstructure-client-js'
 import { useAllPrizeInfo, usePrizeTokenData } from '@pooltogether/hyperstructure-react-hooks'
 import { TokenValue } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
+import { formatDailyCountToFrequency, getPrizeTextFromFrequency } from '@shared/utilities'
+import { useTranslations } from 'next-intl'
 
 interface PrizesTableProps {
   prizePool: PrizePool
@@ -14,14 +12,17 @@ interface PrizesTableProps {
 export const PrizesTable = (props: PrizesTableProps) => {
   const { prizePool } = props
 
+  const t_prizes = useTranslations('Prizes')
+  const t_freq = useTranslations('Frequency')
+
   const { data: allPrizeInfo, isFetched: isFetchedAllPrizeInfo } = useAllPrizeInfo([prizePool])
   const { data: tokenData, isFetched: isFetchedTokenData } = usePrizeTokenData(prizePool)
 
   return (
     <>
       <div className='flex w-full max-w-[36rem] text-xs text-pt-purple-100 pb-4 border-b-[0.5px] border-b-current md:text-sm md:text-pt-purple-100/50 md:mt-8 md:pb-2'>
-        <span className='flex-grow pl-6 text-left md:pl-16'>Estimated Prize Value</span>
-        <span className='flex-grow pr-6 text-right md:pr-16'>Estimated Frequency</span>
+        <span className='flex-grow pl-6 text-left md:pl-16'>{t_prizes('estPrizeValue')}</span>
+        <span className='flex-grow pr-6 text-right md:pr-16'>{t_prizes('estPrizeFreq')}</span>
       </div>
       {isFetchedAllPrizeInfo && isFetchedTokenData && !!tokenData ? (
         <div className='flex flex-col w-full max-w-[36rem] gap-3'>
@@ -39,7 +40,7 @@ export const PrizesTable = (props: PrizesTableProps) => {
                     <TokenValue token={{ ...tokenData, amount: prize.amount }} hideZeroes={true} />
                   </span>
                   <span className='flex-grow text-pt-purple-100 pr-8 text-right md:text-xl md:pr-16'>
-                    {getPrizeTextFromFrequency(frequency, 'daily')}
+                    {getPrizeTextFromFrequency(frequency, 'daily', t_freq)}
                   </span>
                 </div>
               )

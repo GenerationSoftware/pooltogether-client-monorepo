@@ -2,6 +2,7 @@ import { NETWORK } from '@pooltogether/hyperstructure-client-js'
 import { useSelectedVault, useSelectedVaults } from '@pooltogether/hyperstructure-react-hooks'
 import { PrizePoolDropdown } from '@shared/react-components'
 import { Button } from '@shared/ui'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
@@ -11,6 +12,9 @@ import { PrizesTable } from './PrizesTable'
 
 export const PrizePoolDisplay = () => {
   const router = useRouter()
+
+  const t_common = useTranslations('Common')
+  const t_prizes = useTranslations('Prizes')
 
   const networks = useNetworks()
 
@@ -43,9 +47,10 @@ export const PrizePoolDisplay = () => {
         networks={networks}
         selectedNetwork={selectedPrizePool?.chainId as NETWORK}
         onSelect={handleNetworkChange}
+        intl={{ common: t_common, switchPrizePool: t_prizes('switchPrizePool') }}
       />
       <Link href={`/vaults?network=${selectedPrizePool?.chainId}`} passHref={true}>
-        <Button>Deposit to Win</Button>
+        <Button>{t_common('depositToWin')}</Button>
       </Link>
       {!!selectedPrizePool && <PrizesTable prizePool={selectedPrizePool} />}
     </>

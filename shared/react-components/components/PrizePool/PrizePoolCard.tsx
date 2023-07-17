@@ -7,7 +7,7 @@ import { TokenValue } from '../Currency/TokenValue'
 
 export interface PrizePoolCardProps {
   prizePool: PrizePool
-  intl?: Intl
+  intl?: Intl<'prizePool' | 'grandPrize'>
 }
 
 export const PrizePoolCard = (props: PrizePoolCardProps) => {

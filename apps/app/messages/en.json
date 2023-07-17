@@ -1,8 +1,11 @@
 {
   "Common": {
+    "depositToWin": "Deposit to Win",
     "prizePool": "{network} Prize Pool",
     "grandPrize": "Grand Prize",
-    "joinDiscord": "Join our Discord Community"
+    "joinDiscord": "Join our Discord Community",
+    "showMore": "Show More",
+    "drawId": "Draw #{id}"
   },
   "Navigation": {
     "home": "Home",
@@ -12,13 +15,24 @@
     "account": "Account"
   },
   "Home": {
-    "depositToWin": "Deposit to Win",
-    "winUpToFirst": "Deposit for a chance to win up to",
-    "winUpToSecond": "",
+    "winUpTo": {
+      "beforeValue": "Deposit for a chance to win up to",
+      "afterValue": ""
+    },
     "chanceToWin": "Deposit into prize pools for a daily chance to win.",
     "nextDrawIn": "Next Draw In"
   },
-  "Prizes": {},
+  "Prizes": {
+    "learnMore": "Learn more about how prizes work",
+    "switchPrizePool": "Switch prize pool",
+    "estPrizeValue": "Estimated Prize Value",
+    "estPrizeFreq": "Estimated Frequency",
+    "recentWinners": "Recent Prize Pool Winners",
+    "drawWinners": {
+      "xWalletsWon": "{numWallets, plural, one {# wallet} other {# wallets}} won",
+      "xInPrizes": "in prizes"
+    }
+  },
   "Vaults": {},
   "Vault": {},
   "Account": {},
@@ -45,6 +59,17 @@
     "hours": "hrs",
     "minutes": "mins",
     "seconds": "secs"
+  },
+  "Frequency": {
+    "daily": "Daily",
+    "everyXdays": "Every {number} days",
+    "everyXweeks": "Every {number} weeks",
+    "everyXmonths": "Every {number} months",
+    "everyXyears": "Every {number} years",
+    "xPrizesDaily": "{number, plural, one {# prize} other {# prizes}} daily",
+    "xPrizesWeekly": "{number, plural, one {# prize} other {# prizes}} weekly",
+    "xPrizesMonthly": "{number, plural, one {# prize} other {# prizes}} monthly",
+    "xPrizesYearly": "{number, plural, one {# prize} other {# prizes}} yearly"
   },
   "Error": {}
 }

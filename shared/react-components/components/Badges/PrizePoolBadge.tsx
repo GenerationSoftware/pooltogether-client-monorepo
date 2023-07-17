@@ -5,7 +5,7 @@ import { NetworkIcon } from '../Icons/NetworkIcon'
 import { NetworkBadgeProps } from './NetworkBadge'
 
 export interface PrizePoolBadgeProps extends Omit<NetworkBadgeProps, 'appendText'> {
-  intl?: Intl
+  intl?: Intl<'prizePool'>
 }
 
 export const PrizePoolBadge = (props: PrizePoolBadgeProps) => {

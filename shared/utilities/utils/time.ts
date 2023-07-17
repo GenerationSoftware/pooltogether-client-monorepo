@@ -1,4 +1,4 @@
-import { TimeUnit } from '@shared/types'
+import { Intl, TimeUnit } from '@shared/types'
 import {
   MINUTES_PER_DAY,
   SECONDS_PER_DAY,
@@ -246,27 +246,40 @@ export const formatDailyCountToFrequency = (dailyCount: number) => {
  * Returns prize frequency text for any given frequency
  * @param data data from `formatDailyCountToFrequency()`
  * @param format desired output format (default is 'everyXdays')
+ * @param intl optional localization
  * @returns
  */
 export const getPrizeTextFromFrequency = (
   data: { frequency: number; unit: TimeUnit },
-  format?: 'everyXdays' | 'daily'
+  format?: 'everyXdays' | 'daily',
+  intl?: Intl<
+    | 'daily'
+    | 'everyXdays'
+    | 'everyXweeks'
+    | 'everyXmonths'
+    | 'everyXyears'
+    | 'xPrizesDaily'
+    | 'xPrizesWeekly'
+    | 'xPrizesMonthly'
+    | 'xPrizesYearly'
+  >
 ) => {
   // "Every X Days/Weeks/Months/Years" format:
   if (format === 'everyXdays' || format === undefined) {
     if (data.frequency !== 0) {
+      const x = Math.round(data.frequency)
       if (data.unit === TimeUnit.day) {
         if (data.frequency < 1.5) {
-          return `Daily`
+          return intl?.('daily') ?? `Daily`
         } else {
-          return `Every ${Math.round(data.frequency)} days`
+          return intl?.('everyXdays', { number: x }) ?? `Every ${x} days`
         }
       } else if (data.unit === TimeUnit.week) {
-        return `Every ${Math.round(data.frequency)} weeks`
+        return intl?.('everyXweeks', { number: x }) ?? `Every ${x} weeks`
       } else if (data.unit === TimeUnit.month) {
-        return `Every ${Math.round(data.frequency)} months`
+        return intl?.('everyXmonths', { number: x }) ?? `Every ${x} months`
       } else {
-        return `Every ${Math.round(data.frequency)} years`
+        return intl?.('everyXyears', { number: x }) ?? `Every ${x} years`
       }
     } else {
       return null
@@ -280,9 +293,10 @@ export const getPrizeTextFromFrequency = (
 
       if (data.unit === TimeUnit.day) {
         if (perUnitFreq >= 1.5) {
-          return `${Math.round(perUnitFreq)} prizes daily`
+          const x = Math.round(perUnitFreq)
+          return intl?.('xPrizesDaily', { number: x }) ?? `${x} prizes daily`
         } else if (perUnitFreq >= 6.5 / 7) {
-          return `1 prize daily`
+          return intl?.('xPrizesDaily', { number: 1 }) ?? `1 prize daily`
         } else {
           perUnitFreq *= 7
           data.unit = TimeUnit.week
@@ -291,9 +305,10 @@ export const getPrizeTextFromFrequency = (
 
       if (data.unit === TimeUnit.week) {
         if (perUnitFreq >= 1.5) {
-          return `${Math.round(perUnitFreq)} prizes weekly`
+          const x = Math.round(perUnitFreq)
+          return intl?.('xPrizesWeekly', { number: x }) ?? `${x} prizes weekly`
         } else if (perUnitFreq >= 3.5 / (365 / 12 / 7)) {
-          return `1 prize weekly`
+          return intl?.('xPrizesWeekly', { number: 1 }) ?? `1 prize weekly`
         } else {
           perUnitFreq *= 365 / 12 / 7
           data.unit = TimeUnit.month
@@ -302,9 +317,10 @@ export const getPrizeTextFromFrequency = (
 
       if (data.unit === TimeUnit.month) {
         if (perUnitFreq >= 1.5) {
-          return `${Math.round(perUnitFreq)} prizes monthly`
+          const x = Math.round(perUnitFreq)
+          return intl?.('xPrizesMonthly', { number: x }) ?? `${x} prizes monthly`
         } else if (perUnitFreq >= 11.5 / 12) {
-          return `1 prize monthly`
+          return intl?.('xPrizesMonthly', { number: 1 }) ?? `1 prize monthly`
         } else {
           perUnitFreq *= 12
           data.unit = TimeUnit.year
@@ -312,12 +328,11 @@ export const getPrizeTextFromFrequency = (
       }
 
       if (data.unit === TimeUnit.year) {
-        if (perUnitFreq >= 1.5) {
-          return `${Math.round(perUnitFreq)} prizes yearly`
-        } else if (perUnitFreq >= 1) {
-          return `1 prize yearly`
+        if (perUnitFreq >= 1.5 || perUnitFreq < 1) {
+          const x = Math.round(perUnitFreq)
+          return intl?.('xPrizesYearly', { number: x }) ?? `${x} prizes yearly`
         } else {
-          return `${Math.round(perUnitFreq)} prizes yearly`
+          return intl?.('xPrizesYearly', { number: 1 }) ?? `1 prize yearly`
         }
       }
     } else {
