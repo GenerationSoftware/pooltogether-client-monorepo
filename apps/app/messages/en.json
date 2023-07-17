@@ -130,6 +130,9 @@
     "oops": "Oops!",
     "noVaultListsEnabled": "It looks like you don't have any valid vault lists enabled.",
     "noVaultsMatchingFilters": "There are no vaults that match your filters.",
-    "vaultInfoQuery": "Something went wrong while querying this vault's info."
+    "vaultInfoQuery": "Something went wrong while querying this vault's info.",
+    "hmmm": "Hmmm...",
+    "pageNotFound": "We couldn't find the page you're looking for.",
+    "return": "Return to the Pool"
   }
 }
