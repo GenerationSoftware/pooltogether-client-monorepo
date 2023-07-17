@@ -14,6 +14,7 @@ import {
   useVaultTokenData
 } from '@pooltogether/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
+import { Intl } from '@shared/types'
 import { Spinner, toast } from '@shared/ui'
 import { ReactNode, useEffect } from 'react'
 import { useAccount, useWaitForTransaction } from 'wagmi'
@@ -29,6 +30,19 @@ export interface TransactionToastProps {
   formattedAmount: string
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
+  intl?: Intl<
+    | 'deposit'
+    | 'withdrawal'
+    | 'depositing'
+    | 'withdrawing'
+    | 'viewOn'
+    | 'success'
+    | 'deposited'
+    | 'withdrew'
+    | 'uhOh'
+    | 'failedTx'
+    | 'tryAgain'
+  >
 }
 
 /**
@@ -41,7 +55,8 @@ export const createTxToast = (data: TransactionToastProps) => {
 }
 
 export const TransactionToast = (props: TransactionToastProps) => {
-  const { type, vault, txHash, formattedAmount, addRecentTransaction, refetchUserBalances } = props
+  const { type, vault, txHash, formattedAmount, addRecentTransaction, refetchUserBalances, intl } =
+    props
 
   const { data: tokenData } = useVaultTokenData(vault)
 
@@ -75,7 +90,7 @@ export const TransactionToast = (props: TransactionToastProps) => {
       if (!!addRecentTransaction) {
         const networkName = getNiceNetworkNameByChainId(vault.chainId)
         const txDescription = `${tokenData?.symbol} ${
-          type === 'deposit' ? 'Deposit' : 'Withdrawal'
+          type === 'deposit' ? intl?.('deposit') ?? 'Deposit' : intl?.('withdrawal') ?? 'Withdrawal'
         }`
 
         addRecentTransaction({
@@ -95,7 +110,13 @@ export const TransactionToast = (props: TransactionToastProps) => {
   if (!isLoading && isSuccess) {
     toast(
       <ToastLayout id={txHash}>
-        <SuccessView type={type} vault={vault} txHash={txHash} formattedAmount={formattedAmount} />
+        <SuccessView
+          type={type}
+          vault={vault}
+          txHash={txHash}
+          formattedAmount={formattedAmount}
+          intl={intl}
+        />
       </ToastLayout>,
       { id: txHash }
     )
@@ -104,7 +125,7 @@ export const TransactionToast = (props: TransactionToastProps) => {
   if (!isLoading && !isSuccess && isError) {
     toast(
       <ToastLayout id={txHash}>
-        <ErrorView type={type} vault={vault} txHash={txHash} />
+        <ErrorView type={type} vault={vault} txHash={txHash} intl={intl} />
       </ToastLayout>,
       { id: txHash }
     )
@@ -112,7 +133,13 @@ export const TransactionToast = (props: TransactionToastProps) => {
 
   return (
     <ToastLayout id={txHash}>
-      <ConfirmingView type={type} vault={vault} txHash={txHash} formattedAmount={formattedAmount} />
+      <ConfirmingView
+        type={type}
+        vault={vault}
+        txHash={txHash}
+        formattedAmount={formattedAmount}
+        intl={intl}
+      />
     </ToastLayout>
   )
 }
@@ -141,25 +168,30 @@ interface ConfirmingViewProps {
   vault: Vault
   txHash: string
   formattedAmount: string
+  intl?: Intl<'depositing' | 'withdrawing' | 'viewOn'>
 }
 
 const ConfirmingView = (props: ConfirmingViewProps) => {
-  const { type, vault, txHash, formattedAmount } = props
+  const { type, vault, txHash, formattedAmount, intl } = props
 
   const { data: tokenData } = useVaultTokenData(vault)
+
+  const tokens = `${formattedAmount} ${tokenData?.symbol}`
+  const name = getBlockExplorerName(vault.chainId)
 
   return (
     <>
       <span className='flex items-center gap-2 text-pt-purple-50'>
         <Spinner className='after:border-y-pt-teal' />{' '}
-        {type === 'deposit' ? 'Depositing' : 'Withdrawing'} {formattedAmount} {tokenData?.symbol}...
+        {type === 'deposit' && (intl?.('depositing', { tokens }) ?? `Depositing ${tokens}...`)}
+        {type === 'withdraw' && (intl?.('withdrawing', { tokens }) ?? `Withdrawing ${tokens}...`)}
       </span>
       <a
         href={getBlockExplorerUrl(vault.chainId, txHash, 'tx')}
         target='_blank'
         className='text-xs text-pt-teal'
       >
-        View on {getBlockExplorerName(vault.chainId)}
+        {intl?.('viewOn', { name }) ?? `View on ${name}`}
       </a>
     </>
   )
@@ -170,21 +202,30 @@ interface SuccessViewProps {
   vault: Vault
   txHash: string
   formattedAmount: string
+  intl?: Intl<'success' | 'deposited' | 'withdrew' | 'viewOn'>
 }
 
 const SuccessView = (props: SuccessViewProps) => {
-  const { type, vault, txHash, formattedAmount } = props
+  const { type, vault, txHash, formattedAmount, intl } = props
 
   const { data: tokenData } = useVaultTokenData(vault)
+
+  const tokens = `${formattedAmount} ${tokenData?.symbol}`
+  const network = getNiceNetworkNameByChainId(vault.chainId)
+  const name = getBlockExplorerName(vault.chainId)
 
   return (
     <>
       <SuccessPooly className='w-16 h-auto' />
       <div className='flex flex-col items-center text-center'>
-        <span className='text-xl font-semibold text-pt-teal'>Success!</span>
+        <span className='text-xl font-semibold text-pt-teal'>
+          {intl?.('success') ?? 'Success!'}
+        </span>
         <span className='text-pt-purple-50'>
-          You {type === 'deposit' ? 'deposited' : 'withdrew'} {formattedAmount} {tokenData?.symbol}{' '}
-          on {getNiceNetworkNameByChainId(vault.chainId)}
+          {type === 'deposit' &&
+            (intl?.('deposited', { tokens, network }) ?? `You deposited ${tokens} on ${network}`)}
+          {type === 'withdraw' &&
+            (intl?.('withdrew', { tokens, network }) ?? `You withdrew ${tokens} on ${network}`)}
         </span>
       </div>
       <a
@@ -192,7 +233,7 @@ const SuccessView = (props: SuccessViewProps) => {
         target='_blank'
         className='text-xs text-pt-teal'
       >
-        View on {getBlockExplorerName(vault.chainId)}
+        {intl?.('viewOn', { name }) ?? `View on ${name}`}
       </a>
     </>
   )
@@ -202,10 +243,11 @@ interface ErrorViewProps {
   type: TransactionType
   vault: Vault
   txHash: string
+  intl?: Intl<'uhOh' | 'failedTx' | 'tryAgain' | 'viewOn'>
 }
 
 const ErrorView = (props: ErrorViewProps) => {
-  const { type, vault, txHash } = props
+  const { type, vault, txHash, intl } = props
 
   const { setSelectedVaultById } = useSelectedVault()
 
@@ -218,16 +260,18 @@ const ErrorView = (props: ErrorViewProps) => {
     setIsModalOpen(true)
   }
 
+  const name = getBlockExplorerName(vault.chainId)
+
   return (
     <>
       <ErrorPooly className='w-16 h-auto' />
       <div className='flex flex-col items-center text-center'>
-        <span className='text-xl font-semibold text-[#EA8686]'>Uh oh!</span>
-        <span className='text-pt-purple-50'>Something went wrong...</span>
+        <span className='text-xl font-semibold text-[#EA8686]'>{intl?.('uhOh') ?? 'Uh oh!'}</span>
+        <span className='text-pt-purple-50'>{intl?.('failedTx') ?? 'Something went wrong...'}</span>
       </div>
       <span className='text-xs text-pt-purple-100'>
         <span onClick={handleRetry} className='text-pt-teal cursor-pointer'>
-          Try Again
+          {intl?.('tryAgain') ?? 'Try Again'}
         </span>{' '}
         |{' '}
         <a
@@ -235,7 +279,7 @@ const ErrorView = (props: ErrorViewProps) => {
           target='_blank'
           className='text-pt-teal'
         >
-          View on {getBlockExplorerName(vault.chainId)}
+          {intl?.('viewOn', { name }) ?? `View on ${name}`}
         </a>
       </span>
     </>

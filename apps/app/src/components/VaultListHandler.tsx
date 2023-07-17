@@ -5,12 +5,15 @@ import {
 } from '@pooltogether/hyperstructure-react-hooks'
 import { createVaultListToast } from '@shared/react-components'
 import { isNewerVersion } from '@shared/utilities'
+import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { DEFAULT_VAULT_LISTS } from '@constants/config'
 
 export const VaultListHandler = () => {
   const router = useRouter()
+
+  const t = useTranslations('Toasts.vaultListImports')
 
   const { cachedVaultLists, cache } = useCachedVaultLists()
   const { select } = useSelectedVaultListIds()
@@ -54,7 +57,7 @@ export const VaultListHandler = () => {
       ? 'importing'
       : undefined
     if (!!state) {
-      createVaultListToast({ vaultListSrc: urlQueryVaultListSrc, state })
+      createVaultListToast({ vaultListSrc: urlQueryVaultListSrc, state, intl: t })
     }
   }, [isImportingVaultList, isSuccessVaultList, isErrorVaultList])
 

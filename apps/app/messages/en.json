@@ -145,6 +145,27 @@
     "prizePower": "Vaults with higher prize power have more chances to win",
     "winChance": "This is your chance to win a prize in any given draw"
   },
+  "Toasts": {
+    "transactions": {
+      "deposit": "Deposit",
+      "withdrawal": "Withdrawal",
+      "depositing": "Depositing {tokens}...",
+      "withdrawing": "Withdrawing {tokens}...",
+      "viewOn": "View on {name}",
+      "success": "Success!",
+      "deposited": "You deposited {tokens} on {network}",
+      "withdrew": "You withdrew {tokens} on {network}",
+      "uhOh": "Uh oh!",
+      "failedTx": "Something went wrong....",
+      "tryAgain": "Try Again"
+    },
+    "vaultListImports": {
+      "importingFrom": "Importing Vault List from {src}...",
+      "successfulImport": "Successfully imported a vault list.",
+      "selectedVaultList": "\"{name}\" has been added to your currently selected vault lists.",
+      "failedImport": "Something went wrong while importing a vault list from {src}."
+    }
+  },
   "Error": {
     "oops": "Oops!",
     "noVaultListsEnabled": "It looks like you don't have any valid vault lists enabled.",
