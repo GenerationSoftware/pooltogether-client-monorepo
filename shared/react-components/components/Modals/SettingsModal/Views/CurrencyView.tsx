@@ -1,21 +1,23 @@
 import { CheckIcon } from '@heroicons/react/24/outline'
 import { CURRENCY_ID, SUPPORTED_CURRENCIES, useSelectedCurrency } from '@shared/generic-react-hooks'
+import { Intl } from '@shared/types'
 import classNames from 'classnames'
 import { SettingsModalView } from '..'
 
 interface CurrencyViewProps {
   setView: (view: SettingsModalView) => void
+  intl?: Intl<'customizeCurrency'>
 }
 
 export const CurrencyView = (props: CurrencyViewProps) => {
-  const { setView } = props
+  const { setView, intl } = props
 
   const currencies = Object.keys(SUPPORTED_CURRENCIES) as CURRENCY_ID[]
 
   return (
     <div className='flex flex-col items-center gap-4 px-4'>
       <span className='textl-lg font-semibold text-pt-purple-50 order-first md:text-xl'>
-        Customize Currency
+        {intl?.('customizeCurrency') ?? 'Customize Currency'}
       </span>
       {currencies.map((id) => {
         return <CurrencyItem key={`curr-item-${id}`} id={id} setView={setView} />

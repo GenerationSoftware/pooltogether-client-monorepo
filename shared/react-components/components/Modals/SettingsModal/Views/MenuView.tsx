@@ -4,6 +4,7 @@ import {
   useSelectedCurrency,
   useSelectedLanguage
 } from '@shared/generic-react-hooks'
+import { Intl } from '@shared/types'
 import { BasicIcon, LINKS } from '@shared/ui'
 import classNames from 'classnames'
 import { ReactNode } from 'react'
@@ -14,10 +15,19 @@ interface MenuViewProps {
   setView: (view: SettingsModalView) => void
   disable?: SettingsModalOption[]
   hide?: SettingsModalOption[]
+  intl?: Intl<
+    | 'customizeExperience'
+    | 'changeCurrency'
+    | 'changeLanguage'
+    | 'viewEcosystem'
+    | 'manageVaultLists'
+    | 'getHelp'
+    | 'getHelpWithPt'
+  >
 }
 
 export const MenuView = (props: MenuViewProps) => {
-  const { setView, disable, hide } = props
+  const { setView, disable, hide, intl } = props
 
   const { selectedCurrency } = useSelectedCurrency()
   const { selectedLanguage } = useSelectedLanguage()
@@ -25,11 +35,11 @@ export const MenuView = (props: MenuViewProps) => {
   return (
     <div className='flex flex-col gap-4'>
       <SettingsMenuSection
-        title='Customize Your Experience'
+        title={intl?.('customizeExperience') ?? 'Customize Your Experience'}
         items={[
           {
             iconContent: SUPPORTED_CURRENCIES[selectedCurrency].symbol,
-            title: 'Change Currency',
+            title: intl?.('changeCurrency') ?? 'Change Currency',
             onClick: () => setView('currency'),
             disabled: disable?.includes('currency'),
             hidden: hide?.includes('currency')
@@ -37,19 +47,19 @@ export const MenuView = (props: MenuViewProps) => {
           {
             iconContent: selectedLanguage.toUpperCase(),
             iconClassName: '!text-base font-semibold',
-            title: 'Change Language',
+            title: intl?.('changeLanguage') ?? 'Change Language',
             onClick: () => setView('language'),
             disabled: disable?.includes('language'),
             hidden: hide?.includes('language')
           },
           {
             iconContent: <SparklesIcon className='h-6 w-6 text-pt-purple-100' />,
-            title: 'View Ecosystem',
+            title: intl?.('viewEcosystem') ?? 'View Ecosystem',
             onClick: () => window.open(LINKS.ecosystem)
           },
           {
             iconContent: <ClipboardListIcon className='h-6 w-6 text-pt-purple-100' />,
-            title: 'Manage Prize Asset Lists',
+            title: intl?.('manageVaultLists') ?? 'Manage Prize Asset Lists',
             onClick: () => setView('vaultLists'),
             disabled: disable?.includes('vaultLists'),
             hidden: hide?.includes('vaultLists')
@@ -57,12 +67,12 @@ export const MenuView = (props: MenuViewProps) => {
         ]}
       />
       <SettingsMenuSection
-        title='Get Help'
+        title={intl?.('getHelp') ?? 'Get Help'}
         items={[
           {
             iconContent: '?',
             iconClassName: 'font-semibold',
-            title: 'Get Help w/ Using PoolTogether',
+            title: intl?.('getHelpWithPt') ?? 'Get Help w/ Using PoolTogether',
             onClick: () => window.open(LINKS.docs)
           }
         ]}

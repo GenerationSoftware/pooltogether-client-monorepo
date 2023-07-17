@@ -48,6 +48,7 @@ export const Layout = (props: LayoutProps) => {
   const t_nav = useTranslations('Navigation')
   const t_settings = useTranslations('Settings')
   const t_footer = useTranslations('Footer')
+  const t_formErrors = useTranslations('Error.formErrors')
 
   const { setIsModalOpen: setIsSettingsModalOpen } = useIsModalOpen(MODAL_KEYS.settings)
   const [settingsModalView, setSettingsModalView] = useState<SettingsModalView>('menu')
@@ -192,7 +193,9 @@ export const Layout = (props: LayoutProps) => {
       <SettingsModal
         view={settingsModalView}
         setView={setSettingsModalView}
+        locales={['en']}
         localVaultLists={DEFAULT_VAULT_LISTS}
+        intl={{ base: t_settings, forms: t_formErrors }}
       />
 
       <DepositModal
