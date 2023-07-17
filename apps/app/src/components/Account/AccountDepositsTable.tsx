@@ -6,6 +6,7 @@ import {
 import { VaultBadge } from '@shared/react-components'
 import { Table, TableProps } from '@shared/ui'
 import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/router'
 import { useAccount } from 'wagmi'
 import { AccountVaultBalance } from './AccountVaultBalance'
@@ -18,6 +19,9 @@ export const AccountDepositsTable = (props: AccountDepositsTableProps) => {
   const { className, ...rest } = props
 
   const router = useRouter()
+
+  const t_vaults = useTranslations('Vaults')
+  const t_vault = useTranslations('Vault')
 
   const { address: userAddress } = useAccount()
 
@@ -35,9 +39,9 @@ export const AccountDepositsTable = (props: AccountDepositsTableProps) => {
   if (isFetched && isFetchedVaultBalances) {
     const tableData: TableProps['data'] = {
       headers: {
-        token: { content: 'Token' },
-        odds: { content: 'My Win Chance', position: 'center' },
-        balance: { content: 'My Balance', position: 'center' },
+        token: { content: t_vaults('headers.token') },
+        odds: { content: t_vault('headers.myWinChance'), position: 'center' },
+        balance: { content: t_vaults('headers.myBalance'), position: 'center' },
         manage: { content: <ManageHeader />, position: 'right' }
       },
       rows: !!vaultBalances
@@ -87,5 +91,7 @@ export const AccountDepositsTable = (props: AccountDepositsTableProps) => {
 }
 
 const ManageHeader = () => {
-  return <span className='w-[200px] text-center'>Manage</span>
+  const t = useTranslations('Common')
+
+  return <span className='w-[200px] text-center'>{t('manage')}</span>
 }

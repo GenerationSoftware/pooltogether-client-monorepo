@@ -4,6 +4,7 @@ import {
   SubgraphPrizePoolAccount
 } from '@pooltogether/hyperstructure-client-js'
 import { Button, ExternalLink } from '@shared/ui'
+import { useTranslations } from 'next-intl'
 
 interface AccountWinButtonsProps {
   win: SubgraphPrizePoolAccount['prizesReceived'][0] & { chainId: number }
@@ -11,6 +12,8 @@ interface AccountWinButtonsProps {
 
 export const AccountWinButtons = (props: AccountWinButtonsProps) => {
   const { win } = props
+
+  const t = useTranslations('Common')
 
   return (
     <div className='flex justify-end gap-2'>
@@ -23,7 +26,7 @@ export const AccountWinButtons = (props: AccountWinButtonsProps) => {
       >
         <ExternalLink
           href='#'
-          text={`View on ${getBlockExplorerName(win.chainId)}`}
+          text={t('viewOn', { name: getBlockExplorerName(win.chainId) })}
           size='sm'
           className='text-pt-purple-100 pointer-events-none'
         />

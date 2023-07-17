@@ -48,6 +48,7 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
               {t_vault('headers.myWinChance')}{' '}
               <WinChanceTooltip
                 iconSize='sm'
+                intl={{ text: t_tooltips('winChance') }}
                 className='text-sm md:text-base'
                 iconClassName='text-pt-purple-200'
               />

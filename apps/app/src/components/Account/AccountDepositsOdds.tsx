@@ -2,6 +2,7 @@ import { formatNumberForDisplay } from '@pooltogether/hyperstructure-client-js'
 import { useAllUserPrizeOdds, useSelectedVaults } from '@pooltogether/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
 import { useAccount } from 'wagmi'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 
@@ -11,6 +12,8 @@ interface AccountDepositsOddsProps {
 
 export const AccountDepositsOdds = (props: AccountDepositsOddsProps) => {
   const { className } = props
+
+  const t = useTranslations('Account')
 
   const { address: userAddress } = useAccount()
 
@@ -33,10 +36,12 @@ export const AccountDepositsOdds = (props: AccountDepositsOddsProps) => {
         className
       )}
     >
-      <span className='text-xs md:text-base'>Daily Prize Odds</span>
+      <span className='text-xs md:text-base'>{t('dailyPrizeOdds')}</span>
       <span>
         {isFetchedPrizeOdds && !!prizeOdds ? (
-          `1 in ${formatNumberForDisplay(prizeOdds.oneInX, { maximumSignificantDigits: 3 })}`
+          t('oneInXChance', {
+            number: formatNumberForDisplay(prizeOdds.oneInX, { maximumSignificantDigits: 3 })
+          })
         ) : (
           <Spinner />
         )}

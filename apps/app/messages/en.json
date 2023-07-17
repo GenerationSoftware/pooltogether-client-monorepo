@@ -10,7 +10,10 @@
     "deposit": "Deposit",
     "withdraw": "Withdraw",
     "learnMore": "Learn More",
-    "back": "Back"
+    "back": "Back",
+    "connectWallet": "Connect Wallet",
+    "viewTx": "View TX",
+    "viewOn": "View on {name}"
   },
   "Navigation": {
     "home": "Home",
@@ -65,7 +68,23 @@
     },
     "returnToVaults": "Return to Vaults"
   },
-  "Account": {},
+  "Account": {
+    "connectWallet": "Connect your wallet to view account status",
+    "noPrizeAssets": "You don't have any prize assets.",
+    "depositNow": "Deposit now.",
+    "yourDeposits": "Your Deposits",
+    "yourWinnings": "Your Winnings",
+    "dailyPrizeOdds": "Daily Prize Odds",
+    "oneInXChance": "1 in {number}",
+    "noPrizesRecently": "You haven't won any prizes recently.",
+    "learnHowItWorks": "Learn how PoolTogether works",
+    "winHeaders": {
+      "draw": "Draw",
+      "prizePool": "Prize Pool",
+      "winnings": "Winnings",
+      "moreInfo": "More Info"
+    }
+  },
   "Footer": {
     "titles": {
       "getHelp": "Get Help",
@@ -104,7 +123,8 @@
     "xPrizesYearly": "{number, plural, one {# prize} other {# prizes}} yearly"
   },
   "Tooltips": {
-    "prizePower": "Vaults with higher prize power have more chances to win"
+    "prizePower": "Vaults with higher prize power have more chances to win",
+    "winChance": "This is your chance to win a prize in any given draw"
   },
   "Error": {
     "oops": "Oops!",

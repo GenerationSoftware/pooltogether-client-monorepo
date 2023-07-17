@@ -5,6 +5,7 @@ import {
 } from '@pooltogether/hyperstructure-client-js'
 import { NetworkIcon } from '@shared/react-components'
 import { ExternalLink } from '@shared/ui'
+import { useTranslations } from 'next-intl'
 import { AccountWinAmount } from './AccountWinAmount'
 
 interface AccountWinCardProps {
@@ -15,15 +16,17 @@ interface AccountWinCardProps {
 export const AccountWinCard = (props: AccountWinCardProps) => {
   const { win, prizePool } = props
 
+  const t = useTranslations('Common')
+
   return (
     <div className='flex items-center gap-3 bg-pt-transparent rounded-lg p-3'>
       <NetworkIcon chainId={win.chainId} className='h-6 w-6' />
-      <span className='text-sm'>Draw #{win.draw.id}</span>
+      <span className='text-sm'>{t('drawId', { id: win.draw.id })}</span>
       {/* TODO: add txHash once subgraph has it */}
       <ExternalLink
         // href={getBlockExplorerUrl(win.chainId, win.txHash, 'tx')}
         href={getBlockExplorerUrl(win.chainId, '', 'tx')}
-        text='View TX'
+        text={t('viewTx')}
         size='xs'
         className='grow text-pt-purple-200'
       />

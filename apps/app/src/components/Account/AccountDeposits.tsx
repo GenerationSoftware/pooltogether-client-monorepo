@@ -6,6 +6,7 @@ import {
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { Button } from '@shared/ui'
 import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useAccount } from 'wagmi'
 import { PrizePoolCards } from '@components/Prizes/PrizePoolCards'
@@ -71,16 +72,19 @@ interface NoWalletCardProps {
 const NoWalletCard = (props: NoWalletCardProps) => {
   const { className } = props
 
+  const t_common = useTranslations('Common')
+  const t_account = useTranslations('Account')
+
   const { openConnectModal } = useConnectModal()
 
   return (
     <div className={classNames('flex flex-col max-w-md gap-6 items-center', className)}>
       <span className='text-center text-2xl font-semibold md:text-4xl'>
-        Connect your wallet to view account status
+        {t_account('connectWallet')}
       </span>
       <Button onClick={openConnectModal}>
         <div className='inline-flex gap-3 font-medium'>
-          <span>Connect Wallet</span>
+          <span>{t_common('connectWallet')}</span>
           <ArrowRightIcon className='h-5 w-5' />
         </div>
       </Button>
@@ -95,12 +99,14 @@ interface NoDepositsCardProps {
 const NoDepositsCard = (props: NoDepositsCardProps) => {
   const { className } = props
 
+  const t = useTranslations('Account')
+
   return (
     <div className={classNames('w-full rounded-lg lg:p-4 lg:bg-pt-bg-purple', className)}>
       <div className='flex flex-col w-full gap-2 items-center justify-center p-3 text-sm bg-pt-transparent rounded-lg lg:flex-row lg:gap-3 lg:text-lg lg:font-medium'>
-        <span className='text-pt-purple-100'>You don't have any prize assets.</span>
+        <span className='text-pt-purple-100'>{t('noPrizeAssets')}</span>
         <Link href='/vaults' className='text-pt-teal'>
-          Deposit now.
+          {t('depositNow')}
         </Link>
       </div>
     </div>
