@@ -82,7 +82,7 @@ export const Layout = (props: LayoutProps) => {
 
   const footerItems: FooterItem[] = [
     {
-      title: t_footer('getHelp'),
+      title: t_footer('titles.getHelp'),
       content: [
         { content: t_footer('userDocs'), href: LINKS.docs },
         { content: t_footer('faq'), href: LINKS.faq },
@@ -90,7 +90,7 @@ export const Layout = (props: LayoutProps) => {
       ]
     },
     {
-      title: t_footer('ecosystem'),
+      title: t_footer('titles.ecosystem'),
       content: [
         { content: t_footer('extensions'), href: '/extensions' },
         { content: t_footer('governance'), href: LINKS.governance },
@@ -98,7 +98,7 @@ export const Layout = (props: LayoutProps) => {
       ]
     },
     {
-      title: t_footer('community'),
+      title: t_footer('titles.community'),
       content: [
         {
           content: 'Twitter',
@@ -123,7 +123,7 @@ export const Layout = (props: LayoutProps) => {
       ]
     },
     {
-      title: t_footer('settings'),
+      title: t_footer('titles.settings'),
       content: [
         {
           content: t_settings('changeCurrency'),

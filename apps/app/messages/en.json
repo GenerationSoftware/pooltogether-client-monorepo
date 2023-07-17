@@ -5,7 +5,11 @@
     "grandPrize": "Grand Prize",
     "joinDiscord": "Join our Discord Community",
     "showMore": "Show More",
-    "drawId": "Draw #{id}"
+    "drawId": "Draw #{id}",
+    "manage": "Manage",
+    "deposit": "Deposit",
+    "withdraw": "Withdraw",
+    "learnMore": "Learn More"
   },
   "Navigation": {
     "home": "Home",
@@ -33,14 +37,31 @@
       "xInPrizes": "in prizes"
     }
   },
-  "Vaults": {},
+  "Vaults": {
+    "filter": "Filter",
+    "filters": {
+      "showAll": "Show All",
+      "inWallet": "In My Wallet",
+      "stablecoins": "Stablecoins"
+    },
+    "manageVaultLists": "Manage Vault Lists",
+    "clearFilters": "Clear Filters",
+    "headers": {
+      "token": "Token",
+      "prizePower": "Prize Power",
+      "totalDeposits": "Total Deposits",
+      "myBalance": "My Balance"
+    }
+  },
   "Vault": {},
   "Account": {},
   "Footer": {
-    "getHelp": "Get Help",
-    "ecosystem": "Ecosystem",
-    "community": "Community",
-    "settings": "Settings",
+    "titles": {
+      "getHelp": "Get Help",
+      "ecosystem": "Ecosystem",
+      "community": "Community",
+      "settings": "Settings"
+    },
     "userDocs": "User Docs",
     "faq": "FAQ",
     "devDocs": "Developer Docs",
@@ -71,5 +92,12 @@
     "xPrizesMonthly": "{number, plural, one {# prize} other {# prizes}} monthly",
     "xPrizesYearly": "{number, plural, one {# prize} other {# prizes}} yearly"
   },
-  "Error": {}
+  "Tooltips": {
+    "prizePower": "Vaults with higher prize power have more chances to win"
+  },
+  "Error": {
+    "oops": "Oops!",
+    "noVaultListsEnabled": "It looks like you don't have any valid vault lists enabled.",
+    "noVaultsMatchingFilters": "There are no vaults that match your filters."
+  }
 }
