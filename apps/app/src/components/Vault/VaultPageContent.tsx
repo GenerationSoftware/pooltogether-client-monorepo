@@ -7,6 +7,7 @@ import {
 import { ErrorPooly } from '@shared/react-components'
 import { Button } from '@shared/ui'
 import { getVaultId, NETWORK } from '@shared/utilities'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { ParsedUrlQuery } from 'querystring'
 import { useMemo } from 'react'
@@ -76,12 +77,15 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
 }
 
 const ErrorState = () => {
+  const t_vault = useTranslations('Vault')
+  const t_error = useTranslations('Error')
+
   return (
     <div className='flex flex-col gap-6 items-center text-center'>
       <ErrorPooly className='w-full max-w-[50%]' />
-      <span>Something went wrong while querying this vault's info.</span>
+      <span>{t_error('vaultInfoQuery')}</span>
       <Link href='/vaults' passHref={true}>
-        <Button>Return to Vaults</Button>
+        <Button>{t_vault('returnToVaults')}</Button>
       </Link>
     </div>
   )

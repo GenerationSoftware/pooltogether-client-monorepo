@@ -9,7 +9,8 @@
     "manage": "Manage",
     "deposit": "Deposit",
     "withdraw": "Withdraw",
-    "learnMore": "Learn More"
+    "learnMore": "Learn More",
+    "back": "Back"
   },
   "Navigation": {
     "home": "Home",
@@ -53,7 +54,17 @@
       "myBalance": "My Balance"
     }
   },
-  "Vault": {},
+  "Vault": {
+    "headers": {
+      "myBalance": "My Balance",
+      "myWinChance": "My Win Chance",
+      "prizePower": "Prize Power",
+      "tvl": "TVL",
+      "depositAsset": "Deposit Asset",
+      "prizeAsset": "Prize Asset"
+    },
+    "returnToVaults": "Return to Vaults"
+  },
   "Account": {},
   "Footer": {
     "titles": {
@@ -98,6 +109,7 @@
   "Error": {
     "oops": "Oops!",
     "noVaultListsEnabled": "It looks like you don't have any valid vault lists enabled.",
-    "noVaultsMatchingFilters": "There are no vaults that match your filters."
+    "noVaultsMatchingFilters": "There are no vaults that match your filters.",
+    "vaultInfoQuery": "Something went wrong while querying this vault's info."
   }
 }
