@@ -6,7 +6,6 @@ import { NextIntlProvider } from 'next-intl'
 import { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import { useSentryUser } from '../hooks/useSentryUser'
-import { VaultListHandler } from './VaultListHandler'
 
 // React Query Client:
 const queryClient = new QueryClient()
@@ -39,7 +38,6 @@ export const AppContainer = (props: AppProps) => {
       <QueryClientProvider client={queryClient}>
         <NextIntlProvider messages={pageProps.messages}>
           <div id='modal-root' />
-          <VaultListHandler />
           <Component {...pageProps} />
         </NextIntlProvider>
       </QueryClientProvider>

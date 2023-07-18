@@ -33,6 +33,7 @@ import { DEFAULT_VAULT_LISTS } from '@constants/config'
 import { useSelectedPrizePool } from '@hooks/useSelectedPrizePool'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { drawIdAtom } from './Prizes/PrizePoolWinners'
+import { VaultListHandler } from './VaultListHandler'
 
 interface LayoutProps {
   children: ReactNode
@@ -241,6 +242,8 @@ export const Layout = (props: LayoutProps) => {
       />
 
       <Toaster />
+
+      <VaultListHandler />
 
       <main
         className={classNames(
