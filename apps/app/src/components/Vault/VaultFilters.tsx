@@ -189,7 +189,7 @@ const formatVaultsByChain = (
   })
 
   vaultsArray.forEach((vault) => {
-    vaultsByChain[vault.chainId].push(vault)
+    vaultsByChain[vault.chainId]?.push(vault)
   })
 
   return vaultsByChain

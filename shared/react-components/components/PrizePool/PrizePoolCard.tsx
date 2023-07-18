@@ -1,8 +1,9 @@
-import { formatBigIntForDisplay, PrizePool } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@pooltogether/hyperstructure-client-js'
 import { useAllPrizeInfo, usePrizeTokenData } from '@pooltogether/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
 import { Card, Spinner } from '@shared/ui'
 import { PrizePoolBadge } from '../Badges/PrizePoolBadge'
+import { TokenAmount } from '../Currency/TokenAmount'
 import { TokenValue } from '../Currency/TokenValue'
 
 export interface PrizePoolCardProps {
@@ -36,16 +37,24 @@ export const PrizePoolCard = (props: PrizePoolCardProps) => {
         <span className='text-xs uppercase md:text-sm'>
           {intl?.('grandPrize') ?? 'Grand Prize'}
         </span>
-        {isFetchedAllPrizeInfo && isFetchedPrizeTokenData && !!prizeTokenData ? (
-          <>
-            <span className='text-2xl text-pt-teal md:text-4xl'>
-              <TokenValue token={{ ...prizeTokenData, amount: grandPrize }} hideZeroes={true} />
-            </span>
-            <span className='hidden font-light md:block'>
-              ≈ {formatBigIntForDisplay(grandPrize, prizeTokenData.decimals, { hideZeroes: true })}{' '}
-              POOL
-            </span>
-          </>
+        {isFetchedAllPrizeInfo && isFetchedPrizeTokenData ? (
+          !!prizeTokenData ? (
+            <>
+              <span className='text-2xl text-pt-teal md:text-4xl'>
+                <TokenValue
+                  token={{ ...prizeTokenData, amount: grandPrize }}
+                  hideZeroes={true}
+                  fallback={<></>}
+                />
+              </span>
+              <span className='hidden font-light md:block'>
+                ≈{' '}
+                <TokenAmount token={{ ...prizeTokenData, amount: grandPrize }} hideZeroes={true} />
+              </span>
+            </>
+          ) : (
+            '?'
+          )
         ) : (
           <Spinner />
         )}

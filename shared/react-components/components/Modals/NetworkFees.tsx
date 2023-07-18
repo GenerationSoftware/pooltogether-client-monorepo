@@ -60,17 +60,17 @@ const TXFeeEstimate = (props: TXFeeEstimateProps) => {
     gasAmount
   )
 
-  const txCost = gasEstimates?.totalGasCurrencies?.['eth'] ?? '0'
+  const txCost = gasEstimates?.totalGasCurrencies?.['eth']
 
   return (
     <span className='flex justify-between items-center gap-6'>
       <span className='font-normal text-pt-purple-100'>{name}</span>
       <span className='text-pt-purple-50'>
         {isFetchedGasEstimates ? (
-          txCost === '0' ? (
+          txCost === undefined ? (
             <>-</>
           ) : (
-            <CurrencyValue baseValue={txCost} />
+            <CurrencyValue baseValue={txCost} fallback={<>-</>} />
           )
         ) : (
           <Spinner />

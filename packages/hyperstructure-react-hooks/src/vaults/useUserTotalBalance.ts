@@ -53,7 +53,7 @@ export const useUserTotalBalance = () => {
             const tokenAddress = vaults.underlyingTokenAddresses?.byVault[vaultId] as Address
             const shareBalance = vaultBalances[vaultId].amount
 
-            const tokenPrice = getTokenPriceFromObject(chainId, tokenAddress, tokenPrices)
+            const tokenPrice = getTokenPriceFromObject(chainId, tokenAddress, tokenPrices) ?? 0
             const tokenBalance = getAssetsFromShares(shareBalance, exchangeRate, decimals)
 
             const formattedTokenBalance = formatUnits(tokenBalance, decimals)
@@ -63,7 +63,7 @@ export const useUserTotalBalance = () => {
       }
       return totalBalance
     } else {
-      return 0
+      return undefined
     }
   }, [
     isFetchedVaultData,

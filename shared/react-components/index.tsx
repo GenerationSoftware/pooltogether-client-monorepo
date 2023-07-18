@@ -16,6 +16,7 @@ export * from './components/Buttons/WithdrawButton'
  * Currency
  */
 export * from './components/Currency/CurrencyValue'
+export * from './components/Currency/TokenAmount'
 export * from './components/Currency/TokenValue'
 export * from './components/Currency/TokenValueAndAmount'
 

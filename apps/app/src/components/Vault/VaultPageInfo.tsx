@@ -25,8 +25,8 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
 
   const { address: userAddress } = useAccount()
 
-  const { data: shareData } = useVaultShareData(vault)
-  const { data: tokenData } = useVaultTokenData(vault)
+  const { data: shareData, isFetched: isFetchedShareData } = useVaultShareData(vault)
+  const { data: tokenData, isFetched: isFetchedTokenData } = useVaultTokenData(vault)
 
   return (
     <div
@@ -74,11 +74,31 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
       <VaultInfoRow name={t_vault('headers.tvl')} data={<VaultTotalDeposits vault={vault} />} />
       <VaultInfoRow
         name={t_vault('headers.depositAsset')}
-        data={!!tokenData ? <VaultInfoToken token={tokenData} /> : <Spinner />}
+        data={
+          isFetchedTokenData ? (
+            !!tokenData ? (
+              <VaultInfoToken token={tokenData} />
+            ) : (
+              '?'
+            )
+          ) : (
+            <Spinner />
+          )
+        }
       />
       <VaultInfoRow
         name={t_vault('headers.prizeAsset')}
-        data={!!shareData ? <VaultInfoToken token={shareData} /> : <Spinner />}
+        data={
+          isFetchedShareData ? (
+            !!shareData ? (
+              <VaultInfoToken token={shareData} />
+            ) : (
+              '?'
+            )
+          ) : (
+            <Spinner />
+          )
+        }
       />
     </div>
   )

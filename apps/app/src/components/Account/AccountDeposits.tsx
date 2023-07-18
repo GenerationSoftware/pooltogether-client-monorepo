@@ -45,24 +45,17 @@ export const AccountDeposits = (props: AccountDepositsProps) => {
     )
   }
 
-  if (isFetchedVaultBalances && !!vaultBalances) {
-    return (
-      <div
-        className={classNames(
-          'w-full max-w-xl flex flex-col items-center lg:max-w-none',
-          className
-        )}
-      >
-        <AccountDepositsHeader />
-        {isEmpty && <NoDepositsCard className='mt-4' />}
-        {!isEmpty && <AccountDepositsTable rounded={true} className='hidden mt-8 lg:block' />}
-        {!isEmpty && <AccountVaultCards className='mt-2 md:mt-4 lg:hidden' />}
-        {!isEmpty && <AccountDepositsOdds className='mt-4' />}
-      </div>
-    )
-  }
-
-  return <></>
+  return (
+    <div
+      className={classNames('w-full max-w-xl flex flex-col items-center lg:max-w-none', className)}
+    >
+      <AccountDepositsHeader />
+      {isEmpty && <NoDepositsCard className='mt-4' />}
+      {!isEmpty && <AccountDepositsTable rounded={true} className='hidden mt-8 lg:block' />}
+      {!isEmpty && <AccountVaultCards className='mt-2 md:mt-4 lg:hidden' />}
+      {!isEmpty && <AccountDepositsOdds className='mt-4' />}
+    </div>
+  )
 }
 
 interface NoWalletCardProps {

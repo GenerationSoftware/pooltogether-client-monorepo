@@ -27,19 +27,15 @@ export const AccountVaultCards = (props: AccountVaultsCardsProps) => {
     defaultSortId: 'userBalance'
   })
 
-  if (isFetched && isFetchedVaultBalances) {
-    return (
-      <div className={classNames('w-full flex flex-col gap-4', className)}>
-        {!!vaultBalances &&
-          sortedVaults.map((vault) => {
-            const shareBalance = vaultBalances[vault.id]?.amount ?? 0n
-            if (shareBalance > 0n && vault.decimals !== undefined) {
-              return <AccountVaultCard key={vault.id} vault={vault} />
-            }
-          })}
-      </div>
-    )
-  }
-
-  return <></>
+  return (
+    <div className={classNames('w-full flex flex-col gap-4', className)}>
+      {!!vaultBalances &&
+        sortedVaults.map((vault) => {
+          const shareBalance = vaultBalances[vault.id]?.amount ?? 0n
+          if (shareBalance > 0n && vault.decimals !== undefined) {
+            return <AccountVaultCard key={vault.id} vault={vault} />
+          }
+        })}
+    </div>
+  )
 }

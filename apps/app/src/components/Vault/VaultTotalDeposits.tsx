@@ -1,6 +1,6 @@
 import { Vault } from '@pooltogether/hyperstructure-client-js'
 import { useVaultBalance } from '@pooltogether/hyperstructure-react-hooks'
-import { TokenValue } from '@shared/react-components'
+import { TokenAmount, TokenValue } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 
 interface VaultTotalDepositsProps {
@@ -12,9 +12,19 @@ export const VaultTotalDeposits = (props: VaultTotalDepositsProps) => {
 
   const { data: totalDeposits, isFetched: isFetchedTotalDeposits } = useVaultBalance(vault)
 
-  if (!isFetchedTotalDeposits || !totalDeposits) {
+  if (!isFetchedTotalDeposits) {
     return <Spinner />
   }
 
-  return <TokenValue token={totalDeposits} hideZeroes={true} />
+  if (totalDeposits === undefined) {
+    return <>?</>
+  }
+
+  return (
+    <TokenValue
+      token={totalDeposits}
+      hideZeroes={true}
+      fallback={<TokenAmount token={totalDeposits} hideZeroes={true} />}
+    />
+  )
 }

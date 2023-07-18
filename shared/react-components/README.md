@@ -33,6 +33,7 @@ A React componponent library utilizing some simpler components from the internal
 ### Currency Components
 
 - `CurrencyValue`
+- `TokenAmount`
 - `TokenValue`
 - `TokenValueAndAmount`
 

@@ -24,9 +24,13 @@ export const VaultPrizePower = (props: VaultPrizePowerProps) => {
     return <Spinner />
   }
 
+  if (prizePower === undefined) {
+    return <>?</>
+  }
+
   return (
     <>
-      {formatNumberForDisplay((prizePower ?? 0) * 100, {
+      {formatNumberForDisplay(prizePower * 100, {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
       })}

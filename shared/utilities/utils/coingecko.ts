@@ -72,11 +72,7 @@ export const getTokenPriceFromObject = (
   tokenPrices: { [chainId: number]: CoingeckoTokenPrices } | undefined,
   currency?: string
 ) => {
-  if (!!tokenPrices) {
-    return tokenPrices[chainId]?.[tokenAddress.toLowerCase()]?.[currency ?? 'eth'] ?? 0
-  } else {
-    return 0
-  }
+  return tokenPrices?.[chainId]?.[tokenAddress.toLowerCase()]?.[currency ?? 'eth']
 }
 
 /**

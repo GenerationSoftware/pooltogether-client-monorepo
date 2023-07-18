@@ -22,8 +22,11 @@ export const AccountDepositsHeader = (props: AccountDepositsHeaderProps) => {
     <div className={classNames('flex flex-col items-center gap-1 md:gap-2', className)}>
       <span className='text-sm text-pt-purple-100 md:text-base'>{t('yourDeposits')}</span>
       <span className='text-2xl font-averta font-semibold md:text-3xl'>
-        {!isFetchedTotalBalance && !!userAddress && <Spinner />}
-        {isFetchedTotalBalance && <CurrencyValue baseValue={totalBalance} countUp={true} />}
+        {isFetchedTotalBalance && !!userAddress && totalBalance !== undefined ? (
+          <CurrencyValue baseValue={totalBalance} countUp={true} fallback={<Spinner />} />
+        ) : (
+          <Spinner />
+        )}
       </span>
     </div>
   )

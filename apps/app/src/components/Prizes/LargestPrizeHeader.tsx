@@ -1,5 +1,5 @@
 import { useLargestGrandPrize } from '@pooltogether/hyperstructure-react-hooks'
-import { NextDrawCountdown, TokenValue } from '@shared/react-components'
+import { NextDrawCountdown, TokenAmount, TokenValue } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import { useTranslations } from 'next-intl'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
@@ -19,7 +19,12 @@ export const LargestPrizeHeader = () => {
         <span className='w-2/3 text-2xl text-center font-averta font-semibold md:w-full md:text-4xl lg:text-5xl'>
           {t_home('winUpTo.beforeValue')}{' '}
           {!!gpData ? (
-            <TokenValue token={gpData.token} hideZeroes={true} countUp={true} />
+            <TokenValue
+              token={gpData.token}
+              hideZeroes={true}
+              countUp={true}
+              fallback={<TokenAmount token={gpData.token} hideZeroes={true} />}
+            />
           ) : (
             <Spinner />
           )}{' '}

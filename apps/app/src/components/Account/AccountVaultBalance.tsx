@@ -14,14 +14,21 @@ export const AccountVaultBalance = (props: AccountVaultBalanceProps) => {
 
   const { address: userAddress } = useAccount()
 
-  const { data: tokenBalance } = useUserVaultTokenBalance(vault, userAddress as `0x${string}`)
+  const { data: tokenBalance, isFetched: isFetchedTokenBalance } = useUserVaultTokenBalance(
+    vault,
+    userAddress as `0x${string}`
+  )
 
   if (!userAddress) {
     return <>-</>
   }
 
-  if (!tokenBalance) {
+  if (!isFetchedTokenBalance) {
     return <Spinner />
+  }
+
+  if (tokenBalance === undefined) {
+    return <>?</>
   }
 
   if (tokenBalance.amount > 0n) {

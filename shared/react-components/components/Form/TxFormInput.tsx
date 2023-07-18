@@ -98,8 +98,8 @@ export const TxFormInput = (props: TxFormInputProps) => {
       </div>
       {showInfoRow && (
         <div className='flex justify-between gap-6 text-xs text-pt-purple-100 md:text-base'>
-          <CurrencyValue baseValue={amountValue} />
-          <div className='flex gap-1'>
+          <CurrencyValue baseValue={amountValue} fallback={<></>} />
+          <div className='flex gap-1 ml-auto'>
             <span>
               {intl?.base?.('balance') ?? 'Balance:'} {formattedBalance}
             </span>

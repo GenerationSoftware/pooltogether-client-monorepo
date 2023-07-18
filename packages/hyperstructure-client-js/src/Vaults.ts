@@ -71,7 +71,7 @@ export class Vaults {
 
     const underlyingTokenAddresses = await this.getUnderlyingTokenAddresses()
 
-    await Promise.all(
+    await Promise.allSettled(
       this.chainIds.map((chainId) =>
         (async () => {
           const client = this.publicClients[chainId]
@@ -114,7 +114,7 @@ export class Vaults {
     const shareData: { [vaultId: string]: TokenWithSupply } = {}
     const networksToQuery = chainIds ?? this.chainIds
 
-    await Promise.all(
+    await Promise.allSettled(
       networksToQuery.map((chainId) =>
         (async () => {
           const client = this.publicClients[chainId]
@@ -163,7 +163,7 @@ export class Vaults {
 
     const underlyingTokenAddresses = await this.getUnderlyingTokenAddresses()
 
-    await Promise.all(
+    await Promise.allSettled(
       networksToQuery.map((chainId) =>
         (async () => {
           const client = this.publicClients[chainId]
@@ -203,7 +203,7 @@ export class Vaults {
     const networksToQuery = chainIds ?? this.chainIds
     validateAddress(userAddress, source)
 
-    await Promise.all(
+    await Promise.allSettled(
       networksToQuery.map((chainId) =>
         (async () => {
           const vaultAddresses = this.vaultAddresses[chainId]
@@ -243,7 +243,7 @@ export class Vaults {
 
     const tokenData = await this.getTokenData()
 
-    await Promise.all(
+    await Promise.allSettled(
       networksToQuery.map((chainId) =>
         (async () => {
           const client = this.publicClients[chainId]
@@ -276,7 +276,7 @@ export class Vaults {
     const exchangeRates: { [vaultId: string]: bigint } = {}
     const networksToQuery = chainIds ?? this.chainIds
 
-    await Promise.all(
+    await Promise.allSettled(
       networksToQuery.map((chainId) =>
         (async () => {
           const client = this.publicClients[chainId]
@@ -313,7 +313,7 @@ export class Vaults {
       byVault: { [vaultId: string]: Address }
     } = { byChain: {}, byVault: {} }
 
-    await Promise.all(
+    await Promise.allSettled(
       this.chainIds.map((chainId) =>
         (async () => {
           const client = this.publicClients[chainId]

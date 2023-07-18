@@ -23,9 +23,10 @@ export const usePrizeOdds = (
   const { data: prizeCount, isFetched: isFetchedPrizeCount } = useEstimatedPrizeCount(prizePool)
 
   const isFetched = isFetchedShareData && isFetchedVaultContribution && isFetchedPrizeCount
+  const isSuccess = !!shareData && vaultContribution !== undefined && prizeCount !== undefined
 
   const percent =
-    !!shareData && vaultContribution !== undefined && prizeCount !== undefined && !!shares
+    isSuccess && !!shares
       ? calculateOdds(
           shares,
           shareData.totalSupply + (options?.isCumulative ? shares : 0n),
@@ -37,7 +38,7 @@ export const usePrizeOdds = (
 
   const oneInX = 1 / percent
 
-  const data = { percent, oneInX }
+  const data = isFetched && isSuccess ? { percent, oneInX } : undefined
 
   return { data, isFetched }
 }

@@ -21,11 +21,20 @@ export interface CurrencyValueProps extends Omit<Intl.NumberFormatOptions, 'styl
   locale?: string
   round?: boolean
   hideZeroes?: boolean
+  fallback?: JSX.Element
 }
 
 export const CurrencyValue = (props: CurrencyValueProps) => {
-  const { baseValue, baseCurrency, countUp, decimals, hideCountUpSymbol, hideLoading, ...rest } =
-    props
+  const {
+    baseValue,
+    baseCurrency,
+    countUp,
+    decimals,
+    hideCountUpSymbol,
+    hideLoading,
+    fallback,
+    ...rest
+  } = props
 
   const { data: exchangeRates, isFetched: isFetchedExchangeRates } = useCoingeckoExchangeRates()
   const { selectedCurrency } = useSelectedCurrency()
@@ -34,7 +43,7 @@ export const CurrencyValue = (props: CurrencyValueProps) => {
     if (isFetchedExchangeRates && !!exchangeRates) {
       return calculateCurrencyValue(baseValue, selectedCurrency, exchangeRates, { baseCurrency })
     } else {
-      return 0
+      return undefined
     }
   }, [isFetchedExchangeRates, exchangeRates, baseValue, selectedCurrency, baseCurrency])
 
@@ -44,8 +53,10 @@ export const CurrencyValue = (props: CurrencyValueProps) => {
     if (!hideLoading) {
       return <Spinner />
     } else {
-      return null
+      return <></>
     }
+  } else if (currencyValue === undefined) {
+    return fallback ?? <>?</>
   } else if (currencyValue > 0 && currencyValue < minValue) {
     return <>{`< ${formatCurrencyNumberForDisplay(minValue, selectedCurrency, { ...rest })}`}</>
   } else if (countUp) {

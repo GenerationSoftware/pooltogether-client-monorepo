@@ -30,7 +30,7 @@ export const TokenValueAndAmount = (props: TokenValueAndAmountProps) => {
   return (
     <div className={classNames('flex flex-col items-center', className)}>
       <span className={valueClassName}>
-        <TokenValue token={token} />
+        <TokenValue token={token} fallback={<></>} />
       </span>
       <span className={classNames('text-pt-purple-200', amountClassName)}>
         {formatBigIntForDisplay(amount, decimals)} {symbol}

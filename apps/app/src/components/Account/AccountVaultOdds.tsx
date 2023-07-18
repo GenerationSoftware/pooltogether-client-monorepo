@@ -40,12 +40,14 @@ export const AccountVaultOdds = (props: AccountVaultOddsProps) => {
     return <Spinner />
   }
 
+  if (prizeOdds === undefined) {
+    return <>?</>
+  }
+
   return (
     <>
       {t('oneInXChance', {
-        number: formatNumberForDisplay(prizeOdds?.oneInX ?? Number.MAX_SAFE_INTEGER, {
-          maximumSignificantDigits: 3
-        })
+        number: formatNumberForDisplay(prizeOdds.oneInX, { maximumSignificantDigits: 3 })
       })}
     </>
   )

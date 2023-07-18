@@ -39,7 +39,9 @@ export const useLargestGrandPrize = (
     prizePool as PrizePool
   )
 
-  const isFetched = isFetchedAllPrizeInfo && isFetchedTokenPrice
+  const isFetched =
+    (isFetchedAllPrizeInfo && isFetchedTokenPrice) ||
+    (isFetchedAllPrizeInfo && Object.keys(allPrizeInfo).length === 0)
 
   const data =
     !!prizePool && !!tokenWithPrice

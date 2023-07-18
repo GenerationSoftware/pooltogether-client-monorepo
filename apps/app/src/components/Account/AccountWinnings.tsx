@@ -39,7 +39,7 @@ export const AccountWinnings = (props: AccountWinningsProps) => {
     return flattenedWins.sort((a, b) => parseInt(b.timestamp) - parseInt(a.timestamp))
   }, [wins])
 
-  const isEmpty = !flattenedWins?.length
+  const isEmpty = isFetchedWins && !flattenedWins?.length
 
   if (typeof window !== 'undefined' && !!userAddress && isFetchedWins && !!wins) {
     return (

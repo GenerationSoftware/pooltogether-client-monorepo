@@ -1,6 +1,6 @@
 import { PrizePool } from '@pooltogether/hyperstructure-client-js'
 import { useAllPrizeInfo, usePrizeTokenData } from '@pooltogether/hyperstructure-react-hooks'
-import { TokenValue } from '@shared/react-components'
+import { TokenAmount, TokenValue } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import { formatDailyCountToFrequency, getPrizeTextFromFrequency } from '@shared/utilities'
 import { useTranslations } from 'next-intl'
@@ -37,7 +37,16 @@ export const PrizesTable = (props: PrizesTableProps) => {
                   className='flex w-full items-center'
                 >
                   <span className='flex-grow text-lg text-pt-teal pl-8 text-left md:text-3xl md:pl-16'>
-                    <TokenValue token={{ ...tokenData, amount: prize.amount }} hideZeroes={true} />
+                    <TokenValue
+                      token={{ ...tokenData, amount: prize.amount }}
+                      hideZeroes={true}
+                      fallback={
+                        <TokenAmount
+                          token={{ ...tokenData, amount: prize.amount }}
+                          maximumFractionDigits={1}
+                        />
+                      }
+                    />
                   </span>
                   <span className='flex-grow text-pt-purple-100 pr-8 text-right md:text-xl md:pr-16'>
                     {getPrizeTextFromFrequency(frequency, 'daily', t_freq)}

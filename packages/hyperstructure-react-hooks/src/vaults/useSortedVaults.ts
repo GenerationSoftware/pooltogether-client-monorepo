@@ -132,8 +132,10 @@ const sortVaultsByTotalDeposits = (
       formatUnits(vaultBalances[b.id]?.amount ?? 0n, vaultBalances[b.id]?.decimals)
     )
 
-    const aPrice = getTokenPriceFromObject(a.chainId, vaultBalances[a.id]?.address, tokenPrices)
-    const bPrice = getTokenPriceFromObject(b.chainId, vaultBalances[b.id]?.address, tokenPrices)
+    const aPrice =
+      getTokenPriceFromObject(a.chainId, vaultBalances[a.id]?.address, tokenPrices) ?? 0
+    const bPrice =
+      getTokenPriceFromObject(b.chainId, vaultBalances[b.id]?.address, tokenPrices) ?? 0
 
     const aValue = aAmount * aPrice
     const bValue = bAmount * bPrice
@@ -171,8 +173,10 @@ const sortVaultsByUserBalances = (
       )
     )
 
-    const aPrice = getTokenPriceFromObject(a.chainId, vaultBalances[a.id]?.address, tokenPrices)
-    const bPrice = getTokenPriceFromObject(b.chainId, vaultBalances[b.id]?.address, tokenPrices)
+    const aPrice =
+      getTokenPriceFromObject(a.chainId, vaultBalances[a.id]?.address, tokenPrices) ?? 0
+    const bPrice =
+      getTokenPriceFromObject(b.chainId, vaultBalances[b.id]?.address, tokenPrices) ?? 0
 
     const aValue = aAmount * aPrice
     const bValue = bAmount * bPrice

@@ -1,10 +1,10 @@
-import { getTokenPriceFromObject } from '@pooltogether/hyperstructure-client-js'
 import {
   NO_REFETCH,
   QUERY_KEYS,
   useAllTokenPrices,
   useAllUserPrizePoolWins
 } from '@pooltogether/hyperstructure-react-hooks'
+import { getTokenPriceFromObject } from '@shared/utilities'
 import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { formatUnits } from 'viem'
@@ -72,12 +72,12 @@ export const useUserTotalWinnings = () => {
           const tokenAmount = parseFloat(
             formatUnits(totalTokensWonByChain[chainId], tokenData.decimals)
           )
-          const tokenPrice = getTokenPriceFromObject(chainId, tokenData.address, tokenPrices)
+          const tokenPrice = getTokenPriceFromObject(chainId, tokenData.address, tokenPrices) ?? 0
           totalWinnings += tokenAmount * tokenPrice
         }
       }
     }
 
-    return { isFetched, refetch: refetchWins, data: totalWinnings }
+    return { isFetched, refetch: refetchWins, data: isFetched ? totalWinnings : undefined }
   }, [totalTokensWonByChain, tokenDataResults])
 }
