@@ -1,6 +1,5 @@
 import { formatNumberForDisplay } from '@pooltogether/hyperstructure-client-js'
 import { useAllUserPrizeOdds, useSelectedVaults } from '@pooltogether/hyperstructure-react-hooks'
-import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useAccount } from 'wagmi'
@@ -46,4 +45,6 @@ export const AccountDepositsOdds = (props: AccountDepositsOddsProps) => {
       </div>
     )
   }
+
+  return <></>
 }
