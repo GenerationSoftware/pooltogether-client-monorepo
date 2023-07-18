@@ -9,7 +9,7 @@ import { depositFormTokenAmountAtom } from '../../../Form/DepositForm'
 interface WaitingViewProps {
   vault: Vault
   closeModal: () => void
-  intl?: { base?: Intl<'confirmNotice' | 'depositing'>; common?: Intl<'close'> }
+  intl?: { base?: Intl<'confirmNotice' | 'depositing'>; common?: Intl<'prizePool' | 'close'> }
 }
 
 export const WaitingView = (props: WaitingViewProps) => {
@@ -26,7 +26,12 @@ export const WaitingView = (props: WaitingViewProps) => {
       <span className='text-lg font-semibold text-center'>
         {intl?.base?.('confirmNotice') ?? 'Confirm Transaction in Wallet'}
       </span>
-      <PrizePoolBadge chainId={vault.chainId} hideBorder={true} className='!py-1 mx-auto' />
+      <PrizePoolBadge
+        chainId={vault.chainId}
+        hideBorder={true}
+        intl={intl?.common}
+        className='!py-1 mx-auto'
+      />
       <span className='text-sm text-center md:text-base'>
         {intl?.base?.('depositing', { tokens }) ?? `Depositing ${tokens}...`}
       </span>

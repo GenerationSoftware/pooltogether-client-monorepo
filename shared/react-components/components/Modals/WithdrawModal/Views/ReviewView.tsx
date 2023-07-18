@@ -1,5 +1,6 @@
 import { Token, TokenWithLogo, Vault } from '@pooltogether/hyperstructure-client-js'
 import { useVaultShareData, useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
+import { Intl } from '@shared/types'
 import { useAtomValue } from 'jotai'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 import {
@@ -7,14 +8,19 @@ import {
   withdrawFormTokenAmountAtom
 } from '../../../Form/WithdrawForm'
 import { TokenIcon } from '../../../Icons/TokenIcon'
-import { NetworkFees } from '../../NetworkFees'
+import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 
 interface ReviewViewProps {
   vault: Vault
+  intl?: {
+    base?: Intl<'confirmWithdrawal'>
+    common?: Intl<'prizePool'>
+    fees?: NetworkFeesProps['intl']
+  }
 }
 
 export const ReviewView = (props: ReviewViewProps) => {
-  const { vault } = props
+  const { vault, intl } = props
 
   const formShareAmount = useAtomValue(withdrawFormShareAmountAtom)
   const formTokenAmount = useAtomValue(withdrawFormTokenAmountAtom)
@@ -24,8 +30,15 @@ export const ReviewView = (props: ReviewViewProps) => {
 
   return (
     <div className='flex flex-col gap-6'>
-      <span className='text-xl font-semibold text-center'>Confirm Withdrawal</span>
-      <PrizePoolBadge chainId={vault.chainId} hideBorder={true} className='!py-1 mx-auto' />
+      <span className='text-xl font-semibold text-center'>
+        {intl?.base?.('confirmWithdrawal') ?? 'Confirm Withdrawal'}
+      </span>
+      <PrizePoolBadge
+        chainId={vault.chainId}
+        hideBorder={true}
+        intl={intl?.common}
+        className='!py-1 mx-auto'
+      />
       {!!shareData && !!tokenData && (
         <div className='flex flex-col w-full gap-1'>
           <BasicWithdrawFormInput
@@ -36,7 +49,7 @@ export const ReviewView = (props: ReviewViewProps) => {
           />
         </div>
       )}
-      <NetworkFees vault={vault} show={['withdraw']} />
+      <NetworkFees vault={vault} show={['withdraw']} intl={intl?.fees} />
     </div>
   )
 }

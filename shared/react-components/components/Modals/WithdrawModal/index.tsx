@@ -1,12 +1,14 @@
 import { formatNumberForDisplay } from '@pooltogether/hyperstructure-client-js'
 import { useSelectedVault } from '@pooltogether/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
+import { Intl, RichIntl } from '@shared/types'
 import { Modal } from '@shared/ui'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { ReactNode, useState } from 'react'
 import { withdrawFormTokenAmountAtom } from '../../Form/WithdrawForm'
-import { createTxToast } from '../../Toasts/TransactionToast'
+import { createTxToast, TransactionToastProps } from '../../Toasts/TransactionToast'
+import { NetworkFeesProps } from '../NetworkFees'
 import { ConfirmingView } from './Views/ConfirmingView'
 import { ErrorView } from './Views/ErrorView'
 import { MainView } from './Views/MainView'
@@ -23,6 +25,34 @@ export interface WithdrawModalProps {
   openChainModal?: () => void
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
+  intl?: {
+    base?: RichIntl<
+      | 'withdrawFrom'
+      | 'withdrawFromShort'
+      | 'max'
+      | 'balance'
+      | 'enterAnAmount'
+      | 'reviewWithdrawal'
+      | 'withdrawTx'
+      | 'confirmWithdrawal'
+      | 'switchNetwork'
+      | 'switchingNetwork'
+      | 'confirmNotice'
+      | 'submissionNotice'
+      | 'withdrawing'
+      | 'success'
+      | 'withdrew'
+      | 'viewAccount'
+      | 'uhOh'
+      | 'failedTx'
+      | 'tryAgain'
+    >
+    common?: Intl<'prizePool' | 'connectWallet' | 'close' | 'viewOn'>
+    fees?: NetworkFeesProps['intl']
+    tooltips?: Intl<'exactApproval' | 'infiniteApproval'>
+    txToast?: TransactionToastProps['intl']
+    formErrors?: Intl<'notEnoughTokens' | 'invalidNumber' | 'negativeNumber' | 'tooManyDecimals'>
+  }
 }
 
 export const WithdrawModal = (props: WithdrawModalProps) => {
@@ -31,7 +61,8 @@ export const WithdrawModal = (props: WithdrawModalProps) => {
     openConnectModal,
     openChainModal,
     addRecentTransaction,
-    refetchUserBalances
+    refetchUserBalances,
+    intl
   } = props
 
   const { vault } = useSelectedVault()
@@ -52,7 +83,8 @@ export const WithdrawModal = (props: WithdrawModalProps) => {
         txHash: withdrawTxHash,
         formattedAmount: formatNumberForDisplay(formTokenAmount),
         addRecentTransaction: addRecentTransaction,
-        refetchUserBalances: refetchUserBalances
+        refetchUserBalances: refetchUserBalances,
+        intl: intl?.txToast
       })
     }
   }
@@ -65,19 +97,27 @@ export const WithdrawModal = (props: WithdrawModalProps) => {
 
   if (isModalOpen && !!vault) {
     const modalViews: Record<WithdrawModalView, ReactNode> = {
-      main: <MainView vault={vault} />,
-      review: <ReviewView vault={vault} />,
-      waiting: <WaitingView vault={vault} closeModal={handleClose} />,
-      confirming: <ConfirmingView vault={vault} txHash={withdrawTxHash} closeModal={handleClose} />,
+      main: <MainView vault={vault} intl={intl} />,
+      review: <ReviewView vault={vault} intl={intl} />,
+      waiting: <WaitingView vault={vault} closeModal={handleClose} intl={intl} />,
+      confirming: (
+        <ConfirmingView
+          vault={vault}
+          txHash={withdrawTxHash}
+          closeModal={handleClose}
+          intl={intl}
+        />
+      ),
       success: (
         <SuccessView
           vault={vault}
           txHash={withdrawTxHash}
           closeModal={handleClose}
           goToAccount={onGoToAccount}
+          intl={intl}
         />
       ),
-      error: <ErrorView setModalView={setView} />
+      error: <ErrorView setModalView={setView} intl={intl?.base} />
     }
 
     return (
@@ -98,6 +138,7 @@ export const WithdrawModal = (props: WithdrawModalProps) => {
               openChainModal={openChainModal}
               addRecentTransaction={addRecentTransaction}
               refetchUserBalances={refetchUserBalances}
+              intl={intl}
             />
           </div>
         }

@@ -15,7 +15,7 @@ interface ConfirmingViewProps {
   vault: Vault
   closeModal: () => void
   txHash?: string
-  intl?: { base?: Intl<'submissionNotice' | 'depositing'>; common?: Intl<'close'> }
+  intl?: { base?: Intl<'submissionNotice' | 'depositing'>; common?: Intl<'close' | 'viewOn'> }
 }
 
 export const ConfirmingView = (props: ConfirmingViewProps) => {
@@ -26,6 +26,7 @@ export const ConfirmingView = (props: ConfirmingViewProps) => {
   const { data: tokenData } = useVaultTokenData(vault)
 
   const tokens = `${formatNumberForDisplay(formTokenAmount)} ${tokenData?.symbol}`
+  const name = getBlockExplorerName(vault.chainId)
 
   return (
     <div className='flex flex-col gap-6'>
@@ -41,7 +42,7 @@ export const ConfirmingView = (props: ConfirmingViewProps) => {
         {!!txHash && (
           <ExternalLink
             href={getBlockExplorerUrl(vault.chainId, txHash, 'tx')}
-            text={`View on ${getBlockExplorerName(vault.chainId)}`}
+            text={intl?.common?.('viewOn', { name }) ?? `View on ${name}`}
             size='sm'
             className='mx-auto text-pt-purple-100'
           />

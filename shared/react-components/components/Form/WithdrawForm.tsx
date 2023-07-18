@@ -12,6 +12,7 @@ import {
   useVaultTokenData,
   useVaultTokenPrice
 } from '@pooltogether/hyperstructure-react-hooks'
+import { Intl } from '@shared/types'
 import { atom, useSetAtom } from 'jotai'
 import { useEffect, useMemo } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -25,10 +26,14 @@ export const withdrawFormTokenAmountAtom = atom<string>('')
 export interface WithdrawFormProps {
   vault: Vault
   showInputInfoRows?: boolean
+  intl?: {
+    base?: Intl<'balance' | 'max'>
+    formErrors?: Intl<'notEnoughTokens' | 'invalidNumber' | 'negativeNumber' | 'tooManyDecimals'>
+  }
 }
 
 export const WithdrawForm = (props: WithdrawFormProps) => {
-  const { vault, showInputInfoRows } = props
+  const { vault, showInputInfoRows, intl } = props
 
   const { data: vaultExchangeRate } = useVaultExchangeRate(vault)
 
@@ -141,11 +146,13 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
                   parseFloat(formatUnits(shareBalance, decimals)) >= parseFloat(v) ||
                   !isFetchedVaultBalance ||
                   !vaultBalance ||
-                  `Not enough ${shareData?.symbol} in wallet`
+                  (intl?.formErrors?.('notEnoughTokens', { symbol: shareData?.symbol ?? '?' }) ??
+                    `Not enough ${shareData?.symbol ?? '?'} in wallet`)
               }}
               onChange={handleShareAmountChange}
               showInfoRow={showInputInfoRows}
               showMaxButton={true}
+              intl={intl}
               className='mb-0.5'
             />
             <TxFormInput
@@ -153,6 +160,7 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
               formKey='tokenAmount'
               onChange={handleTokenAmountChange}
               showInfoRow={showInputInfoRows}
+              intl={intl}
               className='my-0.5'
             />
           </FormProvider>

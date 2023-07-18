@@ -227,6 +227,14 @@ export const Layout = (props: LayoutProps) => {
         addRecentTransaction={addRecentTransaction}
         onGoToAccount={() => router.push('/account')}
         refetchUserBalances={refetchUserBalances}
+        intl={{
+          base: t_txModals,
+          common: t_common,
+          fees: t_txFees,
+          tooltips: t_tooltips,
+          txToast: t_txToasts,
+          formErrors: t_formErrors
+        }}
       />
 
       <DrawModal
