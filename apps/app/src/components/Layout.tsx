@@ -16,7 +16,6 @@ import {
   DepositModal,
   DrawModal,
   SettingsModal,
-  SettingsModalView,
   WithdrawModal
 } from '@shared/react-components'
 import { Footer, FooterItem, LINKS, Navbar, SocialIcon, Toaster } from '@shared/ui'

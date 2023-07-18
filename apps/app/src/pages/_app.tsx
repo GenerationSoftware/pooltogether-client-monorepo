@@ -1,6 +1,5 @@
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
-import { getInitialIsTestnets } from '@shared/generic-react-hooks'
 import type { AppProps } from 'next/app'
 import { WagmiConfig } from 'wagmi'
 import { AppContainer } from '@components/AppContainer'
@@ -9,8 +8,7 @@ import { ptRainbowTheme } from '@constants/theme'
 import '../styles/globals.css'
 import { createCustomWagmiConfig } from '../utils'
 
-const networks = getInitialIsTestnets() ? SUPPORTED_NETWORKS.testnets : SUPPORTED_NETWORKS.mainnets
-
+const networks = [...SUPPORTED_NETWORKS.mainnets, ...SUPPORTED_NETWORKS.testnets]
 const wagmiConfig = createCustomWagmiConfig(networks)
 
 export default function MyApp(props: AppProps) {
