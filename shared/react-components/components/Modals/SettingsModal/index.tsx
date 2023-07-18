@@ -1,6 +1,7 @@
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { VaultList } from '@pooltogether/hyperstructure-client-js'
-import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
+import { LANGUAGE_ID, MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
+import { Intl } from '@shared/types'
 import { Modal } from '@shared/ui'
 import { ReactNode } from 'react'
 import { CurrencyView } from './Views/CurrencyView'
@@ -15,21 +16,42 @@ export type SettingsModalView = 'menu' | SettingsModalOption
 export interface SettingsModalProps {
   view: SettingsModalView
   setView: (view: SettingsModalView) => void
+  locales?: LANGUAGE_ID[]
   localVaultLists?: { [id: string]: VaultList }
   disable?: SettingsModalOption[]
   hide?: SettingsModalOption[]
+  intl?: {
+    base?: Intl<
+      | 'customizeExperience'
+      | 'customizeCurrency'
+      | 'customizeLanguage'
+      | 'changeCurrency'
+      | 'changeLanguage'
+      | 'viewEcosystem'
+      | 'manageVaultLists'
+      | 'getHelp'
+      | 'getHelpWithPt'
+      | 'vaultListsDescription'
+      | 'learnMoreVaultLists'
+      | 'urlInput'
+      | 'clearImportedVaultLists'
+      | 'numTokens'
+      | 'imported'
+    >
+    forms?: Intl<'invalidSrc'>
+  }
 }
 
 export const SettingsModal = (props: SettingsModalProps) => {
-  const { view, setView, localVaultLists, disable, hide } = props
+  const { view, setView, locales, localVaultLists, disable, hide, intl } = props
 
   const { isModalOpen, setIsModalOpen } = useIsModalOpen(MODAL_KEYS.settings)
 
   const modalViews: Record<SettingsModalView, ReactNode> = {
-    menu: <MenuView setView={setView} disable={disable} hide={hide} />,
-    currency: <CurrencyView setView={setView} />,
-    language: <LanguageView setView={setView} />,
-    vaultLists: <VaultListView localVaultLists={localVaultLists} />
+    menu: <MenuView setView={setView} disable={disable} hide={hide} intl={intl?.base} />,
+    currency: <CurrencyView setView={setView} intl={intl?.base} />,
+    language: <LanguageView setView={setView} locales={locales} intl={intl?.base} />,
+    vaultLists: <VaultListView localVaultLists={localVaultLists} intl={intl} />
   }
 
   if (isModalOpen) {

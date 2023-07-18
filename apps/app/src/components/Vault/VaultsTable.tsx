@@ -3,6 +3,7 @@ import { SortDirection, SortId, useSortedVaults } from '@pooltogether/hyperstruc
 import { PrizePowerTooltip, SortIcon, VaultBadge } from '@shared/react-components'
 import { Spinner, Table, TableProps } from '@shared/ui'
 import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
 import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
@@ -21,6 +22,10 @@ export const VaultsTable = (props: VaultsTableProps) => {
   const { chainId, vaults, className } = props
 
   const router = useRouter()
+
+  const t_common = useTranslations('Common')
+  const t_vaults = useTranslations('Vaults')
+  const t_tooltips = useTranslations('Tooltips')
 
   const prizePools = useSupportedPrizePools()
   const prizePool = Object.values(prizePools).find((prizePool) => prizePool.chainId === chainId)
@@ -56,14 +61,19 @@ export const VaultsTable = (props: VaultsTableProps) => {
 
   const tableData: TableProps['data'] = {
     headers: {
-      token: { content: 'Token' },
+      token: { content: t_vaults('headers.token') },
       prizePower: {
         content: (
           <SortableHeader
             id='prizePower'
             onClick={handleHeaderClick}
             direction={getDirection('prizePower')}
-            append={<PrizePowerTooltip iconSize='lg' />}
+            append={
+              <PrizePowerTooltip
+                iconSize='lg'
+                intl={{ text: t_tooltips('prizePower'), learnMore: t_common('learnMore') }}
+              />
+            }
           />
         ),
         position: 'center'
@@ -145,10 +155,12 @@ interface SortableHeaderProps {
 const SortableHeader = (props: SortableHeaderProps) => {
   const { id, onClick, direction, append } = props
 
+  const t = useTranslations('Vaults')
+
   const names: Record<SortId, string> = {
-    prizePower: 'Prize Power',
-    totalBalance: 'Total Deposits',
-    userBalance: 'My Balance'
+    prizePower: t('headers.prizePower'),
+    totalBalance: t('headers.totalDeposits'),
+    userBalance: t('headers.myBalance')
   }
 
   return (
@@ -166,5 +178,7 @@ const SortableHeader = (props: SortableHeaderProps) => {
 }
 
 const ManageHeader = () => {
-  return <span className='mr-[18px]'>Manage</span>
+  const t = useTranslations('Common')
+
+  return <span className='mr-[18px]'>{t('manage')}</span>
 }

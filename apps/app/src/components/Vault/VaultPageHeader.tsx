@@ -1,8 +1,9 @@
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { Vault } from '@pooltogether/hyperstructure-client-js'
 import { useVaultShareData } from '@pooltogether/hyperstructure-react-hooks'
-import { NetworkBadge, TokenIcon } from '@shared/react-components'
+import { PrizePoolBadge, TokenIcon } from '@shared/react-components'
 import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/router'
 
 interface VaultPageHeaderProps {
@@ -14,6 +15,8 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
   const { vault, className } = props
 
   const router = useRouter()
+
+  const t = useTranslations('Common')
 
   const { data: shareData } = useVaultShareData(vault)
 
@@ -48,10 +51,10 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
           </div>
         </div>
         {(!!vault.name || !!shareData?.name) && (
-          <NetworkBadge
+          <PrizePoolBadge
             chainId={vault.chainId}
-            appendText='Prize Pool'
             onClick={() => router.push(`/prizes?network=${vault.chainId}`)}
+            intl={t}
           />
         )}
       </div>
@@ -62,13 +65,15 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
 const BackButton = () => {
   const router = useRouter()
 
+  const t = useTranslations('Common')
+
   return (
     <div
       onClick={() => router.back()}
       className='absolute left-0 flex items-center gap-2 text-pt-purple-100 cursor-pointer md:left-9'
     >
       <ArrowLeftIcon className='h-6 w-6 md:h-4 md:w-4' />
-      <span className='hidden text-xs font-medium md:block'>Back</span>
+      <span className='hidden text-xs font-medium md:block'>{t('back')}</span>
     </div>
   )
 }

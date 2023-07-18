@@ -3,9 +3,10 @@ import {
   useSelectedVaults
 } from '@pooltogether/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
-import { NetworkBadge } from '@shared/react-components'
+import { PrizePoolBadge } from '@shared/react-components'
 import { Button, Spinner } from '@shared/ui'
 import { useAtomValue, useSetAtom } from 'jotai'
+import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/router'
 import { useNetworks } from '@hooks/useNetworks'
 import { VaultCards } from './VaultCards'
@@ -14,6 +15,8 @@ import { VaultsTable } from './VaultsTable'
 
 export const VaultsDisplay = () => {
   const router = useRouter()
+
+  const t_common = useTranslations('Common')
 
   const networks = useNetworks()
 
@@ -47,11 +50,11 @@ export const VaultsDisplay = () => {
         if (filteredVaults[network] === undefined || filteredVaults[network].length === 0) return
         return (
           <div key={`pp-${network}`} className='w-full flex flex-col items-center gap-4 md:gap-6'>
-            <NetworkBadge
+            <PrizePoolBadge
               chainId={network}
-              appendText='Prize Pool'
               textClassName='text-lg font-medium'
               onClick={() => router.push(`/prizes?network=${network}`)}
+              intl={t_common}
             />
             <VaultsTable
               chainId={network}
@@ -67,23 +70,27 @@ export const VaultsDisplay = () => {
 }
 
 const NoSelectedVaultListsCard = () => {
+  const t_vaults = useTranslations('Vaults')
+  const t_error = useTranslations('Error')
+
   const { setIsModalOpen: setIsSettingsModalOpen } = useIsModalOpen(MODAL_KEYS.settings)
 
   return (
     <div className='flex flex-col items-center text-center p-6 bg-pt-transparent rounded-lg md:min-w-[480px]'>
       <DocumentSVG className='w-12 h-auto' />
-      <span className='text-xl font-semibold py-2 text-pt-purple-400'>Oops!</span>
-      <span className='text-pt-purple-100'>
-        It looks like you don't have any valid vault lists enabled.
-      </span>
+      <span className='text-xl font-semibold py-2 text-pt-purple-400'>{t_error('oops')}</span>
+      <span className='text-pt-purple-100'>{t_error('noVaultListsEnabled')}</span>
       <Button onClick={() => setIsSettingsModalOpen(true)} color='transparent' className='mt-6'>
-        Manage Vault Lists
+        {t_vaults('manageVaultLists')}
       </Button>
     </div>
   )
 }
 
 const NoValidVaultsCard = () => {
+  const t_vaults = useTranslations('Vaults')
+  const t_error = useTranslations('Error')
+
   const { setIsModalOpen: setIsSettingsModalOpen } = useIsModalOpen(MODAL_KEYS.settings)
 
   const setFilterId = useSetAtom(filterIdAtom)
@@ -91,14 +98,14 @@ const NoValidVaultsCard = () => {
   return (
     <div className='flex flex-col items-center text-center p-6 bg-pt-transparent rounded-lg md:min-w-[480px]'>
       <GaugesSVG className='w-14 h-auto' />
-      <span className='text-xl font-semibold py-2 text-pt-purple-400'>Oops!</span>
-      <span className='text-pt-purple-100'>There are no vaults that match your filters.</span>
+      <span className='text-xl font-semibold py-2 text-pt-purple-400'>{t_error('oops')}</span>
+      <span className='text-pt-purple-100'>{t_error('noVaultsMatchingFilters')}</span>
       <div className='flex flex-col gap-2 mt-6'>
         <Button onClick={() => setFilterId('all')} color='transparent' fullSized={true}>
-          Clear Filters
+          {t_vaults('clearFilters')}
         </Button>
         <Button onClick={() => setIsSettingsModalOpen(true)} color='transparent' fullSized={true}>
-          Manage Vault Lists
+          {t_vaults('manageVaultLists')}
         </Button>
       </div>
     </div>

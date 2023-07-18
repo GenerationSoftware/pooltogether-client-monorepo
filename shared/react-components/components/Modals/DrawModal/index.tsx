@@ -1,15 +1,20 @@
 import { PrizePool, SubgraphPrizePoolDraw } from '@pooltogether/hyperstructure-client-js'
 import { MODAL_KEYS, useIsModalOpen, useScreenSize } from '@shared/generic-react-hooks'
+import { Intl } from '@shared/types'
 import { Button, Modal } from '@shared/ui'
 import { MainView } from './Views/MainView'
 
 export interface DrawModalProps {
   draw?: SubgraphPrizePoolDraw
   prizePool?: PrizePool
+  intl?: {
+    base?: Intl<'close' | 'prizePool' | 'drawId'>
+    prizes?: Intl<'drawTotal' | 'winner' | 'prize'>
+  }
 }
 
 export const DrawModal = (props: DrawModalProps) => {
-  const { draw, prizePool } = props
+  const { draw, prizePool, intl } = props
 
   const { isModalOpen, setIsModalOpen } = useIsModalOpen(MODAL_KEYS.drawWinners)
 
@@ -22,10 +27,10 @@ export const DrawModal = (props: DrawModalProps) => {
   if (isModalOpen && !!draw && !!prizePool) {
     return (
       <Modal
-        bodyContent={<MainView draw={draw} prizePool={prizePool} />}
+        bodyContent={<MainView draw={draw} prizePool={prizePool} intl={intl} />}
         footerContent={
           <Button onClick={handleClose} fullSized={true}>
-            Close
+            {intl?.base?.('close') ?? 'Close'}
           </Button>
         }
         onClose={handleClose}

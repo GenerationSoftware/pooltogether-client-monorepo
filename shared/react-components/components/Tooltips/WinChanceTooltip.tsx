@@ -4,18 +4,19 @@ import classNames from 'classnames'
 
 export interface WinChanceTooltipProps {
   iconSize?: 'sm' | 'md' | 'lg'
+  intl?: { text?: string }
   className?: string
   iconClassName?: string
 }
 
 export const WinChanceTooltip = (props: WinChanceTooltipProps) => {
-  const { iconSize, className, iconClassName } = props
+  const { iconSize, intl, className, iconClassName } = props
 
   return (
     <Tooltip
       content={
         <div className={classNames('max-w-[16ch] text-center', className)}>
-          <span>This is your chance to win a prize in any given draw</span>
+          <span>{intl?.text ?? 'This is your chance to win a prize in any given draw'}</span>
         </div>
       }
     >

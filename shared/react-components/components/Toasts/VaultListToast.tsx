@@ -1,11 +1,13 @@
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { useCachedVaultLists } from '@pooltogether/hyperstructure-react-hooks'
+import { Intl } from '@shared/types'
 import { Spinner, toast } from '@shared/ui'
 import { ReactNode } from 'react'
 
 export interface VaultListToastProps {
   vaultListSrc: string
   state: 'importing' | 'success' | 'error'
+  intl?: Intl<'importingFrom' | 'successfulImport' | 'selectedVaultList' | 'failedImport'>
 }
 
 /**
@@ -16,12 +18,12 @@ export const createVaultListToast = (data: VaultListToastProps) => {
 }
 
 export const VaultListToast = (props: VaultListToastProps) => {
-  const { vaultListSrc, state } = props
+  const { vaultListSrc, state, intl } = props
 
   if (state === 'success') {
     toast(
       <ToastLayout id={vaultListSrc}>
-        <SuccessView src={vaultListSrc} />
+        <SuccessView src={vaultListSrc} intl={intl} />
       </ToastLayout>,
       { id: vaultListSrc }
     )
@@ -30,7 +32,7 @@ export const VaultListToast = (props: VaultListToastProps) => {
   if (state === 'error') {
     toast(
       <ToastLayout id={vaultListSrc}>
-        <ErrorView src={vaultListSrc} />
+        <ErrorView src={vaultListSrc} intl={intl} />
       </ToastLayout>,
       { id: vaultListSrc }
     )
@@ -38,7 +40,7 @@ export const VaultListToast = (props: VaultListToastProps) => {
 
   return (
     <ToastLayout id={vaultListSrc}>
-      <ImportingView src={vaultListSrc} />
+      <ImportingView src={vaultListSrc} intl={intl} />
     </ToastLayout>
   )
 }
@@ -64,35 +66,42 @@ const ToastLayout = (props: ToastLayoutProps) => {
 
 interface ImportingViewProps {
   src: string
+  intl?: Intl<'importingFrom'>
 }
 
 const ImportingView = (props: ImportingViewProps) => {
-  const { src } = props
+  const { src, intl } = props
+
+  const cleanSrc = getCleanVaultListSrc(src)
 
   return (
     <span className='flex items-center gap-2 text-pt-purple-50'>
-      <Spinner className='after:border-y-pt-teal' /> Importing Vault List from{' '}
-      {getCleanVaultListSrc(src)}...
+      <Spinner className='after:border-y-pt-teal' />{' '}
+      {intl?.('importingFrom', { src: cleanSrc }) ?? `Importing Vault List from ${cleanSrc}...`}
     </span>
   )
 }
 
 interface SuccessViewProps {
   src: string
+  intl?: Intl<'successfulImport' | 'selectedVaultList'>
 }
 
 const SuccessView = (props: SuccessViewProps) => {
-  const { src } = props
+  const { src, intl } = props
 
   const { cachedVaultLists } = useCachedVaultLists()
 
-  const vaultListName = cachedVaultLists[src]?.name
+  const name = cachedVaultLists[src]?.name
 
   return (
     <div className='flex flex-col gap-2 text-pt-purple-50'>
-      <span>Successfully imported a vault list.</span>
-      {!!vaultListName && (
-        <span>"{vaultListName}" has been added to your currently selected vault lists.</span>
+      <span>{intl?.('successfulImport') ?? 'Successfully imported a vault list.'}</span>
+      {!!name && (
+        <span>
+          {intl?.('selectedVaultList', { name }) ??
+            `"${name}" has been added to your currently selected vault lists.`}
+        </span>
       )}
     </div>
   )
@@ -100,14 +109,18 @@ const SuccessView = (props: SuccessViewProps) => {
 
 interface ErrorViewProps {
   src: string
+  intl?: Intl<'failedImport'>
 }
 
 const ErrorView = (props: ErrorViewProps) => {
-  const { src } = props
+  const { src, intl } = props
+
+  const cleanSrc = getCleanVaultListSrc(src)
 
   return (
     <span className='flex items-center gap-2 text-pt-purple-50'>
-      Something went wrong while importing a vault list from {getCleanVaultListSrc(src)}.
+      {intl?.('failedImport', { src: cleanSrc }) ??
+        `Something went wrong while importing a vault list from ${cleanSrc}.`}
     </span>
   )
 }

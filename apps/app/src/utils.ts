@@ -1,5 +1,6 @@
 import { NETWORK, parseQueryParam } from '@pooltogether/hyperstructure-client-js'
 import { connectorsForWallets, Wallet } from '@rainbow-me/rainbowkit'
+import deepmerge from 'deepmerge'
 import { FallbackTransport, PublicClient } from 'viem'
 import {
   Chain,
@@ -83,4 +84,23 @@ const getWalletConnectors = (chains: Chain[]): (() => Connector[]) => {
   }
 
   return connectorsForWallets(walletGroups)
+}
+
+/**
+ * Returns messages for localization through next-intl
+ * @param locale the locale to fetch messages for
+ * @param options optional settings
+ * @returns
+ */
+export const getMessages = async (locale?: string, options?: { useDefault?: boolean }) => {
+  const defaultMessages: IntlMessages = (await import(`../messages/en.json`)).default
+
+  if (!locale) return defaultMessages
+
+  const localeMessages: IntlMessages = (await import(`../messages/${locale}.json`)).default
+  const messages = options?.useDefault
+    ? deepmerge<IntlMessages>(defaultMessages, localeMessages)
+    : localeMessages
+
+  return messages
 }

@@ -1,0 +1,231 @@
+{
+  "Common": {
+    "depositToWin": "Deposit to Win",
+    "prizePool": "{network} Prize Pool",
+    "grandPrize": "Grand Prize",
+    "joinDiscord": "Join our Discord Community",
+    "showMore": "Show More",
+    "drawId": "Draw #{id}",
+    "manage": "Manage",
+    "deposit": "Deposit",
+    "withdraw": "Withdraw",
+    "learnMore": "Learn More",
+    "back": "Back",
+    "connectWallet": "Connect Wallet",
+    "viewTx": "View TX",
+    "viewOn": "View on {name}",
+    "close": "Close"
+  },
+  "Navigation": {
+    "home": "Home",
+    "prizes": "Prizes",
+    "vaults": "Vaults",
+    "vault": "Vault",
+    "account": "Account"
+  },
+  "Home": {
+    "winUpTo": {
+      "beforeValue": "Deposit for a chance to win up to",
+      "afterValue": ""
+    },
+    "chanceToWin": "Deposit into prize pools for a daily chance to win.",
+    "nextDrawIn": "Next Draw In"
+  },
+  "Prizes": {
+    "learnMore": "Learn more about how prizes work",
+    "switchPrizePool": "Switch prize pool",
+    "estPrizeValue": "Estimated Prize Value",
+    "estPrizeFreq": "Estimated Frequency",
+    "recentWinners": "Recent Prize Pool Winners",
+    "drawWinners": {
+      "xWalletsWon": "{numWallets, plural, one {# wallet} other {# wallets}} won",
+      "xInPrizes": "in prizes"
+    },
+    "drawModal": {
+      "drawTotal": "This draw had {numPrizes} prizes totalling {numTokens}.",
+      "winner": "Winner",
+      "prize": "Prize"
+    }
+  },
+  "Vaults": {
+    "filter": "Filter",
+    "filters": {
+      "showAll": "Show All",
+      "inWallet": "In My Wallet",
+      "stablecoins": "Stablecoins"
+    },
+    "manageVaultLists": "Manage Vault Lists",
+    "clearFilters": "Clear Filters",
+    "headers": {
+      "token": "Token",
+      "prizePower": "Prize Power",
+      "totalDeposits": "Total Deposits",
+      "myBalance": "My Balance"
+    }
+  },
+  "Vault": {
+    "headers": {
+      "myBalance": "My Balance",
+      "myWinChance": "My Win Chance",
+      "prizePower": "Prize Power",
+      "tvl": "TVL",
+      "depositAsset": "Deposit Asset",
+      "prizeAsset": "Prize Asset"
+    },
+    "returnToVaults": "Return to Vaults"
+  },
+  "Account": {
+    "connectWallet": "Connect your wallet to view account status",
+    "noPrizeAssets": "You don't have any prize assets.",
+    "depositNow": "Deposit now.",
+    "yourDeposits": "Your Deposits",
+    "yourWinnings": "Your Winnings",
+    "dailyPrizeOdds": "Daily Prize Odds",
+    "oneInXChance": "1 in {number}",
+    "noPrizesRecently": "You haven't won any prizes recently.",
+    "learnHowItWorks": "Learn how PoolTogether works",
+    "winHeaders": {
+      "draw": "Draw",
+      "prizePool": "Prize Pool",
+      "winnings": "Winnings",
+      "moreInfo": "More Info"
+    }
+  },
+  "TxModals": {
+    "depositTo": "Deposit to {name} on {network}",
+    "depositToShort": "Deposit to {name}",
+    "withdrawFrom": "Withdraw from {name} on {network}",
+    "withdrawFromShort": "Withdraw from {name}",
+    "fees": {
+      "title": "Estimated Network Fees",
+      "approval": "Approval",
+      "deposit": "Deposit",
+      "withdrawal": "Withdrawal"
+    },
+    "dailyChances": "Daily Chance of Winning",
+    "oneInXChance": "1 in {number}",
+    "max": "Max",
+    "balance": "Balance:",
+    "enterAnAmount": "Enter an amount",
+    "exactApprovalButton": "Approve exact amount of {symbol}",
+    "exactApprovalTx": "Exact {symbol} Approval",
+    "infiniteApprovalButton": "Approve unlimited amount of {symbol}",
+    "infiniteApprovalTx": "Infinite {symbol} Approval",
+    "reviewDeposit": "Review Deposit",
+    "reviewWithdrawal": "Review Withdrawal",
+    "confirmDeposit": "Confirm Deposit",
+    "confirmWithdrawal": "Confirm Withdrawal",
+    "depositTx": "{symbol} Deposit",
+    "withdrawTx": "{symbol} Withdrawal",
+    "switchNetwork": "Switch to {network}",
+    "switchingNetwork": "Switching to {network}...",
+    "confirmNotice": "Confirm Transaction in Wallet",
+    "submissionNotice": "Transaction Submitted",
+    "depositing": "Depositing {tokens}...",
+    "withdrawing": "Withdrawing {tokens}...",
+    "success": "Success!",
+    "deposited": "You deposited {tokens}",
+    "withdrew": "You withdrew {tokens}",
+    "nowEligible": "You are now eligible for all future draws in this pool.",
+    "shareTwitter": "Share Tweet",
+    "shareLenster": "Share on Lenster",
+    "viewAccount": "View Account",
+    "uhOh": "Uh oh!",
+    "failedTx": "Something went wrong....",
+    "tryAgain": "Try Again",
+    "disclaimer": "By clicking \"Confirm Deposit\", you agree to PoolTogether's <tosLink>Terms of Service</tosLink> and acknowledge that you have read and understand the PoolTogether <disLink>protocol disclaimer</disLink>."
+  },
+  "Footer": {
+    "titles": {
+      "getHelp": "Get Help",
+      "ecosystem": "Ecosystem",
+      "community": "Community",
+      "settings": "Settings"
+    },
+    "userDocs": "User Docs",
+    "faq": "FAQ",
+    "devDocs": "Developer Docs",
+    "extensions": "Extensions",
+    "governance": "Governance",
+    "security": "Security",
+    "enableTestnets": "Enable Testnets",
+    "disableTestnets": "Disable Testnets"
+  },
+  "Settings": {
+    "customizeExperience": "Customize Your Experience",
+    "customizeCurrency": "Customize Currency",
+    "customizeLanguage": "Customize Language",
+    "changeCurrency": "Change Currency",
+    "changeLanguage": "Change Language",
+    "viewEcosystem": "View Ecosystem",
+    "manageVaultLists": "Manage Prize Asset Lists",
+    "getHelp": "Get Help",
+    "getHelpWithPt": "Get Help w/ Using PoolTogether",
+    "vaultListsDescription": "Prize asset lists determine what assets are displayed throughout the app. Use caution when interacting with imported lists.",
+    "learnMoreVaultLists": "Learn more about prize asset lists",
+    "urlInput": "https:// or ipfs:// or ENS name",
+    "clearImportedVaultLists": "Clear all imported vault lists",
+    "numTokens": "{number, plural, one {# Token} other {# Tokens}}",
+    "imported": "Imported"
+  },
+  "Abbreviations": {
+    "days": "days",
+    "hours": "hrs",
+    "minutes": "mins",
+    "seconds": "secs"
+  },
+  "Frequency": {
+    "daily": "Daily",
+    "everyXdays": "Every {number} days",
+    "everyXweeks": "Every {number} weeks",
+    "everyXmonths": "Every {number} months",
+    "everyXyears": "Every {number} years",
+    "xPrizesDaily": "{number, plural, one {# prize} other {# prizes}} daily",
+    "xPrizesWeekly": "{number, plural, one {# prize} other {# prizes}} weekly",
+    "xPrizesMonthly": "{number, plural, one {# prize} other {# prizes}} monthly",
+    "xPrizesYearly": "{number, plural, one {# prize} other {# prizes}} yearly"
+  },
+  "Tooltips": {
+    "prizePower": "Vaults with higher prize power have more chances to win",
+    "winChance": "This is your chance to win a prize in any given draw",
+    "exactApproval": "You'll give your approval to deposit a specific amount of {symbol}",
+    "infiniteApproval": "You won't need to approve {symbol} the next time you want to deposit"
+  },
+  "Toasts": {
+    "transactions": {
+      "deposit": "Deposit",
+      "withdrawal": "Withdrawal",
+      "depositing": "Depositing {tokens}...",
+      "withdrawing": "Withdrawing {tokens}...",
+      "viewOn": "View on {name}",
+      "success": "Success!",
+      "deposited": "You deposited {tokens} on {network}",
+      "withdrew": "You withdrew {tokens} on {network}",
+      "uhOh": "Uh oh!",
+      "failedTx": "Something went wrong....",
+      "tryAgain": "Try Again"
+    },
+    "vaultListImports": {
+      "importingFrom": "Importing Vault List from {src}...",
+      "successfulImport": "Successfully imported a vault list.",
+      "selectedVaultList": "\"{name}\" has been added to your currently selected vault lists.",
+      "failedImport": "Something went wrong while importing a vault list from {src}."
+    }
+  },
+  "Error": {
+    "oops": "Oops!",
+    "noVaultListsEnabled": "It looks like you don't have any valid vault lists enabled.",
+    "noVaultsMatchingFilters": "There are no vaults that match your filters.",
+    "vaultInfoQuery": "Something went wrong while querying this vault's info.",
+    "hmmm": "Hmmm...",
+    "pageNotFound": "We couldn't find the page you're looking for.",
+    "return": "Return to the Pool",
+    "formErrors": {
+      "invalidSrc": "Not a valid URL or ENS domain",
+      "notEnoughTokens": "Not enough {symbol} in wallet",
+      "invalidNumber": "Enter a valid number",
+      "negativeNumber": "Enter a positive number",
+      "tooManyDecimals": "Too many decimals"
+    }
+  }
+}

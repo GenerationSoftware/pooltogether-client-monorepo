@@ -1,5 +1,6 @@
 import { Button } from '@shared/ui'
 import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 
 interface PageNotFoundProps {
@@ -9,6 +10,8 @@ interface PageNotFoundProps {
 export const PageNotFound = (props: PageNotFoundProps) => {
   const { className } = props
 
+  const t = useTranslations('Error')
+
   return (
     <div
       className={classNames(
@@ -16,11 +19,11 @@ export const PageNotFound = (props: PageNotFoundProps) => {
         className
       )}
     >
-      <span className='text-3xl'>🤔 Hmmm...</span>
-      <h2 className='mb-8 font-bold text-3xl'>We couldn't find the page you're looking for.</h2>
+      <span className='text-3xl'>🤔 {t('hmmm')}</span>
+      <h2 className='mb-8 font-bold text-3xl'>{t('pageNotFound')}</h2>
       <Link href='/' passHref={true}>
         <Button>
-          <span className='text-xl'>Return to the Pool</span>
+          <span className='text-xl'>{t('return')}</span>
         </Button>
       </Link>
     </div>

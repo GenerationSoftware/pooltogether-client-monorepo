@@ -1,11 +1,14 @@
 import { PrizePoolCard } from '@shared/react-components'
 import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 
 export const PrizePoolCards = () => {
   const prizePools = useSupportedPrizePools()
   const numPrizePools = Object.keys(prizePools).length
+
+  const t = useTranslations('Common')
 
   return (
     <div
@@ -25,7 +28,7 @@ export const PrizePoolCards = () => {
             href={`/prizes?network=${prizePool.chainId}`}
             className='w-full max-w-sm'
           >
-            <PrizePoolCard prizePool={prizePool} />
+            <PrizePoolCard prizePool={prizePool} intl={t} />
           </Link>
         )
       })}

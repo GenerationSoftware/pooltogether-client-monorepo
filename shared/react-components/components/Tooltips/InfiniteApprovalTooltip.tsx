@@ -1,22 +1,27 @@
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
+import { Intl } from '@shared/types'
 import { Tooltip } from '@shared/ui'
 import classNames from 'classnames'
 
 export interface InfiniteApprovalTooltipProps {
   tokenSymbol: string
   iconSize?: 'sm' | 'md' | 'lg'
+  intl?: Intl<'infiniteApproval'>
   className?: string
   iconClassName?: string
 }
 
 export const InfiniteApprovalTooltip = (props: InfiniteApprovalTooltipProps) => {
-  const { tokenSymbol, iconSize, className, iconClassName } = props
+  const { tokenSymbol, iconSize, intl, className, iconClassName } = props
 
   return (
     <Tooltip
       content={
         <div className={classNames('max-w-[16ch] text-center', className)}>
-          <span>You won't need to approve {tokenSymbol} the next time you want to deposit</span>
+          <span>
+            {intl?.('infiniteApproval', { symbol: tokenSymbol }) ??
+              `You won't need to approve ${tokenSymbol} the next time you want to deposit`}
+          </span>
         </div>
       }
     >

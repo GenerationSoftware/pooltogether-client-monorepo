@@ -4,21 +4,22 @@ import classNames from 'classnames'
 
 export interface PrizePowerTooltipProps {
   iconSize?: 'sm' | 'md' | 'lg'
+  intl?: { text?: string; learnMore?: string }
   className?: string
   iconClassName?: string
 }
 
 export const PrizePowerTooltip = (props: PrizePowerTooltipProps) => {
-  const { iconSize, className, iconClassName } = props
+  const { iconSize, intl, className, iconClassName } = props
 
   return (
     <Tooltip
       content={
         <div className={classNames('flex flex-col max-w-[16ch] text-center', className)}>
-          <span>Vaults with higher prize power have more chances to win</span>
+          <span>{intl?.text ?? 'Vaults with higher prize power have more chances to win'}</span>
           {/* TODO: add link */}
           <a href='#' className='text-pt-purple-500 underline'>
-            Learn More
+            {intl?.learnMore ?? 'Learn More'}
           </a>
         </div>
       }

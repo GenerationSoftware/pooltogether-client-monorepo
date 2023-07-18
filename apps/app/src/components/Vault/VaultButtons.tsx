@@ -2,6 +2,7 @@ import { Vault } from '@pooltogether/hyperstructure-client-js'
 import { useUserVaultShareBalance } from '@pooltogether/hyperstructure-react-hooks'
 import { DepositButton, WithdrawButton } from '@shared/react-components'
 import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
 import { useAccount } from 'wagmi'
 
 interface VaultButtonsProps {
@@ -13,6 +14,8 @@ interface VaultButtonsProps {
 
 export const VaultButtons = (props: VaultButtonsProps) => {
   const { vault, fullSized, inverseOrder, className } = props
+
+  const t = useTranslations('Common')
 
   const { address: userAddress } = useAccount()
 
@@ -26,14 +29,18 @@ export const VaultButtons = (props: VaultButtonsProps) => {
         vault={vault}
         fullSized={fullSized}
         className={inverseOrder ? 'order-2' : 'order-1'}
-      />
+      >
+        {t('deposit')}
+      </DepositButton>
       {shareBalance > 0n && (
         <WithdrawButton
           vault={vault}
           fullSized={fullSized}
           className={inverseOrder ? 'order-1' : 'order-2'}
           color='transparent'
-        />
+        >
+          {t('withdraw')}
+        </WithdrawButton>
       )}
     </div>
   )

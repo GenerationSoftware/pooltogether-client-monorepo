@@ -8,6 +8,7 @@ import { NetworkIcon } from '@shared/react-components'
 import { Selection, SelectionItem } from '@shared/ui'
 import classNames from 'classnames'
 import { atom, useAtom, useSetAtom } from 'jotai'
+import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/router'
 import { useEffect, useMemo } from 'react'
 import { useAccount } from 'wagmi'
@@ -25,6 +26,8 @@ export const VaultFilters = (props: VaultFiltersProps) => {
   const { className } = props
 
   const router = useRouter()
+
+  const t = useTranslations('Vaults')
 
   const networks = useNetworks()
 
@@ -93,7 +96,7 @@ export const VaultFilters = (props: VaultFiltersProps) => {
     () => [
       {
         id: 'all',
-        content: 'Show All',
+        content: t('filters.showAll'),
         onClick: () => {
           setFilterId('all')
           filterAll()
@@ -103,7 +106,7 @@ export const VaultFilters = (props: VaultFiltersProps) => {
       },
       {
         id: 'userWallet',
-        content: 'In My Wallet',
+        content: t('filters.inWallet'),
         disabled: !isFetchedUserTokenBalances,
         onClick: () => {
           setFilterId('userWallet')
@@ -114,12 +117,13 @@ export const VaultFilters = (props: VaultFiltersProps) => {
       },
       {
         id: 'stablecoin',
-        content: 'Stablecoins',
+        content: t('filters.stablecoins'),
         onClick: () => {
           setFilterId('stablecoin')
           filterStablecoins()
         },
-        filter: filterStablecoins
+        filter: filterStablecoins,
+        className: 'whitespace-nowrap'
       },
       ...networks.map((network) => {
         return {
@@ -152,14 +156,14 @@ export const VaultFilters = (props: VaultFiltersProps) => {
           )}
         >
           <div className='flex items-center gap-8 py-0.5'>
-            <span className='hidden text-lg lg:block'>Filter</span>
+            <span className='hidden text-lg lg:block'>{t('filter')}</span>
             <Selection items={filterItems} activeItem={filterId} buttonColor='purple' />
           </div>
           <span
             onClick={() => setIsSettingsModalOpen(true)}
             className='hidden text-lg text-pt-purple-100 cursor-pointer whitespace-nowrap lg:block'
           >
-            Manage Vault Lists
+            {t('manageVaultLists')}
           </span>
         </div>
       </div>

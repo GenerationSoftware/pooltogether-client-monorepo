@@ -1,7 +1,8 @@
 import { PrizePool, SubgraphPrizePoolAccount } from '@pooltogether/hyperstructure-client-js'
-import { NetworkBadge } from '@shared/react-components'
+import { PrizePoolBadge } from '@shared/react-components'
 import { Table, TableProps } from '@shared/ui'
 import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/router'
 import { AccountWinAmount } from './AccountWinAmount'
 import { AccountWinButtons } from './AccountWinButtons'
@@ -16,12 +17,15 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
 
   const router = useRouter()
 
+  const t_common = useTranslations('Common')
+  const t_account = useTranslations('Account')
+
   const tableData: TableProps['data'] = {
     headers: {
-      draw: { content: 'Draw' },
-      prizePool: { content: 'Prize Pool', position: 'center' },
-      winnings: { content: 'Winnings', position: 'center' },
-      info: { content: 'More Info', position: 'center' }
+      draw: { content: t_account('winHeaders.draw') },
+      prizePool: { content: t_account('winHeaders.prizePool'), position: 'center' },
+      winnings: { content: t_account('winHeaders.winnings'), position: 'center' },
+      info: { content: t_account('winHeaders.moreInfo'), position: 'center' }
     },
     rows: wins
       .map((win) => {
@@ -32,10 +36,10 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
             draw: { content: `Draw #${win.draw.id}` },
             prizePool: {
               content: (
-                <NetworkBadge
+                <PrizePoolBadge
                   chainId={win.chainId}
-                  appendText='Prize Pool'
                   onClick={() => router.push(`/prizes?network=${win.chainId}`)}
+                  intl={t_common}
                 />
               ),
               position: 'center'

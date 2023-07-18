@@ -1,4 +1,5 @@
 import { getNiceNetworkNameByChainId } from '@pooltogether/hyperstructure-client-js'
+import { Intl } from '@shared/types'
 import { Button, ButtonProps, Spinner } from '@shared/ui'
 import { useEffect } from 'react'
 import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi'
@@ -13,6 +14,7 @@ export interface TransactionButtonProps extends Omit<ButtonProps, 'onClick'> {
   openConnectModal?: () => void
   openChainModal?: () => void
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
+  intl?: { base?: Intl<'switchNetwork' | 'switchingNetwork'>; common?: Intl<'connectWallet'> }
 }
 
 export const TransactionButton = (props: TransactionButtonProps) => {
@@ -26,6 +28,7 @@ export const TransactionButton = (props: TransactionButtonProps) => {
     openConnectModal,
     openChainModal,
     addRecentTransaction,
+    intl,
     disabled,
     children,
     ...rest
@@ -50,7 +53,7 @@ export const TransactionButton = (props: TransactionButtonProps) => {
   if (isDisconnected) {
     return (
       <Button onClick={openConnectModal} {...rest}>
-        Connect Wallet
+        {intl?.common?.('connectWallet') ?? 'Connect Wallet'}
       </Button>
     )
   } else if (chain?.id !== chainId) {
@@ -62,8 +65,17 @@ export const TransactionButton = (props: TransactionButtonProps) => {
         disabled={isSwitchingNetwork}
         {...rest}
       >
-        {isSwitchingNetwork && <span>Switching to {networkName}...</span>}
-        {!isSwitchingNetwork && <span>Switch to {networkName} Network</span>}
+        {isSwitchingNetwork && (
+          <span>
+            {intl?.base?.('switchingNetwork', { network: networkName }) ??
+              `Switching to ${networkName}...`}
+          </span>
+        )}
+        {!isSwitchingNetwork && (
+          <span>
+            {intl?.base?.('switchNetwork', { network: networkName }) ?? `Switch to ${networkName}`}
+          </span>
+        )}
       </Button>
     )
   }

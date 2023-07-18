@@ -1,5 +1,6 @@
 import { Vault } from '@pooltogether/hyperstructure-client-js'
 import { DepositButton, WithdrawButton } from '@shared/react-components'
+import { useTranslations } from 'next-intl'
 
 interface AccountVaultButtonsProps {
   vault: Vault
@@ -8,10 +9,14 @@ interface AccountVaultButtonsProps {
 export const AccountVaultButtons = (props: AccountVaultButtonsProps) => {
   const { vault } = props
 
+  const t = useTranslations('Common')
+
   return (
     <div className='flex justify-end gap-2'>
-      <WithdrawButton vault={vault} color='transparent' />
-      <DepositButton vault={vault} />
+      <WithdrawButton vault={vault} color='transparent'>
+        {t('withdraw')}
+      </WithdrawButton>
+      <DepositButton vault={vault}>{t('deposit')}</DepositButton>
     </div>
   )
 }

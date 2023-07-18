@@ -3,6 +3,7 @@ import { useVaultShareData, useVaultTokenData } from '@pooltogether/hyperstructu
 import { PrizePowerTooltip, WinChanceTooltip } from '@shared/react-components'
 import { ExternalLink, Spinner } from '@shared/ui'
 import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
 import { ReactNode } from 'react'
 import { useAccount } from 'wagmi'
 import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
@@ -18,6 +19,10 @@ interface VaultPageInfoProps {
 export const VaultPageInfo = (props: VaultPageInfoProps) => {
   const { vault, className } = props
 
+  const t_common = useTranslations('Common')
+  const t_vault = useTranslations('Vault')
+  const t_tooltips = useTranslations('Tooltips')
+
   const { address: userAddress } = useAccount()
 
   const { data: shareData } = useVaultShareData(vault)
@@ -32,7 +37,7 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
     >
       {!!userAddress && (
         <VaultInfoRow
-          name='My Balance'
+          name={t_vault('headers.myBalance')}
           data={<AccountVaultBalance vault={vault} className='!flex-row gap-1' />}
         />
       )}
@@ -40,9 +45,10 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
         <VaultInfoRow
           name={
             <span className='flex gap-2 items-center'>
-              My Win Chance{' '}
+              {t_vault('headers.myWinChance')}{' '}
               <WinChanceTooltip
                 iconSize='sm'
+                intl={{ text: t_tooltips('winChance') }}
                 className='text-sm md:text-base'
                 iconClassName='text-pt-purple-200'
               />
@@ -54,9 +60,10 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
       <VaultInfoRow
         name={
           <span className='flex gap-2 items-center'>
-            Prize Power{' '}
+            {t_vault('headers.prizePower')}{' '}
             <PrizePowerTooltip
               iconSize='sm'
+              intl={{ text: t_tooltips('prizePower'), learnMore: t_common('learnMore') }}
               className='text-sm md:text-base'
               iconClassName='text-pt-purple-200'
             />
@@ -64,13 +71,13 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
         }
         data={<VaultPrizePower vault={vault} />}
       />
-      <VaultInfoRow name='TVL' data={<VaultTotalDeposits vault={vault} />} />
+      <VaultInfoRow name={t_vault('headers.tvl')} data={<VaultTotalDeposits vault={vault} />} />
       <VaultInfoRow
-        name='Deposit Asset'
+        name={t_vault('headers.depositAsset')}
         data={!!tokenData ? <VaultInfoToken token={tokenData} /> : <Spinner />}
       />
       <VaultInfoRow
-        name='Prize Asset'
+        name={t_vault('headers.prizeAsset')}
         data={!!shareData ? <VaultInfoToken token={shareData} /> : <Spinner />}
       />
     </div>

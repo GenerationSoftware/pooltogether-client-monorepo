@@ -1,21 +1,28 @@
 import { CheckIcon } from '@heroicons/react/24/outline'
 import { LANGUAGE_ID, SUPPORTED_LANGUAGES, useSelectedLanguage } from '@shared/generic-react-hooks'
+import { Intl } from '@shared/types'
 import classNames from 'classnames'
 import { SettingsModalView } from '..'
 
 interface LanguageViewProps {
   setView: (view: SettingsModalView) => void
+  locales?: LANGUAGE_ID[]
+  intl?: Intl<'customizeLanguage'>
 }
 
 export const LanguageView = (props: LanguageViewProps) => {
-  const { setView } = props
+  const { setView, locales, intl } = props
 
-  const languages = Object.keys(SUPPORTED_LANGUAGES) as LANGUAGE_ID[]
+  const allLanguages = Object.keys(SUPPORTED_LANGUAGES) as LANGUAGE_ID[]
+  const languages =
+    !!locales && locales.length > 0
+      ? allLanguages.filter((id) => locales.includes(id))
+      : allLanguages
 
   return (
     <div className='flex flex-col items-center gap-4 px-4'>
       <span className='text-lg font-semibold text-pt-purple-50 order-first md:text-xl'>
-        Customize Language
+        {intl?.('customizeLanguage') ?? 'Customize Language'}
       </span>
       {languages.map((id) => {
         return <LanguageItem key={`lang-item-${id}`} id={id} setView={setView} />

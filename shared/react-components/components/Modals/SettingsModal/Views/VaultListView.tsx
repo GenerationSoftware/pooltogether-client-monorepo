@@ -5,6 +5,7 @@ import {
   useSelectedVaultListIds,
   useVaultList
 } from '@pooltogether/hyperstructure-react-hooks'
+import { Intl } from '@shared/types'
 import { BasicIcon, ExternalLink, Toggle } from '@shared/ui'
 import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -12,10 +13,22 @@ import { ImportedBadge } from '../../../Badges/ImportedBadge'
 
 interface VaultListViewProps {
   localVaultLists?: { [id: string]: VaultList }
+  intl?: {
+    base?: Intl<
+      | 'manageVaultLists'
+      | 'vaultListsDescription'
+      | 'learnMoreVaultLists'
+      | 'urlInput'
+      | 'clearImportedVaultLists'
+      | 'numTokens'
+      | 'imported'
+    >
+    forms?: Intl<'invalidSrc'>
+  }
 }
 
 export const VaultListView = (props: VaultListViewProps) => {
-  const { localVaultLists } = props
+  const { localVaultLists, intl } = props
 
   const { cachedVaultLists, remove } = useCachedVaultLists()
 
@@ -65,15 +78,17 @@ export const VaultListView = (props: VaultListViewProps) => {
   return (
     <div className='flex flex-col gap-4 px-4 md:gap-8'>
       <div className='flex flex-col items-center gap-2 text-center'>
-        <span className='text-lg font-semibold md:text-xl'>Manage Prize Asset Lists</span>
+        <span className='text-lg font-semibold md:text-xl'>
+          {intl?.base?.('manageVaultLists') ?? 'Manage Prize Asset Lists'}
+        </span>
         <span className='text-sm text-pt-purple-50 md:text-base'>
-          Prize asset lists determine what assets are displayed throughout the app. Use caution when
-          interacting with imported lists.
+          {intl?.base?.('vaultListsDescription') ??
+            'Prize asset lists determine what assets are displayed throughout the app. Use caution when interacting with imported lists.'}
         </span>
         {/* TODO: add link */}
         <ExternalLink
           href='#'
-          text='Learn more about prize asset lists'
+          text={intl?.base?.('learnMoreVaultLists') ?? 'Learn more about prize asset lists'}
           className='text-pt-purple-200'
         />
       </div>
@@ -88,13 +103,13 @@ export const VaultListView = (props: VaultListViewProps) => {
                 v.startsWith('ipfs://') ||
                 v.startsWith('ipns://') ||
                 v.endsWith('.eth') ||
-                'Not a valid URL or ENS domain'
+                (intl?.forms?.('invalidSrc') ?? 'Not a valid URL or ENS domain')
             }
           })}
           id='vaultListInput'
           type='text'
           className='w-full text-sm bg-gray-50 text-pt-purple-900 px-4 py-3 rounded-lg focus:outline-none'
-          placeholder='https:// or ipfs:// or ENS name'
+          placeholder={intl?.base?.('urlInput') ?? 'https:// or ipfs:// or ENS name'}
         />
         {!!error && <span className='text-sm text-pt-warning-light'>{error}</span>}
       </form>
@@ -106,6 +121,7 @@ export const VaultListView = (props: VaultListViewProps) => {
             id={id}
             vaultList={localVaultLists[id]}
             isChecked={localIds.includes(id)}
+            intl={intl?.base}
           />
         ))}
 
@@ -116,6 +132,7 @@ export const VaultListView = (props: VaultListViewProps) => {
           vaultList={importedVaultLists[id]}
           isChecked={importedIds.includes(id)}
           isImported={true}
+          intl={intl?.base}
         />
       ))}
 
@@ -124,7 +141,7 @@ export const VaultListView = (props: VaultListViewProps) => {
           onClick={handleClearAll}
           className='w-full text-center text-sm text-pt-purple-200 cursor-pointer'
         >
-          Clear all imported vault lists
+          {intl?.base?.('clearImportedVaultLists') ?? 'Clear all imported vault lists'}
         </span>
       )}
     </div>
@@ -136,10 +153,11 @@ interface VaultListItemProps {
   vaultList: VaultList
   isChecked?: boolean
   isImported?: boolean
+  intl?: Intl<'numTokens' | 'imported'>
 }
 
 const VaultListItem = (props: VaultListItemProps) => {
-  const { vaultList, id, isChecked, isImported } = props
+  const { vaultList, id, isChecked, isImported, intl } = props
 
   const { remove } = useCachedVaultLists()
 
@@ -175,9 +193,10 @@ const VaultListItem = (props: VaultListItemProps) => {
           </span>
           <div className='flex items-center gap-2 text-pt-purple-100'>
             <span className='text-xs'>
-              {vaultList.tokens.length} Token{vaultList.tokens.length > 1 ? 's' : ''}
+              {intl?.('numTokens', { number: vaultList.tokens.length }) ??
+                `${vaultList.tokens.length} Token${vaultList.tokens.length > 1 ? 's' : ''}`}
             </span>
-            {isImported && <ImportedBadge />}
+            {isImported && <ImportedBadge intl={{ text: intl?.('imported') }} />}
           </div>
         </div>
       </div>

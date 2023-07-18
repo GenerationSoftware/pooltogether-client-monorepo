@@ -3,6 +3,7 @@
  */
 export * from './components/Badges/ImportedBadge'
 export * from './components/Badges/NetworkBadge'
+export * from './components/Badges/PrizePoolBadge'
 export * from './components/Badges/VaultBadge'
 
 /**

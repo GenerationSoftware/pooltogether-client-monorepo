@@ -1,38 +1,42 @@
 import { Vault } from '@pooltogether/hyperstructure-client-js'
 import { useGasCostEstimates } from '@pooltogether/hyperstructure-react-hooks'
+import { Intl } from '@shared/types'
 import { Spinner } from '@shared/ui'
 import { TX_GAS_ESTIMATES } from '../../constants'
 import { CurrencyValue } from '../Currency/CurrencyValue'
 
-interface NetworkFeesProps {
+export interface NetworkFeesProps {
   vault: Vault
   show?: ('approve' | 'deposit' | 'withdraw')[]
+  intl?: Intl<'title' | 'approval' | 'deposit' | 'withdrawal'>
 }
 
 export const NetworkFees = (props: NetworkFeesProps) => {
-  const { vault, show } = props
+  const { vault, show, intl } = props
 
   return (
     <div className='flex flex-col items-center gap-2 font-semibold'>
-      <span className='text-xs text-pt-purple-100 md:text-sm'>Estimated Network Fees</span>
+      <span className='text-xs text-pt-purple-100 md:text-sm'>
+        {intl?.('title') ?? 'Estimated Network Fees'}
+      </span>
       <div className='flex flex-col text-xs'>
         {(!show || show.includes('approve')) && (
           <TXFeeEstimate
-            name='Approval'
+            name={intl?.('approval') ?? 'Approval'}
             chainId={vault?.chainId}
             gasAmount={BigInt(TX_GAS_ESTIMATES.approve)}
           />
         )}
         {(!show || show.includes('deposit')) && (
           <TXFeeEstimate
-            name='Deposit'
+            name={intl?.('deposit') ?? 'Deposit'}
             chainId={vault?.chainId}
             gasAmount={BigInt(TX_GAS_ESTIMATES.deposit)}
           />
         )}
         {(!show || show.includes('withdraw')) && (
           <TXFeeEstimate
-            name='Withdrawal'
+            name={intl?.('withdrawal') ?? 'Withdrawal'}
             chainId={vault?.chainId}
             gasAmount={BigInt(TX_GAS_ESTIMATES.withdraw)}
           />

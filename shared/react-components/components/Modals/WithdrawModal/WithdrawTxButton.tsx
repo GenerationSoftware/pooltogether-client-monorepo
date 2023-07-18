@@ -6,6 +6,7 @@ import {
   useVaultBalance,
   useVaultTokenData
 } from '@pooltogether/hyperstructure-react-hooks'
+import { Intl } from '@shared/types'
 import { Button } from '@shared/ui'
 import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
@@ -25,6 +26,17 @@ interface WithdrawTxButtonProps {
   openChainModal?: () => void
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
+  intl?: {
+    base?: Intl<
+      | 'enterAnAmount'
+      | 'reviewWithdrawal'
+      | 'withdrawTx'
+      | 'confirmWithdrawal'
+      | 'switchNetwork'
+      | 'switchingNetwork'
+    >
+    common?: Intl<'connectWallet'>
+  }
 }
 
 // TODO: BUG - buttons should not be clickable (enabled) if there are any form errors
@@ -37,7 +49,8 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
     openConnectModal,
     openChainModal,
     addRecentTransaction,
-    refetchUserBalances
+    refetchUserBalances,
+    intl
   } = props
 
   const { address: userAddress, isDisconnected } = useAccount()
@@ -118,13 +131,13 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
   if (withdrawAmount === 0n) {
     return (
       <Button color='transparent' fullSized={true} disabled={true}>
-        Enter an amount
+        {intl?.base?.('enterAnAmount') ?? 'Enter an amount'}
       </Button>
     )
   } else if (!isDisconnected && chain?.id === vault.chainId && modalView === 'main') {
     return (
       <Button onClick={() => setModalView('review')} fullSized={true} disabled={!withdrawEnabled}>
-        Review Withdrawal
+        {intl?.base?.('reviewWithdrawal') ?? 'Review Withdrawal'}
       </Button>
     )
   } else {
@@ -135,14 +148,18 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
         isTxSuccess={isSuccessfulWithdrawal}
         write={sendRedeemTransaction}
         txHash={withdrawTxHash}
-        txDescription={`${tokenData?.symbol} Withdrawal`}
+        txDescription={
+          intl?.base?.('withdrawTx', { symbol: tokenData?.symbol ?? '?' }) ??
+          `${tokenData?.symbol} Withdrawal`
+        }
         fullSized={true}
         disabled={!withdrawEnabled}
         openConnectModal={openConnectModal}
         openChainModal={openChainModal}
         addRecentTransaction={addRecentTransaction}
+        intl={intl}
       >
-        Confirm Withdrawal
+        {intl?.base?.('confirmWithdrawal') ?? 'Confirm Withdrawal'}
       </TransactionButton>
     )
   }

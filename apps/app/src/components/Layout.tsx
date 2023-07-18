@@ -1,11 +1,8 @@
-import { isNewerVersion, PrizePool } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@pooltogether/hyperstructure-client-js'
 import {
   useAllUserVaultBalances,
-  useCachedVaultLists,
   usePrizeDrawWinners,
-  useSelectedVaultListIds,
-  useSelectedVaults,
-  useVaultList
+  useSelectedVaults
 } from '@pooltogether/hyperstructure-react-hooks'
 import {
   ConnectButton,
@@ -16,7 +13,6 @@ import {
 import { MODAL_KEYS, useIsModalOpen, useIsTestnets } from '@shared/generic-react-hooks'
 import {
   CaptchaModal,
-  createVaultListToast,
   DepositModal,
   DrawModal,
   SettingsModal,
@@ -27,6 +23,7 @@ import { Footer, FooterItem, LINKS, Navbar, SocialIcon, Toaster } from '@shared/
 import { getDiscordInvite } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
+import { useTranslations } from 'next-intl'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -36,6 +33,7 @@ import { DEFAULT_VAULT_LISTS } from '@constants/config'
 import { useSelectedPrizePool } from '@hooks/useSelectedPrizePool'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { drawIdAtom } from './Prizes/PrizePoolWinners'
+import { VaultListHandler } from './VaultListHandler'
 
 interface LayoutProps {
   children: ReactNode
@@ -47,6 +45,17 @@ export const Layout = (props: LayoutProps) => {
 
   const router = useRouter()
 
+  const t_common = useTranslations('Common')
+  const t_nav = useTranslations('Navigation')
+  const t_settings = useTranslations('Settings')
+  const t_footer = useTranslations('Footer')
+  const t_txModals = useTranslations('TxModals')
+  const t_txFees = useTranslations('TxModals.fees')
+  const t_txToasts = useTranslations('Toasts.transactions')
+  const t_tooltips = useTranslations('Tooltips')
+  const t_drawModal = useTranslations('Prizes.drawModal')
+  const t_formErrors = useTranslations('Error.formErrors')
+
   const { setIsModalOpen: setIsSettingsModalOpen } = useIsModalOpen(MODAL_KEYS.settings)
   const [settingsModalView, setSettingsModalView] = useState<SettingsModalView>('menu')
 
@@ -57,9 +66,6 @@ export const Layout = (props: LayoutProps) => {
   const { openConnectModal } = useConnectModal()
   const { openChainModal } = useChainModal()
   const addRecentTransaction = useAddRecentTransaction()
-
-  const { cachedVaultLists, cache } = useCachedVaultLists()
-  const { select } = useSelectedVaultListIds()
 
   const { vaults } = useSelectedVaults()
   const { address: userAddress } = useAccount()
@@ -74,44 +80,6 @@ export const Layout = (props: LayoutProps) => {
   const selectedDrawId = useAtomValue(drawIdAtom)
   const selectedDraw = draws?.find((draw) => draw.id === selectedDrawId)
 
-  const [urlQueryVaultListSrc, setUrlQueryVaultListSrc] = useState<string>('')
-  const {
-    isFetching: isImportingVaultList,
-    isSuccess: isSuccessVaultList,
-    isError: isErrorVaultList
-  } = useVaultList(urlQueryVaultListSrc)
-
-  useEffect(() => {
-    for (const key in DEFAULT_VAULT_LISTS) {
-      const defaultVaultList = DEFAULT_VAULT_LISTS[key as keyof typeof DEFAULT_VAULT_LISTS]
-      const cachedVaultList = cachedVaultLists[key]
-      if (!cachedVaultList || isNewerVersion(defaultVaultList.version, cachedVaultList.version)) {
-        cache(key, defaultVaultList)
-        select(key, 'local')
-      }
-    }
-  }, [])
-
-  useEffect(() => {
-    const vaultListSrc = router.query['list']
-    if (!!vaultListSrc && typeof vaultListSrc === 'string') {
-      setUrlQueryVaultListSrc(vaultListSrc)
-    }
-  }, [router.query])
-
-  useEffect(() => {
-    const state = isSuccessVaultList
-      ? 'success'
-      : isErrorVaultList
-      ? 'error'
-      : isImportingVaultList
-      ? 'importing'
-      : undefined
-    if (!!state) {
-      createVaultListToast({ vaultListSrc: urlQueryVaultListSrc, state })
-    }
-  }, [isImportingVaultList, isSuccessVaultList, isErrorVaultList])
-
   // NOTE: This is necessary due to hydration errors otherwise.
   const [isBrowser, setIsBrowser] = useState(false)
   useEffect(() => setIsBrowser(true), [])
@@ -121,23 +89,23 @@ export const Layout = (props: LayoutProps) => {
 
   const footerItems: FooterItem[] = [
     {
-      title: 'Get Help',
+      title: t_footer('titles.getHelp'),
       content: [
-        { content: 'User Docs', href: LINKS.docs },
-        { content: 'FAQ', href: LINKS.faq },
-        { content: 'Developer Docs', href: LINKS.devDocs }
+        { content: t_footer('userDocs'), href: LINKS.docs },
+        { content: t_footer('faq'), href: LINKS.faq },
+        { content: t_footer('devDocs'), href: LINKS.devDocs }
       ]
     },
     {
-      title: 'Ecosystem',
+      title: t_footer('titles.ecosystem'),
       content: [
-        { content: 'Extensions', href: '/extensions' },
-        { content: 'Governance', href: LINKS.governance },
-        { content: 'Security', href: LINKS.audits }
+        { content: t_footer('extensions'), href: '/extensions' },
+        { content: t_footer('governance'), href: LINKS.governance },
+        { content: t_footer('security'), href: LINKS.audits }
       ]
     },
     {
-      title: 'Community',
+      title: t_footer('titles.community'),
       content: [
         {
           content: 'Twitter',
@@ -162,22 +130,21 @@ export const Layout = (props: LayoutProps) => {
       ]
     },
     {
-      title: 'Settings',
+      title: t_footer('titles.settings'),
       content: [
         {
-          content: 'Change Currency',
+          content: t_settings('changeCurrency'),
           onClick: () => {
             setSettingsModalView('currency')
             setIsSettingsModalOpen(true)
           }
         },
         {
-          content: 'Change Language',
+          content: t_settings('changeLanguage'),
           onClick: () => {
             setSettingsModalView('language')
             setIsSettingsModalOpen(true)
-          },
-          disabled: true
+          }
         }
       ]
     }
@@ -185,7 +152,7 @@ export const Layout = (props: LayoutProps) => {
 
   if (isBrowser) {
     footerItems[footerItems.length - 1].content.push({
-      content: `${isTestnets ? 'Disable' : 'Enable'} Testnets`,
+      content: isTestnets ? t_footer('disableTestnets') : t_footer('enableTestnets'),
       onClick: () => {
         setIsTestnets(!isTestnets)
         router.reload()
@@ -194,10 +161,10 @@ export const Layout = (props: LayoutProps) => {
   }
 
   const pageTitles: { [href: string]: string } = {
-    account: 'Account',
-    prizes: 'Prizes',
-    vaults: 'Vaults',
-    vault: 'Vault'
+    account: t_nav('account'),
+    prizes: t_nav('prizes'),
+    vaults: t_nav('vaults'),
+    vault: t_nav('vault')
   }
 
   const pageTitle = pageTitles[router.pathname.split('/')[1]]
@@ -210,9 +177,9 @@ export const Layout = (props: LayoutProps) => {
 
       <Navbar
         links={[
-          { href: '/prizes', name: 'Prizes' },
-          { href: '/vaults', name: 'Vaults' },
-          { href: '/account', name: 'Account' }
+          { href: '/prizes', name: t_nav('prizes') },
+          { href: '/vaults', name: t_nav('vaults') },
+          { href: '/account', name: t_nav('account') }
         ]}
         activePage={router.pathname}
         // @ts-ignore
@@ -225,14 +192,16 @@ export const Layout = (props: LayoutProps) => {
           />
         }
         onClickSettings={() => setIsSettingsModalOpen(true)}
+        intl={{ home: t_nav('home') }}
         linkClassName='hover:text-pt-purple-200'
       />
 
       <SettingsModal
         view={settingsModalView}
         setView={setSettingsModalView}
+        locales={['en']}
         localVaultLists={DEFAULT_VAULT_LISTS}
-        disable={['language']}
+        intl={{ base: t_settings, forms: t_formErrors }}
       />
 
       <DepositModal
@@ -242,6 +211,14 @@ export const Layout = (props: LayoutProps) => {
         addRecentTransaction={addRecentTransaction}
         onGoToAccount={() => router.push('/account')}
         refetchUserBalances={refetchUserBalances}
+        intl={{
+          base: t_txModals,
+          common: t_common,
+          fees: t_txFees,
+          tooltips: t_tooltips,
+          txToast: t_txToasts,
+          formErrors: t_formErrors
+        }}
       />
 
       <WithdrawModal
@@ -250,17 +227,31 @@ export const Layout = (props: LayoutProps) => {
         addRecentTransaction={addRecentTransaction}
         onGoToAccount={() => router.push('/account')}
         refetchUserBalances={refetchUserBalances}
+        intl={{
+          base: t_txModals,
+          common: t_common,
+          fees: t_txFees,
+          tooltips: t_tooltips,
+          txToast: t_txToasts,
+          formErrors: t_formErrors
+        }}
       />
 
-      <DrawModal draw={selectedDraw} prizePool={selectedPrizePool} />
+      <DrawModal
+        draw={selectedDraw}
+        prizePool={selectedPrizePool}
+        intl={{ base: t_common, prizes: t_drawModal }}
+      />
 
       <CaptchaModal
         hCaptchaSiteKey='11cdabde-af7e-42cb-ba97-76e35b7f7c39'
-        header='Join our Discord Community'
+        header={t_common('joinDiscord')}
         onVerify={getDiscordInvite}
       />
 
       <Toaster />
+
+      <VaultListHandler />
 
       <main
         className={classNames(

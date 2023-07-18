@@ -1,12 +1,14 @@
 import { formatNumberForDisplay, PrizePool } from '@pooltogether/hyperstructure-client-js'
 import { useSelectedVault } from '@pooltogether/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
+import { Intl, RichIntl } from '@shared/types'
 import { LINKS, Modal } from '@shared/ui'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { ReactNode, useMemo, useState } from 'react'
 import { depositFormTokenAmountAtom } from '../../Form/DepositForm'
-import { createTxToast } from '../../Toasts/TransactionToast'
+import { createTxToast, TransactionToastProps } from '../../Toasts/TransactionToast'
+import { NetworkFeesProps } from '../NetworkFees'
 import { DepositTxButton } from './DepositTxButton'
 import { ConfirmingView } from './Views/ConfirmingView'
 import { ErrorView } from './Views/ErrorView'
@@ -24,6 +26,44 @@ export interface DepositModalProps {
   openChainModal?: () => void
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
+  intl?: {
+    base?: RichIntl<
+      | 'depositTo'
+      | 'depositToShort'
+      | 'dailyChances'
+      | 'oneInXChance'
+      | 'max'
+      | 'balance'
+      | 'enterAnAmount'
+      | 'exactApprovalButton'
+      | 'exactApprovalTx'
+      | 'infiniteApprovalButton'
+      | 'infiniteApprovalTx'
+      | 'reviewDeposit'
+      | 'confirmDeposit'
+      | 'depositTx'
+      | 'switchNetwork'
+      | 'switchingNetwork'
+      | 'confirmNotice'
+      | 'submissionNotice'
+      | 'depositing'
+      | 'success'
+      | 'deposited'
+      | 'nowEligible'
+      | 'shareTwitter'
+      | 'shareLenster'
+      | 'viewAccount'
+      | 'uhOh'
+      | 'failedTx'
+      | 'tryAgain'
+      | 'disclaimer'
+    >
+    common?: Intl<'prizePool' | 'connectWallet' | 'close' | 'viewOn'>
+    fees?: NetworkFeesProps['intl']
+    tooltips?: Intl<'exactApproval' | 'infiniteApproval'>
+    txToast?: TransactionToastProps['intl']
+    formErrors?: Intl<'notEnoughTokens' | 'invalidNumber' | 'negativeNumber' | 'tooManyDecimals'>
+  }
 }
 
 export const DepositModal = (props: DepositModalProps) => {
@@ -33,7 +73,8 @@ export const DepositModal = (props: DepositModalProps) => {
     openConnectModal,
     openChainModal,
     addRecentTransaction,
-    refetchUserBalances
+    refetchUserBalances,
+    intl
   } = props
 
   const { vault } = useSelectedVault()
@@ -60,7 +101,8 @@ export const DepositModal = (props: DepositModalProps) => {
         txHash: depositTxHash,
         formattedAmount: formatNumberForDisplay(formTokenAmount),
         addRecentTransaction: addRecentTransaction,
-        refetchUserBalances: refetchUserBalances
+        refetchUserBalances: refetchUserBalances,
+        intl: intl?.txToast
       })
     }
   }
@@ -73,19 +115,22 @@ export const DepositModal = (props: DepositModalProps) => {
 
   if (isModalOpen && !!vault) {
     const modalViews: Record<DepositModalView, ReactNode> = {
-      main: <MainView vault={vault} prizePool={prizePool as PrizePool} />,
-      review: <ReviewView vault={vault} prizePool={prizePool as PrizePool} />,
-      waiting: <WaitingView vault={vault} closeModal={handleClose} />,
-      confirming: <ConfirmingView vault={vault} txHash={depositTxHash} closeModal={handleClose} />,
+      main: <MainView vault={vault} prizePool={prizePool as PrizePool} intl={intl} />,
+      review: <ReviewView vault={vault} prizePool={prizePool as PrizePool} intl={intl} />,
+      waiting: <WaitingView vault={vault} closeModal={handleClose} intl={intl} />,
+      confirming: (
+        <ConfirmingView vault={vault} txHash={depositTxHash} closeModal={handleClose} intl={intl} />
+      ),
       success: (
         <SuccessView
           vault={vault}
           txHash={depositTxHash}
           closeModal={handleClose}
           goToAccount={onGoToAccount}
+          intl={intl}
         />
       ),
-      error: <ErrorView setModalView={setView} />
+      error: <ErrorView setModalView={setView} intl={intl?.base} />
     }
 
     return (
@@ -106,8 +151,9 @@ export const DepositModal = (props: DepositModalProps) => {
               openChainModal={openChainModal}
               addRecentTransaction={addRecentTransaction}
               refetchUserBalances={refetchUserBalances}
+              intl={intl}
             />
-            {view === 'review' && <DepositDisclaimer />}
+            {view === 'review' && <DepositDisclaimer intl={intl?.base} />}
           </div>
         }
         onClose={handleClose}
@@ -121,18 +167,36 @@ export const DepositModal = (props: DepositModalProps) => {
   return <></>
 }
 
-const DepositDisclaimer = () => {
+interface DepositDisclaimerProps {
+  intl?: RichIntl<'disclaimer'>
+}
+
+const DepositDisclaimer = (props: DepositDisclaimerProps) => {
+  const { intl } = props
+
   return (
     <span className='text-xs text-pt-purple-100 px-6'>
-      By clicking "Confirm Deposit", you agree to PoolTogether's{' '}
-      <a href={LINKS.termsOfService} target='_blank' className='text-pt-teal-dark'>
-        Terms of Service
-      </a>{' '}
-      and acknowledge that you have read and understand the PoolTogether{' '}
-      <a href={LINKS.protocolDisclaimer} target='_blank' className='text-pt-teal-dark'>
-        protocol disclaimer
-      </a>
-      .
+      {intl?.rich('disclaimer', {
+        tosLink: (chunks) => <ToSLink>{chunks}</ToSLink>,
+        disLink: (chunks) => <PDLink>{chunks}</PDLink>
+      }) ??
+        `By clicking "Confirm Deposit", you agree to PoolTogether's ${(
+          <ToSLink>Terms of Service</ToSLink>
+        )} and acknowledge that you have read and understand the PoolTogether ${(
+          <PDLink>protocol disclaimer</PDLink>
+        )}.`}
     </span>
   )
 }
+
+const ToSLink = (props: { children: ReactNode }) => (
+  <a href={LINKS.termsOfService} target='_blank' className='text-pt-teal-dark'>
+    {props.children}
+  </a>
+)
+
+const PDLink = (props: { children: ReactNode }) => (
+  <a href={LINKS.protocolDisclaimer} target='_blank' className='text-pt-teal-dark'>
+    {props.children}
+  </a>
+)

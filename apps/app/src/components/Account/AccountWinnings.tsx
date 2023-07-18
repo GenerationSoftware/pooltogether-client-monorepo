@@ -2,6 +2,7 @@ import { SubgraphPrizePoolAccount } from '@pooltogether/hyperstructure-client-js
 import { useAllUserPrizePoolWins } from '@pooltogether/hyperstructure-react-hooks'
 import { ExternalLink, LINKS } from '@shared/ui'
 import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { useAccount } from 'wagmi'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
@@ -79,15 +80,15 @@ interface NoWinsCardProps {
 const NoWinsCard = (props: NoWinsCardProps) => {
   const { className } = props
 
+  const t = useTranslations('Account')
+
   return (
     <div className={classNames('w-full rounded-lg lg:p-4 lg:bg-pt-bg-purple', className)}>
       <div className='flex flex-col w-full gap-2 items-center justify-center p-3 bg-pt-transparent rounded-lg lg:flex-row lg:gap-3 lg:font-medium'>
-        <span className='text-sm text-pt-purple-100 lg:text-lg'>
-          You haven't won any prizes recently.
-        </span>
+        <span className='text-sm text-pt-purple-100 lg:text-lg'>{t('noPrizesRecently')}</span>
         <ExternalLink
           href={LINKS.docs}
-          text='Learn how PoolTogether works'
+          text={t('learnHowItWorks')}
           size='sm'
           className='text-pt-teal lg:text-lg'
           iconClassName='lg:h-6 lg:w-6'

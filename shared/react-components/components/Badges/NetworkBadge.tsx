@@ -1,4 +1,4 @@
-import { getNiceNetworkNameByChainId } from '@pooltogether/hyperstructure-client-js'
+import { getNiceNetworkNameByChainId } from '@shared/utilities'
 import classNames from 'classnames'
 import { NetworkIcon } from '../Icons/NetworkIcon'
 
