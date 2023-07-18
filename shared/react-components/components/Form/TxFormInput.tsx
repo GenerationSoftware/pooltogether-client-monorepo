@@ -4,6 +4,7 @@ import {
   TokenWithLogo,
   TokenWithPrice
 } from '@pooltogether/hyperstructure-client-js'
+import { Intl } from '@shared/types'
 import classNames from 'classnames'
 import { useFormContext } from 'react-hook-form'
 import { formatUnits } from 'viem'
@@ -23,12 +24,22 @@ export interface TxFormInputProps {
   onChange?: (v: string) => void
   showInfoRow?: boolean
   showMaxButton?: boolean
+  intl?: { base?: Intl<'balance' | 'max'>; formErrors?: InputProps['intl'] }
   className?: string
 }
 
 export const TxFormInput = (props: TxFormInputProps) => {
-  const { token, formKey, validate, disabled, onChange, showInfoRow, showMaxButton, className } =
-    props
+  const {
+    token,
+    formKey,
+    validate,
+    disabled,
+    onChange,
+    showInfoRow,
+    showMaxButton,
+    intl,
+    className
+  } = props
 
   const {
     watch,
@@ -78,6 +89,7 @@ export const TxFormInput = (props: TxFormInputProps) => {
           validate={validate}
           disabled={disabled}
           onChange={onChange}
+          intl={intl?.formErrors}
         />
         <div className='flex shrink-0 items-center gap-1'>
           <TokenIcon token={token} />
@@ -88,13 +100,15 @@ export const TxFormInput = (props: TxFormInputProps) => {
         <div className='flex justify-between gap-6 text-xs text-pt-purple-100 md:text-base'>
           <CurrencyValue baseValue={amountValue} />
           <div className='flex gap-1'>
-            <span>Balance: {formattedBalance}</span>
+            <span>
+              {intl?.base?.('balance') ?? 'Balance:'} {formattedBalance}
+            </span>
             {showMaxButton && (
               <span
                 onClick={setFormAmountToMax}
                 className='text-pt-purple-200 cursor-pointer select-none'
               >
-                Max
+                {intl?.base?.('max') ?? 'Max'}
               </span>
             )}
           </div>
@@ -111,18 +125,23 @@ interface InputProps {
   validate?: { [rule: string]: (v: any) => true | string }
   disabled?: boolean
   onChange?: (v: string) => void
+  intl?: Intl<'invalidNumber' | 'negativeNumber' | 'tooManyDecimals'>
 }
 
 const Input = (props: InputProps) => {
-  const { formKey, decimals, validate, disabled, onChange } = props
+  const { formKey, decimals, validate, disabled, onChange, intl } = props
 
   const { register } = useFormContext<TxFormValues>()
 
   const basicValidation: { [rule: string]: (v: any) => true | string } = {
-    isValidNumber: (v) => !Number.isNaN(Number(v)) || 'Enter a valid number',
-    isGreaterThanOrEqualToZero: (v) => parseFloat(v) >= 0 || 'Enter a positive number',
+    isValidNumber: (v) =>
+      !Number.isNaN(Number(v)) || (intl?.('invalidNumber') ?? 'Enter a valid number'),
+    isGreaterThanOrEqualToZero: (v) =>
+      parseFloat(v) >= 0 || (intl?.('negativeNumber') ?? 'Enter a positive number'),
     isNotTooPrecise: (v) =>
-      v.split('.').length < 2 || v.split('.')[1].length <= decimals || 'Too many decimals'
+      v.split('.').length < 2 ||
+      v.split('.')[1].length <= decimals ||
+      (intl?.('tooManyDecimals') ?? 'Too many decimals')
   }
 
   return (

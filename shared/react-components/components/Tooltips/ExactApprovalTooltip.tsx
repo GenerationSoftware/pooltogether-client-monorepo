@@ -1,22 +1,27 @@
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
+import { Intl } from '@shared/types'
 import { Tooltip } from '@shared/ui'
 import classNames from 'classnames'
 
 export interface ExactApprovalTooltipProps {
   tokenSymbol: string
   iconSize?: 'sm' | 'md' | 'lg'
+  intl?: Intl<'exactApproval'>
   className?: string
   iconClassName?: string
 }
 
 export const ExactApprovalTooltip = (props: ExactApprovalTooltipProps) => {
-  const { tokenSymbol, iconSize, className, iconClassName } = props
+  const { tokenSymbol, iconSize, intl, className, iconClassName } = props
 
   return (
     <Tooltip
       content={
         <div className={classNames('max-w-[16ch] text-center', className)}>
-          <span>You'll give your approval to deposit a specific amount of {tokenSymbol}</span>
+          <span>
+            {intl?.('exactApproval', { symbol: tokenSymbol }) ??
+              `You'll give your approval to deposit a specific amount of ${tokenSymbol}`}
+          </span>
         </div>
       }
     >

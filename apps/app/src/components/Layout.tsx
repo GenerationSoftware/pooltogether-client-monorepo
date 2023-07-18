@@ -48,6 +48,10 @@ export const Layout = (props: LayoutProps) => {
   const t_nav = useTranslations('Navigation')
   const t_settings = useTranslations('Settings')
   const t_footer = useTranslations('Footer')
+  const t_txModals = useTranslations('TxModals')
+  const t_txFees = useTranslations('TxModals.fees')
+  const t_txToasts = useTranslations('Toasts.transactions')
+  const t_tooltips = useTranslations('Tooltips')
   const t_drawModal = useTranslations('Prizes.drawModal')
   const t_formErrors = useTranslations('Error.formErrors')
 
@@ -206,6 +210,14 @@ export const Layout = (props: LayoutProps) => {
         addRecentTransaction={addRecentTransaction}
         onGoToAccount={() => router.push('/account')}
         refetchUserBalances={refetchUserBalances}
+        intl={{
+          base: t_txModals,
+          common: t_common,
+          fees: t_txFees,
+          tooltips: t_tooltips,
+          txToast: t_txToasts,
+          formErrors: t_formErrors
+        }}
       />
 
       <WithdrawModal

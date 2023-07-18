@@ -1,20 +1,26 @@
 import { PrizePool, Token, TokenWithLogo, Vault } from '@pooltogether/hyperstructure-client-js'
 import { useVaultShareData, useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
+import { Intl } from '@shared/types'
 import { useAtomValue } from 'jotai'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 import { depositFormShareAmountAtom, depositFormTokenAmountAtom } from '../../../Form/DepositForm'
 import { TokenIcon } from '../../../Icons/TokenIcon'
-import { NetworkFees } from '../../NetworkFees'
+import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
 
 interface ReviewViewProps {
   vault: Vault
   prizePool: PrizePool
+  intl?: {
+    base?: Intl<'confirmDeposit' | 'dailyChances' | 'oneInXChance'>
+    common?: Intl<'prizePool'>
+    fees?: NetworkFeesProps['intl']
+  }
 }
 
 // TODO: add warning if deposit doesn't make sense gas-wise
 export const ReviewView = (props: ReviewViewProps) => {
-  const { vault, prizePool } = props
+  const { vault, prizePool, intl } = props
 
   const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
   const formShareAmount = useAtomValue(depositFormShareAmountAtom)
@@ -24,8 +30,15 @@ export const ReviewView = (props: ReviewViewProps) => {
 
   return (
     <div className='flex flex-col gap-6'>
-      <span className='text-xl font-semibold text-center'>Confirm Deposit</span>
-      <PrizePoolBadge chainId={vault.chainId} hideBorder={true} className='!py-1 mx-auto' />
+      <span className='text-xl font-semibold text-center'>
+        {intl?.base?.('confirmDeposit') ?? 'Confirm Deposit'}
+      </span>
+      <PrizePoolBadge
+        chainId={vault.chainId}
+        hideBorder={true}
+        intl={intl?.common}
+        className='!py-1 mx-auto'
+      />
       {!!shareData && !!tokenData && (
         <div className='flex flex-col w-full gap-1'>
           <BasicDepositFormInput
@@ -37,8 +50,8 @@ export const ReviewView = (props: ReviewViewProps) => {
         </div>
       )}
       <div className='flex flex-col gap-4 mx-auto md:flex-row md:gap-9'>
-        <Odds vault={vault} prizePool={prizePool} />
-        <NetworkFees vault={vault} show={['approve', 'deposit', 'withdraw']} />
+        <Odds vault={vault} prizePool={prizePool} intl={intl?.base} />
+        <NetworkFees vault={vault} show={['approve', 'deposit', 'withdraw']} intl={intl?.fees} />
       </div>
     </div>
   )

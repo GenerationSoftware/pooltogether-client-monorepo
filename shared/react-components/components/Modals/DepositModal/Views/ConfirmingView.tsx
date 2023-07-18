@@ -5,6 +5,7 @@ import {
   Vault
 } from '@pooltogether/hyperstructure-client-js'
 import { useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
+import { Intl } from '@shared/types'
 import { Button, ExternalLink, Spinner } from '@shared/ui'
 import { useAtomValue } from 'jotai'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
@@ -14,21 +15,26 @@ interface ConfirmingViewProps {
   vault: Vault
   closeModal: () => void
   txHash?: string
+  intl?: { base?: Intl<'submissionNotice' | 'depositing'>; common?: Intl<'close'> }
 }
 
 export const ConfirmingView = (props: ConfirmingViewProps) => {
-  const { vault, txHash, closeModal } = props
+  const { vault, txHash, closeModal, intl } = props
 
   const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
 
   const { data: tokenData } = useVaultTokenData(vault)
 
+  const tokens = `${formatNumberForDisplay(formTokenAmount)} ${tokenData?.symbol}`
+
   return (
     <div className='flex flex-col gap-6'>
-      <span className='text-lg font-semibold text-center'>Transaction Submitted</span>
+      <span className='text-lg font-semibold text-center'>
+        {intl?.base?.('submissionNotice') ?? 'Transaction Submitted'}
+      </span>
       <PrizePoolBadge chainId={vault.chainId} hideBorder={true} className='!py-1 mx-auto' />
       <span className='text-sm text-center md:text-base'>
-        Depositing {formatNumberForDisplay(formTokenAmount)} {tokenData?.symbol}...
+        {intl?.base?.('depositing', { tokens }) ?? `Depositing ${tokens}...`}
       </span>
       <Spinner size='lg' className='mx-auto after:border-y-pt-teal' />
       <div className='flex flex-col w-full justify-end h-24 gap-4 md:h-36 md:gap-6'>
@@ -41,7 +47,7 @@ export const ConfirmingView = (props: ConfirmingViewProps) => {
           />
         )}
         <Button fullSized={true} color='transparent' onClick={closeModal}>
-          Close
+          {intl?.common?.('close') ?? 'Close'}
         </Button>
       </div>
     </div>

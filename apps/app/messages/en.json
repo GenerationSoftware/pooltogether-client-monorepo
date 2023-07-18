@@ -91,6 +91,43 @@
       "moreInfo": "More Info"
     }
   },
+  "TxModals": {
+    "depositTo": "Deposit to {name} on {network}",
+    "depositToShort": "Deposit to {name}",
+    "fees": {
+      "title": "Estimated Network Fees",
+      "approval": "Approval",
+      "deposit": "Deposit",
+      "withdrawal": "Withdrawal"
+    },
+    "dailyChances": "Daily Chance of Winning",
+    "oneInXChance": "1 in {number}",
+    "max": "Max",
+    "balance": "Balance:",
+    "enterAnAmount": "Enter an amount",
+    "exactApprovalButton": "Approve exact amount of {symbol}",
+    "exactApprovalTx": "Exact {symbol} Approval",
+    "infiniteApprovalButton": "Approve unlimited amount of {symbol}",
+    "infiniteApprovalTx": "Infinite {symbol} Approval",
+    "reviewDeposit": "Review Deposit",
+    "confirmDeposit": "Confirm Deposit",
+    "depositTx": "{symbol} Deposit",
+    "switchNetwork": "Switch to {network}",
+    "switchingNetwork": "Switching to {network}...",
+    "confirmNotice": "Confirm Transaction in Wallet",
+    "submissionNotice": "Transaction Submitted",
+    "depositing": "Depositing {tokens}...",
+    "success": "Success!",
+    "deposited": "You deposited {tokens}",
+    "nowEligible": "You are now eligible for all future draws in this pool.",
+    "shareTwitter": "Share Tweet",
+    "shareLenster": "Share on Lenster",
+    "viewAccount": "View Account",
+    "uhOh": "Uh oh!",
+    "failedTx": "Something went wrong....",
+    "tryAgain": "Try Again",
+    "disclaimer": "By clicking \"Confirm Deposit\", you agree to PoolTogether's <tosLink>Terms of Service</tosLink> and acknowledge that you have read and understand the PoolTogether <disLink>protocol disclaimer</disLink>."
+  },
   "Footer": {
     "titles": {
       "getHelp": "Get Help",
@@ -143,7 +180,9 @@
   },
   "Tooltips": {
     "prizePower": "Vaults with higher prize power have more chances to win",
-    "winChance": "This is your chance to win a prize in any given draw"
+    "winChance": "This is your chance to win a prize in any given draw",
+    "exactApproval": "You'll give your approval to deposit a specific amount of {symbol}",
+    "infiniteApproval": "You won't need to approve {symbol} the next time you want to deposit"
   },
   "Toasts": {
     "transactions": {
@@ -175,7 +214,11 @@
     "pageNotFound": "We couldn't find the page you're looking for.",
     "return": "Return to the Pool",
     "formErrors": {
-      "invalidSrc": "Not a valid URL or ENS domain"
+      "invalidSrc": "Not a valid URL or ENS domain",
+      "notEnoughTokens": "Not enough {symbol} in wallet",
+      "invalidNumber": "Enter a valid number",
+      "negativeNumber": "Enter a positive number",
+      "tooManyDecimals": "Too many decimals"
     }
   }
 }

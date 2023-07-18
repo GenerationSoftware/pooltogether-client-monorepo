@@ -1,5 +1,6 @@
 import { formatNumberForDisplay, PrizePool, Vault } from '@pooltogether/hyperstructure-client-js'
 import { usePrizeOdds, useVaultShareData } from '@pooltogether/hyperstructure-react-hooks'
+import { Intl } from '@shared/types'
 import { Spinner } from '@shared/ui'
 import { useAtomValue } from 'jotai'
 import { parseUnits } from 'viem'
@@ -8,10 +9,11 @@ import { depositFormShareAmountAtom } from '../Form/DepositForm'
 interface OddsProps {
   vault: Vault
   prizePool: PrizePool
+  intl?: Intl<'dailyChances' | 'oneInXChance'>
 }
 
 export const Odds = (props: OddsProps) => {
-  const { vault, prizePool } = props
+  const { vault, prizePool, intl } = props
 
   const formShareAmount = useAtomValue(depositFormShareAmountAtom)
 
@@ -26,10 +28,15 @@ export const Odds = (props: OddsProps) => {
 
   return (
     <div className='flex flex-col items-center gap-2 font-semibold'>
-      <span className='text-xs text-pt-purple-100 md:text-sm'>Daily Chance of Winning</span>
+      <span className='text-xs text-pt-purple-100 md:text-sm'>
+        {intl?.('dailyChances') ?? 'Daily Chance of Winning'}
+      </span>
       <span className='text-pt-purple-50 md:text-xl'>
         {isFetchedPrizeOdds && !!prizeOdds ? (
           formShareAmount !== '0' ? (
+            intl?.('oneInXChance', {
+              number: formatNumberForDisplay(prizeOdds.oneInX, { maximumSignificantDigits: 3 })
+            }) ??
             `1 in ${formatNumberForDisplay(prizeOdds.oneInX, { maximumSignificantDigits: 3 })}`
           ) : (
             '-'

@@ -8,6 +8,7 @@ import {
   useVaultBalance,
   useVaultTokenData
 } from '@pooltogether/hyperstructure-react-hooks'
+import { Intl } from '@shared/types'
 import { Button, Spinner } from '@shared/ui'
 import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
@@ -29,6 +30,22 @@ interface DepositTxButtonProps {
   openChainModal?: () => void
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
+  intl?: {
+    base?: Intl<
+      | 'enterAnAmount'
+      | 'exactApprovalButton'
+      | 'exactApprovalTx'
+      | 'infiniteApprovalButton'
+      | 'infiniteApprovalTx'
+      | 'reviewDeposit'
+      | 'confirmDeposit'
+      | 'depositTx'
+      | 'switchNetwork'
+      | 'switchingNetwork'
+    >
+    common?: Intl<'connectWallet'>
+    tooltips?: Intl<'exactApproval' | 'infiniteApproval'>
+  }
 }
 
 // TODO: BUG - buttons should not be clickable (enabled) if there are any form errors
@@ -41,7 +58,8 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
     openConnectModal,
     openChainModal,
     addRecentTransaction,
-    refetchUserBalances
+    refetchUserBalances,
+    intl
   } = props
 
   const { address: userAddress, isDisconnected } = useAccount()
@@ -169,7 +187,7 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
   if (depositAmount === 0n) {
     return (
       <Button color='transparent' fullSized={true} disabled={true}>
-        Enter an amount
+        {intl?.base?.('enterAnAmount') ?? 'Enter an amount'}
       </Button>
     )
   } else if (
@@ -187,15 +205,24 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
           isTxSuccess={isSuccessfulExactApproval}
           write={sendExactApproveTransaction}
           txHash={exactApprovalTxHash}
-          txDescription={`Exact ${tokenData?.symbol} Approval`}
+          txDescription={
+            intl?.base?.('exactApprovalTx', { symbol: tokenData?.symbol ?? '?' }) ??
+            `Exact ${tokenData?.symbol} Approval`
+          }
           fullSized={true}
           disabled={!approvalEnabled}
           openConnectModal={openConnectModal}
           openChainModal={openChainModal}
           addRecentTransaction={addRecentTransaction}
+          intl={intl}
         >
-          Approve exact amount of {tokenData?.symbol ?? <Spinner />}
-          <ExactApprovalTooltip tokenSymbol={tokenData?.symbol ?? '?'} iconClassName='ml-3' />
+          {intl?.base?.('exactApprovalButton', { symbol: tokenData?.symbol ?? '?' }) ??
+            `Approve exact amount of ${tokenData?.symbol ?? <Spinner />}`}
+          <ExactApprovalTooltip
+            tokenSymbol={tokenData?.symbol ?? '?'}
+            intl={intl?.tooltips}
+            iconClassName='ml-3'
+          />
         </TransactionButton>
         <TransactionButton
           chainId={vault.chainId}
@@ -203,23 +230,32 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
           isTxSuccess={isSuccessfulInfiniteApproval}
           write={sendInfiniteApproveTransaction}
           txHash={infiniteApprovalTxHash}
-          txDescription={`Infinite ${tokenData?.symbol} Approval`}
+          txDescription={
+            intl?.base?.('infiniteApprovalTx', { symbol: tokenData?.symbol ?? '?' }) ??
+            `Infinite ${tokenData?.symbol} Approval`
+          }
           fullSized={true}
           disabled={!approvalEnabled}
           openConnectModal={openConnectModal}
           openChainModal={openChainModal}
           addRecentTransaction={addRecentTransaction}
+          intl={intl}
           color='transparent'
         >
-          Approve unlimited amount of {tokenData?.symbol ?? <Spinner />}
-          <InfiniteApprovalTooltip tokenSymbol={tokenData?.symbol ?? '?'} iconClassName='ml-3' />
+          {intl?.base?.('infiniteApprovalButton', { symbol: tokenData?.symbol ?? '?' }) ??
+            `Approve unlimited amount of ${tokenData?.symbol ?? <Spinner />}`}
+          <InfiniteApprovalTooltip
+            tokenSymbol={tokenData?.symbol ?? '?'}
+            intl={intl?.tooltips}
+            iconClassName='ml-3'
+          />
         </TransactionButton>
       </div>
     )
   } else if (!isDisconnected && chain?.id === vault.chainId && modalView === 'main') {
     return (
       <Button onClick={() => setModalView('review')} fullSized={true} disabled={!depositEnabled}>
-        Review Deposit
+        {intl?.base?.('reviewDeposit') ?? 'Review Deposit'}
       </Button>
     )
   } else {
@@ -230,14 +266,18 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
         isTxSuccess={isSuccessfulDeposit}
         write={sendDepositTransaction}
         txHash={depositTxHash}
-        txDescription={`${tokenData?.symbol} Deposit`}
+        txDescription={
+          intl?.base?.('depositTx', { symbol: tokenData?.symbol ?? '?' }) ??
+          `${tokenData?.symbol} Deposit`
+        }
         fullSized={true}
         disabled={!depositEnabled}
         openConnectModal={openConnectModal}
         openChainModal={openChainModal}
         addRecentTransaction={addRecentTransaction}
+        intl={intl}
       >
-        Confirm Deposit
+        {intl?.base?.('confirmDeposit') ?? 'Confirm Deposit'}
       </TransactionButton>
     )
   }
