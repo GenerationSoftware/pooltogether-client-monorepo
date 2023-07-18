@@ -31,6 +31,7 @@ import { ReactNode, useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { DEFAULT_VAULT_LISTS } from '@constants/config'
 import { useSelectedPrizePool } from '@hooks/useSelectedPrizePool'
+import { useSettingsModalView } from '@hooks/useSettingsModalView'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { drawIdAtom } from './Prizes/PrizePoolWinners'
 import { VaultListHandler } from './VaultListHandler'
@@ -57,7 +58,7 @@ export const Layout = (props: LayoutProps) => {
   const t_formErrors = useTranslations('Error.formErrors')
 
   const { setIsModalOpen: setIsSettingsModalOpen } = useIsModalOpen(MODAL_KEYS.settings)
-  const [settingsModalView, setSettingsModalView] = useState<SettingsModalView>('menu')
+  const { view: settingsModalView, setView: setSettingsModalView } = useSettingsModalView()
 
   const { setIsModalOpen: setIsCaptchaModalOpen } = useIsModalOpen(MODAL_KEYS.captcha)
 

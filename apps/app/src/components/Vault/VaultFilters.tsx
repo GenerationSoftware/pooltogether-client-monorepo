@@ -13,6 +13,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useMemo } from 'react'
 import { useAccount } from 'wagmi'
 import { useNetworks } from '@hooks/useNetworks'
+import { useSettingsModalView } from '@hooks/useSettingsModalView'
 
 export const filterIdAtom = atom<string>('all')
 
@@ -48,6 +49,7 @@ export const VaultFilters = (props: VaultFiltersProps) => {
   const setFilteredVaults = useSetAtom(filteredVaultsAtom)
 
   const { setIsModalOpen: setIsSettingsModalOpen } = useIsModalOpen(MODAL_KEYS.settings)
+  const { setView: setSettingsModalView } = useSettingsModalView()
 
   // Getting filter ID from URL query:
   useEffect(() => {
@@ -160,7 +162,10 @@ export const VaultFilters = (props: VaultFiltersProps) => {
             <Selection items={filterItems} activeItem={filterId} buttonColor='purple' />
           </div>
           <span
-            onClick={() => setIsSettingsModalOpen(true)}
+            onClick={() => {
+              setSettingsModalView('vaultLists')
+              setIsSettingsModalOpen(true)
+            }}
             className='hidden text-lg text-pt-purple-100 cursor-pointer whitespace-nowrap lg:block'
           >
             {t('manageVaultLists')}
