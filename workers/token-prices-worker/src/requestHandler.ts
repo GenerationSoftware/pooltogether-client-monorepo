@@ -80,7 +80,8 @@ export const handleRequest = async (event: FetchEvent): Promise<Response> => {
           .split(',')
           .filter((address) => isAddress(address))
           .map((address) => address.toLowerCase()) as Address[]
-        const tokenPrices = tokens.length > 0 ? await fetchTokenPrices(chainId, tokens) : undefined
+        const tokenPrices =
+          tokens.length > 0 ? await fetchTokenPrices(event, chainId, tokens) : undefined
         if (!!tokenPrices) {
           return new Response(tokenPrices, {
             ...DEFAULT_HEADERS,
@@ -93,7 +94,7 @@ export const handleRequest = async (event: FetchEvent): Promise<Response> => {
           })
         }
       } else {
-        const tokenPrices = await fetchTokenPrices(chainId)
+        const tokenPrices = await fetchTokenPrices(event, chainId)
         if (!!tokenPrices) {
           return new Response(tokenPrices, {
             ...DEFAULT_HEADERS,
