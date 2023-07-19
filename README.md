@@ -61,6 +61,15 @@ The dependencies for these libraries are picked up from the root `package.json` 
 
 ---
 
+### Workers
+
+- `protocol-stats-worker`: Caching basic stats about the PoolTogether protocol.
+- `token-prices-worker`: Caching token prices.
+
+**Repo Links:** [Protocol Stats](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/workers/protocol-stats-worker) | [Token Prices](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/workers/token-prices-worker)
+
+---
+
 ### Utilities
 
 This Turborepo has some additional tools already setup:

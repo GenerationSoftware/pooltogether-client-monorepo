@@ -1,5 +1,5 @@
 {
-  "name": "protocol-stats-worker",
+  "name": "token-prices-worker",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
@@ -31,5 +31,8 @@
     "tslib": "^2.5.0",
     "tsup": "^6.6.3",
     "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "viem": "^1.2.12"
   }
 }
