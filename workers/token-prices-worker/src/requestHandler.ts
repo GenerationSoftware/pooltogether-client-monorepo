@@ -1,10 +1,10 @@
-import { Address, isAddress } from 'viem'
 import { DEFAULT_HEADERS, SUPPORTED_NETWORKS } from './constants'
 import { fetchAllTokenPrices } from './fetchAllTokenPrices'
 import { fetchExchangeRates } from './fetchExchangeRates'
 import { fetchSimpleTokenPrices } from './fetchSimpleTokenPrices'
 import { fetchTokenPrices } from './fetchTokenPrices'
 import { updateTokenPrices } from './updateTokenPrices'
+import { isAddress } from './utils'
 
 export const handleRequest = async (event: FetchEvent): Promise<Response> => {
   try {
@@ -79,9 +79,11 @@ export const handleRequest = async (event: FetchEvent): Promise<Response> => {
         const tokens = urlTokens
           .split(',')
           .filter((address) => isAddress(address))
-          .map((address) => address.toLowerCase()) as Address[]
+          .map((address) => address.toLowerCase()) as `0x${string}`[]
         const tokenPrices =
-          tokens.length > 0 ? await fetchTokenPrices(event, chainId, tokens) : undefined
+          tokens.length > 0
+            ? await fetchTokenPrices(event, chainId as (typeof SUPPORTED_NETWORKS)[number], tokens)
+            : undefined
         if (!!tokenPrices) {
           return new Response(tokenPrices, {
             ...DEFAULT_HEADERS,
@@ -94,7 +96,10 @@ export const handleRequest = async (event: FetchEvent): Promise<Response> => {
           })
         }
       } else {
-        const tokenPrices = await fetchTokenPrices(event, chainId)
+        const tokenPrices = await fetchTokenPrices(
+          event,
+          chainId as (typeof SUPPORTED_NETWORKS)[number]
+        )
         if (!!tokenPrices) {
           return new Response(tokenPrices, {
             ...DEFAULT_HEADERS,

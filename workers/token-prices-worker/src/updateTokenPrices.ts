@@ -1,13 +1,12 @@
+import { Address } from 'viem'
+import { COINGECKO_PLATFORMS, KV_ADDRESS_KEYS, SUPPORTED_NETWORKS } from './constants'
+import { ChainTokenPrices, SimpleTokenPrices, SupportedCoingeckoNetwork } from './types'
+import { updateHandler } from './updateHandler'
 import {
-  COINGECKO_PLATFORMS,
   getCoingeckoExchangeRates,
   getCoingeckoSimpleTokenPrices,
   getCoingeckoTokenPrices
-} from '@shared/utilities'
-import { Address } from 'viem'
-import { KV_ADDRESS_KEYS, SUPPORTED_NETWORKS } from './constants'
-import { ChainTokenPrices, SimpleTokenPrices, SupportedCoingeckoNetwork } from './types'
-import { updateHandler } from './updateHandler'
+} from './utils'
 
 export const updateTokenPrices = async (event: FetchEvent | ScheduledEvent) => {
   try {

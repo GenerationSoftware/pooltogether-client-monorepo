@@ -1,13 +1,12 @@
-import { Address } from 'viem'
-import { KV_PRICE_KEYS, SUPPORTED_NETWORKS } from './constants'
+import { COINGECKO_PLATFORMS, KV_PRICE_KEYS, SUPPORTED_NETWORKS } from './constants'
 import { ChainTokenPrices, SupportedCoingeckoNetwork } from './types'
 import { updateHandler } from './updateHandler'
-import { COINGECKO_PLATFORMS, getCoingeckoTokenPrices } from './utilities'
+import { getCoingeckoTokenPrices } from './utils'
 
 export const fetchTokenPrices = async (
   event: FetchEvent,
   chainId: (typeof SUPPORTED_NETWORKS)[number],
-  tokens?: Address[]
+  tokens?: `0x${string}`[]
 ) => {
   try {
     const { value: allCachedChainTokenPrices } = await TOKEN_PRICES.getWithMetadata(
@@ -41,7 +40,7 @@ export const fetchTokenPrices = async (
         for (const address in missingTokenPrices) {
           const tokenPrice = missingTokenPrices[address]['eth']
           if (tokenPrice !== undefined) {
-            chainTokenPrices[address.toLowerCase() as Address] = tokenPrice
+            chainTokenPrices[address.toLowerCase() as `0x${string}`] = tokenPrice
           }
         }
         await updateHandler(event, { [chainId]: chainTokenPrices })

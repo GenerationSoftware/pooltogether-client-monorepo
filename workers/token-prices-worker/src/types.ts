@@ -1,6 +1,4 @@
-import { CoingeckoExchangeRates } from '@shared/types'
-import { SUPPORTED_NETWORKS } from './constants'
-import { COINGECKO_PLATFORMS } from './utilities'
+import { COINGECKO_PLATFORMS, SUPPORTED_NETWORKS } from './constants'
 
 export interface TokenPrices {
   simple: SimpleTokenPrices
@@ -15,6 +13,23 @@ export interface ChainTokenPrices {
 export interface SimpleTokenPrices {
   [id: string]: number
 }
+
+export interface CoingeckoTokenPrices {
+  [id: string]: {
+    [currency: string]: number
+  }
+}
+
+export interface CoingeckoExchangeRates {
+  [id: string]: {
+    name: string
+    unit: string
+    value: number
+    type: 'crypto' | 'fiat' | 'commodity'
+  }
+}
+
+export type COINGECKO_PLATFORM = keyof typeof COINGECKO_PLATFORMS
 
 export type SupportedCoingeckoNetwork = keyof typeof COINGECKO_PLATFORMS &
   (typeof SUPPORTED_NETWORKS)[number]

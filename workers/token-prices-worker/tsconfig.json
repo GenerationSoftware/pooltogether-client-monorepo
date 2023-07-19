@@ -4,7 +4,7 @@
   "exclude": ["dist", "node_modules"],
   "compilerOptions": {
     "lib": ["esnext"],
-    "rootDirs": ["./src", "../../shared"],
+    "rootDir": "./src",
     "outDir": "dist",
     "types": ["@cloudflare/workers-types"]
   }

@@ -256,9 +256,6 @@ importers:
       tslib: ^2.5.0
       tsup: ^6.6.3
       typescript: ^5.0.4
-      viem: ^1.2.12
-    dependencies:
-      viem: 1.2.12_typescript@5.0.4
     devDependencies:
       '@cloudflare/workers-types': 4.20230717.0
       '@types/node': 17.0.45

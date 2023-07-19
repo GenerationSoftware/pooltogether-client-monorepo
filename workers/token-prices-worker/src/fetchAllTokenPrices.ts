@@ -1,6 +1,5 @@
-import { CoingeckoExchangeRates } from '@shared/types'
 import { KV_PRICE_KEYS, SUPPORTED_NETWORKS } from './constants'
-import { SimpleTokenPrices, TokenPrices } from './types'
+import { CoingeckoExchangeRates, SimpleTokenPrices, TokenPrices } from './types'
 
 export const fetchAllTokenPrices = async () => {
   try {
