@@ -12,3 +12,6 @@ kv_namespaces = [
 
 [triggers]
 crons = ["0 */2 * * *"]
+
+[vars]
+COVALENT_API_KEY = "<YOUR_API_KEY_HERE>"

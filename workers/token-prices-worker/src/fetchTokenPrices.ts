@@ -1,7 +1,7 @@
-import { COINGECKO_PLATFORMS, KV_PRICE_KEYS, SUPPORTED_NETWORKS } from './constants'
-import { ChainTokenPrices, SupportedCoingeckoNetwork } from './types'
+import { KV_ADDRESS_KEYS, KV_PRICE_KEYS, SUPPORTED_NETWORKS } from './constants'
+import { ChainTokenPrices } from './types'
 import { updateHandler } from './updateHandler'
-import { getCoingeckoTokenPrices } from './utils'
+import { getCovalentTokenPrices } from './utils'
 
 export const fetchTokenPrices = async (
   event: FetchEvent,
@@ -32,16 +32,11 @@ export const fetchTokenPrices = async (
       }
 
       // Querying missing tokens' prices
-      if (tokenSet.size > 0 && chainId in COINGECKO_PLATFORMS) {
-        const missingTokenPrices = await getCoingeckoTokenPrices(
-          chainId as SupportedCoingeckoNetwork,
-          Array.from(tokenSet)
-        )
-        for (const address in missingTokenPrices) {
-          const tokenPrice = missingTokenPrices[address]['eth']
-          if (tokenPrice !== undefined) {
-            chainTokenPrices[address.toLowerCase() as `0x${string}`] = tokenPrice
-          }
+      if (tokenSet.size > 0 && chainId in KV_ADDRESS_KEYS) {
+        const missingTokenPrices = await getCovalentTokenPrices(chainId, Array.from(tokenSet))
+        for (const strAddress in missingTokenPrices) {
+          const address = strAddress as `0x${string}`
+          chainTokenPrices[address] = missingTokenPrices[address]
         }
         await updateHandler(event, { [chainId]: chainTokenPrices })
       }

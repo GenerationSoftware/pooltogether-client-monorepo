@@ -1,8 +1,7 @@
 import { DEFAULT_HEADERS, SUPPORTED_NETWORKS } from './constants'
 import { fetchAllTokenPrices } from './fetchAllTokenPrices'
-import { fetchExchangeRates } from './fetchExchangeRates'
-import { fetchSimpleTokenPrices } from './fetchSimpleTokenPrices'
 import { fetchTokenPrices } from './fetchTokenPrices'
+import { SUPPORTED_NETWORK } from './types'
 import { updateTokenPrices } from './updateTokenPrices'
 import { isAddress } from './utils'
 
@@ -19,36 +18,6 @@ export const handleRequest = async (event: FetchEvent): Promise<Response> => {
         })
       } else {
         return new Response(tokenPrices, {
-          ...DEFAULT_HEADERS,
-          status: 500
-        })
-      }
-    }
-
-    if (url.pathname === '/simple') {
-      const simpleTokenPrices = await fetchSimpleTokenPrices()
-      if (!!simpleTokenPrices) {
-        return new Response(simpleTokenPrices, {
-          ...DEFAULT_HEADERS,
-          status: 200
-        })
-      } else {
-        return new Response(simpleTokenPrices, {
-          ...DEFAULT_HEADERS,
-          status: 500
-        })
-      }
-    }
-
-    if (url.pathname === '/exchangeRates') {
-      const exchangeRates = await fetchExchangeRates()
-      if (!!exchangeRates) {
-        return new Response(exchangeRates, {
-          ...DEFAULT_HEADERS,
-          status: 200
-        })
-      } else {
-        return new Response(exchangeRates, {
           ...DEFAULT_HEADERS,
           status: 500
         })
@@ -73,7 +42,7 @@ export const handleRequest = async (event: FetchEvent): Promise<Response> => {
 
     const chainId = parseInt(url.pathname.split('/')[1])
 
-    if (!!chainId && chainId in SUPPORTED_NETWORKS) {
+    if (!!chainId && (SUPPORTED_NETWORKS as readonly number[]).includes(chainId)) {
       const urlTokens = url.searchParams.get('tokens')
       if (!!urlTokens) {
         const tokens = urlTokens
@@ -82,7 +51,7 @@ export const handleRequest = async (event: FetchEvent): Promise<Response> => {
           .map((address) => address.toLowerCase()) as `0x${string}`[]
         const tokenPrices =
           tokens.length > 0
-            ? await fetchTokenPrices(event, chainId as (typeof SUPPORTED_NETWORKS)[number], tokens)
+            ? await fetchTokenPrices(event, chainId as SUPPORTED_NETWORK, tokens)
             : undefined
         if (!!tokenPrices) {
           return new Response(tokenPrices, {
@@ -96,10 +65,7 @@ export const handleRequest = async (event: FetchEvent): Promise<Response> => {
           })
         }
       } else {
-        const tokenPrices = await fetchTokenPrices(
-          event,
-          chainId as (typeof SUPPORTED_NETWORKS)[number]
-        )
+        const tokenPrices = await fetchTokenPrices(event, chainId as SUPPORTED_NETWORK)
         if (!!tokenPrices) {
           return new Response(tokenPrices, {
             ...DEFAULT_HEADERS,
