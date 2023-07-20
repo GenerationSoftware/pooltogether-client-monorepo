@@ -16,7 +16,7 @@ import { Intl } from '@shared/types'
 import { atom, useSetAtom } from 'jotai'
 import { useEffect, useMemo } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { formatUnits, parseUnits } from 'viem'
+import { Address, formatUnits, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { isValidFormInput, TxFormInput, TxFormValues } from './TxFormInput'
 
@@ -46,14 +46,14 @@ export const DepositForm = (props: DepositFormProps) => {
 
   const { data: tokenWithAmount, isFetched: isFetchedTokenBalance } = useTokenBalance(
     vault.chainId,
-    userAddress as `0x${string}`,
-    tokenData?.address as `0x${string}`
+    userAddress as Address,
+    tokenData?.address as Address
   )
   const tokenBalance = isFetchedTokenBalance && !!tokenWithAmount ? tokenWithAmount.amount : 0n
 
   const { data: vaultBalance, isFetched: isFetchedVaultBalance } = useUserVaultShareBalance(
     vault,
-    userAddress as `0x${string}`
+    userAddress as Address
   )
   const shareBalance = isFetchedVaultBalance && !!vaultBalance ? vaultBalance.amount : 0n
 

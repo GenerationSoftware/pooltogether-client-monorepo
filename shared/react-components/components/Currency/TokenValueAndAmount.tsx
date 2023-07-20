@@ -2,10 +2,11 @@ import { formatBigIntForDisplay, TokenWithAmount } from '@pooltogether/hyperstru
 import { useToken } from '@pooltogether/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
+import { Address } from 'viem'
 import { TokenValue } from './TokenValue'
 
 export interface TokenValueAndAmountProps {
-  token: { chainId: number; address: `0x${string}` } & Partial<TokenWithAmount>
+  token: { chainId: number; address: Address } & Partial<TokenWithAmount>
   className?: string
   valueClassName?: string
   amountClassName?: string

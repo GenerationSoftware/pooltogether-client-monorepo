@@ -1,5 +1,6 @@
 import { VaultList } from '@shared/types'
 import { JSONSchemaType } from 'ajv'
+import { Address } from 'viem'
 
 /**
  * Network IDs
@@ -54,12 +55,17 @@ export const MINUTES_PER_DAY = 1_440
 export const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3'
 
 /**
+ * Token Prices API URL
+ */
+export const TOKEN_PRICES_API_URL = 'https://token-prices.g9software.workers.dev'
+
+/**
  * Prize Pools
  */
 export const PRIZE_POOLS: {
   chainId: NETWORK
-  address: `0x${string}`
-  options: { prizeTokenAddress: `0x${string}`; drawPeriodInSeconds: number; tierShares: number }
+  address: Address
+  options: { prizeTokenAddress: Address; drawPeriodInSeconds: number; tierShares: number }
 }[] = [
   {
     chainId: NETWORK.sepolia,
@@ -251,3 +257,8 @@ export const VAULT_LIST_SCHEMA: JSONSchemaType<VaultList> = {
  * Max uint256 value
  */
 export const MAX_UINT_256 = 2n ** 256n - 1n
+
+/**
+ * Null Address
+ */
+export const NULL_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'

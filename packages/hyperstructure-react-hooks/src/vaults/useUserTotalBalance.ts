@@ -1,14 +1,11 @@
-import {
-  getAssetsFromShares,
-  getTokenPriceFromObject
-} from '@pooltogether/hyperstructure-client-js'
+import { getAssetsFromShares } from '@pooltogether/hyperstructure-client-js'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import {
-  useAllTokenPrices,
   useAllUserVaultBalances,
   useAllVaultExchangeRates,
+  useAllVaultTokenPrices,
   useSelectedVaults
 } from '..'
 
@@ -21,7 +18,8 @@ export const useUserTotalBalance = () => {
 
   const { vaults, isFetched: isFetchedVaultData } = useSelectedVaults()
 
-  const { data: tokenPrices, isFetched: isFetchedTokenPrices } = useAllTokenPrices()
+  const { data: allVaultTokenPrices, isFetched: isFetchedAllVaultTokenPrices } =
+    useAllVaultTokenPrices()
 
   const { data: vaultBalances, isFetched: isFetchedVaultBalances } = useAllUserVaultBalances(
     vaults,
@@ -33,10 +31,10 @@ export const useUserTotalBalance = () => {
 
   const isFetched =
     isFetchedVaultData &&
-    isFetchedTokenPrices &&
+    isFetchedAllVaultTokenPrices &&
     isFetchedVaultBalances &&
     isFetchedVaultExchangeRates &&
-    !!tokenPrices &&
+    !!allVaultTokenPrices &&
     !!vaultBalances &&
     !!vaultExchangeRates &&
     !!vaults.underlyingTokenAddresses
@@ -53,7 +51,7 @@ export const useUserTotalBalance = () => {
             const tokenAddress = vaults.underlyingTokenAddresses?.byVault[vaultId] as Address
             const shareBalance = vaultBalances[vaultId].amount
 
-            const tokenPrice = getTokenPriceFromObject(chainId, tokenAddress, tokenPrices) ?? 0
+            const tokenPrice = allVaultTokenPrices[chainId]?.[tokenAddress] ?? 0
             const tokenBalance = getAssetsFromShares(shareBalance, exchangeRate, decimals)
 
             const formattedTokenBalance = formatUnits(tokenBalance, decimals)
@@ -67,8 +65,8 @@ export const useUserTotalBalance = () => {
     }
   }, [
     isFetchedVaultData,
-    isFetchedTokenPrices,
-    tokenPrices,
+    isFetchedAllVaultTokenPrices,
+    allVaultTokenPrices,
     isFetchedVaultBalances,
     vaultBalances,
     isFetchedVaultExchangeRates,

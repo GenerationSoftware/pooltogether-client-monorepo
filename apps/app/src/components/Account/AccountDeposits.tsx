@@ -8,6 +8,7 @@ import { Button } from '@shared/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
+import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { PrizePoolCards } from '@components/Prizes/PrizePoolCards'
 import { AccountDepositsHeader } from './AccountDepositsHeader'
@@ -28,7 +29,7 @@ export const AccountDeposits = (props: AccountDepositsProps) => {
 
   const { data: vaultBalances, isFetched: isFetchedVaultBalances } = useAllUserVaultBalances(
     vaults,
-    userAddress as `0x${string}`
+    userAddress as Address
   )
 
   const isEmpty =

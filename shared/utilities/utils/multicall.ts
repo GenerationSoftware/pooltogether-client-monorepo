@@ -1,4 +1,4 @@
-import { isAddress, PublicClient } from 'viem'
+import { Address, isAddress, PublicClient } from 'viem'
 
 // TODO: need better ABI and multicall params/results typing throughout this file
 
@@ -12,7 +12,7 @@ import { isAddress, PublicClient } from 'viem'
  */
 export const getSimpleMulticallResults = async (
   publicClient: PublicClient,
-  contractAddress: `0x${string}`,
+  contractAddress: Address,
   abi: any,
   calls: { functionName: string; args?: any[] }[]
 ): Promise<any[]> => {
@@ -25,7 +25,7 @@ export const getSimpleMulticallResults = async (
     throw new Error('Multicall Error: Could not get chain ID from client')
   }
 
-  const contracts: { address: `0x${string}`; abi: any; functionName: string; args?: any[] }[] = []
+  const contracts: { address: Address; abi: any; functionName: string; args?: any[] }[] = []
   calls.forEach((call) => {
     contracts.push({ address: contractAddress, abi, ...call })
   })
@@ -45,11 +45,11 @@ export const getSimpleMulticallResults = async (
  */
 export const getMulticallResults = async (
   publicClient: PublicClient,
-  contractAddresses: `0x${string}`[],
+  contractAddresses: Address[],
   abi: any,
   calls: { functionName: string; args?: any[] }[]
 ): Promise<{
-  [contractAddress: `0x${string}`]: {
+  [contractAddress: Address]: {
     [functionName: string]: any
   }
 }> => {
@@ -63,7 +63,7 @@ export const getMulticallResults = async (
     throw new Error('Multicall Error: Could not get chain ID from client')
   }
 
-  const contracts: { address: `0x${string}`; abi: any; functionName: string; args?: any[] }[] = []
+  const contracts: { address: Address; abi: any; functionName: string; args?: any[] }[] = []
   calls.forEach((call) => {
     contractAddresses.forEach((contractAddress) => {
       contracts.push({ address: contractAddress, abi, ...call })
@@ -73,7 +73,7 @@ export const getMulticallResults = async (
   const results = await publicClient.multicall({ contracts })
 
   const formattedResults: {
-    [contractAddress: `0x${string}`]: {
+    [contractAddress: Address]: {
       [functionName: string]: any
     }
   } = {}
@@ -95,7 +95,7 @@ export const getMulticallResults = async (
  */
 export const getComplexMulticallResults = async (
   publicClient: PublicClient,
-  calls: { address: `0x${string}`; abi: any; functionName: string; args?: any[] }[]
+  calls: { address: Address; abi: any; functionName: string; args?: any[] }[]
 ): Promise<{
   [contractAddress: string]: {
     [functionName: string]: any
@@ -114,7 +114,7 @@ export const getComplexMulticallResults = async (
   const results = await publicClient.multicall({ contracts: calls })
 
   const formattedResults: {
-    [contractAddress: `0x${string}`]: {
+    [contractAddress: Address]: {
       [functionName: string]: any
     }
   } = {}

@@ -11,6 +11,7 @@ import { atom, useAtom, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/router'
 import { useEffect, useMemo } from 'react'
+import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useNetworks } from '@hooks/useNetworks'
 import { useSettingsModalView } from '@hooks/useSettingsModalView'
@@ -40,7 +41,7 @@ export const VaultFilters = (props: VaultFiltersProps) => {
   const { data: userTokenBalances, isFetched: isFetchedUserTokenBalances } =
     useTokenBalancesAcrossChains(
       networks,
-      userAddress as `0x${string}`,
+      userAddress as Address,
       vaults.underlyingTokenAddresses?.byChain ?? {}
     )
 

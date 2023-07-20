@@ -1,5 +1,5 @@
 import { VaultInfo } from '@shared/types'
-import { formatUnits, parseUnits, PublicClient } from 'viem'
+import { Address, formatUnits, parseUnits, PublicClient } from 'viem'
 import { erc4626 as erc4626Abi } from '../abis/erc4626'
 import { formatStringWithPrecision } from './formatting'
 import { getComplexMulticallResults, getMulticallResults } from './multicall'
@@ -120,8 +120,8 @@ export const getVaultBalances = async (
  * @param vaults vaults' info
  * @returns
  */
-export const getVaultAddresses = (vaults: VaultInfo[]): { [chainId: number]: `0x${string}`[] } => {
-  const vaultAddresses: { [chainId: number]: `0x${string}`[] } = {}
+export const getVaultAddresses = (vaults: VaultInfo[]): { [chainId: number]: Address[] } => {
+  const vaultAddresses: { [chainId: number]: Address[] } = {}
 
   vaults.forEach((vault) => {
     if (vaultAddresses[vault.chainId] === undefined) {
@@ -144,14 +144,14 @@ export const getVaultAddresses = (vaults: VaultInfo[]): { [chainId: number]: `0x
 export const getVaultUnderlyingTokenAddresses = async (
   publicClient: PublicClient,
   vaults: VaultInfo[]
-): Promise<{ [vaultId: string]: `0x${string}` }> => {
-  const tokenAddresses: { [vaultId: string]: `0x${string}` } = {}
+): Promise<{ [vaultId: string]: Address }> => {
+  const tokenAddresses: { [vaultId: string]: Address } = {}
 
   const chainId = await publicClient.getChainId()
   const filteredVaults = !!chainId ? vaults.filter((vault) => vault.chainId === chainId) : []
 
   if (filteredVaults.length > 0) {
-    const vaultAddresses = new Set<`0x${string}`>()
+    const vaultAddresses = new Set<Address>()
     filteredVaults.forEach((vault) => {
       if (!!vault.extensions?.underlyingAsset?.address) {
         const vaultId = getVaultId(vault)

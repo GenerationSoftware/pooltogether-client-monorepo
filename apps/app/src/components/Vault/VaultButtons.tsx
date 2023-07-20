@@ -3,6 +3,7 @@ import { useUserVaultShareBalance } from '@pooltogether/hyperstructure-react-hoo
 import { DepositButton, WithdrawButton } from '@shared/react-components'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 
 interface VaultButtonsProps {
@@ -19,7 +20,7 @@ export const VaultButtons = (props: VaultButtonsProps) => {
 
   const { address: userAddress } = useAccount()
 
-  const { data: vaultBalance } = useUserVaultShareBalance(vault, userAddress as `0x${string}`)
+  const { data: vaultBalance } = useUserVaultShareBalance(vault, userAddress as Address)
 
   const shareBalance = vaultBalance?.amount ?? 0n
 

@@ -78,10 +78,10 @@ yarn add @pooltogether/hyperstructure-react-hooks
 
 ### Token Hooks
 
-- `useAllTokenPrices`
 - `useTokenAllowances`
 - `useTokenBalances`
 - `useTokenPrices`
+- `useTokenPricesAcrossChains`
 - `useTokens`
 
 ### Transaction Hooks
@@ -101,6 +101,7 @@ yarn add @pooltogether/hyperstructure-react-hooks
 - `useAllVaultShareData`
 - `useAllVaultTokenAddresses`
 - `useAllVaultTokenData`
+- `useAllVaultTokenPrices`
 - `useSortedVaults`
 - `useUserTotalBalance`
 - `useUserVaultShareBalance`

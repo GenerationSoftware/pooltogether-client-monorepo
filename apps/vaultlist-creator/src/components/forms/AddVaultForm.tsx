@@ -6,14 +6,14 @@ import { useAtom } from 'jotai'
 import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { vaultsAtom } from 'src/atoms'
 import { isValidChars } from 'src/utils'
-import { isAddress } from 'viem'
+import { Address, isAddress } from 'viem'
 import { PurpleButton } from '@components/buttons/PurpleButton'
 import { useNetworks } from '@hooks/useNetworks'
 import { SimpleInput } from './SimpleInput'
 
 interface AddVaultFormValues {
   vaultName: string
-  vaultAddress: `0x${string}`
+  vaultAddress: Address
   vaultChainId: string
 }
 
@@ -33,7 +33,7 @@ export const AddVaultForm = (props: AddVaultFormProps) => {
   const onSubmit = (data: AddVaultFormValues) => {
     const newVault: VaultInfo = {
       name: data.vaultName.trim(),
-      address: data.vaultAddress.trim() as `0x${string}`,
+      address: data.vaultAddress.trim() as Address,
       chainId: parseInt(data.vaultChainId)
     }
 

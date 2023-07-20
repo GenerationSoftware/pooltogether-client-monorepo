@@ -17,6 +17,7 @@ import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Intl } from '@shared/types'
 import { Spinner, toast } from '@shared/ui'
 import { ReactNode, useEffect } from 'react'
+import { Address } from 'viem'
 import { useAccount, useWaitForTransaction } from 'wagmi'
 import { ErrorPooly } from '../Graphics/ErrorPooly'
 import { SuccessPooly } from '../Graphics/SuccessPooly'
@@ -62,27 +63,27 @@ export const TransactionToast = (props: TransactionToastProps) => {
 
   const { isLoading, isSuccess, isError } = useWaitForTransaction({
     chainId: vault.chainId,
-    hash: txHash as `0x${string}`
+    hash: txHash as Address
   })
 
   const { address: userAddress } = useAccount()
 
   const { refetch: refetchTokenBalance } = useTokenBalance(
     vault.chainId,
-    userAddress as `0x${string}`,
-    tokenData?.address as `0x${string}`
+    userAddress as Address,
+    tokenData?.address as Address
   )
 
   const { refetch: refetchVaultBalance } = useVaultBalance(vault)
 
   const { refetch: refetchUserVaultShareBalance } = useUserVaultShareBalance(
     vault,
-    userAddress as `0x${string}`
+    userAddress as Address
   )
 
   const { refetch: refetchUserVaultTokenBalance } = useUserVaultTokenBalance(
     vault,
-    userAddress as `0x${string}`
+    userAddress as Address
   )
 
   useEffect(() => {

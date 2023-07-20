@@ -4,6 +4,7 @@ import { ExternalLink, LINKS } from '@shared/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
+import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { AccountWinCards } from './AccountWinCards'
@@ -24,7 +25,7 @@ export const AccountWinnings = (props: AccountWinningsProps) => {
 
   const { data: wins, isFetched: isFetchedWins } = useAllUserPrizePoolWins(
     prizePoolsArray,
-    userAddress as `0x${string}`
+    userAddress as Address
   )
 
   const flattenedWins = useMemo(() => {

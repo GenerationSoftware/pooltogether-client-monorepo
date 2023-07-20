@@ -3,6 +3,7 @@ import { useUserVaultTokenBalance } from '@pooltogether/hyperstructure-react-hoo
 import { PrizePowerTooltip, VaultBadge } from '@shared/react-components'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/router'
+import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
 import { VaultButtons } from './VaultButtons'
@@ -24,7 +25,7 @@ export const VaultCard = (props: VaultCardProps) => {
 
   const { address: userAddress } = useAccount()
 
-  const { data: tokenBalance } = useUserVaultTokenBalance(vault, userAddress as `0x${string}`)
+  const { data: tokenBalance } = useUserVaultTokenBalance(vault, userAddress as Address)
 
   return (
     <div className='flex flex-col gap-4 bg-pt-transparent rounded-lg px-3 pt-3 pb-6'>

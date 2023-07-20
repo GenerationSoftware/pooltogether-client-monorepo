@@ -2,6 +2,7 @@ import { formatNumberForDisplay, PrizePool, Vault } from '@pooltogether/hyperstr
 import { usePrizeOdds, useUserVaultShareBalance } from '@pooltogether/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import { useTranslations } from 'next-intl'
+import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 
@@ -18,7 +19,7 @@ export const AccountVaultOdds = (props: AccountVaultOddsProps) => {
 
   const { data: shareBalance, isFetched: isFetchedShareBalance } = useUserVaultShareBalance(
     vault,
-    userAddress as `0x${string}`
+    userAddress as Address
   )
 
   const prizePools = useSupportedPrizePools()

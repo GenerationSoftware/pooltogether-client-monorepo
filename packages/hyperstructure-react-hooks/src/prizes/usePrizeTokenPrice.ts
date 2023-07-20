@@ -1,20 +1,14 @@
-import {
-  getTokenPriceFromObject,
-  PrizePool,
-  TokenWithPrice
-} from '@pooltogether/hyperstructure-client-js'
-import { CURRENCY_ID } from '@shared/generic-react-hooks'
+import { PrizePool, TokenWithPrice } from '@pooltogether/hyperstructure-client-js'
+import { Address } from 'viem'
 import { usePrizeTokenData, useTokenPrices } from '..'
 
 /**
  * Returns the price of the token awarded by a prize pool
  * @param prizePool instance of the `PrizePool` class
- * @param currency optional currency (default is 'eth')
  * @returns
  */
 export const usePrizeTokenPrice = (
-  prizePool: PrizePool,
-  currency?: CURRENCY_ID
+  prizePool: PrizePool
 ): { data: TokenWithPrice | undefined; isFetched: boolean; refetch: () => void } => {
   const { data: prizeToken, isFetched: isFetchedPrizeToken } = usePrizeTokenData(prizePool)
 
@@ -22,22 +16,12 @@ export const usePrizeTokenPrice = (
     data: tokenPrices,
     isFetched: isFetchedTokenPrices,
     refetch
-  } = useTokenPrices(
-    prizePool?.chainId,
-    !!prizeToken ? [prizeToken.address] : [],
-    !!currency ? [currency] : undefined
-  )
+  } = useTokenPrices(prizePool?.chainId, !!prizeToken ? [prizeToken.address] : [])
 
-  const tokenPrice = !!prizeToken
-    ? getTokenPriceFromObject(
-        prizePool.chainId,
-        prizeToken.address,
-        {
-          [prizePool.chainId]: tokenPrices ?? {}
-        },
-        currency
-      )
-    : undefined
+  const tokenPrice =
+    !!prizeToken && !!tokenPrices
+      ? tokenPrices[prizeToken.address.toLowerCase() as Address]
+      : undefined
 
   const isFetched = isFetchedPrizeToken && isFetchedTokenPrices
 
