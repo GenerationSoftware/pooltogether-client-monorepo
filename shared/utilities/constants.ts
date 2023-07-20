@@ -182,22 +182,6 @@ export const STABLECOIN_ADDRESSES: Record<NETWORK, Lowercase<string>[]> = {
 }
 
 /**
- * Hardcoded testnet token prices
- *
- * NOTE: All addresses are lowercase
- */
-export const TESTNET_TOKEN_PRICES = Object.freeze({
-  [NETWORK.sepolia]: {
-    '0xb20ff9fe4065cc1494dfa3a273a527a05871074f': { eth: 0.00054086 }, // DAI
-    '0x59d6b2e784f45568a76b9627de97e06fc237da83': { eth: 0.00054048 }, // USDC
-    '0x73b3f9fecf92b4f0eb6a20c977cbb30964858fd7': { eth: 0.00054055 }, // GUSD
-    '0xf78de71cf358a92aee3370a7a3b743bf63c257d4': { eth: 14.381406 }, // WBTC
-    '0x62739a657d3bb724694b46b35795532ec9b42b47': { eth: 0.99951637 }, // WETH
-    '0x09f06f4bc026fb75e0064747edd49d371d20d434': { eth: 0.00036417 } // POOL
-  }
-})
-
-/**
  * Vault list schema
  */
 export const VAULT_LIST_SCHEMA: JSONSchemaType<VaultList> = {
