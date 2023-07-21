@@ -1,7 +1,6 @@
 import { getAssetsFromShares } from '@pooltogether/hyperstructure-client-js'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
-import { useAccount } from 'wagmi'
 import {
   useAllUserVaultBalances,
   useAllVaultExchangeRates,
@@ -11,11 +10,10 @@ import {
 
 /**
  * Returns a user's total balance in ETH
+ * @param userAddress user address to get total balance for
  * @returns
  */
-export const useUserTotalBalance = () => {
-  const { address: userAddress } = useAccount()
-
+export const useUserTotalBalance = (userAddress: Address) => {
   const { vaults, isFetched: isFetchedVaultData } = useSelectedVaults()
 
   const { data: allVaultTokenPrices, isFetched: isFetchedAllVaultTokenPrices } =
@@ -23,7 +21,7 @@ export const useUserTotalBalance = () => {
 
   const { data: vaultBalances, isFetched: isFetchedVaultBalances } = useAllUserVaultBalances(
     vaults,
-    userAddress as Address
+    userAddress
   )
 
   const { data: vaultExchangeRates, isFetched: isFetchedVaultExchangeRates } =
@@ -51,7 +49,8 @@ export const useUserTotalBalance = () => {
             const tokenAddress = vaults.underlyingTokenAddresses?.byVault[vaultId] as Address
             const shareBalance = vaultBalances[vaultId].amount
 
-            const tokenPrice = allVaultTokenPrices[chainId]?.[tokenAddress] ?? 0
+            const tokenPrice =
+              allVaultTokenPrices[chainId]?.[tokenAddress.toLowerCase() as Address] ?? 0
             const tokenBalance = getAssetsFromShares(shareBalance, exchangeRate, decimals)
 
             const formattedTokenBalance = formatUnits(tokenBalance, decimals)

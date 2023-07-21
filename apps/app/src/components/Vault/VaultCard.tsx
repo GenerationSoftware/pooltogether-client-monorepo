@@ -12,10 +12,11 @@ import { VaultTotalDeposits } from './VaultTotalDeposits'
 
 interface VaultCardProps {
   vault: Vault
+  address?: Address
 }
 
 export const VaultCard = (props: VaultCardProps) => {
-  const { vault } = props
+  const { vault, address } = props
 
   const router = useRouter()
 
@@ -23,7 +24,8 @@ export const VaultCard = (props: VaultCardProps) => {
   const t_vaults = useTranslations('Vaults')
   const t_tooltips = useTranslations('Tooltips')
 
-  const { address: userAddress } = useAccount()
+  const { address: _userAddress } = useAccount()
+  const userAddress = address ?? _userAddress
 
   const { data: tokenBalance } = useUserVaultTokenBalance(vault, userAddress as Address)
 

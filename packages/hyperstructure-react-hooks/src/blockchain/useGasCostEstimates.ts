@@ -4,6 +4,7 @@ import {
   NETWORK,
   NULL_ADDRESS
 } from '@pooltogether/hyperstructure-client-js'
+import { useMemo } from 'react'
 import { formatUnits, parseUnits } from 'viem'
 import { useGasPrices, useTokenPrices } from '..'
 
@@ -20,7 +21,10 @@ export const useGasCostEstimates = (
   const { data: tokenPrices, isFetched: isFetchedTokenPrices } = useTokenPrices(chainId, [
     NULL_ADDRESS
   ])
-  const tokenPrice = tokenPrices?.[NULL_ADDRESS]
+
+  const tokenPrice = useMemo(() => {
+    return tokenPrices?.[NULL_ADDRESS]
+  }, [tokenPrices])
 
   const { data: gasPrices, isFetched: isFetchedGasPrices } = useGasPrices(chainId)
 

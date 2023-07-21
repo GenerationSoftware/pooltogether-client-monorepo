@@ -7,16 +7,13 @@ import {
 import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
-import { useAccount } from 'wagmi'
 import { useSupportedPrizePools } from './useSupportedPrizePools'
 
 /**
  * Returns a user's total prize winnings in ETH
  * @returns
  */
-export const useUserTotalWinnings = () => {
-  const { address: userAddress } = useAccount()
-
+export const useUserTotalWinnings = (userAddress: Address) => {
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
 
@@ -72,12 +69,13 @@ export const useUserTotalWinnings = () => {
           const tokenAmount = parseFloat(
             formatUnits(totalTokensWonByChain[chainId], tokenData.decimals)
           )
-          const tokenPrice = allVaultTokenPrices[chainId]?.[tokenData.address] ?? 0
+          const tokenPrice =
+            allVaultTokenPrices[chainId]?.[tokenData.address.toLowerCase() as Address] ?? 0
           totalWinnings += tokenAmount * tokenPrice
         }
       }
     }
 
     return { isFetched, refetch: refetchWins, data: isFetched ? totalWinnings : undefined }
-  }, [totalTokensWonByChain, tokenDataResults])
+  }, [totalTokensWonByChain, tokenDataResults, allVaultTokenPrices])
 }

@@ -12,13 +12,15 @@ import { AccountWinningsHeader } from './AccountWinningsHeader'
 import { AccountWinningsTable } from './AccountWinningsTable'
 
 interface AccountWinningsProps {
+  address?: Address
   className?: string
 }
 
 export const AccountWinnings = (props: AccountWinningsProps) => {
-  const { className } = props
+  const { address, className } = props
 
-  const { address: userAddress } = useAccount()
+  const { address: _userAddress } = useAccount()
+  const userAddress = address ?? _userAddress
 
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
@@ -50,7 +52,7 @@ export const AccountWinnings = (props: AccountWinningsProps) => {
           className
         )}
       >
-        <AccountWinningsHeader />
+        <AccountWinningsHeader address={userAddress} />
         {isEmpty && <NoWinsCard className='mt-4' />}
         {!isEmpty && (
           <AccountWinningsTable

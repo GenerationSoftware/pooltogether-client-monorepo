@@ -1,4 +1,5 @@
 import { PrizePool, TokenWithPrice } from '@pooltogether/hyperstructure-client-js'
+import { useMemo } from 'react'
 import { Address } from 'viem'
 import { usePrizeTokenData, useTokenPrices } from '..'
 
@@ -18,10 +19,11 @@ export const usePrizeTokenPrice = (
     refetch
   } = useTokenPrices(prizePool?.chainId, !!prizeToken ? [prizeToken.address] : [])
 
-  const tokenPrice =
-    !!prizeToken && !!tokenPrices
+  const tokenPrice = useMemo(() => {
+    return !!prizeToken && !!tokenPrices
       ? tokenPrices[prizeToken.address.toLowerCase() as Address]
       : undefined
+  }, [prizeToken, tokenPrices])
 
   const isFetched = isFetchedPrizeToken && isFetchedTokenPrices
 
