@@ -67,6 +67,8 @@
     "headers": {
       "myBalance": "My Balance",
       "myWinChance": "My Win Chance",
+      "balance": "Balance",
+      "winChance": "Win Chance",
       "prizePower": "Prize Power",
       "tvl": "TVL",
       "depositAsset": "Deposit Asset",
@@ -80,6 +82,8 @@
     "depositNow": "Deposit now.",
     "yourDeposits": "Your Deposits",
     "yourWinnings": "Your Winnings",
+    "externalAccountDeposits": "{account}'s Deposits",
+    "externalAccountWinnings": "{account}'s Winnings",
     "dailyPrizeOdds": "Daily Prize Odds",
     "oneInXChance": "1 in {number}",
     "noPrizesRecently": "You haven't won any prizes recently.",

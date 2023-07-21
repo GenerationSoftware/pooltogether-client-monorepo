@@ -33,7 +33,7 @@ export const AccountVaultCards = (props: AccountVaultsCardsProps) => {
         sortedVaults.map((vault) => {
           const shareBalance = vaultBalances[vault.id]?.amount ?? 0n
           if (shareBalance > 0n && vault.decimals !== undefined) {
-            return <AccountVaultCard key={vault.id} vault={vault} />
+            return <AccountVaultCard key={vault.id} vault={vault} address={userAddress} />
           }
         })}
     </div>

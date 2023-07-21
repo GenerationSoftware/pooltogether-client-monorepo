@@ -45,8 +45,14 @@ export const AccountDepositsTable = (props: AccountDepositsTableProps) => {
   const tableHeaders = useMemo(() => {
     const headers: TableProps['data']['headers'] = {
       token: { content: t_vaults('headers.token') },
-      odds: { content: t_vault('headers.myWinChance'), position: 'center' },
-      balance: { content: t_vaults('headers.myBalance'), position: 'center' }
+      odds: {
+        content: isExternalUser ? t_vault('headers.winChance') : t_vault('headers.myWinChance'),
+        position: 'center'
+      },
+      balance: {
+        content: isExternalUser ? t_vault('headers.balance') : t_vaults('headers.myBalance'),
+        position: 'center'
+      }
     }
     if (!isExternalUser) {
       headers.manage = { content: <ManageHeader />, position: 'right' }

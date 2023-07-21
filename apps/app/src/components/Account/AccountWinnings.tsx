@@ -42,6 +42,10 @@ export const AccountWinnings = (props: AccountWinningsProps) => {
     return flattenedWins.sort((a, b) => parseInt(b.timestamp) - parseInt(a.timestamp))
   }, [wins])
 
+  const isExternalUser = useMemo(() => {
+    return !!address && address.toLowerCase() !== _userAddress?.toLowerCase()
+  }, [address, _userAddress])
+
   const isEmpty = isFetchedWins && !flattenedWins?.length
 
   if (typeof window !== 'undefined' && !!userAddress && isFetchedWins && !!wins) {
@@ -52,8 +56,8 @@ export const AccountWinnings = (props: AccountWinningsProps) => {
           className
         )}
       >
-        <AccountWinningsHeader address={userAddress} />
-        {isEmpty && <NoWinsCard className='mt-4' />}
+        {(!isEmpty || !isExternalUser) && <AccountWinningsHeader address={userAddress} />}
+        {isEmpty && !isExternalUser && <NoWinsCard className='mt-4' />}
         {!isEmpty && (
           <AccountWinningsTable
             wins={flattenedWins}
