@@ -1,13 +1,12 @@
 import {
   NO_REFETCH,
   QUERY_KEYS,
-  useAllTokenPrices,
-  useAllUserPrizePoolWins
+  useAllUserPrizePoolWins,
+  useAllVaultTokenPrices
 } from '@pooltogether/hyperstructure-react-hooks'
-import { getTokenPriceFromObject } from '@shared/utilities'
 import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'
-import { formatUnits } from 'viem'
+import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { useSupportedPrizePools } from './useSupportedPrizePools'
 
@@ -25,9 +24,10 @@ export const useUserTotalWinnings = () => {
     data: wins,
     isFetched: isFetchedWins,
     refetch: refetchWins
-  } = useAllUserPrizePoolWins(prizePoolsArray, userAddress as `0x${string}`)
+  } = useAllUserPrizePoolWins(prizePoolsArray, userAddress as Address)
 
-  const { data: tokenPrices, isFetched: isFetchedTokenPrices } = useAllTokenPrices()
+  const { data: allVaultTokenPrices, isFetched: isFetchedAllVaultTokenPrices } =
+    useAllVaultTokenPrices()
 
   const totalTokensWonByChain = useMemo(() => {
     if (!!wins) {
@@ -55,10 +55,10 @@ export const useUserTotalWinnings = () => {
   return useMemo(() => {
     const isFetched =
       isFetchedWins &&
-      isFetchedTokenPrices &&
+      isFetchedAllVaultTokenPrices &&
       tokenDataResults?.every((result) => result.isFetched) &&
       !!wins &&
-      !!tokenPrices &&
+      !!allVaultTokenPrices &&
       !!totalTokensWonByChain
 
     let totalWinnings = 0
@@ -72,7 +72,7 @@ export const useUserTotalWinnings = () => {
           const tokenAmount = parseFloat(
             formatUnits(totalTokensWonByChain[chainId], tokenData.decimals)
           )
-          const tokenPrice = getTokenPriceFromObject(chainId, tokenData.address, tokenPrices) ?? 0
+          const tokenPrice = allVaultTokenPrices[chainId]?.[tokenData.address] ?? 0
           totalWinnings += tokenAmount * tokenPrice
         }
       }

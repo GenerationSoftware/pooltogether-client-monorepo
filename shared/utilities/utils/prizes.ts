@@ -1,5 +1,5 @@
 import { PrizeInfo, SubgraphPrizePoolAccount, SubgraphPrizePoolDraw } from '@shared/types'
-import { formatUnits, getContract, PublicClient } from 'viem'
+import { Address, formatUnits, getContract, PublicClient } from 'viem'
 import { prizePool as prizePoolAbi } from '../abis/prizePool'
 import { PRIZE_POOL_GRAPH_API_URLS, SECONDS_PER_DAY } from '../constants'
 import { formatStringWithPrecision } from './formatting'
@@ -28,8 +28,8 @@ export const getPrizePoolId = (chainId: number, address: string) => {
  */
 export const getPrizePoolContributionAmounts = async (
   publicClient: PublicClient,
-  prizePoolAddress: `0x${string}`,
-  vaultAddresses: `0x${string}`[],
+  prizePoolAddress: Address,
+  vaultAddresses: Address[],
   startDrawId: number,
   endDrawId: number
 ): Promise<{ [vaultId: string]: bigint }> => {
@@ -74,8 +74,8 @@ export const getPrizePoolContributionAmounts = async (
  */
 export const getPrizePoolContributionPercentages = async (
   publicClient: PublicClient,
-  prizePoolAddress: `0x${string}`,
-  vaultAddresses: `0x${string}`[],
+  prizePoolAddress: Address,
+  vaultAddresses: Address[],
   startDrawId: number,
   endDrawId: number
 ): Promise<{ [vaultId: string]: number }> => {
@@ -117,7 +117,7 @@ export const getPrizePoolContributionPercentages = async (
  */
 export const getPrizePoolAllPrizeInfo = async (
   publicClient: PublicClient,
-  prizePoolAddress: `0x${string}`,
+  prizePoolAddress: Address,
   tiers: number[],
   considerPastDraws: number = 7
 ): Promise<PrizeInfo[]> => {

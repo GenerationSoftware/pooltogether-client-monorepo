@@ -1,12 +1,12 @@
-import { getTokenPriceFromObject, TokenWithAmount } from '@pooltogether/hyperstructure-client-js'
+import { TokenWithAmount } from '@pooltogether/hyperstructure-client-js'
 import { useToken, useTokenPrices } from '@pooltogether/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import { useMemo } from 'react'
-import { formatUnits } from 'viem'
+import { Address, formatUnits } from 'viem'
 import { CurrencyValue, CurrencyValueProps } from './CurrencyValue'
 
 export interface TokenValueProps extends Omit<CurrencyValueProps, 'baseValue'> {
-  token: { chainId: number; address: `0x${string}` } & Partial<TokenWithAmount>
+  token: { chainId: number; address: Address } & Partial<TokenWithAmount>
   fallback?: JSX.Element
 }
 
@@ -18,22 +18,14 @@ export const TokenValue = (props: TokenValueProps) => {
     token.address
   )
 
-  const { data: tokenPrices, isFetching: isFetchingTokenPrices } = useTokenPrices(
-    token.chainId,
-    [token.address],
-    !!baseCurrency ? [baseCurrency] : undefined
-  )
+  const { data: tokenPrices, isFetching: isFetchingTokenPrices } = useTokenPrices(token.chainId, [
+    token.address
+  ])
 
-  const tokenPrice = !!tokenData
-    ? getTokenPriceFromObject(
-        token.chainId,
-        token.address,
-        {
-          [token.chainId]: tokenPrices ?? {}
-        },
-        baseCurrency
-      )
-    : undefined
+  const tokenPrice =
+    !!tokenData && !!tokenPrices
+      ? tokenPrices[tokenData.address.toLowerCase() as Address]
+      : undefined
 
   const tokenValue = useMemo(() => {
     if (!!tokenPrice) {

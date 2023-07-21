@@ -2,6 +2,7 @@ import { formatNumberForDisplay } from '@pooltogether/hyperstructure-client-js'
 import { useAllUserPrizeOdds, useSelectedVaults } from '@pooltogether/hyperstructure-react-hooks'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 
@@ -24,7 +25,7 @@ export const AccountDepositsOdds = (props: AccountDepositsOddsProps) => {
   const { data: prizeOdds, isFetched: isFetchedPrizeOdds } = useAllUserPrizeOdds(
     prizePoolsArray,
     vaults,
-    userAddress as `0x${string}`
+    userAddress as Address
   )
 
   if (isFetchedPrizeOdds && !!prizeOdds) {

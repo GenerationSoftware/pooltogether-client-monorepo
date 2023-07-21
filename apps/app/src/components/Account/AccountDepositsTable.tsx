@@ -8,6 +8,7 @@ import { Table, TableProps } from '@shared/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/router'
+import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { AccountVaultBalance } from './AccountVaultBalance'
 import { AccountVaultButtons } from './AccountVaultButtons'
@@ -27,12 +28,9 @@ export const AccountDepositsTable = (props: AccountDepositsTableProps) => {
 
   const { vaults } = useSelectedVaults()
 
-  const { data: vaultBalances, isFetched: isFetchedVaultBalances } = useAllUserVaultBalances(
-    vaults,
-    userAddress as `0x${string}`
-  )
+  const { data: vaultBalances } = useAllUserVaultBalances(vaults, userAddress as Address)
 
-  const { sortedVaults, isFetched } = useSortedVaults(Object.values(vaults.vaults), {
+  const { sortedVaults } = useSortedVaults(Object.values(vaults.vaults), {
     defaultSortId: 'userBalance'
   })
 
@@ -84,8 +82,6 @@ export const AccountDepositsTable = (props: AccountDepositsTableProps) => {
       {...rest}
     />
   )
-
-  return <></>
 }
 
 const ManageHeader = () => {

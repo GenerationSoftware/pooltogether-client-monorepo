@@ -1,7 +1,5 @@
 import {
-  CoingeckoTokenPrices,
   getAssetsFromShares,
-  getTokenPriceFromObject,
   PrizePool,
   TokenWithAmount,
   Vault
@@ -10,11 +8,11 @@ import { useMemo, useState } from 'react'
 import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import {
-  useAllTokenPrices,
   useAllUserVaultBalances,
   useAllVaultBalances,
   useAllVaultExchangeRates,
   useAllVaultPrizePowers,
+  useAllVaultTokenPrices,
   useSelectedVaults
 } from '..'
 
@@ -56,7 +54,8 @@ export const useSortedVaults = (
   const { data: allVaultExchangeRates, isFetched: isFetchedAllVaultExchangeRates } =
     useAllVaultExchangeRates(selectedVaults)
 
-  const { data: allTokenPrices, isFetched: isFetchedAllTokenPrices } = useAllTokenPrices()
+  const { data: allVaultTokenPrices, isFetched: isFetchedAllVaultTokenPrices } =
+    useAllVaultTokenPrices()
 
   const isFetched =
     isFetchedSelectedVaults &&
@@ -64,13 +63,17 @@ export const useSortedVaults = (
     (isFetchedAllUserVaultBalances || !userAddress) &&
     (isFetchedAllPrizePowers || !options?.prizePool) &&
     isFetchedAllVaultExchangeRates &&
-    isFetchedAllTokenPrices
+    isFetchedAllVaultTokenPrices
 
   const sortedVaults = useMemo(() => {
     if (isFetched) {
       let sortedVaults = sortVaultsByPrizePower(vaults, allPrizePowers)
       if (sortVaultsBy === 'totalBalance' && !!allVaultBalances) {
-        sortedVaults = sortVaultsByTotalDeposits(sortedVaults, allVaultBalances, allTokenPrices)
+        sortedVaults = sortVaultsByTotalDeposits(
+          sortedVaults,
+          allVaultBalances,
+          allVaultTokenPrices
+        )
       } else if (
         sortVaultsBy === 'userBalance' &&
         !!allVaultBalances &&
@@ -80,7 +83,7 @@ export const useSortedVaults = (
         sortedVaults = sortVaultsByUserBalances(
           sortedVaults,
           allVaultBalances,
-          allTokenPrices,
+          allVaultTokenPrices,
           allUserVaultBalances,
           allVaultExchangeRates
         )
@@ -122,7 +125,7 @@ const sortVaultsByPrizePower = (vaults: Vault[], prizePowers?: { [vaultId: strin
 const sortVaultsByTotalDeposits = (
   vaults: Vault[],
   vaultBalances: { [vaultId: string]: TokenWithAmount },
-  tokenPrices: { [chainId: number]: CoingeckoTokenPrices }
+  tokenPrices: { [chainId: number]: { [address: Address]: number } }
 ) => {
   return vaults.sort((a, b) => {
     const aAmount = parseFloat(
@@ -132,10 +135,8 @@ const sortVaultsByTotalDeposits = (
       formatUnits(vaultBalances[b.id]?.amount ?? 0n, vaultBalances[b.id]?.decimals)
     )
 
-    const aPrice =
-      getTokenPriceFromObject(a.chainId, vaultBalances[a.id]?.address, tokenPrices) ?? 0
-    const bPrice =
-      getTokenPriceFromObject(b.chainId, vaultBalances[b.id]?.address, tokenPrices) ?? 0
+    const aPrice = tokenPrices[a.chainId]?.[vaultBalances[a.id]?.address] ?? 0
+    const bPrice = tokenPrices[b.chainId]?.[vaultBalances[b.id]?.address] ?? 0
 
     const aValue = aAmount * aPrice
     const bValue = bAmount * bPrice
@@ -147,7 +148,7 @@ const sortVaultsByTotalDeposits = (
 const sortVaultsByUserBalances = (
   vaults: Vault[],
   vaultBalances: { [vaultId: string]: TokenWithAmount },
-  tokenPrices: { [chainId: number]: CoingeckoTokenPrices },
+  tokenPrices: { [chainId: number]: { [address: Address]: number } },
   userBalances: { [vaultId: string]: TokenWithAmount },
   exchangeRates: { [vaultId: string]: bigint }
 ) => {
@@ -173,10 +174,8 @@ const sortVaultsByUserBalances = (
       )
     )
 
-    const aPrice =
-      getTokenPriceFromObject(a.chainId, vaultBalances[a.id]?.address, tokenPrices) ?? 0
-    const bPrice =
-      getTokenPriceFromObject(b.chainId, vaultBalances[b.id]?.address, tokenPrices) ?? 0
+    const aPrice = tokenPrices[a.chainId]?.[vaultBalances[a.id]?.address] ?? 0
+    const bPrice = tokenPrices[b.chainId]?.[vaultBalances[b.id]?.address] ?? 0
 
     const aValue = aAmount * aPrice
     const bValue = bAmount * bPrice

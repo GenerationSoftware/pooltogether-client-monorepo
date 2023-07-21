@@ -60,7 +60,7 @@ const TXFeeEstimate = (props: TXFeeEstimateProps) => {
     gasAmount
   )
 
-  const txCost = gasEstimates?.totalGasCurrencies?.['eth']
+  const txCost = gasEstimates?.totalGasEth
 
   return (
     <span className='flex justify-between items-center gap-6'>

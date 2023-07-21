@@ -12,7 +12,7 @@ import { Intl } from '@shared/types'
 import { Button, Spinner } from '@shared/ui'
 import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
-import { parseUnits } from 'viem'
+import { Address, parseUnits } from 'viem'
 import { useAccount, useNetwork } from 'wagmi'
 import { DepositModalView } from '.'
 import { depositFormTokenAmountAtom } from '../../Form/DepositForm'
@@ -75,26 +75,22 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
     refetch: refetchTokenAllowance
   } = useTokenAllowance(
     vault.chainId,
-    userAddress as `0x${string}`,
+    userAddress as Address,
     vault.address,
-    tokenData?.address as `0x${string}`
+    tokenData?.address as Address
   )
 
   const {
     data: userBalance,
     isFetched: isFetchedUserBalance,
     refetch: refetchTokenBalance
-  } = useTokenBalance(
-    vault.chainId,
-    userAddress as `0x${string}`,
-    tokenData?.address as `0x${string}`
-  )
+  } = useTokenBalance(vault.chainId, userAddress as Address, tokenData?.address as Address)
 
   const { refetch: refetchVaultBalance } = useVaultBalance(vault)
 
   const { refetch: refetchUserVaultTokenBalance } = useUserVaultTokenBalance(
     vault,
-    userAddress as `0x${string}`
+    userAddress as Address
   )
 
   const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)

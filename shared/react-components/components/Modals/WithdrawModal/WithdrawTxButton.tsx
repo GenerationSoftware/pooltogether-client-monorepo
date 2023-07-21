@@ -10,7 +10,7 @@ import { Intl } from '@shared/types'
 import { Button } from '@shared/ui'
 import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
-import { parseUnits } from 'viem'
+import { Address, parseUnits } from 'viem'
 import { useAccount, useNetwork } from 'wagmi'
 import { WithdrawModalView } from '.'
 import { isValidFormInput } from '../../Form/TxFormInput'
@@ -64,12 +64,12 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
     data: vaultShareBalance,
     isFetched: isFetchedVaultShareBalance,
     refetch: refetchVaultShareBalance
-  } = useUserVaultShareBalance(vault, userAddress as `0x${string}`)
+  } = useUserVaultShareBalance(vault, userAddress as Address)
 
   const { refetch: refetchTokenBalance } = useTokenBalance(
     vault.chainId,
-    userAddress as `0x${string}`,
-    tokenData?.address as `0x${string}`
+    userAddress as Address,
+    tokenData?.address as Address
   )
 
   const { refetch: refetchVaultBalance } = useVaultBalance(vault)

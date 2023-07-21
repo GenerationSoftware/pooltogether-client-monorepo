@@ -27,6 +27,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ReactNode, useEffect, useState } from 'react'
+import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { DEFAULT_VAULT_LISTS } from '@constants/config'
 import { useSelectedPrizePool } from '@hooks/useSelectedPrizePool'
@@ -69,10 +70,7 @@ export const Layout = (props: LayoutProps) => {
 
   const { vaults } = useSelectedVaults()
   const { address: userAddress } = useAccount()
-  const { refetch: refetchUserBalances } = useAllUserVaultBalances(
-    vaults,
-    userAddress as `0x${string}`
-  )
+  const { refetch: refetchUserBalances } = useAllUserVaultBalances(vaults, userAddress as Address)
 
   const { selectedPrizePool } = useSelectedPrizePool()
   const { data: draws } = usePrizeDrawWinners(selectedPrizePool as PrizePool)

@@ -1,9 +1,10 @@
 import { formatBigIntForDisplay, TokenWithAmount } from '@pooltogether/hyperstructure-client-js'
 import { useToken } from '@pooltogether/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
+import { Address } from 'viem'
 
 export interface TokenAmountProps extends Omit<Intl.NumberFormatOptions, 'style' | 'currency'> {
-  token: { chainId: number; address: `0x${string}` } & Partial<TokenWithAmount>
+  token: { chainId: number; address: Address } & Partial<TokenWithAmount>
   locale?: string
   round?: boolean
   hideZeroes?: boolean

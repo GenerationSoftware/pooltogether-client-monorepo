@@ -1,5 +1,5 @@
 {
-  "name": "@pooltogether/protocol-stats-worker",
+  "name": "protocol-stats-worker",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
@@ -11,6 +11,7 @@
   ],
   "scripts": {
     "build": "tsup",
+    "prepare": "pnpm build",
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "clean": "rm -rf dist"

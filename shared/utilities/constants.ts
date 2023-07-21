@@ -1,5 +1,6 @@
 import { VaultList } from '@shared/types'
 import { JSONSchemaType } from 'ajv'
+import { Address } from 'viem'
 
 /**
  * Network IDs
@@ -54,12 +55,17 @@ export const MINUTES_PER_DAY = 1_440
 export const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3'
 
 /**
+ * Token Prices API URL
+ */
+export const TOKEN_PRICES_API_URL = 'https://token-prices.g9software.workers.dev'
+
+/**
  * Prize Pools
  */
 export const PRIZE_POOLS: {
   chainId: NETWORK
-  address: `0x${string}`
-  options: { prizeTokenAddress: `0x${string}`; drawPeriodInSeconds: number; tierShares: number }
+  address: Address
+  options: { prizeTokenAddress: Address; drawPeriodInSeconds: number; tierShares: number }
 }[] = [
   {
     chainId: NETWORK.sepolia,
@@ -176,22 +182,6 @@ export const STABLECOIN_ADDRESSES: Record<NETWORK, Lowercase<string>[]> = {
 }
 
 /**
- * Hardcoded testnet token prices
- *
- * NOTE: All addresses are lowercase
- */
-export const TESTNET_TOKEN_PRICES = Object.freeze({
-  [NETWORK.sepolia]: {
-    '0xb20ff9fe4065cc1494dfa3a273a527a05871074f': { eth: 0.00054086 }, // DAI
-    '0x59d6b2e784f45568a76b9627de97e06fc237da83': { eth: 0.00054048 }, // USDC
-    '0x73b3f9fecf92b4f0eb6a20c977cbb30964858fd7': { eth: 0.00054055 }, // GUSD
-    '0xf78de71cf358a92aee3370a7a3b743bf63c257d4': { eth: 14.381406 }, // WBTC
-    '0x62739a657d3bb724694b46b35795532ec9b42b47': { eth: 0.99951637 }, // WETH
-    '0x09f06f4bc026fb75e0064747edd49d371d20d434': { eth: 0.00036417 } // POOL
-  }
-})
-
-/**
  * Vault list schema
  */
 export const VAULT_LIST_SCHEMA: JSONSchemaType<VaultList> = {
@@ -251,3 +241,8 @@ export const VAULT_LIST_SCHEMA: JSONSchemaType<VaultList> = {
  * Max uint256 value
  */
 export const MAX_UINT_256 = 2n ** 256n - 1n
+
+/**
+ * Null Address
+ */
+export const NULL_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'

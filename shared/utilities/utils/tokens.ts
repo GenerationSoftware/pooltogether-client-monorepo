@@ -1,5 +1,5 @@
 import { TokenWithAmount, TokenWithSupply } from '@shared/types'
-import { PublicClient } from 'viem'
+import { Address, PublicClient } from 'viem'
 import { erc20 as erc20Abi } from '../abis/erc20'
 import { getMulticallResults } from './multicall'
 
@@ -11,9 +11,9 @@ import { getMulticallResults } from './multicall'
  */
 export const getTokenInfo = async (
   publicClient: PublicClient,
-  tokenAddresses: `0x${string}`[]
-): Promise<{ [tokenAddress: `0x${string}`]: TokenWithSupply }> => {
-  const formattedResult: { [tokenAddress: `0x${string}`]: TokenWithSupply } = {}
+  tokenAddresses: Address[]
+): Promise<{ [tokenAddress: Address]: TokenWithSupply }> => {
+  const formattedResult: { [tokenAddress: Address]: TokenWithSupply } = {}
 
   if (tokenAddresses?.length > 0) {
     const multicallResults = await getMulticallResults(publicClient, tokenAddresses, erc20Abi, [
@@ -52,11 +52,11 @@ export const getTokenInfo = async (
  */
 export const getTokenAllowances = async (
   publicClient: PublicClient,
-  address: `0x${string}`,
-  spenderAddress: `0x${string}`,
-  tokenAddresses: `0x${string}`[]
-): Promise<{ [tokenAddress: `0x${string}`]: bigint }> => {
-  const formattedResult: { [tokenAddress: `0x${string}`]: bigint } = {}
+  address: Address,
+  spenderAddress: Address,
+  tokenAddresses: Address[]
+): Promise<{ [tokenAddress: Address]: bigint }> => {
+  const formattedResult: { [tokenAddress: Address]: bigint } = {}
 
   if (tokenAddresses?.length > 0) {
     const multicallResults = await getMulticallResults(publicClient, tokenAddresses, erc20Abi, [
@@ -80,10 +80,10 @@ export const getTokenAllowances = async (
  */
 export const getTokenBalances = async (
   publicClient: PublicClient,
-  address: `0x${string}`,
-  tokenAddresses: `0x${string}`[]
-): Promise<{ [tokenAddress: `0x${string}`]: TokenWithAmount }> => {
-  const formattedResult: { [tokenAddress: `0x${string}`]: TokenWithAmount } = {}
+  address: Address,
+  tokenAddresses: Address[]
+): Promise<{ [tokenAddress: Address]: TokenWithAmount }> => {
+  const formattedResult: { [tokenAddress: Address]: TokenWithAmount } = {}
 
   if (tokenAddresses?.length > 0) {
     const multicallResults = await getMulticallResults(publicClient, tokenAddresses, erc20Abi, [

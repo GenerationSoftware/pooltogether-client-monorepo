@@ -4,6 +4,7 @@ import {
   useSortedVaults
 } from '@pooltogether/hyperstructure-react-hooks'
 import classNames from 'classnames'
+import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { AccountVaultCard } from './AccountVaultCard'
 
@@ -18,12 +19,9 @@ export const AccountVaultCards = (props: AccountVaultsCardsProps) => {
 
   const { vaults } = useSelectedVaults()
 
-  const { data: vaultBalances, isFetched: isFetchedVaultBalances } = useAllUserVaultBalances(
-    vaults,
-    userAddress as `0x${string}`
-  )
+  const { data: vaultBalances } = useAllUserVaultBalances(vaults, userAddress as Address)
 
-  const { sortedVaults, isFetched } = useSortedVaults(Object.values(vaults.vaults), {
+  const { sortedVaults } = useSortedVaults(Object.values(vaults.vaults), {
     defaultSortId: 'userBalance'
   })
 

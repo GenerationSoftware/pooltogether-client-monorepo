@@ -1,5 +1,6 @@
 import { getVaultId, VaultInfo, VaultList, Vaults } from '@pooltogether/hyperstructure-client-js'
 import { atom, useAtom } from 'jotai'
+import { Address } from 'viem'
 import {
   useAllVaultShareData,
   useAllVaultTokenAddresses,
@@ -98,7 +99,7 @@ export const useSelectedVault = () => {
     !!selectedVaultId
       ? {
           chainId: parseInt(selectedVaultId.split('-')[1]),
-          address: selectedVaultId.split('-')[0] as `0x${string}`
+          address: selectedVaultId.split('-')[0] as Address
         }
       : { chainId: 1, address: '0x00' }
   )
