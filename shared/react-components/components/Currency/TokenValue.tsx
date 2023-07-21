@@ -22,10 +22,11 @@ export const TokenValue = (props: TokenValueProps) => {
     token.address
   ])
 
-  const tokenPrice =
-    !!tokenData && !!tokenPrices
+  const tokenPrice = useMemo(() => {
+    return !!tokenData && !!tokenPrices
       ? tokenPrices[tokenData.address.toLowerCase() as Address]
       : undefined
+  }, [tokenData, tokenPrices])
 
   const tokenValue = useMemo(() => {
     if (!!tokenPrice) {
@@ -38,7 +39,7 @@ export const TokenValue = (props: TokenValueProps) => {
     }
 
     return undefined
-  }, [token, tokenData])
+  }, [tokenPrice, token, tokenData])
 
   if (isFetchingTokenData || isFetchingTokenPrices) {
     return <Spinner />

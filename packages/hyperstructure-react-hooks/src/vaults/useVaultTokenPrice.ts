@@ -1,4 +1,5 @@
 import { TokenWithPrice, Vault } from '@pooltogether/hyperstructure-client-js'
+import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useTokenPrices, useVaultTokenData } from '..'
 
@@ -16,10 +17,11 @@ export const useVaultTokenPrice = (vault: Vault) => {
     refetch
   } = useTokenPrices(vault.chainId, !!tokenData ? [tokenData.address] : [])
 
-  const tokenPrice =
-    !!tokenData && !!tokenPrices
+  const tokenPrice = useMemo(() => {
+    return !!tokenData && !!tokenPrices
       ? tokenPrices[tokenData.address.toLowerCase() as Address]
       : undefined
+  }, [tokenData, tokenPrices])
 
   const isFetched = isFetchedTokenData && isFetchedTokenPrices
 

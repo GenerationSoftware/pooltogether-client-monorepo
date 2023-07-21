@@ -8,14 +8,16 @@ import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 
 interface AccountVaultOddsProps {
   vault: Vault
+  address?: Address
 }
 
 export const AccountVaultOdds = (props: AccountVaultOddsProps) => {
-  const { vault } = props
+  const { vault, address } = props
 
   const t = useTranslations('Account')
 
-  const { address: userAddress } = useAccount()
+  const { address: _userAddress } = useAccount()
+  const userAddress = address ?? _userAddress
 
   const { data: shareBalance, isFetched: isFetchedShareBalance } = useUserVaultShareBalance(
     vault,

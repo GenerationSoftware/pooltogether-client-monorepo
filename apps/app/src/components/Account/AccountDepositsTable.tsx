@@ -8,23 +8,27 @@ import { Table, TableProps } from '@shared/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/router'
+import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { AccountVaultBalance } from './AccountVaultBalance'
 import { AccountVaultButtons } from './AccountVaultButtons'
 import { AccountVaultOdds } from './AccountVaultOdds'
 
-interface AccountDepositsTableProps extends Omit<TableProps, 'data' | 'keyPrefix'> {}
+interface AccountDepositsTableProps extends Omit<TableProps, 'data' | 'keyPrefix'> {
+  address?: Address
+}
 
 export const AccountDepositsTable = (props: AccountDepositsTableProps) => {
-  const { className, ...rest } = props
+  const { address, className, ...rest } = props
 
   const router = useRouter()
 
   const t_vaults = useTranslations('Vaults')
   const t_vault = useTranslations('Vault')
 
-  const { address: userAddress } = useAccount()
+  const { address: _userAddress } = useAccount()
+  const userAddress = address ?? _userAddress
 
   const { vaults } = useSelectedVaults()
 
@@ -34,49 +38,66 @@ export const AccountDepositsTable = (props: AccountDepositsTableProps) => {
     defaultSortId: 'userBalance'
   })
 
-  const tableData: TableProps['data'] = {
-    headers: {
+  const isExternalUser = useMemo(() => {
+    return !!address && address.toLowerCase() !== _userAddress?.toLowerCase()
+  }, [address, _userAddress])
+
+  const tableHeaders = useMemo(() => {
+    const headers: TableProps['data']['headers'] = {
       token: { content: t_vaults('headers.token') },
-      odds: { content: t_vault('headers.myWinChance'), position: 'center' },
-      balance: { content: t_vaults('headers.myBalance'), position: 'center' },
-      manage: { content: <ManageHeader />, position: 'right' }
-    },
-    rows: !!vaultBalances
-      ? sortedVaults
-          .map((vault) => {
-            const shareBalance = vaultBalances[vault.id]?.amount ?? 0n
-            if (!!vaultBalances[vault.id] && shareBalance > 0n && vault.decimals !== undefined) {
-              const cells: TableProps['data']['rows'][0]['cells'] = {
-                token: {
-                  content: (
-                    <VaultBadge
-                      vault={vault}
-                      onClick={() => router.push(`/vault/${vault.chainId}/${vault.address}`)}
-                    />
-                  )
-                },
-                odds: {
-                  content: <AccountVaultOdds vault={vault} />,
-                  position: 'center'
-                },
-                balance: {
-                  content: <AccountVaultBalance vault={vault} />,
-                  position: 'center'
-                },
-                manage: { content: <AccountVaultButtons vault={vault} />, position: 'right' }
+      odds: {
+        content: isExternalUser ? t_vault('headers.winChance') : t_vault('headers.myWinChance'),
+        position: 'center'
+      },
+      balance: {
+        content: isExternalUser ? t_vault('headers.balance') : t_vaults('headers.myBalance'),
+        position: 'center'
+      }
+    }
+    if (!isExternalUser) {
+      headers.manage = { content: <ManageHeader />, position: 'right' }
+    }
+    return headers
+  }, [isExternalUser])
+
+  const tableRows: TableProps['data']['rows'] = !!vaultBalances
+    ? sortedVaults
+        .map((vault) => {
+          const shareBalance = vaultBalances[vault.id]?.amount ?? 0n
+          if (!!vaultBalances[vault.id] && shareBalance > 0n && vault.decimals !== undefined) {
+            const cells: TableProps['data']['rows'][0]['cells'] = {
+              token: {
+                content: (
+                  <VaultBadge
+                    vault={vault}
+                    onClick={() => router.push(`/vault/${vault.chainId}/${vault.address}`)}
+                  />
+                )
+              },
+              odds: {
+                content: <AccountVaultOdds vault={vault} address={userAddress} />,
+                position: 'center'
+              },
+              balance: {
+                content: <AccountVaultBalance vault={vault} address={userAddress} />,
+                position: 'center'
+              },
+              manage: {
+                content: <AccountVaultButtons vault={vault} />,
+                position: 'right'
               }
-              return { id: vault.id, cells }
-            } else {
-              return { id: vault.id, cells: {} }
             }
-          })
-          .filter((row) => Object.keys(row.cells).length > 0)
-      : []
-  }
+            return { id: vault.id, cells }
+          } else {
+            return { id: vault.id, cells: {} }
+          }
+        })
+        .filter((row) => Object.keys(row.cells).length > 0)
+    : []
 
   return (
     <Table
-      data={tableData}
+      data={{ headers: tableHeaders, rows: tableRows }}
       keyPrefix='accountVaultsTable'
       className={classNames('w-full', className)}
       {...rest}

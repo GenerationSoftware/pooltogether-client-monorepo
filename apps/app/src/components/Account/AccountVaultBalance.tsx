@@ -7,13 +7,15 @@ import { useAccount } from 'wagmi'
 
 interface AccountVaultBalanceProps {
   vault: Vault
+  address?: Address
   className?: string
 }
 
 export const AccountVaultBalance = (props: AccountVaultBalanceProps) => {
-  const { vault, className } = props
+  const { vault, address, className } = props
 
-  const { address: userAddress } = useAccount()
+  const { address: _userAddress } = useAccount()
+  const userAddress = address ?? _userAddress
 
   const { data: tokenBalance, isFetched: isFetchedTokenBalance } = useUserVaultTokenBalance(
     vault,

@@ -9,13 +9,15 @@ import { useAccount } from 'wagmi'
 import { AccountVaultCard } from './AccountVaultCard'
 
 interface AccountVaultsCardsProps {
+  address?: Address
   className?: string
 }
 
 export const AccountVaultCards = (props: AccountVaultsCardsProps) => {
-  const { className } = props
+  const { address, className } = props
 
-  const { address: userAddress } = useAccount()
+  const { address: _userAddress } = useAccount()
+  const userAddress = address ?? _userAddress
 
   const { vaults } = useSelectedVaults()
 
@@ -31,7 +33,7 @@ export const AccountVaultCards = (props: AccountVaultsCardsProps) => {
         sortedVaults.map((vault) => {
           const shareBalance = vaultBalances[vault.id]?.amount ?? 0n
           if (shareBalance > 0n && vault.decimals !== undefined) {
-            return <AccountVaultCard key={vault.id} vault={vault} />
+            return <AccountVaultCard key={vault.id} vault={vault} address={userAddress} />
           }
         })}
     </div>

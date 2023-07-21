@@ -1,6 +1,7 @@
 import { TokenWithAmount, Vault } from '@pooltogether/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
+import { Address } from 'viem'
 import { QUERY_KEYS } from '../constants'
 
 /**
@@ -12,7 +13,7 @@ import { QUERY_KEYS } from '../constants'
  */
 export const useUserVaultShareBalance = (
   vault: Vault,
-  userAddress: string,
+  userAddress: Address,
   refetchInterval?: number
 ): UseQueryResult<TokenWithAmount, unknown> => {
   const queryKey = [QUERY_KEYS.userVaultBalances, userAddress, vault?.id]

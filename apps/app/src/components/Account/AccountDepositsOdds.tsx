@@ -7,15 +7,17 @@ import { useAccount } from 'wagmi'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 
 interface AccountDepositsOddsProps {
+  address?: Address
   className?: string
 }
 
 export const AccountDepositsOdds = (props: AccountDepositsOddsProps) => {
-  const { className } = props
+  const { address, className } = props
 
   const t = useTranslations('Account')
 
-  const { address: userAddress } = useAccount()
+  const { address: _userAddress } = useAccount()
+  const userAddress = address ?? _userAddress
 
   const { vaults } = useSelectedVaults()
 

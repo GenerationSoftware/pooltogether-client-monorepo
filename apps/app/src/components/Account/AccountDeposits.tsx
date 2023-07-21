@@ -17,13 +17,15 @@ import { AccountDepositsTable } from './AccountDepositsTable'
 import { AccountVaultCards } from './AccountVaultCards'
 
 interface AccountDepositsProps {
+  address?: Address
   className?: string
 }
 
 export const AccountDeposits = (props: AccountDepositsProps) => {
-  const { className } = props
+  const { address, className } = props
 
-  const { address: userAddress } = useAccount()
+  const { address: _userAddress } = useAccount()
+  const userAddress = address ?? _userAddress
 
   const { vaults } = useSelectedVaults()
 
@@ -50,11 +52,17 @@ export const AccountDeposits = (props: AccountDepositsProps) => {
     <div
       className={classNames('w-full max-w-xl flex flex-col items-center lg:max-w-none', className)}
     >
-      <AccountDepositsHeader />
+      <AccountDepositsHeader address={userAddress} />
       {isEmpty && <NoDepositsCard className='mt-4' />}
-      {!isEmpty && <AccountDepositsTable rounded={true} className='hidden mt-8 lg:block' />}
-      {!isEmpty && <AccountVaultCards className='mt-2 md:mt-4 lg:hidden' />}
-      {!isEmpty && <AccountDepositsOdds className='mt-4' />}
+      {!isEmpty && (
+        <AccountDepositsTable
+          address={userAddress}
+          rounded={true}
+          className='hidden mt-8 lg:block'
+        />
+      )}
+      {!isEmpty && <AccountVaultCards address={userAddress} className='mt-2 md:mt-4 lg:hidden' />}
+      {!isEmpty && <AccountDepositsOdds address={userAddress} className='mt-4' />}
     </div>
   )
 }

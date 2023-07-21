@@ -1,4 +1,5 @@
 import { getAssetsFromShares, TokenWithAmount, Vault } from '@pooltogether/hyperstructure-client-js'
+import { Address } from 'viem'
 import { useUserVaultShareBalance, useVaultExchangeRate, useVaultTokenData } from '..'
 
 /**
@@ -12,7 +13,7 @@ import { useUserVaultShareBalance, useVaultExchangeRate, useVaultTokenData } fro
  */
 export const useUserVaultTokenBalance = (
   vault: Vault,
-  userAddress: string,
+  userAddress: Address,
   refetchInterval?: number
 ) => {
   const {
