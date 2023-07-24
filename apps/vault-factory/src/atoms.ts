@@ -1,6 +1,6 @@
 import { NETWORK } from '@shared/utilities'
 import { atom } from 'jotai'
-import { Address, zeroAddress } from 'viem'
+import { Address } from 'viem'
 
 /**
  * Vault Chain ID
@@ -25,12 +25,12 @@ export const vaultYieldSourceAddressAtom = atom<Address | undefined>(undefined)
 /**
  * Vault Fee Percentage
  */
-export const vaultFeePercentageAtom = atom<number>(0)
+export const vaultFeePercentageAtom = atom<number | undefined>(undefined)
 
 /**
- * Vaul Fee Recipient
+ * Vault Fee Recipient
  */
-export const vaultFeeRecipientAddressAtom = atom<Address>(zeroAddress)
+export const vaultFeeRecipientAddressAtom = atom<Address | undefined>(undefined)
 
 /**
  * Vault Owner Address

@@ -6,11 +6,12 @@ import { ReactNode } from 'react'
 
 interface LayoutProps {
   children: ReactNode
+  isSidebarActive?: boolean
   className?: string
 }
 
 export const Layout = (props: LayoutProps) => {
-  const { children, className } = props
+  const { children, isSidebarActive, className } = props
 
   return (
     <div className='flex flex-col min-h-screen overflow-x-hidden'>
@@ -20,9 +21,11 @@ export const Layout = (props: LayoutProps) => {
 
       <SimpleNavbar />
 
+      {isSidebarActive && <div className='fixed w-[28rem] h-screen bg-pt-transparent' />}
+
       <main
         className={classNames(
-          'w-full min-h-[calc(100vh-16rem)] max-w-[1440px] relative flex flex-col items-center mx-auto lg:px-4',
+          'w-full min-h-[calc(100vh-16rem)] relative flex flex-col items-center mx-auto lg:px-4',
           className
         )}
       >
@@ -42,14 +45,16 @@ const SimpleNavbar = (props: { className?: string }) => {
         props.className
       )}
     >
-      <Image
-        src='/cabanaLogo.svg'
-        alt='Cabana Logo'
-        width={260}
-        height={99}
-        priority={true}
-        className='w-28 h-auto'
-      />
+      <div className='w-[25rem] pr-12'>
+        <Image
+          src='/cabanaLogo.svg'
+          alt='Cabana Logo'
+          width={260}
+          height={99}
+          priority={true}
+          className='w-64 h-auto mx-auto'
+        />
+      </div>
       <ConnectButton
         showBalance={false}
         chainStatus={{ smallScreen: 'icon', largeScreen: 'full' }}
@@ -59,6 +64,7 @@ const SimpleNavbar = (props: { className?: string }) => {
   )
 }
 
+// TODO: if sidebar is active, show powered by on the left and center the rest to the right
 const SimpleFooter = (props: { className?: string }) => {
   return (
     <footer
