@@ -1,0 +1,10 @@
+export type FormKey =
+  | 'vaultChainId'
+  | 'vaultToken'
+  | 'vaultCustomYieldSource'
+  | 'vaultOwner'
+  | 'vaultFee'
+  | 'vaultFeeRecipient'
+  | 'vaultName'
+  | 'vaultSymbol'
+  | 'vaultClaimer'
