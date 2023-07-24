@@ -6,7 +6,7 @@
 
 <br />
 
-# 💻 &nbsp; PoolTogether App
+# 💻 &nbsp; Cabana App
 
 ![next](https://img.shields.io/static/v1?label&logo=nextdotjs&logoColor=white&message=Next.js&color=black)
 ![ts](https://img.shields.io/badge/typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white)

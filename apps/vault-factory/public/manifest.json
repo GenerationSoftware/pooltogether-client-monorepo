@@ -1,6 +1,6 @@
 {
-  "short_name": "Vault Factory",
-  "name": "PoolTogether Vault Factory App",
+  "short_name": "Cabana Factory",
+  "name": "Cabana Vault Factory App",
   "description": "Create and manage your own PoolTogether 4626 vaults.",
   "start_url": "/",
   "scope": "/",

@@ -1,6 +1,6 @@
 {
-  "short_name": "VaultList Creator",
-  "name": "PoolTogether VaultList Creator App",
+  "short_name": "Cabana Lists",
+  "name": "Cabana Vault List Creator App",
   "description": "Create your very own PoolTogether vaultlists.",
   "start_url": "/",
   "scope": "/",

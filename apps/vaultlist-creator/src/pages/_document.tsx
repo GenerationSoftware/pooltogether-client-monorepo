@@ -16,7 +16,7 @@ class MyDocument extends Document {
   }
 
   render() {
-    const title = 'PoolTogether Vault List Creator'
+    const title = 'Cabana Lists'
     const description = 'Create your very own PoolTogether vaultlists.'
     const keywords = 'prize savings win save protocol blockchain vaultlist'
 

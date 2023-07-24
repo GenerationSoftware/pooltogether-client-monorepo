@@ -19,7 +19,7 @@ export default function MyApp(props: AppProps) {
         theme={ptRainbowTheme()}
         showRecentTransactions={true}
         coolMode={true}
-        appInfo={{ appName: 'PoolTogether' }}
+        appInfo={{ appName: 'Cabana' }}
       >
         <AppContainer {...props} />
       </RainbowKitProvider>

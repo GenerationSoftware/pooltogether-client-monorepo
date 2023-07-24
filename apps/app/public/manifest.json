@@ -1,6 +1,6 @@
 {
-  "short_name": "PT Hyperstructure",
-  "name": "PoolTogether Hyperstructure",
+  "short_name": "Cabana",
+  "name": "Cabana App",
   "description": "Browse, deposit into and withdraw from any number of PoolTogether vaults.",
   "start_url": "/",
   "scope": "/",

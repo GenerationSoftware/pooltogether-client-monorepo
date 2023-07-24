@@ -16,7 +16,7 @@ export const Layout = (props: LayoutProps) => {
   return (
     <div className='flex flex-col min-h-screen overflow-x-hidden'>
       <Head>
-        <title>Vault List Creator</title>
+        <title>Cabana Lists</title>
       </Head>
 
       <SimpleNavbar />

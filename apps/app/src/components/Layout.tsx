@@ -170,7 +170,7 @@ export const Layout = (props: LayoutProps) => {
   return (
     <div className='flex flex-col min-h-screen'>
       <Head>
-        <title>{`PT Hyperstructure${!!pageTitle ? ` | ${pageTitle}` : ''}`}</title>
+        <title>{`Cabana${!!pageTitle ? ` | ${pageTitle}` : ''}`}</title>
       </Head>
 
       <Navbar

@@ -16,7 +16,7 @@ class MyDocument extends Document {
   }
 
   render() {
-    const title = 'Cabana Vault Factory'
+    const title = 'Cabana Factory'
     const description = 'Create and manage your PoolTogether Hyperstructure ERC4626 vaults.'
     const keywords = 'prize savings win save protocol blockchain vault 4626 ethereum tool factory'
 

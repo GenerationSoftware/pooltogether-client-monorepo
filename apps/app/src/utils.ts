@@ -44,7 +44,7 @@ export const createCustomWagmiConfig = (
  * @returns
  */
 const getWalletConnectors = (chains: Chain[]): (() => Connector[]) => {
-  const appName = 'PoolTogether'
+  const appName = 'Cabana'
   const projectId = '358b98f0af3cd936fe09dc21064de51d'
 
   const walletGroups: { groupName: string; wallets: Wallet[] }[] = []

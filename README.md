@@ -8,7 +8,7 @@
 
 # 💻 &nbsp; PoolTogether Client Monorepo
 
-This monorepo includes many of PoolTogether's apps and packages in order to facilitate code sharing and maintainabiliy.
+This monorepo includes many of PoolTogether's apps and packages in order to facilitate code sharing and maintainability.
 
 ## 💾 &nbsp; Installation
 

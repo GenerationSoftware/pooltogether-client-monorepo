@@ -16,7 +16,7 @@ class MyDocument extends Document {
   }
 
   render() {
-    const title = 'PoolTogether Hyperstructure'
+    const title = 'Cabana'
     const description = 'Browse, deposit into and withdraw from any number of PoolTogether vaults.'
     const keywords = 'prize savings win save protocol blockchain vault vaultlist 4626 ethereum'
 
