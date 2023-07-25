@@ -54,7 +54,7 @@ export const SimpleInput = (props: SimpleInputProps) => {
         disabled={disabled}
         className={classNames(
           'px-3 py-2 text-sm leading-tight bg-pt-purple-50 text-gray-700 rounded-lg border border-gray-300 outline outline-1',
-          'lg:px-4 lg:py-3',
+          'md:px-4 md:py-3',
           {
             'brightness-75': disabled,
             [`outline-red-600 ${errorClassName}`]: !!error,

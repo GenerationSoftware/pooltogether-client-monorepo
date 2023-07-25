@@ -1,9 +1,9 @@
 import classNames from 'classnames'
 import { ReactNode, useMemo } from 'react'
 import { useSteps } from '@hooks/useSteps'
-import { ChainAndTokenForm } from './forms/ChainAndTokenForm'
+import { NetworkAndTokenForm } from './forms/NetworkAndTokenForm'
 
-const allVaultStepContent: ReactNode[] = [<ChainAndTokenForm />]
+const allVaultStepContent: ReactNode[] = [<NetworkAndTokenForm />]
 
 interface CreateVaultStepContentProps {
   className?: string
@@ -16,5 +16,7 @@ export const CreateVaultStepContent = (props: CreateVaultStepContentProps) => {
 
   const content = useMemo(() => allVaultStepContent[step] ?? <></>, [step])
 
-  return <div className={classNames('', className)}>{content}</div>
+  return (
+    <div className={classNames('flex grow items-center justify-center', className)}>{content}</div>
+  )
 }

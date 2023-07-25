@@ -26,7 +26,7 @@ export const Layout = (props: LayoutProps) => {
 
       <main
         className={classNames(
-          'w-full min-h-[calc(100vh-16rem)] relative flex flex-col items-center mx-auto lg:px-4',
+          'w-full min-h-[calc(100vh-16rem)] relative flex flex-col items-center mx-auto md:px-4',
           className
         )}
       >
@@ -48,7 +48,7 @@ const SimpleNavbar = (props: SimpleNavbarProps) => {
   return (
     <div
       className={classNames(
-        'flex flex-row gap-6 items-center justify-between pt-6 pb-8 px-12 z-30 lg:h-36 lg:pt-0 lg:pb-0',
+        'flex flex-row gap-6 items-center justify-between pt-6 pb-8 px-12 z-30 md:h-36 md:pt-0 md:pb-0',
         className
       )}
     >
@@ -80,7 +80,7 @@ const SimpleFooter = (props: SimpleFooterProps) => {
   const { isSidebarActive, className } = props
 
   return (
-    <footer className={classNames('h-28 flex items-center mt-auto px-2 z-20 lg:px-0', className)}>
+    <footer className={classNames('h-28 flex items-center mt-auto px-2 z-20 md:px-0', className)}>
       {isSidebarActive && (
         <div className='w-[28rem]'>
           <PoweredByPT className='mx-auto' />

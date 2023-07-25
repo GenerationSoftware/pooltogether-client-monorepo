@@ -1,3 +1,4 @@
+import { Card } from '@shared/ui'
 import { getNiceNetworkNameByChainId, NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
 import { useFormContext, useWatch } from 'react-hook-form'
@@ -19,7 +20,7 @@ export const NetworkInput = (props: NetworkInputProps) => {
   const id = `chain-${chainId}`
 
   return (
-    <div className={className}>
+    <div className={classNames('max-w-[25%] max-h-[20vh]', className)}>
       <input
         id={id}
         {...register('vaultChainId', {
@@ -29,7 +30,7 @@ export const NetworkInput = (props: NetworkInputProps) => {
         value={chainId}
         className='hidden'
       />
-      <label htmlFor={id}>
+      <label htmlFor={id} className='relative '>
         <NetworkCard chainId={chainId} />
       </label>
     </div>
@@ -48,6 +49,26 @@ const NetworkCard = (props: NetworkCardProps) => {
   const isSelected = !!vaultChainId && chainId === parseInt(vaultChainId)
 
   return (
-    <div className={classNames('', { '': isSelected })}>{getNiceNetworkNameByChainId(chainId)}</div>
+    <Card
+      wrapperClassName={classNames(
+        'w-full h-full border border-transparent cursor-pointer overflow-hidden hover:bg-pt-purple-50/20',
+        {
+          'border-pt-teal-dark': isSelected
+        }
+      )}
+      className='gap-3'
+    >
+      <span className='text-lg font-bold text-blue-500'>
+        {getNiceNetworkNameByChainId(chainId)}
+      </span>
+      {/* TODO: add actual prize pool stat */}
+      <span className='text-pt-purple-100'>some useful prize pool stat here</span>
+      {/* TODO: add network description */}
+      <span className='line-clamp-3'>
+        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Distinctio, perspiciatis qui
+        minima porro possimus ea perferendis, optio quidem praesentium voluptatum dolorem cum
+        asperiores incidunt nesciunt? Ad minus numquam asperiores ratione!
+      </span>
+    </Card>
   )
 }

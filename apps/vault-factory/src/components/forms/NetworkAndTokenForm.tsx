@@ -9,19 +9,19 @@ import { useSteps } from '@hooks/useSteps'
 import { NetworkInput } from './NetworkInput'
 import { SimpleInput } from './SimpleInput'
 
-interface ChainAndTokenFormValues {
+interface NetworkAndTokenFormValues {
   vaultChainId: string
   vaultToken: Address
 }
 
-interface ChainAndTokenFormProps {
+interface NetworkAndTokenFormProps {
   className?: string
 }
 
-export const ChainAndTokenForm = (props: ChainAndTokenFormProps) => {
+export const NetworkAndTokenForm = (props: NetworkAndTokenFormProps) => {
   const { className } = props
 
-  const formMethods = useForm<ChainAndTokenFormValues>({ mode: 'onSubmit' })
+  const formMethods = useForm<NetworkAndTokenFormValues>({ mode: 'onSubmit' })
 
   const setVaultChainId = useSetAtom(vaultChainIdAtom)
   const setVaultTokenAddress = useSetAtom(vaultTokenAddressAtom)
@@ -30,7 +30,7 @@ export const ChainAndTokenForm = (props: ChainAndTokenFormProps) => {
 
   const { nextStep } = useSteps()
 
-  const onSubmit = (data: ChainAndTokenFormValues) => {
+  const onSubmit = (data: NetworkAndTokenFormValues) => {
     setVaultChainId(parseInt(data.vaultChainId))
     setVaultTokenAddress(data.vaultToken)
     nextStep()
@@ -38,10 +38,13 @@ export const ChainAndTokenForm = (props: ChainAndTokenFormProps) => {
 
   return (
     <FormProvider {...formMethods}>
-      <form onSubmit={formMethods.handleSubmit(onSubmit)} className={classNames('', className)}>
-        <div>
-          <span>Select Network</span>
-          <div>
+      <form
+        onSubmit={formMethods.handleSubmit(onSubmit)}
+        className={classNames('flex flex-col gap-12 items-center', className)}
+      >
+        <div className='flex flex-col gap-4 items-center'>
+          <span className='text-sm font-medium text-pt-purple-100'>Select Network</span>
+          <div className='flex flex-wrap justify-center gap-x-6 gap-y-4'>
             {networks.map((chainId) => (
               <NetworkInput key={`chain-${chainId}`} chainId={chainId} />
             ))}
@@ -54,8 +57,9 @@ export const ChainAndTokenForm = (props: ChainAndTokenFormProps) => {
           }}
           placeholder='0x0000...'
           label='Enter Deposit Token Address'
-          className='max-w-md'
+          className='w-full max-w-md'
         />
+        {/* TODO: add arrow right icon to button */}
         <PurpleButton type='submit'>Next</PurpleButton>
       </form>
     </FormProvider>
