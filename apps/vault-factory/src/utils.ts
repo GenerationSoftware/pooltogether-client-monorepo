@@ -1,5 +1,5 @@
 import { connectorsForWallets, Wallet } from '@rainbow-me/rainbowkit'
-import { NETWORK, parseQueryParam } from '@shared/utilities'
+import { formatNumberForDisplay, NETWORK, parseQueryParam } from '@shared/utilities'
 import { FallbackTransport, PublicClient } from 'viem'
 import {
   Chain,
@@ -95,4 +95,13 @@ const getWalletConnectors = (chains: Chain[]): (() => Connector[]) => {
  */
 export const isValidChars = (str: string, options?: { allowSpaces?: boolean }) => {
   return !!str.match(options?.allowSpaces ? /^[a-z0-9._ '\-]+$/i : /^[a-z0-9._'\-]+$/i)
+}
+
+/**
+ * Returns a formatted string with a vault's fee percentage setting
+ * @param feePercentage the 9-decimal value of a vault's fee percentage
+ * @returns
+ */
+export const getFormattedFeePercentage = (feePercentage: number) => {
+  return `${formatNumberForDisplay(feePercentage / 1e7, { maximumFractionDigits: 2 })}%`
 }

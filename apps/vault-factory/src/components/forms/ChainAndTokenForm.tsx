@@ -5,6 +5,7 @@ import { vaultChainIdAtom, vaultTokenAddressAtom } from 'src/atoms'
 import { Address, isAddress } from 'viem'
 import { PurpleButton } from '@components/buttons/PurpleButton'
 import { useNetworks } from '@hooks/useNetworks'
+import { useSteps } from '@hooks/useSteps'
 import { NetworkInput } from './NetworkInput'
 import { SimpleInput } from './SimpleInput'
 
@@ -27,9 +28,12 @@ export const ChainAndTokenForm = (props: ChainAndTokenFormProps) => {
 
   const networks = useNetworks()
 
+  const { nextStep } = useSteps()
+
   const onSubmit = (data: ChainAndTokenFormValues) => {
     setVaultChainId(parseInt(data.vaultChainId))
     setVaultTokenAddress(data.vaultToken)
+    nextStep()
   }
 
   return (

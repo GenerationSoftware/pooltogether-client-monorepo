@@ -1,8 +1,14 @@
 import { useToken } from '@pooltogether/hyperstructure-react-hooks'
 import { ExternalLink } from '@shared/ui'
-import { formatNumberForDisplay, getNiceNetworkNameByChainId, NETWORK } from '@shared/utilities'
+import {
+  getBlockExplorerUrl,
+  getNiceNetworkNameByChainId,
+  NETWORK,
+  shorten
+} from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
+import { useMemo } from 'react'
 import {
   vaultChainIdAtom,
   vaultClaimerAddressAtom,
@@ -12,8 +18,10 @@ import {
   vaultOwnerAddressAtom,
   vaultSymbolAtom,
   vaultTokenAddressAtom,
+  vaultYieldSourceAddressAtom,
   vaultYieldSourceNameAtom
 } from 'src/atoms'
+import { getFormattedFeePercentage } from 'src/utils'
 import { Address } from 'viem'
 
 interface VaultPreviewProps {
@@ -26,6 +34,7 @@ export const VaultPreview = (props: VaultPreviewProps) => {
   const vaultChainId = useAtomValue(vaultChainIdAtom)
   const vaultTokenAddress = useAtomValue(vaultTokenAddressAtom)
   const vaultYieldSourceName = useAtomValue(vaultYieldSourceNameAtom)
+  const vaultYieldSourceAddress = useAtomValue(vaultYieldSourceAddressAtom)
   const vaultFeePercentage = useAtomValue(vaultFeePercentageAtom)
   const vaultFeeRecipientAddress = useAtomValue(vaultFeeRecipientAddressAtom)
   const vaultOwnerAddress = useAtomValue(vaultOwnerAddressAtom)
@@ -35,38 +44,64 @@ export const VaultPreview = (props: VaultPreviewProps) => {
 
   const { data: tokenData } = useToken(vaultChainId as NETWORK, vaultTokenAddress as Address)
 
+  const formattedFeePercentage = useMemo(() => {
+    return vaultFeePercentage !== undefined
+      ? getFormattedFeePercentage(vaultFeePercentage)
+      : undefined
+  }, [vaultFeePercentage])
+
   if (!vaultChainId || !vaultTokenAddress) {
     return <></>
   }
 
-  const formattedFeePercentage =
-    vaultFeePercentage !== undefined
-      ? `${formatNumberForDisplay(vaultFeePercentage / 10_000_000, {
-          maximumFractionDigits: 2
-        })}%`
-      : undefined
-
-  // TODO: add hrefs where appropriate
   return (
-    <div className={classNames('flex flex-col gap-3 items-center', className)}>
+    <div
+      className={classNames(
+        'flex flex-col gap-3 items-center px-8 py-5 border border-pt-purple-100 rounded-2xl',
+        className
+      )}
+    >
       <span className='text-xl text-pt-purple-100'>Prize Vault Preview</span>
       <VaultPreviewItem label='Network' value={getNiceNetworkNameByChainId(vaultChainId)} />
-      <VaultPreviewItem label='Deposit Token Address' value={vaultTokenAddress} />
-      {!!tokenData && <VaultPreviewItem label='Deposit Token Symbol' value={tokenData.symbol} />}
-      {!!vaultYieldSourceName && (
-        <VaultPreviewItem label='Yield Source' value={vaultYieldSourceName} />
+      {!!tokenData && (
+        <VaultPreviewItem
+          label='Deposit Token'
+          value={tokenData.symbol ?? '???'}
+          href={getBlockExplorerUrl(tokenData.chainId, tokenData.address, 'token')}
+        />
+      )}
+      {!!vaultYieldSourceName && !!vaultYieldSourceAddress && (
+        <VaultPreviewItem
+          label='Yield Source'
+          value={vaultYieldSourceName}
+          href={getBlockExplorerUrl(vaultChainId, vaultYieldSourceAddress, 'address')}
+        />
       )}
       {!!formattedFeePercentage && (
         <VaultPreviewItem label='Yield Fee %' value={formattedFeePercentage} />
       )}
       {!!vaultFeeRecipientAddress && (
-        <VaultPreviewItem label='Fee Recipient' value={vaultFeeRecipientAddress} />
+        <VaultPreviewItem
+          label='Fee Recipient'
+          value={`${shorten(vaultFeeRecipientAddress)}`}
+          href={getBlockExplorerUrl(vaultChainId, vaultFeeRecipientAddress, 'address')}
+        />
       )}
-      {!!vaultOwnerAddress && <VaultPreviewItem label='Vault Owner' value={vaultOwnerAddress} />}
+      {!!vaultOwnerAddress && (
+        <VaultPreviewItem
+          label='Vault Owner'
+          value={`${shorten(vaultOwnerAddress)}`}
+          href={getBlockExplorerUrl(vaultChainId, vaultOwnerAddress, 'address')}
+        />
+      )}
       {!!vaultName && <VaultPreviewItem label='Vault Name' value={vaultName} />}
       {!!vaultSymbol && <VaultPreviewItem label='Vault Symbol' value={vaultSymbol} />}
       {!!vaultClaimerAddress && (
-        <VaultPreviewItem label='Claimer Address' value={vaultClaimerAddress} />
+        <VaultPreviewItem
+          label='Claimer'
+          value={`${shorten(vaultClaimerAddress)}`}
+          href={getBlockExplorerUrl(vaultChainId, vaultClaimerAddress, 'address')}
+        />
       )}
     </div>
   )

@@ -51,3 +51,8 @@ export const vaultSymbolAtom = atom<string>('')
  * Vault Claimer Address
  */
 export const vaultClaimerAddressAtom = atom<Address | undefined>(undefined)
+
+/**
+ * Vault Creation Step Counter
+ */
+export const vaultCreationStepCounter = atom<number>(0)

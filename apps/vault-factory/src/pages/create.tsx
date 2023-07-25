@@ -1,18 +1,17 @@
-import { ChainAndTokenForm } from '@components/forms/ChainAndTokenForm'
+import { CreateVaultStepContent } from '@components/CreateVaultStepContent'
+import { CreateVaultStepInfo } from '@components/CreateVaultStepInfo'
 import { Layout } from '@components/Layout'
-import { PoweredByPT } from '@components/PoweredByPT'
 import { VaultPreview } from '@components/VaultPreview'
 
 export default function CreatePage() {
   return (
     <Layout isSidebarActive={true}>
       <div className='w-full flex grow gap-8'>
-        {/* TODO: info on current step */}
-        <div className='w-[27rem] flex flex-col pr-4'>
+        <div className='w-[27rem] flex flex-col gap-8 pl-2 pr-6'>
+          <CreateVaultStepInfo className='grow justify-center' />
           <VaultPreview />
-          <PoweredByPT />
         </div>
-        <ChainAndTokenForm />
+        <CreateVaultStepContent />
       </div>
     </Layout>
   )

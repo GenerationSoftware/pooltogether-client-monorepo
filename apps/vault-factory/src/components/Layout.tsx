@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import Head from 'next/head'
 import Image from 'next/image'
 import { ReactNode } from 'react'
+import { PoweredByPT } from './PoweredByPT'
 
 interface LayoutProps {
   children: ReactNode
@@ -32,17 +33,23 @@ export const Layout = (props: LayoutProps) => {
         {children}
       </main>
 
-      <SimpleFooter />
+      <SimpleFooter isSidebarActive={isSidebarActive} />
     </div>
   )
 }
 
-const SimpleNavbar = (props: { className?: string }) => {
+interface SimpleNavbarProps {
+  className?: string
+}
+
+const SimpleNavbar = (props: SimpleNavbarProps) => {
+  const { className } = props
+
   return (
     <div
       className={classNames(
         'flex flex-row gap-6 items-center justify-between pt-6 pb-8 px-12 z-30 lg:h-36 lg:pt-0 lg:pb-0',
-        props.className
+        className
       )}
     >
       <div className='w-[25rem] pr-12'>
@@ -64,21 +71,29 @@ const SimpleNavbar = (props: { className?: string }) => {
   )
 }
 
-// TODO: if sidebar is active, show powered by on the left and center the rest to the right
-const SimpleFooter = (props: { className?: string }) => {
+interface SimpleFooterProps {
+  isSidebarActive?: boolean
+  className?: string
+}
+
+const SimpleFooter = (props: SimpleFooterProps) => {
+  const { isSidebarActive, className } = props
+
   return (
-    <footer
-      className={classNames(
-        'h-28 flex items-center justify-center mt-auto px-2 z-20 lg:px-12',
-        props.className
+    <footer className={classNames('h-28 flex items-center mt-auto px-2 z-20 lg:px-0', className)}>
+      {isSidebarActive && (
+        <div className='w-[28rem]'>
+          <PoweredByPT className='mx-auto' />
+        </div>
       )}
-    >
-      <span className='text-center text-sm font-medium'>
-        Made with ❤️ & 🤖 by{' '}
-        <a href='https://g9software.xyz' target='_blank' className='hover:text-pt-teal'>
-          Generation Software
-        </a>
-      </span>
+      <div className='mx-auto'>
+        <span className='text-center text-sm font-medium'>
+          Made with ❤️ & 🤖 by{' '}
+          <a href='https://g9software.xyz' target='_blank' className='hover:text-pt-teal'>
+            Generation Software
+          </a>
+        </span>
+      </div>
     </footer>
   )
 }
