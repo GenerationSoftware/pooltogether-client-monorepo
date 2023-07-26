@@ -1,14 +1,15 @@
 import { Card } from '@shared/ui'
-import { getNiceNetworkNameByChainId, NETWORK } from '@shared/utilities'
+import { getNiceNetworkNameByChainId } from '@shared/utilities'
 import classNames from 'classnames'
 import { useFormContext, useWatch } from 'react-hook-form'
+import { SupportedNetwork } from 'src/types'
 
 interface NetworkInputFormValues {
   vaultChainId: string
 }
 
 interface NetworkInputProps {
-  chainId: NETWORK
+  chainId: SupportedNetwork
   className?: string
 }
 
@@ -30,7 +31,7 @@ export const NetworkInput = (props: NetworkInputProps) => {
         value={chainId}
         className='hidden'
       />
-      <label htmlFor={id} className='relative '>
+      <label htmlFor={id}>
         <NetworkCard chainId={chainId} />
       </label>
     </div>
@@ -38,7 +39,7 @@ export const NetworkInput = (props: NetworkInputProps) => {
 }
 
 interface NetworkCardProps {
-  chainId: NETWORK
+  chainId: SupportedNetwork
 }
 
 const NetworkCard = (props: NetworkCardProps) => {
@@ -51,9 +52,10 @@ const NetworkCard = (props: NetworkCardProps) => {
   return (
     <Card
       wrapperClassName={classNames(
-        'w-full h-full border border-transparent cursor-pointer overflow-hidden hover:bg-pt-purple-50/20',
+        'w-full h-full border cursor-pointer overflow-hidden hover:bg-pt-purple-50/20',
         {
-          'border-pt-teal-dark': isSelected
+          'border-pt-teal-dark': isSelected,
+          'border-transparent': !isSelected
         }
       )}
       className='gap-3'

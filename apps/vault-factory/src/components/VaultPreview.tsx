@@ -1,11 +1,6 @@
 import { useToken } from '@pooltogether/hyperstructure-react-hooks'
 import { ExternalLink } from '@shared/ui'
-import {
-  getBlockExplorerUrl,
-  getNiceNetworkNameByChainId,
-  NETWORK,
-  shorten
-} from '@shared/utilities'
+import { getBlockExplorerUrl, getNiceNetworkNameByChainId, shorten } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
@@ -21,6 +16,7 @@ import {
   vaultYieldSourceAddressAtom,
   vaultYieldSourceNameAtom
 } from 'src/atoms'
+import { SupportedNetwork } from 'src/types'
 import { getFormattedFeePercentage } from 'src/utils'
 import { Address } from 'viem'
 
@@ -42,7 +38,10 @@ export const VaultPreview = (props: VaultPreviewProps) => {
   const vaultSymbol = useAtomValue(vaultSymbolAtom)
   const vaultClaimerAddress = useAtomValue(vaultClaimerAddressAtom)
 
-  const { data: tokenData } = useToken(vaultChainId as NETWORK, vaultTokenAddress as Address)
+  const { data: tokenData } = useToken(
+    vaultChainId as SupportedNetwork,
+    vaultTokenAddress as Address
+  )
 
   const formattedFeePercentage = useMemo(() => {
     return vaultFeePercentage !== undefined

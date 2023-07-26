@@ -1,11 +1,11 @@
-import { NETWORK } from '@shared/utilities'
 import { atom } from 'jotai'
 import { Address } from 'viem'
+import { SupportedNetwork } from './types'
 
 /**
  * Vault Chain ID
  */
-export const vaultChainIdAtom = atom<NETWORK | undefined>(undefined)
+export const vaultChainIdAtom = atom<SupportedNetwork | undefined>(undefined)
 
 /**
  * Vault Token Address

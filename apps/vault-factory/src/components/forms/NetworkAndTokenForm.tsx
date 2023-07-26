@@ -3,21 +3,22 @@ import { useSetAtom } from 'jotai'
 import { FormProvider, useForm } from 'react-hook-form'
 import { vaultChainIdAtom, vaultTokenAddressAtom } from 'src/atoms'
 import { Address, isAddress } from 'viem'
-import { PurpleButton } from '@components/buttons/PurpleButton'
-import { useNetworks } from '@hooks/useNetworks'
+import { NextButton } from '@components/buttons/NextButton'
+import { SUPPORTED_NETWORKS } from '@constants/config'
 import { useSteps } from '@hooks/useSteps'
 import { NetworkInput } from './NetworkInput'
 import { SimpleInput } from './SimpleInput'
 
 interface NetworkAndTokenFormValues {
   vaultChainId: string
-  vaultToken: Address
+  vaultToken: string
 }
 
 interface NetworkAndTokenFormProps {
   className?: string
 }
 
+// TODO: form should auto-fill with existing data in case of returning from other step
 export const NetworkAndTokenForm = (props: NetworkAndTokenFormProps) => {
   const { className } = props
 
@@ -26,13 +27,11 @@ export const NetworkAndTokenForm = (props: NetworkAndTokenFormProps) => {
   const setVaultChainId = useSetAtom(vaultChainIdAtom)
   const setVaultTokenAddress = useSetAtom(vaultTokenAddressAtom)
 
-  const networks = useNetworks()
-
   const { nextStep } = useSteps()
 
   const onSubmit = (data: NetworkAndTokenFormValues) => {
     setVaultChainId(parseInt(data.vaultChainId))
-    setVaultTokenAddress(data.vaultToken)
+    setVaultTokenAddress(data.vaultToken.trim() as Address)
     nextStep()
   }
 
@@ -45,7 +44,7 @@ export const NetworkAndTokenForm = (props: NetworkAndTokenFormProps) => {
         <div className='flex flex-col gap-4 items-center'>
           <span className='text-sm font-medium text-pt-purple-100'>Select Network</span>
           <div className='flex flex-wrap justify-center gap-x-6 gap-y-4'>
-            {networks.map((chainId) => (
+            {SUPPORTED_NETWORKS.map((chainId) => (
               <NetworkInput key={`chain-${chainId}`} chainId={chainId} />
             ))}
           </div>
@@ -56,11 +55,10 @@ export const NetworkAndTokenForm = (props: NetworkAndTokenFormProps) => {
             isValidAddress: (v: string) => isAddress(v.trim()) || 'Enter a valid token address.'
           }}
           placeholder='0x0000...'
-          label='Enter Deposit Token Address'
+          label='Deposit Token Address'
           className='w-full max-w-md'
         />
-        {/* TODO: add arrow right icon to button */}
-        <PurpleButton type='submit'>Next</PurpleButton>
+        <NextButton disabled={!formMethods.formState.isValid} />
       </form>
     </FormProvider>
   )

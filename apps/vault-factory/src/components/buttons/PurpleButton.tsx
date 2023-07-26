@@ -1,7 +1,7 @@
 import { Button, ButtonProps } from '@shared/ui'
 import classNames from 'classnames'
 
-interface PurpleButtonProps extends ButtonProps {
+export interface PurpleButtonProps extends Omit<ButtonProps, 'color'> {
   innerClassName?: string
 }
 

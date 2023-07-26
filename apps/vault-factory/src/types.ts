@@ -1,10 +1,17 @@
+import { SUPPORTED_NETWORKS } from '@constants/config'
+
+export type SupportedNetwork = (typeof SUPPORTED_NETWORKS)[number]
+
 export type FormKey =
   | 'vaultChainId'
   | 'vaultToken'
-  | 'vaultCustomYieldSource'
+  | 'vaultYieldSourceName'
+  | 'vaultYieldSourceAddress'
   | 'vaultOwner'
   | 'vaultFee'
   | 'vaultFeeRecipient'
   | 'vaultName'
   | 'vaultSymbol'
   | 'vaultClaimer'
+
+export type YieldSourceId = 'aave' | 'yearn' | 'compound'

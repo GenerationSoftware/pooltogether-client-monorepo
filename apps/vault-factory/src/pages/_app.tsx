@@ -8,14 +8,13 @@ import { ptRainbowTheme } from '@constants/theme'
 import '../styles/globals.css'
 import { createCustomWagmiConfig } from '../utils'
 
-const networks = [...SUPPORTED_NETWORKS.mainnets, ...SUPPORTED_NETWORKS.testnets]
-const wagmiConfig = createCustomWagmiConfig(networks)
+const wagmiConfig = createCustomWagmiConfig()
 
 export default function MyApp(props: AppProps) {
   return (
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider
-        chains={networks.map((id) => ({ id }))}
+        chains={SUPPORTED_NETWORKS.map((id) => ({ id }))}
         theme={ptRainbowTheme()}
         showRecentTransactions={true}
         coolMode={true}
