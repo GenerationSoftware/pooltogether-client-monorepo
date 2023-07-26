@@ -14,18 +14,14 @@ import {
   walletConnectWallet,
   zerionWallet
 } from '@rainbow-me/rainbowkit/wallets'
+import { SupportedNetwork } from 'src/types'
+import { Address } from 'viem'
 import { arbitrum, Chain, mainnet, optimism, polygon, sepolia } from 'wagmi/chains'
 
 /**
  * Supported networks
  */
-export const SUPPORTED_NETWORKS = [
-  NETWORK.mainnet,
-  NETWORK.polygon,
-  NETWORK.optimism,
-  NETWORK.arbitrum,
-  NETWORK.sepolia
-] as const
+export const SUPPORTED_NETWORKS = [NETWORK.sepolia] as const
 
 /**
  * Wagmi networks
@@ -68,3 +64,10 @@ export const RPC_URLS = {
   [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
   [NETWORK.sepolia]: process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL
 } as const
+
+/**
+ * Claimer contracts
+ */
+export const CLAIMERS: Record<SupportedNetwork, Address> = {
+  [NETWORK.sepolia]: '0x28781b60C9b3FE86c3018EBb9650766ea08673f5'
+}

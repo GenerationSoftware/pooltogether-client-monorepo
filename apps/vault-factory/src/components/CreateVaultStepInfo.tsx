@@ -1,3 +1,4 @@
+import { LINKS } from '@shared/ui'
 import classNames from 'classnames'
 import { ReactNode, useMemo } from 'react'
 import { useSteps } from '@hooks/useSteps'
@@ -22,14 +23,11 @@ const allVaultStepInfo: { title: string; info: ReactNode }[] = [
   {
     title: 'Configure a claimer',
     info: (
-      // TODO: add links
       <>
-        By default, prize vaults use the{' '}
-        <a href='#' className='text-pt-teal-dark'>
-          Cabana Claimer Bot
-        </a>
-        , however advanced users may want to run their own bot.{' '}
-        <a href='#' className='text-pt-teal-dark'>
+        By default, all vaults use the same claimer contract to make it easy for bots to claim
+        prizes. If you'd like to set up prize claims differently, or claim them yourself, set
+        another contract address here.{' '}
+        <a href={LINKS.devDocs_v5} target='_blank' className='text-pt-teal-dark'>
           Read our docs for more info.
         </a>
       </>

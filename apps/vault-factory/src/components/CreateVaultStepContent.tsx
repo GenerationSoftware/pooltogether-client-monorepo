@@ -1,6 +1,7 @@
 import classNames from 'classnames'
 import { ReactNode, useMemo } from 'react'
 import { useSteps } from '@hooks/useSteps'
+import { ClaimerForm } from './forms/ClaimerForm'
 import { NameAndSymbolForm } from './forms/NameAndSymbolForm'
 import { NetworkAndTokenForm } from './forms/NetworkAndTokenForm'
 import { OwnerAndFeesForm } from './forms/OwnerAndFeesForm'
@@ -10,7 +11,8 @@ const allVaultStepContent: ReactNode[] = [
   <NetworkAndTokenForm />,
   <YieldSourceForm />,
   <OwnerAndFeesForm />,
-  <NameAndSymbolForm />
+  <NameAndSymbolForm />,
+  <ClaimerForm />
 ]
 
 interface CreateVaultStepContentProps {
