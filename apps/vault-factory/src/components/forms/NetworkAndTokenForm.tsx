@@ -22,7 +22,7 @@ interface NetworkAndTokenFormProps {
 export const NetworkAndTokenForm = (props: NetworkAndTokenFormProps) => {
   const { className } = props
 
-  const formMethods = useForm<NetworkAndTokenFormValues>({ mode: 'onSubmit' })
+  const formMethods = useForm<NetworkAndTokenFormValues>({ mode: 'onChange' })
 
   const setVaultChainId = useSetAtom(vaultChainIdAtom)
   const setVaultTokenAddress = useSetAtom(vaultTokenAddressAtom)
@@ -39,7 +39,7 @@ export const NetworkAndTokenForm = (props: NetworkAndTokenFormProps) => {
     <FormProvider {...formMethods}>
       <form
         onSubmit={formMethods.handleSubmit(onSubmit)}
-        className={classNames('flex flex-col gap-12 items-center', className)}
+        className={classNames('flex flex-col grow gap-12 items-center', className)}
       >
         <div className='flex flex-col gap-4 items-center'>
           <span className='text-sm font-medium text-pt-purple-100'>Select Network</span>
@@ -52,7 +52,7 @@ export const NetworkAndTokenForm = (props: NetworkAndTokenFormProps) => {
         <SimpleInput
           formKey='vaultToken'
           validate={{
-            isValidAddress: (v: string) => isAddress(v.trim()) || 'Enter a valid token address.'
+            isValidAddress: (v: string) => isAddress(v?.trim()) || 'Enter a valid token address.'
           }}
           placeholder='0x0000...'
           label='Deposit Token Address'

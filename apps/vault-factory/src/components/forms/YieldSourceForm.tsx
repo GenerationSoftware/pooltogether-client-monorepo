@@ -24,7 +24,7 @@ interface YieldSourceFormProps {
 export const YieldSourceForm = (props: YieldSourceFormProps) => {
   const { className } = props
 
-  const formMethods = useForm<YieldSourceFormValues>({ mode: 'onSubmit' })
+  const formMethods = useForm<YieldSourceFormValues>({ mode: 'onChange' })
 
   const setVaultYieldSourceName = useSetAtom(vaultYieldSourceNameAtom)
   const setVaultYieldSourceAddress = useSetAtom(vaultYieldSourceAddressAtom)
@@ -43,7 +43,7 @@ export const YieldSourceForm = (props: YieldSourceFormProps) => {
     <FormProvider {...formMethods}>
       <form
         onSubmit={formMethods.handleSubmit(onSubmit)}
-        className={classNames('flex flex-col gap-12 items-center', className)}
+        className={classNames('flex flex-col grow gap-12 items-center', className)}
       >
         <div className='flex flex-col gap-4 items-center'>
           <span className='text-sm font-medium text-pt-purple-100'>Select Yield Source</span>
@@ -61,7 +61,7 @@ export const YieldSourceForm = (props: YieldSourceFormProps) => {
             </div>
           )}
         </div>
-        <div className='flex gap-6 items-center'>
+        <div className='flex gap-6'>
           <SimpleInput
             formKey='vaultYieldSourceName'
             validate={{
@@ -77,7 +77,7 @@ export const YieldSourceForm = (props: YieldSourceFormProps) => {
             formKey='vaultYieldSourceAddress'
             validate={{
               isValidAddress: (v: string) =>
-                isAddress(v.trim()) || 'Enter a valid contract address.'
+                isAddress(v?.trim()) || 'Enter a valid contract address.'
             }}
             placeholder='0x0000...'
             label='Yield Source Address'

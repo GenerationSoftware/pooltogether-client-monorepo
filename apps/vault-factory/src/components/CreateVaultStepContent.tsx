@@ -2,9 +2,14 @@ import classNames from 'classnames'
 import { ReactNode, useMemo } from 'react'
 import { useSteps } from '@hooks/useSteps'
 import { NetworkAndTokenForm } from './forms/NetworkAndTokenForm'
+import { OwnerAndFeesForm } from './forms/OwnerAndFeesForm'
 import { YieldSourceForm } from './forms/YieldSourceForm'
 
-const allVaultStepContent: ReactNode[] = [<NetworkAndTokenForm />, <YieldSourceForm />]
+const allVaultStepContent: ReactNode[] = [
+  <NetworkAndTokenForm />,
+  <YieldSourceForm />,
+  <OwnerAndFeesForm />
+]
 
 interface CreateVaultStepContentProps {
   className?: string

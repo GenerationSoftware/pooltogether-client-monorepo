@@ -1,6 +1,6 @@
 import classNames from 'classnames'
-import { ReactNode } from 'react'
-import { useFormContext } from 'react-hook-form'
+import { ReactNode, useState } from 'react'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { FormKey } from 'src/types'
 
 interface SimpleInputProps {
@@ -13,6 +13,7 @@ interface SimpleInputProps {
   hideErrorMsgs?: boolean
   autoFocus?: boolean
   disabled?: boolean
+  needsOverride?: boolean
   className?: string
   innerClassName?: string
   errorClassName?: string
@@ -29,20 +30,42 @@ export const SimpleInput = (props: SimpleInputProps) => {
     hideErrorMsgs,
     autoFocus,
     disabled,
+    needsOverride,
     className,
     innerClassName,
     errorClassName
   } = props
 
-  const { register, formState } = useFormContext()
+  const { register, formState, setValue } = useFormContext()
+
+  const formValues = useWatch()
+
+  const [isActiveOverride, setIsActiveOverride] = useState<boolean>(false)
+
+  const handleOverride = () => {
+    setValue(formKey, '')
+    setIsActiveOverride(true)
+  }
+
+  const handleBlur = () => {
+    if ((needsOverride && !formValues[formKey]) || formValues[formKey] === defaultValue) {
+      setValue(formKey, defaultValue, { shouldValidate: true })
+      setIsActiveOverride(false)
+    }
+  }
 
   const error = formState.errors[formKey]?.message as string | undefined
 
   return (
     <div className={classNames('flex flex-col gap-2', className)}>
       {!!label && (
-        <label htmlFor={id ?? formKey} className='text-sm font-medium text-pt-purple-100'>
-          {label}
+        <label htmlFor={id ?? formKey} className='flex items-center justify-between text-sm'>
+          <span className='font-medium text-pt-purple-100'>{label}</span>
+          {needsOverride && !isActiveOverride && (
+            <span onClick={handleOverride} className='text-pt-teal-dark cursor-pointer underline'>
+              override
+            </span>
+          )}
         </label>
       )}
       <input
@@ -51,11 +74,15 @@ export const SimpleInput = (props: SimpleInputProps) => {
         placeholder={placeholder}
         defaultValue={defaultValue}
         autoFocus={autoFocus}
-        disabled={disabled}
+        disabled={disabled || (needsOverride && !isActiveOverride)}
+        onBlur={handleBlur}
         className={classNames(
-          'px-3 py-2 text-sm leading-tight bg-pt-purple-50 text-gray-700 rounded-lg border border-gray-300 outline outline-1',
+          'px-3 py-2 text-sm leading-tight rounded-lg border outline outline-1',
           'md:px-4 md:py-3',
           {
+            'bg-pt-purple-50 text-gray-700 border-gray-300':
+              !needsOverride || (needsOverride && isActiveOverride),
+            'bg-transparent text-pt-teal-dark border-pt-teal': needsOverride && !isActiveOverride,
             'brightness-75': disabled,
             [`outline-red-600 ${errorClassName}`]: !!error,
             'outline-transparent': !error

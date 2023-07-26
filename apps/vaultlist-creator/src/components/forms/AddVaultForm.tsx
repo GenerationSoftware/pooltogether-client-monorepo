@@ -90,7 +90,7 @@ export const AddVaultForm = (props: AddVaultFormProps) => {
           <SimpleInput
             formKey='vaultAddress'
             validate={{
-              isValidAddress: (v: string) => isAddress(v.trim()) || 'Enter a valid vault address.'
+              isValidAddress: (v: string) => isAddress(v?.trim()) || 'Enter a valid vault address.'
             }}
             placeholder='0x0000...'
             label='Vault Address'
