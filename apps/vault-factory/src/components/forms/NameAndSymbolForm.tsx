@@ -1,5 +1,6 @@
 import classNames from 'classnames'
-import { useSetAtom } from 'jotai'
+import { useAtom } from 'jotai'
+import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { vaultNameAtom, vaultSymbolAtom } from 'src/atoms'
 import { isValidChars } from 'src/utils'
@@ -18,18 +19,24 @@ interface NameAndSymbolFormProps {
   className?: string
 }
 
-// TODO: form should auto-fill with existing data in case of returning from other step
 export const NameAndSymbolForm = (props: NameAndSymbolFormProps) => {
   const { className } = props
 
   const formMethods = useForm<NameAndSymbolFormValues>({ mode: 'onChange' })
 
-  const setVaultName = useSetAtom(vaultNameAtom)
-  const setVaultSymbol = useSetAtom(vaultSymbolAtom)
+  const [vaultName, setVaultName] = useAtom(vaultNameAtom)
+  const [vaultSymbol, setVaultSymbol] = useAtom(vaultSymbolAtom)
 
   const { name: defaultName, symbol: defaultSymbol } = useVaultNaming()
 
   const { nextStep } = useSteps()
+
+  useEffect(() => {
+    formMethods.setValue('vaultName', vaultName ?? defaultName, { shouldValidate: true })
+    formMethods.setValue('vaultSymbol', vaultSymbol ?? defaultSymbol, {
+      shouldValidate: true
+    })
+  }, [])
 
   const onSubmit = (data: NameAndSymbolFormValues) => {
     setVaultName(data.vaultName.trim())

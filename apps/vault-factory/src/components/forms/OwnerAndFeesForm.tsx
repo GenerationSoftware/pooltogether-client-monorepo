@@ -1,5 +1,6 @@
 import classNames from 'classnames'
-import { useSetAtom } from 'jotai'
+import { useAtom } from 'jotai'
+import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import {
   vaultFeePercentageAtom,
@@ -7,6 +8,7 @@ import {
   vaultOwnerAddressAtom
 } from 'src/atoms'
 import { Address, isAddress, zeroAddress } from 'viem'
+import { useAccount } from 'wagmi'
 import { NextButton } from '@components/buttons/NextButton'
 import { PrevButton } from '@components/buttons/PrevButton'
 import { useSteps } from '@hooks/useSteps'
@@ -22,18 +24,28 @@ interface OwnerAndFeesFormProps {
   className?: string
 }
 
-// TODO: form should auto-fill with existing data in case of returning from other step
-// TODO: owner address should pre-populate with connect wallet's address
 export const OwnerAndFeesForm = (props: OwnerAndFeesFormProps) => {
   const { className } = props
 
   const formMethods = useForm<OwnerAndFeesFormValues>({ mode: 'onChange' })
 
-  const setVaultOwner = useSetAtom(vaultOwnerAddressAtom)
-  const setVaultFeePercentage = useSetAtom(vaultFeePercentageAtom)
-  const setVaultFeeRecipient = useSetAtom(vaultFeeRecipientAddressAtom)
+  const { address: userAddress } = useAccount()
+
+  const [vaultOwner, setVaultOwner] = useAtom(vaultOwnerAddressAtom)
+  const [vaultFeePercentage, setVaultFeePercentage] = useAtom(vaultFeePercentageAtom)
+  const [vaultFeeRecipient, setVaultFeeRecipient] = useAtom(vaultFeeRecipientAddressAtom)
 
   const { nextStep } = useSteps()
+
+  useEffect(() => {
+    formMethods.setValue('vaultOwner', vaultOwner ?? userAddress ?? '', { shouldValidate: true })
+    formMethods.setValue('vaultFee', ((vaultFeePercentage ?? 0) / 1e7).toString(), {
+      shouldValidate: true
+    })
+    formMethods.setValue('vaultFeeRecipient', vaultFeeRecipient ?? zeroAddress, {
+      shouldValidate: true
+    })
+  }, [])
 
   const onSubmit = (data: OwnerAndFeesFormValues) => {
     setVaultOwner(data.vaultOwner.trim() as Address)

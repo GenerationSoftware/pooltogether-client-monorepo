@@ -1,5 +1,6 @@
 import classNames from 'classnames'
-import { useAtomValue, useSetAtom } from 'jotai'
+import { useAtom, useAtomValue } from 'jotai'
+import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { vaultChainIdAtom, vaultClaimerAddressAtom } from 'src/atoms'
 import { Address, isAddress } from 'viem'
@@ -17,17 +18,23 @@ interface ClaimerFormProps {
   className?: string
 }
 
-// TODO: form should auto-fill with existing data in case of returning from other step
 export const ClaimerForm = (props: ClaimerFormProps) => {
   const { className } = props
 
   const formMethods = useForm<ClaimerFormValues>({ mode: 'onChange' })
 
-  const setVaultClaimer = useSetAtom(vaultClaimerAddressAtom)
+  const [vaultClaimer, setVaultClaimer] = useAtom(vaultClaimerAddressAtom)
 
   const vaultChainId = useAtomValue(vaultChainIdAtom)
 
   const { nextStep } = useSteps()
+
+  useEffect(() => {
+    !!vaultChainId &&
+      formMethods.setValue('vaultClaimer', vaultClaimer ?? CONTRACTS[vaultChainId].claimer, {
+        shouldValidate: true
+      })
+  }, [])
 
   const onSubmit = (data: ClaimerFormValues) => {
     setVaultClaimer(data.vaultClaimer.trim() as Address)

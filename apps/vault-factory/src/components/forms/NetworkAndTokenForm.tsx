@@ -1,5 +1,6 @@
 import classNames from 'classnames'
-import { useSetAtom } from 'jotai'
+import { useAtom } from 'jotai'
+import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { vaultChainIdAtom, vaultTokenAddressAtom } from 'src/atoms'
 import { Address, isAddress } from 'viem'
@@ -18,16 +19,22 @@ interface NetworkAndTokenFormProps {
   className?: string
 }
 
-// TODO: form should auto-fill with existing data in case of returning from other step
 export const NetworkAndTokenForm = (props: NetworkAndTokenFormProps) => {
   const { className } = props
 
   const formMethods = useForm<NetworkAndTokenFormValues>({ mode: 'onChange' })
 
-  const setVaultChainId = useSetAtom(vaultChainIdAtom)
-  const setVaultTokenAddress = useSetAtom(vaultTokenAddressAtom)
+  const [vaultChainId, setVaultChainId] = useAtom(vaultChainIdAtom)
+  const [vaultTokenAddress, setVaultTokenAddress] = useAtom(vaultTokenAddressAtom)
 
   const { nextStep } = useSteps()
+
+  useEffect(() => {
+    !!vaultChainId &&
+      formMethods.setValue('vaultChainId', vaultChainId.toString(), { shouldValidate: true })
+    !!vaultTokenAddress &&
+      formMethods.setValue('vaultToken', vaultTokenAddress, { shouldValidate: true })
+  }, [])
 
   const onSubmit = (data: NetworkAndTokenFormValues) => {
     setVaultChainId(parseInt(data.vaultChainId))

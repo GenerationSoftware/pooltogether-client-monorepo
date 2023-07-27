@@ -40,12 +40,12 @@ export const vaultOwnerAddressAtom = atom<Address | undefined>(undefined)
 /**
  * Vault Name
  */
-export const vaultNameAtom = atom<string>('')
+export const vaultNameAtom = atom<string | undefined>(undefined)
 
 /**
  * Vault Symbol
  */
-export const vaultSymbolAtom = atom<string>('')
+export const vaultSymbolAtom = atom<string | undefined>(undefined)
 
 /**
  * Vault Claimer Address

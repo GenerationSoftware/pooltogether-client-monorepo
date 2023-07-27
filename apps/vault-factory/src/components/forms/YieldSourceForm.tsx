@@ -1,5 +1,6 @@
 import classNames from 'classnames'
-import { useSetAtom } from 'jotai'
+import { useAtom } from 'jotai'
+import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { vaultYieldSourceAddressAtom, vaultYieldSourceNameAtom } from 'src/atoms'
 import { isValidChars } from 'src/utils'
@@ -20,18 +21,26 @@ interface YieldSourceFormProps {
   className?: string
 }
 
-// TODO: form should auto-fill with existing data in case of returning from other step
 export const YieldSourceForm = (props: YieldSourceFormProps) => {
   const { className } = props
 
   const formMethods = useForm<YieldSourceFormValues>({ mode: 'onChange' })
 
-  const setVaultYieldSourceName = useSetAtom(vaultYieldSourceNameAtom)
-  const setVaultYieldSourceAddress = useSetAtom(vaultYieldSourceAddressAtom)
+  const [vaultYieldSourceName, setVaultYieldSourceName] = useAtom(vaultYieldSourceNameAtom)
+  const [vaultYieldSourceAddress, setVaultYieldSourceAddress] = useAtom(vaultYieldSourceAddressAtom)
 
   const yieldSources = useTokenYieldSources()
 
   const { nextStep } = useSteps()
+
+  useEffect(() => {
+    !!vaultYieldSourceName &&
+      formMethods.setValue('vaultYieldSourceName', vaultYieldSourceName, { shouldValidate: true })
+    !!vaultYieldSourceAddress &&
+      formMethods.setValue('vaultYieldSourceAddress', vaultYieldSourceAddress, {
+        shouldValidate: true
+      })
+  }, [])
 
   const onSubmit = (data: YieldSourceFormValues) => {
     setVaultYieldSourceName(data.vaultYieldSourceName.trim())
