@@ -182,6 +182,11 @@ export const STABLECOIN_ADDRESSES: Record<NETWORK, Lowercase<string>[]> = {
 }
 
 /**
+ * Vault factory addresses
+ */
+export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = Object.freeze({})
+
+/**
  * Vault list schema
  */
 export const VAULT_LIST_SCHEMA: JSONSchemaType<VaultList> = {

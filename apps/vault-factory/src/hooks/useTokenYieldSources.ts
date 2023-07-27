@@ -1,6 +1,6 @@
 import { useAtomValue } from 'jotai'
 import { vaultChainIdAtom, vaultTokenAddressAtom } from 'src/atoms'
-import { YIELD_SOURCES } from '@constants/yieldSources'
+import { CONTRACTS } from '@constants/config'
 
 /**
  * Returns default yield sources for the currently selected token
@@ -11,7 +11,7 @@ export const useTokenYieldSources = () => {
   const vaultTokenAddress = useAtomValue(vaultTokenAddressAtom)
 
   if (!!vaultChainId && !!vaultTokenAddress) {
-    return YIELD_SOURCES[vaultChainId][vaultTokenAddress] ?? []
+    return CONTRACTS[vaultChainId].yieldSources[vaultTokenAddress] ?? []
   }
 
   return []

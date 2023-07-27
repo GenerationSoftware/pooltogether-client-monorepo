@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { YieldSourceId } from 'src/types'
 import { Address } from 'viem'
-import { YIELD_SOURCE_DESCRIPTIONS } from '@constants/yieldSources'
+import { YIELD_SOURCE_DESCRIPTIONS } from '@constants/config'
 import { YieldSourceFormValues } from './YieldSourceForm'
 
 interface YieldSourceInputProps {
@@ -16,7 +16,7 @@ export const YieldSourceInput = (props: YieldSourceInputProps) => {
   const { yieldSource, className } = props
 
   return (
-    <div className={classNames('max-w-[25%] max-h-[25vh]', className)}>
+    <div className={classNames('max-w-[25%]', className)}>
       <YieldSourceCard yieldSource={yieldSource} />
     </div>
   )
@@ -36,8 +36,8 @@ const YieldSourceCard = (props: YieldSourceCardProps) => {
   const { name, href, description } = YIELD_SOURCE_DESCRIPTIONS[yieldSource.id]
 
   const handleClick = () => {
-    setValue('vaultYieldSourceName', name)
-    setValue('vaultYieldSourceAddress', yieldSource.address)
+    setValue('vaultYieldSourceName', name, { shouldValidate: true })
+    setValue('vaultYieldSourceAddress', yieldSource.address, { shouldValidate: true })
   }
 
   const isSelected =

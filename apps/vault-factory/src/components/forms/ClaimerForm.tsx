@@ -5,7 +5,7 @@ import { vaultChainIdAtom, vaultClaimerAddressAtom } from 'src/atoms'
 import { Address, isAddress } from 'viem'
 import { NextButton } from '@components/buttons/NextButton'
 import { PrevButton } from '@components/buttons/PrevButton'
-import { CLAIMERS } from '@constants/config'
+import { CONTRACTS } from '@constants/config'
 import { useSteps } from '@hooks/useSteps'
 import { SimpleInput } from './SimpleInput'
 
@@ -45,7 +45,7 @@ export const ClaimerForm = (props: ClaimerFormProps) => {
           validate={{
             isValidAddress: (v: string) => isAddress(v?.trim()) || 'Enter a valid contract address.'
           }}
-          defaultValue={!!vaultChainId ? CLAIMERS[vaultChainId] : undefined}
+          defaultValue={!!vaultChainId ? CONTRACTS[vaultChainId].claimer : undefined}
           label='Claimer Contract'
           needsOverride={true}
           className='w-full max-w-md'

@@ -15,6 +15,7 @@ export interface TransactionButtonProps extends Omit<ButtonProps, 'onClick'> {
   openChainModal?: () => void
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   intl?: { base?: Intl<'switchNetwork' | 'switchingNetwork'>; common?: Intl<'connectWallet'> }
+  innerClassName?: string
 }
 
 export const TransactionButton = (props: TransactionButtonProps) => {
@@ -29,6 +30,7 @@ export const TransactionButton = (props: TransactionButtonProps) => {
     openChainModal,
     addRecentTransaction,
     intl,
+    innerClassName,
     disabled,
     children,
     ...rest
@@ -53,7 +55,9 @@ export const TransactionButton = (props: TransactionButtonProps) => {
   if (isDisconnected) {
     return (
       <Button onClick={openConnectModal} {...rest}>
-        {intl?.common?.('connectWallet') ?? 'Connect Wallet'}
+        <span className={innerClassName}>
+          {intl?.common?.('connectWallet') ?? 'Connect Wallet'}
+        </span>
       </Button>
     )
   } else if (chain?.id !== chainId) {
@@ -66,13 +70,13 @@ export const TransactionButton = (props: TransactionButtonProps) => {
         {...rest}
       >
         {isSwitchingNetwork && (
-          <span>
+          <span className={innerClassName}>
             {intl?.base?.('switchingNetwork', { network: networkName }) ??
               `Switching to ${networkName}...`}
           </span>
         )}
         {!isSwitchingNetwork && (
-          <span>
+          <span className={innerClassName}>
             {intl?.base?.('switchNetwork', { network: networkName }) ?? `Switch to ${networkName}`}
           </span>
         )}
@@ -82,8 +86,10 @@ export const TransactionButton = (props: TransactionButtonProps) => {
 
   return (
     <Button onClick={write} disabled={!write || isTxLoading || disabled} {...rest}>
-      {isTxLoading && <Spinner />}
-      {!isTxLoading && children}
+      <span className={innerClassName}>
+        {isTxLoading && <Spinner />}
+        {!isTxLoading && children}
+      </span>
     </Button>
   )
 }

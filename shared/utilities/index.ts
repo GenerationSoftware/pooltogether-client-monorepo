@@ -4,6 +4,7 @@
 export * from './abis/erc20'
 export * from './abis/erc4626'
 export * from './abis/prizePool'
+export * from './abis/vaultFactory'
 
 /**
  * Utils

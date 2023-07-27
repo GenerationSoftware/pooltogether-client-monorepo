@@ -50,3 +50,18 @@ export interface VaultListTags {
     readonly description: string
   }
 }
+
+export interface VaultDeployInfo {
+  chainId: number
+  token: `0x${string}`
+  name: string
+  symbol: string
+  twabController: `0x${string}`
+  yieldSourceName: string
+  yieldSourceAddress: `0x${string}`
+  prizePool: `0x${string}`
+  claimer: `0x${string}`
+  feeRecipient: `0x${string}`
+  feePercentage: number
+  owner: `0x${string}`
+}
