@@ -17,7 +17,9 @@ export const PurpleButton = (props: PurpleButtonProps) => {
       )}
       {...rest}
     >
-      <span className={classNames('text-pt-purple-50', innerClassName)}>{children}</span>
+      <span className={classNames('text-pt-purple-50 whitespace-nowrap', innerClassName)}>
+        {children}
+      </span>
     </Button>
   )
 }
