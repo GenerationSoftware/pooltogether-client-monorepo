@@ -1,6 +1,6 @@
 import { PrizeInfo, SubgraphPrizePoolAccount, SubgraphPrizePoolDraw } from '@shared/types'
 import { Address, formatUnits, getContract, PublicClient } from 'viem'
-import { prizePool as prizePoolAbi } from '../abis/prizePool'
+import { prizePoolABI } from '../abis/prizePool'
 import { PRIZE_POOL_GRAPH_API_URLS, SECONDS_PER_DAY } from '../constants'
 import { formatStringWithPrecision } from './formatting'
 import { calculatePercentageOfBigInt, divideBigInts } from './math'
@@ -46,7 +46,7 @@ export const getPrizePoolContributionAmounts = async (
     const multicallResults = await getSimpleMulticallResults(
       publicClient,
       prizePoolAddress,
-      prizePoolAbi,
+      prizePoolABI,
       calls
     )
 
@@ -92,7 +92,7 @@ export const getPrizePoolContributionPercentages = async (
     const multicallResults = await getSimpleMulticallResults(
       publicClient,
       prizePoolAddress,
-      prizePoolAbi,
+      prizePoolABI,
       calls
     )
 
@@ -138,7 +138,7 @@ export const getPrizePoolAllPrizeInfo = async (
   const multicallResults = await getSimpleMulticallResults(
     publicClient,
     prizePoolAddress,
-    prizePoolAbi,
+    prizePoolABI,
     calls
   )
 
@@ -147,7 +147,7 @@ export const getPrizePoolAllPrizeInfo = async (
 
   const prizePoolContract = getContract({
     address: prizePoolAddress,
-    abi: prizePoolAbi,
+    abi: prizePoolABI,
     publicClient
   })
   const totalContributions =

@@ -1,6 +1,6 @@
 import { VaultInfo } from '@shared/types'
 import { Address, formatUnits, parseUnits, PublicClient } from 'viem'
-import { erc4626 as erc4626Abi } from '../abis/erc4626'
+import { vaultABI } from '../abis/vault'
 import { formatStringWithPrecision } from './formatting'
 import { getComplexMulticallResults, getMulticallResults } from './multicall'
 
@@ -44,7 +44,7 @@ export const getVaultExchangeRates = async (
   if (filteredVaults.length > 0) {
     const calls = filteredVaults.map((vault) => ({
       address: vault.address,
-      abi: erc4626Abi,
+      abi: vaultABI,
       functionName: 'convertToAssets',
       args: [parseUnits('1', vault.decimals as number)]
     }))
@@ -102,7 +102,7 @@ export const getVaultBalances = async (
 
   if (filteredVaults.length > 0) {
     const vaultAddresses = filteredVaults.map((vault) => vault.address)
-    const multicallResults = await getMulticallResults(publicClient, vaultAddresses, erc4626Abi, [
+    const multicallResults = await getMulticallResults(publicClient, vaultAddresses, vaultABI, [
       { functionName: 'totalAssets' }
     ])
 
@@ -165,7 +165,7 @@ export const getVaultUnderlyingTokenAddresses = async (
       const multicallResults = await getMulticallResults(
         publicClient,
         Array.from(vaultAddresses),
-        erc4626Abi,
+        vaultABI,
         [{ functionName: 'asset' }]
       )
 

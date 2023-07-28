@@ -1,4 +1,4 @@
-import { erc4626 as erc4626Abi, Vault } from '@pooltogether/hyperstructure-client-js'
+import { Vault, vaultABI } from '@pooltogether/hyperstructure-client-js'
 import { useEffect } from 'react'
 import { Address, isAddress, TransactionReceipt } from 'viem'
 import {
@@ -56,7 +56,7 @@ export const useSendDepositTransaction = (
   const { config } = usePrepareContractWrite({
     chainId: vault?.chainId,
     address: vault?.address,
-    abi: erc4626Abi,
+    abi: vaultABI,
     functionName: 'deposit',
     args: [amount, userAddress as Address],
     enabled

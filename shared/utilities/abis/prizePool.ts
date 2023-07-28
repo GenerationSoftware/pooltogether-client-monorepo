@@ -1,4 +1,4 @@
-export const prizePool = [
+export const prizePoolABI = [
   {
     inputs: [],
     name: 'accountedBalance',

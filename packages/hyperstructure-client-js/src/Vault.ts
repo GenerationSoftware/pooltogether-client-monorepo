@@ -1,13 +1,13 @@
 import { TokenWithAmount, TokenWithSupply, TxOverrides } from '@shared/types'
 import {
-  erc20 as erc20Abi,
-  erc4626 as erc4626Abi,
+  erc20ABI,
   getTokenAllowances,
   getTokenBalances,
   getTokenInfo,
   getVaultId,
   validateAddress,
-  validateClientNetwork
+  validateClientNetwork,
+  vaultABI
 } from '@shared/utilities'
 import { Address, parseUnits, PublicClient, WalletClient } from 'viem'
 
@@ -89,7 +89,7 @@ export class Vault {
 
     const tokenAddress = await this.publicClient.readContract({
       address: this.address,
-      abi: erc4626Abi,
+      abi: vaultABI,
       functionName: 'asset'
     })
 
@@ -214,7 +214,7 @@ export class Vault {
 
     const assets = await this.publicClient.readContract({
       address: this.address,
-      abi: erc4626Abi,
+      abi: vaultABI,
       functionName: 'convertToAssets',
       args: [shares]
     })
@@ -233,7 +233,7 @@ export class Vault {
 
     const shares = await this.publicClient.readContract({
       address: this.address,
-      abi: erc4626Abi,
+      abi: vaultABI,
       functionName: 'convertToShares',
       args: [assets]
     })
@@ -253,7 +253,7 @@ export class Vault {
 
     const totalAssets = await this.publicClient.readContract({
       address: this.address,
-      abi: erc4626Abi,
+      abi: vaultABI,
       functionName: 'totalAssets'
     })
 
@@ -294,7 +294,7 @@ export class Vault {
     const { request } = await this.publicClient.simulateContract({
       account: this.walletClient.account,
       address: this.address,
-      abi: erc4626Abi,
+      abi: vaultABI,
       functionName: 'deposit',
       args: [amount, this.walletClient.account.address],
       chain: this.walletClient.chain,
@@ -325,7 +325,7 @@ export class Vault {
     const { request } = await this.publicClient.simulateContract({
       account: this.walletClient.account,
       address: this.address,
-      abi: erc4626Abi,
+      abi: vaultABI,
       functionName: 'deposit',
       args: [amount, receiver],
       chain: this.walletClient.chain,
@@ -353,7 +353,7 @@ export class Vault {
     const { request } = await this.publicClient.simulateContract({
       account: this.walletClient.account,
       address: this.address,
-      abi: erc4626Abi,
+      abi: vaultABI,
       functionName: 'withdraw',
       args: [amount, this.walletClient.account.address, this.walletClient.account.address],
       chain: this.walletClient.chain,
@@ -384,7 +384,7 @@ export class Vault {
     const { request } = await this.publicClient.simulateContract({
       account: this.walletClient.account,
       address: this.address,
-      abi: erc4626Abi,
+      abi: vaultABI,
       functionName: 'withdraw',
       args: [amount, receiver, this.walletClient.account.address],
       chain: this.walletClient.chain,
@@ -412,7 +412,7 @@ export class Vault {
     const { request } = await this.publicClient.simulateContract({
       account: this.walletClient.account,
       address: this.address,
-      abi: erc4626Abi,
+      abi: vaultABI,
       functionName: 'redeem',
       args: [amount, this.walletClient.account.address, this.walletClient.account.address],
       chain: this.walletClient.chain,
@@ -443,7 +443,7 @@ export class Vault {
     const { request } = await this.publicClient.simulateContract({
       account: this.walletClient.account,
       address: this.address,
-      abi: erc4626Abi,
+      abi: vaultABI,
       functionName: 'redeem',
       args: [amount, receiver, this.walletClient.account.address],
       chain: this.walletClient.chain,
@@ -473,7 +473,7 @@ export class Vault {
     const { request } = await this.publicClient.simulateContract({
       account: this.walletClient.account,
       address: tokenAddress,
-      abi: erc20Abi,
+      abi: erc20ABI,
       functionName: 'approve',
       args: [this.address, amount],
       chain: this.walletClient.chain,
@@ -502,7 +502,7 @@ export class Vault {
     const { request } = await this.publicClient.simulateContract({
       account: this.walletClient.account,
       address: tokenAddress,
-      abi: erc20Abi,
+      abi: erc20ABI,
       functionName: 'approve',
       args: [this.address, 0n],
       chain: this.walletClient.chain,

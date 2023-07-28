@@ -1,7 +1,7 @@
 import {
   VAULT_FACTORY_ADDRESSES,
   VaultDeployInfo,
-  vaultFactory as vaultFactoryAbi
+  vaultFactoryABI
 } from '@pooltogether/hyperstructure-client-js'
 import { useEffect } from 'react'
 import { Address, TransactionReceipt } from 'viem'
@@ -62,7 +62,7 @@ export const useSendDeployVaultTransaction = (
   const { config } = usePrepareContractWrite({
     chainId,
     address: vaultFactoryAddress,
-    abi: vaultFactoryAbi,
+    abi: vaultFactoryABI,
     functionName: 'deployVault',
     args: [
       token,

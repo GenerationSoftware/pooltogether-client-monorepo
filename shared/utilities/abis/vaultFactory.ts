@@ -1,4 +1,4 @@
-export const vaultFactory = [
+export const vaultFactoryABI = [
   {
     constant: false,
     inputs: [

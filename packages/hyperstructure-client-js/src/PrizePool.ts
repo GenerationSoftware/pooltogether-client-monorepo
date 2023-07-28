@@ -5,7 +5,7 @@ import {
   getPrizePoolContributionPercentages,
   getPrizePoolId,
   getTokenInfo,
-  prizePool as prizePoolAbi,
+  prizePoolABI,
   validateAddress,
   validateClientNetwork
 } from '@shared/utilities'
@@ -74,7 +74,7 @@ export class PrizePool {
 
     const prizeTokenAddress = await this.publicClient.readContract({
       address: this.address,
-      abi: prizePoolAbi,
+      abi: prizePoolABI,
       functionName: 'prizeToken'
     })
 
@@ -109,7 +109,7 @@ export class PrizePool {
 
     const drawPeriodInSeconds = await this.publicClient.readContract({
       address: this.address,
-      abi: prizePoolAbi,
+      abi: prizePoolABI,
       functionName: 'drawPeriodSeconds'
     })
 
@@ -129,7 +129,7 @@ export class PrizePool {
 
     const tierShares = await this.publicClient.readContract({
       address: this.address,
-      abi: prizePoolAbi,
+      abi: prizePoolABI,
       functionName: 'tierShares'
     })
 
@@ -149,7 +149,7 @@ export class PrizePool {
 
     const numberOfTiers = await this.publicClient.readContract({
       address: this.address,
-      abi: prizePoolAbi,
+      abi: prizePoolABI,
       functionName: 'numberOfTiers'
     })
 
@@ -167,7 +167,7 @@ export class PrizePool {
     const lastDrawId = Number(
       await this.publicClient.readContract({
         address: this.address,
-        abi: prizePoolAbi,
+        abi: prizePoolABI,
         functionName: 'getLastCompletedDrawId'
       })
     )
@@ -187,7 +187,7 @@ export class PrizePool {
 
     const totalContributedAmount = await this.publicClient.readContract({
       address: this.address,
-      abi: prizePoolAbi,
+      abi: prizePoolABI,
       functionName: 'getTotalContributedBetween',
       args: [startDrawId, endDrawId]
     })
@@ -260,7 +260,7 @@ export class PrizePool {
     const startTimestamp = Number(
       await this.publicClient.readContract({
         address: this.address,
-        abi: prizePoolAbi,
+        abi: prizePoolABI,
         functionName: 'lastCompletedDrawStartedAt'
       })
     )
@@ -279,7 +279,7 @@ export class PrizePool {
     const startTimestamp = Number(
       await this.publicClient.readContract({
         address: this.address,
-        abi: prizePoolAbi,
+        abi: prizePoolABI,
         functionName: 'nextDrawStartsAt'
       })
     )
@@ -308,7 +308,7 @@ export class PrizePool {
 
     const isWinner = await this.publicClient.readContract({
       address: this.address,
-      abi: prizePoolAbi,
+      abi: prizePoolABI,
       functionName: 'isWinner',
       args: [vaultAddress, userAddress, tier, prizeIndex]
     })
@@ -327,7 +327,7 @@ export class PrizePool {
 
     const tierPrizeSize = await this.publicClient.readContract({
       address: this.address,
-      abi: prizePoolAbi,
+      abi: prizePoolABI,
       functionName: 'getTierPrizeSize',
       args: [tier]
     })
@@ -346,7 +346,7 @@ export class PrizePool {
 
     const estimatedDraws = await this.publicClient.readContract({
       address: this.address,
-      abi: prizePoolAbi,
+      abi: prizePoolABI,
       functionName: 'getTierAccrualDurationInDraws',
       args: [tier]
     })
@@ -366,7 +366,7 @@ export class PrizePool {
 
     const estimatedPrizeCount = await this.publicClient.readContract({
       address: this.address,
-      abi: prizePoolAbi,
+      abi: prizePoolABI,
       functionName: 'estimatedPrizeCount'
     })
 
@@ -437,7 +437,7 @@ export class PrizePool {
     const { request } = await this.publicClient.simulateContract({
       account: this.walletClient.account,
       address: this.address,
-      abi: prizePoolAbi,
+      abi: prizePoolABI,
       functionName: 'claimPrizes',
       args: [
         tier,
@@ -471,7 +471,7 @@ export class PrizePool {
     const { request } = await this.publicClient.simulateContract({
       account: this.walletClient.account,
       address: this.address,
-      abi: prizePoolAbi,
+      abi: prizePoolABI,
       functionName: 'completeAndStartNextDraw',
       args: [winningRandomNumber],
       chain: this.walletClient.chain,

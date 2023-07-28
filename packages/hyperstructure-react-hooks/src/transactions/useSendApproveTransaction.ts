@@ -1,4 +1,4 @@
-import { erc20 as erc20Abi, Vault } from '@pooltogether/hyperstructure-client-js'
+import { erc20ABI, Vault } from '@pooltogether/hyperstructure-client-js'
 import { useEffect } from 'react'
 import { Address, TransactionReceipt } from 'viem'
 import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
@@ -33,7 +33,7 @@ export const useSendApproveTransaction = (
   const { config } = usePrepareContractWrite({
     chainId: vault?.chainId,
     address: tokenAddress,
-    abi: erc20Abi,
+    abi: erc20ABI,
     functionName: 'approve',
     args: [vault?.address, amount],
     enabled

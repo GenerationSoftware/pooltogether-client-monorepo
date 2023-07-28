@@ -1,6 +1,6 @@
 import { TokenWithAmount, TokenWithSupply } from '@shared/types'
 import { Address, PublicClient } from 'viem'
-import { erc20 as erc20Abi } from '../abis/erc20'
+import { erc20ABI } from '../abis/erc20'
 import { getMulticallResults } from './multicall'
 
 /**
@@ -16,7 +16,7 @@ export const getTokenInfo = async (
   const formattedResult: { [tokenAddress: Address]: TokenWithSupply } = {}
 
   if (tokenAddresses?.length > 0) {
-    const multicallResults = await getMulticallResults(publicClient, tokenAddresses, erc20Abi, [
+    const multicallResults = await getMulticallResults(publicClient, tokenAddresses, erc20ABI, [
       { functionName: 'symbol' },
       { functionName: 'name' },
       { functionName: 'decimals' },
@@ -59,7 +59,7 @@ export const getTokenAllowances = async (
   const formattedResult: { [tokenAddress: Address]: bigint } = {}
 
   if (tokenAddresses?.length > 0) {
-    const multicallResults = await getMulticallResults(publicClient, tokenAddresses, erc20Abi, [
+    const multicallResults = await getMulticallResults(publicClient, tokenAddresses, erc20ABI, [
       { functionName: 'allowance', args: [address, spenderAddress] }
     ])
 
@@ -86,7 +86,7 @@ export const getTokenBalances = async (
   const formattedResult: { [tokenAddress: Address]: TokenWithAmount } = {}
 
   if (tokenAddresses?.length > 0) {
-    const multicallResults = await getMulticallResults(publicClient, tokenAddresses, erc20Abi, [
+    const multicallResults = await getMulticallResults(publicClient, tokenAddresses, erc20ABI, [
       { functionName: 'symbol' },
       { functionName: 'name' },
       { functionName: 'decimals' },
