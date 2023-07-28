@@ -12,6 +12,7 @@ import {
   tahoWallet,
   trustWallet,
   walletConnectWallet,
+  xdefiWallet,
   zerionWallet
 } from '@rainbow-me/rainbowkit/wallets'
 import { SupportedNetwork, YieldSourceId } from 'src/types'
@@ -51,7 +52,8 @@ export const WALLETS: {
   trust: trustWallet,
   zerion: zerionWallet,
   brave: braveWallet,
-  safe: safeWallet
+  safe: safeWallet,
+  xdefi: xdefiWallet
 } as const
 
 /**

@@ -49,7 +49,7 @@ const getWalletConnectors = (chains: Chain[]): (() => Connector[]) => {
   const walletGroups: { groupName: string; wallets: Wallet[] }[] = []
 
   const defaultWallets = ['metamask', 'walletconnect', 'rainbow', 'injected', 'coinbase']
-  const otherWallets = ['argent', 'ledger', 'taho', 'trust', 'zerion', 'brave', 'safe']
+  const otherWallets = ['argent', 'ledger', 'taho', 'trust', 'zerion', 'brave', 'safe', 'xdefi']
 
   const highlightedWallet = parseQueryParam('wallet', { validValues: Object.keys(WALLETS) })
 

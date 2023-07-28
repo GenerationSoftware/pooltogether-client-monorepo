@@ -12,6 +12,7 @@ import {
   tahoWallet,
   trustWallet,
   walletConnectWallet,
+  xdefiWallet,
   zerionWallet
 } from '@rainbow-me/rainbowkit/wallets'
 import defaultVaultList from '@vaultLists/default'
@@ -54,7 +55,8 @@ export const WALLETS: {
   trust: trustWallet,
   zerion: zerionWallet,
   brave: braveWallet,
-  safe: safeWallet
+  safe: safeWallet,
+  xdefi: xdefiWallet
 })
 
 /**
