@@ -41,7 +41,11 @@ export const useSendDeployVaultTransaction = (
     owner
   } = vaultDeployInfo
 
-  const vaultFactoryAddress = chainId ? VAULT_FACTORY_ADDRESSES[chainId] : undefined
+  const vaultFactoryAddress = !!chainId ? VAULT_FACTORY_ADDRESSES[chainId] : undefined
+
+  if (!!chainId && vaultFactoryAddress === undefined) {
+    console.warn(`No vault factory address found for chain ID ${chainId}.`)
+  }
 
   const enabled =
     !!vaultDeployInfo &&
@@ -51,7 +55,7 @@ export const useSendDeployVaultTransaction = (
     !!symbol &&
     !!twabController &&
     !!yieldSourceAddress &&
-    prizePool &&
+    !!prizePool &&
     !!claimer &&
     !!feeRecipient &&
     feePercentage !== undefined &&

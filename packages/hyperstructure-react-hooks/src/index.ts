@@ -45,9 +45,11 @@ export * from './tokens/useTokens'
  * Transaction Hooks
  */
 export * from './transactions/useSendApproveTransaction'
+export * from './transactions/useSendDeployLiquidationPairTransaction'
 export * from './transactions/useSendDeployVaultTransaction'
 export * from './transactions/useSendDepositTransaction'
 export * from './transactions/useSendRedeemTransaction'
+export * from './transactions/useSendSetLiquidationPairTransaction'
 export * from './transactions/useSendWithdrawTransaction'
 
 /**
