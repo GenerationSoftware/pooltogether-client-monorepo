@@ -22,7 +22,7 @@ export const createCustomWagmiConfig = (): Config<
   WebSocketPublicClient
 > => {
   const supportedNetworks = Object.values(WAGMI_CHAINS).filter(
-    (chain) => SUPPORTED_NETWORKS.includes(chain.id) && !!RPC_URLS[chain.id]
+    (chain) => SUPPORTED_NETWORKS.includes(chain.id as number) && !!RPC_URLS[chain.id]
   )
 
   const { chains, publicClient } = configureChains(supportedNetworks, [
