@@ -1,0 +1,17 @@
+{
+  "short_name": "Cabana",
+  "name": "Cabana Landing Page",
+  "description": "Welcome to Cabana, a suite of open source interfaces and tools for the PoolTogether Hyperstructure.",
+  "start_url": "/",
+  "scope": "/",
+  "theme_color": "#6538C1",
+  "background_color": "#4C249F",
+  "display": "fullscreen",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ]
+}
