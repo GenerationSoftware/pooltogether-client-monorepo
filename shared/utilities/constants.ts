@@ -57,7 +57,7 @@ export const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3'
 /**
  * Token Prices API URL
  */
-export const TOKEN_PRICES_API_URL = 'https://token-prices.g9software.workers.dev'
+export const TOKEN_PRICES_API_URL = 'https://token-prices.api.cabana.fi'
 
 /**
  * Prize Pools
