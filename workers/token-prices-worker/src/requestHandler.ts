@@ -2,7 +2,6 @@ import { DEFAULT_HEADERS, SUPPORTED_NETWORKS } from './constants'
 import { fetchAllTokenPrices } from './fetchAllTokenPrices'
 import { fetchTokenPrices } from './fetchTokenPrices'
 import { SUPPORTED_NETWORK } from './types'
-import { updateTokenPrices } from './updateTokenPrices'
 import { isAddress } from './utils'
 
 export const handleRequest = async (event: FetchEvent): Promise<Response> => {
@@ -18,22 +17,6 @@ export const handleRequest = async (event: FetchEvent): Promise<Response> => {
         })
       } else {
         return new Response(tokenPrices, {
-          ...DEFAULT_HEADERS,
-          status: 500
-        })
-      }
-    }
-
-    if (url.pathname === '/update') {
-      const updates = await updateTokenPrices(event)
-
-      if (!!updates) {
-        return new Response(JSON.stringify(updates), {
-          ...DEFAULT_HEADERS,
-          status: 200
-        })
-      } else {
-        return new Response(JSON.stringify(updates), {
           ...DEFAULT_HEADERS,
           status: 500
         })
