@@ -1,0 +1,18 @@
+{
+  "extends": "../../shared/config/nextjs.tsconfig.json",
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "tailwind.config.js", "postcss.config.js"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["./src/components/*"],
+      "@constants/*": ["./src/constants/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@views/*": ["./src/views/*"],
+      "@shared/generic-react-hooks": ["../../shared/generic-react-hooks"],
+      "@shared/types": ["../../shared/types"],
+      "@shared/ui": ["../../shared/ui"],
+      "@shared/utilities": ["../../shared/utilities"]
+    }
+  }
+}

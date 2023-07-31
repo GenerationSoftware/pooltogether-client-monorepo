@@ -1,4 +1,3 @@
-import '@rainbow-me/rainbowkit/styles.css'
 import type { AppProps } from 'next/app'
 import { WagmiConfig } from 'wagmi'
 import { AppContainer } from '@components/AppContainer'
