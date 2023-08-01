@@ -21,7 +21,6 @@ interface VaultPageContentProps {
   queryParams: ParsedUrlQuery
 }
 
-// TODO: display notice that external vaults aren't in the selected vaultlists somewhere on the page
 export const VaultPageContent = (props: VaultPageContentProps) => {
   const { queryParams } = props
 

@@ -1,6 +1,11 @@
-import { Address, isAddress, PublicClient } from 'viem'
+import { Abi, Address, isAddress, PublicClient } from 'viem'
 
-// TODO: need better ABI and multicall params/results typing throughout this file
+interface MulticallContract {
+  address: Address
+  abi: Abi
+  functionName: string
+  args?: any[]
+}
 
 /**
  * Returns the results of a simple multicall where many calls are made to a single contract address
@@ -13,7 +18,7 @@ import { Address, isAddress, PublicClient } from 'viem'
 export const getSimpleMulticallResults = async (
   publicClient: PublicClient,
   contractAddress: Address,
-  abi: any,
+  abi: Abi,
   calls: { functionName: string; args?: any[] }[]
 ): Promise<any[]> => {
   if (!isAddress(contractAddress) || calls.length === 0) {
@@ -25,7 +30,7 @@ export const getSimpleMulticallResults = async (
     throw new Error('Multicall Error: Could not get chain ID from client')
   }
 
-  const contracts: { address: Address; abi: any; functionName: string; args?: any[] }[] = []
+  const contracts: MulticallContract[] = []
   calls.forEach((call) => {
     contracts.push({ address: contractAddress, abi, ...call })
   })
@@ -46,7 +51,7 @@ export const getSimpleMulticallResults = async (
 export const getMulticallResults = async (
   publicClient: PublicClient,
   contractAddresses: Address[],
-  abi: any,
+  abi: Abi,
   calls: { functionName: string; args?: any[] }[]
 ): Promise<{
   [contractAddress: Address]: {
@@ -63,7 +68,7 @@ export const getMulticallResults = async (
     throw new Error('Multicall Error: Could not get chain ID from client')
   }
 
-  const contracts: { address: Address; abi: any; functionName: string; args?: any[] }[] = []
+  const contracts: MulticallContract[] = []
   calls.forEach((call) => {
     contractAddresses.forEach((contractAddress) => {
       contracts.push({ address: contractAddress, abi, ...call })
@@ -95,7 +100,7 @@ export const getMulticallResults = async (
  */
 export const getComplexMulticallResults = async (
   publicClient: PublicClient,
-  calls: { address: Address; abi: any; functionName: string; args?: any[] }[]
+  calls: MulticallContract[]
 ): Promise<{
   [contractAddress: string]: {
     [functionName: string]: any
