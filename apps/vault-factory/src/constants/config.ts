@@ -131,3 +131,7 @@ export const YIELD_SOURCE_DESCRIPTIONS: Record<
       'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Distinctio, perspiciatis qui minima porro possimus ea perferendis, optio quidem praesentium voluptatum dolorem cum asperiores incidunt nesciunt? Ad minus numquam asperiores ratione!'
   }
 }
+
+export const LOCAL_STORAGE_KEYS = {
+  vaultAddresses: 'vaultAddresses'
+}

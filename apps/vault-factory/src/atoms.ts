@@ -1,5 +1,6 @@
 import { atom } from 'jotai'
-import { Address } from 'viem'
+import { Address, isAddress } from 'viem'
+import { LOCAL_STORAGE_KEYS } from '@constants/config'
 import { SupportedNetwork } from './types'
 
 /**
@@ -55,4 +56,18 @@ export const vaultClaimerAddressAtom = atom<Address | undefined>(undefined)
 /**
  * Vault Creation Step Counter
  */
-export const vaultCreationStepCounter = atom<number>(0)
+export const vaultCreationStepCounterAtom = atom<number>(0)
+
+/**
+ * Deployed Vault Addresses
+ */
+const getInitialVaultAddresses = (): Address[] => {
+  if (typeof window === 'undefined') return []
+  const cachedVaultAddresses = localStorage.getItem(LOCAL_STORAGE_KEYS.vaultAddresses)
+  if (!!cachedVaultAddresses) {
+    return cachedVaultAddresses.split(',').filter((v) => isAddress(v)) as Address[]
+  } else {
+    return []
+  }
+}
+export const vaultAddressesAtom = atom<Address[]>(getInitialVaultAddresses())

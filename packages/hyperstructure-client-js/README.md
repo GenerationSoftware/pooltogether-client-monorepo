@@ -83,7 +83,7 @@ const prizePool = new PrizePool(1, '0x123...', publicClient, options)
 
 ### Vault
 
-A `Vault` is an interface to interact with a [vault contract](https://github.com/pooltogether/v5-vault), which is an [ERC4626](https://eips.ethereum.org/EIPS/eip-4626) wrapper around any yield source, responsible for deposits and withdrawals.
+A `Vault` is an interface to interact with a [vault contract](https://github.com/pooltogether/v5-vault), which is an [ERC 4626](https://eips.ethereum.org/EIPS/eip-4626) wrapper around any yield source, responsible for deposits and withdrawals.
 
 To create an instance of a `Vault`, you will need:
 

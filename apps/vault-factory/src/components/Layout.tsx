@@ -2,6 +2,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit'
 import classNames from 'classnames'
 import Head from 'next/head'
 import Image from 'next/image'
+import Link from 'next/link'
 import { ReactNode } from 'react'
 import { PoweredByPT } from './PoweredByPT'
 
@@ -13,6 +14,8 @@ interface LayoutProps {
 
 export const Layout = (props: LayoutProps) => {
   const { children, isSidebarActive, className } = props
+
+  // TODO: when wallet is connected, query vault deployment subgraph and update `useDeployedVaults`
 
   return (
     <div className='flex flex-col min-h-screen overflow-x-hidden'>
@@ -52,16 +55,16 @@ const SimpleNavbar = (props: SimpleNavbarProps) => {
         className
       )}
     >
-      <div className='w-[25rem] pr-12'>
+      <Link href='/' className='w-[22rem] mr-12'>
         <Image
           src='/cabanaLogo.svg'
           alt='Cabana Logo'
-          width={260}
-          height={99}
+          width={300}
+          height={98}
           priority={true}
-          className='w-64 h-auto mx-auto'
+          className='w-[300px] h-auto mx-auto'
         />
-      </div>
+      </Link>
       <ConnectButton
         showBalance={false}
         chainStatus={{ smallScreen: 'icon', largeScreen: 'full' }}
@@ -81,11 +84,14 @@ const SimpleFooter = (props: SimpleFooterProps) => {
 
   return (
     <footer className={classNames('h-28 flex items-center mt-auto px-2 z-20 md:px-0', className)}>
-      {isSidebarActive && (
-        <div className='w-[28rem]'>
-          <PoweredByPT className='mx-auto' />
-        </div>
-      )}
+      <div
+        className={classNames({
+          'w-[28rem]': isSidebarActive,
+          'absolute right-8': !isSidebarActive
+        })}
+      >
+        <PoweredByPT className='mx-auto' />
+      </div>
       <div className='mx-auto'>
         <span className='text-center text-sm font-medium'>
           Made with ❤️ & 🤖 by{' '}
