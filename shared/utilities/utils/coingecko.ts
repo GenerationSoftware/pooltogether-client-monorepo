@@ -100,7 +100,7 @@ export const getCoingeckoTokenData = async (
  * Returns exchange rates from CoinGecko
  * @returns
  */
-export const getCoingeckoExchangeRates = async (): Promise<CoingeckoExchangeRates | undefined> => {
+export const getCoingeckoExchangeRates = async (): Promise<CoingeckoExchangeRates> => {
   try {
     const response = await fetch(`${COINGECKO_API_URL}/exchange_rates`)
     const jsonResponse = await response.json()
@@ -110,10 +110,10 @@ export const getCoingeckoExchangeRates = async (): Promise<CoingeckoExchangeRate
       return exchangeRates
     } else {
       console.error(jsonResponse.status)
-      return undefined
+      return {}
     }
   } catch (e) {
     console.error(e)
-    return undefined
+    return {}
   }
 }

@@ -36,6 +36,18 @@ export const POOL_TOKEN_ADDRESSES = Object.freeze({
 })
 
 /**
+ * USDC token addresses
+ *
+ * NOTE: All addresses are lowercase
+ */
+export const USDC_TOKEN_ADDRESSES: { [chainId: number]: Lowercase<Address> } = {
+  [NETWORK.mainnet]: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+  [NETWORK.polygon]: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+  [NETWORK.optimism]: '0x7f5c764cbc14f9669b88837ca1490cca17c31607',
+  [NETWORK.sepolia]: '0x59d6b2e784f45568a76b9627de97e06fc237da83'
+}
+
+/**
  * Second constants
  */
 export const SECONDS_PER_MINUTE = 60

@@ -25,7 +25,12 @@ export const formatCurrencyValue = (
   const currencyValue = calculateCurrencyValue(baseValue, currency, exchangeRates, {
     baseCurrency: options?.baseCurrency
   })
-  return formatCurrencyNumberForDisplay(currencyValue, currency, options)
+
+  if (!!currencyValue) {
+    return formatCurrencyNumberForDisplay(currencyValue, currency, options)
+  } else {
+    return undefined
+  }
 }
 
 /**
@@ -59,5 +64,5 @@ export const calculateCurrencyValue = (
     console.warn(`No currency exchange rate found: ${currency}`)
   }
 
-  return 0
+  return undefined
 }
