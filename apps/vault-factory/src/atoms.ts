@@ -59,15 +59,15 @@ export const vaultClaimerAddressAtom = atom<Address | undefined>(undefined)
 export const vaultCreationStepCounterAtom = atom<number>(0)
 
 /**
- * Deployed Vault Addresses
+ * Deployed Vault IDs
  */
-const getInitialVaultAddresses = (): Address[] => {
+const getInitialVaultIds = (): string[] => {
   if (typeof window === 'undefined') return []
-  const cachedVaultAddresses = localStorage.getItem(LOCAL_STORAGE_KEYS.vaultAddresses)
+  const cachedVaultAddresses = localStorage.getItem(LOCAL_STORAGE_KEYS.vaultIds)
   if (!!cachedVaultAddresses) {
-    return cachedVaultAddresses.split(',').filter((v) => isAddress(v)) as Address[]
+    return cachedVaultAddresses.split(',')
   } else {
     return []
   }
 }
-export const vaultAddressesAtom = atom<Address[]>(getInitialVaultAddresses())
+export const vaultIdsAtom = atom<string[]>(getInitialVaultIds())

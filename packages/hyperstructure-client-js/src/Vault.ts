@@ -22,6 +22,8 @@ export class Vault {
   tokenData: TokenWithSupply | undefined
   shareData: TokenWithSupply | undefined
   exchangeRate: bigint | undefined
+  liquidationPair: Address | undefined
+  claimer: Address | undefined
   name: string | undefined
   logoURI: string | undefined
   tokenLogoURI: string | undefined
@@ -274,6 +276,46 @@ export class Vault {
 
     this.exchangeRate = exchangeRate
     return this.exchangeRate
+  }
+
+  /**
+   * Returns the address of the vault's currently set liquidation pair contract
+   * @returns
+   */
+  async getLiquidationPair(): Promise<Address> {
+    if (this.liquidationPair !== undefined) return this.liquidationPair
+
+    const source = 'Vault [getLiquidationPair]'
+    await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    const liquidationPair = await this.publicClient.readContract({
+      address: this.address,
+      abi: vaultABI,
+      functionName: 'liquidationPair'
+    })
+
+    this.liquidationPair = liquidationPair
+    return this.liquidationPair
+  }
+
+  /**
+   * Returns the address of the vault's currently set claimer contract
+   * @returns
+   */
+  async getClaimer(): Promise<Address> {
+    if (this.claimer !== undefined) return this.claimer
+
+    const source = 'Vault [getClaimer]'
+    await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    const claimer = await this.publicClient.readContract({
+      address: this.address,
+      abi: vaultABI,
+      functionName: 'claimer'
+    })
+
+    this.claimer = claimer
+    return this.claimer
   }
 
   /* ============================== Write Functions ============================== */

@@ -1,33 +1,40 @@
+import { VaultInfo } from '@shared/types'
+import { getVaultId } from '@shared/utilities'
 import { useAtom } from 'jotai'
-import { useEffect } from 'react'
-import { vaultAddressesAtom } from 'src/atoms'
-import { Address } from 'viem'
+import { useEffect, useMemo } from 'react'
+import { vaultIdsAtom } from 'src/atoms'
+import { isAddress } from 'viem'
 import { LOCAL_STORAGE_KEYS } from '@constants/config'
 
 /**
  * Returns a record of a user's deployed vaults and methods to update them
  */
 export const useDeployedVaults = () => {
-  const [vaultAddresses, _setVaultAddresses] = useAtom(vaultAddressesAtom)
+  const [vaultIds, setVaultIds] = useAtom(vaultIdsAtom)
 
-  const setVaultAddresses = (newVaultAddresses: Address[]) => {
-    _setVaultAddresses(newVaultAddresses.map((address) => address.toLowerCase() as Address))
+  const addVault = (vaultInfo: VaultInfo) => {
+    const vaultId = getVaultId(vaultInfo).toLowerCase()
+    setVaultIds((prev) => Array.from(new Set<string>([...prev, vaultId])))
   }
 
-  const addVaultAddress = (newVaultAddress: Address) => {
-    _setVaultAddresses((prev) =>
-      Array.from(new Set<Address>([...prev, newVaultAddress.toLowerCase() as Address]))
-    )
+  const removeVault = (vaultInfo: VaultInfo) => {
+    const vaultId = getVaultId(vaultInfo).toLowerCase()
+    setVaultIds((prev) => prev.filter((id) => id !== vaultId))
   }
 
-  const removeVaultAddress = (oldVaultAddress: Address) => {
-    _setVaultAddresses((prev) => prev.filter((v) => v !== oldVaultAddress.toLowerCase()))
-  }
+  useEffect(() => localStorage.setItem(LOCAL_STORAGE_KEYS.vaultIds, vaultIds.join(',')), [vaultIds])
 
-  useEffect(
-    () => localStorage.setItem(LOCAL_STORAGE_KEYS.vaultAddresses, vaultAddresses.join(',')),
-    [vaultAddresses]
-  )
+  const vaultInfoArray = useMemo(() => {
+    return vaultIds
+      .map((id) => {
+        const [address, strChainId] = id.split('-')
+        if (!!address && !!strChainId && isAddress(address)) {
+          const chainId = parseInt(strChainId)
+          return { chainId, address }
+        }
+      })
+      .filter((v) => !!v) as VaultInfo[]
+  }, [vaultIds])
 
-  return { vaultAddresses, setVaultAddresses, addVaultAddress, removeVaultAddress }
+  return { vaultIds, setVaultIds, addVault, removeVault, vaultInfoArray }
 }

@@ -18,7 +18,7 @@ export const TokenIcon = (props: TokenIconProps) => {
     ? `${token.name} Logo`
     : undefined
 
-  if (token.logoURI) {
+  if (!!token.logoURI) {
     return (
       <img
         src={token.logoURI}
@@ -28,7 +28,7 @@ export const TokenIcon = (props: TokenIconProps) => {
     )
   }
 
-  if (token.chainId && token.address) {
+  if (!!token.chainId && !!token.address) {
     const logoOverride =
       TOKEN_LOGO_OVERRIDES[token.chainId as NETWORK]?.[
         token.address.toLowerCase() as Lowercase<string>

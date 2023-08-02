@@ -133,5 +133,5 @@ export const YIELD_SOURCE_DESCRIPTIONS: Record<
 }
 
 export const LOCAL_STORAGE_KEYS = {
-  vaultAddresses: 'vaultAddresses'
+  vaultIds: 'vaultIds'
 }

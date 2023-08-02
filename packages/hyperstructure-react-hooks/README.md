@@ -108,7 +108,9 @@ yarn add @pooltogether/hyperstructure-react-hooks
 - `useUserVaultTokenBalance`
 - `useVault`
 - `useVaultBalance`
+- `useVaultClaimer`
 - `useVaultExchangeRate`
+- `useVaultLiquidationPair`
 - `useVaultPercentageContribution`
 - `useVaultPrizePower`
 - `useVaults`

@@ -13,6 +13,7 @@ export type FormKey =
   | 'vaultName'
   | 'vaultSymbol'
   | 'vaultClaimer'
+  | 'deployedVaultChainId'
   | 'deployedVaultAddress'
 
 export type YieldSourceId = 'aave' | 'yearn' | 'compound'

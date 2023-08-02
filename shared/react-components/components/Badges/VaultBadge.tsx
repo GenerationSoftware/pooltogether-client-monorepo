@@ -1,4 +1,5 @@
-import { Vault } from '@pooltogether/hyperstructure-client-js'
+import { TokenWithLogo, Vault } from '@pooltogether/hyperstructure-client-js'
+import { useVaultShareData, useVaultTokenAddress } from '@pooltogether/hyperstructure-react-hooks'
 import classNames from 'classnames'
 import { NetworkIcon } from '../Icons/NetworkIcon'
 import { TokenIcon } from '../Icons/TokenIcon'
@@ -15,6 +16,17 @@ export interface VaultBadgeProps {
 export const VaultBadge = (props: VaultBadgeProps) => {
   const { vault, className, iconClassName, nameClassName, symbolClassName, onClick } = props
 
+  const { data: shareData } = useVaultShareData(vault)
+  const { data: tokenAddress } = useVaultTokenAddress(vault)
+
+  const token: Partial<TokenWithLogo> = {
+    chainId: vault.chainId,
+    address: !!vault.logoURI ? vault.address : vault.tokenAddress ?? tokenAddress,
+    name: vault.name ?? shareData?.name,
+    symbol: vault.shareData?.symbol ?? shareData?.symbol,
+    logoURI: vault.logoURI ?? vault.tokenLogoURI
+  }
+
   return (
     <div
       className={classNames(
@@ -27,14 +39,7 @@ export const VaultBadge = (props: VaultBadgeProps) => {
       onClick={onClick}
     >
       <div className={classNames('relative pb-1 shrink-0', iconClassName)}>
-        <TokenIcon
-          token={{
-            chainId: vault.chainId,
-            address: vault.address,
-            name: vault.name,
-            logoURI: vault.logoURI
-          }}
-        />
+        <TokenIcon token={token} />
         <NetworkIcon chainId={vault.chainId} className='absolute top-3 left-3 h-4 w-4' />
       </div>
       <span
@@ -43,10 +48,10 @@ export const VaultBadge = (props: VaultBadgeProps) => {
           nameClassName
         )}
       >
-        {vault.name}
+        {token.name}
       </span>
       <span className={classNames('text-xs text-pt-purple-200', symbolClassName)}>
-        {vault.shareData?.symbol}
+        {token.symbol}
       </span>
     </div>
   )

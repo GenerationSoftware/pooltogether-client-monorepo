@@ -15,6 +15,7 @@ interface SimpleInputProps {
   disabled?: boolean
   needsOverride?: boolean
   className?: string
+  labelClassName?: string
   innerClassName?: string
   errorClassName?: string
 }
@@ -32,6 +33,7 @@ export const SimpleInput = (props: SimpleInputProps) => {
     disabled,
     needsOverride,
     className,
+    labelClassName,
     innerClassName,
     errorClassName
   } = props
@@ -59,7 +61,10 @@ export const SimpleInput = (props: SimpleInputProps) => {
   return (
     <div className={classNames('flex flex-col gap-2', className)}>
       {!!label && (
-        <label htmlFor={id ?? formKey} className='flex items-center justify-between text-sm'>
+        <label
+          htmlFor={id ?? formKey}
+          className={classNames('flex items-center justify-between text-sm', labelClassName)}
+        >
           <span className='font-medium text-pt-purple-100'>{label}</span>
           {needsOverride && !isActiveOverride && (
             <span onClick={handleOverride} className='text-pt-teal-dark cursor-pointer underline'>
