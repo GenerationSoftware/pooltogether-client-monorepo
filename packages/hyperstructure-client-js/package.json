@@ -1,6 +1,6 @@
 {
   "name": "@pooltogether/hyperstructure-client-js",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "license": "MIT",
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
