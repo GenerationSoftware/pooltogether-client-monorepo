@@ -36,7 +36,7 @@
     "turbo": "latest",
     "typescript": "^5.0.4",
     "viem": "^1.2.12",
-    "wagmi": "^1.0.5"
+    "wagmi": "^1.3.9"
   },
   "packageManager": "pnpm@7.15.0"
 }

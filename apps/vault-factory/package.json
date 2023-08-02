@@ -11,7 +11,7 @@
     "@heroicons/react": "^2.0.16",
     "@pooltogether/hyperstructure-client-js": "workspace:*",
     "@pooltogether/hyperstructure-react-hooks": "workspace:*",
-    "@rainbow-me/rainbowkit": "^1.0.0",
+    "@rainbow-me/rainbowkit": "^1.0.7",
     "@tanstack/react-query": "^4.24.10",
     "axios": "^1.4.0",
     "classnames": "^2.3.2",
@@ -26,7 +26,7 @@
     "react-hook-form": "^7.43.2",
     "sonner": "^0.4.0",
     "viem": "^1.2.12",
-    "wagmi": "^1.0.5"
+    "wagmi": "^1.3.9"
   },
   "devDependencies": {
     "@types/node": "^17.0.45",
