@@ -17,3 +17,5 @@ export type FormKey =
   | 'deployedVaultAddress'
 
 export type YieldSourceId = 'aave' | 'yearn' | 'compound'
+
+export type VaultState = 'active' | 'invalid' | 'missingLiquidationPair' | 'missingClaimer'

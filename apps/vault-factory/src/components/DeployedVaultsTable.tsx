@@ -2,14 +2,17 @@ import { Vault } from '@pooltogether/hyperstructure-client-js'
 import {
   useVaultClaimer,
   useVaultLiquidationPair,
-  useVaults,
-  useVaultTokenData
+  useVaults
 } from '@pooltogether/hyperstructure-react-hooks'
 import { VaultBadge } from '@shared/react-components'
-import { Spinner, Table, TableData } from '@shared/ui'
+import { Button, Spinner, Table, TableData } from '@shared/ui'
 import { shorten } from '@shared/utilities'
 import classNames from 'classnames'
+import { useRouter } from 'next/router'
+import { VaultState } from 'src/types'
 import { useDeployedVaults } from '@hooks/useDeployedVaults'
+import { useDeployedVaultState } from '@hooks/useDeployedVaultState'
+import { useSteps } from '@hooks/useSteps'
 
 interface DeployedVaultsTableProps {
   className?: string
@@ -127,24 +130,61 @@ const VaultClaimerItem = (props: ItemProps) => {
 const VaultStatusItem = (props: ItemProps) => {
   const { vault } = props
 
-  const { data: tokenData, isFetched: isFetchedTokenData } = useVaultTokenData(vault)
-  const { data: liquidator, isFetched: isFetchedLiquidator } = useVaultLiquidationPair(vault)
-  const { data: claimer, isFetched: isFetchedClaimer } = useVaultClaimer(vault)
+  const { vaultState } = useDeployedVaultState(vault)
 
-  if (!isFetchedTokenData || !isFetchedLiquidator || !isFetchedClaimer) {
-    return <WrappedSpinner />
+  if (vaultState === 'invalid') {
+    return <span className='text-sm text-pt-warning-light'>invalid</span>
   }
 
-  if (!tokenData || !liquidator || !claimer) {
+  if (vaultState === 'missingLiquidationPair' || vaultState === 'missingClaimer') {
     return <span className='text-sm text-pt-warning-light'>incomplete</span>
   }
 
-  return <span className='text-sm text-pt-purple-300'>active</span>
+  if (vaultState === 'active') {
+    return <span className='text-sm text-pt-purple-300'>active</span>
+  }
+
+  return <WrappedSpinner />
 }
 
-// TODO: add actions (complete setup, claim fees, etc.)
 const VaultActionsItem = (props: ItemProps) => {
   const { vault } = props
+
+  const router = useRouter()
+
+  const { setStep } = useSteps()
+
+  const { vaultState } = useDeployedVaultState(vault)
+
+  const onClickCompleteSetup = (state: VaultState) => {
+    if (state === 'missingLiquidationPair') {
+      setStep(0) // TODO: set proper step
+      router.replace('/create')
+    } else if (state === 'missingClaimer') {
+      setStep(0) // TODO: set proper step
+      router.replace('/create')
+    }
+  }
+
+  if (vaultState === 'missingLiquidationPair' || vaultState === 'missingClaimer') {
+    return (
+      <Button onClick={() => onClickCompleteSetup(vaultState)} color='red'>
+        Complete Setup
+      </Button>
+    )
+  }
+
+  const onClickClaimFees = () => {
+    // TODO: claim fees' functionality and enable button
+  }
+
+  if (vaultState === 'active') {
+    return (
+      <Button onClick={onClickClaimFees} color='transparent' disabled={true}>
+        Claim Fees
+      </Button>
+    )
+  }
 
   return <></>
 }
