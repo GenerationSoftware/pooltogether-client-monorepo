@@ -4,12 +4,12 @@ import { useSteps } from '@hooks/useSteps'
 import { DeployVaultView } from './DeployVaultView'
 import { ClaimerForm } from './forms/ClaimerForm'
 import { NameAndSymbolForm } from './forms/NameAndSymbolForm'
-import { NetworkAndTokenForm } from './forms/NetworkAndTokenForm'
+import { NetworkForm } from './forms/NetworkForm'
 import { OwnerAndFeesForm } from './forms/OwnerAndFeesForm'
 import { YieldSourceForm } from './forms/YieldSourceForm'
 
 const allVaultStepContent: ReactNode[] = [
-  <NetworkAndTokenForm />,
+  <NetworkForm />,
   <YieldSourceForm />,
   <OwnerAndFeesForm />,
   <NameAndSymbolForm />,

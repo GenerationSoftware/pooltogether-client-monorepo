@@ -17,7 +17,7 @@
 
 # 🏆 &nbsp; Overview
 
-App to easily create and manage 4626 vaults for the PoolTogether Hyperstructure.
+App to easily create and manage ERC-4626 vaults for the PoolTogether Hyperstructure.
 
 ## 🏎️ &nbsp; Quickstart
 

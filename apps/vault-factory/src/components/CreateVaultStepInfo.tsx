@@ -5,12 +5,12 @@ import { useSteps } from '@hooks/useSteps'
 
 const allVaultStepInfo: { title: string; info: ReactNode }[] = [
   {
-    title: 'Choose a network and deposit token',
-    info: `This is the asset users will deposit into your prize vault, and the network it belongs to!`
+    title: 'Choose a network',
+    info: `This is network your prize vault will be deployed on!`
   },
   {
     title: 'Choose a yield source',
-    info: `Choose from a list of audited ERC 4626 yield sources, or set your own custom ERC 4626 yield source.`
+    info: `Any ERC-4626 compatible yield source can be used to generate yield for your prize vault.`
   },
   {
     title: 'Configure ownership and vault fees',

@@ -1,8 +1,9 @@
 import { useToken } from '@pooltogether/hyperstructure-react-hooks'
 import { useAtomValue } from 'jotai'
-import { vaultChainIdAtom, vaultTokenAddressAtom, vaultYieldSourceNameAtom } from 'src/atoms'
+import { vaultChainIdAtom, vaultYieldSourceAddressAtom, vaultYieldSourceNameAtom } from 'src/atoms'
 import { SupportedNetwork } from 'src/types'
 import { Address } from 'viem'
+import { useYieldSourceTokenAddress } from './useYieldSourceTokenAddress'
 
 /**
  * Returns a vault name and symbol based on its underlying token and yield source
@@ -10,16 +11,18 @@ import { Address } from 'viem'
  */
 export const useVaultNaming = () => {
   const vaultChainId = useAtomValue(vaultChainIdAtom)
-  const vaultTokenAddress = useAtomValue(vaultTokenAddressAtom)
-  const vaultYieldSource = useAtomValue(vaultYieldSourceNameAtom)
+  const vaultYieldSourceName = useAtomValue(vaultYieldSourceNameAtom)
+  const vaultYieldSourceAddress = useAtomValue(vaultYieldSourceAddressAtom)
 
-  const { data: tokenData } = useToken(
-    vaultChainId as SupportedNetwork,
-    vaultTokenAddress as Address
+  const { data: tokenAddress } = useYieldSourceTokenAddress(
+    vaultChainId as number,
+    vaultYieldSourceAddress as Address
   )
 
-  const name = `Prize ${vaultYieldSource} ${tokenData?.symbol ?? '???'}`
-  const symbol = `p${vaultYieldSource.charAt(0).toLowerCase()}${tokenData?.symbol ?? '???'}`
+  const { data: tokenData } = useToken(vaultChainId as SupportedNetwork, tokenAddress as Address)
+
+  const name = `Prize ${vaultYieldSourceName} ${tokenData?.symbol ?? '???'}`
+  const symbol = `p${vaultYieldSourceName.charAt(0).toLowerCase()}${tokenData?.symbol ?? '???'}`
 
   return { name, symbol }
 }

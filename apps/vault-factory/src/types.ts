@@ -4,7 +4,6 @@ export type SupportedNetwork = (typeof SUPPORTED_NETWORKS)[number]
 
 export type FormKey =
   | 'vaultChainId'
-  | 'vaultToken'
   | 'vaultYieldSourceName'
   | 'vaultYieldSourceAddress'
   | 'vaultOwner'
@@ -15,7 +14,5 @@ export type FormKey =
   | 'vaultClaimer'
   | 'deployedVaultChainId'
   | 'deployedVaultAddress'
-
-export type YieldSourceId = 'aave' | 'yearn' | 'compound'
 
 export type VaultState = 'active' | 'invalid' | 'missingLiquidationPair' | 'missingClaimer'

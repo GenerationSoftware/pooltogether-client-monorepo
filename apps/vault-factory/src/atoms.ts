@@ -1,5 +1,5 @@
 import { atom } from 'jotai'
-import { Address, isAddress } from 'viem'
+import { Address } from 'viem'
 import { LOCAL_STORAGE_KEYS } from '@constants/config'
 import { SupportedNetwork } from './types'
 
@@ -7,11 +7,6 @@ import { SupportedNetwork } from './types'
  * Vault Chain ID
  */
 export const vaultChainIdAtom = atom<SupportedNetwork | undefined>(undefined)
-
-/**
- * Vault Token Address
- */
-export const vaultTokenAddressAtom = atom<Address | undefined>(undefined)
 
 /**
  * Vault Yield Source Name

@@ -1,7 +1,7 @@
 {
   "short_name": "Cabana Factory",
   "name": "Cabana Vault Factory App",
-  "description": "Create and manage your own PoolTogether 4626 vaults.",
+  "description": "Create and manage your own PoolTogether ERC-4626 vaults.",
   "start_url": "/",
   "scope": "/",
   "theme_color": "#8050E3",

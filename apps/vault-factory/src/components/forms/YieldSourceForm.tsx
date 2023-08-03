@@ -1,3 +1,4 @@
+import { ExternalLink } from '@shared/ui'
 import classNames from 'classnames'
 import { useAtom } from 'jotai'
 import { useEffect } from 'react'
@@ -8,9 +9,7 @@ import { Address, isAddress } from 'viem'
 import { NextButton } from '@components/buttons/NextButton'
 import { PrevButton } from '@components/buttons/PrevButton'
 import { useSteps } from '@hooks/useSteps'
-import { useTokenYieldSources } from '@hooks/useTokenYieldSources'
 import { SimpleInput } from './SimpleInput'
-import { YieldSourceInput } from './YieldSourceInput'
 
 export interface YieldSourceFormValues {
   vaultYieldSourceName: string
@@ -28,8 +27,6 @@ export const YieldSourceForm = (props: YieldSourceFormProps) => {
 
   const [vaultYieldSourceName, setVaultYieldSourceName] = useAtom(vaultYieldSourceNameAtom)
   const [vaultYieldSourceAddress, setVaultYieldSourceAddress] = useAtom(vaultYieldSourceAddressAtom)
-
-  const yieldSources = useTokenYieldSources()
 
   const { nextStep } = useSteps()
 
@@ -54,22 +51,11 @@ export const YieldSourceForm = (props: YieldSourceFormProps) => {
         onSubmit={formMethods.handleSubmit(onSubmit)}
         className={classNames('flex flex-col grow gap-12 items-center', className)}
       >
-        <div className='flex flex-col gap-4 items-center'>
-          <span className='text-sm font-medium text-pt-purple-100'>Select Yield Source</span>
-          {!!yieldSources.length && (
-            <div className='flex flex-wrap justify-center gap-x-6 gap-y-4'>
-              {yieldSources.map((yieldSource) => (
-                <YieldSourceInput key={`ys-${yieldSource.id}`} yieldSource={yieldSource} />
-              ))}
-            </div>
-          )}
-          {!yieldSources.length && (
-            <div className='flex flex-col items-center text-center text-sm text-pt-purple-300'>
-              <span>Could not find any yield sources for your vault's deposit token.</span>
-              <span>Use the form below to enter a custom one.</span>
-            </div>
-          )}
-        </div>
+        <ExternalLink
+          href='https://ethereum.org/en/developers/docs/standards/tokens/erc-4626/'
+          text='What is ERC-4626?'
+          className='text-pt-teal-dark'
+        />
         <div className='flex gap-6'>
           <SimpleInput
             formKey='vaultYieldSourceName'
