@@ -18,5 +18,14 @@ export const vaultFactoryABI = [
     payable: false,
     stateMutability: 'nonpayable',
     type: 'function'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: '', type: 'address' },
+      { indexed: true, internalType: 'address', name: '', type: 'address' }
+    ],
+    name: 'NewFactoryVault',
+    type: 'event'
   }
 ] as const

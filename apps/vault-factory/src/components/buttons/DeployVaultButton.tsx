@@ -3,19 +3,21 @@ import { useSendDeployVaultTransaction, useToken } from '@pooltogether/hyperstru
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { createDeployVaultTxToast, TransactionButton } from '@shared/react-components'
 import { VaultDeployInfo } from '@shared/types'
-import { NETWORK } from '@shared/utilities'
+import { vaultFactoryABI } from '@shared/utilities'
 import classNames from 'classnames'
 import { SupportedNetwork } from 'src/types'
-import { Address } from 'viem'
+import { Address, decodeEventLog } from 'viem'
+import { useDeployedVaults } from '@hooks/useDeployedVaults'
 import { useVaultInfo } from '@hooks/useVaultInfo'
 
 interface DeployVaultButtonProps {
+  onSuccess?: () => void
   className?: string
   innerClassName?: string
 }
 
 export const DeployVaultButton = (props: DeployVaultButtonProps) => {
-  const { className, innerClassName } = props
+  const { onSuccess, className, innerClassName } = props
 
   const vault = useVaultInfo()
 
@@ -25,6 +27,8 @@ export const DeployVaultButton = (props: DeployVaultButtonProps) => {
   const { openChainModal } = useChainModal()
   const addRecentTransaction = useAddRecentTransaction()
 
+  const { addVault } = useDeployedVaults()
+
   const {
     isWaiting: isWaitingDeploy,
     isConfirming: isConfirmingDeploy,
@@ -32,14 +36,18 @@ export const DeployVaultButton = (props: DeployVaultButtonProps) => {
     txHash: deployTxHash,
     sendDeployVaultTransaction
   } = useSendDeployVaultTransaction(vault as VaultDeployInfo, {
-    onSend: () => {
-      createDeployVaultTxToast({
-        chainId: vault.chainId as NETWORK,
-        txHash: deployTxHash as `0x${string}`,
-        addRecentTransaction: addRecentTransaction
-      })
+    onSend: (txHash) => {
+      if (!!vault.chainId) {
+        createDeployVaultTxToast({ chainId: vault.chainId, txHash, addRecentTransaction })
+      }
     },
-    onSuccess: () => {}
+    onSuccess: (txReceipt) => {
+      if (!!vault.chainId) {
+        const event = decodeEventLog({ abi: vaultFactoryABI, ...txReceipt.logs[0] })
+        addVault({ chainId: vault.chainId, address: event.args[0] })
+      }
+      onSuccess?.()
+    }
   })
 
   const deployVaultEnabled = !!vault.chainId && !!tokenData && !!sendDeployVaultTransaction
