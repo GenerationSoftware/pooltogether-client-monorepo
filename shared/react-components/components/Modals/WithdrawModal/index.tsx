@@ -7,7 +7,7 @@ import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { ReactNode, useState } from 'react'
 import { withdrawFormTokenAmountAtom } from '../../Form/WithdrawForm'
-import { createTxToast, TransactionToastProps } from '../../Toasts/TransactionToast'
+import { createWithdrawTxToast, WithdrawTxToastProps } from '../../Toasts/WithdrawTxToast'
 import { NetworkFeesProps } from '../NetworkFees'
 import { ConfirmingView } from './Views/ConfirmingView'
 import { ErrorView } from './Views/ErrorView'
@@ -50,7 +50,7 @@ export interface WithdrawModalProps {
     common?: Intl<'prizePool' | 'connectWallet' | 'close' | 'viewOn'>
     fees?: NetworkFeesProps['intl']
     tooltips?: Intl<'exactApproval' | 'infiniteApproval'>
-    txToast?: TransactionToastProps['intl']
+    txToast?: WithdrawTxToastProps['intl']
     formErrors?: Intl<'notEnoughTokens' | 'invalidNumber' | 'negativeNumber' | 'tooManyDecimals'>
   }
 }
@@ -77,8 +77,7 @@ export const WithdrawModal = (props: WithdrawModalProps) => {
 
   const createToast = () => {
     if (!!vault && !!withdrawTxHash && view === 'confirming') {
-      createTxToast({
-        type: 'withdraw',
+      createWithdrawTxToast({
         vault: vault,
         txHash: withdrawTxHash,
         formattedAmount: formatNumberForDisplay(formTokenAmount),

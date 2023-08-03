@@ -22,23 +22,17 @@ import { useAccount, useWaitForTransaction } from 'wagmi'
 import { ErrorPooly } from '../Graphics/ErrorPooly'
 import { SuccessPooly } from '../Graphics/SuccessPooly'
 
-type TransactionType = 'deposit' | 'withdraw'
-
-export interface TransactionToastProps {
-  type: TransactionType
+export interface WithdrawTxToastProps {
   vault: Vault
   txHash: string
   formattedAmount: string
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
   intl?: Intl<
-    | 'deposit'
     | 'withdrawal'
-    | 'depositing'
     | 'withdrawing'
     | 'viewOn'
     | 'success'
-    | 'deposited'
     | 'withdrew'
     | 'uhOh'
     | 'failedTx'
@@ -47,17 +41,16 @@ export interface TransactionToastProps {
 }
 
 /**
- * Function to create original TX toast while confirming transaction
+ * Function to create original withdrawal TX toast while confirming transaction
  *
  * This toast will then update itself on TX success or fail
  */
-export const createTxToast = (data: TransactionToastProps) => {
-  toast(<TransactionToast {...data} />, { id: data.txHash })
+export const createWithdrawTxToast = (data: WithdrawTxToastProps) => {
+  toast(<WithdrawTxToast {...data} />, { id: data.txHash })
 }
 
-export const TransactionToast = (props: TransactionToastProps) => {
-  const { type, vault, txHash, formattedAmount, addRecentTransaction, refetchUserBalances, intl } =
-    props
+export const WithdrawTxToast = (props: WithdrawTxToastProps) => {
+  const { vault, txHash, formattedAmount, addRecentTransaction, refetchUserBalances, intl } = props
 
   const { data: tokenData } = useVaultTokenData(vault)
 
@@ -90,9 +83,7 @@ export const TransactionToast = (props: TransactionToastProps) => {
     if (isSuccess && !!txHash) {
       if (!!addRecentTransaction) {
         const networkName = getNiceNetworkNameByChainId(vault.chainId)
-        const txDescription = `${tokenData?.symbol} ${
-          type === 'deposit' ? intl?.('deposit') ?? 'Deposit' : intl?.('withdrawal') ?? 'Withdrawal'
-        }`
+        const txDescription = `${tokenData?.symbol} ${intl?.('withdrawal') ?? 'Withdrawal'}`
 
         addRecentTransaction({
           hash: txHash,
@@ -111,13 +102,7 @@ export const TransactionToast = (props: TransactionToastProps) => {
   if (!isLoading && isSuccess) {
     toast(
       <ToastLayout id={txHash}>
-        <SuccessView
-          type={type}
-          vault={vault}
-          txHash={txHash}
-          formattedAmount={formattedAmount}
-          intl={intl}
-        />
+        <SuccessView vault={vault} txHash={txHash} formattedAmount={formattedAmount} intl={intl} />
       </ToastLayout>,
       { id: txHash }
     )
@@ -126,7 +111,7 @@ export const TransactionToast = (props: TransactionToastProps) => {
   if (!isLoading && !isSuccess && isError) {
     toast(
       <ToastLayout id={txHash}>
-        <ErrorView type={type} vault={vault} txHash={txHash} intl={intl} />
+        <ErrorView vault={vault} txHash={txHash} intl={intl} />
       </ToastLayout>,
       { id: txHash }
     )
@@ -134,13 +119,7 @@ export const TransactionToast = (props: TransactionToastProps) => {
 
   return (
     <ToastLayout id={txHash}>
-      <ConfirmingView
-        type={type}
-        vault={vault}
-        txHash={txHash}
-        formattedAmount={formattedAmount}
-        intl={intl}
-      />
+      <ConfirmingView vault={vault} txHash={txHash} formattedAmount={formattedAmount} intl={intl} />
     </ToastLayout>
   )
 }
@@ -165,15 +144,14 @@ const ToastLayout = (props: ToastLayoutProps) => {
 }
 
 interface ConfirmingViewProps {
-  type: TransactionType
   vault: Vault
   txHash: string
   formattedAmount: string
-  intl?: Intl<'depositing' | 'withdrawing' | 'viewOn'>
+  intl?: Intl<'withdrawing' | 'viewOn'>
 }
 
 const ConfirmingView = (props: ConfirmingViewProps) => {
-  const { type, vault, txHash, formattedAmount, intl } = props
+  const { vault, txHash, formattedAmount, intl } = props
 
   const { data: tokenData } = useVaultTokenData(vault)
 
@@ -184,8 +162,7 @@ const ConfirmingView = (props: ConfirmingViewProps) => {
     <>
       <span className='flex items-center gap-2 text-pt-purple-50'>
         <Spinner className='after:border-y-pt-teal' />{' '}
-        {type === 'deposit' && (intl?.('depositing', { tokens }) ?? `Depositing ${tokens}...`)}
-        {type === 'withdraw' && (intl?.('withdrawing', { tokens }) ?? `Withdrawing ${tokens}...`)}
+        {intl?.('withdrawing', { tokens }) ?? `Withdrawing ${tokens}...`}
       </span>
       <a
         href={getBlockExplorerUrl(vault.chainId, txHash, 'tx')}
@@ -199,15 +176,14 @@ const ConfirmingView = (props: ConfirmingViewProps) => {
 }
 
 interface SuccessViewProps {
-  type: TransactionType
   vault: Vault
   txHash: string
   formattedAmount: string
-  intl?: Intl<'success' | 'deposited' | 'withdrew' | 'viewOn'>
+  intl?: Intl<'success' | 'withdrew' | 'viewOn'>
 }
 
 const SuccessView = (props: SuccessViewProps) => {
-  const { type, vault, txHash, formattedAmount, intl } = props
+  const { vault, txHash, formattedAmount, intl } = props
 
   const { data: tokenData } = useVaultTokenData(vault)
 
@@ -223,10 +199,7 @@ const SuccessView = (props: SuccessViewProps) => {
           {intl?.('success') ?? 'Success!'}
         </span>
         <span className='text-pt-purple-50'>
-          {type === 'deposit' &&
-            (intl?.('deposited', { tokens, network }) ?? `You deposited ${tokens} on ${network}`)}
-          {type === 'withdraw' &&
-            (intl?.('withdrew', { tokens, network }) ?? `You withdrew ${tokens} on ${network}`)}
+          {intl?.('withdrew', { tokens, network }) ?? `You withdrew ${tokens} on ${network}`}
         </span>
       </div>
       <a
@@ -241,20 +214,17 @@ const SuccessView = (props: SuccessViewProps) => {
 }
 
 interface ErrorViewProps {
-  type: TransactionType
   vault: Vault
   txHash: string
   intl?: Intl<'uhOh' | 'failedTx' | 'tryAgain' | 'viewOn'>
 }
 
 const ErrorView = (props: ErrorViewProps) => {
-  const { type, vault, txHash, intl } = props
+  const { vault, txHash, intl } = props
 
   const { setSelectedVaultById } = useSelectedVault()
 
-  const { setIsModalOpen } = useIsModalOpen(
-    type === 'deposit' ? MODAL_KEYS.deposit : MODAL_KEYS.withdraw
-  )
+  const { setIsModalOpen } = useIsModalOpen(MODAL_KEYS.withdraw)
 
   const handleRetry = () => {
     setSelectedVaultById(vault.id)

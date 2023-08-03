@@ -75,7 +75,9 @@ A React componponent library utilizing some simpler components from the internal
 
 ### Toast Components
 
-- `TransactionToast`
+- `DepositTxToast`
+- `VaultListToast`
+- `WithdrawTxToast`
 
 ### Tooltip Components
 

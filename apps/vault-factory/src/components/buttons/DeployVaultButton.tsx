@@ -1,9 +1,9 @@
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { useSendDeployVaultTransaction, useToken } from '@pooltogether/hyperstructure-react-hooks'
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
-import { TransactionButton } from '@shared/react-components'
+import { createDeployVaultTxToast, TransactionButton } from '@shared/react-components'
 import { VaultDeployInfo } from '@shared/types'
-import { Spinner } from '@shared/ui'
+import { NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
 import { SupportedNetwork } from 'src/types'
 import { Address } from 'viem'
@@ -31,13 +31,21 @@ export const DeployVaultButton = (props: DeployVaultButtonProps) => {
     isSuccess: isSuccessfulDeploy,
     txHash: deployTxHash,
     sendDeployVaultTransaction
-  } = useSendDeployVaultTransaction(vault as VaultDeployInfo)
+  } = useSendDeployVaultTransaction(vault as VaultDeployInfo, {
+    onSend: () => {
+      createDeployVaultTxToast({
+        chainId: vault.chainId as NETWORK,
+        txHash: deployTxHash as `0x${string}`,
+        addRecentTransaction: addRecentTransaction
+      })
+    },
+    onSuccess: () => {}
+  })
 
   const deployVaultEnabled = !!vault.chainId && !!tokenData && !!sendDeployVaultTransaction
 
   if (!vault.chainId) {
-    // TODO: return better bugged state
-    return <Spinner />
+    return <></>
   }
 
   return (

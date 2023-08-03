@@ -7,7 +7,7 @@ import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { ReactNode, useMemo, useState } from 'react'
 import { depositFormTokenAmountAtom } from '../../Form/DepositForm'
-import { createTxToast, TransactionToastProps } from '../../Toasts/TransactionToast'
+import { createDepositTxToast, DepositTxToastProps } from '../../Toasts/DepositTxToast'
 import { NetworkFeesProps } from '../NetworkFees'
 import { DepositTxButton } from './DepositTxButton'
 import { ConfirmingView } from './Views/ConfirmingView'
@@ -61,7 +61,7 @@ export interface DepositModalProps {
     common?: Intl<'prizePool' | 'connectWallet' | 'close' | 'viewOn'>
     fees?: NetworkFeesProps['intl']
     tooltips?: Intl<'exactApproval' | 'infiniteApproval'>
-    txToast?: TransactionToastProps['intl']
+    txToast?: DepositTxToastProps['intl']
     formErrors?: Intl<'notEnoughTokens' | 'invalidNumber' | 'negativeNumber' | 'tooManyDecimals'>
   }
 }
@@ -95,8 +95,7 @@ export const DepositModal = (props: DepositModalProps) => {
 
   const createToast = () => {
     if (!!vault && !!depositTxHash && view === 'confirming') {
-      createTxToast({
-        type: 'deposit',
+      createDepositTxToast({
         vault: vault,
         txHash: depositTxHash,
         formattedAmount: formatNumberForDisplay(formTokenAmount),
