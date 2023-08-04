@@ -16,7 +16,7 @@ import {
   zerionWallet
 } from '@rainbow-me/rainbowkit/wallets'
 import { SupportedNetwork } from 'src/types'
-import { Address } from 'viem'
+import { Address, parseUnits } from 'viem'
 import { arbitrum, Chain, mainnet, optimism, polygon, sepolia } from 'wagmi/chains'
 
 /**
@@ -85,6 +85,18 @@ export const CONTRACTS: Record<
   }
 }
 
+/**
+ * Local storage keys
+ */
 export const LOCAL_STORAGE_KEYS = {
   vaultIds: 'vaultIds'
+}
+
+/**
+ * Default liquidation pair config
+ */
+export const LP_CONFIG = {
+  targetFirstSaleTimeFraction: 0.2,
+  decayConstant: parseUnits('0.5', 18),
+  liquidationGasAmount: 100_000n
 }

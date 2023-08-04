@@ -60,19 +60,17 @@ export const SimpleInput = (props: SimpleInputProps) => {
 
   return (
     <div className={classNames('flex flex-col gap-2', className)}>
-      {!!label && (
-        <label
-          htmlFor={id ?? formKey}
-          className={classNames('flex items-center justify-between text-sm', labelClassName)}
-        >
-          <span className='font-medium text-pt-purple-100'>{label}</span>
-          {needsOverride && !isActiveOverride && (
-            <span onClick={handleOverride} className='text-pt-teal-dark cursor-pointer underline'>
-              override
-            </span>
-          )}
-        </label>
-      )}
+      <label
+        htmlFor={id ?? formKey}
+        className={classNames('flex items-center justify-between text-sm', labelClassName)}
+      >
+        <span className='font-medium text-pt-purple-100'>{label}</span>
+        {needsOverride && !isActiveOverride && (
+          <span onClick={handleOverride} className='text-pt-teal-dark cursor-pointer underline'>
+            override
+          </span>
+        )}
+      </label>
       <input
         id={id ?? formKey}
         {...register(formKey, { validate })}

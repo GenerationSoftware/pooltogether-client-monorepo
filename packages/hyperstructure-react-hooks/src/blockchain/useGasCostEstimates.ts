@@ -35,7 +35,9 @@ export const useGasCostEstimates = (
       (BigInt(Math.round(gasPrices.ProposeGasPrice * 1_000)) * parseUnits('1', 9)) / BigInt(1_000)
     const totalGasWei = gasPriceWei * gasAmount
 
-    const totalGasEth = formatUnits(calculatePercentageOfBigInt(totalGasWei, tokenPrice), 18)
+    const totalGasEth = Number(
+      formatUnits(calculatePercentageOfBigInt(totalGasWei, tokenPrice), 18)
+    )
 
     return { data: { totalGasWei, totalGasEth }, isFetched }
   } else {

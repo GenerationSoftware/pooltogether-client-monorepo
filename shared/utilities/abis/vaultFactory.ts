@@ -22,8 +22,8 @@ export const vaultFactoryABI = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'address', name: '', type: 'address' },
-      { indexed: true, internalType: 'address', name: '', type: 'address' }
+      { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'vaultFactory', type: 'address' }
     ],
     name: 'NewFactoryVault',
     type: 'event'

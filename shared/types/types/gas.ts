@@ -6,5 +6,5 @@ export interface PoolTogetherApiGasPrices {
 
 export interface GasCostEstimates {
   totalGasWei: bigint
-  totalGasEth: string
+  totalGasEth: number
 }

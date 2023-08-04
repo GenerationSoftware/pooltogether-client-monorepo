@@ -18,5 +18,23 @@ export const liquidationPairFactoryABI = [
     payable: false,
     stateMutability: 'nonpayable',
     type: 'function'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'pair', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'source', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'tokenIn', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'tokenOut', type: 'address' },
+      { indexed: true, internalType: 'uint32', name: 'periodLength', type: 'uint32' },
+      { indexed: true, internalType: 'uint32', name: 'periodOffset', type: 'uint32' },
+      { indexed: true, internalType: 'uint32', name: 'targetFirstSaleTime', type: 'uint32' },
+      { indexed: true, internalType: 'int256', name: 'decayConstant', type: 'int256' },
+      { indexed: true, internalType: 'uint112', name: 'initialAmountIn', type: 'uint112' },
+      { indexed: true, internalType: 'uint112', name: 'initialAmountOut', type: 'uint112' },
+      { indexed: true, internalType: 'uint256', name: 'minimumAuctionAmount', type: 'uint256' }
+    ],
+    name: 'PairCreated',
+    type: 'event'
   }
 ] as const

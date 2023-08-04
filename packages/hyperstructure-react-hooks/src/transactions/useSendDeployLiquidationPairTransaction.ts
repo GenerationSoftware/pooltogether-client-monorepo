@@ -15,7 +15,11 @@ import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransa
  */
 export const useSendDeployLiquidationPairTransaction = (
   pairCreateInfo: PairCreateInfo,
-  options?: { onSend?: () => void; onSuccess?: () => void; onError?: () => void }
+  options?: {
+    onSend?: (txHash: `0x${string}`) => void
+    onSuccess?: (txReceipt: TransactionReceipt) => void
+    onError?: () => void
+  }
 ): {
   isWaiting: boolean
   isConfirming: boolean
@@ -93,7 +97,9 @@ export const useSendDeployLiquidationPairTransaction = (
   const sendDeployLiquidationPairTransaction = !!write
     ? () => {
         write()
-        options?.onSend?.()
+        if (!!txHash) {
+          options?.onSend?.(txHash)
+        }
       }
     : undefined
 
@@ -110,7 +116,7 @@ export const useSendDeployLiquidationPairTransaction = (
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {
-      options?.onSuccess?.()
+      options?.onSuccess?.(txReceipt)
     }
   }, [isSuccess])
 

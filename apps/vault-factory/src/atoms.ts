@@ -54,6 +54,11 @@ export const vaultClaimerAddressAtom = atom<Address | undefined>(undefined)
 export const vaultCreationStepCounterAtom = atom<number>(0)
 
 /**
+ * Vault Address
+ */
+export const vaultAddressAtom = atom<Address | undefined>(undefined)
+
+/**
  * Deployed Vault IDs
  */
 const getInitialVaultIds = (): string[] => {
@@ -66,3 +71,18 @@ const getInitialVaultIds = (): string[] => {
   }
 }
 export const vaultIdsAtom = atom<string[]>(getInitialVaultIds())
+
+/**
+ * Liquidation Pair Initial POOL Exchange Rate
+ */
+export const liquidationPairInitialAmountInAtom = atom<bigint | undefined>(undefined)
+
+/**
+ * Liquidation Pair Minimum Auction Share Amount
+ */
+export const liquidationPairMinimumAuctionAmountAtom = atom<bigint | undefined>(undefined)
+
+/**
+ * Liquidation Pair Address
+ */
+export const liquidationPairAddressAtom = atom<Address | undefined>(undefined)

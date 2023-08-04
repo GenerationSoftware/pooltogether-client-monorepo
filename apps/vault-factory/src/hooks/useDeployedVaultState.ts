@@ -13,12 +13,12 @@ import { VaultState } from 'src/types'
  */
 export const useDeployedVaultState = (vault: Vault) => {
   const { data: tokenData, isFetched: isFetchedTokenData } = useVaultTokenData(vault)
-  const { data: liquidator, isFetched: isFetchedLiquidator } = useVaultLiquidationPair(vault)
+  const { data: liquidationPair, isFetched: isFetchedLiquidationPair } = useVaultLiquidationPair(vault)
   const { data: claimer, isFetched: isFetchedClaimer } = useVaultClaimer(vault)
 
-  const isFetched = isFetchedTokenData && isFetchedLiquidator && isFetchedClaimer
+  const isFetched = isFetchedTokenData && isFetchedLiquidationPair && isFetchedClaimer
 
-  if (!isFetchedTokenData || !isFetchedLiquidator || !isFetchedClaimer) {
+  if (!isFetchedTokenData || !isFetchedLiquidationPair || !isFetchedClaimer) {
     return { isFetched }
   }
 
@@ -26,7 +26,7 @@ export const useDeployedVaultState = (vault: Vault) => {
 
   if (!tokenData) {
     vaultState = 'invalid'
-  } else if (!liquidator) {
+  } else if (!liquidationPair) {
     vaultState = 'missingLiquidationPair'
   } else if (!claimer) {
     vaultState = 'missingClaimer'

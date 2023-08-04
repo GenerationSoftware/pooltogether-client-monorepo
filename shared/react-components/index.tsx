@@ -66,6 +66,7 @@ export * from './components/Time/TimeDigits'
 /**
  * Toasts
  */
+export * from './components/Toasts/DeployLiquidationPairTxToast'
 export * from './components/Toasts/DeployVaultTxToast'
 export * from './components/Toasts/DepositTxToast'
 export * from './components/Toasts/VaultListToast'

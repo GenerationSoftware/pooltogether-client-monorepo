@@ -1,4 +1,5 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { Toaster } from '@shared/ui'
 import classNames from 'classnames'
 import Head from 'next/head'
 import Image from 'next/image'
@@ -24,6 +25,8 @@ export const Layout = (props: LayoutProps) => {
       </Head>
 
       <SimpleNavbar />
+
+      <Toaster />
 
       {isSidebarActive && <div className='fixed w-[28rem] h-screen bg-pt-transparent' />}
 

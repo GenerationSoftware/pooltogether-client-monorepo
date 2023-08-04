@@ -36,7 +36,7 @@ export const NameAndSymbolForm = (props: NameAndSymbolFormProps) => {
     formMethods.setValue('vaultSymbol', vaultSymbol ?? defaultSymbol, {
       shouldValidate: true
     })
-  }, [])
+  }, [defaultName, defaultSymbol])
 
   const onSubmit = (data: NameAndSymbolFormValues) => {
     setVaultName(data.vaultName.trim())

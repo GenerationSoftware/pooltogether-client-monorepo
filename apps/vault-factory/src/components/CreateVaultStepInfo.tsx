@@ -36,6 +36,10 @@ const allVaultStepInfo: { title: string; info: ReactNode }[] = [
   {
     title: 'Deploy your vault',
     info: `Make sure your vault is set up correctly, then sign a transaction to deploy it onchain!`
+  },
+  {
+    title: 'Deploy your liquidation pair',
+    info: `This is the contract that enables your prize vault's yield to be liquidated for POOL prizes. We've set some initial settings automatically, but feel free to customize these.`
   }
 ]
 

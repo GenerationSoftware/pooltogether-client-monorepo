@@ -25,14 +25,14 @@ interface SonnerToasterProps {
 export interface ToasterProps extends SonnerToasterProps {}
 
 export const Toaster = (props: ToasterProps) => {
-  const { toastOptions, style, ...rest } = props
+  const { duration, offset, style, toastOptions, ...rest } = props
 
   return (
     <SonnerToaster
       theme='dark'
       position='top-right'
-      duration={300_000}
-      offset='4.5rem'
+      duration={duration ?? 300_000}
+      offset={offset ?? '4.5rem'}
       style={{ marginRight: '-3.5rem', ...style }}
       toastOptions={{
         className: toastOptions?.className,

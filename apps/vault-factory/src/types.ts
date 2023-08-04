@@ -12,6 +12,8 @@ export type FormKey =
   | 'vaultName'
   | 'vaultSymbol'
   | 'vaultClaimer'
+  | 'initialExchangeRate'
+  | 'minimumAuctionAmount'
   | 'deployedVaultChainId'
   | 'deployedVaultAddress'
 

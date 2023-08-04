@@ -5,6 +5,8 @@ import { createDeployVaultTxToast, TransactionButton } from '@shared/react-compo
 import { VaultDeployInfo } from '@shared/types'
 import { vaultFactoryABI } from '@shared/utilities'
 import classNames from 'classnames'
+import { useSetAtom } from 'jotai'
+import { vaultAddressAtom } from 'src/atoms'
 import { SupportedNetwork } from 'src/types'
 import { Address, decodeEventLog } from 'viem'
 import { useDeployedVaults } from '@hooks/useDeployedVaults'
@@ -27,6 +29,8 @@ export const DeployVaultButton = (props: DeployVaultButtonProps) => {
   const { openChainModal } = useChainModal()
   const addRecentTransaction = useAddRecentTransaction()
 
+  const setVaultAddress = useSetAtom(vaultAddressAtom)
+
   const { addVault } = useDeployedVaults()
 
   const {
@@ -44,7 +48,9 @@ export const DeployVaultButton = (props: DeployVaultButtonProps) => {
     onSuccess: (txReceipt) => {
       if (!!vault.chainId) {
         const event = decodeEventLog({ abi: vaultFactoryABI, ...txReceipt.logs[0] })
-        addVault({ chainId: vault.chainId, address: event.args[0] })
+        const vaultAddress = event.args.vault
+        setVaultAddress(vaultAddress)
+        addVault({ chainId: vault.chainId, address: vaultAddress })
       }
       onSuccess?.()
     }
