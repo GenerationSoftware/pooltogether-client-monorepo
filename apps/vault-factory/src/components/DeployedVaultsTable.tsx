@@ -5,14 +5,14 @@ import {
   useVaults
 } from '@pooltogether/hyperstructure-react-hooks'
 import { VaultBadge } from '@shared/react-components'
-import { Button, Spinner, Table, TableData } from '@shared/ui'
-import { shorten } from '@shared/utilities'
+import { Button, LINKS, Spinner, Table, TableData } from '@shared/ui'
+import { getBlockExplorerUrl, shorten } from '@shared/utilities'
 import classNames from 'classnames'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 import { VaultState } from 'src/types'
+import { zeroAddress } from 'viem'
 import { useDeployedVaults } from '@hooks/useDeployedVaults'
 import { useDeployedVaultState } from '@hooks/useDeployedVaultState'
-import { useSteps } from '@hooks/useSteps'
 
 interface DeployedVaultsTableProps {
   className?: string
@@ -29,7 +29,7 @@ export const DeployedVaultsTable = (props: DeployedVaultsTableProps) => {
     headers: {
       name: { content: 'Name', className: 'pl-11' },
       address: { content: 'Address', position: 'center' },
-      liquidator: { content: 'Liquidator', position: 'center' },
+      liquidator: { content: 'Liquidity Pair', position: 'center' },
       claimer: { content: 'Claimer', position: 'center' },
       status: { content: 'Status', position: 'center' },
       actions: { content: 'Actions', position: 'center' }
@@ -38,14 +38,14 @@ export const DeployedVaultsTable = (props: DeployedVaultsTableProps) => {
       id: vault.id,
       cells: {
         name: {
-          content: <VaultBadge vault={vault} className='w-full' symbolClassName='hidden' />
+          content: <VaultNameItem vault={vault} />
         },
         address: {
-          content: <AddressDisplay address={vault.address} />,
+          content: <VaultAddressItem vault={vault} />,
           position: 'center'
         },
         liquidator: {
-          content: <VaultLiquidatorItem vault={vault} />,
+          content: <VaultLiquidityPairItem vault={vault} />,
           position: 'center'
         },
         claimer: {
@@ -94,20 +94,44 @@ interface ItemProps {
   vault: Vault
 }
 
-const VaultLiquidatorItem = (props: ItemProps) => {
+const VaultNameItem = (props: ItemProps) => {
   const { vault } = props
 
-  const { data: liquidator, isFetched: isFetchedLiquidator } = useVaultLiquidationPair(vault)
+  return (
+    <Link href={`${LINKS.app}/vault/${vault.chainId}/${vault.address}`} target='_blank'>
+      <VaultBadge vault={vault} onClick={() => {}} symbolClassName='hidden' />
+    </Link>
+  )
+}
 
-  if (!isFetchedLiquidator) {
+const VaultAddressItem = (props: ItemProps) => {
+  const { vault } = props
+
+  return (
+    <a href={getBlockExplorerUrl(vault.chainId, vault.address)} target='_blank'>
+      {shorten(vault.address)}
+    </a>
+  )
+}
+
+const VaultLiquidityPairItem = (props: ItemProps) => {
+  const { vault } = props
+
+  const { data: liquidityPair, isFetched: isFetchedLiquidityPair } = useVaultLiquidationPair(vault)
+
+  if (!isFetchedLiquidityPair) {
     return <WrappedSpinner />
   }
 
-  if (!liquidator) {
+  if (!liquidityPair || liquidityPair === zeroAddress) {
     return <span className='text-sm text-pt-warning-light'>not set</span>
   }
 
-  return <AddressDisplay address={liquidator} />
+  return (
+    <a href={getBlockExplorerUrl(vault.chainId, liquidityPair)} target='_blank'>
+      {shorten(liquidityPair)}
+    </a>
+  )
 }
 
 const VaultClaimerItem = (props: ItemProps) => {
@@ -119,11 +143,15 @@ const VaultClaimerItem = (props: ItemProps) => {
     return <WrappedSpinner />
   }
 
-  if (!claimer) {
+  if (!claimer || claimer === zeroAddress) {
     return <span className='text-sm text-pt-warning-light'>not set</span>
   }
 
-  return <AddressDisplay address={claimer} />
+  return (
+    <a href={getBlockExplorerUrl(vault.chainId, claimer)} target='_blank'>
+      {shorten(claimer)}
+    </a>
+  )
 }
 
 // TODO: add checkmark / warning icons
@@ -150,25 +178,19 @@ const VaultStatusItem = (props: ItemProps) => {
 const VaultActionsItem = (props: ItemProps) => {
   const { vault } = props
 
-  const router = useRouter()
-
-  const { setStep } = useSteps()
-
   const { vaultState } = useDeployedVaultState(vault)
 
   const onClickCompleteSetup = (state: VaultState) => {
     if (state === 'missingLiquidationPair') {
-      setStep(0) // TODO: set proper step
-      router.replace('/create')
+      // TODO: send user to 2 step flow for specific vault - deploy lp, set lp
     } else if (state === 'missingClaimer') {
-      setStep(0) // TODO: set proper step
-      router.replace('/create')
+      // TODO: send user to 1 step flow for specific vault - set claimer
     }
   }
 
   if (vaultState === 'missingLiquidationPair' || vaultState === 'missingClaimer') {
     return (
-      <Button onClick={() => onClickCompleteSetup(vaultState)} color='red'>
+      <Button onClick={() => onClickCompleteSetup(vaultState)} color='red' disabled={true}>
         Complete Setup
       </Button>
     )
@@ -187,12 +209,6 @@ const VaultActionsItem = (props: ItemProps) => {
   }
 
   return <></>
-}
-
-const AddressDisplay = (props: { address: string }) => {
-  const { address } = props
-
-  return <span title={address}>{shorten(address)}</span>
 }
 
 // NOTE: This is wrapped to avoid table overflow on spinner animation

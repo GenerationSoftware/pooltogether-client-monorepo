@@ -79,9 +79,9 @@ export const CONTRACTS: Record<
   }
 > = {
   [NETWORK.sepolia]: {
-    prizePool: '0xA377A589C1957D7777F6eDF1b7C22C911a56e90F',
-    twabController: '0x21A7c83D23d75b5eA80115974e3473fc35B1f263',
-    claimer: '0x28781b60C9b3FE86c3018EBb9650766ea08673f5'
+    prizePool: '0x858029ed93B97D9015A63A5CC63E5872EE67F88c',
+    twabController: '0xB56D699B27ca6ee4a76e68e585999E552105C10f',
+    claimer: '0x91b718F250A74Ad80da828d7D60b13993275d43c'
   }
 }
 

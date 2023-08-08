@@ -3,12 +3,11 @@ import { useSendDeployLiquidationPairTransaction } from '@pooltogether/hyperstru
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { createDeployLiquidationPairTxToast, TransactionButton } from '@shared/react-components'
 import { PairCreateInfo } from '@shared/types'
-import { liquidationPairFactoryABI } from '@shared/utilities'
 import classNames from 'classnames'
 import { useSetAtom } from 'jotai'
 import { liquidationPairAddressAtom } from 'src/atoms'
 import { SupportedNetwork } from 'src/types'
-import { Address, decodeEventLog } from 'viem'
+import { Address } from 'viem'
 import { useLiquidationPairInfo } from '@hooks/useLiquidationPairInfo'
 
 interface DeployLiquidationPairButtonProps {
@@ -41,8 +40,7 @@ export const DeployLiquidationPairButton = (props: DeployLiquidationPairButtonPr
       createDeployLiquidationPairTxToast({ chainId, txHash, addRecentTransaction })
     },
     onSuccess: (txReceipt) => {
-      const event = decodeEventLog({ abi: liquidationPairFactoryABI, ...txReceipt.logs[0] })
-      const liquidationPairAddress = event.args.pair
+      const liquidationPairAddress = txReceipt.logs[0].address
       setLiquidationPairAddress(liquidationPairAddress)
       onSuccess?.()
     }

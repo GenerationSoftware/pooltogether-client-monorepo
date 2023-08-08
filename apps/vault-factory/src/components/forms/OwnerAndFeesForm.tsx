@@ -68,7 +68,7 @@ export const OwnerAndFeesForm = (props: OwnerAndFeesFormProps) => {
             isValidAddress: (v: string) => isAddress(v?.trim()) || 'Enter a valid wallet address.'
           }}
           placeholder='0x0000...'
-          defaultValue={zeroAddress}
+          defaultValue={userAddress ?? zeroAddress}
           label='Vault Owner'
           needsOverride={!!userAddress}
           className='w-full max-w-md'

@@ -3,12 +3,11 @@ import { useSendDeployVaultTransaction, useToken } from '@pooltogether/hyperstru
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { createDeployVaultTxToast, TransactionButton } from '@shared/react-components'
 import { VaultDeployInfo } from '@shared/types'
-import { vaultFactoryABI } from '@shared/utilities'
 import classNames from 'classnames'
 import { useSetAtom } from 'jotai'
 import { vaultAddressAtom } from 'src/atoms'
 import { SupportedNetwork } from 'src/types'
-import { Address, decodeEventLog } from 'viem'
+import { Address } from 'viem'
 import { useDeployedVaults } from '@hooks/useDeployedVaults'
 import { useVaultInfo } from '@hooks/useVaultInfo'
 
@@ -47,8 +46,7 @@ export const DeployVaultButton = (props: DeployVaultButtonProps) => {
     },
     onSuccess: (txReceipt) => {
       if (!!vault.chainId) {
-        const event = decodeEventLog({ abi: vaultFactoryABI, ...txReceipt.logs[0] })
-        const vaultAddress = event.args.vault
+        const vaultAddress = txReceipt.logs[0].address
         setVaultAddress(vaultAddress)
         addVault({ chainId: vault.chainId, address: vaultAddress })
       }
