@@ -12,7 +12,7 @@ export const Logo = (props: LogoProps) => {
   return (
     <>
       <svg
-        className={classNames('w-[21px] h-auto md:hidden', className, smLogoClassName)}
+        className={classNames('w-[31px] h-auto md:hidden', className, smLogoClassName)}
         viewBox='0 0 31 40'
         fill='none'
         xmlns='http://www.w3.org/2000/svg'
@@ -56,7 +56,7 @@ export const Logo = (props: LogoProps) => {
         />
       </svg>
       <svg
-        className={classNames('w-[101px] h-auto hidden md:block', className, mdLogoClassName)}
+        className={classNames('w-[150px] h-auto hidden md:block', className, mdLogoClassName)}
         viewBox='0 0 150 40'
         shapeRendering='geometricPrecision'
         textRendering='geometricPrecision'
