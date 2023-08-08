@@ -1,6 +1,6 @@
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
-import { useSteps } from '@hooks/useSteps'
+import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
 import { PurpleButton, PurpleButtonProps } from './PurpleButton'
 
 interface PrevButtonProps extends Omit<PurpleButtonProps, 'onClick' | 'outline' | 'children'> {}
@@ -8,7 +8,7 @@ interface PrevButtonProps extends Omit<PurpleButtonProps, 'onClick' | 'outline' 
 export const PrevButton = (props: PrevButtonProps) => {
   const { className, innerClassName, ...rest } = props
 
-  const { prevStep } = useSteps()
+  const { prevStep } = useVaultCreationSteps()
 
   return (
     <PurpleButton

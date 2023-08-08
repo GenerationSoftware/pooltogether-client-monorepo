@@ -2,7 +2,7 @@ import { Button, LINKS } from '@shared/ui'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
-import { useSteps } from '@hooks/useSteps'
+import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
 import { PurpleButton } from './buttons/PurpleButton'
 import { DeployedVaultsTable } from './DeployedVaultsTable'
 import { AddDeployedVaultForm } from './forms/AddDeployedVaultForm'
@@ -13,7 +13,7 @@ export const HomePageContent = () => {
 
   const { address } = useAccount()
 
-  const { setStep } = useSteps()
+  const { setStep } = useVaultCreationSteps()
 
   // NOTE: This is necessary due to hydration errors otherwise.
   const [isBrowser, setIsBrowser] = useState(false)

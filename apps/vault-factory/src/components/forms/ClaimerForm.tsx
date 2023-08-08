@@ -7,7 +7,7 @@ import { Address, isAddress } from 'viem'
 import { NextButton } from '@components/buttons/NextButton'
 import { PrevButton } from '@components/buttons/PrevButton'
 import { CONTRACTS } from '@constants/config'
-import { useSteps } from '@hooks/useSteps'
+import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
 import { SimpleInput } from './SimpleInput'
 
 export interface ClaimerFormValues {
@@ -27,7 +27,7 @@ export const ClaimerForm = (props: ClaimerFormProps) => {
 
   const vaultChainId = useAtomValue(vaultChainIdAtom)
 
-  const { nextStep } = useSteps()
+  const { nextStep } = useVaultCreationSteps()
 
   useEffect(() => {
     !!vaultChainId &&

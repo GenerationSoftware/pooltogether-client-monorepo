@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { ReactNode, useMemo } from 'react'
-import { useSteps } from '@hooks/useSteps'
+import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
 import { DeployVaultView } from './DeployVaultView'
 import { ClaimerForm } from './forms/ClaimerForm'
 import { DeployLiquidationPairForm } from './forms/DeployLiquidationPairForm'
@@ -26,7 +26,7 @@ interface CreateVaultStepContentProps {
 export const CreateVaultStepContent = (props: CreateVaultStepContentProps) => {
   const { className } = props
 
-  const { step } = useSteps()
+  const { step } = useVaultCreationSteps()
 
   const content = useMemo(() => allVaultStepContent[step] ?? <></>, [step])
 

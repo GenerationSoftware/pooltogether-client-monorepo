@@ -8,7 +8,7 @@ import { isValidChars } from 'src/utils'
 import { Address, isAddress } from 'viem'
 import { NextButton } from '@components/buttons/NextButton'
 import { PrevButton } from '@components/buttons/PrevButton'
-import { useSteps } from '@hooks/useSteps'
+import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
 import { SimpleInput } from './SimpleInput'
 
 export interface YieldSourceFormValues {
@@ -28,7 +28,7 @@ export const YieldSourceForm = (props: YieldSourceFormProps) => {
   const [vaultYieldSourceName, setVaultYieldSourceName] = useAtom(vaultYieldSourceNameAtom)
   const [vaultYieldSourceAddress, setVaultYieldSourceAddress] = useAtom(vaultYieldSourceAddressAtom)
 
-  const { nextStep } = useSteps()
+  const { nextStep } = useVaultCreationSteps()
 
   useEffect(() => {
     !!vaultYieldSourceName &&

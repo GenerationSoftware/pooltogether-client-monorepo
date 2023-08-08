@@ -73,6 +73,11 @@ const getInitialVaultIds = (): string[] => {
 export const vaultIdsAtom = atom<string[]>(getInitialVaultIds())
 
 /**
+ * Liquidation Pair Step Counter
+ */
+export const liquidationPairStepCounterAtom = atom<number>(0)
+
+/**
  * Liquidation Pair Initial POOL Exchange Rate
  */
 export const liquidationPairInitialAmountInAtom = atom<bigint | undefined>(undefined)

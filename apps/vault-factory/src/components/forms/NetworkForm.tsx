@@ -5,7 +5,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { vaultChainIdAtom } from 'src/atoms'
 import { NextButton } from '@components/buttons/NextButton'
 import { SUPPORTED_NETWORKS } from '@constants/config'
-import { useSteps } from '@hooks/useSteps'
+import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
 import { NetworkInput } from './NetworkInput'
 
 interface NetworkFormValues {
@@ -23,7 +23,7 @@ export const NetworkForm = (props: NetworkFormProps) => {
 
   const [vaultChainId, setVaultChainId] = useAtom(vaultChainIdAtom)
 
-  const { nextStep } = useSteps()
+  const { nextStep } = useVaultCreationSteps()
 
   useEffect(() => {
     !!vaultChainId &&

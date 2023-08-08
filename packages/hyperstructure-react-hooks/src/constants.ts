@@ -24,13 +24,16 @@ export const QUERY_KEYS = Object.freeze({
   vaultBalances: 'vaultBalances',
   vaultClaimers: 'vaultClaimers',
   vaultExchangeRates: 'vaultExchangeRates',
+  vaultFeeInfo: 'vaultFeeInfo',
   vaultLiquidationPairs: 'vaultLiquidationPairs',
   vaultList: 'vaultList',
+  vaultOwner: 'vaultOwner',
   vaultPercentageContributions: 'vaultPercentageContributions',
   vaultPrizePower: 'vaultPrizePower',
   vaultShareData: 'vaultShareData',
   vaultTokenAddresses: 'vaultTokenAddresses',
-  vaultTokenData: 'vaultTokenData'
+  vaultTokenData: 'vaultTokenData',
+  vaultYieldSources: 'vaultYieldSources'
 })
 
 /**

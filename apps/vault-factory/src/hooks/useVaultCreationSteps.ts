@@ -2,10 +2,10 @@ import { useAtom } from 'jotai'
 import { vaultCreationStepCounterAtom } from 'src/atoms'
 
 /**
- * Returns an easily update-able step counter
+ * Returns an easily update-able step counter for vault creation
  * @returns
  */
-export const useSteps = () => {
+export const useVaultCreationSteps = () => {
   const [step, setStep] = useAtom(vaultCreationStepCounterAtom)
 
   const nextStep = () => {

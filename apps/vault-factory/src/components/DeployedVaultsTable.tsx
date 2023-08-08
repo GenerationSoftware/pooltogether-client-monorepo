@@ -9,10 +9,12 @@ import { Button, LINKS, Spinner, Table, TableData } from '@shared/ui'
 import { getBlockExplorerUrl, shorten } from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { VaultState } from 'src/types'
 import { zeroAddress } from 'viem'
 import { useDeployedVaults } from '@hooks/useDeployedVaults'
 import { useDeployedVaultState } from '@hooks/useDeployedVaultState'
+import { useLiquidationPairSteps } from '@hooks/useLiquidationPairSteps'
 
 interface DeployedVaultsTableProps {
   className?: string
@@ -29,7 +31,7 @@ export const DeployedVaultsTable = (props: DeployedVaultsTableProps) => {
     headers: {
       name: { content: 'Name', className: 'pl-11' },
       address: { content: 'Address', position: 'center' },
-      liquidator: { content: 'Liquidity Pair', position: 'center' },
+      liquidator: { content: 'Liquidation Pair', position: 'center' },
       claimer: { content: 'Claimer', position: 'center' },
       status: { content: 'Status', position: 'center' },
       actions: { content: 'Actions', position: 'center' }
@@ -45,7 +47,7 @@ export const DeployedVaultsTable = (props: DeployedVaultsTableProps) => {
           position: 'center'
         },
         liquidator: {
-          content: <VaultLiquidityPairItem vault={vault} />,
+          content: <VaultLiquidationPairItem vault={vault} />,
           position: 'center'
         },
         claimer: {
@@ -114,22 +116,23 @@ const VaultAddressItem = (props: ItemProps) => {
   )
 }
 
-const VaultLiquidityPairItem = (props: ItemProps) => {
+const VaultLiquidationPairItem = (props: ItemProps) => {
   const { vault } = props
 
-  const { data: liquidityPair, isFetched: isFetchedLiquidityPair } = useVaultLiquidationPair(vault)
+  const { data: liquidationPair, isFetched: isFetchedLiquidationPair } =
+    useVaultLiquidationPair(vault)
 
-  if (!isFetchedLiquidityPair) {
+  if (!isFetchedLiquidationPair) {
     return <WrappedSpinner />
   }
 
-  if (!liquidityPair || liquidityPair === zeroAddress) {
+  if (!liquidationPair || liquidationPair === zeroAddress) {
     return <span className='text-sm text-pt-warning-light'>not set</span>
   }
 
   return (
-    <a href={getBlockExplorerUrl(vault.chainId, liquidityPair)} target='_blank'>
-      {shorten(liquidityPair)}
+    <a href={getBlockExplorerUrl(vault.chainId, liquidationPair)} target='_blank'>
+      {shorten(liquidationPair)}
     </a>
   )
 }
@@ -178,11 +181,16 @@ const VaultStatusItem = (props: ItemProps) => {
 const VaultActionsItem = (props: ItemProps) => {
   const { vault } = props
 
+  const router = useRouter()
+
   const { vaultState } = useDeployedVaultState(vault)
+
+  const { setStep } = useLiquidationPairSteps()
 
   const onClickCompleteSetup = (state: VaultState) => {
     if (state === 'missingLiquidationPair') {
-      // TODO: send user to 2 step flow for specific vault - deploy lp, set lp
+      setStep(0)
+      router.push(`/lp/${vault.chainId}/${vault.address}`)
     } else if (state === 'missingClaimer') {
       // TODO: send user to 1 step flow for specific vault - set claimer
     }
@@ -190,7 +198,7 @@ const VaultActionsItem = (props: ItemProps) => {
 
   if (vaultState === 'missingLiquidationPair' || vaultState === 'missingClaimer') {
     return (
-      <Button onClick={() => onClickCompleteSetup(vaultState)} color='red' disabled={true}>
+      <Button onClick={() => onClickCompleteSetup(vaultState)} color='red'>
         Complete Setup
       </Button>
     )

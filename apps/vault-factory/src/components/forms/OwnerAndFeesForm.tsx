@@ -11,7 +11,7 @@ import { Address, isAddress, zeroAddress } from 'viem'
 import { useAccount } from 'wagmi'
 import { NextButton } from '@components/buttons/NextButton'
 import { PrevButton } from '@components/buttons/PrevButton'
-import { useSteps } from '@hooks/useSteps'
+import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
 import { SimpleInput } from './SimpleInput'
 
 interface OwnerAndFeesFormValues {
@@ -35,7 +35,7 @@ export const OwnerAndFeesForm = (props: OwnerAndFeesFormProps) => {
   const [vaultFeePercentage, setVaultFeePercentage] = useAtom(vaultFeePercentageAtom)
   const [vaultFeeRecipient, setVaultFeeRecipient] = useAtom(vaultFeeRecipientAddressAtom)
 
-  const { nextStep } = useSteps()
+  const { nextStep } = useVaultCreationSteps()
 
   useEffect(() => {
     formMethods.setValue('vaultOwner', vaultOwner ?? userAddress ?? '', {

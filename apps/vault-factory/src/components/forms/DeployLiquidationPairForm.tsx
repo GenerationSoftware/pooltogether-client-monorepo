@@ -14,7 +14,7 @@ import { DeployLiquidationPairButton } from '@components/buttons/DeployLiquidati
 import { CONTRACTS } from '@constants/config'
 import { useLiquidationPairInitialAmountIn } from '@hooks/useLiquidationPairInitialAmountIn'
 import { useLiquidationPairMinimumAuctionAmount } from '@hooks/useLiquidationPairMinimumAuctionAmount'
-import { useSteps } from '@hooks/useSteps'
+import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
 import { ExchangeRateInput } from './ExchangeRateInput'
 import { MinimumAuctionAmountInput } from './MinimumAuctionAmountInput'
 
@@ -32,7 +32,7 @@ export const DeployLiquidationPairForm = (props: DeployLiquidationPairFormProps)
 
   const formMethods = useForm<DeployLiquidationPairFormValues>({ mode: 'onChange' })
 
-  const { nextStep } = useSteps()
+  const { nextStep } = useVaultCreationSteps()
 
   const chainId = useAtomValue(vaultChainIdAtom) as SupportedNetwork
   const vaultAddress = useAtomValue(vaultAddressAtom) as Address

@@ -1,9 +1,9 @@
 import { LINKS } from '@shared/ui'
-import classNames from 'classnames'
-import { ReactNode, useMemo } from 'react'
-import { useSteps } from '@hooks/useSteps'
+import { ReactNode } from 'react'
+import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
+import { StepInfo } from './StepInfo'
 
-const allVaultStepInfo: { title: string; info: ReactNode }[] = [
+export const allVaultStepInfo: { title: string; info: ReactNode }[] = [
   {
     title: 'Choose a network',
     info: `This is network your prize vault will be deployed on!`
@@ -50,48 +50,9 @@ interface CreateVaultStepInfoProps {
 export const CreateVaultStepInfo = (props: CreateVaultStepInfoProps) => {
   const { className } = props
 
-  const { step } = useSteps()
-
-  const { title, info } = useMemo(() => allVaultStepInfo[step] ?? { title: '?', info: '?' }, [step])
+  const { step, setStep } = useVaultCreationSteps()
 
   return (
-    <div className={classNames('flex flex-col', className)}>
-      <span>
-        {step + 1}/{allVaultStepInfo.length}
-      </span>
-      <h2 className='text-3xl'>{title}</h2>
-      <span>{info}</span>
-      <VaultStepGraphic className='mt-6' />
-    </div>
-  )
-}
-
-interface VaultStepGraphicProps {
-  className?: string
-}
-
-const VaultStepGraphic = (props: VaultStepGraphicProps) => {
-  const { className } = props
-
-  const { step, setStep } = useSteps()
-
-  const completedSteps = [...Array(step).keys()]
-  const futureSteps =
-    step < allVaultStepInfo.length ? [...Array(allVaultStepInfo.length - step - 1).keys()] : []
-
-  return (
-    <div className={classNames('flex gap-3', className)}>
-      {completedSteps.map((i) => (
-        <div
-          key={`completed-${i}`}
-          onClick={() => setStep(i)}
-          className='w-3 h-3 bg-pt-teal-dark rounded-full cursor-pointer'
-        />
-      ))}
-      <div className='w-9 h-3 bg-pt-purple-50 rounded-full' />
-      {futureSteps.map((i) => (
-        <div key={`future-${i}`} className='w-3 h-3 bg-pt-purple-50/50 rounded-full' />
-      ))}
-    </div>
+    <StepInfo step={step} stepInfo={allVaultStepInfo} setStep={setStep} className={className} />
   )
 }

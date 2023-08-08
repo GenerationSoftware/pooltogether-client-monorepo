@@ -6,7 +6,7 @@ import { vaultNameAtom, vaultSymbolAtom } from 'src/atoms'
 import { isValidChars } from 'src/utils'
 import { NextButton } from '@components/buttons/NextButton'
 import { PrevButton } from '@components/buttons/PrevButton'
-import { useSteps } from '@hooks/useSteps'
+import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
 import { useVaultNaming } from '@hooks/useVaultNaming'
 import { SimpleInput } from './SimpleInput'
 
@@ -29,7 +29,7 @@ export const NameAndSymbolForm = (props: NameAndSymbolFormProps) => {
 
   const { name: defaultName, symbol: defaultSymbol } = useVaultNaming()
 
-  const { nextStep } = useSteps()
+  const { nextStep } = useVaultCreationSteps()
 
   useEffect(() => {
     formMethods.setValue('vaultName', vaultName ?? defaultName, { shouldValidate: true })

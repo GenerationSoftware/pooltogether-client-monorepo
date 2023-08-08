@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { useSteps } from '@hooks/useSteps'
+import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
 import { DeployVaultButton } from './buttons/DeployVaultButton'
 import { PrevButton } from './buttons/PrevButton'
 import { VaultPreview } from './VaultPreview'
@@ -11,7 +11,7 @@ interface DeployVaultViewProps {
 export const DeployVaultView = (props: DeployVaultViewProps) => {
   const { className } = props
 
-  const { nextStep } = useSteps()
+  const { nextStep } = useVaultCreationSteps()
 
   return (
     <div className={classNames('flex flex-col grow gap-12 items-center', className)}>

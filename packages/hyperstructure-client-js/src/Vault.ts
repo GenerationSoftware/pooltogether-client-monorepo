@@ -24,6 +24,10 @@ export class Vault {
   exchangeRate: bigint | undefined
   liquidationPair: Address | undefined
   claimer: Address | undefined
+  yieldSource: Address | undefined
+  feePercent: number | undefined
+  feeRecipient: Address | undefined
+  owner: Address | undefined
   name: string | undefined
   logoURI: string | undefined
   tokenLogoURI: string | undefined
@@ -316,6 +320,81 @@ export class Vault {
 
     this.claimer = claimer
     return this.claimer
+  }
+
+  /**
+   * Returns the address of the vault's underlying yield source
+   * @returns
+   */
+  async getYieldSource(): Promise<Address> {
+    if (this.yieldSource !== undefined) return this.yieldSource
+
+    const source = 'Vault [getYieldSource]'
+    await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    const yieldSource = await this.publicClient.readContract({
+      address: this.address,
+      abi: vaultABI,
+      functionName: 'yieldVault'
+    })
+
+    this.yieldSource = yieldSource
+    return this.yieldSource
+  }
+
+  /**
+   * Returns the vault's current fee configuration
+   * @returns
+   */
+  async getFeeInfo(): Promise<{ percent: number; recipient: Address }> {
+    if (this.feePercent !== undefined && this.feeRecipient !== undefined) {
+      return { percent: this.feePercent, recipient: this.feeRecipient }
+    }
+
+    const source = 'Vault [getFeeInfo]'
+    await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    if (this.feePercent === undefined) {
+      const feeValue = await this.publicClient.readContract({
+        address: this.address,
+        abi: vaultABI,
+        functionName: 'yieldFeePercentage'
+      })
+
+      this.feePercent = Number(feeValue)
+    }
+
+    if (this.feeRecipient === undefined) {
+      const feeRecipient = await this.publicClient.readContract({
+        address: this.address,
+        abi: vaultABI,
+        functionName: 'yieldFeeRecipient'
+      })
+
+      this.feeRecipient = feeRecipient
+    }
+
+    return { percent: this.feePercent, recipient: this.feeRecipient }
+  }
+
+  /**
+   * Returns the address of the vault's owner
+   * @returns
+   */
+  async getOwner(): Promise<Address> {
+    if (this.owner !== undefined) return this.owner
+
+    const source = 'Vault [getOwner]'
+    await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    const owner = await this.publicClient.readContract({
+      address: this.address,
+      abi: vaultABI,
+      functionName: 'owner'
+    })
+
+    this.owner = owner
+    return this.owner
   }
 
   /* ============================== Write Functions ============================== */

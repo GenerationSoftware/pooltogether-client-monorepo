@@ -111,7 +111,9 @@ yarn add @pooltogether/hyperstructure-react-hooks
 - `useVaultBalance`
 - `useVaultClaimer`
 - `useVaultExchangeRate`
+- `useVaultFeeInfo`
 - `useVaultLiquidationPair`
+- `useVaultOwner`
 - `useVaultPercentageContribution`
 - `useVaultPrizePower`
 - `useVaults`
@@ -120,3 +122,4 @@ yarn add @pooltogether/hyperstructure-react-hooks
 - `useVaultTokenAddress`
 - `useVaultTokenData`
 - `useVaultTokenPrice`
+- `useVaultYieldSource`

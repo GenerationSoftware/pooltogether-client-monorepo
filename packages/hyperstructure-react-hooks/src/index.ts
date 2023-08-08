@@ -73,7 +73,9 @@ export * from './vaults/useVault'
 export * from './vaults/useVaultBalance'
 export * from './vaults/useVaultClaimer'
 export * from './vaults/useVaultExchangeRate'
+export * from './vaults/useVaultFeeInfo'
 export * from './vaults/useVaultLiquidationPair'
+export * from './vaults/useVaultOwner'
 export * from './vaults/useVaultPercentageContribution'
 export * from './vaults/useVaultPrizePower'
 export * from './vaults/useVaults'
@@ -82,6 +84,7 @@ export * from './vaults/useVaultSharePrice'
 export * from './vaults/useVaultTokenAddress'
 export * from './vaults/useVaultTokenData'
 export * from './vaults/useVaultTokenPrice'
+export * from './vaults/useVaultYieldSource'
 
 /**
  * Utils

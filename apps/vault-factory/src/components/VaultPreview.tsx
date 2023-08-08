@@ -58,7 +58,7 @@ export const VaultPreview = (props: VaultPreviewProps) => {
         <VaultPreviewItem
           label='Yield Source'
           value={yieldSourceName}
-          href={getBlockExplorerUrl(chainId, yieldSourceAddress, 'address')}
+          href={getBlockExplorerUrl(chainId, yieldSourceAddress)}
         />
       )}
       {!!formattedFeePercentage && (
@@ -68,14 +68,14 @@ export const VaultPreview = (props: VaultPreviewProps) => {
         <VaultPreviewItem
           label='Fee Recipient'
           value={`${shorten(feeRecipient)}`}
-          href={getBlockExplorerUrl(chainId, feeRecipient, 'address')}
+          href={getBlockExplorerUrl(chainId, feeRecipient)}
         />
       )}
       {!!owner && (
         <VaultPreviewItem
           label='Vault Owner'
           value={`${shorten(owner)}`}
-          href={getBlockExplorerUrl(chainId, owner, 'address')}
+          href={getBlockExplorerUrl(chainId, owner)}
         />
       )}
       {!!name && <VaultPreviewItem label='Vault Name' value={name} />}
@@ -84,7 +84,7 @@ export const VaultPreview = (props: VaultPreviewProps) => {
         <VaultPreviewItem
           label='Claimer'
           value={`${shorten(claimer)}`}
-          href={getBlockExplorerUrl(chainId, claimer, 'address')}
+          href={getBlockExplorerUrl(chainId, claimer)}
         />
       )}
     </div>
