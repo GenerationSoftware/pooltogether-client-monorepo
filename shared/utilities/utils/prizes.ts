@@ -84,24 +84,31 @@ export const getPrizePoolContributionPercentages = async (
   const chainId = await publicClient.getChainId()
 
   if (vaultAddresses.length > 0) {
-    const calls = vaultAddresses.map((vaultAddress) => ({
-      functionName: 'getVaultPortion',
-      args: [vaultAddress, startDrawId, endDrawId]
-    }))
+    if (endDrawId >= startDrawId) {
+      const calls = vaultAddresses.map((vaultAddress) => ({
+        functionName: 'getVaultPortion',
+        args: [vaultAddress, startDrawId, endDrawId]
+      }))
 
-    const multicallResults = await getSimpleMulticallResults(
-      publicClient,
-      prizePoolAddress,
-      prizePoolABI,
-      calls
-    )
+      const multicallResults = await getSimpleMulticallResults(
+        publicClient,
+        prizePoolAddress,
+        prizePoolABI,
+        calls
+      )
 
-    vaultAddresses.forEach((vaultAddress, i) => {
-      const result = multicallResults[i]
-      const vaultContribution: bigint = typeof result === 'bigint' ? result : 0n
-      const vaultId = getVaultId({ chainId, address: vaultAddress })
-      contributionPercentages[vaultId] = parseFloat(formatUnits(vaultContribution, 18))
-    })
+      vaultAddresses.forEach((vaultAddress, i) => {
+        const result = multicallResults[i]
+        const vaultContribution: bigint = typeof result === 'bigint' ? result : 0n
+        const vaultId = getVaultId({ chainId, address: vaultAddress })
+        contributionPercentages[vaultId] = parseFloat(formatUnits(vaultContribution, 18))
+      })
+    } else {
+      vaultAddresses.forEach((vaultAddress) => {
+        const vaultId = getVaultId({ chainId, address: vaultAddress })
+        contributionPercentages[vaultId] = parseFloat(formatUnits(0n, 18))
+      })
+    }
   }
 
   return contributionPercentages
@@ -131,7 +138,7 @@ export const getPrizePoolAllPrizeInfo = async (
     { functionName: 'drawPeriodSeconds' },
     { functionName: 'tierShares' },
     { functionName: 'getTotalShares' },
-    { functionName: 'getLastCompletedDrawId' },
+    { functionName: 'getLastClosedDrawId' },
     ...tiers.map((tier) => ({ functionName: 'getTierAccrualDurationInDraws', args: [tier] }))
   ]
 

@@ -32,7 +32,7 @@ export const POOL_TOKEN_ADDRESSES = Object.freeze({
   [NETWORK.mainnet]: '0x0cEC1A9154Ff802e7934Fc916Ed7Ca50bDE6844e',
   [NETWORK.polygon]: '0x25788a1a171ec66Da6502f9975a15B609fF54CF6',
   [NETWORK.optimism]: '0x395ae52bb17aef68c2888d941736a71dc6d4e125',
-  [NETWORK.sepolia]: '0x09f06F4BC026fB75E0064747edd49D371D20D434'
+  [NETWORK.sepolia]: '0x68a100a3729fc04ab26fb4c0862df22ceec2f18b'
 })
 
 /**
@@ -44,7 +44,7 @@ export const USDC_TOKEN_ADDRESSES: { [chainId: number]: Lowercase<Address> } = {
   [NETWORK.mainnet]: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
   [NETWORK.polygon]: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
   [NETWORK.optimism]: '0x7f5c764cbc14f9669b88837ca1490cca17c31607',
-  [NETWORK.sepolia]: '0x59d6b2e784f45568a76b9627de97e06fc237da83'
+  [NETWORK.sepolia]: '0x4d5f2cd31701f3e5de77b3f89ee7b80eb87b4acc'
 }
 
 /**
@@ -81,10 +81,10 @@ export const PRIZE_POOLS: {
 }[] = [
   {
     chainId: NETWORK.sepolia,
-    address: '0xA377A589C1957D7777F6eDF1b7C22C911a56e90F',
+    address: '0x858029ed93B97D9015A63A5CC63E5872EE67F88c',
     options: {
-      prizeTokenAddress: '0x09f06F4BC026fB75E0064747edd49D371D20D434',
-      drawPeriodInSeconds: 3_600,
+      prizeTokenAddress: '0x68A100A3729Fc04ab26Fb4C0862Df22CEec2f18B',
+      drawPeriodInSeconds: 7_200,
       tierShares: 100
     }
   }
@@ -174,9 +174,9 @@ export const STABLECOIN_ADDRESSES: Record<NETWORK, Lowercase<string>[]> = {
   ],
   [NETWORK.goerli]: [],
   [NETWORK.sepolia]: [
-    '0xb20ff9fe4065cc1494dfa3a273a527a05871074f', // DAI
-    '0x59d6b2e784f45568a76b9627de97e06fc237da83', // USDC
-    '0x73b3f9fecf92b4f0eb6a20c977cbb30964858fd7' // GUSD
+    '0x0aa9e2e0b37fb54c19e45cb246b17b0e700ab98d', // DAI
+    '0x4d5f2cd31701f3e5de77b3f89ee7b80eb87b4acc', // USDC
+    '0xa99b3a8503260ab32753c382eac297acd4a43908' // GUSD
   ],
   [NETWORK.bsc]: [],
   [NETWORK['bsc-testnet']]: [],
@@ -196,12 +196,16 @@ export const STABLECOIN_ADDRESSES: Record<NETWORK, Lowercase<string>[]> = {
 /**
  * Vault factory addresses
  */
-export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = Object.freeze({})
+export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = Object.freeze({
+  [NETWORK.sepolia]: '0x3341DAC0912B630F1A8c237b64F6861e9fa11d79'
+})
 
 /**
  * Liquidation pair factory addresses
  */
-export const LIQUIDATION_PAIR_FACTORY_ADDRESSES: { [chainId: number]: Address } = Object.freeze({})
+export const LIQUIDATION_PAIR_FACTORY_ADDRESSES: { [chainId: number]: Address } = Object.freeze({
+  [NETWORK.sepolia]: '0x1cA3CF8B47B596F2d9b440EdC59542539619bAec'
+})
 
 /**
  * Vault list schema

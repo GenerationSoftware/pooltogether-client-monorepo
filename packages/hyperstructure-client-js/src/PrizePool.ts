@@ -157,7 +157,7 @@ export class PrizePool {
   }
 
   /**
-   * Returns the prize pool's last awarded draw ID
+   * Returns the prize pool's last awarded (closed) draw ID
    * @returns
    */
   async getLastDrawId(): Promise<number> {
@@ -168,7 +168,7 @@ export class PrizePool {
       await this.publicClient.readContract({
         address: this.address,
         abi: prizePoolABI,
-        functionName: 'getLastCompletedDrawId'
+        functionName: 'getLastClosedDrawId'
       })
     )
 
@@ -250,7 +250,7 @@ export class PrizePool {
   }
 
   /**
-   * Returns the start timestamp of the last completed draw (in seconds)
+   * Returns the start timestamp of the last awarded draw (in seconds)
    * @returns
    */
   async getLastDrawStartTimestamp(): Promise<number> {
@@ -261,7 +261,7 @@ export class PrizePool {
       await this.publicClient.readContract({
         address: this.address,
         abi: prizePoolABI,
-        functionName: 'lastCompletedDrawStartedAt'
+        functionName: 'lastClosedDrawStartedAt'
       })
     )
 
@@ -280,7 +280,7 @@ export class PrizePool {
       await this.publicClient.readContract({
         address: this.address,
         abi: prizePoolABI,
-        functionName: 'nextDrawStartsAt'
+        functionName: 'openDrawEndsAt'
       })
     )
 
@@ -412,23 +412,24 @@ export class PrizePool {
   /* ============================== Write Functions ============================== */
 
   /**
-   * Submits a transaction to claim prizes from the prize pool
+   * Submits a transaction to claim a prize from the prize pool
+   * @param winner the wallet address that won a given tier's prize
    * @param tier the prize tier to claim
-   * @param winners the user addresses that won a given tier's prize
-   * @param prizeIndices the indices of each prize, for each winner
-   * @param options optional fees, fee recipient and overrides for this transaction
+   * @param prizeIndex the prize index to claim
+   * @param options optional settings and overrides for this transaction
    * @returns
    */
-  async claimPrizes(
+  async claimPrize(
+    winner: Address,
     tier: number,
-    winners: Address[],
-    prizeIndices: number[][],
+    prizeIndex: number,
     options?: {
+      recipient?: Address
       fee?: { amount: bigint; recipient: Address }
       overrides?: TxOverrides
     }
   ) {
-    const source = 'Prize Pool [claimPrizes]'
+    const source = 'Prize Pool [claimPrize]'
 
     if (!this.walletClient?.account) {
       throw new Error(`${source} | Invalid/Unavailable Viem Wallet Client`)
@@ -438,11 +439,12 @@ export class PrizePool {
       account: this.walletClient.account,
       address: this.address,
       abi: prizePoolABI,
-      functionName: 'claimPrizes',
+      functionName: 'claimPrize',
       args: [
+        winner,
         tier,
-        winners,
-        prizeIndices,
+        prizeIndex,
+        options?.recipient ?? winner,
         options?.fee?.amount ?? 0n,
         options?.fee?.recipient ?? this.walletClient.account.address
       ],
@@ -456,13 +458,13 @@ export class PrizePool {
   }
 
   /**
-   * Submits a transaction to complete the current draw and start the next draw
+   * Submits a transaction to close the currently open draw
    * @param winningRandomNumber randomly generated winning number
    * @param overrides optional overrides for this transaction
    * @returns
    */
-  async completeAndStartNextDraw(winningRandomNumber: bigint, overrides?: TxOverrides) {
-    const source = 'Prize Pool [completeAndStartNextDraw]'
+  async closeDraw(winningRandomNumber: bigint, overrides?: TxOverrides) {
+    const source = 'Prize Pool [closeDraw]'
 
     if (!this.walletClient?.account) {
       throw new Error(`${source} | Invalid/Unavailable Viem Wallet Client`)
@@ -472,7 +474,7 @@ export class PrizePool {
       account: this.walletClient.account,
       address: this.address,
       abi: prizePoolABI,
-      functionName: 'completeAndStartNextDraw',
+      functionName: 'closeDraw',
       args: [winningRandomNumber],
       chain: this.walletClient.chain,
       ...overrides

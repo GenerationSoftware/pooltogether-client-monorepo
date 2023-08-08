@@ -22,11 +22,11 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   },
   [NETWORK.goerli]: {},
   [NETWORK.sepolia]: {
-    '0xb20ff9fe4065cc1494dfa3a273a527a05871074f': tokenLogoUrls.dai,
-    '0x59d6b2e784f45568a76b9627de97e06fc237da83': tokenLogoUrls.usdc,
-    '0x73b3f9fecf92b4f0eb6a20c977cbb30964858fd7': tokenLogoUrls.gusd,
-    '0xf78de71cf358a92aee3370a7a3b743bf63c257d4': tokenLogoUrls.wbtc,
-    '0x62739a657d3bb724694b46b35795532ec9b42b47': tokenLogoUrls.weth
+    '0x0aa9e2e0b37fb54c19e45cb246b17b0e700ab98d': tokenLogoUrls.dai,
+    '0x4d5f2cd31701f3e5de77b3f89ee7b80eb87b4acc': tokenLogoUrls.usdc,
+    '0xa99b3a8503260ab32753c382eac297acd4a43908': tokenLogoUrls.gusd,
+    '0x29c102109d6cb2d866cfec380e0e10e9a287a75f': tokenLogoUrls.wbtc,
+    '0x4457025dff44e3d9085d9195828e7d53fe6a7088': tokenLogoUrls.weth
   },
   [NETWORK.bsc]: {},
   [NETWORK['bsc-testnet']]: {},

@@ -4,7 +4,6 @@ import {
   useToken
 } from '@pooltogether/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
-import { PRIZE_POOLS } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -12,6 +11,7 @@ import { vaultAddressAtom, vaultChainIdAtom } from 'src/atoms'
 import { SupportedNetwork } from 'src/types'
 import { Address } from 'viem'
 import { DeployLiquidationPairButton } from '@components/buttons/DeployLiquidationPairButton'
+import { CONTRACTS } from '@constants/config'
 import { useLiquidationPairInitialAmountIn } from '@hooks/useLiquidationPairInitialAmountIn'
 import { useLiquidationPairMinimumAuctionAmount } from '@hooks/useLiquidationPairMinimumAuctionAmount'
 import { useSteps } from '@hooks/useSteps'
@@ -37,9 +37,7 @@ export const DeployLiquidationPairForm = (props: DeployLiquidationPairFormProps)
   const chainId = useAtomValue(vaultChainIdAtom) as SupportedNetwork
   const vaultAddress = useAtomValue(vaultAddressAtom) as Address
 
-  const prizePoolAddress = PRIZE_POOLS.find((pool) => pool.chainId === chainId)?.address as Address
-
-  const prizePool = usePrizePool(chainId, prizePoolAddress)
+  const prizePool = usePrizePool(chainId, CONTRACTS[chainId].prizePool)
   const { data: prizeToken } = usePrizeTokenPrice(prizePool)
 
   const { data: shareToken } = useToken(chainId, vaultAddress)

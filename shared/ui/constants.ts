@@ -2,7 +2,7 @@
  * Domains
  */
 export const DOMAINS = Object.freeze({
-  app: 'https://mvp-pt-app.netlify.app',
+  app: 'https://app.cabana.fi',
   app_v4: 'https://app.pooltogether.com',
   landingPage: 'https://cabana-landing-page.netlify.app',
   protocolLandingPage: 'https://pooltogether.com',
@@ -12,8 +12,8 @@ export const DOMAINS = Object.freeze({
   poolExplorer: 'https://poolexplorer.win',
   tools: 'https://tools.pooltogether.com',
   notion: 'https://pooltogetherdao.notion.site',
-  vaultListCreator: 'https://vaultlist-creator.netlify.app',
-  vaultFactory: 'https://vault-factory.netlify.app'
+  vaultListCreator: 'https://lists.cabana.fi',
+  vaultFactory: 'https://factory.cabana.fi'
 })
 
 /**
