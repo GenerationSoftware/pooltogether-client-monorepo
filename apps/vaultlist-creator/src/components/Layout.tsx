@@ -1,6 +1,7 @@
 import classNames from 'classnames'
 import Head from 'next/head'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
 import { AppView } from 'src/types'
 
@@ -36,6 +37,8 @@ export const Layout = (props: LayoutProps) => {
 }
 
 const SimpleNavbar = (props: { className?: string }) => {
+  const router = useRouter()
+
   return (
     <div
       className={classNames(
@@ -44,14 +47,14 @@ const SimpleNavbar = (props: { className?: string }) => {
       )}
     >
       <Image
-        src='/ptLogo.svg'
+        src='/cabanaLogo.svg'
         alt='PoolTogether Logo'
-        width={183}
-        height={72}
+        width={215}
+        height={71}
         priority={true}
-        className='w-28 h-auto'
+        onClick={() => router.reload()}
+        className='w-52 h-auto cursor-pointer'
       />
-      <span className='text-center text-2xl lg:text-4xl'>Vault List Creator</span>
     </div>
   )
 }
