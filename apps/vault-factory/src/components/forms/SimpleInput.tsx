@@ -14,6 +14,8 @@ interface SimpleInputProps {
   autoFocus?: boolean
   disabled?: boolean
   needsOverride?: boolean
+  keepValueOnOverride?: boolean
+  onOverride?: (val: boolean) => void
   className?: string
   labelClassName?: string
   innerClassName?: string
@@ -32,6 +34,8 @@ export const SimpleInput = (props: SimpleInputProps) => {
     autoFocus,
     disabled,
     needsOverride,
+    keepValueOnOverride,
+    onOverride,
     className,
     labelClassName,
     innerClassName,
@@ -45,14 +49,16 @@ export const SimpleInput = (props: SimpleInputProps) => {
   const [isActiveOverride, setIsActiveOverride] = useState<boolean>(false)
 
   const handleOverride = () => {
-    setValue(formKey, '')
+    !keepValueOnOverride && setValue(formKey, '')
     setIsActiveOverride(true)
+    onOverride?.(true)
   }
 
   const handleBlur = () => {
     if ((needsOverride && !formValues[formKey]) || formValues[formKey] === defaultValue) {
       setValue(formKey, defaultValue, { shouldValidate: true })
       setIsActiveOverride(false)
+      onOverride?.(false)
     }
   }
 

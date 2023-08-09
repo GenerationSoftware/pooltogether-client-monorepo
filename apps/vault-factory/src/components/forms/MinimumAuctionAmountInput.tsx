@@ -1,7 +1,7 @@
 import { Token } from '@shared/types'
 import classNames from 'classnames'
 import { useAtom } from 'jotai'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { liquidationPairMinimumAuctionAmountAtom } from 'src/atoms'
 import { Address, formatUnits, parseUnits } from 'viem'
@@ -33,6 +33,8 @@ export const MinimumAuctionAmountInput = (props: MinimumAuctionAmountInputProps)
     vaultAddress
   )
 
+  const [isOverriden, setIsOverriden] = useState<boolean>(false)
+
   useEffect(() => {
     setValue(
       'minimumAuctionAmount',
@@ -55,11 +57,16 @@ export const MinimumAuctionAmountInput = (props: MinimumAuctionAmountInputProps)
   }, [_minimumAuctionAmount])
 
   return (
-    <div className={classNames('w-full flex flex-col items-center', className)}>
+    <div
+      className={classNames(
+        'relative w-full max-w-md flex flex-col items-center overflow-hidden',
+        className
+      )}
+    >
       <SimpleInput
         formKey='minimumAuctionAmount'
         validate={{
-          isValidNumber: (v: string) => !isNaN(parseFloat(v)) || 'Enter a valid number.',
+          isValidNumber: (v: string) => /^-?\d+\.?\d*$/.test(v) || 'Enter a valid number.',
           isPositiveNumber: (v: string) => parseFloat(v) > 0 || 'Enter a number larger than 0.',
           isNotTooPrecise: (v) =>
             v.split('.').length < 2 ||
@@ -73,9 +80,19 @@ export const MinimumAuctionAmountInput = (props: MinimumAuctionAmountInputProps)
             : undefined
         }
         needsOverride={true}
-        className={classNames('w-full max-w-md', inputClassName)}
+        keepValueOnOverride={true}
+        onOverride={setIsOverriden}
+        className={classNames('w-full', inputClassName)}
       />
-      <span>{shareToken.symbol}</span>
+      <span
+        className={classNames(
+          'absolute top-9 pt-[1px] pl-3 text-sm leading-tight pointer-events-none md:top-10 md:pl-4',
+          { 'text-gray-400': isOverriden, 'text-pt-teal-dark': !isOverriden }
+        )}
+        style={{ left: `${(_minimumAuctionAmount?.length ?? 0) + 0.5}ch` }}
+      >
+        {shareToken.symbol}
+      </span>
     </div>
   )
 }
@@ -83,7 +100,7 @@ export const MinimumAuctionAmountInput = (props: MinimumAuctionAmountInputProps)
 const isValidMinimumAuctionAmount = (val: string, maxDecimals: number) => {
   return (
     !!val &&
-    !isNaN(parseFloat(val)) &&
+    /^-?\d+\.?\d*$/.test(val) &&
     parseFloat(val) > 0 &&
     (val.split('.').length < 2 || val.split('.')[1].length <= maxDecimals)
   )

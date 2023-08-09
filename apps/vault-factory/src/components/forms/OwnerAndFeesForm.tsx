@@ -76,7 +76,7 @@ export const OwnerAndFeesForm = (props: OwnerAndFeesFormProps) => {
         <SimpleInput
           formKey='vaultFee'
           validate={{
-            isValidNumber: (v: string) => !isNaN(parseFloat(v)) || 'Enter a valid number.',
+            isValidNumber: (v: string) => /^-?\d+\.?\d*$/.test(v) || 'Enter a valid number.',
             isValidPercentage: (v: string) =>
               (parseFloat(v) >= 0 && parseFloat(v) <= 100) || 'Enter a number between 0 and 100.',
             isNotTooPrecise: (v) =>
