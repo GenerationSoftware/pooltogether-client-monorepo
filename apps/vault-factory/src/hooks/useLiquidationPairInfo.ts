@@ -1,5 +1,5 @@
 import {
-  useLastDrawTimestamps,
+  useFirstDrawStartTimestamp,
   usePrizePool,
   useVault,
   useVaultSharePrice
@@ -38,7 +38,7 @@ export const useLiquidationPairInfo = (
   }
 
   const prizePool = usePrizePool(chainId, prizePoolInfo.address)
-  const { data: lastDrawTimestamps } = useLastDrawTimestamps(prizePool)
+  const { data: periodOffset } = useFirstDrawStartTimestamp(prizePool)
 
   const periodLength = prizePoolInfo.options.drawPeriodInSeconds
   const targetFirstSaleTime = LP_CONFIG.targetFirstSaleTimeFraction * periodLength
@@ -51,7 +51,7 @@ export const useLiquidationPairInfo = (
     tokenIn: POOL_TOKEN_ADDRESSES[chainId],
     tokenOut: vaultAddress,
     periodLength,
-    periodOffset: lastDrawTimestamps?.start,
+    periodOffset,
     targetFirstSaleTime,
     decayConstant: LP_CONFIG.decayConstant,
     initialAmountIn,

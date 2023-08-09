@@ -1,7 +1,8 @@
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import {
   useSendSetLiquidationPairTransaction,
-  useVault
+  useVault,
+  useVaultLiquidationPair
 } from '@pooltogether/hyperstructure-react-hooks'
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { createSetLiquidationPairTxToast, TransactionButton } from '@shared/react-components'
@@ -30,6 +31,8 @@ export const SetLiquidationPairButton = (props: SetLiquidationPairButtonProps) =
 
   const vault = useVault({ chainId, address: vaultAddress })
 
+  const { refetch: refetchVaultLiquidationPair } = useVaultLiquidationPair(vault)
+
   const {
     isWaiting: isWaitingSet,
     isConfirming: isConfirmingSet,
@@ -41,6 +44,7 @@ export const SetLiquidationPairButton = (props: SetLiquidationPairButtonProps) =
       createSetLiquidationPairTxToast({ chainId, txHash, addRecentTransaction })
     },
     onSuccess: () => {
+      refetchVaultLiquidationPair()
       onSuccess?.()
     }
   })

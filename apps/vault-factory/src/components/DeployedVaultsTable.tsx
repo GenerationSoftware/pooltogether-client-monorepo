@@ -185,18 +185,16 @@ const VaultActionsItem = (props: ItemProps) => {
 
   const { vaultState } = useDeployedVaultState(vault)
 
-  const { setStep } = useLiquidationPairSteps()
+  const { setStep: setLpStep } = useLiquidationPairSteps()
 
   const onClickCompleteSetup = (state: VaultState) => {
     if (state === 'missingLiquidationPair') {
-      setStep(0)
+      setLpStep(0)
       router.push(`/lp/${vault.chainId}/${vault.address}`)
-    } else if (state === 'missingClaimer') {
-      // TODO: send user to 1 step flow for specific vault - set claimer
     }
   }
 
-  if (vaultState === 'missingLiquidationPair' || vaultState === 'missingClaimer') {
+  if (vaultState === 'missingLiquidationPair') {
     return (
       <Button onClick={() => onClickCompleteSetup(vaultState)} color='red'>
         Complete Setup

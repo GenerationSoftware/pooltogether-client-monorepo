@@ -1,5 +1,5 @@
 import { LINKS } from '@shared/ui'
-import { ReactNode } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
 import { StepInfo } from './StepInfo'
 
@@ -56,7 +56,20 @@ export const CreateVaultStepInfo = (props: CreateVaultStepInfoProps) => {
 
   const { step, setStep } = useVaultCreationSteps()
 
+  const blockedSteps = useMemo(() => {
+    if (step >= 6) {
+      return [...Array(6).keys()]
+    }
+    return []
+  }, [step])
+
   return (
-    <StepInfo step={step} stepInfo={allVaultStepInfo} setStep={setStep} className={className} />
+    <StepInfo
+      step={step}
+      stepInfo={allVaultStepInfo}
+      setStep={setStep}
+      blockedSteps={blockedSteps}
+      className={className}
+    />
   )
 }

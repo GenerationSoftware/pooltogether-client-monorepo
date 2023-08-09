@@ -250,6 +250,25 @@ export class PrizePool {
   }
 
   /**
+   * Returns the start timestamp of the first ever draw (in seconds)
+   * @returns
+   */
+  async getFirstDrawStartTimestamp(): Promise<number> {
+    const source = 'Prize Pool [getFirstDrawStartTimestamp]'
+    await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    const startTimestamp = Number(
+      await this.publicClient.readContract({
+        address: this.address,
+        abi: prizePoolABI,
+        functionName: 'firstDrawStartsAt'
+      })
+    )
+
+    return startTimestamp
+  }
+
+  /**
    * Returns the start timestamp of the last awarded draw (in seconds)
    * @returns
    */

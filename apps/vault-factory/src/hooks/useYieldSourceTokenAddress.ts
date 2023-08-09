@@ -2,11 +2,13 @@ import { Vault } from '@pooltogether/hyperstructure-client-js'
 import { NO_REFETCH, QUERY_KEYS } from '@pooltogether/hyperstructure-react-hooks'
 import { getVaultId } from '@shared/utilities'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
-import { Address } from 'viem'
+import { Address, zeroAddress } from 'viem'
 import { usePublicClient } from 'wagmi'
 
 /**
  * Returns the underlying token address of a given yield source
+ *
+ * NOTE: Returns the zero address if not a valid ERC-4626 contract
  * @param chainId the yield source's chain ID
  * @param address the yield source's address
  * @returns
@@ -24,8 +26,13 @@ export const useYieldSourceTokenAddress = (
     queryKey,
     async () => {
       const yieldSource = new Vault(chainId, address, publicClient)
-      const tokenAddress = await yieldSource.getTokenAddress()
-      return tokenAddress
+      try {
+        const tokenAddress = await yieldSource.getTokenAddress()
+        return tokenAddress
+      } catch (e) {
+        console.warn(e)
+        return zeroAddress
+      }
     },
     {
       enabled: !!chainId && !!address && !!publicClient,

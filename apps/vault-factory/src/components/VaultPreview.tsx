@@ -5,7 +5,7 @@ import classNames from 'classnames'
 import { useMemo } from 'react'
 import { SupportedNetwork } from 'src/types'
 import { getFormattedFeePercentage } from 'src/utils'
-import { Address } from 'viem'
+import { Address, zeroAddress } from 'viem'
 import { useVaultInfo } from '@hooks/useVaultInfo'
 
 interface VaultPreviewProps {
@@ -34,9 +34,7 @@ export const VaultPreview = (props: VaultPreviewProps) => {
     return feePercentage !== undefined ? getFormattedFeePercentage(feePercentage) : undefined
   }, [feePercentage])
 
-  if (!chainId || !token) {
-    return <></>
-  }
+  const isInvalidYieldSource = token === zeroAddress
 
   return (
     <div
@@ -46,32 +44,42 @@ export const VaultPreview = (props: VaultPreviewProps) => {
       )}
     >
       <span className='text-xl text-pt-purple-100'>Prize Vault Preview</span>
-      <VaultPreviewItem label='Network' value={getNiceNetworkNameByChainId(chainId)} />
+      {!!chainId && (
+        <VaultPreviewItem label='Network' value={getNiceNetworkNameByChainId(chainId)} />
+      )}
       {!!tokenData && (
         <VaultPreviewItem
           label='Deposit Token'
-          value={tokenData.symbol ?? '???'}
+          value={tokenData.symbol}
           href={getBlockExplorerUrl(tokenData.chainId, tokenData.address, 'token')}
         />
       )}
-      {!!yieldSourceName && !!yieldSourceAddress && (
+      {!!chainId && !!yieldSourceName && !!yieldSourceAddress && !isInvalidYieldSource && (
         <VaultPreviewItem
           label='Yield Source'
           value={yieldSourceName}
           href={getBlockExplorerUrl(chainId, yieldSourceAddress)}
         />
       )}
+      {!!yieldSourceAddress && isInvalidYieldSource && (
+        <VaultPreviewItem
+          label='Yield Source'
+          value='Invalid'
+          href={!!chainId ? getBlockExplorerUrl(chainId, yieldSourceAddress) : undefined}
+          valueClassName='text-pt-warning-light'
+        />
+      )}
       {!!formattedFeePercentage && (
         <VaultPreviewItem label='Yield Fee %' value={formattedFeePercentage} />
       )}
-      {!!feeRecipient && (
+      {!!chainId && !!feeRecipient && (
         <VaultPreviewItem
           label='Fee Recipient'
           value={`${shorten(feeRecipient)}`}
           href={getBlockExplorerUrl(chainId, feeRecipient)}
         />
       )}
-      {!!owner && (
+      {!!chainId && !!owner && (
         <VaultPreviewItem
           label='Vault Owner'
           value={`${shorten(owner)}`}
@@ -80,7 +88,7 @@ export const VaultPreview = (props: VaultPreviewProps) => {
       )}
       {!!name && <VaultPreviewItem label='Vault Name' value={name} />}
       {!!symbol && <VaultPreviewItem label='Vault Symbol' value={symbol} />}
-      {!!claimer && (
+      {!!chainId && !!claimer && (
         <VaultPreviewItem
           label='Claimer'
           value={`${shorten(claimer)}`}
@@ -95,18 +103,24 @@ interface VaultPreviewItemProps {
   label: string
   value: string
   href?: string
+  valueClassName?: string
 }
 
 const VaultPreviewItem = (props: VaultPreviewItemProps) => {
-  const { label, value, href } = props
+  const { label, value, href, valueClassName } = props
 
   return (
     <div className='w-full inline-flex justify-between text-sm leading-tight'>
       <span>{label}</span>
       {!!href ? (
-        <ExternalLink href={href} text={value} size='sm' className='text-pt-teal-dark' />
+        <ExternalLink
+          href={href}
+          text={value}
+          size='sm'
+          className={classNames('text-pt-teal-dark', valueClassName)}
+        />
       ) : (
-        <span className='text-pt-teal-dark'>{value}</span>
+        <span className={classNames('text-pt-teal-dark', valueClassName)}>{value}</span>
       )}
     </div>
   )

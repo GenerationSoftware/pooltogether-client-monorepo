@@ -7,7 +7,7 @@ import { VaultPreview } from './VaultPreview'
 export const CreatePageContent = () => {
   const { step } = useVaultCreationSteps()
 
-  const showPreview: number[] = [0, 1, 2, 3, 4]
+  const showPreview: number[] = [1, 2, 3, 4]
   const showDeployment: number[] = [6, 7]
 
   return (
