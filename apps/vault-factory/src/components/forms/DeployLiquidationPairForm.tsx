@@ -14,6 +14,7 @@ import { DeployLiquidationPairButton } from '@components/buttons/DeployLiquidati
 import { CONTRACTS } from '@constants/config'
 import { useLiquidationPairInitialAmountIn } from '@hooks/useLiquidationPairInitialAmountIn'
 import { useLiquidationPairMinimumAuctionAmount } from '@hooks/useLiquidationPairMinimumAuctionAmount'
+import { useLiquidationPairSteps } from '@hooks/useLiquidationPairSteps'
 import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
 import { ExchangeRateInput } from './ExchangeRateInput'
 import { MinimumAuctionAmountInput } from './MinimumAuctionAmountInput'
@@ -32,7 +33,8 @@ export const DeployLiquidationPairForm = (props: DeployLiquidationPairFormProps)
 
   const formMethods = useForm<DeployLiquidationPairFormValues>({ mode: 'onChange' })
 
-  const { nextStep } = useVaultCreationSteps()
+  const { nextStep: nextVaultCreationStep } = useVaultCreationSteps()
+  const { nextStep: nextLpStep } = useLiquidationPairSteps()
 
   const chainId = useAtomValue(vaultChainIdAtom) as SupportedNetwork
   const vaultAddress = useAtomValue(vaultAddressAtom) as Address
@@ -50,6 +52,11 @@ export const DeployLiquidationPairForm = (props: DeployLiquidationPairFormProps)
 
   if (!prizeToken || !shareToken || !defaultInitialAmountIn || !defaultMinimumAuctionAmount) {
     return <Spinner />
+  }
+
+  const nextStep = () => {
+    nextVaultCreationStep()
+    nextLpStep()
   }
 
   return (

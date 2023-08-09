@@ -16,5 +16,6 @@ export type FormKey =
   | 'minimumAuctionAmount'
   | 'deployedVaultChainId'
   | 'deployedVaultAddress'
+  | 'lpAddress'
 
 export type VaultState = 'active' | 'invalid' | 'missingLiquidationPair' | 'missingClaimer'

@@ -7,7 +7,7 @@ import classNames from 'classnames'
 import { useSetAtom } from 'jotai'
 import { liquidationPairAddressAtom } from 'src/atoms'
 import { SupportedNetwork } from 'src/types'
-import { Address } from 'viem'
+import { Address, isAddress } from 'viem'
 import { useLiquidationPairInfo } from '@hooks/useLiquidationPairInfo'
 
 interface DeployLiquidationPairButtonProps {
@@ -21,7 +21,7 @@ interface DeployLiquidationPairButtonProps {
 export const DeployLiquidationPairButton = (props: DeployLiquidationPairButtonProps) => {
   const { chainId, vaultAddress, onSuccess, className, innerClassName } = props
 
-  const liquidationPair = useLiquidationPairInfo(chainId, vaultAddress)
+  const liquidationPairInfo = useLiquidationPairInfo(chainId, vaultAddress)
 
   const { openConnectModal } = useConnectModal()
   const { openChainModal } = useChainModal()
@@ -35,13 +35,15 @@ export const DeployLiquidationPairButton = (props: DeployLiquidationPairButtonPr
     isSuccess: isSuccessfulDeploy,
     txHash: deployTxHash,
     sendDeployLiquidationPairTransaction
-  } = useSendDeployLiquidationPairTransaction(liquidationPair as PairCreateInfo, {
+  } = useSendDeployLiquidationPairTransaction(liquidationPairInfo as PairCreateInfo, {
     onSend: (txHash) => {
       createDeployLiquidationPairTxToast({ chainId, txHash, addRecentTransaction })
     },
     onSuccess: (txReceipt) => {
-      const liquidationPairAddress = txReceipt.logs[0].address
-      setLiquidationPairAddress(liquidationPairAddress)
+      const liquidationPairAddress = `0x${txReceipt.logs[0].topics[1]?.slice(-40)}`
+      if (isAddress(liquidationPairAddress)) {
+        setLiquidationPairAddress(liquidationPairAddress)
+      }
       onSuccess?.()
     }
   })
@@ -62,7 +64,7 @@ export const DeployLiquidationPairButton = (props: DeployLiquidationPairButtonPr
       addRecentTransaction={addRecentTransaction}
       color='purple'
       className={classNames(
-        '!bg-pt-purple-600 !border-pt-purple-600 hover:!bg-pt-purple-700 focus:outline-transparent',
+        'w-56 !bg-pt-purple-600 !border-pt-purple-600 hover:!bg-pt-purple-700 focus:outline-transparent',
         className
       )}
       innerClassName={classNames(

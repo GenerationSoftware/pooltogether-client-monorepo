@@ -40,6 +40,10 @@ export const allVaultStepInfo: { title: string; info: ReactNode }[] = [
   {
     title: 'Deploy your liquidation pair',
     info: `This is the contract that enables your prize vault's yield to be liquidated for POOL prizes. We've set some initial settings automatically, but feel free to customize these.`
+  },
+  {
+    title: 'Set the liquidation pair to your prize vault',
+    info: `This transaction will configure your prize vault to use the liquidation pair contract you've just deployed!`
   }
 ]
 

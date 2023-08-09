@@ -7,6 +7,7 @@ import { DeployLiquidationPairForm } from './forms/DeployLiquidationPairForm'
 import { NameAndSymbolForm } from './forms/NameAndSymbolForm'
 import { NetworkForm } from './forms/NetworkForm'
 import { OwnerAndFeesForm } from './forms/OwnerAndFeesForm'
+import { SetLiquidationPairForm } from './forms/SetLiquidationPairForm'
 import { YieldSourceForm } from './forms/YieldSourceForm'
 
 const allVaultStepContent: ReactNode[] = [
@@ -16,7 +17,8 @@ const allVaultStepContent: ReactNode[] = [
   <NameAndSymbolForm />,
   <ClaimerForm />,
   <DeployVaultView />,
-  <DeployLiquidationPairForm />
+  <DeployLiquidationPairForm />,
+  <SetLiquidationPairForm />
 ]
 
 interface CreateVaultStepContentProps {

@@ -2,8 +2,12 @@ import classNames from 'classnames'
 import { ReactNode, useMemo } from 'react'
 import { useLiquidationPairSteps } from '@hooks/useLiquidationPairSteps'
 import { DeployLiquidationPairForm } from './forms/DeployLiquidationPairForm'
+import { SetLiquidationPairForm } from './forms/SetLiquidationPairForm'
 
-const allLiquidationPairStepContent: ReactNode[] = [<DeployLiquidationPairForm />]
+const allLiquidationPairStepContent: ReactNode[] = [
+  <DeployLiquidationPairForm />,
+  <SetLiquidationPairForm />
+]
 
 interface LiquidationPairStepContentProps {
   className?: string

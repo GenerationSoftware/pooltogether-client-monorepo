@@ -13,7 +13,11 @@ import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransa
 export const useSendSetLiquidationPairTransaction = (
   address: Address,
   vault: Vault,
-  options?: { onSend?: () => void; onSuccess?: () => void; onError?: () => void }
+  options?: {
+    onSend?: (txHash: `0x${string}`) => void
+    onSuccess?: (txReceipt: TransactionReceipt) => void
+    onError?: () => void
+  }
 ): {
   isWaiting: boolean
   isConfirming: boolean
@@ -43,14 +47,16 @@ export const useSendSetLiquidationPairTransaction = (
     write
   } = useContractWrite(config)
 
+  const txHash = txSendData?.hash
+
   const sendSetLiquidationPairTransaction = !!write
     ? () => {
         write()
-        options?.onSend?.()
+        if (!!txHash) {
+          options?.onSend?.(txHash)
+        }
       }
     : undefined
-
-  const txHash = txSendData?.hash
 
   const {
     data: txReceipt,
@@ -63,7 +69,7 @@ export const useSendSetLiquidationPairTransaction = (
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {
-      options?.onSuccess?.()
+      options?.onSuccess?.(txReceipt)
     }
   }, [isSuccess])
 

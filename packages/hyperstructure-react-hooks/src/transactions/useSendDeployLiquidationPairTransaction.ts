@@ -94,6 +94,8 @@ export const useSendDeployLiquidationPairTransaction = (
     write
   } = useContractWrite(config)
 
+  const txHash = txSendData?.hash
+
   const sendDeployLiquidationPairTransaction = !!write
     ? () => {
         write()
@@ -102,8 +104,6 @@ export const useSendDeployLiquidationPairTransaction = (
         }
       }
     : undefined
-
-  const txHash = txSendData?.hash
 
   const {
     data: txReceipt,
