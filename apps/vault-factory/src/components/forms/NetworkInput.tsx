@@ -1,8 +1,12 @@
-import { Card } from '@shared/ui'
-import { getNiceNetworkNameByChainId } from '@shared/utilities'
+import { useGrandPrize, usePrizePool } from '@pooltogether/hyperstructure-react-hooks'
+import { TokenAmount, TokenValue } from '@shared/react-components'
+import { Card, Spinner } from '@shared/ui'
+import { getNiceNetworkNameByChainId, NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
+import { ReactNode } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { SupportedNetwork } from 'src/types'
+import { CONTRACTS } from '@constants/config'
 
 interface NetworkInputFormValues {
   vaultChainId: string
@@ -42,8 +46,16 @@ interface NetworkCardProps {
   chainId: SupportedNetwork
 }
 
+const networkDescriptions: Record<SupportedNetwork, ReactNode> = {
+  [NETWORK.sepolia]: 'This is the main testnet used to try out the PoolTogether Hyperstructure.'
+}
+
 const NetworkCard = (props: NetworkCardProps) => {
   const { chainId } = props
+
+  const prizePoolAddress = CONTRACTS[chainId].prizePool
+  const prizePool = usePrizePool(chainId, prizePoolAddress)
+  const { data: grandPrize } = useGrandPrize(prizePool)
 
   const { vaultChainId } = useWatch<NetworkInputFormValues>()
 
@@ -63,14 +75,19 @@ const NetworkCard = (props: NetworkCardProps) => {
       <span className='text-lg font-bold text-blue-500'>
         {getNiceNetworkNameByChainId(chainId)}
       </span>
-      {/* TODO: add actual prize pool stat */}
-      <span className='text-pt-purple-100'>some useful prize pool stat here</span>
-      {/* TODO: add network description */}
-      <span className='line-clamp-3'>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Distinctio, perspiciatis qui
-        minima porro possimus ea perferendis, optio quidem praesentium voluptatum dolorem cum
-        asperiores incidunt nesciunt? Ad minus numquam asperiores ratione!
+      <span className='text-pt-purple-100'>
+        Grand Prize:{' '}
+        {!!grandPrize ? (
+          <TokenValue
+            token={grandPrize}
+            fallback={<TokenAmount token={grandPrize} hideZeroes={true} />}
+            hideZeroes={true}
+          />
+        ) : (
+          <Spinner />
+        )}
       </span>
+      <span className='line-clamp-3'>{networkDescriptions[chainId]}</span>
     </Card>
   )
 }

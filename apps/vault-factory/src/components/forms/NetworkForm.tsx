@@ -41,9 +41,9 @@ export const NetworkForm = (props: NetworkFormProps) => {
         onSubmit={formMethods.handleSubmit(onSubmit)}
         className={classNames('flex flex-col grow gap-12 items-center', className)}
       >
-        <div className='flex flex-col gap-4 items-center'>
+        <div className='w-full flex flex-col gap-4 items-center'>
           <span className='text-sm font-medium text-pt-purple-100'>Select Network</span>
-          <div className='flex flex-wrap justify-center gap-x-6 gap-y-4'>
+          <div className='w-full flex flex-wrap justify-center gap-x-6 gap-y-4'>
             {SUPPORTED_NETWORKS.map((chainId) => (
               <NetworkInput key={`chain-${chainId}`} chainId={chainId} />
             ))}

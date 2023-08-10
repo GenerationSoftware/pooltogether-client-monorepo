@@ -69,6 +69,7 @@ yarn add @pooltogether/hyperstructure-react-hooks
 - `useDrawPeriod`
 - `useEstimatedPrizeCount`
 - `useFirstDrawStartTimestamp`
+- `useGrandPrize`
 - `useLargestGrandPrize`
 - `useLastDrawTimestamps`
 - `useNextDrawTimestamps`
