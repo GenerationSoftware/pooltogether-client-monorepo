@@ -219,7 +219,9 @@ export const getPrizePoolHistoricalWins = async (
           prizeClaims {
             id
             winner { id }
+            recipient { id }
             tier
+            prizeIndex
             payout
             fee
             feeRecipient { id }
@@ -269,6 +271,7 @@ export const getUserPrizePoolHistoricalWins = async (
             id
             draw { id }
             tier
+            prizeIndex
             payout
             fee
             feeRecipient { id }

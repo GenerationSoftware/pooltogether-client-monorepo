@@ -8,7 +8,9 @@ export interface SubgraphPrizePoolDraw {
   prizeClaims: {
     id: string
     winner: { id: string }
+    recipient: { id: string }
     tier: number
+    prizeIndex: string
     payout: string
     fee: string
     feeRecipient: { id: string }
@@ -22,6 +24,7 @@ export interface SubgraphPrizePoolAccount {
     id: string
     draw: { id: string }
     tier: number
+    prizeIndex: string
     payout: string
     fee: string
     feeRecipient: { id: string }

@@ -94,7 +94,8 @@ export const PRIZE_POOLS: {
  * Prize Pool Graph API URLs
  */
 export const PRIZE_POOL_GRAPH_API_URLS = Object.freeze({
-  [NETWORK.sepolia]: 'https://api.studio.thegraph.com/query/41211/v5-prize-pool-eth-sepolia/v0.0.3'
+  [NETWORK.sepolia]:
+    'https://api.studio.thegraph.com/query/50959/pt-v5-prize-pool-eth-sepolia/v0.0.1'
 })
 
 /**
