@@ -49,7 +49,7 @@ export const Navbar = (props: NavbarProps) => {
       <FlowbiteNavbar
         fluid={true}
         theme={{
-          base: 'font-averta bg-pt-bg-purple-darker text-pt-purple-50 px-8 py-4 border-b-2 border-b-pt-purple-700 border-opacity-0 isolate z-50'
+          base: 'bg-pt-bg-purple-darker text-pt-purple-50 px-8 py-4 border-b-2 border-b-pt-purple-700 border-opacity-0 isolate z-50'
         }}
         className={classNames({ 'fixed w-full border-opacity-100': sticky }, className)}
       >
@@ -110,7 +110,7 @@ const NavbarLinks = (props: NavbarLinksProps) => {
       {links.map((link, i) => {
         const key = `nav-${i}-${link.name.toLowerCase()}`
         const isActiveLink = link.href === activePage
-        const baseClassName = 'block text-base font-semibold'
+        const baseClassName = 'block text-base font-medium'
         const activeClassName = { '!text-pt-teal': isActiveLink }
 
         if (!!Component) {

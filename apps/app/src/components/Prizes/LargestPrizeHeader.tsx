@@ -16,7 +16,7 @@ export const LargestPrizeHeader = () => {
   return (
     <>
       <div className='flex flex-col items-center gap-3'>
-        <span className='w-2/3 text-2xl text-center font-averta font-semibold md:w-full md:text-4xl lg:text-5xl'>
+        <span className='w-2/3 text-[1.75rem] text-center font-grotesk font-medium md:w-full md:text-4xl lg:text-5xl'>
           {t_home('winUpTo.beforeValue')}{' '}
           {!!gpData ? (
             <TokenValue

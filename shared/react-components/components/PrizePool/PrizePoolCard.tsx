@@ -31,7 +31,7 @@ export const PrizePoolCard = (props: PrizePoolCardProps) => {
         intl={intl}
         className='gap-2 !p-0'
         iconClassName='h-8 w-8'
-        textClassName='font-semibold whitespace-nowrap md:text-2xl'
+        textClassName='text-2xl font-grotesk font-medium whitespace-nowrap md:text-3xl'
       />
       <div className='flex flex-col gap-0.5 text-center text-pt-purple-100 md:text-start'>
         <span className='text-xs uppercase md:text-sm'>

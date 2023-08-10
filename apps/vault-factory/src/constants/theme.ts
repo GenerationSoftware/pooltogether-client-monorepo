@@ -15,7 +15,7 @@ export const ptRainbowTheme = (): Theme => {
       connectButtonText: '#F5F0FF'
     },
     fonts: {
-      body: 'Averta'
+      body: 'Grotesk'
     },
     shadows: {
       connectButton: '0 0 0 transparent'

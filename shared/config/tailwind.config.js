@@ -12,7 +12,7 @@ module.exports = {
   darkMode: 'class',
   theme: {
     fontFamily: {
-      averta: 'Averta',
+      grotesk: 'Grotesk',
       inter: 'Inter'
     },
     extend: {

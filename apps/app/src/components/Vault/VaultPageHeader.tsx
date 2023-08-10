@@ -41,7 +41,7 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
             )}
             <span
               className={classNames(
-                'text-2xl font-semibold font-averta line-clamp-2 overflow-hidden overflow-ellipsis',
+                'text-[1.75rem] font-medium font-grotesk line-clamp-2 overflow-hidden overflow-ellipsis',
                 'md:max-w-[65%] md:text-4xl',
                 { 'text-center': !vault.logoURI }
               )}

@@ -41,7 +41,7 @@ export const AccountWinningsHeader = (props: AccountWinningsHeaderProps) => {
           ? t('externalAccountWinnings', { account: externalAccountName })
           : t('yourWinnings')}
       </span>
-      <span className='text-2xl font-averta font-semibold md:text-3xl'>
+      <span className='text-[1.75rem] font-grotesk font-medium md:text-4xl'>
         {isFetchedTotalWinnings && !!userAddress && totalWinnings !== undefined ? (
           <CurrencyValue baseValue={totalWinnings} countUp={true} fallback={<Spinner />} />
         ) : (

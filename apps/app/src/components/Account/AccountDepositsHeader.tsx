@@ -41,7 +41,7 @@ export const AccountDepositsHeader = (props: AccountDepositsHeaderProps) => {
           ? t('externalAccountDeposits', { account: externalAccountName })
           : t('yourDeposits')}
       </span>
-      <span className='text-2xl font-averta font-semibold md:text-3xl'>
+      <span className='text-[1.75rem] font-grotesk font-medium md:text-4xl'>
         {isFetchedTotalBalance && !!userAddress && totalBalance !== undefined ? (
           <CurrencyValue baseValue={totalBalance} countUp={true} fallback={<Spinner />} />
         ) : (

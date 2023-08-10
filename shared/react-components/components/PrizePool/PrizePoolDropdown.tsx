@@ -29,7 +29,7 @@ export const PrizePoolDropdown = (props: PrizePoolDropdownProps) => {
                 hideBg={true}
                 intl={intl?.common}
                 className='w-full justify-center p-2 hover:!bg-pt-purple-100/40'
-                textClassName='text-pt-purple-600'
+                textClassName='font-grotesk font-medium text-pt-purple-600'
               />
             ),
             onClick: (id) => onSelect(parseInt(id))
@@ -44,7 +44,7 @@ export const PrizePoolDropdown = (props: PrizePoolDropdownProps) => {
               intl={intl?.common}
               className='w-full justify-center py-4 border-0'
               iconClassName='h-6 w-6'
-              textClassName='font-averta font-semibold text-pt-purple-100'
+              textClassName='font-grotesk font-medium text-pt-purple-100'
             />
           ),
           onClick: (id) => onSelect(parseInt(id))
@@ -62,7 +62,7 @@ export const PrizePoolDropdown = (props: PrizePoolDropdownProps) => {
           intl={intl?.common}
           className='gap-2 pr-0'
           iconClassName='h-8 w-8'
-          textClassName='text-2xl font-semibold font-averta'
+          textClassName='text-[1.75rem] font-grotesk font-medium md:text-4xl'
         />
       }
       items={dropdownItems}

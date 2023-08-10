@@ -191,6 +191,7 @@ export const Layout = (props: LayoutProps) => {
         }
         onClickSettings={() => setIsSettingsModalOpen(true)}
         intl={{ home: t_nav('home') }}
+        className='font-grotesk'
         linkClassName='hover:text-pt-purple-200'
       />
 
