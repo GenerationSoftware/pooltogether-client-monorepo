@@ -62,10 +62,10 @@ const SimpleNavbar = (props: SimpleNavbarProps) => {
         <Image
           src='/cabanaLogo.svg'
           alt='Cabana Logo'
-          width={300}
-          height={98}
+          width={215}
+          height={71}
           priority={true}
-          className='w-[300px] h-auto mx-auto'
+          className='w-52 h-auto mx-auto'
         />
       </Link>
       <ConnectButton

@@ -83,7 +83,7 @@ export const AddVaultForm = (props: AddVaultFormProps) => {
                 isValidChars(v, { allowSpaces: true }) || 'Invalid characters in vault name.'
             }}
             placeholder='Wrapped Bitcorn'
-            label='Vault Name'
+            label='Prize Vault Name'
             hideErrorMsgs={true}
             className='max-w-[calc(50%-6px)] lg:max-w-none'
           />
@@ -93,7 +93,7 @@ export const AddVaultForm = (props: AddVaultFormProps) => {
               isValidAddress: (v: string) => isAddress(v?.trim()) || 'Enter a valid vault address.'
             }}
             placeholder='0x0000...'
-            label='Vault Address'
+            label='Prize Vault Address'
             hideErrorMsgs={true}
             className='max-w-[calc(50%-6px)] lg:max-w-none'
           />
