@@ -44,7 +44,7 @@ export const createCustomWagmiConfig = (): Config<
  */
 const getWalletConnectors = (chains: Chain[]): (() => Connector[]) => {
   const appName = 'Cabana Factory'
-  const projectId = '358b98f0af3cd936fe09dc21064de51d'
+  const projectId = '3eb812d6ed9689e2ced204df2b9e6c76'
 
   const walletGroups: { groupName: string; wallets: Wallet[] }[] = []
 
