@@ -5,7 +5,7 @@ import { Layout } from '@components/Layout'
 export default function HomePage() {
   return (
     <Layout>
-      <HomeHeader />
+      <HomeHeader className='mt-10' />
       <HomeContent />
     </Layout>
   )

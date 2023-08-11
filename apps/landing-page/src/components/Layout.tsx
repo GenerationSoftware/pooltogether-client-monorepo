@@ -107,14 +107,7 @@ const SimpleNavbarLink = (props: SimpleNavbarLinkProps) => {
 const SimpleFooter = (props: { className?: string }) => {
   return (
     <footer className={classNames('flex items-end mt-auto pb-28 isolate z-20', props.className)}>
-      <Image
-        src='/footerBG.svg'
-        alt='Footer BG'
-        width={1440}
-        height={348}
-        priority={true}
-        className='absolute w-full -z-10'
-      />
+      <SimpleFooterBackground />
       <div className='w-full flex items-center justify-between px-16'>
         <div className='flex gap-12'>
           <div className='flex flex-col gap-3'>
@@ -152,6 +145,22 @@ const SimpleFooter = (props: { className?: string }) => {
         </div>
       </div>
     </footer>
+  )
+}
+
+const SimpleFooterBackground = () => {
+  return (
+    <div className='absolute w-full flex flex-col'>
+      <Image
+        src='/footerBG.svg'
+        alt='Footer BG'
+        width={1440}
+        height={260}
+        priority={true}
+        className='w-full drop-shadow-[0_20px_40px_#8050E3] -z-20'
+      />
+      <span className='w-full h-28 bg-pt-purple-700 -z-10' />
+    </div>
   )
 }
 
