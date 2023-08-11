@@ -1,7 +1,9 @@
-import { LINKS, SocialIcon, SocialIconProps } from '@shared/ui'
+import { Button, LINKS, SocialIcon, SocialIconProps } from '@shared/ui'
 import classNames from 'classnames'
 import Head from 'next/head'
 import Image from 'next/image'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
 
 interface LayoutProps {
@@ -38,48 +40,116 @@ const SimpleNavbar = (props: { className?: string }) => {
   return (
     <div
       className={classNames(
-        'flex flex-col gap-6 items-center justify-between z-30 md:flex-row',
+        'flex flex-col gap-6 items-center justify-between px-24 py-12 z-30 md:flex-row',
         props.className
       )}
     >
-      <Image
-        src='/cabanaLogo.svg'
-        alt='Cabana Logo'
-        width={300}
-        height={80}
-        priority={true}
-        className='w-[300px] h-auto'
-      />
-      <Image
-        src='/poweredByPT.svg'
-        alt='Powered By PoolTogether'
-        width={134}
-        height={73}
-        priority={true}
-        className='w-32 h-auto'
-      />
+      <Link href='/'>
+        <Image
+          src='/cabanaLogo.svg'
+          alt='Cabana Logo'
+          width={300}
+          height={80}
+          priority={true}
+          className='w-52 h-auto'
+        />
+      </Link>
+      <div className='flex flex-col items-center'>
+        <span className='text-pt-purple-300'>Powered by</span>
+        <Image
+          src='/ptLogo.svg'
+          alt='PoolTogether'
+          width={183}
+          height={72}
+          className='w-32 h-auto'
+        />
+      </div>
+      <div className='flex gap-6 items-center'>
+        {/* TODO: need cabana-specific docs link */}
+        <SimpleNavbarLink href={LINKS.docs} name='Docs' />
+        <SimpleNavbarLink href='/tools' name='Tools' />
+        <Button href={LINKS.app} color='purple'>
+          Launch App
+        </Button>
+      </div>
     </div>
+  )
+}
+
+interface SimpleNavbarLinkProps {
+  href: string
+  name: string
+  className?: string
+}
+
+const SimpleNavbarLink = (props: SimpleNavbarLinkProps) => {
+  const { href, name, className } = props
+
+  const router = useRouter()
+
+  const isActive = href === router.pathname
+
+  return (
+    <Link
+      href={href}
+      target={href.startsWith('http') ? '_blank' : '_self'}
+      className={classNames(
+        'text-pt-purple-200 border-b-2',
+        { 'border-b-pt-teal-dark': isActive, 'border-b-transparent': !isActive },
+        className
+      )}
+    >
+      {name}
+    </Link>
   )
 }
 
 const SimpleFooter = (props: { className?: string }) => {
   return (
-    <footer
-      className={classNames('flex items-center justify-between mt-auto p-16 z-20', props.className)}
-    >
-      <span className='max-w-[1/3] text-xl text-pt-purple-100'>
-        Cabana is a suite of open source interfaces for PoolTogether, made by{' '}
-        <a
-          href='https://g9software.xyz'
-          target='_blank'
-          className='text-pt-purple-300 hover:text-pt-purple-200'
-        >
-          Generation Software
-        </a>
-      </span>
-      <div className='flex gap-4 items-center '>
-        <SimpleSocialIcon platform='twitter' href={LINKS.twitter} />
-        <SimpleSocialIcon platform='discord' href={LINKS.discord} />
+    <footer className={classNames('flex items-end mt-auto pb-28 isolate z-20', props.className)}>
+      <Image
+        src='/footerBG.svg'
+        alt='Footer BG'
+        width={1440}
+        height={348}
+        priority={true}
+        className='absolute w-full -z-10'
+      />
+      <div className='w-full flex items-center justify-between px-16'>
+        <div className='flex gap-12'>
+          <div className='flex flex-col gap-3'>
+            <span className='text-pt-purple-300'>Cabana made by</span>
+            <a href='https://g9software.xyz' target='_blank'>
+              <Image src='/generationLogo.svg' alt='Generation Software' width={261} height={38} />
+            </a>
+          </div>
+          <div className='flex flex-col gap-3'>
+            <span className='text-pt-purple-300'>PoolTogether audits by</span>
+            {/* TODO: get these logos grayscale */}
+            <div className='flex gap-6 items-center'>
+              {/* TODO: add link to c4 audit(s) */}
+              <Image src='/c4Logo.svg' alt='Code Arena' width={257} height={46} />
+              {/* TODO: add link to macro audit(s) */}
+              <Image src='/macroLogo.svg' alt='Macro' width={191} height={40} />
+            </div>
+          </div>
+        </div>
+        <div className='flex gap-6 items-end'>
+          <div className='flex gap-4 items-center'>
+            <SimpleSocialIcon platform='twitter' href={LINKS.twitter} />
+            <SimpleSocialIcon platform='discord' href={LINKS.discord} />
+          </div>
+          <div className='flex flex-col gap-1'>
+            <span className='text-pt-purple-300'>Powered by</span>
+            <Image
+              src='/ptLogo.svg'
+              alt='PoolTogether'
+              width={183}
+              height={72}
+              className='w-32 h-auto'
+            />
+          </div>
+        </div>
       </div>
     </footer>
   )
@@ -89,6 +159,7 @@ interface SimpleSocialIconProps extends SocialIconProps {
   href: string
 }
 
+// TODO: add hover effect
 const SimpleSocialIcon = (props: SimpleSocialIconProps) => {
   const { platform, href, className } = props
 
