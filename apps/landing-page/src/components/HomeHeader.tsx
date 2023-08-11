@@ -22,7 +22,7 @@ export const HomeHeader = (props: HomeHeaderProps) => {
           className='w-44 h-auto'
         />
         <div className='flex flex-col items-center mt-6 mb-10 text-center'>
-          <h2 className='text-5xl font-bold'>Save to Win</h2>
+          <h2 className='text-5xl font-medium'>Save to Win</h2>
           <h3 className='text-xl'>Deposit for a chance to win big, without losing.</h3>
         </div>
         <Button href={LINKS.app} color='purple' size='lg'>
@@ -35,7 +35,7 @@ export const HomeHeader = (props: HomeHeaderProps) => {
 
 const HeaderBackground = () => {
   return (
-    <div className='absolute w-full flex flex-col'>
+    <div className='absolute w-full flex flex-col pointer-events-none'>
       <span className='w-full h-96 bg-pt-purple-700 -z-10' />
       <Image
         src='/headerBG.svg'
@@ -43,7 +43,7 @@ const HeaderBackground = () => {
         width={1440}
         height={190}
         priority={true}
-        className='w-full drop-shadow-[0_20px_40px_#8050E3] -z-20'
+        className='w-full drop-shadow-[0_20px_20px_#8050E3] -z-20'
       />
     </div>
   )

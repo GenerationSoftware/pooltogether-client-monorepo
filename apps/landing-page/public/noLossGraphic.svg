@@ -1,0 +1,16 @@
+<svg width="340" height="265" viewBox="0 0 340 265" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="340" height="265" rx="24" fill="#36147D"/>
+<rect x="66" y="44" width="208" height="64" rx="32" stroke="white" stroke-width="2"/>
+<line x1="116" y1="74" x2="116" y2="204" stroke="white" stroke-width="2"/>
+<line x1="171" y1="74" x2="171" y2="204" stroke="white" stroke-width="2"/>
+<circle cx="116" cy="109" r="12" transform="rotate(-90 116 109)" fill="#3F83F8" stroke="#36147D" stroke-width="8"/>
+<circle cx="171" cy="109" r="12" transform="rotate(-90 171 109)" fill="#3F83F8" stroke="#36147D" stroke-width="8"/>
+<circle cx="116" cy="160" r="12" transform="rotate(-90 116 160)" fill="#35F0D0" stroke="#36147D" stroke-width="8"/>
+<circle cx="171" cy="160" r="12" transform="rotate(-90 171 160)" fill="#35F0D0" stroke="#36147D" stroke-width="8"/>
+<line x1="226" y1="74" x2="226" y2="204" stroke="white" stroke-width="2"/>
+<circle cx="226" cy="109" r="12" transform="rotate(-90 226 109)" fill="#3F83F8" stroke="#36147D" stroke-width="8"/>
+<circle cx="226" cy="160" r="12" transform="rotate(-90 226 160)" fill="#35F0D0" stroke="#36147D" stroke-width="8"/>
+<circle cx="116" cy="213" r="12" transform="rotate(-90 116 213)" fill="#FFB636" stroke="#36147D" stroke-width="8"/>
+<circle cx="171" cy="213" r="12" transform="rotate(-90 171 213)" fill="#FFB636" stroke="#36147D" stroke-width="8"/>
+<circle cx="226" cy="213" r="12" transform="rotate(-90 226 213)" fill="#FFB636" stroke="#36147D" stroke-width="8"/>
+</svg>

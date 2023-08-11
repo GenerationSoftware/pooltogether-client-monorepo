@@ -150,14 +150,14 @@ const SimpleFooter = (props: { className?: string }) => {
 
 const SimpleFooterBackground = () => {
   return (
-    <div className='absolute w-full flex flex-col'>
+    <div className='absolute w-full flex flex-col pointer-events-none'>
       <Image
         src='/footerBG.svg'
         alt='Footer BG'
         width={1440}
         height={260}
         priority={true}
-        className='w-full drop-shadow-[0_20px_40px_#8050E3] -z-20'
+        className='w-full drop-shadow-[0_-20px_20px_#8050E3] -z-20'
       />
       <span className='w-full h-28 bg-pt-purple-700 -z-10' />
     </div>

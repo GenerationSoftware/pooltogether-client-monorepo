@@ -7,10 +7,12 @@ import { ReactNode } from 'react'
 
 export interface AccordionProps extends Omit<FlowbiteAccordionProps, 'children'> {
   items: { id: string; title: ReactNode; content: ReactNode; className?: string }[]
+  titleClassName?: string
+  contentClassName?: string
 }
 
 export const Accordion = (props: AccordionProps) => {
-  const { items, className, ...rest } = props
+  const { items, className, titleClassName, contentClassName, ...rest } = props
 
   return (
     <FlowbiteAccordion
@@ -28,11 +30,13 @@ export const Accordion = (props: AccordionProps) => {
                 on: 'bg-pt-transparent text-pt-purple-100'
               }
             }}
+            className={titleClassName}
           >
             {item.title}
           </FlowbiteAccordion.Title>
           <FlowbiteAccordion.Content
             theme={{ base: 'px-3 py-2 bg-pt-transparent first:rounded-t-lg last:rounded-b-lg' }}
+            className={contentClassName}
           >
             {item.content}
           </FlowbiteAccordion.Content>

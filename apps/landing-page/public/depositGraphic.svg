@@ -1,0 +1,13 @@
+<svg width="340" height="265" viewBox="0 0 340 265" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="340" height="265" rx="24" fill="#36147D"/>
+<circle cx="170" cy="133" r="80" stroke="white" stroke-width="2"/>
+<circle cx="170" cy="133" r="32" stroke="white" stroke-width="2"/>
+<circle cx="90" cy="133" r="12" transform="rotate(-180 90 133)" fill="#FFB636" stroke="#36147D" stroke-width="8"/>
+<circle cx="250" cy="133" r="12" transform="rotate(-180 250 133)" fill="#FFB636" stroke="#36147D" stroke-width="8"/>
+<circle cx="170" cy="51" r="12" transform="rotate(-180 170 51)" fill="#35F0D0" stroke="#36147D" stroke-width="8"/>
+<circle cx="170" cy="101" r="12" transform="rotate(-180 170 101)" fill="#3F83F8" stroke="#36147D" stroke-width="8"/>
+<circle cx="170" cy="165" r="12" transform="rotate(-180 170 165)" fill="#3F83F8" stroke="#36147D" stroke-width="8"/>
+<circle cx="138" cy="133" r="12" transform="rotate(90 138 133)" fill="#3F83F8" stroke="#36147D" stroke-width="8"/>
+<circle cx="202" cy="133" r="12" transform="rotate(90 202 133)" fill="#3F83F8" stroke="#36147D" stroke-width="8"/>
+<circle cx="170" cy="213" r="12" transform="rotate(-180 170 213)" fill="#35F0D0" stroke="#36147D" stroke-width="8"/>
+</svg>
