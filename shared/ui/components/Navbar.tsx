@@ -59,7 +59,7 @@ export const Navbar = (props: NavbarProps) => {
           onClick={onClickBrand}
           className='cursor-pointer z-30'
         >
-          <Logo />
+          <Logo smLogoClassName='w-8' mdLogoClassName='w-[150px]' />
         </FlowbiteNavbar.Brand>
 
         {/* Middle Content */}
