@@ -49,8 +49,8 @@ const SimpleNavbar = (props: { className?: string }) => {
       <Image
         src='/cabanaLogo.svg'
         alt='PoolTogether Logo'
-        width={215}
-        height={71}
+        width={177}
+        height={60}
         priority={true}
         onClick={() => router.reload()}
         className='w-52 h-auto cursor-pointer'

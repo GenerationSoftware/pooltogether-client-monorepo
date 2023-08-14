@@ -48,8 +48,8 @@ const SimpleNavbar = (props: { className?: string }) => {
         <Image
           src='/cabanaLogo.svg'
           alt='Cabana Logo'
-          width={300}
-          height={80}
+          width={152}
+          height={34}
           priority={true}
           className='w-52 h-auto'
         />

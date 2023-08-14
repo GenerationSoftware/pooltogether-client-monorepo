@@ -62,8 +62,8 @@ const SimpleNavbar = (props: SimpleNavbarProps) => {
         <Image
           src='/cabanaLogo.svg'
           alt='Cabana Logo'
-          width={215}
-          height={71}
+          width={177}
+          height={60}
           priority={true}
           className='w-52 h-auto mx-auto'
         />
