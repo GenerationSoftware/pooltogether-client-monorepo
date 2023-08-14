@@ -54,16 +54,18 @@ const SimpleNavbar = (props: { className?: string }) => {
           className='w-52 h-auto'
         />
       </Link>
-      <div className='flex flex-col items-center'>
-        <span className='text-pt-purple-300'>Powered by</span>
-        <Image
-          src='/ptLogo.svg'
-          alt='PoolTogether'
-          width={183}
-          height={72}
-          className='w-32 h-auto'
-        />
-      </div>
+      <Link href={LINKS.protocolLandingPage} target='_blank'>
+        <div className='flex flex-col items-center'>
+          <span className='text-pt-purple-300'>Powered by</span>
+          <Image
+            src='/ptLogo.svg'
+            alt='PoolTogether'
+            width={183}
+            height={72}
+            className='w-32 h-auto'
+          />
+        </div>
+      </Link>
       <div className='flex gap-6 items-center'>
         {/* TODO: need cabana-specific docs link */}
         <SimpleNavbarLink href={LINKS.docs} name='Docs' />
@@ -118,12 +120,15 @@ const SimpleFooter = (props: { className?: string }) => {
           </div>
           <div className='flex flex-col gap-3'>
             <span className='text-pt-purple-300'>PoolTogether audits by</span>
-            {/* TODO: get these logos grayscale */}
-            <div className='flex gap-6 items-center'>
+            <div className='flex gap-6 items-center opacity-50'>
               {/* TODO: add link to c4 audit(s) */}
-              <Image src='/c4Logo.svg' alt='Code Arena' width={257} height={46} />
+              <Link href={LINKS.audits} target='_blank'>
+                <Image src='/c4Logo.svg' alt='Code Arena' width={257} height={46} />
+              </Link>
               {/* TODO: add link to macro audit(s) */}
-              <Image src='/macroLogo.svg' alt='Macro' width={191} height={40} />
+              <Link href={LINKS.audits} target='_blank'>
+                <Image src='/macroLogo.svg' alt='Macro' width={191} height={40} />
+              </Link>
             </div>
           </div>
         </div>
@@ -132,16 +137,18 @@ const SimpleFooter = (props: { className?: string }) => {
             <SimpleSocialIcon platform='twitter' href={LINKS.twitter} />
             <SimpleSocialIcon platform='discord' href={LINKS.discord} />
           </div>
-          <div className='flex flex-col gap-1'>
-            <span className='text-pt-purple-300'>Powered by</span>
-            <Image
-              src='/ptLogo.svg'
-              alt='PoolTogether'
-              width={183}
-              height={72}
-              className='w-32 h-auto'
-            />
-          </div>
+          <Link href={LINKS.protocolLandingPage} target='_blank'>
+            <div className='flex flex-col gap-1'>
+              <span className='text-pt-purple-300'>Powered by</span>
+              <Image
+                src='/ptLogo.svg'
+                alt='PoolTogether'
+                width={183}
+                height={72}
+                className='w-32 h-auto'
+              />
+            </div>
+          </Link>
         </div>
       </div>
     </footer>
@@ -168,7 +175,6 @@ interface SimpleSocialIconProps extends SocialIconProps {
   href: string
 }
 
-// TODO: add hover effect
 const SimpleSocialIcon = (props: SimpleSocialIconProps) => {
   const { platform, href, className } = props
 
@@ -178,6 +184,7 @@ const SimpleSocialIcon = (props: SimpleSocialIconProps) => {
       target='_blank'
       className={classNames(
         'w-12 h-12 flex items-center justify-center rounded-full bg-pt-purple-600',
+        'hover:bg-pt-purple-500',
         className
       )}
     >

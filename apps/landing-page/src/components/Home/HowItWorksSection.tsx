@@ -44,7 +44,7 @@ const HowItWorksItem = (props: HowItWorksItemProps) => {
 
   return (
     <div className={classNames('flex flex-col', className)}>
-      <Image src={imgSrc} alt={title} width={340} height={265} />
+      <Image src={imgSrc} alt={title} width={340} height={265} className='drop-shadow-lg' />
       <div className='flex flex-col gap-2 items-center text-center mt-6'>
         <span className='text-3xl font-medium'>{title}</span>
         <span className='text-xl text-pt-purple-100'>{description}</span>
