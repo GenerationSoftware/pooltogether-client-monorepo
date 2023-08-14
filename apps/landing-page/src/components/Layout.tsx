@@ -108,9 +108,9 @@ const SimpleNavbarLink = (props: SimpleNavbarLinkProps) => {
 
 const SimpleFooter = (props: { className?: string }) => {
   return (
-    <footer className={classNames('flex items-end mt-auto pb-28 isolate z-20', props.className)}>
-      <SimpleFooterBackground />
-      <div className='w-full flex items-center justify-between px-16'>
+    <footer className={classNames('flex flex-col mt-auto pb-28 z-20', props.className)}>
+      <SimpleFooterWave />
+      <div className='w-full flex items-center justify-between px-16 bg-pt-purple-700'>
         <div className='flex gap-12'>
           <div className='flex flex-col gap-3'>
             <span className='text-pt-purple-300'>Cabana made by</span>
@@ -155,18 +155,24 @@ const SimpleFooter = (props: { className?: string }) => {
   )
 }
 
-const SimpleFooterBackground = () => {
+const SimpleFooterWave = () => {
+  const router = useRouter()
+
   return (
-    <div className='absolute w-full flex flex-col pointer-events-none'>
+    <div
+      className={classNames('w-full flex flex-col bg-pt-purple-600 isolate pointer-events-none', {
+        'bg-pt-purple-700': router.pathname === '/tools'
+      })}
+    >
       <Image
-        src='/footerBG.svg'
-        alt='Footer BG'
+        src='/footerWave.svg'
+        alt='Footer Wave'
         width={1440}
         height={260}
         priority={true}
-        className='w-full drop-shadow-[0_-20px_20px_#8050E3] -z-20'
+        className='w-full drop-shadow-[0_-20px_20px_#8050E3]'
       />
-      <span className='w-full h-28 bg-pt-purple-700 -z-10' />
+      <span className='w-full h-24 -mt-[1px] bg-pt-purple-700 z-10' />
     </div>
   )
 }

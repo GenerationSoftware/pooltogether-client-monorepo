@@ -6,7 +6,7 @@ export default function HomePage() {
   return (
     <Layout>
       <HomeHeader className='mt-10' />
-      <HomeContent className='pt-64 pb-[30rem]' />
+      <HomeContent className='py-12' />
     </Layout>
   )
 }
