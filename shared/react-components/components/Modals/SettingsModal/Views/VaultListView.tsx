@@ -79,16 +79,16 @@ export const VaultListView = (props: VaultListViewProps) => {
     <div className='flex flex-col gap-4 px-4 md:gap-8'>
       <div className='flex flex-col items-center gap-2 text-center'>
         <span className='text-lg font-semibold md:text-xl'>
-          {intl?.base?.('manageVaultLists') ?? 'Manage Prize Asset Lists'}
+          {intl?.base?.('manageVaultLists') ?? 'Manage Vault Lists'}
         </span>
         <span className='text-sm text-pt-purple-50 md:text-base'>
           {intl?.base?.('vaultListsDescription') ??
-            'Prize asset lists determine what assets are displayed throughout the app. Use caution when interacting with imported lists.'}
+            'Vault lists determine what prize vaults are displayed throughout the app. Use caution when interacting with imported lists.'}
         </span>
         {/* TODO: add link */}
         <ExternalLink
           href='#'
-          text={intl?.base?.('learnMoreVaultLists') ?? 'Learn more about prize asset lists'}
+          text={intl?.base?.('learnMoreVaultLists') ?? 'Learn more about vault lists'}
           className='text-pt-purple-200'
         />
       </div>
