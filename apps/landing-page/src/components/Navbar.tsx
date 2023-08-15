@@ -38,7 +38,6 @@ export const Navbar = (props: NavbarProps) => {
         </div>
       </Link>
       <div className='hidden gap-6 items-center md:flex'>
-        {/* TODO: need cabana-specific docs link */}
         <NavbarLink href={LINKS.docs} name='Docs' />
         <NavbarLink href='/tools' name='Tools' />
         <Button href={LINKS.app} color='purple'>
@@ -72,8 +71,11 @@ const NavbarLink = (props: NavbarLinkProps) => {
       href={href}
       target={href.startsWith('http') ? '_blank' : '_self'}
       className={classNames(
-        'text-pt-purple-200 border-b-2',
-        { 'border-b-pt-teal-dark': isActive, 'border-b-transparent': !isActive },
+        'border-b-2',
+        {
+          'text-pt-purple-50 border-b-pt-teal-dark': isActive,
+          'text-pt-purple-200 border-b-transparent hover:text-pt-purple-50': !isActive
+        },
         className
       )}
     >

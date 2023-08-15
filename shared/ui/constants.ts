@@ -4,13 +4,14 @@
 export const DOMAINS = Object.freeze({
   app: 'https://app.cabana.fi',
   app_v4: 'https://app.pooltogether.com',
-  landingPage: 'https://cabana-landing-page.netlify.app',
+  landingPage: 'https://cabana.fi',
   protocolLandingPage: 'https://pooltogether.com',
-  docs: 'https://docs.pooltogether.com',
-  devDocs: 'https://dev.pooltogether.com',
+  docs: 'https://docs.cabana.fi',
+  protocolDocs: 'https://docs.pooltogether.com',
+  protocolDevDocs: 'https://dev.pooltogether.com',
   governance: 'https://gov.pooltogether.com',
   poolExplorer: 'https://poolexplorer.win',
-  tools: 'https://tools.pooltogether.com',
+  tools_v4: 'https://tools.pooltogether.com',
   notion: 'https://pooltogetherdao.notion.site',
   vaultListCreator: 'https://lists.cabana.fi',
   vaultFactory: 'https://factory.cabana.fi'
@@ -21,17 +22,19 @@ export const DOMAINS = Object.freeze({
  */
 export const LINKS = Object.freeze({
   ...DOMAINS,
-  termsOfService: `${DOMAINS.app}/terms`,
-  protocolDisclaimer: `${DOMAINS.app}/protocol-disclaimer`,
+  termsOfService: `${DOMAINS.protocolLandingPage}/terms`, // TODO: update to cabana ToS once available
+  protocolDisclaimer: `${DOMAINS.protocolLandingPage}/protocol-disclaimer`, // TODO: update to cabana disclaimer once available
   ecosystem: `${DOMAINS.protocolLandingPage}/ecosystem`,
   discord: `${DOMAINS.protocolLandingPage}/discord`,
-  gettingStarted: `${DOMAINS.docs}/welcome/getting-started`,
-  faq: `${DOMAINS.docs}/welcome/faq`,
-  guides: `${DOMAINS.docs}/pooltogether/guides`,
-  audits: `${DOMAINS.docs}/security/audits`,
-  devDocs_v5: `${DOMAINS.devDocs}/protocol/next/introduction`,
-  depositDelegator: `${DOMAINS.tools}/delegate`,
-  prizeTierController: `${DOMAINS.tools}/prize-tier-controller`,
+  toolDocs: `${DOMAINS.docs}/`, // TODO: update to tools section once available
+  factoryDocs: `${DOMAINS.docs}/`, // TODO: update to factory docs page once available
+  listDocs: `${DOMAINS.docs}/`, // TODO: update to list docs page once available
+  faq: `${DOMAINS.protocolDocs}/welcome/faq`, // TODO: update to cabana docs FAQ page once available
+  tutorials: `${DOMAINS.docs}/`, // TODO: update to tutorials section on docs once available
+  audits: `${DOMAINS.protocolDocs}/security/audits`, // TODO: update to cabana docs audits page once available
+  devDocs_v5: `${DOMAINS.protocolDevDocs}/protocol/next/introduction`,
+  depositDelegator: `${DOMAINS.tools_v4}/delegate`,
+  prizeTierController: `${DOMAINS.tools_v4}/prize-tier-controller`,
   communityCalendar: `${DOMAINS.notion}/Community-Calendar-4ce3024241dd464db96215e6729a78e0`,
   brandKit: `https://www.figma.com/community/file/1212805243917604494`,
   twitter: `https://twitter.com/PoolTogether_`,

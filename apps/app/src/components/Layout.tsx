@@ -91,7 +91,7 @@ export const Layout = (props: LayoutProps) => {
       content: [
         { content: t_footer('userDocs'), href: LINKS.docs },
         { content: t_footer('faq'), href: LINKS.faq },
-        { content: t_footer('devDocs'), href: LINKS.devDocs }
+        { content: t_footer('devDocs'), href: LINKS.devDocs_v5 }
       ]
     },
     {

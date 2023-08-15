@@ -25,12 +25,11 @@ export const ToolsHeader = (props: ToolsHeaderProps) => {
           {/* TODO: add more accurate live data here (# of users, # of blockchains deployed) */}
           <h3 className='text-xl'>Connect with 50,000+ real users across many blockchains</h3>
         </div>
-        {/* TODO: better docs links here */}
         <div className='flex gap-4 items-center'>
-          <Button href={LINKS.docs} color='purple' size='lg'>
+          <Button href={LINKS.tutorials} color='purple' size='lg'>
             Watch Tutorials
           </Button>
-          <Button href={LINKS.docs} color='purple' size='lg' outline={true}>
+          <Button href={LINKS.toolDocs} color='purple' size='lg' outline={true}>
             Read the Docs
           </Button>
         </div>
