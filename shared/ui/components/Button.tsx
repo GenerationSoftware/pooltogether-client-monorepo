@@ -18,7 +18,7 @@ export const Button = (props: ButtonProps) => {
           purple:
             'text-pt-purple-700 bg-pt-purple-100 border-pt-purple-100 hover:bg-pt-purple-200 focus:ring-pt-purple-50',
           white: 'text-gray-900 bg-white border-white hover:bg-gray-100 focus:ring-gray-100',
-          red: 'text-red-600 bg-pt-warning-light border-red-600 hover:bg-pt-warning focus:ring-pt-warning',
+          red: 'text-red-600 bg-pt-warning-light border-red-600 hover:text-pt-warning-light hover:bg-red-600 focus:ring-pt-warning',
           transparent:
             'text-pt-purple-100 bg-pt-transparent border-pt-transparent hover:bg-pt-purple-50/20 focus:ring-pt-purple-50'
         },
@@ -29,7 +29,7 @@ export const Button = (props: ButtonProps) => {
               '!text-pt-purple-100 border-pt-purple-100 bg-opacity-0 hover:!bg-pt-transparent hover:bg-opacity-100',
             white:
               '!text-white border-white bg-opacity-0 hover:!text-gray-900 hover:bg-opacity-100',
-            red: '!text-pt-warning-light border-pt-pt-warning-light bg-opacity-0 hover:!text-red-600 hover:bg-opacity-100',
+            red: '!text-pt-warning-light border-pt-warning-light bg-opacity-0 hover:!text-red-600 hover:bg-pt-warning-light hover:bg-opacity-100',
             transparent:
               '!text-pt-purple-50 border-pt-transparent bg-opacity-0 hover:!text-pt-purple-100 hover:bg-opacity-100'
           },
