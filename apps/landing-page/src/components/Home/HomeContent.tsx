@@ -13,7 +13,7 @@ export const HomeContent = (props: HomeContentProps) => {
   return (
     <div
       className={classNames(
-        'w-full flex flex-col gap-24 items-center px-16 bg-pt-purple-600',
+        'w-full flex flex-col gap-24 items-center px-4 bg-pt-purple-600 md:px-16',
         className
       )}
     >

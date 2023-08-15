@@ -78,7 +78,7 @@ const FooterWave = () => {
         width={1440}
         height={260}
         priority={true}
-        className='w-full drop-shadow-[0_-20px_20px_#8050E3]'
+        className='w-full drop-shadow-[0_-10px_10px_#8050E3] md:drop-shadow-[0_-20px_20px_#8050E3]'
       />
       <span className='w-full h-24 -mt-[1px] bg-pt-purple-700 z-10' />
     </div>

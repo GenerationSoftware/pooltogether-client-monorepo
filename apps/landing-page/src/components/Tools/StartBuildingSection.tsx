@@ -11,9 +11,9 @@ export const StartBuildingSection = (props: StartBuildingSectionProps) => {
   const { className } = props
 
   return (
-    <section className={classNames('w-full flex flex-col gap-12 items-center', className)}>
-      <span className='text-xl text-pt-teal-dark'>Start Building Today</span>
-      <div className='flex gap-10'>
+    <section className={classNames('w-full flex flex-col gap-4 items-center md:gap-12', className)}>
+      <span className='text-pt-teal-dark md:text-xl'>Start Building Today</span>
+      <div className='flex flex-col gap-10 md:flex-row'>
         <StartBuildingItem
           href={LINKS.vaultFactory}
           imgSrc='/factoryScreenshot.png'
@@ -45,7 +45,7 @@ const StartBuildingItem = (props: StartBuildingItemProps) => {
   return (
     <div className={classNames('max-w-md flex flex-col', className)}>
       <Link href={href} target='_blank'>
-        <div className='px-12 py-11 bg-pt-purple-200 rounded-3xl shadow-lg outline outline-2 outline-transparent hover:outline-pt-purple-50'>
+        <div className='px-8 py-4 bg-pt-purple-200 shadow-lg outline outline-2 outline-transparent hover:outline-pt-purple-50 md:px-12 md:py-11 md:rounded-3xl'>
           <Image
             src={imgSrc}
             alt={title}
@@ -55,9 +55,9 @@ const StartBuildingItem = (props: StartBuildingItemProps) => {
           />
         </div>
       </Link>
-      <div className='flex flex-col gap-2 mt-6 px-6'>
+      <div className='flex flex-col gap-1 mt-3 px-6 text-center md:gap-2 md:mt-6 md:text-start'>
         <span className='text-3xl font-medium'>{title}</span>
-        <span className='text-xl text-pt-purple-100'>{description}</span>
+        <span className='text-pt-purple-100 md:text-xl'>{description}</span>
       </div>
     </div>
   )

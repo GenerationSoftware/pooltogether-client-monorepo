@@ -10,9 +10,14 @@ export const ToolsContent = (props: ToolsContentProps) => {
   const { className } = props
 
   return (
-    <div className={classNames('w-full flex flex-col gap-52 items-center px-16', className)}>
+    <div
+      className={classNames(
+        'w-full flex flex-col gap-28 items-center md:gap-52 md:px-16',
+        className
+      )}
+    >
       <StartBuildingSection className='max-w-[1440px]' />
-      <DocsSection />
+      <DocsSection className='px-6' />
     </div>
   )
 }

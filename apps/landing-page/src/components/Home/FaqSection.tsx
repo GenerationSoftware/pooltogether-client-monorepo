@@ -21,7 +21,7 @@ export const FaqSection = (props: FaqSectionProps) => {
 
   return (
     <section className={classNames('w-full flex flex-col gap-1 items-center', className)}>
-      <span className='text-3xl font-bold'>Frequently Asked Questions</span>
+      <span className='text-xl font-bold md:text-3xl'>Frequently Asked Questions</span>
       <Accordion
         items={faqs.map((faq, i) => ({
           id: `faq-${i}`,

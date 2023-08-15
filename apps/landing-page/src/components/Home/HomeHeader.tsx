@@ -1,3 +1,4 @@
+import { useScreenSize } from '@shared/generic-react-hooks'
 import { Button, LINKS } from '@shared/ui'
 import classNames from 'classnames'
 import Image from 'next/image'
@@ -9,6 +10,8 @@ interface HomeHeaderProps {
 export const HomeHeader = (props: HomeHeaderProps) => {
   const { className } = props
 
+  const { isMobile } = useScreenSize()
+
   return (
     <div className={classNames('w-full isolate', className)}>
       <div className='w-full flex flex-col items-center'>
@@ -18,13 +21,13 @@ export const HomeHeader = (props: HomeHeaderProps) => {
           width={188}
           height={188}
           priority={true}
-          className='w-44 h-auto z-10'
+          className='w-24 h-auto z-10 md:w-44'
         />
-        <div className='flex flex-col items-center mt-6 mb-10 text-center z-10'>
-          <h2 className='text-5xl font-medium'>Save to Win</h2>
-          <h3 className='text-xl'>Deposit for a chance to win big, without losing.</h3>
+        <div className='flex flex-col items-center text-center mb-6 z-10 md:mt-6 md:mb-10'>
+          <h2 className='text-3xl font-medium md:text-5xl'>Save to Win</h2>
+          <h3 className='md:text-xl'>Deposit for a chance to win big, without losing.</h3>
         </div>
-        <Button href={LINKS.app} color='purple' size='lg' className='z-10'>
+        <Button href={LINKS.app} color='purple' size={isMobile ? 'md' : 'lg'} className='z-10'>
           Launch App
         </Button>
       </div>
@@ -43,7 +46,7 @@ const HeaderWave = () => {
         width={1440}
         height={190}
         priority={true}
-        className='w-full drop-shadow-[0_20px_20px_#8050E3]'
+        className='w-full drop-shadow-[0_10px_10px_#8050E3] md:drop-shadow-[0_20px_20px_#8050E3]'
       />
     </div>
   )

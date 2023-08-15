@@ -16,7 +16,9 @@ export const DocsSection = (props: DocsSectionProps) => {
       <Link href={LINKS.docs} target='_blank'>
         <div className='flex flex-col gap-2 items-center px-20 py-10 bg-pt-purple-300 rounded-lg shadow-lg outline outline-2 outline-transparent hover:outline-pt-purple-700'>
           <Image src='/docsIcon.svg' alt='Docs' width={96} height={96} />
-          <span className='text-3xl font-bold text-pt-purple-600'>Cabana Docs</span>
+          <span className='text-3xl font-bold text-pt-purple-600 whitespace-nowrap'>
+            Cabana Docs
+          </span>
         </div>
       </Link>
     </section>

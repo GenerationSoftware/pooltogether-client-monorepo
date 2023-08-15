@@ -6,7 +6,7 @@ export default function ToolsPage() {
   return (
     <Layout>
       <ToolsHeader className='mt-10' />
-      <ToolsContent className='py-40' />
+      <ToolsContent className='py-20 md:py-40' />
     </Layout>
   )
 }
