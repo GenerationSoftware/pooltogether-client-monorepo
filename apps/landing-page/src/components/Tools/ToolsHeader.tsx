@@ -18,8 +18,8 @@ export const ToolsHeader = (props: ToolsHeaderProps) => {
         <Image
           src='/unicorn.png'
           alt='Cabana Flamingo'
-          width={349}
-          height={188}
+          width={206}
+          height={176}
           priority={true}
           className='w-44 h-auto'
         />

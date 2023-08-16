@@ -40,7 +40,7 @@ export const Navbar = (props: NavbarProps) => {
       <div className='hidden gap-6 items-center md:flex'>
         <NavbarLink href={LINKS.docs} name='Docs' />
         <NavbarLink href='/tools' name='Tools' />
-        <Button href={LINKS.app} color='purple'>
+        <Button href={LINKS.app} target='_blank' color='purple'>
           Launch App
         </Button>
       </div>

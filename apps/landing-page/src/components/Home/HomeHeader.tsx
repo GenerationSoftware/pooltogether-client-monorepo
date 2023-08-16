@@ -18,8 +18,8 @@ export const HomeHeader = (props: HomeHeaderProps) => {
         <Image
           src='/flamingo.png'
           alt='Cabana Flamingo'
-          width={188}
-          height={188}
+          width={176}
+          height={176}
           priority={true}
           className='w-24 h-auto z-10 md:w-44'
         />
@@ -27,7 +27,13 @@ export const HomeHeader = (props: HomeHeaderProps) => {
           <h2 className='text-3xl font-medium md:text-5xl'>Save to Win</h2>
           <h3 className='md:text-xl'>Deposit for a chance to win big, without losing.</h3>
         </div>
-        <Button href={LINKS.app} color='purple' size={isMobile ? 'md' : 'lg'} className='z-10'>
+        <Button
+          href={LINKS.app}
+          target='_blank'
+          color='purple'
+          size={isMobile ? 'md' : 'lg'}
+          className='z-10'
+        >
           Launch App
         </Button>
       </div>
