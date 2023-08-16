@@ -73,7 +73,10 @@ const DrawTotals = (props: DrawTotalsProps) => {
 
   const totalPrizeAmount = draw.prizeClaims.reduce((a, b) => a + BigInt(b.payout), 0n)
   const formattedTotalPrizeAmount = !!tokenData
-    ? formatBigIntForDisplay(totalPrizeAmount, tokenData.decimals)
+    ? formatBigIntForDisplay(totalPrizeAmount, tokenData.decimals, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      })
     : undefined
 
   if (formattedTotalPrizeAmount === undefined) {
@@ -124,9 +127,10 @@ const DrawWinnersTable = (props: DrawWinnersTableProps) => {
                   </span>
                   <span className='flex-grow text-right whitespace-nowrap md:text-center'>
                     {!!tokenData ? (
-                      `${formatBigIntForDisplay(BigInt(prize.payout), tokenData.decimals)} ${
-                        tokenData.symbol
-                      }`
+                      `${formatBigIntForDisplay(BigInt(prize.payout), tokenData.decimals, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      })} ${tokenData.symbol}`
                     ) : (
                       <Spinner />
                     )}

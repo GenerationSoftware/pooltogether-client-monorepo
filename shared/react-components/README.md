@@ -28,6 +28,8 @@ A React componponent library utilizing some simpler components from the internal
 ### Button Components
 
 - `DepositButton`
+- `LensterShareButton`
+- `TwitterShareButton`
 - `WithdrawButton`
 
 ### Currency Components

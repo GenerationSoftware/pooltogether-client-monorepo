@@ -10,6 +10,8 @@ export * from './components/Badges/VaultBadge'
  * Buttons
  */
 export * from './components/Buttons/DepositButton'
+export * from './components/Buttons/LensterShareButton'
+export * from './components/Buttons/TwitterShareButton'
 export * from './components/Buttons/WithdrawButton'
 
 /**

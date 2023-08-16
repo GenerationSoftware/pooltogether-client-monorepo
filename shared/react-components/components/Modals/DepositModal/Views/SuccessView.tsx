@@ -1,14 +1,28 @@
 import {
+  formatCurrencyNumberForDisplay,
   formatNumberForDisplay,
   getBlockExplorerName,
   getBlockExplorerUrl,
+  getNiceNetworkNameByChainId,
+  NETWORK,
+  PRIZE_POOLS,
+  USDC_TOKEN_ADDRESSES,
   Vault
 } from '@pooltogether/hyperstructure-client-js'
-import { useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
+import {
+  useGrandPrize,
+  usePrizePool,
+  useTokenPrices,
+  useVaultTokenData
+} from '@pooltogether/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
-import { Button, ExternalLink } from '@shared/ui'
+import { Button, ExternalLink, LINKS } from '@shared/ui'
 import { useAtomValue } from 'jotai'
+import { useMemo } from 'react'
+import { Address, formatUnits } from 'viem'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
+import { LensterShareButton } from '../../../Buttons/LensterShareButton'
+import { TwitterShareButton } from '../../../Buttons/TwitterShareButton'
 import { depositFormTokenAmountAtom } from '../../../Form/DepositForm'
 import { SuccessPooly } from '../../../Graphics/SuccessPooly'
 
@@ -61,14 +75,7 @@ export const SuccessView = (props: SuccessViewProps) => {
           className='text-pt-teal'
         />
       )}
-      {/* TODO: implement twitter sharing and enable button */}
-      <Button fullSized={true} disabled>
-        {intl?.base?.('shareTwitter') ?? 'Share Tweet'}
-      </Button>
-      {/* TODO: implement lenster sharing and enable button */}
-      <Button fullSized={true} disabled>
-        {intl?.base?.('shareLenster') ?? 'Share on Lenster'}
-      </Button>
+      <ShareButtons vault={vault} intl={intl?.base} />
       {!!goToAccount && (
         <Button
           fullSized={true}
@@ -82,5 +89,63 @@ export const SuccessView = (props: SuccessViewProps) => {
         </Button>
       )}
     </div>
+  )
+}
+
+interface ShareButtonsProps {
+  vault: Vault
+  intl?: Intl<'shareTwitter' | 'shareLenster'>
+}
+
+const ShareButtons = (props: ShareButtonsProps) => {
+  const { vault, intl } = props
+
+  const { data: tokenData } = useVaultTokenData(vault)
+
+  const prizePoolAddress = PRIZE_POOLS.find((pool) => pool.chainId === vault.chainId)
+    ?.address as Address
+  const prizePool = usePrizePool(vault.chainId, prizePoolAddress)
+  const { data: grandPrize } = useGrandPrize(prizePool)
+
+  const { data: tokenPrices } = useTokenPrices(NETWORK.mainnet, [
+    USDC_TOKEN_ADDRESSES[NETWORK.mainnet]
+  ])
+
+  const network = getNiceNetworkNameByChainId(vault.chainId)
+  const hashTags = ['PoolTogether', network]
+
+  // TODO: improve and add more alternatives to this text (emojis? :D)
+  const text = useMemo(() => {
+    if (!!tokenData && !!grandPrize && !!tokenPrices) {
+      const tokenSymbol = tokenData.symbol
+      const grandPrizeAmount = parseFloat(formatUnits(grandPrize.amount, grandPrize.decimals))
+      const grandPrizeValue = grandPrizeAmount * grandPrize.price
+      const usdPrice = tokenPrices[USDC_TOKEN_ADDRESSES[NETWORK.mainnet]]
+      const formattedGrandPrizeValue = formatCurrencyNumberForDisplay(
+        !!usdPrice ? grandPrizeValue * (1 / usdPrice) : grandPrizeValue,
+        !!usdPrice ? 'usd' : 'eth',
+        { hideZeroes: true }
+      )
+      return `I've just deposited some ${tokenSymbol} into PoolTogether! Watch me win the next ${formattedGrandPrizeValue} prize.`
+    }
+  }, [tokenData, grandPrize, tokenPrices])
+
+  return (
+    <>
+      <TwitterShareButton
+        text={text}
+        hashTags={hashTags}
+        url={LINKS.app}
+        fullSized={true}
+        intl={intl}
+      />
+      <LensterShareButton
+        text={text}
+        hashTags={hashTags}
+        url={LINKS.app}
+        fullSized={true}
+        intl={intl}
+      />
+    </>
   )
 }
