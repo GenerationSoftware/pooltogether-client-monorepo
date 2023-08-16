@@ -16,46 +16,13 @@ export const Footer = (props: FooterProps) => {
       <FooterWave />
       <div className='w-full flex flex-col gap-12 items-center justify-between px-16 bg-pt-purple-700 md:flex-row'>
         <div className='flex flex-col gap-12 px-4 md:flex-row md:px-0'>
-          <div className='flex flex-col gap-3'>
-            <span className='text-center text-pt-purple-300 md:text-start'>Cabana made by</span>
-            <a href='https://g9software.xyz' target='_blank' className='opacity-50'>
-              <Image src='/generationLogo.svg' alt='Generation Software' width={261} height={38} />
-            </a>
-          </div>
-          <div className='flex flex-col gap-3'>
-            <span className='text-center text-pt-purple-300 md:text-start'>
-              PoolTogether audits by
-            </span>
-            <div className='flex flex-col gap-6 items-center opacity-50 md:flex-row'>
-              {/* TODO: add link to c4 audit(s) */}
-              <Link href={LINKS.audits} target='_blank'>
-                <Image src='/c4Logo.svg' alt='Code Arena' width={257} height={46} />
-              </Link>
-              {/* TODO: add link to macro audit(s) */}
-              <Link href={LINKS.audits} target='_blank'>
-                <Image src='/macroLogo.svg' alt='Macro' width={191} height={40} />
-              </Link>
-            </div>
-          </div>
+          <MadeBy />
+          <AuditsBy />
         </div>
         <div className='flex flex-col gap-12 items-center order-first md:flex-row md:gap-6 md:items-end md:order-none'>
-          <div className='flex gap-4 items-center order-last md:order-none'>
-            <SimpleSocialIcon platform='twitter' href={LINKS.twitter} />
-            <SimpleSocialIcon platform='discord' href={LINKS.discord} />
-          </div>
+          <SocialIcons />
           <Link href={LINKS.protocolLandingPage} target='_blank'>
-            <div className='flex flex-col gap-1'>
-              <span className='text-center text-pt-purple-300 whitespace-nowrap md:text-start'>
-                Powered by
-              </span>
-              <Image
-                src='/ptLogo.svg'
-                alt='PoolTogether'
-                width={183}
-                height={72}
-                className='w-32 h-auto'
-              />
-            </div>
+            <PoweredByPT />
           </Link>
         </div>
       </div>
@@ -85,6 +52,44 @@ const FooterWave = () => {
   )
 }
 
+const MadeBy = () => {
+  return (
+    <div className='flex flex-col gap-3'>
+      <span className='text-center text-pt-purple-300 md:text-start'>Cabana made by</span>
+      <a href='https://g9software.xyz' target='_blank' className='opacity-50'>
+        <Image src='/generationLogo.svg' alt='Generation Software' width={261} height={38} />
+      </a>
+    </div>
+  )
+}
+
+const AuditsBy = () => {
+  return (
+    <div className='flex flex-col gap-3'>
+      <span className='text-center text-pt-purple-300 md:text-start'>PoolTogether audits by</span>
+      <div className='flex flex-col gap-6 items-center opacity-50 md:flex-row'>
+        {/* TODO: add link to c4 audit(s) */}
+        <Link href={LINKS.audits} target='_blank'>
+          <Image src='/c4Logo.svg' alt='Code Arena' width={257} height={46} />
+        </Link>
+        {/* TODO: add link to macro audit(s) */}
+        <Link href={LINKS.audits} target='_blank'>
+          <Image src='/macroLogo.svg' alt='Macro' width={191} height={40} />
+        </Link>
+      </div>
+    </div>
+  )
+}
+
+const SocialIcons = () => {
+  return (
+    <div className='flex gap-4 items-center order-last md:order-none'>
+      <SimpleSocialIcon platform='twitter' href={LINKS.twitter} />
+      <SimpleSocialIcon platform='discord' href={LINKS.discord} />
+    </div>
+  )
+}
+
 interface SimpleSocialIconProps extends SocialIconProps {
   href: string
 }
@@ -104,5 +109,16 @@ const SimpleSocialIcon = (props: SimpleSocialIconProps) => {
     >
       <SocialIcon platform={platform} className='w-6 h-auto text-pt-purple-100' />
     </a>
+  )
+}
+
+const PoweredByPT = () => {
+  return (
+    <div className='flex flex-col gap-1'>
+      <span className='text-center text-pt-purple-300 whitespace-nowrap md:text-start'>
+        Powered by
+      </span>
+      <Image src='/ptLogo.svg' alt='PoolTogether' width={183} height={72} className='w-32 h-auto' />
+    </div>
   )
 }
