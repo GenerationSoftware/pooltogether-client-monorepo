@@ -1,7 +1,13 @@
-import { PrizeInfo, SubgraphPrizePoolAccount, SubgraphPrizePoolDraw } from '@shared/types'
+import {
+  PrizeInfo,
+  SubgraphPrizePoolAccount,
+  SubgraphPrizePoolDraw,
+  SubgraphPrizePoolDrawTimestamp,
+  SubgraphTWABAccount
+} from '@shared/types'
 import { Address, formatUnits, getContract, PublicClient } from 'viem'
 import { prizePoolABI } from '../abis/prizePool'
-import { PRIZE_POOL_GRAPH_API_URLS, SECONDS_PER_DAY } from '../constants'
+import { PRIZE_POOL_GRAPH_API_URLS, SECONDS_PER_DAY, TWAB_GRAPH_API_URLS } from '../constants'
 import { formatStringWithPrecision } from './formatting'
 import { calculatePercentageOfBigInt, divideBigInts } from './math'
 import { getSimpleMulticallResults } from './multicall'
@@ -290,6 +296,118 @@ export const getUserPrizePoolHistoricalWins = async (
       jsonData?.data?.account?.prizesReceived ?? []
 
     return wins
+  } else {
+    console.warn(`Could not find subgraph URL for chain ID: ${chainId}`)
+    return []
+  }
+}
+
+/**
+ * Returns a user's historical account balance updates
+ * @param chainId the prize pool's chain ID
+ * @param userAddress the user's wallet address
+ * @returns
+ */
+export const getUserBalanceUpdates = async (
+  chainId: number,
+  userAddress: string
+): Promise<{
+  [vaultAddress: Address]: {
+    balance: bigint
+    delegateBalance: bigint
+    timestamp: number
+  }[]
+}> => {
+  if (chainId in TWAB_GRAPH_API_URLS) {
+    const subgraphUrl = TWAB_GRAPH_API_URLS[chainId as keyof typeof TWAB_GRAPH_API_URLS]
+
+    const headers = { 'Content-Type': 'application/json' }
+
+    const body = JSON.stringify({
+      query: `query($id: Bytes, $orderBy: AccountObservation_orderBy) {
+        user(id: $id) {
+          id
+          accounts {
+            vault { id }
+            observations(orderBy: $orderBy) {
+              balance
+              delegateBalance
+              timestamp
+            }
+          }
+        }
+      }`,
+      variables: {
+        id: userAddress,
+        orderBy: 'timestamp'
+      }
+    })
+
+    const result = await fetch(subgraphUrl, { method: 'POST', headers, body })
+    const jsonData = await result.json()
+    const accounts: SubgraphTWABAccount['accounts'] = jsonData?.data?.user?.accounts ?? []
+
+    const balanceUpdates: {
+      [vaultAddress: Address]: {
+        balance: bigint
+        delegateBalance: bigint
+        timestamp: number
+      }[]
+    } = {}
+
+    accounts.forEach((account) => {
+      balanceUpdates[account.vault.id as Address] = account.observations.map((obs) => ({
+        balance: BigInt(obs.balance),
+        delegateBalance: BigInt(obs.delegateBalance),
+        timestamp: parseInt(obs.timestamp)
+      }))
+    })
+
+    return balanceUpdates
+  } else {
+    console.warn(`Could not find subgraph URL for chain ID: ${chainId}`)
+    return {}
+  }
+}
+
+/**
+ * Returns prize pool draws and their timestamps
+ * @param chainId the prize pool's chain ID
+ * @returns
+ */
+export const getPrizePoolDrawTimestamps = async (
+  chainId: number
+): Promise<{ id: number; timestamp: number }[]> => {
+  if (chainId in PRIZE_POOL_GRAPH_API_URLS) {
+    const subgraphUrl = PRIZE_POOL_GRAPH_API_URLS[chainId as keyof typeof PRIZE_POOL_GRAPH_API_URLS]
+
+    const headers = { 'Content-Type': 'application/json' }
+
+    const body = JSON.stringify({
+      query: `query($first: Int, $orderDirection: OrderDirection, $orderBy: Draw_orderBy) {
+        draws(orderDirection: $orderDirection, orderBy: $orderBy) {
+          id
+          prizeClaims(first: $first) {
+            timestamp
+          }
+        }
+      }`,
+      variables: {
+        orderDirection: 'asc',
+        orderBy: 'id',
+        first: 1
+      }
+    })
+
+    const result = await fetch(subgraphUrl, { method: 'POST', headers, body })
+    const jsonData = await result.json()
+    const draws: SubgraphPrizePoolDrawTimestamp[] = jsonData?.data?.draws ?? []
+    const formattedDraws = draws.map((draw) => ({
+      id: parseInt(draw.id),
+      timestamp: parseInt(draw.prizeClaims[0].timestamp)
+    }))
+
+    return formattedDraws
   } else {
     console.warn(`Could not find subgraph URL for chain ID: ${chainId}`)
     return []

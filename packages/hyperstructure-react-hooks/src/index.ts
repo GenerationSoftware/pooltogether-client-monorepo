@@ -2,6 +2,7 @@
  * App Hooks
  */
 export * from './app/useCachedVaultLists'
+export * from './app/useLastCheckedDrawIds'
 export * from './app/useSelectedVaultListIds'
 export * from './app/useSelectedVaultLists'
 export * from './app/useSelectedVaults'
@@ -19,7 +20,10 @@ export * from './blockchain/useGasPrices'
 /**
  * Prize Pool Hooks
  */
+export * from './prizes/useAllPrizeDrawTimestamps'
 export * from './prizes/useAllPrizeInfo'
+export * from './prizes/useAllUserBalanceUpdates'
+export * from './prizes/useAllUserEligibleDraws'
 export * from './prizes/useAllUserPrizeOdds'
 export * from './prizes/useAllUserPrizePoolWins'
 export * from './prizes/useDrawPeriod'
@@ -29,6 +33,7 @@ export * from './prizes/useGrandPrize'
 export * from './prizes/useLargestGrandPrize'
 export * from './prizes/useLastDrawTimestamps'
 export * from './prizes/useNextDrawTimestamps'
+export * from './prizes/usePrizeDrawTimestamps'
 export * from './prizes/usePrizeDrawWinners'
 export * from './prizes/usePrizeOdds'
 export * from './prizes/usePrizePools'

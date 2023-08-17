@@ -1,14 +1,14 @@
+import { PrizePool } from '@pooltogether/hyperstructure-client-js'
+import { usePrizeTokenData } from '@pooltogether/hyperstructure-react-hooks'
+import { Intl, SubgraphPrizePoolDraw } from '@shared/types'
+import { ExternalLink, Spinner } from '@shared/ui'
 import {
   formatBigIntForDisplay,
   getBlockExplorerUrl,
-  PrizePool,
   shorten,
   sortByBigIntDesc,
-  SubgraphPrizePoolDraw
-} from '@pooltogether/hyperstructure-client-js'
-import { usePrizeTokenData } from '@pooltogether/hyperstructure-react-hooks'
-import { Intl } from '@shared/types'
-import { ExternalLink, Spinner } from '@shared/ui'
+  sToMs
+} from '@shared/utilities'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 
 interface MainViewProps {
@@ -39,7 +39,7 @@ interface MainViewHeaderProps {
 const MainViewHeader = (props: MainViewHeaderProps) => {
   const { draw, intl } = props
 
-  const drawDate = new Date(parseInt(draw.prizeClaims[0].timestamp) * 1_000)
+  const drawDate = new Date(sToMs(parseInt(draw.prizeClaims[0].timestamp)))
   const formattedDrawDate = drawDate.toLocaleTimeString(undefined, {
     month: 'long',
     day: 'numeric',

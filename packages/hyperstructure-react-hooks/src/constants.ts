@@ -5,6 +5,7 @@ import { LOCAL_STORAGE_KEYS as GENERIC_LOCAL_STORAGE_KEYS } from '@shared/generi
  */
 export const QUERY_KEYS = Object.freeze({
   drawPeriod: 'drawPeriod',
+  drawTimestamps: 'drawTimestamps',
   drawWinners: 'drawWinners',
   estimatedPrizeCount: 'estimatedPrizeCount',
   firstDrawStartTimestamp: 'firstDrawStartTimestamp',
@@ -20,6 +21,8 @@ export const QUERY_KEYS = Object.freeze({
   tokenBalances: 'tokenBalances',
   tokenPrices: 'tokenPrices',
   tokens: 'tokens',
+  userBalanceUpdates: 'userBalanceUpdates',
+  userEligibleDraws: 'userEligibleDraws',
   userVaultBalances: 'userVaultBalances',
   userWins: 'userWins',
   vaultBalances: 'vaultBalances',
@@ -38,16 +41,12 @@ export const QUERY_KEYS = Object.freeze({
 })
 
 /**
- * Local storage key suffix (update for breaking updates)
- */
-const LOCAL_STORAGE_KEY_SUFFIX = '-alpha.1'
-
-/**
  * Local storage keys
  */
 export const LOCAL_STORAGE_KEYS = Object.freeze({
   ...GENERIC_LOCAL_STORAGE_KEYS,
-  cachedVaultLists: `cachedVaultLists${LOCAL_STORAGE_KEY_SUFFIX}`,
-  localVaultListIds: `localVaultListIds${LOCAL_STORAGE_KEY_SUFFIX}`,
-  importedVaultListIds: `importedVaultListIds${LOCAL_STORAGE_KEY_SUFFIX}`
+  cachedVaultLists: 'cachedVaultLists',
+  localVaultListIds: 'localVaultListIds',
+  importedVaultListIds: 'importedVaultListIds',
+  lastCheckedDrawIds: 'lastCheckedDrawIds'
 })

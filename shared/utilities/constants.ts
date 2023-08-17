@@ -99,6 +99,14 @@ export const PRIZE_POOL_GRAPH_API_URLS = Object.freeze({
 })
 
 /**
+ * TWAB Graph API URLs
+ */
+export const TWAB_GRAPH_API_URLS = Object.freeze({
+  [NETWORK.sepolia]:
+    'https://api.studio.thegraph.com/query/50959/pt-v5-twab-control-eth-sepolia/v0.0.1'
+})
+
+/**
  * CoinGecko platform IDs
  */
 export const COINGECKO_PLATFORMS = Object.freeze({
