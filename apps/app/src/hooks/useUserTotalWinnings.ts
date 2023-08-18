@@ -21,7 +21,7 @@ export const useUserTotalWinnings = (userAddress: Address) => {
     data: wins,
     isFetched: isFetchedWins,
     refetch: refetchWins
-  } = useAllUserPrizePoolWins(prizePoolsArray, userAddress as Address)
+  } = useAllUserPrizePoolWins(prizePoolsArray, userAddress)
 
   const { data: allVaultTokenPrices, isFetched: isFetchedAllVaultTokenPrices } =
     useAllVaultTokenPrices()

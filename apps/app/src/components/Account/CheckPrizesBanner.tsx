@@ -1,23 +1,18 @@
-import {
-  useAllPrizeDrawWinners,
-  useAllUserEligibleDraws,
-  useLastCheckedDrawIds,
-  usePrizeTokenPrice
-} from '@pooltogether/hyperstructure-react-hooks'
+import { usePrizeTokenPrice } from '@pooltogether/hyperstructure-react-hooks'
 import { TokenValue } from '@shared/react-components'
-import { Button } from '@shared/ui'
+import { Button, Spinner } from '@shared/ui'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
+import { useDrawsToCheckForPrizes } from '@hooks/useDrawsToCheckForPrizes'
+import { useDrawsTotalEligiblePrizeAmount } from '@hooks/useDrawsTotalEligiblePrizeAmount'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 
 interface CheckPrizesBannerProps {
   className?: string
 }
 
-// TODO: this component is way too complicated - split it up into separate hooks
-// TODO: center total prizes
 // TODO: mobile design
 // TODO: localization
 export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
@@ -25,122 +20,42 @@ export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
 
   const { address: userAddress } = useAccount()
 
-  const { lastCheckedDrawIds } = useLastCheckedDrawIds()
-
+  // TODO: this assumes every prize pool is using the same prize token - not ideal
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
+  const { data: prizeToken } = usePrizeTokenPrice(prizePoolsArray[0])
 
-  // const { data: allUserEligibleDraws } = useAllUserEligibleDraws(
-  //   prizePoolsArray,
-  //   userAddress as Address
-  // )
-  const { data: allUserEligibleDraws } = useAllUserEligibleDraws(
-    prizePoolsArray,
+  // const { data: drawsToCheck } = useDrawsToCheckForPrizes(userAddress as Address)
+  const { data: drawsToCheck } = useDrawsToCheckForPrizes(
     '0x062bdedfecfd229cd908371a5683e23224366856'
   )
 
-  const { data: allDrawWinners } = useAllPrizeDrawWinners(prizePoolsArray)
+  // const { data: totalPrizeAmount } = useDrawsTotalEligiblePrizeAmount(userAddress as Address)
+  const { data: totalPrizeAmount } = useDrawsTotalEligiblePrizeAmount(
+    '0x062bdedfecfd229cd908371a5683e23224366856'
+  )
 
-  // TODO: this assumes every prize pool is using the same prize token - not ideal
-  const { data: prizeToken } = usePrizeTokenPrice(prizePoolsArray[0])
-
-  const numDrawsToCheck = useMemo(() => {
-    if (!!lastCheckedDrawIds && !!allUserEligibleDraws) {
-      let num = 0
-
-      for (const chainId in allUserEligibleDraws.eligibleDraws) {
-        const eligibleDraws = allUserEligibleDraws.eligibleDraws[chainId]
-        const lastCheckedDrawId = lastCheckedDrawIds[chainId] ?? 0
-        eligibleDraws.forEach((draw) => {
-          if (draw.id > lastCheckedDrawId) {
-            num++
-          }
-        })
-      }
-
-      return num
-    }
-  }, [lastCheckedDrawIds, allUserEligibleDraws])
-
-  const dateFormatting: Intl.DateTimeFormatOptions = {
-    month: 'long',
-    day: 'numeric',
-    timeZone: 'UTC'
-  }
-
-  const dateRangeToCheck = useMemo(() => {
-    if (!!lastCheckedDrawIds && !!allUserEligibleDraws) {
-      let startTimestamp = Number.MAX_SAFE_INTEGER
-      let endTimestamp = 0
-
-      for (const chainId in allUserEligibleDraws.eligibleDraws) {
-        const eligibleDraws = allUserEligibleDraws.eligibleDraws[chainId]
-        const lastCheckedDrawId = lastCheckedDrawIds[chainId] ?? 0
-
-        eligibleDraws.forEach((draw) => {
-          if (draw.id > lastCheckedDrawId) {
-            if (startTimestamp > draw.timestamp) {
-              startTimestamp = draw.timestamp
-            }
-            if (endTimestamp < draw.timestamp) {
-              endTimestamp = draw.timestamp
-            }
-          }
-        })
-      }
-
-      if (!!startTimestamp && !!endTimestamp) {
-        return {
-          startDate: new Date(startTimestamp * 1e3).toLocaleDateString(undefined, dateFormatting),
-          endDate: new Date(endTimestamp * 1e3).toLocaleDateString(undefined, dateFormatting)
-        }
-      }
-    }
-  }, [lastCheckedDrawIds, allUserEligibleDraws])
-
-  const totalPrizesAmount = useMemo(() => {
-    if (!!lastCheckedDrawIds && !!allUserEligibleDraws && !!allDrawWinners && !!prizeToken) {
-      let total = 0n
-
-      for (const chainId in allUserEligibleDraws.eligibleDraws) {
-        const eligibleDrawIds = allUserEligibleDraws.eligibleDraws[chainId].map((d) => d.id)
-        const lastCheckedDrawId = lastCheckedDrawIds[chainId] ?? 0
-
-        allDrawWinners[chainId].forEach((draw) => {
-          const drawId = parseInt(draw.id)
-          if (drawId > lastCheckedDrawId && eligibleDrawIds.includes(drawId)) {
-            total += draw.prizeClaims.reduce((a, b) => a + BigInt(b.payout), 0n)
-          }
-        })
-      }
-
-      return total
-    }
-  }, [lastCheckedDrawIds, allUserEligibleDraws, allDrawWinners, prizeToken])
-
-  if (!!numDrawsToCheck && !!prizeToken && !!totalPrizesAmount) {
+  if (!!drawsToCheck && !!totalPrizeAmount) {
     return (
       <div
         className={classNames(
-          'w-full flex items-center justify-between px-8 py-6 text-pt-purple-300 bg-pt-purple-700 font-medium rounded-md',
+          'relative w-full flex items-center justify-between px-8 py-6 text-pt-purple-300 bg-pt-purple-700 font-medium rounded-md',
           className
         )}
       >
         <div className='flex flex-col'>
-          <span>You were eligible for {numDrawsToCheck} draws</span>
-          {!!dateRangeToCheck && (
-            <span>
-              {dateRangeToCheck.startDate === dateRangeToCheck.endDate
-                ? dateRangeToCheck.startDate
-                : `${dateRangeToCheck.startDate} - ${dateRangeToCheck.endDate}`}
-            </span>
-          )}
+          <span>You were eligible for {drawsToCheck.totalCount} draws</span>
+          {!!drawsToCheck && <DateRange timestamps={drawsToCheck.timestamps} />}
         </div>
-        <div className='flex gap-2 items-center'>
+        <div className='absolute inset-0 flex gap-2 items-center justify-center'>
           <span>Totalling</span>
-          <span className='text-5xl text-pt-teal'>
-            <TokenValue token={{ ...prizeToken, amount: totalPrizesAmount }} hideZeroes={true} />
-          </span>
+          {!!prizeToken ? (
+            <span className='text-5xl text-pt-teal'>
+              <TokenValue token={{ ...prizeToken, amount: totalPrizeAmount }} hideZeroes={true} />
+            </span>
+          ) : (
+            <Spinner />
+          )}
           <span>in Prizes</span>
         </div>
         {/* TODO: open prize checking modal onclick */}
@@ -148,4 +63,32 @@ export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
       </div>
     )
   }
+}
+
+interface DateRangeProps {
+  timestamps: { start: number; end: number }
+  className?: string
+}
+
+const DateRange = (props: DateRangeProps) => {
+  const { timestamps, className } = props
+
+  const dateFormatting: Intl.DateTimeFormatOptions = {
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC'
+  }
+
+  const dates = useMemo(() => {
+    return {
+      start: new Date(timestamps.start * 1e3).toLocaleDateString(undefined, dateFormatting),
+      end: new Date(timestamps.end * 1e3).toLocaleDateString(undefined, dateFormatting)
+    }
+  }, [timestamps])
+
+  return (
+    <span className={className}>
+      {dates.start === dates.end ? dates.start : `${dates.start} - ${dates.end}`}
+    </span>
+  )
 }
