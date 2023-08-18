@@ -3,6 +3,7 @@ import { usePrizeTokenData } from '@pooltogether/hyperstructure-react-hooks'
 import { SubgraphPrizePoolAccount, TokenWithAmount } from '@shared/types'
 import { Intl } from '@shared/types'
 import { Button } from '@shared/ui'
+import { getSimpleDate } from '@shared/utilities'
 import classNames from 'classnames'
 import Lottie from 'lottie-react'
 import { useMemo, useState } from 'react'
@@ -119,12 +120,6 @@ interface PrizeRowProps {
 const PrizeRow = (props: PrizeRowProps) => {
   const { chainId, prize, timestamp, prizeToken, className, intl } = props
 
-  const date = new Date(timestamp * 1e3).toLocaleDateString(undefined, {
-    month: 'long',
-    day: 'numeric',
-    timeZone: 'UTC'
-  })
-
   return (
     <div
       className={classNames(
@@ -134,7 +129,7 @@ const PrizeRow = (props: PrizeRowProps) => {
     >
       <div className='flex gap-2 items-center'>
         <NetworkIcon chainId={chainId} className='w-4 h-4' />
-        <span className='text-sm text-pt-purple-300'>{date}</span>
+        <span className='text-sm text-pt-purple-300'>{getSimpleDate(timestamp)}</span>
       </div>
       <span className='font-medium'>
         <TokenValue token={{ ...prizeToken, amount: prize }} /> {intl?.('xWon') ?? `Won!`}

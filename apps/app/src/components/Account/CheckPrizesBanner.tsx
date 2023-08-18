@@ -5,6 +5,7 @@ import {
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { TokenValue } from '@shared/react-components'
 import { Button, Spinner } from '@shared/ui'
+import { getSimpleDate } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -80,16 +81,10 @@ interface DateRangeProps {
 const DateRange = (props: DateRangeProps) => {
   const { timestamps, className } = props
 
-  const dateFormatting: Intl.DateTimeFormatOptions = {
-    month: 'long',
-    day: 'numeric',
-    timeZone: 'UTC'
-  }
-
   const dates = useMemo(() => {
     return {
-      start: new Date(timestamps.start * 1e3).toLocaleDateString(undefined, dateFormatting),
-      end: new Date(timestamps.end * 1e3).toLocaleDateString(undefined, dateFormatting)
+      start: getSimpleDate(timestamps.start),
+      end: getSimpleDate(timestamps.end)
     }
   }, [timestamps])
 

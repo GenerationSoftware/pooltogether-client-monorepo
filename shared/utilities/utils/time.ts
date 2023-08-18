@@ -342,3 +342,15 @@ export const getPrizeTextFromFrequency = (
 
   return null
 }
+
+/**
+ * Returns a simple date showing month and day in UTC
+ * @param timestamp timestamp in seconds
+ */
+export const getSimpleDate = (timestamp: number) => {
+  return new Date(timestamp * 1e3).toLocaleDateString(undefined, {
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC'
+  })
+}

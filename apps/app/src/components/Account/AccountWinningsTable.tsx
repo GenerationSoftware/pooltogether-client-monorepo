@@ -1,6 +1,7 @@
 import { PrizePool, SubgraphPrizePoolAccount } from '@pooltogether/hyperstructure-client-js'
 import { PrizePoolBadge } from '@shared/react-components'
 import { Table, TableProps } from '@shared/ui'
+import { getSimpleDate } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/router'
@@ -22,7 +23,7 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
 
   const tableData: TableProps['data'] = {
     headers: {
-      draw: { content: t_account('winHeaders.draw') },
+      date: { content: t_account('winHeaders.date') },
       prizePool: { content: t_account('winHeaders.prizePool'), position: 'center' },
       winnings: { content: t_account('winHeaders.winnings'), position: 'center' },
       info: { content: t_account('winHeaders.moreInfo'), position: 'center' }
@@ -33,7 +34,7 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
 
         if (!!prizePool) {
           const cells: TableProps['data']['rows'][0]['cells'] = {
-            draw: { content: `Draw #${win.draw.id}` },
+            date: { content: getSimpleDate(parseInt(win.timestamp)) },
             prizePool: {
               content: (
                 <PrizePoolBadge

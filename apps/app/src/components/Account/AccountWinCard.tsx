@@ -5,6 +5,7 @@ import {
 } from '@pooltogether/hyperstructure-client-js'
 import { NetworkIcon } from '@shared/react-components'
 import { ExternalLink } from '@shared/ui'
+import { getSimpleDate } from '@shared/utilities'
 import { useTranslations } from 'next-intl'
 import { AccountWinAmount } from './AccountWinAmount'
 
@@ -21,7 +22,7 @@ export const AccountWinCard = (props: AccountWinCardProps) => {
   return (
     <div className='flex items-center gap-3 bg-pt-transparent rounded-lg p-3'>
       <NetworkIcon chainId={win.chainId} className='h-6 w-6' />
-      <span className='text-sm'>{t('drawId', { id: win.draw.id })}</span>
+      <span className='text-sm'>{getSimpleDate(parseInt(win.timestamp))}</span>
       {/* TODO: add txHash once subgraph has it */}
       <ExternalLink
         // href={getBlockExplorerUrl(win.chainId, win.txHash, 'tx')}
