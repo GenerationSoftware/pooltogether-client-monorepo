@@ -1,6 +1,7 @@
 import { PrizePool } from '@pooltogether/hyperstructure-client-js'
 import { usePrizeTokenData } from '@pooltogether/hyperstructure-react-hooks'
 import { SubgraphPrizePoolAccount, TokenWithAmount } from '@shared/types'
+import { Intl } from '@shared/types'
 import { Button } from '@shared/ui'
 import classNames from 'classnames'
 import Lottie from 'lottie-react'
@@ -16,10 +17,11 @@ interface WinViewProps {
   draws: { [chainId: number]: { id: number; timestamp: number }[] }
   wins: { [chainId: number]: SubgraphPrizePoolAccount['prizesReceived'] }
   onClose: () => void
+  intl?: Intl<'viewAccount' | 'youWonX' | 'xWon'>
 }
 
 export const WinView = (props: WinViewProps) => {
-  const { prizePools, draws, wins, onClose } = props
+  const { prizePools, draws, wins, onClose, intl } = props
 
   // TODO: this assumes all prize pools use the same prize token - not ideal
   const { data: prizeToken } = usePrizeTokenData(prizePools[0])
@@ -75,7 +77,7 @@ export const WinView = (props: WinViewProps) => {
           onComplete={() => setIsAnimationComplete(true)}
         />
         <Button onClick={onClose} className={classNames('mx-auto', transitionIn)}>
-          View Your Account
+          {intl?.('viewAccount') ?? `View Your Account`}
         </Button>
       </div>
     )
@@ -87,15 +89,16 @@ export const WinView = (props: WinViewProps) => {
 interface HeaderProps {
   token: TokenWithAmount
   className?: string
+  intl?: Intl<'youWonX'>
 }
 
 const Header = (props: HeaderProps) => {
-  const { token, className } = props
+  const { token, className, intl } = props
 
   return (
     <div className={classNames('flex flex-col items-center text-center', className)}>
       <span className='text-3xl font-medium text-gray-100'>
-        You won <TokenValue token={token} hideZeroes={true} />!
+        {intl?.('youWonX') ?? `You won`} <TokenValue token={token} hideZeroes={true} />!
       </span>
       <span className='text-pt-purple-100'>
         (<TokenAmount token={token} hideZeroes={true} />)
@@ -110,10 +113,11 @@ interface PrizeRowProps {
   timestamp: number
   prizeToken: { chainId: number; address: Address }
   className?: string
+  intl?: Intl<'xWon'>
 }
 
 const PrizeRow = (props: PrizeRowProps) => {
-  const { chainId, prize, timestamp, prizeToken, className } = props
+  const { chainId, prize, timestamp, prizeToken, className, intl } = props
 
   const date = new Date(timestamp * 1e3).toLocaleDateString(undefined, {
     month: 'long',
@@ -133,7 +137,7 @@ const PrizeRow = (props: PrizeRowProps) => {
         <span className='text-sm text-pt-purple-300'>{date}</span>
       </div>
       <span className='font-medium'>
-        <TokenValue token={{ ...prizeToken, amount: prize }} /> Won!
+        <TokenValue token={{ ...prizeToken, amount: prize }} /> {intl?.('xWon') ?? `Won!`}
       </span>
     </div>
   )

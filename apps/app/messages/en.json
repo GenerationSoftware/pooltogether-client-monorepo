@@ -93,6 +93,19 @@
       "prizePool": "Prize Pool",
       "winnings": "Winnings",
       "moreInfo": "More Info"
+    },
+    "prizeChecking": {
+      "eligibleDraws": "You were eligible for {number} draws",
+      "totalPrizes": {
+        "beforeValue": "Totalling",
+        "afterValue": "in Prizes"
+      },
+      "checkPrizes": "Check for Prizes",
+      "checking": "Checking the blockchain...",
+      "noPrizes": "No prizes this time.",
+      "viewAccount": "View Your Account",
+      "youWonX": "You won",
+      "xWon": "Won!"
     }
   },
   "TxModals": {

@@ -5,6 +5,7 @@ import {
   useLastCheckedDrawIds
 } from '@pooltogether/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen, useScreenSize } from '@shared/generic-react-hooks'
+import { Intl } from '@shared/types'
 import { Modal } from '@shared/ui'
 import { sToMs } from '@shared/utilities'
 import { ReactNode, useEffect, useState } from 'react'
@@ -18,11 +19,11 @@ export type CheckPrizesModalView = 'checking' | 'win' | 'noWin'
 
 export interface CheckPrizesModalProps {
   prizePools: PrizePool[]
+  intl?: Intl<'checking' | 'noPrizes' | 'viewAccount' | 'youWonX' | 'xWon'>
 }
 
-// TODO: localization
 export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
-  const { prizePools } = props
+  const { prizePools, intl } = props
 
   const { isModalOpen, setIsModalOpen } = useIsModalOpen(MODAL_KEYS.checkPrizes)
 
@@ -78,16 +79,17 @@ export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
 
   if (isModalOpen) {
     const modalViews: Record<CheckPrizesModalView, ReactNode> = {
-      checking: <CheckingView />,
+      checking: <CheckingView intl={intl} />,
       win: !!drawsToCheck && (
         <WinView
           prizePools={prizePools}
           draws={drawsToCheck.draws}
           wins={wins}
           onClose={handleClose}
+          intl={intl}
         />
       ),
-      noWin: <NoWinView onClose={handleClose} />
+      noWin: <NoWinView onClose={handleClose} intl={intl} />
     }
 
     return (

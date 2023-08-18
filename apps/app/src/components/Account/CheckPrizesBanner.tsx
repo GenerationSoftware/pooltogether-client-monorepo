@@ -6,6 +6,7 @@ import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { TokenValue } from '@shared/react-components'
 import { Button, Spinner } from '@shared/ui'
 import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
@@ -16,13 +17,14 @@ interface CheckPrizesBannerProps {
   className?: string
 }
 
-// TODO: localization
 export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
   const { className } = props
 
   const { address: userAddress } = useAccount()
 
   const { setIsModalOpen } = useIsModalOpen(MODAL_KEYS.checkPrizes)
+
+  const t = useTranslations('Account.prizeChecking')
 
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
@@ -44,13 +46,13 @@ export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
         )}
       >
         <div className='flex flex-col text-center text-sm md:text-start lg:text-base'>
-          <span>You were eligible for {drawsToCheck.totalCount} draws</span>
+          <span>{t('eligibleDraws', { number: drawsToCheck.totalCount })}</span>
           {!!drawsToCheck && (
             <DateRange timestamps={drawsToCheck.timestamps} className='text-pt-purple-100' />
           )}
         </div>
         <div className='inset-0 flex flex-col gap-x-2 items-center justify-center text-sm -z-10 md:absolute md:flex-row lg:text-base'>
-          <span>Totalling</span>
+          <span>{t('totalPrizes.beforeValue')}</span>
           {!!prizeToken ? (
             <span className='text-2xl md:text-3xl lg:text-5xl text-pt-teal'>
               <TokenValue token={{ ...prizeToken, amount: totalPrizeAmount }} hideZeroes={true} />
@@ -58,10 +60,10 @@ export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
           ) : (
             <Spinner />
           )}
-          <span>in Prizes</span>
+          <span>{t('totalPrizes.afterValue')}</span>
         </div>
         <Button onClick={() => setIsModalOpen(true)}>
-          <span className='text-xs lg:text-sm'>Check for Prizes</span>
+          <span className='text-xs lg:text-sm'>{t('checkPrizes')}</span>
         </Button>
       </div>
     )
