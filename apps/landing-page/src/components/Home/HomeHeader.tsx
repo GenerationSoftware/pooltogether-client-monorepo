@@ -21,7 +21,7 @@ export const HomeHeader = (props: HomeHeaderProps) => {
           width={176}
           height={176}
           priority={true}
-          className='w-24 h-auto z-10 md:w-44'
+          className='w-auto h-24 z-10 md:h-44'
         />
         <div className='flex flex-col items-center text-center mb-6 z-10 md:mt-6 md:mb-10'>
           <h2 className='text-3xl font-medium md:text-5xl'>Save to Win</h2>

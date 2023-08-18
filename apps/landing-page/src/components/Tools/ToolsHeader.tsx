@@ -17,11 +17,11 @@ export const ToolsHeader = (props: ToolsHeaderProps) => {
       <div className='w-full flex flex-col items-center'>
         <Image
           src='/unicorn.png'
-          alt='Cabana Flamingo'
-          width={206}
+          alt='Cabana Unicorn'
+          width={224}
           height={176}
           priority={true}
-          className='w-44 h-auto'
+          className='w-auto h-24 md:h-44'
         />
         <div className='flex flex-col items-center mt-2 mb-8 px-4 text-center md:mt-6 md:mb-10'>
           <h2 className='text-3xl font-medium md:text-5xl'>Build on PoolTogether & Cabana</h2>
