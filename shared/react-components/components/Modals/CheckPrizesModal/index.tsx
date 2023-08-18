@@ -39,13 +39,13 @@ export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
   const { set } = useLastCheckedDrawIds()
 
   const updateLastCheckedDrawIds = () => {
-    if (!!drawsToCheck) {
+    if (!!drawsToCheck && !!userAddress) {
       for (const key in drawsToCheck.draws) {
         const chainId = parseInt(key)
         const draws = drawsToCheck.draws[chainId]
         if (draws.length > 0) {
           const lastDrawId = draws[draws.length - 1].id
-          set(chainId, lastDrawId)
+          set(userAddress, chainId, lastDrawId)
         }
       }
     }

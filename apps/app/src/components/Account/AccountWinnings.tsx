@@ -43,7 +43,9 @@ export const AccountWinnings = (props: AccountWinningsProps) => {
 
     for (const key in wins) {
       const chainId = parseInt(key)
-      const lastCheckedDrawId = lastCheckedDrawIds[chainId]
+      const lastCheckedDrawId = !!userAddress
+        ? lastCheckedDrawIds[userAddress.toLowerCase()]?.[chainId] ?? 0
+        : 0
 
       wins[chainId].forEach((win) => {
         const drawId = parseInt(win.draw.id)

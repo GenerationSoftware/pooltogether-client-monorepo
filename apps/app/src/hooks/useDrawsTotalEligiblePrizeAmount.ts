@@ -30,7 +30,7 @@ export const useDrawsTotalEligiblePrizeAmount = (userAddress: Address) => {
 
       for (const chainId in allUserEligibleDraws.eligibleDraws) {
         const eligibleDrawIds = allUserEligibleDraws.eligibleDraws[chainId].map((d) => d.id)
-        const lastCheckedDrawId = lastCheckedDrawIds[chainId] ?? 0
+        const lastCheckedDrawId = lastCheckedDrawIds[userAddress.toLowerCase()]?.[chainId] ?? 0
 
         allDrawWinners[chainId]?.forEach((draw) => {
           const drawId = parseInt(draw.id)

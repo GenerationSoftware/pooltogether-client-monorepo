@@ -80,6 +80,8 @@ export const WinView = (props: WinViewProps) => {
       </div>
     )
   }
+
+  return <></>
 }
 
 interface HeaderProps {

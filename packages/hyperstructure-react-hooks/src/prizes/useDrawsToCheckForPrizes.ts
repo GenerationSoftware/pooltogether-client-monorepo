@@ -27,7 +27,7 @@ export const useDrawsToCheckForPrizes = (prizePools: PrizePool[], userAddress: A
         const chainDraws: { id: number; timestamp: number }[] = []
 
         const eligibleDraws = allUserEligibleDraws.eligibleDraws[chainId]
-        const lastCheckedDrawId = lastCheckedDrawIds[chainId] ?? 0
+        const lastCheckedDrawId = lastCheckedDrawIds[userAddress.toLowerCase()]?.[chainId] ?? 0
 
         eligibleDraws.forEach((draw) => {
           if (draw.id > lastCheckedDrawId) {

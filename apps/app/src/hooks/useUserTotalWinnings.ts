@@ -36,7 +36,7 @@ export const useUserTotalWinnings = (
       const totals: { [chainId: number]: bigint } = {}
       for (const key in wins) {
         const chainId = parseInt(key)
-        const lastCheckedDrawId = lastCheckedDrawIds[chainId] ?? 0
+        const lastCheckedDrawId = lastCheckedDrawIds[userAddress.toLowerCase()]?.[chainId] ?? 0
 
         let chainTotal = 0n
 
