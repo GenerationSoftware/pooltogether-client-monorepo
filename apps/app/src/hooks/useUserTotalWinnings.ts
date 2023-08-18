@@ -1,10 +1,8 @@
 import {
-  NO_REFETCH,
-  QUERY_KEYS,
   useAllUserPrizePoolWins,
-  useAllVaultTokenPrices
+  useLastCheckedDrawIds,
+  usePrizeTokenPrice
 } from '@pooltogether/hyperstructure-react-hooks'
-import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
 import { useSupportedPrizePools } from './useSupportedPrizePools'
@@ -13,7 +11,10 @@ import { useSupportedPrizePools } from './useSupportedPrizePools'
  * Returns a user's total prize winnings in ETH
  * @returns
  */
-export const useUserTotalWinnings = (userAddress: Address) => {
+export const useUserTotalWinnings = (
+  userAddress: Address,
+  options?: { skipPrizeChecking?: boolean }
+) => {
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
 
@@ -23,59 +24,51 @@ export const useUserTotalWinnings = (userAddress: Address) => {
     refetch: refetchWins
   } = useAllUserPrizePoolWins(prizePoolsArray, userAddress)
 
-  const { data: allVaultTokenPrices, isFetched: isFetchedAllVaultTokenPrices } =
-    useAllVaultTokenPrices()
+  // TODO: this assumes every prize pool is using the same prize token - not ideal
+  const { data: prizeToken, isFetched: isFetchedPrizeToken } = usePrizeTokenPrice(
+    prizePoolsArray[0]
+  )
+
+  const { lastCheckedDrawIds } = useLastCheckedDrawIds()
 
   const totalTokensWonByChain = useMemo(() => {
-    if (!!wins) {
+    if (!!wins && !!lastCheckedDrawIds) {
       const totals: { [chainId: number]: bigint } = {}
       for (const key in wins) {
         const chainId = parseInt(key)
-        totals[chainId] = wins[chainId].reduce((a, b) => a + BigInt(b.payout), 0n)
+        const lastCheckedDrawId = lastCheckedDrawIds[chainId] ?? 0
+
+        let chainTotal = 0n
+
+        wins[chainId].forEach((win) => {
+          const drawId = parseInt(win.draw.id)
+          if (drawId <= lastCheckedDrawId || options?.skipPrizeChecking) {
+            chainTotal += BigInt(win.payout)
+          }
+        })
+
+        totals[chainId] = chainTotal
       }
       return totals
     }
-  }, [wins])
-
-  const tokenDataResults = useQueries({
-    queries: prizePoolsArray.map((prizePool) => {
-      return {
-        queryKey: [QUERY_KEYS.prizeTokenData, prizePool?.id],
-        queryFn: async () => await prizePool.getPrizeTokenData(),
-        staleTime: Infinity,
-        enabled: !!prizePool,
-        ...NO_REFETCH
-      }
-    })
-  })
+  }, [wins, lastCheckedDrawIds, options])
 
   return useMemo(() => {
     const isFetched =
-      isFetchedWins &&
-      isFetchedAllVaultTokenPrices &&
-      tokenDataResults?.every((result) => result.isFetched) &&
-      !!wins &&
-      !!allVaultTokenPrices &&
-      !!totalTokensWonByChain
+      isFetchedWins && isFetchedPrizeToken && !!wins && !!prizeToken && !!totalTokensWonByChain
 
     let totalWinnings = 0
 
     if (isFetched) {
       for (const key in totalTokensWonByChain) {
         const chainId = parseInt(key)
-        const tokenDataResult = tokenDataResults.find((result) => result.data?.chainId === chainId)
-        if (!!tokenDataResult?.data) {
-          const tokenData = tokenDataResult.data
-          const tokenAmount = parseFloat(
-            formatUnits(totalTokensWonByChain[chainId], tokenData.decimals)
-          )
-          const tokenPrice =
-            allVaultTokenPrices[chainId]?.[tokenData.address.toLowerCase() as Address] ?? 0
-          totalWinnings += tokenAmount * tokenPrice
-        }
+        const tokenAmount = parseFloat(
+          formatUnits(totalTokensWonByChain[chainId], prizeToken.decimals)
+        )
+        totalWinnings += tokenAmount * prizeToken.price
       }
     }
 
     return { isFetched, refetch: refetchWins, data: isFetched ? totalWinnings : undefined }
-  }, [totalTokensWonByChain, tokenDataResults, allVaultTokenPrices])
+  }, [totalTokensWonByChain, prizeToken])
 }
