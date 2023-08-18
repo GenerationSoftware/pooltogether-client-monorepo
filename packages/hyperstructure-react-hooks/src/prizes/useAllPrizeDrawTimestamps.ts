@@ -1,25 +1,25 @@
-import { PrizeInfo, PrizePool } from '@pooltogether/hyperstructure-client-js'
+import { getPrizePoolDrawTimestamps, PrizePool } from '@pooltogether/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { QUERY_KEYS } from '../constants'
 
 /**
- * Returns prize info for all given prize pools
- * @param prizePools instances of `PrizePool` to query prize info for
+ * Returns all draw timestamps for any given prize pools
+ * @param prizePools instances of `PrizePool`
  * @returns
  */
-export const useAllPrizeInfo = (prizePools: PrizePool[]) => {
+export const useAllPrizeDrawTimestamps = (prizePools: PrizePool[]) => {
   const results = useQueries({
     queries: prizePools.map((prizePool) => {
-      const queryKey = [QUERY_KEYS.prizeInfo, prizePool?.id]
-
       return {
-        queryKey: queryKey,
+        queryKey: [QUERY_KEYS.drawTimestamps, prizePool?.chainId],
         queryFn: async () => {
-          const prizeInfo = await prizePool.getAllPrizeInfo()
-          return prizeInfo
+          const chainId = prizePool.chainId
+          const drawTimestamps = await getPrizePoolDrawTimestamps(chainId)
+          return drawTimestamps
         },
+        staleTime: Infinity,
         enabled: !!prizePool,
         ...NO_REFETCH
       }
@@ -30,12 +30,13 @@ export const useAllPrizeInfo = (prizePools: PrizePool[]) => {
     const isFetched = results?.every((result) => result.isFetched)
     const refetch = () => results?.forEach((result) => result.refetch())
 
-    const formattedData: { [prizePoolId: string]: PrizeInfo[] } = {}
+    const formattedData: { [chainId: number]: { id: number; timestamp: number }[] } = {}
     results.forEach((result, i) => {
       if (!!result.data) {
-        formattedData[prizePools[i].id] = result.data
+        formattedData[prizePools[i].chainId] = result.data
       }
     })
+
     return { isFetched, refetch, data: formattedData }
   }, [results])
 }

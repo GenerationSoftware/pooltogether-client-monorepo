@@ -50,19 +50,22 @@ export const AccountDeposits = (props: AccountDepositsProps) => {
 
   return (
     <div
-      className={classNames('w-full max-w-xl flex flex-col items-center lg:max-w-none', className)}
+      className={classNames(
+        'w-full max-w-xl flex flex-col gap-2 items-center md:gap-4 lg:max-w-none',
+        className
+      )}
     >
       <AccountDepositsHeader address={userAddress} />
-      {isEmpty && <NoDepositsCard className='mt-4' />}
+      {isEmpty && <NoDepositsCard />}
       {!isEmpty && (
         <AccountDepositsTable
           address={userAddress}
           rounded={true}
-          className='hidden mt-8 lg:block'
+          className='hidden mt-4 lg:block'
         />
       )}
-      {!isEmpty && <AccountVaultCards address={userAddress} className='mt-2 md:mt-4 lg:hidden' />}
-      {!isEmpty && <AccountDepositsOdds address={userAddress} className='mt-4' />}
+      {!isEmpty && <AccountVaultCards address={userAddress} className='lg:hidden' />}
+      {!isEmpty && <AccountDepositsOdds address={userAddress} />}
     </div>
   )
 }

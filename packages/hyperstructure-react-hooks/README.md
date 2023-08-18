@@ -47,6 +47,7 @@ yarn add @pooltogether/hyperstructure-react-hooks
 ### App Hooks
 
 - `useCachedVaultLists`
+- `useLastCheckedDrawIds`
 - `useSelectedVaultListIds`
 - `useSelectedVaultLists`
 - `useSelectedVaults`
@@ -63,16 +64,22 @@ yarn add @pooltogether/hyperstructure-react-hooks
 
 ### Prize Pool Hooks
 
+- `useAllPrizeDrawTimestamps`
+- `useAllPrizeDrawWinners`
 - `useAllPrizeInfo`
+- `useAllUserBalanceUpdates`
+- `useAllUserEligibleDraws`
 - `useAllUserPrizeOdds`
 - `useAllUserPrizePoolWins`
 - `useDrawPeriod`
+- `useDrawsToCheckForPrizes`
 - `useEstimatedPrizeCount`
 - `useFirstDrawStartTimestamp`
 - `useGrandPrize`
 - `useLargestGrandPrize`
 - `useLastDrawTimestamps`
 - `useNextDrawTimestamps`
+- `usePrizeDrawTimestamps`
 - `usePrizeDrawWinners`
 - `usePrizeOdds`
 - `usePrizePools`

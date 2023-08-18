@@ -42,6 +42,7 @@ A React componponent library utilizing some simpler components from the internal
 ### Modals
 
 - `DepositModal`
+- `CheckPrizesModal`
 - `DrawModal`
 - `SettingsModal`
 - `WithdrawModal`

@@ -25,6 +25,7 @@
     "flowbite-react": "0.4.7",
     "framer-motion": "^10.12.16",
     "jotai": "^1.13.1",
+    "lottie-react": "^2.4.0",
     "prettier": "^2.8.4",
     "prettier-plugin-tailwindcss": "^0.2.4",
     "react": "^18.2.0",

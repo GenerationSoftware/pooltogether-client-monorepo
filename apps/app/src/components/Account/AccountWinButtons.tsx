@@ -1,9 +1,10 @@
+import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
 import {
   getBlockExplorerName,
   getBlockExplorerUrl,
   SubgraphPrizePoolAccount
 } from '@pooltogether/hyperstructure-client-js'
-import { Button, ExternalLink } from '@shared/ui'
+import { Button } from '@shared/ui'
 import { useTranslations } from 'next-intl'
 
 interface AccountWinButtonsProps {
@@ -24,12 +25,10 @@ export const AccountWinButtons = (props: AccountWinButtonsProps) => {
         color='transparent'
         disabled
       >
-        <ExternalLink
-          href='#'
-          text={t('viewOn', { name: getBlockExplorerName(win.chainId) })}
-          size='sm'
-          className='text-pt-purple-100 pointer-events-none'
-        />
+        <span className='inline-flex items-center gap-1 text-pt-purple-100'>
+          {t('viewOn', { name: getBlockExplorerName(win.chainId) })}
+          <ArrowTopRightOnSquareIcon className='h-5 w-5' />
+        </span>
       </Button>
     </div>
   )

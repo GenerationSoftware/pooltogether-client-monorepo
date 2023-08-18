@@ -1,0 +1,30 @@
+import { Intl } from '@shared/types'
+import { Button } from '@shared/ui'
+import classNames from 'classnames'
+import Lottie from 'lottie-react'
+import { noWinAnimation } from '../animations'
+
+interface NoWinViewProps {
+  onClose: () => void
+  intl?: Intl<'noPrizes' | 'viewAccount'>
+}
+
+export const NoWinView = (props: NoWinViewProps) => {
+  const { onClose, intl } = props
+
+  return (
+    <div className='flex flex-col items-center'>
+      <span className='text-center text-3xl font-medium text-gray-100'>
+        {intl?.('noPrizes') ?? `No prizes this time.`}
+      </span>
+      <Lottie
+        animationData={noWinAnimation}
+        loop={true}
+        className='w-full h-auto pointer-events-none'
+      />
+      <Button onClick={onClose} className={classNames('mx-auto')}>
+        {intl?.('viewAccount') ?? `View Your Account`}
+      </Button>
+    </div>
+  )
+}

@@ -13,6 +13,7 @@ import {
 import { MODAL_KEYS, useIsModalOpen, useIsTestnets } from '@shared/generic-react-hooks'
 import {
   CaptchaModal,
+  CheckPrizesModal,
   DepositModal,
   DrawModal,
   SettingsModal,
@@ -56,6 +57,7 @@ export const Layout = (props: LayoutProps) => {
   const t_tooltips = useTranslations('Tooltips')
   const t_drawModal = useTranslations('Prizes.drawModal')
   const t_formErrors = useTranslations('Error.formErrors')
+  const t_prizeChecking = useTranslations('Account.prizeChecking')
 
   const { setIsModalOpen: setIsSettingsModalOpen } = useIsModalOpen(MODAL_KEYS.settings)
   const { view: settingsModalView, setView: setSettingsModalView } = useSettingsModalView()
@@ -241,6 +243,8 @@ export const Layout = (props: LayoutProps) => {
         prizePool={selectedPrizePool}
         intl={{ base: t_common, prizes: t_drawModal }}
       />
+
+      <CheckPrizesModal prizePools={prizePoolsArray} intl={t_prizeChecking} />
 
       <CaptchaModal
         hCaptchaSiteKey='11cdabde-af7e-42cb-ba97-76e35b7f7c39'

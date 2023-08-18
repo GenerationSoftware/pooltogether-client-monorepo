@@ -18,6 +18,15 @@ export interface SubgraphPrizePoolDraw {
   }[]
 }
 
+export interface SubgraphPrizePoolDrawTimestamp {
+  id: string
+  prizeClaims: [
+    {
+      timestamp: string
+    }
+  ]
+}
+
 export interface SubgraphPrizePoolAccount {
   id: string
   prizesReceived: {
@@ -29,5 +38,19 @@ export interface SubgraphPrizePoolAccount {
     fee: string
     feeRecipient: { id: string }
     timestamp: string
+  }[]
+}
+
+export interface SubgraphTWABAccount {
+  id: string
+  accounts: {
+    vault: {
+      id: string
+    }
+    observations: {
+      balance: string
+      delegateBalance: string
+      timestamp: string
+    }[]
   }[]
 }
