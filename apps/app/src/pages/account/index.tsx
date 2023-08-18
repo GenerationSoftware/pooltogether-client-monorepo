@@ -22,7 +22,7 @@ export const getStaticProps: GetStaticProps<AccountPageProps> = async ({ locale 
 export default function AccountPage() {
   return (
     <Layout className='gap-6'>
-      {/* <CheckPrizesBanner /> */}
+      <CheckPrizesBanner />
       <AccountDeposits />
       <AccountWinnings />
     </Layout>

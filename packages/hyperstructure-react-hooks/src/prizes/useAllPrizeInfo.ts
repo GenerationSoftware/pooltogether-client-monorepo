@@ -18,7 +18,7 @@ export const useAllPrizeInfo = (prizePools: PrizePool[]) => {
         queryKey: queryKey,
         queryFn: async () => {
           const prizeInfo = await prizePool.getAllPrizeInfo()
-          return { id: prizePool.id, prizeInfo }
+          return prizeInfo
         },
         enabled: !!prizePool,
         ...NO_REFETCH
@@ -31,9 +31,9 @@ export const useAllPrizeInfo = (prizePools: PrizePool[]) => {
     const refetch = () => results?.forEach((result) => result.refetch())
 
     const formattedData: { [prizePoolId: string]: PrizeInfo[] } = {}
-    results.forEach((result) => {
-      if (result.data && result.data.id) {
-        formattedData[result.data.id] = result.data.prizeInfo
+    results.forEach((result, i) => {
+      if (!!result.data) {
+        formattedData[prizePools[i].id] = result.data
       }
     })
     return { isFetched, refetch, data: formattedData }

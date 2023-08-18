@@ -22,7 +22,7 @@ export const useAllUserPrizePoolWins = (prizePools: PrizePool[], userAddress: st
         queryFn: async () => {
           const chainId = prizePool.chainId
           const wins = await getUserPrizePoolHistoricalWins(chainId, userAddress)
-          return { chainId, wins }
+          return wins
         },
         staleTime: Infinity,
         enabled: !!prizePool && !!userAddress,
@@ -36,9 +36,9 @@ export const useAllUserPrizePoolWins = (prizePools: PrizePool[], userAddress: st
     const refetch = () => results?.forEach((result) => result.refetch())
 
     const formattedData: { [chainId: number]: SubgraphPrizePoolAccount['prizesReceived'] } = {}
-    results.forEach((result) => {
-      if (result.data) {
-        formattedData[result.data.chainId] = result.data.wins
+    results.forEach((result, i) => {
+      if (!!result.data) {
+        formattedData[prizePools[i].chainId] = result.data
       }
     })
 

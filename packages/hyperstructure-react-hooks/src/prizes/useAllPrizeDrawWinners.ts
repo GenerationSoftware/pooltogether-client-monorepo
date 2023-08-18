@@ -26,7 +26,7 @@ export const useAllPrizeDrawWinners = (
         queryFn: async () => {
           const chainId = prizePool.chainId
           const drawWinners = await getPrizePoolHistoricalWins(chainId, options)
-          return { chainId, drawWinners }
+          return drawWinners
         },
         staleTime: Infinity,
         enabled: !!prizePool,
@@ -42,9 +42,9 @@ export const useAllPrizeDrawWinners = (
     const formattedData: {
       [chainId: number]: SubgraphPrizePoolDraw[]
     } = {}
-    results.forEach((result) => {
-      if (result.data) {
-        formattedData[result.data.chainId] = result.data.drawWinners
+    results.forEach((result, i) => {
+      if (!!result.data) {
+        formattedData[prizePools[i].chainId] = result.data
       }
     })
 

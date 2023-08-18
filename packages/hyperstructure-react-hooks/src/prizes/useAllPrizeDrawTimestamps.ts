@@ -17,7 +17,7 @@ export const useAllPrizeDrawTimestamps = (prizePools: PrizePool[]) => {
         queryFn: async () => {
           const chainId = prizePool.chainId
           const drawTimestamps = await getPrizePoolDrawTimestamps(chainId)
-          return { chainId, drawTimestamps }
+          return drawTimestamps
         },
         staleTime: Infinity,
         enabled: !!prizePool,
@@ -31,9 +31,9 @@ export const useAllPrizeDrawTimestamps = (prizePools: PrizePool[]) => {
     const refetch = () => results?.forEach((result) => result.refetch())
 
     const formattedData: { [chainId: number]: { id: number; timestamp: number }[] } = {}
-    results.forEach((result) => {
-      if (result.data) {
-        formattedData[result.data.chainId] = result.data.drawTimestamps
+    results.forEach((result, i) => {
+      if (!!result.data) {
+        formattedData[prizePools[i].chainId] = result.data
       }
     })
 

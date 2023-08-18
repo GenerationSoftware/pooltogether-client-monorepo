@@ -1,9 +1,11 @@
 import {
+  useAllPrizeDrawWinners,
   useAllUserEligibleDraws,
-  useLastCheckedDrawIds
+  useLastCheckedDrawIds,
+  usePrizeTokenPrice
 } from '@pooltogether/hyperstructure-react-hooks'
-import { CurrencyValue } from '@shared/react-components'
-import { Button, Spinner } from '@shared/ui'
+import { TokenValue } from '@shared/react-components'
+import { Button } from '@shared/ui'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import { Address } from 'viem'
@@ -14,6 +16,7 @@ interface CheckPrizesBannerProps {
   className?: string
 }
 
+// TODO: this component is way too complicated - split it up into separate hooks
 // TODO: center total prizes
 // TODO: mobile design
 // TODO: localization
@@ -27,10 +30,19 @@ export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
 
-  // const { data: allUserEligibleDraws, isFetched: isFetchedAllUserEligibleDraws } =
-  //   useAllUserEligibleDraws(prizePoolsArray, userAddress as Address)
-  const { data: allUserEligibleDraws, isFetched: isFetchedAllUserEligibleDraws } =
-    useAllUserEligibleDraws(prizePoolsArray, '0x062bdedfecfd229cd908371a5683e23224366856')
+  // const { data: allUserEligibleDraws } = useAllUserEligibleDraws(
+  //   prizePoolsArray,
+  //   userAddress as Address
+  // )
+  const { data: allUserEligibleDraws } = useAllUserEligibleDraws(
+    prizePoolsArray,
+    '0x062bdedfecfd229cd908371a5683e23224366856'
+  )
+
+  const { data: allDrawWinners } = useAllPrizeDrawWinners(prizePoolsArray)
+
+  // TODO: this assumes every prize pool is using the same prize token - not ideal
+  const { data: prizeToken } = usePrizeTokenPrice(prizePoolsArray[0])
 
   const numDrawsToCheck = useMemo(() => {
     if (!!lastCheckedDrawIds && !!allUserEligibleDraws) {
@@ -64,6 +76,7 @@ export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
       for (const chainId in allUserEligibleDraws.eligibleDraws) {
         const eligibleDraws = allUserEligibleDraws.eligibleDraws[chainId]
         const lastCheckedDrawId = lastCheckedDrawIds[chainId] ?? 0
+
         eligibleDraws.forEach((draw) => {
           if (draw.id > lastCheckedDrawId) {
             if (startTimestamp > draw.timestamp) {
@@ -85,10 +98,27 @@ export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
     }
   }, [lastCheckedDrawIds, allUserEligibleDraws])
 
-  // TODO: need to get total prize amount from all eligible draws
-  const totalAvailablePrizeAmount = 5
+  const totalPrizesAmount = useMemo(() => {
+    if (!!lastCheckedDrawIds && !!allUserEligibleDraws && !!allDrawWinners && !!prizeToken) {
+      let total = 0n
 
-  if (!!numDrawsToCheck) {
+      for (const chainId in allUserEligibleDraws.eligibleDraws) {
+        const eligibleDrawIds = allUserEligibleDraws.eligibleDraws[chainId].map((d) => d.id)
+        const lastCheckedDrawId = lastCheckedDrawIds[chainId] ?? 0
+
+        allDrawWinners[chainId].forEach((draw) => {
+          const drawId = parseInt(draw.id)
+          if (drawId > lastCheckedDrawId && eligibleDrawIds.includes(drawId)) {
+            total += draw.prizeClaims.reduce((a, b) => a + BigInt(b.payout), 0n)
+          }
+        })
+      }
+
+      return total
+    }
+  }, [lastCheckedDrawIds, allUserEligibleDraws, allDrawWinners, prizeToken])
+
+  if (!!numDrawsToCheck && !!prizeToken && !!totalPrizesAmount) {
     return (
       <div
         className={classNames(
@@ -109,11 +139,7 @@ export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
         <div className='flex gap-2 items-center'>
           <span>Totalling</span>
           <span className='text-5xl text-pt-teal'>
-            <CurrencyValue
-              baseValue={totalAvailablePrizeAmount}
-              hideZeroes={true}
-              fallback={<Spinner />}
-            />
+            <TokenValue token={{ ...prizeToken, amount: totalPrizesAmount }} hideZeroes={true} />
           </span>
           <span>in Prizes</span>
         </div>

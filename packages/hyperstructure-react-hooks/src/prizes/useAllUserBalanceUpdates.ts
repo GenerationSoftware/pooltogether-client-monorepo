@@ -19,7 +19,7 @@ export const useAllUserBalanceUpdates = (prizePools: PrizePool[], userAddress: s
         queryFn: async () => {
           const chainId = prizePool.chainId
           const balanceUpdates = await getUserBalanceUpdates(chainId, userAddress)
-          return { chainId, balanceUpdates }
+          return balanceUpdates
         },
         staleTime: Infinity,
         enabled: !!prizePool && !!userAddress,
@@ -37,9 +37,9 @@ export const useAllUserBalanceUpdates = (prizePools: PrizePool[], userAddress: s
         [vaultAddress: Address]: { balance: bigint; delegateBalance: bigint; timestamp: number }[]
       }
     } = {}
-    results.forEach((result) => {
-      if (result.data) {
-        formattedData[result.data.chainId] = result.data.balanceUpdates
+    results.forEach((result, i) => {
+      if (!!result.data) {
+        formattedData[prizePools[i].chainId] = result.data
       }
     })
 
