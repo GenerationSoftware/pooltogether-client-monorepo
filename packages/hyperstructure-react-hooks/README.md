@@ -65,6 +65,7 @@ yarn add @pooltogether/hyperstructure-react-hooks
 ### Prize Pool Hooks
 
 - `useAllPrizeDrawTimestamps`
+- `useAllPrizeDrawWinners`
 - `useAllPrizeInfo`
 - `useAllUserBalanceUpdates`
 - `useAllUserEligibleDraws`
