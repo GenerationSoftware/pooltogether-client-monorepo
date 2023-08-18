@@ -42,8 +42,11 @@ export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
     if (!!drawsToCheck) {
       for (const key in drawsToCheck.draws) {
         const chainId = parseInt(key)
-        const lastDrawId = drawsToCheck.draws[chainId][drawsToCheck.draws[chainId].length - 1].id
-        set(chainId, lastDrawId)
+        const draws = drawsToCheck.draws[chainId]
+        if (draws.length > 0) {
+          const lastDrawId = draws[draws.length - 1].id
+          set(chainId, lastDrawId)
+        }
       }
     }
   }

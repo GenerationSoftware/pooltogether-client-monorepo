@@ -68,7 +68,6 @@ export const WinView = (props: WinViewProps) => {
             <PrizeRow key={`prize-${i}-${prize.timestamp}`} {...prize} prizeToken={prizeToken} />
           ))}
         </div>
-        {/* TODO: need to shorten animation in order to be able to use the onComplete trigger at the right time */}
         <Lottie
           animationData={winAnimation}
           loop={false}

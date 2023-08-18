@@ -16,7 +16,6 @@ interface CheckPrizesBannerProps {
   className?: string
 }
 
-// TODO: mobile design
 // TODO: localization
 export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
   const { className } = props
@@ -39,18 +38,21 @@ export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
     return (
       <div
         className={classNames(
-          'relative w-full flex items-center justify-between px-8 py-6 text-pt-purple-300 bg-pt-purple-700 font-medium rounded-md isolate',
+          'relative w-full flex flex-col gap-4 items-center justify-between px-8 py-6 text-pt-purple-300 bg-pt-purple-700 font-medium rounded-md isolate',
+          'md:flex-row',
           className
         )}
       >
-        <div className='flex flex-col'>
+        <div className='flex flex-col text-center text-sm md:text-start lg:text-base'>
           <span>You were eligible for {drawsToCheck.totalCount} draws</span>
-          {!!drawsToCheck && <DateRange timestamps={drawsToCheck.timestamps} />}
+          {!!drawsToCheck && (
+            <DateRange timestamps={drawsToCheck.timestamps} className='text-pt-purple-100' />
+          )}
         </div>
-        <div className='absolute inset-0 flex gap-2 items-center justify-center -z-10'>
+        <div className='inset-0 flex flex-col gap-x-2 items-center justify-center text-sm -z-10 md:absolute md:flex-row lg:text-base'>
           <span>Totalling</span>
           {!!prizeToken ? (
-            <span className='text-5xl text-pt-teal'>
+            <span className='text-2xl md:text-3xl lg:text-5xl text-pt-teal'>
               <TokenValue token={{ ...prizeToken, amount: totalPrizeAmount }} hideZeroes={true} />
             </span>
           ) : (
@@ -58,10 +60,14 @@ export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
           )}
           <span>in Prizes</span>
         </div>
-        <Button onClick={() => setIsModalOpen(true)}>Check for Prizes</Button>
+        <Button onClick={() => setIsModalOpen(true)}>
+          <span className='text-xs lg:text-sm'>Check for Prizes</span>
+        </Button>
       </div>
     )
   }
+
+  return <></>
 }
 
 interface DateRangeProps {
