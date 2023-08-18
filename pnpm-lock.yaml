@@ -20,6 +20,7 @@ importers:
       flowbite-react: 0.4.7
       framer-motion: ^10.12.16
       jotai: ^1.13.1
+      lottie-react: ^2.4.0
       prettier: ^2.8.4
       prettier-plugin-tailwindcss: ^0.2.4
       react: ^18.2.0
@@ -50,6 +51,7 @@ importers:
       flowbite-react: 0.4.7_pob4ffeafvx74vtuaxxqyesgwy
       framer-motion: 10.12.16_biqbaboplfbrettd7655fr4n2y
       jotai: 1.13.1_react@18.2.0
+      lottie-react: 2.4.0_biqbaboplfbrettd7655fr4n2y
       prettier: 2.8.8
       prettier-plugin-tailwindcss: 0.2.7_vx2i665krt45esupzuhn5o4zsy
       react: 18.2.0
@@ -83,6 +85,7 @@ importers:
       flowbite-react: 0.4.7
       framer-motion: ^10.12.16
       jotai: ^1.13.1
+      lottie-react: ^2.4.0
       next: 13.3.0
       next-intl: ^2.15.1
       postcss: ^8.4.21
@@ -110,6 +113,7 @@ importers:
       flowbite-react: 0.4.7_pob4ffeafvx74vtuaxxqyesgwy
       framer-motion: 10.12.16_biqbaboplfbrettd7655fr4n2y
       jotai: 1.13.1_react@18.2.0
+      lottie-react: 2.4.0_biqbaboplfbrettd7655fr4n2y
       next: 13.3.0_biqbaboplfbrettd7655fr4n2y
       next-intl: 2.17.5_next@13.3.0+react@18.2.0
       react: 18.2.0
@@ -197,6 +201,7 @@ importers:
       flowbite-react: 0.4.7
       framer-motion: ^10.12.16
       jotai: ^1.13.1
+      lottie-react: ^2.4.0
       next: 13.3.0
       postcss: ^8.4.21
       react: ^18.2.0
@@ -221,6 +226,7 @@ importers:
       flowbite-react: 0.4.7_pob4ffeafvx74vtuaxxqyesgwy
       framer-motion: 10.12.16_biqbaboplfbrettd7655fr4n2y
       jotai: 1.13.1_react@18.2.0
+      lottie-react: 2.4.0_biqbaboplfbrettd7655fr4n2y
       next: 13.3.0_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -255,6 +261,7 @@ importers:
       flowbite-react: 0.4.7
       framer-motion: ^10.12.16
       jotai: ^1.13.1
+      lottie-react: ^2.4.0
       next: 13.3.0
       postcss: ^8.4.21
       react: ^18.2.0
@@ -278,6 +285,7 @@ importers:
       flowbite-react: 0.4.7_pob4ffeafvx74vtuaxxqyesgwy
       framer-motion: 10.12.16_biqbaboplfbrettd7655fr4n2y
       jotai: 1.13.1_react@18.2.0
+      lottie-react: 2.4.0_biqbaboplfbrettd7655fr4n2y
       next: 13.3.0_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -4408,6 +4416,25 @@ packages:
     hasBin: true
     dependencies:
       js-tokens: 4.0.0
+
+  /lottie-react/2.4.0_biqbaboplfbrettd7655fr4n2y:
+    resolution:
+      {
+        integrity: sha512-pDJGj+AQlnlyHvOHFK7vLdsDcvbuqvwPZdMlJ360wrzGFurXeKPr8SiRCjLf3LrNYKANQtSsh5dz9UYQHuqx4w==
+      }
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      lottie-web: 5.12.2
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+
+  /lottie-web/5.12.2:
+    resolution:
+      {
+        integrity: sha512-uvhvYPC8kGPjXT3MyKMrL3JitEAmDMp30lVkuq/590Mw9ok6pWcFCwXJveo0t5uqYw1UREQHofD+jVpdjBv8wg==
+      }
 
   /lru-cache/6.0.0:
     resolution:

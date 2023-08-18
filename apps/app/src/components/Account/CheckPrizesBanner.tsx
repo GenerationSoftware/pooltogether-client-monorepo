@@ -1,4 +1,7 @@
-import { usePrizeTokenPrice } from '@pooltogether/hyperstructure-react-hooks'
+import {
+  useDrawsToCheckForPrizes,
+  usePrizeTokenData
+} from '@pooltogether/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { TokenValue } from '@shared/react-components'
 import { Button, Spinner } from '@shared/ui'
@@ -6,7 +9,6 @@ import classNames from 'classnames'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
-import { useDrawsToCheckForPrizes } from '@hooks/useDrawsToCheckForPrizes'
 import { useDrawsTotalEligiblePrizeAmount } from '@hooks/useDrawsTotalEligiblePrizeAmount'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 
@@ -23,20 +25,15 @@ export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
 
   const { setIsModalOpen } = useIsModalOpen(MODAL_KEYS.checkPrizes)
 
-  // TODO: this assumes every prize pool is using the same prize token - not ideal
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
-  const { data: prizeToken } = usePrizeTokenPrice(prizePoolsArray[0])
 
-  // const { data: drawsToCheck } = useDrawsToCheckForPrizes(userAddress as Address)
-  const { data: drawsToCheck } = useDrawsToCheckForPrizes(
-    '0x062bdedfecfd229cd908371a5683e23224366856'
-  )
+  // TODO: this assumes every prize pool is using the same prize token - not ideal
+  const { data: prizeToken } = usePrizeTokenData(prizePoolsArray[0])
 
-  // const { data: totalPrizeAmount } = useDrawsTotalEligiblePrizeAmount(userAddress as Address)
-  const { data: totalPrizeAmount } = useDrawsTotalEligiblePrizeAmount(
-    '0x062bdedfecfd229cd908371a5683e23224366856'
-  )
+  const { data: drawsToCheck } = useDrawsToCheckForPrizes(prizePoolsArray, userAddress as Address)
+
+  const { data: totalPrizeAmount } = useDrawsTotalEligiblePrizeAmount(userAddress as Address)
 
   if (!!drawsToCheck && !!totalPrizeAmount) {
     return (

@@ -1,7 +1,20 @@
 import { PrizePool } from '@pooltogether/hyperstructure-client-js'
+import {
+  useAllUserPrizePoolWins,
+  useDrawsToCheckForPrizes,
+  useLastCheckedDrawIds
+} from '@pooltogether/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen, useScreenSize } from '@shared/generic-react-hooks'
-import { Button, Modal } from '@shared/ui'
-import { MainView } from './Views/MainView'
+import { Modal } from '@shared/ui'
+import { sToMs } from '@shared/utilities'
+import { ReactNode, useEffect, useState } from 'react'
+import { Address } from 'viem'
+import { useAccount } from 'wagmi'
+import { CheckingView } from './Views/CheckingView'
+import { NoWinView } from './Views/NoWinView'
+import { WinView } from './Views/WinView'
+
+export type CheckPrizesModalView = 'checking' | 'win' | 'noWin'
 
 export interface CheckPrizesModalProps {
   prizePools: PrizePool[]
@@ -13,26 +26,75 @@ export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
 
   const { isModalOpen, setIsModalOpen } = useIsModalOpen(MODAL_KEYS.checkPrizes)
 
+  const [view, setView] = useState<CheckPrizesModalView>('checking')
+
   const { isMobile } = useScreenSize()
+
+  const { address: userAddress } = useAccount()
+
+  const { data: drawsToCheck } = useDrawsToCheckForPrizes(prizePools, userAddress as Address)
+
+  const { data: wins } = useAllUserPrizePoolWins(prizePools, userAddress as Address)
+
+  const { set } = useLastCheckedDrawIds()
+
+  const updateLastCheckedDrawIds = () => {
+    if (!!drawsToCheck) {
+      for (const key in drawsToCheck.draws) {
+        const chainId = parseInt(key)
+        const lastDrawId = drawsToCheck.draws[chainId][drawsToCheck.draws[chainId].length - 1].id
+        set(chainId, lastDrawId)
+      }
+    }
+  }
 
   const handleClose = () => {
     setIsModalOpen(false)
+    if (view !== 'checking') {
+      updateLastCheckedDrawIds()
+      setView('checking')
+    }
   }
 
+  useEffect(() => {
+    if (isModalOpen) {
+      setTimeout(() => {
+        for (const key in wins) {
+          const chainId = parseInt(key)
+          const winningDrawIds = wins[chainId].map((w) => parseInt(w.draw.id))
+          const drawIdsToCheck = drawsToCheck?.draws[chainId]?.map((d) => d.id) ?? []
+          if (winningDrawIds.some((id) => drawIdsToCheck.indexOf(id) >= 0)) {
+            setView('win')
+            return
+          }
+        }
+        setView('noWin')
+      }, sToMs(3.5))
+    }
+  }, [isModalOpen, wins])
+
   if (isModalOpen) {
+    const modalViews: Record<CheckPrizesModalView, ReactNode> = {
+      checking: <CheckingView />,
+      win: !!drawsToCheck && (
+        <WinView
+          prizePools={prizePools}
+          draws={drawsToCheck.draws}
+          wins={wins}
+          onClose={handleClose}
+        />
+      ),
+      noWin: <NoWinView onClose={handleClose} />
+    }
+
     return (
       <Modal
-        bodyContent={<MainView prizePools={prizePools} />}
-        footerContent={
-          <Button onClick={handleClose} className='mx-auto'>
-            View Your Account
-          </Button>
-        }
+        bodyContent={modalViews[view]}
         onClose={handleClose}
         label='prize-checking'
         mobileStyle='tab'
         hideHeader={isMobile}
-        className='md:!max-w-2xl'
+        className='overflow-y-hidden md:!max-w-2xl'
       />
     )
   }

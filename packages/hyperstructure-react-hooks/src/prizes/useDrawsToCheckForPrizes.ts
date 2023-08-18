@@ -1,23 +1,19 @@
-import {
-  useAllUserEligibleDraws,
-  useLastCheckedDrawIds
-} from '@pooltogether/hyperstructure-react-hooks'
+import { PrizePool } from '@pooltogether/hyperstructure-client-js'
 import { useMemo } from 'react'
 import { Address } from 'viem'
-import { useSupportedPrizePools } from './useSupportedPrizePools'
+import { useAllUserEligibleDraws, useLastCheckedDrawIds } from '..'
 
 /**
  * Returns info on draws to check for prizes based on eligibility and last checked draw IDs
+ * @param prizePools instances of `PrizePool`
+ * @param userAddress a user's address to find draws for
  * @returns
  */
-export const useDrawsToCheckForPrizes = (userAddress: Address) => {
+export const useDrawsToCheckForPrizes = (prizePools: PrizePool[], userAddress: Address) => {
   const { lastCheckedDrawIds } = useLastCheckedDrawIds()
 
-  const prizePools = useSupportedPrizePools()
-  const prizePoolsArray = Object.values(prizePools)
-
   const { data: allUserEligibleDraws, isFetched: isFetchedAllUserEligibleDraws } =
-    useAllUserEligibleDraws(prizePoolsArray, userAddress)
+    useAllUserEligibleDraws(prizePools, userAddress)
 
   const drawsToCheck = useMemo(() => {
     if (!!lastCheckedDrawIds && !!allUserEligibleDraws) {

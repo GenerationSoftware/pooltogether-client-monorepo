@@ -9,6 +9,7 @@ import { useSupportedPrizePools } from './useSupportedPrizePools'
 
 /**
  * Returns the total prize amount in eligible and unchecked draws
+ * @param userAddress a user's address to find relevant draws for
  * @returns
  */
 export const useDrawsTotalEligiblePrizeAmount = (userAddress: Address) => {
@@ -31,7 +32,7 @@ export const useDrawsTotalEligiblePrizeAmount = (userAddress: Address) => {
         const eligibleDrawIds = allUserEligibleDraws.eligibleDraws[chainId].map((d) => d.id)
         const lastCheckedDrawId = lastCheckedDrawIds[chainId] ?? 0
 
-        allDrawWinners[chainId].forEach((draw) => {
+        allDrawWinners[chainId]?.forEach((draw) => {
           const drawId = parseInt(draw.id)
           if (drawId > lastCheckedDrawId && eligibleDrawIds.includes(drawId)) {
             total += draw.prizeClaims.reduce((a, b) => a + BigInt(b.payout), 0n)
