@@ -13,6 +13,7 @@ import {
 import { MODAL_KEYS, useIsModalOpen, useIsTestnets } from '@shared/generic-react-hooks'
 import {
   CaptchaModal,
+  CheckPrizesModal,
   DepositModal,
   DrawModal,
   SettingsModal,
@@ -241,6 +242,8 @@ export const Layout = (props: LayoutProps) => {
         prizePool={selectedPrizePool}
         intl={{ base: t_common, prizes: t_drawModal }}
       />
+
+      <CheckPrizesModal prizePools={prizePoolsArray} />
 
       <CaptchaModal
         hCaptchaSiteKey='11cdabde-af7e-42cb-ba97-76e35b7f7c39'

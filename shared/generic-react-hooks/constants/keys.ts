@@ -25,5 +25,6 @@ export const MODAL_KEYS = Object.freeze({
   deposit: 'deposit',
   drawWinners: 'drawWinners',
   settings: 'settings',
-  withdraw: 'withdraw'
+  withdraw: 'withdraw',
+  checkPrizes: 'checkPrizes'
 })

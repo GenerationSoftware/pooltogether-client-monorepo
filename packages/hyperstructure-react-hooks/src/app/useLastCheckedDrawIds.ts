@@ -12,6 +12,7 @@ const cachedLastCheckedDrawIdsAtom = atom<{ [chainId: number]: number }>(
   getInitialLastCheckedDrawIds()
 )
 
+// TODO: this should be keyed by wallet address as well
 /**
  * Returns last checked draw IDs for each network
  *

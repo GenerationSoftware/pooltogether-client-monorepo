@@ -1,4 +1,5 @@
 import { usePrizeTokenPrice } from '@pooltogether/hyperstructure-react-hooks'
+import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { TokenValue } from '@shared/react-components'
 import { Button, Spinner } from '@shared/ui'
 import classNames from 'classnames'
@@ -20,6 +21,8 @@ export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
 
   const { address: userAddress } = useAccount()
 
+  const { setIsModalOpen } = useIsModalOpen(MODAL_KEYS.checkPrizes)
+
   // TODO: this assumes every prize pool is using the same prize token - not ideal
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
@@ -39,7 +42,7 @@ export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
     return (
       <div
         className={classNames(
-          'relative w-full flex items-center justify-between px-8 py-6 text-pt-purple-300 bg-pt-purple-700 font-medium rounded-md',
+          'relative w-full flex items-center justify-between px-8 py-6 text-pt-purple-300 bg-pt-purple-700 font-medium rounded-md isolate',
           className
         )}
       >
@@ -47,7 +50,7 @@ export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
           <span>You were eligible for {drawsToCheck.totalCount} draws</span>
           {!!drawsToCheck && <DateRange timestamps={drawsToCheck.timestamps} />}
         </div>
-        <div className='absolute inset-0 flex gap-2 items-center justify-center'>
+        <div className='absolute inset-0 flex gap-2 items-center justify-center -z-10'>
           <span>Totalling</span>
           {!!prizeToken ? (
             <span className='text-5xl text-pt-teal'>
@@ -58,8 +61,7 @@ export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
           )}
           <span>in Prizes</span>
         </div>
-        {/* TODO: open prize checking modal onclick */}
-        <Button onClick={() => {}}>Check for Prizes</Button>
+        <Button onClick={() => setIsModalOpen(true)}>Check for Prizes</Button>
       </div>
     )
   }

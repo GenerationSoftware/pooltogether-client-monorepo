@@ -48,6 +48,7 @@ export * from './components/Icons/TokenIcon'
  * Modals
  */
 export * from './components/Modals/CaptchaModal'
+export * from './components/Modals/CheckPrizesModal'
 export * from './components/Modals/DepositModal'
 export * from './components/Modals/DrawModal'
 export * from './components/Modals/SettingsModal'
