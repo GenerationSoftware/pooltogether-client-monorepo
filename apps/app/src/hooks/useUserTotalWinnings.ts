@@ -51,7 +51,7 @@ export const useUserTotalWinnings = (
       }
       return totals
     }
-  }, [wins, lastCheckedDrawIds, options])
+  }, [wins, lastCheckedDrawIds, userAddress, options])
 
   return useMemo(() => {
     const isFetched =

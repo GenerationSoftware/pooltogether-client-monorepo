@@ -56,7 +56,7 @@ export const AccountWinnings = (props: AccountWinningsProps) => {
     }
 
     return flattenedWins.sort((a, b) => parseInt(b.timestamp) - parseInt(a.timestamp))
-  }, [wins, lastCheckedDrawIds, isExternalUser])
+  }, [wins, lastCheckedDrawIds, userAddress, isExternalUser])
 
   const isEmpty = isFetchedWins && !flattenedWins?.length
 

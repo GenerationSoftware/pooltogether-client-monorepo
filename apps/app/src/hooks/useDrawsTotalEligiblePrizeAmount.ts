@@ -42,7 +42,7 @@ export const useDrawsTotalEligiblePrizeAmount = (userAddress: Address) => {
 
       return total
     }
-  }, [lastCheckedDrawIds, allUserEligibleDraws, allDrawWinners])
+  }, [lastCheckedDrawIds, userAddress, allUserEligibleDraws, allDrawWinners])
 
   const isFetched = isFetchedAllUserEligibleDraws && isFetchedAllDrawWinners && !!totalAmount
 

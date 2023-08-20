@@ -52,7 +52,7 @@ export const useDrawsToCheckForPrizes = (prizePools: PrizePool[], userAddress: A
 
       return { draws, totalCount, timestamps: { start: startTimestamp, end: endTimestamp } }
     }
-  }, [lastCheckedDrawIds, allUserEligibleDraws])
+  }, [lastCheckedDrawIds, userAddress, allUserEligibleDraws])
 
   const isFetched = isFetchedAllUserEligibleDraws && !!drawsToCheck
 
