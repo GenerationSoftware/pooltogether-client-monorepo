@@ -1,25 +1,15 @@
 import {
-  formatCurrencyNumberForDisplay,
   formatNumberForDisplay,
   getBlockExplorerName,
   getBlockExplorerUrl,
   getNiceNetworkNameByChainId,
-  NETWORK,
-  PRIZE_POOLS,
-  USDC_TOKEN_ADDRESSES,
   Vault
 } from '@pooltogether/hyperstructure-client-js'
-import {
-  useGrandPrize,
-  usePrizePool,
-  useTokenPrices,
-  useVaultTokenData
-} from '@pooltogether/hyperstructure-react-hooks'
+import { useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
 import { Button, ExternalLink, LINKS } from '@shared/ui'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
-import { Address, formatUnits } from 'viem'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 import { LensterShareButton } from '../../../Buttons/LensterShareButton'
 import { TwitterShareButton } from '../../../Buttons/TwitterShareButton'
@@ -102,45 +92,31 @@ const ShareButtons = (props: ShareButtonsProps) => {
 
   const { data: tokenData } = useVaultTokenData(vault)
 
-  const prizePoolAddress = PRIZE_POOLS.find((pool) => pool.chainId === vault.chainId)
-    ?.address as Address
-  const prizePool = usePrizePool(vault.chainId, prizePoolAddress)
-  const { data: grandPrize } = useGrandPrize(prizePool)
-
-  const { data: tokenPrices } = useTokenPrices(NETWORK.mainnet, [
-    USDC_TOKEN_ADDRESSES[NETWORK.mainnet]
-  ])
-
   const network = getNiceNetworkNameByChainId(vault.chainId)
   const hashTags = ['PoolTogether', network]
 
-  // TODO: improve and add more alternatives to this text (emojis? :D)
   const text = useMemo(() => {
-    if (!!tokenData && !!grandPrize && !!tokenPrices) {
-      const tokenSymbol = tokenData.symbol
-      const grandPrizeAmount = parseFloat(formatUnits(grandPrize.amount, grandPrize.decimals))
-      const grandPrizeValue = grandPrizeAmount * grandPrize.price
-      const usdPrice = tokenPrices[USDC_TOKEN_ADDRESSES[NETWORK.mainnet]]
-      const formattedGrandPrizeValue = formatCurrencyNumberForDisplay(
-        !!usdPrice ? grandPrizeValue * (1 / usdPrice) : grandPrizeValue,
-        !!usdPrice ? 'usd' : 'eth',
-        { hideZeroes: true }
-      )
-      return `I've just deposited some ${tokenSymbol} into PoolTogether! Watch me win the next ${formattedGrandPrizeValue} prize.`
+    if (!!tokenData) {
+      return {
+        twitter: getShareText(tokenData.symbol, 'twitter'),
+        lenster: getShareText(tokenData.symbol, 'lenster')
+      }
+    } else {
+      return {}
     }
-  }, [tokenData, grandPrize, tokenPrices])
+  }, [tokenData])
 
   return (
     <>
       <TwitterShareButton
-        text={text}
+        text={text.twitter}
         hashTags={hashTags}
         url={LINKS.app}
         fullSized={true}
         intl={intl}
       />
       <LensterShareButton
-        text={text}
+        text={text.lenster}
         hashTags={hashTags}
         url={LINKS.app}
         fullSized={true}
@@ -148,4 +124,30 @@ const ShareButtons = (props: ShareButtonsProps) => {
       />
     </>
   )
+}
+
+type SharePlatform = 'twitter' | 'lenster'
+
+const getShareText = (tokenSymbol: string, platform: SharePlatform) => {
+  const protocolAccounts: Record<SharePlatform, string> = {
+    twitter: '@PoolTogether_',
+    lenster: '@pooltogether.lens'
+  }
+
+  const pooltogether = protocolAccounts[platform]
+  const token = `$${tokenSymbol}`
+
+  const textOptions: string[] = [
+    `⚡️ Injecting some excitement into my savings strategy with ${pooltogether}! Just made my deposit - watch out for my victory dance when I scoop up that grand prize. 🏆`,
+    `🎉 Just joined the thrill ride of decentralized savings! I've deposited into ${pooltogether}, crossing my fingers for that sweet grand prize win. 🤞🏆💰`,
+    `Just added some ${token} to the ${pooltogether} mix! Excited to be part of a no-loss savings game. Who knows, maybe I'll be the next lucky winner! 🤞💸`,
+    `🎉 Joined the ${pooltogether} community by depositing ${token} today! Let's see if my luck will land me that grand prize. 🏆🚀`,
+    `Tossed my ${token} into the ${pooltogether} mix! Who else is crossing their fingers for a no-loss win?`,
+    `Just added some ${token} to the ${pooltogether} party! 🎉 Let's ride this wave together! 🌊💸`,
+    `🚂 Deposited ${token} into ${pooltogether} and I'm excited to see where this ride takes me. Could a cool win be in my future? 🎆💰`
+  ]
+
+  const pseudoRandomIndex = Math.floor(Math.random() * textOptions.length)
+
+  return textOptions[pseudoRandomIndex]
 }
