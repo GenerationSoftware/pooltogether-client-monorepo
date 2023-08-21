@@ -34,6 +34,7 @@ export const VaultPrizePower = (props: VaultPrizePowerProps) => {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
       })}
+      %
     </>
   )
 }

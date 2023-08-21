@@ -16,7 +16,10 @@ export const PrizePowerTooltip = (props: PrizePowerTooltipProps) => {
     <Tooltip
       content={
         <div className={classNames('flex flex-col max-w-[16ch] text-center', className)}>
-          <span>{intl?.text ?? 'Vaults with higher prize power have more chances to win'}</span>
+          <span>
+            {intl?.text ??
+              'Vaults with higher prize power have a greater percentage of chances to win'}
+          </span>
           {/* TODO: add link */}
           <a href='#' className='text-pt-purple-500 underline'>
             {intl?.learnMore ?? 'Learn More'}
