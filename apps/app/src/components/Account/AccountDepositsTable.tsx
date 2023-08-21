@@ -3,7 +3,7 @@ import {
   useSelectedVaults,
   useSortedVaults
 } from '@pooltogether/hyperstructure-react-hooks'
-import { VaultBadge } from '@shared/react-components'
+import { VaultBadge, WinChanceTooltip } from '@shared/react-components'
 import { Table, TableProps } from '@shared/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -26,6 +26,7 @@ export const AccountDepositsTable = (props: AccountDepositsTableProps) => {
 
   const t_vaults = useTranslations('Vaults')
   const t_vault = useTranslations('Vault')
+  const t_tooltips = useTranslations('Tooltips')
 
   const { address: _userAddress } = useAccount()
   const userAddress = address ?? _userAddress
@@ -46,7 +47,14 @@ export const AccountDepositsTable = (props: AccountDepositsTableProps) => {
     const headers: TableProps['data']['headers'] = {
       token: { content: t_vaults('headers.token') },
       odds: {
-        content: isExternalUser ? t_vault('headers.winChance') : t_vault('headers.yourWinChance'),
+        content: isExternalUser ? (
+          t_vault('headers.winChance')
+        ) : (
+          <span className='flex gap-1 items-center'>
+            {t_vault('headers.yourWinChance')}
+            <WinChanceTooltip intl={{ text: t_tooltips('winChance') }} className='text-xs' />
+          </span>
+        ),
         position: 'center'
       },
       balance: {

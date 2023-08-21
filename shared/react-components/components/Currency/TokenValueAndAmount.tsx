@@ -3,17 +3,23 @@ import { useToken } from '@pooltogether/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
 import { Address } from 'viem'
-import { TokenValue } from './TokenValue'
+import { TokenValue, TokenValueProps } from './TokenValue'
 
 export interface TokenValueAndAmountProps {
   token: { chainId: number; address: Address } & Partial<TokenWithAmount>
+  valueOptions?: Omit<TokenValueProps, 'token' | 'fallback'>
+  amountOptions?: Intl.NumberFormatOptions & {
+    locale?: string
+    round?: boolean
+    hideZeroes?: boolean
+  }
   className?: string
   valueClassName?: string
   amountClassName?: string
 }
 
 export const TokenValueAndAmount = (props: TokenValueAndAmountProps) => {
-  const { token, className, valueClassName, amountClassName } = props
+  const { token, valueOptions, amountOptions, className, valueClassName, amountClassName } = props
 
   const { data: tokenData, isFetching: isFetchingTokenData } = useToken(
     token.chainId,
@@ -31,10 +37,10 @@ export const TokenValueAndAmount = (props: TokenValueAndAmountProps) => {
   return (
     <div className={classNames('flex flex-col items-center', className)}>
       <span className={valueClassName}>
-        <TokenValue token={token} fallback={<></>} />
+        <TokenValue token={token} fallback={<></>} {...valueOptions} />
       </span>
       <span className={classNames('text-pt-purple-200', amountClassName)}>
-        {formatBigIntForDisplay(amount, decimals)} {symbol}
+        {formatBigIntForDisplay(amount, decimals, amountOptions)} {symbol}
       </span>
     </div>
   )

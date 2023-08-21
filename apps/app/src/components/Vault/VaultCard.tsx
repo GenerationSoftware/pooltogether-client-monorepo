@@ -46,7 +46,7 @@ export const VaultCard = (props: VaultCardProps) => {
         )}
         <div className='flex items-center justify-between'>
           <span className='flex gap-1 items-center text-xs text-pt-purple-200'>
-            {t_vaults('headers.prizePower')}{' '}
+            {t_vaults('headers.prizePower')}
             <PrizePowerTooltip
               intl={{ text: t_tooltips('prizePower'), learnMore: t_common('learnMore') }}
               className='text-xs'

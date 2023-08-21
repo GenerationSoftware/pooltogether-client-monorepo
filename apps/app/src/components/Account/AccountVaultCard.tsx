@@ -46,7 +46,7 @@ export const AccountVaultCard = (props: AccountVaultCardProps) => {
         </div>
         <div className='flex items-center justify-between'>
           <span className='flex gap-1 items-center text-xs text-pt-purple-200'>
-            {isExternalUser ? t_vault('headers.winChance') : t_vault('headers.yourWinChance')}{' '}
+            {isExternalUser ? t_vault('headers.winChance') : t_vault('headers.yourWinChance')}
             <WinChanceTooltip intl={{ text: t_tooltips('winChance') }} className='text-xs' />
           </span>
           <span className='text-sm'>

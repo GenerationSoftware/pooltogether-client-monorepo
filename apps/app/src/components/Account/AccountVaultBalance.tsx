@@ -41,6 +41,7 @@ export const AccountVaultBalance = (props: AccountVaultBalanceProps) => {
         className={className}
         valueClassName='text-sm md:text-base'
         amountClassName='text-xs md:text-sm'
+        valueOptions={{ hideZeroes: true }}
       />
     )
   }

@@ -45,7 +45,7 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
         <VaultInfoRow
           name={
             <span className='flex gap-2 items-center'>
-              {t_vault('headers.yourWinChance')}{' '}
+              {t_vault('headers.yourWinChance')}
               <WinChanceTooltip
                 iconSize='sm'
                 intl={{ text: t_tooltips('winChance') }}
@@ -60,7 +60,7 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
       <VaultInfoRow
         name={
           <span className='flex gap-2 items-center'>
-            {t_vault('headers.prizePower')}{' '}
+            {t_vault('headers.prizePower')}
             <PrizePowerTooltip
               iconSize='sm'
               intl={{ text: t_tooltips('prizePower'), learnMore: t_common('learnMore') }}
