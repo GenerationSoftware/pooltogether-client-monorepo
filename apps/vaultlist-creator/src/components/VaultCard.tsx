@@ -13,6 +13,7 @@ interface VaultCardProps {
   className?: string
 }
 
+// TODO: show yield source URI
 export const VaultCard = (props: VaultCardProps) => {
   const { vault, className } = props
 

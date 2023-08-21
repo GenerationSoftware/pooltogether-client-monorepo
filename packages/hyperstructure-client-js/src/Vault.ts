@@ -31,6 +31,7 @@ export class Vault {
   name: string | undefined
   logoURI: string | undefined
   tokenLogoURI: string | undefined
+  yieldSourceURI: string | undefined
 
   /**
    * Creates an instance of a Vault with a given public and optional wallet client
@@ -52,6 +53,7 @@ export class Vault {
       name?: string
       logoURI?: string
       tokenLogoURI?: string
+      yieldSourceURI?: string
     }
   ) {
     this.id = getVaultId({ address, chainId })
@@ -78,6 +80,10 @@ export class Vault {
 
     if (!!options?.tokenLogoURI) {
       this.tokenLogoURI = options.tokenLogoURI
+    }
+
+    if (!!options?.yieldSourceURI) {
+      this.yieldSourceURI = options.yieldSourceURI
     }
   }
 

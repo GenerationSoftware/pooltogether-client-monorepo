@@ -1,19 +1,20 @@
-import { NetworkBadge } from '@shared/react-components'
+import { Vault } from '@pooltogether/hyperstructure-client-js'
+import { usePublicClientsByChain } from '@pooltogether/hyperstructure-react-hooks'
+import { NetworkBadge, YieldSourceURITooltip } from '@shared/react-components'
 import { VaultInfo } from '@shared/types'
 import { NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtom } from 'jotai'
 import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { vaultsAtom } from 'src/atoms'
-import { isValidChars } from 'src/utils'
 import { Address, isAddress } from 'viem'
 import { PurpleButton } from '@components/buttons/PurpleButton'
 import { useNetworks } from '@hooks/useNetworks'
 import { SimpleInput } from './SimpleInput'
 
 interface AddVaultFormValues {
-  vaultName: string
   vaultAddress: Address
+  vaultYieldSourceURI: string
   vaultChainId: string
 }
 
@@ -30,11 +31,20 @@ export const AddVaultForm = (props: AddVaultFormProps) => {
 
   const networks = useNetworks()
 
-  const onSubmit = (data: AddVaultFormValues) => {
+  const clientsByChain = usePublicClientsByChain({ useAll: true })
+
+  const onSubmit = async (data: AddVaultFormValues) => {
+    const chainId = parseInt(data.vaultChainId)
+    const vaultAddress = data.vaultAddress.trim() as Address
+
+    const vault = new Vault(chainId, vaultAddress, clientsByChain[chainId])
+    const vaultName = await vault.getShareData()
+
     const newVault: VaultInfo = {
-      name: data.vaultName.trim(),
+      chainId: parseInt(data.vaultChainId),
       address: data.vaultAddress.trim() as Address,
-      chainId: parseInt(data.vaultChainId)
+      name: vaultName.name,
+      yieldSourceURI: data.vaultYieldSourceURI
     }
 
     const existingVault = vaultInfo.find(
@@ -53,13 +63,13 @@ export const AddVaultForm = (props: AddVaultFormProps) => {
   const getError = () => {
     const errors = formMethods.formState.errors
 
-    if (!!errors.vaultName?.message && !!errors.vaultAddress?.message) {
-      return 'Enter a valid vault name and address.'
+    if (!!errors.vaultAddress?.message && !!errors.vaultYieldSourceURI?.message) {
+      return 'Enter a valid vault address and yield source URL.'
     }
 
     return (
-      errors.vaultName?.message ??
       errors.vaultAddress?.message ??
+      errors.vaultYieldSourceURI?.message ??
       errors.vaultChainId?.message ??
       errors.root?.message
     )
@@ -76,24 +86,34 @@ export const AddVaultForm = (props: AddVaultFormProps) => {
       >
         <div className='flex gap-3 justify-between px-6 lg:gap-6 lg:justify-start lg:px-0'>
           <SimpleInput
-            formKey='vaultName'
-            validate={{
-              isNotFalsyString: (v: string) => !!v || 'Enter a valid vault name.',
-              isValidString: (v: string) =>
-                isValidChars(v, { allowSpaces: true }) || 'Invalid characters in vault name.'
-            }}
-            placeholder='Wrapped Bitcorn'
-            label='Prize Vault Name'
-            hideErrorMsgs={true}
-            className='max-w-[calc(50%-6px)] lg:max-w-none'
-          />
-          <SimpleInput
             formKey='vaultAddress'
             validate={{
               isValidAddress: (v: string) => isAddress(v?.trim()) || 'Enter a valid vault address.'
             }}
             placeholder='0x0000...'
             label='Prize Vault Address'
+            hideErrorMsgs={true}
+            className='max-w-[calc(50%-6px)] lg:max-w-none'
+          />
+          <SimpleInput
+            formKey='vaultYieldSourceURI'
+            validate={{
+              isNotFalsyString: (v: string) =>
+                !!v || 'Enter a valid yield source URL or ENS domain.',
+              isValidURI: (v: string) =>
+                v.startsWith('http://') ||
+                v.startsWith('https://') ||
+                v.startsWith('ipfs://') ||
+                v.startsWith('ipns://') ||
+                v.endsWith('.eth') ||
+                'Enter a valid yield source URL or ENS domain.'
+            }}
+            placeholder='https://aave.com/'
+            label={
+              <span className='flex gap-1 items-center justify-between'>
+                Yield Source URL <YieldSourceURITooltip />
+              </span>
+            }
             hideErrorMsgs={true}
             className='max-w-[calc(50%-6px)] lg:max-w-none'
           />

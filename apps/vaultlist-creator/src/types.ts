@@ -10,6 +10,7 @@ export type FormKey =
   | 'vaultName'
   | 'vaultAddress'
   | 'vaultChainId'
+  | 'vaultYieldSourceURI'
   | 'text'
 
 export type MutableVaultList = Omit<Mutable<VaultList>, 'tokens'> & {

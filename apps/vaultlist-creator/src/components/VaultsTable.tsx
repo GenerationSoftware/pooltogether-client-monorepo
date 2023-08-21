@@ -1,4 +1,5 @@
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
+import { LinkIcon } from '@heroicons/react/24/outline'
 import { Vault } from '@pooltogether/hyperstructure-client-js'
 import { useVaults, useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
 import { SCREEN_SIZES, useScreenSize } from '@shared/generic-react-hooks'
@@ -35,6 +36,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
   const tableData: TableData = {
     headers: {
       name: { content: 'Name', className: 'pl-9' },
+      yieldSourceURI: { content: 'Yield URL', position: 'center' },
       network: { content: 'Network', position: 'center' },
       address: { content: 'Address', position: 'center' },
       tokenSymbol: { content: 'Token Symbol', position: 'center' },
@@ -46,6 +48,10 @@ export const VaultsTable = (props: VaultsTableProps) => {
       cells: {
         name: {
           content: <VaultNameItem vault={vault} index={i} />
+        },
+        yieldSourceURI: {
+          content: <VaultYieldSourceURIItem vault={vault} />,
+          position: 'center'
         },
         network: {
           content: <VaultNetworkItem vault={vault} />,
@@ -75,7 +81,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
     return (
       <div className={classNames('flex flex-col gap-2 items-center', className)}>
         {vaultsArray.map((vault) => (
-          <VaultCard vault={vault} className='w-full max-w-xl' />
+          <VaultCard key={`vaultsCard-${vault.id}`} vault={vault} className='w-full max-w-xl' />
         ))}
       </div>
     )
@@ -89,7 +95,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
       innerClassName={classNames('overflow-y-auto', innerClassName)}
       headerClassName='px-0 pt-0 pb-6 text-center font-medium text-pt-purple-300 whitespace-nowrap'
       rowClassName='!p-0 text-sm font-medium bg-transparent overflow-hidden'
-      gridColsClassName={`grid-cols-[minmax(0,5fr)_minmax(0,2fr)_minmax(0,3fr)_minmax(0,2fr)_minmax(0,3fr)_minmax(0,2fr)]`}
+      gridColsClassName={`grid-cols-[minmax(0,5fr)_minmax(0,2fr)_minmax(0,2fr)_minmax(0,3fr)_minmax(0,2fr)_minmax(0,3fr)_minmax(0,2fr)]`}
     />
   )
 }
@@ -135,6 +141,16 @@ const VaultNameItem = (props: ItemProps & { index: number }) => {
         textClassName={classNames('text-pt-purple-50 line-clamp-2', { 'line-through': isDisabled })}
       />
     </div>
+  )
+}
+
+const VaultYieldSourceURIItem = (props: ItemProps) => {
+  const { vault } = props
+
+  return (
+    <a href={vault.yieldSourceURI} target='_blank'>
+      <LinkIcon className='h-5 w-5 text-pt-purple-100' />
+    </a>
   )
 }
 

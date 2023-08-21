@@ -260,7 +260,8 @@ export const VAULT_LIST_SCHEMA: JSONSchemaType<VaultList> = {
             nullable: true
           },
           tags: { type: 'array', items: { type: 'string' }, nullable: true },
-          logoURI: { type: 'string', nullable: true }
+          logoURI: { type: 'string', nullable: true },
+          yieldSourceURI: { type: 'string', nullable: true }
         },
         required: ['chainId', 'address']
       }

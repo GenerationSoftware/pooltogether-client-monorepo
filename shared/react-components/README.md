@@ -91,6 +91,7 @@ A React componponent library utilizing some simpler components from the internal
 - `InfiniteApprovalTooltip`
 - `PrizePowerTooltip`
 - `WinChanceTooltip`
+- `YieldSourceURITooltip`
 
 ### Transaction Components
 
