@@ -87,9 +87,13 @@ const DrawTotals = (props: DrawTotalsProps) => {
     <span className='text-center'>
       {intl?.('drawTotal', {
         numPrizes: draw.prizeClaims.length,
-        numTokens: `${formattedTotalPrizeAmount} ${tokenData?.symbol}`
+        numTokens: `${
+          formattedTotalPrizeAmount === '0.00' ? '< 0.01' : formattedTotalPrizeAmount
+        } ${tokenData?.symbol}`
       }) ??
-        `This draw had ${draw.prizeClaims.length} prizes totalling ${formattedTotalPrizeAmount} ${tokenData?.symbol}.`}
+        `This draw had ${draw.prizeClaims.length} prizes totalling ${
+          formattedTotalPrizeAmount === '0.00' ? '< 0.01' : formattedTotalPrizeAmount
+        } ${tokenData?.symbol}.`}
     </span>
   )
 }
@@ -100,6 +104,7 @@ interface DrawWinnersTableProps {
   intl?: Intl<'winner' | 'prize'>
 }
 
+// TODO: highlight grand prizes
 const DrawWinnersTable = (props: DrawWinnersTableProps) => {
   const { draw, prizePool, intl } = props
 
@@ -107,30 +112,35 @@ const DrawWinnersTable = (props: DrawWinnersTableProps) => {
 
   return (
     <div className='flex flex-col w-full gap-2 md:text-center'>
-      {/* TODO: make sure table headers are aligned with content when scrollbar is active */}
       <div className='flex w-full text-pt-purple-100 font-semibold'>
-        <span className='flex-grow'>{intl?.('winner') ?? 'Winner'}</span>
-        <span className='flex-grow text-right md:text-center'>{intl?.('prize') ?? 'Prize'}</span>
+        <span className='w-1/2'>{intl?.('winner') ?? 'Winner'}</span>
+        <span className='w-1/2 text-right md:text-center'>{intl?.('prize') ?? 'Prize'}</span>
       </div>
       {!!draw && !!tokenData ? (
         <div className='flex flex-col w-full max-h-52 gap-3 overflow-y-auto'>
           {draw.prizeClaims
             .sort((a, b) => sortByBigIntDesc(BigInt(a.payout), BigInt(b.payout)))
             .map((prize) => {
+              const formattedPrize = formatBigIntForDisplay(
+                BigInt(prize.payout),
+                tokenData.decimals,
+                {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                }
+              )
+
               return (
                 <div key={prize.id} className='flex w-full items-center'>
-                  <span className='flex-grow'>
+                  <span className='w-1/2'>
                     <ExternalLink
                       href={getBlockExplorerUrl(prizePool.chainId, prize.winner.id, 'address')}
                       text={shorten(prize.winner.id, { short: true }) as string}
                     />
                   </span>
-                  <span className='flex-grow text-right whitespace-nowrap md:text-center'>
+                  <span className='w-1/2 text-right whitespace-nowrap md:text-center'>
                     {!!tokenData ? (
-                      `${formatBigIntForDisplay(BigInt(prize.payout), tokenData.decimals, {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                      })} ${tokenData.symbol}`
+                      `${formattedPrize === '0.00' ? '< 0.01' : formattedPrize} ${tokenData.symbol}`
                     ) : (
                       <Spinner />
                     )}
