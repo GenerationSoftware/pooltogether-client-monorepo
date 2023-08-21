@@ -51,7 +51,7 @@
     "filter": "Filter",
     "filters": {
       "showAll": "Show All",
-      "inWallet": "In My Wallet",
+      "inWallet": "In Your Wallet",
       "stablecoins": "Stablecoins"
     },
     "manageVaultLists": "Manage Vault Lists",
@@ -60,13 +60,13 @@
       "token": "Token",
       "prizePower": "Prize Power",
       "totalDeposits": "Total Deposits",
-      "myBalance": "My Balance"
+      "yourBalance": "Your Balance"
     }
   },
   "Vault": {
     "headers": {
-      "myBalance": "My Balance",
-      "myWinChance": "My Win Chance",
+      "yourBalance": "Your Balance",
+      "yourWinChance": "Your Win Chance",
       "balance": "Balance",
       "winChance": "Win Chance",
       "prizePower": "Prize Power",

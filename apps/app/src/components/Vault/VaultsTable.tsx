@@ -160,7 +160,7 @@ const SortableHeader = (props: SortableHeaderProps) => {
   const names: Record<SortId, string> = {
     prizePower: t('headers.prizePower'),
     totalBalance: t('headers.totalDeposits'),
-    userBalance: t('headers.myBalance')
+    userBalance: t('headers.yourBalance')
   }
 
   return (

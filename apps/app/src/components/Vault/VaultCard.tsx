@@ -40,7 +40,7 @@ export const VaultCard = (props: VaultCardProps) => {
       <div className='w-full flex flex-col gap-1 px-3'>
         {!!tokenBalance && tokenBalance.amount > 0n && (
           <div className='flex items-center justify-between'>
-            <span className='text-xs text-pt-purple-200'>{t_vaults('headers.myBalance')}</span>
+            <span className='text-xs text-pt-purple-200'>{t_vaults('headers.yourBalance')}</span>
             <AccountVaultBalance vault={vault} className='!flex-row gap-1' />
           </div>
         )}

@@ -37,7 +37,7 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
     >
       {!!userAddress && (
         <VaultInfoRow
-          name={t_vault('headers.myBalance')}
+          name={t_vault('headers.yourBalance')}
           data={<AccountVaultBalance vault={vault} className='!flex-row gap-1' />}
         />
       )}
@@ -45,7 +45,7 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
         <VaultInfoRow
           name={
             <span className='flex gap-2 items-center'>
-              {t_vault('headers.myWinChance')}{' '}
+              {t_vault('headers.yourWinChance')}{' '}
               <WinChanceTooltip
                 iconSize='sm'
                 intl={{ text: t_tooltips('winChance') }}

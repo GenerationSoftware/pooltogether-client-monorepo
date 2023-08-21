@@ -46,11 +46,11 @@ export const AccountDepositsTable = (props: AccountDepositsTableProps) => {
     const headers: TableProps['data']['headers'] = {
       token: { content: t_vaults('headers.token') },
       odds: {
-        content: isExternalUser ? t_vault('headers.winChance') : t_vault('headers.myWinChance'),
+        content: isExternalUser ? t_vault('headers.winChance') : t_vault('headers.yourWinChance'),
         position: 'center'
       },
       balance: {
-        content: isExternalUser ? t_vault('headers.balance') : t_vaults('headers.myBalance'),
+        content: isExternalUser ? t_vault('headers.balance') : t_vaults('headers.yourBalance'),
         position: 'center'
       }
     }
