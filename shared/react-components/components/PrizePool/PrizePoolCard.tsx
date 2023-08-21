@@ -1,5 +1,5 @@
 import { PrizePool } from '@pooltogether/hyperstructure-client-js'
-import { useAllPrizeInfo, usePrizeTokenData } from '@pooltogether/hyperstructure-react-hooks'
+import { useGrandPrize } from '@pooltogether/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
 import { Card, Spinner } from '@shared/ui'
 import { PrizePoolBadge } from '../Badges/PrizePoolBadge'
@@ -14,11 +14,9 @@ export interface PrizePoolCardProps {
 export const PrizePoolCard = (props: PrizePoolCardProps) => {
   const { prizePool, intl } = props
 
-  const { data: allPrizeInfo, isFetched: isFetchedAllPrizeInfo } = useAllPrizeInfo([prizePool])
-  const grandPrize =
-    isFetchedAllPrizeInfo && !!allPrizeInfo ? allPrizeInfo[prizePool.id]?.[0].amount ?? 0n : 0n
-
-  const { data: prizeTokenData, isFetched: isFetchedPrizeTokenData } = usePrizeTokenData(prizePool)
+  const { data: grandPrize, isFetched: isFetchedGrandPrize } = useGrandPrize(prizePool, {
+    useCurrentPrizeSizes: true
+  })
 
   return (
     <Card
@@ -37,19 +35,14 @@ export const PrizePoolCard = (props: PrizePoolCardProps) => {
         <span className='text-xs uppercase md:text-sm'>
           {intl?.('grandPrize') ?? 'Grand Prize'}
         </span>
-        {isFetchedAllPrizeInfo && isFetchedPrizeTokenData ? (
-          !!prizeTokenData ? (
+        {isFetchedGrandPrize ? (
+          !!grandPrize ? (
             <>
               <span className='text-2xl text-pt-teal md:text-4xl'>
-                <TokenValue
-                  token={{ ...prizeTokenData, amount: grandPrize }}
-                  hideZeroes={true}
-                  fallback={<></>}
-                />
+                <TokenValue token={grandPrize} hideZeroes={true} fallback={<></>} />
               </span>
               <span className='hidden font-light md:block'>
-                ≈{' '}
-                <TokenAmount token={{ ...prizeTokenData, amount: grandPrize }} hideZeroes={true} />
+                ≈ <TokenAmount token={grandPrize} hideZeroes={true} />
               </span>
             </>
           ) : (

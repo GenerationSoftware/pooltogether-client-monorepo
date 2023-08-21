@@ -17,7 +17,7 @@ export const useAllPrizeInfo = (prizePools: PrizePool[]) => {
       return {
         queryKey: queryKey,
         queryFn: async () => {
-          const prizeInfo = await prizePool.getAllPrizeInfo()
+          const prizeInfo = await prizePool.getAllPrizeInfo({ considerPastDraws: 7 })
           return prizeInfo
         },
         enabled: !!prizePool,

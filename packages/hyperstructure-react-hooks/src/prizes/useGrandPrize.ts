@@ -1,34 +1,41 @@
-import { PrizePool, TokenWithAmount, TokenWithPrice } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool, TokenWithAmount } from '@pooltogether/hyperstructure-client-js'
 import { useMemo } from 'react'
-import { useAllPrizeInfo, usePrizeTokenPrice } from '..'
+import { useAllPrizeInfo, usePrizeTokenData } from '..'
 
 /**
  * Returns the prize pool's grand prize
  *
  * Wraps {@link useAllPrizeInfo}
  * @param prizePool instance of `PrizePool` to check
+ * @param options optional settings
  * @returns
  */
 export const useGrandPrize = (
-  prizePool: PrizePool
+  prizePool: PrizePool,
+  options?: { useCurrentPrizeSizes?: boolean }
 ): {
-  data?: TokenWithAmount & TokenWithPrice
+  data?: TokenWithAmount
   isFetched: boolean
 } => {
   const { data: allPrizeInfo, isFetched: isFetchedAllPrizeInfo } = useAllPrizeInfo([prizePool])
 
-  const { data: tokenWithPrice, isFetched: isFetchedTokenPrice } = usePrizeTokenPrice(prizePool)
+  const { data: prizeToken, isFetched: isFetchedPrizeToken } = usePrizeTokenData(prizePool)
 
-  const isFetched = isFetchedAllPrizeInfo && isFetchedTokenPrice
+  const isFetched = isFetchedAllPrizeInfo && isFetchedPrizeToken
 
   const data = useMemo(() => {
-    if (isFetched && !!allPrizeInfo?.[prizePool.id] && !!tokenWithPrice) {
+    if (isFetched && !!allPrizeInfo?.[prizePool.id] && !!prizeToken) {
       const grandPrizeAmount = allPrizeInfo[prizePool.id][0].amount
-      return { ...tokenWithPrice, amount: grandPrizeAmount }
+      return {
+        ...prizeToken,
+        amount: options?.useCurrentPrizeSizes
+          ? grandPrizeAmount.current
+          : grandPrizeAmount.estimated
+      }
     } else {
       return undefined
     }
-  }, [allPrizeInfo, tokenWithPrice])
+  }, [allPrizeInfo, prizeToken])
 
   return { data, isFetched }
 }

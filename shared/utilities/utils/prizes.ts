@@ -121,7 +121,7 @@ export const getPrizePoolContributionPercentages = async (
 }
 
 /**
- * Returns estimated prize amounts and frequency for any tiers of a prize pool
+ * Returns current and estimated prize amounts and frequency for any tiers of a prize pool
  * @param publicClient a public Viem client for the prize pool's chain
  * @param prizePoolAddress the prize pool's address
  * @param tiers the prize tiers to get info for
@@ -145,7 +145,8 @@ export const getPrizePoolAllPrizeInfo = async (
     { functionName: 'tierShares' },
     { functionName: 'getTotalShares' },
     { functionName: 'getLastClosedDrawId' },
-    ...tiers.map((tier) => ({ functionName: 'getTierAccrualDurationInDraws', args: [tier] }))
+    ...tiers.map((tier) => ({ functionName: 'getTierAccrualDurationInDraws', args: [tier] })),
+    ...tiers.map((tier) => ({ functionName: 'getTierPrizeSize', args: [tier] }))
   ]
 
   const multicallResults = await getSimpleMulticallResults(
@@ -156,7 +157,8 @@ export const getPrizePoolAllPrizeInfo = async (
   )
 
   const lastDrawId = Number(multicallResults[3] ?? 0)
-  const startDrawId = considerPastDraws > lastDrawId ? 1 : lastDrawId - considerPastDraws + 1
+  const startDrawId =
+    considerPastDraws > lastDrawId ? 1 : lastDrawId - Math.floor(considerPastDraws) + 1
 
   const prizePoolContract = getContract({
     address: prizePoolAddress,
@@ -174,7 +176,7 @@ export const getPrizePoolAllPrizeInfo = async (
   const drawPeriod = Number(multicallResults[0])
 
   const tierShares = BigInt(multicallResults[1]) ?? 0n
-  const totalShares = multicallResults[2] ?? 0n
+  const totalShares: bigint = multicallResults[2] ?? 0n
   const tierSharePercentage = divideBigInts(tierShares, totalShares)
   const formattedTierSharePercentage = parseFloat(
     formatStringWithPrecision(tierSharePercentage.toString(), 4)
@@ -182,16 +184,21 @@ export const getPrizePoolAllPrizeInfo = async (
 
   const tierContributionPerDraw =
     calculatePercentageOfBigInt(totalContributions, formattedTierSharePercentage) /
-    BigInt(considerPastDraws)
+    BigInt(Math.floor(considerPastDraws))
 
   tiers.forEach((tier) => {
     const tierPrizeCount = 4 ** tier
+
+    const currentPrizeSize: bigint = multicallResults[tier + tiers.length + 4] ?? 0n
 
     const accrualDraws = Number(multicallResults[tier + 4])
     const accrualSeconds = accrualDraws * drawPeriod
     const accrualDays = accrualSeconds / SECONDS_PER_DAY
 
-    const amount = (tierContributionPerDraw * BigInt(accrualDraws)) / BigInt(tierPrizeCount)
+    const amount = {
+      current: currentPrizeSize,
+      estimated: (tierContributionPerDraw * BigInt(accrualDraws)) / BigInt(tierPrizeCount)
+    }
 
     const dailyFrequency = tierPrizeCount / accrualDays
 

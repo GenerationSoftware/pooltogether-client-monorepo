@@ -38,11 +38,11 @@ export const PrizesTable = (props: PrizesTableProps) => {
                 >
                   <span className='flex-grow text-lg text-pt-teal pl-8 text-left md:text-3xl md:pl-16'>
                     <TokenValue
-                      token={{ ...tokenData, amount: prize.amount }}
+                      token={{ ...tokenData, amount: prize.amount.current }}
                       hideZeroes={true}
                       fallback={
                         <TokenAmount
-                          token={{ ...tokenData, amount: prize.amount }}
+                          token={{ ...tokenData, amount: prize.amount.current }}
                           maximumFractionDigits={1}
                         />
                       }

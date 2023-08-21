@@ -8,7 +8,7 @@ export const LargestPrizeHeader = () => {
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
 
-  const { data: gpData } = useLargestGrandPrize(prizePoolsArray)
+  const { data: gpData } = useLargestGrandPrize(prizePoolsArray, { useCurrentPrizeSizes: true })
 
   const t_home = useTranslations('Home')
   const t_short = useTranslations('Abbreviations')

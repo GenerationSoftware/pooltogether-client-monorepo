@@ -7,10 +7,12 @@ import { useAllPrizeInfo, usePrizeTokenPrice } from '..'
  *
  * Wraps {@link useAllPrizeInfo}
  * @param prizePools instances of `PrizePool` to check
+ * @param options optional settings
  * @returns
  */
 export const useLargestGrandPrize = (
-  prizePools: PrizePool[]
+  prizePools: PrizePool[],
+  options?: { useCurrentPrizeSizes?: boolean }
 ): {
   data?: { prizePool: PrizePool; token: TokenWithAmount & TokenWithPrice }
   isFetched: boolean
@@ -23,7 +25,9 @@ export const useLargestGrandPrize = (
     let largestGrandPrizePoolId = ''
 
     for (const id in allPrizeInfo) {
-      const prizeAmount = allPrizeInfo[id][0].amount
+      const prizeAmount = options?.useCurrentPrizeSizes
+        ? allPrizeInfo[id][0].amount.current
+        : allPrizeInfo[id][0].amount.estimated
       if (prizeAmount > largestGrandPrizeAmount || largestGrandPrizePoolId === '') {
         largestGrandPrizePoolId = id
         largestGrandPrizeAmount = prizeAmount

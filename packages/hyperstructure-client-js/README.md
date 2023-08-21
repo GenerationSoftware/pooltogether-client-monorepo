@@ -162,7 +162,7 @@ const tokenData = await prizePool.getPrizeTokenData()
 const lastDrawId = await prizePool.getLastDrawId()
 ```
 
-### Getting estimated prize amounts and frequency for all tiers of a prize pool
+### Getting current and estimated prize amounts and frequency for all tiers of a prize pool
 
 ```ts
 const allPrizeInfo = await prizePool.getAllPrizeInfo()

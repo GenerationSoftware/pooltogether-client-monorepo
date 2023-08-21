@@ -393,17 +393,23 @@ export class PrizePool {
   }
 
   /**
-   * Returns estimated prize amounts and frequency for all prize tiers
+   * Returns current and estimated prize amounts and frequency for all prize tiers
+   * @param options optional settings
    * @returns
    */
-  async getAllPrizeInfo(): Promise<PrizeInfo[]> {
+  async getAllPrizeInfo(options?: { considerPastDraws?: number }): Promise<PrizeInfo[]> {
     const source = 'Prize Pool [getAllPrizeInfo]'
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
     const numberOfTiers = await this.getNumberOfTiers()
     const tiers = Array.from(Array(numberOfTiers).keys())
 
-    const allPrizeInfo = await getPrizePoolAllPrizeInfo(this.publicClient, this.address, tiers)
+    const allPrizeInfo = await getPrizePoolAllPrizeInfo(
+      this.publicClient,
+      this.address,
+      tiers,
+      options?.considerPastDraws
+    )
 
     return allPrizeInfo
   }

@@ -1,6 +1,6 @@
 {
   "name": "@pooltogether/hyperstructure-react-hooks",
-  "version": "0.1.18",
+  "version": "0.1.19",
   "license": "MIT",
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

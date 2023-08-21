@@ -55,7 +55,7 @@ const NetworkCard = (props: NetworkCardProps) => {
 
   const prizePoolAddress = CONTRACTS[chainId].prizePool
   const prizePool = usePrizePool(chainId, prizePoolAddress)
-  const { data: grandPrize } = useGrandPrize(prizePool)
+  const { data: grandPrize } = useGrandPrize(prizePool, { useCurrentPrizeSizes: true })
 
   const { vaultChainId } = useWatch<NetworkInputFormValues>()
 

@@ -1,5 +1,5 @@
 export interface PrizeInfo {
-  amount: bigint
+  amount: { current: bigint; estimated: bigint }
   dailyFrequency: number
 }
 
