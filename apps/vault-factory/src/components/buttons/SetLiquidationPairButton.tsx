@@ -68,10 +68,7 @@ export const SetLiquidationPairButton = (props: SetLiquidationPairButtonProps) =
         'w-54 !bg-pt-purple-600 !border-pt-purple-600 hover:!bg-pt-purple-700 focus:outline-transparent',
         className
       )}
-      innerClassName={classNames(
-        'flex gap-2 items-center text-pt-purple-50 whitespace-nowrap',
-        innerClassName
-      )}
+      innerClassName={classNames('flex gap-2 items-center text-pt-purple-50', innerClassName)}
     >
       Set Liquidation Pair <ArrowRightIcon className='w-4 h-4' />
     </TransactionButton>

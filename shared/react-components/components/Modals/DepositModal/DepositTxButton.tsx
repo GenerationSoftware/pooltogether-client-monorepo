@@ -210,6 +210,7 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
           openConnectModal={openConnectModal}
           openChainModal={openChainModal}
           addRecentTransaction={addRecentTransaction}
+          innerClassName='flex gap-2 items-center'
           intl={intl}
         >
           {intl?.base?.('exactApprovalButton', { symbol: tokenData?.symbol ?? '?' }) ??
@@ -235,8 +236,9 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
           openConnectModal={openConnectModal}
           openChainModal={openChainModal}
           addRecentTransaction={addRecentTransaction}
-          intl={intl}
           color='transparent'
+          innerClassName='flex gap-2 items-center'
+          intl={intl}
         >
           {intl?.base?.('infiniteApprovalButton', { symbol: tokenData?.symbol ?? '?' }) ??
             `Approve unlimited amount of ${tokenData?.symbol ?? <Spinner />}`}

@@ -1,6 +1,7 @@
 import { getNiceNetworkNameByChainId } from '@pooltogether/hyperstructure-client-js'
 import { Intl } from '@shared/types'
 import { Button, ButtonProps, Spinner } from '@shared/ui'
+import classNames from 'classnames'
 import { useEffect } from 'react'
 import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi'
 
@@ -55,7 +56,7 @@ export const TransactionButton = (props: TransactionButtonProps) => {
   if (isDisconnected) {
     return (
       <Button onClick={openConnectModal} {...rest}>
-        <span className={innerClassName}>
+        <span className={classNames('whitespace-nowrap', innerClassName)}>
           {intl?.common?.('connectWallet') ?? 'Connect Wallet'}
         </span>
       </Button>
@@ -70,13 +71,13 @@ export const TransactionButton = (props: TransactionButtonProps) => {
         {...rest}
       >
         {isSwitchingNetwork && (
-          <span className={innerClassName}>
+          <span className={classNames('whitespace-nowrap', innerClassName)}>
             {intl?.base?.('switchingNetwork', { network: networkName }) ??
               `Switching to ${networkName}...`}
           </span>
         )}
         {!isSwitchingNetwork && (
-          <span className={innerClassName}>
+          <span className={classNames('whitespace-nowrap', innerClassName)}>
             {intl?.base?.('switchNetwork', { network: networkName }) ?? `Switch to ${networkName}`}
           </span>
         )}
@@ -86,7 +87,7 @@ export const TransactionButton = (props: TransactionButtonProps) => {
 
   return (
     <Button onClick={write} disabled={!write || isTxLoading || disabled} {...rest}>
-      <span className={innerClassName}>
+      <span className={classNames('whitespace-nowrap', innerClassName)}>
         {isTxLoading && <Spinner />}
         {!isTxLoading && children}
       </span>
