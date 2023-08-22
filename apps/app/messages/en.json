@@ -150,7 +150,7 @@
     "uhOh": "Uh oh!",
     "failedTx": "Something went wrong....",
     "tryAgain": "Try Again",
-    "disclaimer": "By clicking \"Confirm Deposit\", you agree to PoolTogether's <tosLink>Terms of Service</tosLink> and acknowledge that you have read and understand the PoolTogether <disLink>protocol disclaimer</disLink>."
+    "disclaimer": "By clicking \"Confirm Deposit\", you agree to Cabana's <tosLink>Terms of Service</tosLink>. Click <vaultLink>here</vaultLink> to learn more about the vault you're depositing into."
   },
   "Footer": {
     "titles": {

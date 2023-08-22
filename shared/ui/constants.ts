@@ -22,8 +22,7 @@ export const DOMAINS = Object.freeze({
  */
 export const LINKS = Object.freeze({
   ...DOMAINS,
-  termsOfService: `${DOMAINS.protocolLandingPage}/terms`, // TODO: update to cabana ToS once available
-  protocolDisclaimer: `${DOMAINS.protocolLandingPage}/protocol-disclaimer`, // TODO: update to cabana disclaimer once available
+  termsOfService: `${DOMAINS.landingPage}/terms`,
   ecosystem: `${DOMAINS.protocolLandingPage}/ecosystem`,
   discord: `${DOMAINS.protocolLandingPage}/discord`,
   toolDocs: `${DOMAINS.docs}/`, // TODO: update to tools section once available

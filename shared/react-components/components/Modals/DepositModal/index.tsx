@@ -1,4 +1,4 @@
-import { formatNumberForDisplay, PrizePool } from '@pooltogether/hyperstructure-client-js'
+import { formatNumberForDisplay, PrizePool, Vault } from '@pooltogether/hyperstructure-client-js'
 import { useSelectedVault } from '@pooltogether/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Intl, RichIntl } from '@shared/types'
@@ -152,7 +152,7 @@ export const DepositModal = (props: DepositModalProps) => {
               refetchUserBalances={refetchUserBalances}
               intl={intl}
             />
-            {view === 'review' && <DepositDisclaimer intl={intl?.base} />}
+            {view === 'review' && <DepositDisclaimer vault={vault} intl={intl?.base} />}
           </div>
         }
         onClose={handleClose}
@@ -167,35 +167,41 @@ export const DepositModal = (props: DepositModalProps) => {
 }
 
 interface DepositDisclaimerProps {
+  vault: Vault
   intl?: RichIntl<'disclaimer'>
 }
 
 const DepositDisclaimer = (props: DepositDisclaimerProps) => {
-  const { intl } = props
+  const { vault, intl } = props
+
+  const vaultHref = `/vault/${vault.chainId}/${vault.address}`
 
   return (
     <span className='text-xs text-pt-purple-100 px-6'>
       {intl?.rich('disclaimer', {
-        tosLink: (chunks) => <ToSLink>{chunks}</ToSLink>,
-        disLink: (chunks) => <PDLink>{chunks}</PDLink>
+        tosLink: (chunks) => <DisclaimerLink href={LINKS.termsOfService}>{chunks}</DisclaimerLink>,
+        vaultLink: (chunks) => <DisclaimerLink href={vaultHref}>{chunks}</DisclaimerLink>
       }) ??
-        `By clicking "Confirm Deposit", you agree to PoolTogether's ${(
-          <ToSLink>Terms of Service</ToSLink>
-        )} and acknowledge that you have read and understand the PoolTogether ${(
-          <PDLink>protocol disclaimer</PDLink>
-        )}.`}
+        `By clicking "Confirm Deposit", you agree to Cabana's ${(
+          <DisclaimerLink href={LINKS.termsOfService}>Terms of Service</DisclaimerLink>
+        )}. Click ${(
+          <DisclaimerLink href={vaultHref}>here</DisclaimerLink>
+        )} to learn more about the vault you're depositing into.`}
     </span>
   )
 }
 
-const ToSLink = (props: { children: ReactNode }) => (
-  <a href={LINKS.termsOfService} target='_blank' className='text-pt-teal-dark'>
-    {props.children}
-  </a>
-)
+interface DisclaimerLinkProps {
+  href: string
+  children: ReactNode
+}
 
-const PDLink = (props: { children: ReactNode }) => (
-  <a href={LINKS.protocolDisclaimer} target='_blank' className='text-pt-teal-dark'>
-    {props.children}
-  </a>
-)
+const DisclaimerLink = (props: DisclaimerLinkProps) => {
+  const { href, children } = props
+
+  return (
+    <a href={href} target='_blank' className='text-pt-purple-300'>
+      {children}
+    </a>
+  )
+}

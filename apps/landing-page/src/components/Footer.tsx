@@ -36,7 +36,7 @@ const FooterWave = () => {
   return (
     <div
       className={classNames('w-full flex flex-col bg-pt-purple-600 isolate pointer-events-none', {
-        'bg-pt-purple-700': router.pathname === '/tools'
+        'bg-pt-purple-700': router.pathname !== '/'
       })}
     >
       <Image
