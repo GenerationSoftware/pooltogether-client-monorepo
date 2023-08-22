@@ -109,8 +109,7 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
     txHash: exactApprovalTxHash,
     sendApproveTransaction: sendExactApproveTransaction
   } = useSendApproveTransaction(depositAmount, vault, {
-    onSuccess: () => refetchTokenAllowance(),
-    onError: () => setModalView('error')
+    onSuccess: () => refetchTokenAllowance()
   })
 
   const {
@@ -120,8 +119,7 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
     txHash: infiniteApprovalTxHash,
     sendApproveTransaction: sendInfiniteApproveTransaction
   } = useSendApproveTransaction(MAX_UINT_256, vault, {
-    onSuccess: () => refetchTokenAllowance(),
-    onError: () => setModalView('error')
+    onSuccess: () => refetchTokenAllowance()
   })
 
   const {
@@ -215,11 +213,7 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
         >
           {intl?.base?.('exactApprovalButton', { symbol: tokenData?.symbol ?? '?' }) ??
             `Approve exact amount of ${tokenData?.symbol ?? <Spinner />}`}
-          <ExactApprovalTooltip
-            tokenSymbol={tokenData?.symbol ?? '?'}
-            intl={intl?.tooltips}
-            iconClassName='ml-3'
-          />
+          <ExactApprovalTooltip tokenSymbol={tokenData?.symbol ?? '?'} intl={intl?.tooltips} />
         </TransactionButton>
         <TransactionButton
           chainId={vault.chainId}
@@ -242,11 +236,7 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
         >
           {intl?.base?.('infiniteApprovalButton', { symbol: tokenData?.symbol ?? '?' }) ??
             `Approve unlimited amount of ${tokenData?.symbol ?? <Spinner />}`}
-          <InfiniteApprovalTooltip
-            tokenSymbol={tokenData?.symbol ?? '?'}
-            intl={intl?.tooltips}
-            iconClassName='ml-3'
-          />
+          <InfiniteApprovalTooltip tokenSymbol={tokenData?.symbol ?? '?'} intl={intl?.tooltips} />
         </TransactionButton>
       </div>
     )
