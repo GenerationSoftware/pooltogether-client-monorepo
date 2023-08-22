@@ -14,6 +14,7 @@ import { useMemo } from 'react'
 import { isAddress } from 'viem'
 import { useNetworks } from '@hooks/useNetworks'
 import { VaultPageButtons } from './VaultPageButtons'
+import { VaultPageExtraInfo } from './VaultPageExtraInfo'
 import { VaultPageHeader } from './VaultPageHeader'
 import { VaultPageInfo } from './VaultPageInfo'
 
@@ -64,6 +65,7 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
           <>
             <VaultPageInfo vault={vault} />
             <VaultPageButtons vault={vault} />
+            <VaultPageExtraInfo vault={vault} />
           </>
         ) : (
           <ErrorState />

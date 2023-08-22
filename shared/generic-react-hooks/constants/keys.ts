@@ -13,6 +13,7 @@ export const QUERY_KEYS = Object.freeze({
  */
 export const LOCAL_STORAGE_KEYS = Object.freeze({
   isTestnets: 'isTestnets',
+  isDismissed: 'isDismissed',
   selectedCurrency: 'selectedCurrency',
   selectedLanguage: 'selectedLanguage'
 })

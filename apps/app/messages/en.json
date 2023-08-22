@@ -14,7 +14,9 @@
     "connectWallet": "Connect Wallet",
     "viewTx": "View TX",
     "viewOn": "View on {name}",
-    "close": "Close"
+    "close": "Close",
+    "learnAboutRisks": "Learn about the risks",
+    "readDocs": "Read the Docs"
   },
   "Navigation": {
     "home": "Home",
@@ -56,6 +58,7 @@
     },
     "manageVaultLists": "Manage Vault Lists",
     "clearFilters": "Clear Filters",
+    "disclaimer": "PoolTogether prize vaults can be deployed by anyone. Know what you are depositing into.",
     "headers": {
       "token": "Token",
       "prizePower": "Prize Power",
@@ -74,7 +77,13 @@
       "depositAsset": "Deposit Asset",
       "prizeAsset": "Prize Asset"
     },
-    "returnToVaults": "Return to Vaults"
+    "returnToVaults": "Return to Vaults",
+    "learnAboutToken": "Learn about {token}",
+    "smartContractRisk": "PoolTogether is a permissionless protocol that anyone can use to deploy prize vaults. This prize vault exposes you to smart contract risk from the following contracts:",
+    "vaultContract": "Vault Contract",
+    "yieldSourceContract": "Yield Source Contract",
+    "inVaultLists": "This prize vault is in the following vault lists you have selected:",
+    "notInVaultLists": "This prize vault is not in any of the vault lists you have selected."
   },
   "Account": {
     "connectWallet": "Connect your wallet to view account status",
@@ -150,7 +159,8 @@
     "uhOh": "Uh oh!",
     "failedTx": "Something went wrong....",
     "tryAgain": "Try Again",
-    "disclaimer": "By clicking \"Confirm Deposit\", you agree to Cabana's <tosLink>Terms of Service</tosLink>. Click <vaultLink>here</vaultLink> to learn more about the vault you're depositing into."
+    "risksDisclaimer": "PoolTogether is a permissionless protocol. Prize vaults can be deployed by anyone. Make sure you know what you are depositing into. <vaultLink>Learn more about this prize vault.</vaultLink>",
+    "depositDisclaimer": "By clicking \"Confirm Deposit\", you agree to Cabana's <tosLink>Terms of Service</tosLink>. Click <vaultLink>here</vaultLink> to learn more about the vault you're depositing into."
   },
   "Footer": {
     "titles": {

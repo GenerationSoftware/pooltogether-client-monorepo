@@ -60,6 +60,7 @@ A React componponent library utilizing some simpler components from the internal
 
 ### Icon Components
 
+- `AlertIcon`
 - `ClipboardListIcon`
 - `NetworkIcon`
 - `SortIcon`

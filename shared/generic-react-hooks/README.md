@@ -20,8 +20,11 @@ A library of shared React hooks with minimal dependencies.
 ### App Hooks
 
 - `useCountdown`
+- `useFathom`
+- `useIsDismissed`
 - `useIsModalOpen`
 - `useIsTestnets`
+- `useScreenSize`
 - `useSelectedCurrency`
 - `useSelectedLanguage`
 

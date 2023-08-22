@@ -6,7 +6,8 @@ import { LINKS, Modal } from '@shared/ui'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { ReactNode, useMemo, useState } from 'react'
-import { depositFormTokenAmountAtom } from '../../Form/DepositForm'
+import { depositFormShareAmountAtom, depositFormTokenAmountAtom } from '../../Form/DepositForm'
+import { AlertIcon } from '../../Icons/AlertIcon'
 import { createDepositTxToast, DepositTxToastProps } from '../../Toasts/DepositTxToast'
 import { NetworkFeesProps } from '../NetworkFees'
 import { DepositTxButton } from './DepositTxButton'
@@ -56,9 +57,10 @@ export interface DepositModalProps {
       | 'uhOh'
       | 'failedTx'
       | 'tryAgain'
-      | 'disclaimer'
+      | 'risksDisclaimer'
+      | 'depositDisclaimer'
     >
-    common?: Intl<'prizePool' | 'connectWallet' | 'close' | 'viewOn'>
+    common?: Intl<'prizePool' | 'connectWallet' | 'close' | 'viewOn' | 'learnAboutRisks'>
     fees?: NetworkFeesProps['intl']
     tooltips?: Intl<'exactApproval' | 'infiniteApproval'>
     txToast?: DepositTxToastProps['intl']
@@ -85,6 +87,7 @@ export const DepositModal = (props: DepositModalProps) => {
 
   const [depositTxHash, setDepositTxHash] = useState<string>()
 
+  const formShareAmount = useAtomValue(depositFormShareAmountAtom)
   const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
 
   const prizePool = useMemo(() => {
@@ -141,6 +144,7 @@ export const DepositModal = (props: DepositModalProps) => {
               hidden: view !== 'main' && view !== 'review'
             })}
           >
+            {view === 'main' && !formShareAmount && <RisksDisclaimer vault={vault} intl={intl} />}
             <DepositTxButton
               vault={vault}
               modalView={view}
@@ -166,9 +170,42 @@ export const DepositModal = (props: DepositModalProps) => {
   return <></>
 }
 
+interface RisksDisclaimerProps {
+  vault: Vault
+  intl?: { base?: RichIntl<'risksDisclaimer'>; common?: Intl<'learnAboutRisks'> }
+}
+
+const RisksDisclaimer = (props: RisksDisclaimerProps) => {
+  const { vault, intl } = props
+
+  const vaultHref = `/vault/${vault.chainId}/${vault.address}`
+
+  return (
+    <div className='w-full flex flex-col gap-4 items-center p-6 text-pt-purple-100 bg-pt-transparent rounded-lg'>
+      <div className='flex gap-2 items-center'>
+        <AlertIcon className='w-5 h-5' />
+        <span className='font-semibold'>
+          {intl?.common?.('learnAboutRisks') ?? 'Learn about the risks'}
+        </span>
+      </div>
+      <span className='text-center text-sm'>
+        {intl?.base?.rich('risksDisclaimer', {
+          vaultLink: (chunks) => <DisclaimerLink href={vaultHref}>{chunks}</DisclaimerLink>
+        }) ?? (
+          <>
+            PoolTogether is a permissionless protocol. Prize vaults can be deployed by anyone. Make
+            sure you know what you are depositing into.{' '}
+            <DisclaimerLink href={vaultHref}>Learn more about this prize vault.</DisclaimerLink>
+          </>
+        )}
+      </span>
+    </div>
+  )
+}
+
 interface DepositDisclaimerProps {
   vault: Vault
-  intl?: RichIntl<'disclaimer'>
+  intl?: RichIntl<'depositDisclaimer'>
 }
 
 const DepositDisclaimer = (props: DepositDisclaimerProps) => {
@@ -178,15 +215,17 @@ const DepositDisclaimer = (props: DepositDisclaimerProps) => {
 
   return (
     <span className='text-xs text-pt-purple-100 px-6'>
-      {intl?.rich('disclaimer', {
+      {intl?.rich('depositDisclaimer', {
         tosLink: (chunks) => <DisclaimerLink href={LINKS.termsOfService}>{chunks}</DisclaimerLink>,
         vaultLink: (chunks) => <DisclaimerLink href={vaultHref}>{chunks}</DisclaimerLink>
-      }) ??
-        `By clicking "Confirm Deposit", you agree to Cabana's ${(
-          <DisclaimerLink href={LINKS.termsOfService}>Terms of Service</DisclaimerLink>
-        )}. Click ${(
-          <DisclaimerLink href={vaultHref}>here</DisclaimerLink>
-        )} to learn more about the vault you're depositing into.`}
+      }) ?? (
+        <>
+          By clicking "Confirm Deposit", you agree to Cabana's{' '}
+          <DisclaimerLink href={LINKS.termsOfService}>Terms of Service</DisclaimerLink>. Click{' '}
+          <DisclaimerLink href={vaultHref}>here</DisclaimerLink> to learn more about the vault
+          you're depositing into.
+        </>
+      )}
     </span>
   )
 }

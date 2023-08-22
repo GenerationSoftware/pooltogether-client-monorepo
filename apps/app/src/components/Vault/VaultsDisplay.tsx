@@ -49,7 +49,7 @@ export const VaultsDisplay = () => {
       {networks.map((network) => {
         if (filteredVaults[network] === undefined || filteredVaults[network].length === 0) return
         return (
-          <div key={`pp-${network}`} className='w-full flex flex-col items-center gap-4 md:gap-6'>
+          <div key={`pp-${network}`} className='w-full flex flex-col items-center gap-4 lg:gap-6'>
             <PrizePoolBadge
               chainId={network}
               textClassName='text-lg font-medium'

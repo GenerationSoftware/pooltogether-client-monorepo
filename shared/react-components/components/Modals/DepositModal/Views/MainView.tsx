@@ -6,8 +6,9 @@ import {
 import { useVaultShareData } from '@pooltogether/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
 import { Spinner } from '@shared/ui'
+import { useAtomValue } from 'jotai'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
-import { DepositForm } from '../../../Form/DepositForm'
+import { DepositForm, depositFormShareAmountAtom } from '../../../Form/DepositForm'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
 
@@ -28,6 +29,8 @@ export const MainView = (props: MainViewProps) => {
   const { vault, prizePool, intl } = props
 
   const { data: shareData } = useVaultShareData(vault)
+
+  const formShareAmount = useAtomValue(depositFormShareAmountAtom)
 
   const vaultName = vault.name ?? `"${shareData?.name}"`
   const networkName = getNiceNetworkNameByChainId(vault.chainId)
@@ -55,10 +58,12 @@ export const MainView = (props: MainViewProps) => {
         className='!py-1 mx-auto'
       />
       <DepositForm vault={vault} showInputInfoRows={true} intl={intl} />
-      <div className='flex flex-col gap-4 mx-auto md:flex-row md:gap-9'>
-        <Odds vault={vault} prizePool={prizePool} intl={intl?.base} />
-        <NetworkFees vault={vault} show={['approve', 'deposit', 'withdraw']} intl={intl?.fees} />
-      </div>
+      {!!formShareAmount && (
+        <div className='flex flex-col gap-4 mx-auto md:flex-row md:gap-9'>
+          <Odds vault={vault} prizePool={prizePool} intl={intl?.base} />
+          <NetworkFees vault={vault} show={['approve', 'deposit', 'withdraw']} intl={intl?.fees} />
+        </div>
+      )}
     </div>
   )
 }

@@ -94,7 +94,7 @@ export const Modal = (props: ModalProps) => {
               key={`modal-${label}`}
               {...animationProps}
               className={classNames(
-                'flex flex-col relative items-center p-8 shadow-xl overflow-y-auto md:rounded-lg',
+                'flex flex-col relative items-center p-8 shadow-xl overflow-x-hidden overflow-y-auto md:rounded-lg',
                 'bg-pt-purple-700 text-pt-purple-50',
                 'h-screen md:h-auto md:max-h-[90vh]',
                 'w-screen md:w-full md:max-w-lg',
