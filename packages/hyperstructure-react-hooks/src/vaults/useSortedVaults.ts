@@ -13,7 +13,7 @@ import {
   useAllVaultExchangeRates,
   useAllVaultPrizePowers,
   useAllVaultTokenPrices,
-  useSelectedVaults
+  useVaults
 } from '..'
 
 export type SortId = 'prizePower' | 'totalBalance' | 'userBalance'
@@ -23,12 +23,12 @@ export type SortDirection = 'asc' | 'desc'
  * Returns a sorted array of vaults
  *
  * NOTE: In order to sort by prize power, provide a prize pool in `options`.
- * @param vaults an unsorted array of vaults
+ * @param vaultsArray an unsorted array of vaults
  * @param options optional settings
  * @returns
  */
 export const useSortedVaults = (
-  vaults: Vault[],
+  vaultsArray: Vault[],
   options?: { prizePool?: PrizePool; defaultSortId?: SortId; defaultSortDirection?: SortDirection }
 ) => {
   const [sortVaultsBy, setSortVaultsBy] = useState<SortId>(options?.defaultSortId ?? 'prizePower')
@@ -36,29 +36,29 @@ export const useSortedVaults = (
     options?.defaultSortDirection ?? 'desc'
   )
 
+  const vaults = useVaults(vaultsArray)
+
   const { address: userAddress } = useAccount()
 
-  const { vaults: selectedVaults, isFetched: isFetchedSelectedVaults } = useSelectedVaults()
-
   const { data: allVaultBalances, isFetched: isFetchedAllVaultBalances } =
-    useAllVaultBalances(selectedVaults)
+    useAllVaultBalances(vaults)
 
   const { data: allUserVaultBalances, isFetched: isFetchedAllUserVaultBalances } =
-    useAllUserVaultBalances(selectedVaults, userAddress as Address)
+    useAllUserVaultBalances(vaults, userAddress as Address)
 
   const { data: allPrizePowers, isFetched: isFetchedAllPrizePowers } = useAllVaultPrizePowers(
-    selectedVaults,
+    vaults,
     options?.prizePool as PrizePool
   )
 
   const { data: allVaultExchangeRates, isFetched: isFetchedAllVaultExchangeRates } =
-    useAllVaultExchangeRates(selectedVaults)
+    useAllVaultExchangeRates(vaults)
 
   const { data: allVaultTokenPrices, isFetched: isFetchedAllVaultTokenPrices } =
     useAllVaultTokenPrices()
 
   const isFetched =
-    isFetchedSelectedVaults &&
+    !!vaults &&
     isFetchedAllVaultBalances &&
     (isFetchedAllUserVaultBalances || !userAddress) &&
     (isFetchedAllPrizePowers || !options?.prizePool) &&
@@ -67,7 +67,7 @@ export const useSortedVaults = (
 
   const sortedVaults = useMemo(() => {
     if (isFetched) {
-      let sortedVaults = sortVaultsByPrizePower(vaults, allPrizePowers)
+      let sortedVaults = sortVaultsByPrizePower(vaultsArray, allPrizePowers)
       if (sortVaultsBy === 'totalBalance' && !!allVaultBalances) {
         sortedVaults = sortVaultsByTotalDeposits(
           sortedVaults,
@@ -76,13 +76,11 @@ export const useSortedVaults = (
         )
       } else if (
         sortVaultsBy === 'userBalance' &&
-        !!allVaultBalances &&
         !!allUserVaultBalances &&
         !!allVaultExchangeRates
       ) {
         sortedVaults = sortVaultsByUserBalances(
           sortedVaults,
-          allVaultBalances,
           allVaultTokenPrices,
           allUserVaultBalances,
           allVaultExchangeRates
@@ -97,7 +95,7 @@ export const useSortedVaults = (
     } else {
       return []
     }
-  }, [vaults, sortVaultsBy, sortDirection, isFetched])
+  }, [vaultsArray, sortVaultsBy, sortDirection, userAddress, isFetched])
 
   const toggleSortDirection = () => {
     setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
@@ -116,7 +114,8 @@ export const useSortedVaults = (
 
 const sortVaultsByPrizePower = (vaults: Vault[], prizePowers?: { [vaultId: string]: number }) => {
   if (!!prizePowers) {
-    return vaults.sort((a, b) => (prizePowers[b.id] ?? 0) - (prizePowers[a.id] ?? 0))
+    const prizePower = (v: Vault) => prizePowers[v.id] ?? 0
+    return vaults.sort((a, b) => prizePower(b) - prizePower(a))
   } else {
     return vaults
   }
@@ -128,58 +127,33 @@ const sortVaultsByTotalDeposits = (
   tokenPrices: { [chainId: number]: { [address: Address]: number } }
 ) => {
   return vaults.sort((a, b) => {
-    const aAmount = parseFloat(
-      formatUnits(vaultBalances[a.id]?.amount ?? 0n, vaultBalances[a.id]?.decimals)
-    )
-    const bAmount = parseFloat(
-      formatUnits(vaultBalances[b.id]?.amount ?? 0n, vaultBalances[b.id]?.decimals)
-    )
+    const price = (v: Vault) => tokenPrices[v.chainId]?.[v.address.toLowerCase() as Address] ?? 0
+    const balance = (v: Vault) => vaultBalances[v.id]?.amount ?? 0n
+    const decimals = (v: Vault) => vaultBalances[v.id]?.decimals ?? 0
 
-    const aPrice = tokenPrices[a.chainId]?.[vaultBalances[a.id]?.address] ?? 0
-    const bPrice = tokenPrices[b.chainId]?.[vaultBalances[b.id]?.address] ?? 0
+    const amount = (v: Vault) => parseFloat(formatUnits(balance(v), decimals(v)))
+    const value = (v: Vault) => amount(v) * price(v)
 
-    const aValue = aAmount * aPrice
-    const bValue = bAmount * bPrice
-
-    return bValue - aValue
+    return value(b) - value(a)
   })
 }
 
 const sortVaultsByUserBalances = (
   vaults: Vault[],
-  vaultBalances: { [vaultId: string]: TokenWithAmount },
   tokenPrices: { [chainId: number]: { [address: Address]: number } },
   userBalances: { [vaultId: string]: TokenWithAmount },
   exchangeRates: { [vaultId: string]: bigint }
 ) => {
   return vaults.sort((a, b) => {
-    const aAmount = parseFloat(
-      formatUnits(
-        getAssetsFromShares(
-          userBalances[a.id]?.amount ?? 0n,
-          exchangeRates[a.id] ?? 0n,
-          userBalances[a.id]?.decimals
-        ),
-        userBalances[a.id]?.decimals
-      )
-    )
-    const bAmount = parseFloat(
-      formatUnits(
-        getAssetsFromShares(
-          userBalances[b.id]?.amount ?? 0n,
-          exchangeRates[b.id] ?? 0n,
-          userBalances[b.id]?.decimals
-        ),
-        userBalances[b.id]?.decimals
-      )
-    )
+    const price = (v: Vault) => tokenPrices[v.chainId]?.[v.address.toLowerCase() as Address] ?? 0
+    const shareBalance = (v: Vault) => userBalances[v.id]?.amount ?? 0n
+    const decimals = (v: Vault) => userBalances[v.id]?.decimals ?? 0
+    const exchangeRate = (v: Vault) => exchangeRates[v.id] ?? 0n
 
-    const aPrice = tokenPrices[a.chainId]?.[vaultBalances[a.id]?.address] ?? 0
-    const bPrice = tokenPrices[b.chainId]?.[vaultBalances[b.id]?.address] ?? 0
+    const balance = (v: Vault) => getAssetsFromShares(shareBalance(v), exchangeRate(v), decimals(v))
+    const amount = (v: Vault) => parseFloat(formatUnits(balance(v), decimals(v)))
+    const value = (v: Vault) => amount(v) * price(v)
 
-    const aValue = aAmount * aPrice
-    const bValue = bAmount * bPrice
-
-    return bValue - aValue
+    return value(b) - value(a)
   })
 }
