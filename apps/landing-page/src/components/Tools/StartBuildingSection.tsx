@@ -45,7 +45,7 @@ const StartBuildingItem = (props: StartBuildingItemProps) => {
   return (
     <div className={classNames('max-w-md flex flex-col', className)}>
       <Link href={href} target='_blank'>
-        <div className='px-8 py-4 bg-pt-purple-200 shadow-lg outline outline-2 outline-transparent hover:outline-pt-purple-50 md:px-12 md:py-11 md:rounded-3xl'>
+        <div className='px-8 py-4 bg-pt-purple-200 shadow-lg outline outline-2 outline-transparent hover:outline-pt-purple-400 md:px-12 md:py-11 md:rounded-3xl'>
           <Image
             src={imgSrc}
             alt={title}
