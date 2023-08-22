@@ -2,7 +2,7 @@ import { XMarkIcon } from '@heroicons/react/24/solid'
 import { useScreenSize } from '@shared/generic-react-hooks'
 import classNames from 'classnames'
 import { AnimatePresence, AnimationProps, motion, useReducedMotion } from 'framer-motion'
-import { ReactNode, useLayoutEffect, useState } from 'react'
+import { ReactNode, useEffect, useLayoutEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 
 type MobileStyle = 'tab' | 'cover'
@@ -63,6 +63,20 @@ export const Modal = (props: ModalProps) => {
   }
 
   const [isModalShown, setIsModalShown] = useState<boolean>(true)
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsModalShown(false)
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
 
   if (isFetchedScreenSize) {
     const animationProps = isDesktop
