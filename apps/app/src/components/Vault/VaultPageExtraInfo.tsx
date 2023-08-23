@@ -66,29 +66,32 @@ export const VaultPageExtraInfo = (props: VaultPageExtraInfoProps) => {
     return (
       <div
         className={classNames(
-          'w-full max-w-screen-md flex flex-col gap-3 items-center p-4 text-pt-purple-100 bg-pt-transparent rounded-lg',
-          'lg:gap-5 lg:p-10',
+          'w-full max-w-screen-md flex flex-col gap-4 p-6 text-pt-purple-100 bg-pt-transparent rounded-lg',
+          'lg:gap-5 lg:items-center lg:p-10',
           className
         )}
       >
         <div className='flex gap-2 items-center'>
-          <AlertIcon className='w-5 h-auto' />
-          <span className='text-lg font-semibold lg:text-xl'>
-            {t_vault('learnAboutToken', { token: shareData.symbol })}
+          <AlertIcon className='w-5 h-5' />
+          <span className='lg:text-xl lg:font-semibold'>
+            {t_vault.rich('learnAboutVault', {
+              vaultName: vault.name ?? shareData.name,
+              highlight: (chunks) => <span className='text-pt-purple-300'>{chunks}</span>
+            })}
           </span>
         </div>
-        <span className='text-center text-sm lg:text-base'>{t_vault('smartContractRisk')}</span>
+        <span className='text-sm lg:text-center lg:text-base'>{t_vault('smartContractRisk')}</span>
         <Contracts chainId={vault.chainId} contracts={contracts} />
         {vaultLists.length > 0 ? (
           <>
-            <span className='text-center text-sm lg:text-base'>{t_vault('inVaultLists')}</span>
+            <span className='text-sm lg:text-center lg:text-base'>{t_vault('inVaultLists')}</span>
             <VaultLists vaultLists={vaultLists} />
           </>
         ) : (
-          <span className='text-center text-sm lg:text-base'>{t_vault('notInVaultLists')}</span>
+          <span className='text-sm lg:text-center lg:text-base'>{t_vault('notInVaultLists')}</span>
         )}
-        <Button href={LINKS.docs} target='_blank' color='transparent'>
-          <span className='text-xs whitespace-nowrap lg:text-sm'>{t_common('readDocs')}</span>
+        <Button href={LINKS.docs} target='_blank' color='transparent' className='mx-auto'>
+          <span className='whitespace-nowrap'>{t_common('readDocs')}</span>
         </Button>
       </div>
     )
@@ -107,7 +110,7 @@ const Contracts = (props: ContractsProps) => {
   const { chainId, contracts, className } = props
 
   return (
-    <div className={classNames('flex flex-col items-center lg:flex-row', className)}>
+    <div className={classNames('flex flex-col lg:flex-row lg:items-center', className)}>
       {contracts.map((contract, i) => {
         return (
           <span
@@ -137,7 +140,7 @@ const VaultLists = (props: VaultListsProps) => {
   const { vaultLists, className } = props
 
   return (
-    <div className={classNames('flex flex-col items-center lg:flex-row', className)}>
+    <div className={classNames('flex flex-col lg:flex-row lg:items-center', className)}>
       {vaultLists.map((list, i) => {
         const isDefaultList = list.src in DEFAULT_VAULT_LISTS
 

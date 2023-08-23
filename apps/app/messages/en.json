@@ -78,7 +78,7 @@
       "prizeAsset": "Prize Asset"
     },
     "returnToVaults": "Return to Vaults",
-    "learnAboutToken": "Learn about {token}",
+    "learnAboutVault": "Learn about <highlight>{vaultName}</highlight>",
     "smartContractRisk": "PoolTogether is a permissionless protocol that anyone can use to deploy prize vaults. This prize vault exposes you to smart contract risk from the following contracts:",
     "vaultContract": "Vault Contract",
     "yieldSourceContract": "Yield Source Contract",

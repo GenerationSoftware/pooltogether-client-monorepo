@@ -181,14 +181,14 @@ const RisksDisclaimer = (props: RisksDisclaimerProps) => {
   const vaultHref = `/vault/${vault.chainId}/${vault.address}`
 
   return (
-    <div className='w-full flex flex-col gap-4 items-center p-6 text-pt-purple-100 bg-pt-transparent rounded-lg'>
+    <div className='w-full flex flex-col gap-4 p-6 text-pt-purple-100 bg-pt-transparent rounded-lg lg:items-center'>
       <div className='flex gap-2 items-center'>
         <AlertIcon className='w-5 h-5' />
-        <span className='font-semibold'>
+        <span className='text-xs font-semibold lg:text-base'>
           {intl?.common?.('learnAboutRisks') ?? 'Learn about the risks'}
         </span>
       </div>
-      <span className='text-center text-sm'>
+      <span className='text-xs lg:text-center lg:text-sm'>
         {intl?.base?.rich('risksDisclaimer', {
           vaultLink: (chunks) => <DisclaimerLink href={vaultHref}>{chunks}</DisclaimerLink>
         }) ?? (
