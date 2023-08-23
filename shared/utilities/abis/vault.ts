@@ -63,13 +63,13 @@ export const vaultABI = [
   },
   {
     inputs: [
+      { internalType: 'address', name: '_winner', type: 'address' },
       { internalType: 'uint8', name: '_tier', type: 'uint8' },
-      { internalType: 'address[]', name: '_winners', type: 'address[]' },
-      { internalType: 'uint32[][]', name: '_prizeIndices', type: 'uint32[][]' },
-      { internalType: 'uint96', name: '_feePerClaim', type: 'uint96' },
+      { internalType: 'uint32', name: '_prizeIndex', type: 'uint32' },
+      { internalType: 'uint96', name: '_fee', type: 'uint96' },
       { internalType: 'address', name: '_feeRecipient', type: 'address' }
     ],
-    name: 'claimPrizes',
+    name: 'claimPrize',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'nonpayable',
     type: 'function'
@@ -89,7 +89,7 @@ export const vaultABI = [
     type: 'function'
   },
   {
-    inputs: [{ internalType: 'uint256', name: 'assets', type: 'uint256' }],
+    inputs: [{ internalType: 'uint256', name: '_assets', type: 'uint256' }],
     name: 'convertToShares',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
@@ -125,7 +125,7 @@ export const vaultABI = [
   {
     inputs: [
       { internalType: 'uint256', name: '_assets', type: 'uint256' },
-      { internalType: 'address', name: '_receiver', type: 'address' },
+      { internalType: 'address', name: '_owner', type: 'address' },
       { internalType: 'uint256', name: '_deadline', type: 'uint256' },
       { internalType: 'uint8', name: '_v', type: 'uint8' },
       { internalType: 'bytes32', name: '_r', type: 'bytes32' },
@@ -152,33 +152,14 @@ export const vaultABI = [
     type: 'function'
   },
   {
-    inputs: [],
-    name: 'exchangeRate',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
     inputs: [{ internalType: 'address', name: '_account', type: 'address' }],
     name: 'getHooks',
     outputs: [
       {
         components: [
-          {
-            internalType: 'bool',
-            name: 'useBeforeClaimPrize',
-            type: 'bool'
-          },
-          {
-            internalType: 'bool',
-            name: 'useAfterClaimPrize',
-            type: 'bool'
-          },
-          {
-            internalType: 'contract IVaultHooks',
-            name: 'implementation',
-            type: 'address'
-          }
+          { internalType: 'bool', name: 'useBeforeClaimPrize', type: 'bool' },
+          { internalType: 'bool', name: 'useAfterClaimPrize', type: 'bool' },
+          { internalType: 'contract IVaultHooks', name: 'implementation', type: 'address' }
         ],
         internalType: 'struct VaultHooks',
         name: '',
@@ -214,11 +195,13 @@ export const vaultABI = [
   },
   {
     inputs: [
-      { internalType: 'address', name: '_account', type: 'address' },
+      { internalType: 'address', name: '_sender', type: 'address' },
+      { internalType: 'address', name: '_receiver', type: 'address' },
       { internalType: 'address', name: '_tokenIn', type: 'address' },
       { internalType: 'uint256', name: '_amountIn', type: 'uint256' },
       { internalType: 'address', name: '_tokenOut', type: 'address' },
-      { internalType: 'uint256', name: '_amountOut', type: 'uint256' }
+      { internalType: 'uint256', name: '_amountOut', type: 'uint256' },
+      { internalType: 'bytes', name: '_flashSwapData', type: 'bytes' }
     ],
     name: 'liquidate',
     outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
@@ -254,7 +237,7 @@ export const vaultABI = [
     type: 'function'
   },
   {
-    inputs: [{ internalType: 'address', name: 'owner', type: 'address' }],
+    inputs: [{ internalType: 'address', name: '_owner', type: 'address' }],
     name: 'maxWithdraw',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
@@ -271,24 +254,7 @@ export const vaultABI = [
     type: 'function'
   },
   {
-    inputs: [
-      { internalType: 'uint256', name: '_shares', type: 'uint256' },
-      { internalType: 'address', name: '_receiver', type: 'address' },
-      { internalType: 'uint256', name: '_deadline', type: 'uint256' },
-      { internalType: 'uint8', name: '_v', type: 'uint8' },
-      { internalType: 'bytes32', name: '_r', type: 'bytes32' },
-      { internalType: 'bytes32', name: '_s', type: 'bytes32' }
-    ],
-    name: 'mintWithPermit',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-    stateMutability: 'nonpayable',
-    type: 'function'
-  },
-  {
-    inputs: [
-      { internalType: 'uint256', name: '_shares', type: 'uint256' },
-      { internalType: 'address', name: '_recipient', type: 'address' }
-    ],
+    inputs: [{ internalType: 'uint256', name: '_shares', type: 'uint256' }],
     name: 'mintYieldFee',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -338,28 +304,28 @@ export const vaultABI = [
     type: 'function'
   },
   {
-    inputs: [{ internalType: 'uint256', name: 'assets', type: 'uint256' }],
+    inputs: [{ internalType: 'uint256', name: '_assets', type: 'uint256' }],
     name: 'previewDeposit',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function'
   },
   {
-    inputs: [{ internalType: 'uint256', name: 'shares', type: 'uint256' }],
+    inputs: [{ internalType: 'uint256', name: '_shares', type: 'uint256' }],
     name: 'previewMint',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function'
   },
   {
-    inputs: [{ internalType: 'uint256', name: 'shares', type: 'uint256' }],
+    inputs: [{ internalType: 'uint256', name: '_shares', type: 'uint256' }],
     name: 'previewRedeem',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function'
   },
   {
-    inputs: [{ internalType: 'uint256', name: 'assets', type: 'uint256' }],
+    inputs: [{ internalType: 'uint256', name: '_assets', type: 'uint256' }],
     name: 'previewWithdraw',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
@@ -439,10 +405,7 @@ export const vaultABI = [
     type: 'function'
   },
   {
-    inputs: [
-      { internalType: 'uint256', name: '_assets', type: 'uint256' },
-      { internalType: 'address', name: '_receiver', type: 'address' }
-    ],
+    inputs: [{ internalType: 'uint256', name: '_assets', type: 'uint256' }],
     name: 'sponsor',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'nonpayable',
@@ -451,7 +414,7 @@ export const vaultABI = [
   {
     inputs: [
       { internalType: 'uint256', name: '_assets', type: 'uint256' },
-      { internalType: 'address', name: '_receiver', type: 'address' },
+      { internalType: 'address', name: '_owner', type: 'address' },
       { internalType: 'uint256', name: '_deadline', type: 'uint256' },
       { internalType: 'uint8', name: '_v', type: 'uint8' },
       { internalType: 'bytes32', name: '_r', type: 'bytes32' },
@@ -464,13 +427,20 @@ export const vaultABI = [
   },
   {
     inputs: [],
+    name: 'sweep',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [],
     name: 'symbol',
     outputs: [{ internalType: 'string', name: '', type: 'string' }],
     stateMutability: 'view',
     type: 'function'
   },
   {
-    inputs: [{ internalType: 'address', name: '_token', type: 'address' }],
+    inputs: [{ internalType: 'address', name: '', type: 'address' }],
     name: 'targetOf',
     outputs: [{ internalType: 'address', name: '', type: 'address' }],
     stateMutability: 'view',
@@ -552,7 +522,7 @@ export const vaultABI = [
   },
   {
     inputs: [],
-    name: 'yieldFeeTotalSupply',
+    name: 'yieldFeeShares',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function'
@@ -577,8 +547,8 @@ export const vaultABI = [
   {
     anonymous: false,
     inputs: [
-      { indexed: false, internalType: 'address', name: 'previousClaimer', type: 'address' },
-      { indexed: false, internalType: 'address', name: 'newClaimer', type: 'address' }
+      { indexed: true, internalType: 'address', name: 'previousClaimer', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'newClaimer', type: 'address' }
     ],
     name: 'ClaimerSet',
     type: 'event'
@@ -599,7 +569,7 @@ export const vaultABI = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
+        indexed: true,
         internalType: 'contract ILiquidationPair',
         name: 'newLiquidationPair',
         type: 'address'
@@ -657,21 +627,15 @@ export const vaultABI = [
   },
   {
     anonymous: false,
-    inputs: [{ indexed: false, internalType: 'uint256', name: 'exchangeRate', type: 'uint256' }],
-    name: 'RecordedExchangeRate',
-    type: 'event'
-  },
-  {
-    anonymous: false,
     inputs: [
-      { indexed: false, internalType: 'address', name: 'account', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'account', type: 'address' },
       {
         components: [
           { internalType: 'bool', name: 'useBeforeClaimPrize', type: 'bool' },
           { internalType: 'bool', name: 'useAfterClaimPrize', type: 'bool' },
           { internalType: 'contract IVaultHooks', name: 'implementation', type: 'address' }
         ],
-        indexed: false,
+        indexed: true,
         internalType: 'struct VaultHooks',
         name: 'hooks',
         type: 'tuple'
@@ -684,11 +648,19 @@ export const vaultABI = [
     anonymous: false,
     inputs: [
       { indexed: true, internalType: 'address', name: 'caller', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'receiver', type: 'address' },
       { indexed: false, internalType: 'uint256', name: 'assets', type: 'uint256' },
       { indexed: false, internalType: 'uint256', name: 'shares', type: 'uint256' }
     ],
     name: 'Sponsor',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'caller', type: 'address' },
+      { indexed: false, internalType: 'uint256', name: 'assets', type: 'uint256' }
+    ],
+    name: 'Sweep',
     type: 'event'
   },
   {
@@ -731,15 +703,25 @@ export const vaultABI = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
+        indexed: true,
         internalType: 'address',
         name: 'previousYieldFeeRecipient',
         type: 'address'
       },
-      { indexed: false, internalType: 'address', name: 'newYieldFeeRecipient', type: 'address' }
+      { indexed: true, internalType: 'address', name: 'newYieldFeeRecipient', type: 'address' }
     ],
     name: 'YieldFeeRecipientSet',
     type: 'event'
+  },
+  {
+    inputs: [{ internalType: 'bytes', name: 'reason', type: 'bytes' }],
+    name: 'AfterClaimPrizeFailed',
+    type: 'error'
+  },
+  {
+    inputs: [{ internalType: 'bytes', name: 'reason', type: 'bytes' }],
+    name: 'BeforeClaimPrizeFailed',
+    type: 'error'
   },
   {
     inputs: [
@@ -802,6 +784,7 @@ export const vaultABI = [
     name: 'MintMoreThanMax',
     type: 'error'
   },
+  { inputs: [], name: 'MintZeroShares', type: 'error' },
   { inputs: [], name: 'OwnerZeroAddress', type: 'error' },
   { inputs: [], name: 'PrizePoolZeroAddress', type: 'error' },
   {
@@ -818,8 +801,25 @@ export const vaultABI = [
     name: 'StringTooLong',
     type: 'error'
   },
+  { inputs: [], name: 'SweepZeroAssets', type: 'error' },
   { inputs: [], name: 'TwabControllerZeroAddress', type: 'error' },
+  {
+    inputs: [
+      { internalType: 'address', name: 'asset', type: 'address' },
+      { internalType: 'address', name: 'yieldVaultAsset', type: 'address' }
+    ],
+    name: 'UnderlyingAssetMismatch',
+    type: 'error'
+  },
   { inputs: [], name: 'VaultUnderCollateralized', type: 'error' },
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'requestedAssets', type: 'uint256' },
+      { internalType: 'uint256', name: 'withdrawnAssets', type: 'uint256' }
+    ],
+    name: 'WithdrawAssetsLTRequested',
+    type: 'error'
+  },
   {
     inputs: [
       { internalType: 'address', name: 'owner', type: 'address' },
@@ -829,12 +829,29 @@ export const vaultABI = [
     name: 'WithdrawMoreThanMax',
     type: 'error'
   },
+  { inputs: [], name: 'WithdrawZeroAssets', type: 'error' },
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'withdrawableAssets', type: 'uint256' },
+      { internalType: 'uint256', name: 'expectedWithdrawableAssets', type: 'uint256' }
+    ],
+    name: 'YVWithdrawableAssetsLTExpected',
+    type: 'error'
+  },
   {
     inputs: [
       { internalType: 'uint256', name: 'shares', type: 'uint256' },
-      { internalType: 'uint256', name: 'yieldFeeTotalSupply', type: 'uint256' }
+      { internalType: 'uint256', name: 'yieldFeeShares', type: 'uint256' }
     ],
-    name: 'YieldFeeGTAvailable',
+    name: 'YieldFeeGTAvailableShares',
+    type: 'error'
+  },
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'assets', type: 'uint256' },
+      { internalType: 'uint256', name: 'availableYield', type: 'uint256' }
+    ],
+    name: 'YieldFeeGTAvailableYield',
     type: 'error'
   },
   {
@@ -842,7 +859,7 @@ export const vaultABI = [
       { internalType: 'uint256', name: 'yieldFeePercentage', type: 'uint256' },
       { internalType: 'uint256', name: 'maxYieldFeePercentage', type: 'uint256' }
     ],
-    name: 'YieldFeePercentageGTPrecision',
+    name: 'YieldFeePercentageGtePrecision',
     type: 'error'
   },
   { inputs: [], name: 'YieldVaultZeroAddress', type: 'error' }

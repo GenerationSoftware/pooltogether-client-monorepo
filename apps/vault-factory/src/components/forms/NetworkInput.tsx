@@ -47,7 +47,8 @@ interface NetworkCardProps {
 }
 
 const networkDescriptions: Record<SupportedNetwork, ReactNode> = {
-  [NETWORK.sepolia]: 'This is the main testnet used to try out the PoolTogether Hyperstructure.'
+  [NETWORK['optimism-goerli']]:
+    'This is the main testnet used to try out the PoolTogether Hyperstructure.'
 }
 
 const NetworkCard = (props: NetworkCardProps) => {

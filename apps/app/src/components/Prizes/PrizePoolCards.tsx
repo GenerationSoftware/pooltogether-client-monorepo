@@ -26,7 +26,7 @@ export const PrizePoolCards = () => {
           <Link
             key={`pp-${prizePool.id}`}
             href={`/prizes?network=${prizePool.chainId}`}
-            className='w-full max-w-sm'
+            className='w-full'
           >
             <PrizePoolCard prizePool={prizePool} intl={t} />
           </Link>

@@ -32,6 +32,13 @@ export const vaultFactoryABI = [
     type: 'function'
   },
   {
+    inputs: [{ internalType: 'address', name: '', type: 'address' }],
+    name: 'deployerNonces',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
     inputs: [],
     name: 'totalVaults',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],

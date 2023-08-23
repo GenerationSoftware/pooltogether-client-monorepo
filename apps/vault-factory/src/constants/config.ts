@@ -17,12 +17,12 @@ import {
 } from '@rainbow-me/rainbowkit/wallets'
 import { SupportedNetwork } from 'src/types'
 import { Address, parseUnits } from 'viem'
-import { arbitrum, Chain, mainnet, optimism, polygon, sepolia } from 'wagmi/chains'
+import { arbitrum, Chain, mainnet, optimism, optimismGoerli, polygon } from 'wagmi/chains'
 
 /**
  * Supported networks
  */
-export const SUPPORTED_NETWORKS = [NETWORK.sepolia] as const
+export const SUPPORTED_NETWORKS = [NETWORK['optimism-goerli']] as const
 
 /**
  * Wagmi networks
@@ -32,7 +32,7 @@ export const WAGMI_CHAINS = {
   [NETWORK.polygon]: polygon,
   [NETWORK.optimism]: optimism,
   [NETWORK.arbitrum]: arbitrum,
-  [NETWORK.sepolia]: sepolia
+  [NETWORK['optimism-goerli']]: optimismGoerli
 } as const
 
 /**
@@ -64,7 +64,7 @@ export const RPC_URLS = {
   [NETWORK.polygon]: process.env.NEXT_PUBLIC_POLYGON_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
   [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
-  [NETWORK.sepolia]: process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL
+  [NETWORK['optimism-goerli']]: process.env.NEXT_PUBLIC_OPTIMISM_GOERLI_RPC_URL
 } as const
 
 /**
@@ -78,10 +78,10 @@ export const CONTRACTS: Record<
     claimer: Address
   }
 > = {
-  [NETWORK.sepolia]: {
-    prizePool: '0x858029ed93B97D9015A63A5CC63E5872EE67F88c',
-    twabController: '0xB56D699B27ca6ee4a76e68e585999E552105C10f',
-    claimer: '0x91b718F250A74Ad80da828d7D60b13993275d43c'
+  [NETWORK['optimism-goerli']]: {
+    prizePool: '0x6A62cd64Acb8bAb35C21e9114A7F9d97e7FaB987',
+    twabController: '0x1F4823b8254bB008C36961f64D50e5a0e824949C',
+    claimer: '0xbDe2D03FB278C8f9D492358E0eB1f863035892EF'
   }
 }
 
@@ -96,7 +96,7 @@ export const LOCAL_STORAGE_KEYS = {
  * Default liquidation pair config
  */
 export const LP_CONFIG = {
-  targetFirstSaleTimeFraction: 0.2,
-  decayConstant: parseUnits('0.018', 18),
+  targetFirstSaleTimeFraction: 0.5,
+  decayConstant: parseUnits('0.0015', 18),
   liquidationGasAmount: 100_000n
 }

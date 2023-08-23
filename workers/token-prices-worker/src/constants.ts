@@ -9,12 +9,12 @@ export const DEFAULT_HEADERS = {
   }
 }
 
-export const SUPPORTED_NETWORKS = [1, 10, 11155111] as const
+export const SUPPORTED_NETWORKS = [1, 10, 420] as const
 
 export const KV_PRICE_KEYS = {
   1: 'mainnet',
   10: 'optimism',
-  11155111: 'sepolia'
+  420: 'optimism-goerli'
 } as const
 
 export const KV_ADDRESS_KEYS = {

@@ -15,8 +15,8 @@ export const liquidationPairFactoryABI = [
       { internalType: 'uint32', name: '_periodOffset', type: 'uint32' },
       { internalType: 'uint32', name: '_targetFirstSaleTime', type: 'uint32' },
       { internalType: 'SD59x18', name: '_decayConstant', type: 'int256' },
-      { internalType: 'uint112', name: '_initialAmountIn', type: 'uint112' },
-      { internalType: 'uint112', name: '_initialAmountOut', type: 'uint112' },
+      { internalType: 'uint104', name: '_initialAmountIn', type: 'uint104' },
+      { internalType: 'uint104', name: '_initialAmountOut', type: 'uint104' },
       { internalType: 'uint256', name: '_minimumAuctionAmount', type: 'uint256' }
     ],
     name: 'createPair',
@@ -54,8 +54,8 @@ export const liquidationPairFactoryABI = [
       { indexed: false, internalType: 'uint32', name: 'periodOffset', type: 'uint32' },
       { indexed: false, internalType: 'uint32', name: 'targetFirstSaleTime', type: 'uint32' },
       { indexed: false, internalType: 'SD59x18', name: 'decayConstant', type: 'int256' },
-      { indexed: false, internalType: 'uint112', name: 'initialAmountIn', type: 'uint112' },
-      { indexed: false, internalType: 'uint112', name: 'initialAmountOut', type: 'uint112' },
+      { indexed: false, internalType: 'uint104', name: 'initialAmountIn', type: 'uint104' },
+      { indexed: false, internalType: 'uint104', name: 'initialAmountOut', type: 'uint104' },
       { indexed: false, internalType: 'uint256', name: 'minimumAuctionAmount', type: 'uint256' }
     ],
     name: 'PairCreated',

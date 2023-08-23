@@ -25,50 +25,8 @@ export const prizePoolABI = [
   },
   {
     inputs: [],
-    name: 'canaryClaimCount',
-    outputs: [{ internalType: 'uint32', name: '', type: 'uint32' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [{ internalType: 'uint8', name: '_numTiers', type: 'uint8' }],
-    name: 'canaryPrizeCount',
-    outputs: [{ internalType: 'uint32', name: '', type: 'uint32' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [],
-    name: 'canaryPrizeCount',
-    outputs: [{ internalType: 'uint32', name: '', type: 'uint32' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [{ internalType: 'uint8', name: 'numTiers', type: 'uint8' }],
-    name: 'canaryPrizeCountFractional',
-    outputs: [{ internalType: 'UD60x18', name: '', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [],
-    name: 'canaryShares',
-    outputs: [{ internalType: 'uint8', name: '', type: 'uint8' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [],
     name: 'claimCount',
     outputs: [{ internalType: 'uint32', name: '', type: 'uint32' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [],
-    name: 'claimExpansionThreshold',
-    outputs: [{ internalType: 'UD2x18', name: '', type: 'uint64' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -89,8 +47,15 @@ export const prizePoolABI = [
   {
     inputs: [{ internalType: 'uint256', name: 'winningRandomNumber_', type: 'uint256' }],
     name: 'closeDraw',
-    outputs: [{ internalType: 'uint16', name: '', type: 'uint16' }],
+    outputs: [{ internalType: 'uint24', name: '', type: 'uint24' }],
     stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [{ internalType: 'uint32', name: '_claimCount', type: 'uint32' }],
+    name: 'computeNextNumberOfTiers',
+    outputs: [{ internalType: 'uint8', name: '', type: 'uint8' }],
+    stateMutability: 'view',
     type: 'function'
   },
   {
@@ -100,6 +65,13 @@ export const prizePoolABI = [
     ],
     name: 'contributePrizeTokens',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [{ internalType: 'uint96', name: '_amount', type: 'uint96' }],
+    name: 'contributeReserve',
+    outputs: [],
     stateMutability: 'nonpayable',
     type: 'function'
   },
@@ -118,10 +90,17 @@ export const prizePoolABI = [
     type: 'function'
   },
   {
+    inputs: [],
+    name: 'estimateNextNumberOfTiers',
+    outputs: [{ internalType: 'uint8', name: '', type: 'uint8' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
     inputs: [{ internalType: 'uint8', name: 'numTiers', type: 'uint8' }],
     name: 'estimatedPrizeCount',
     outputs: [{ internalType: 'uint32', name: '', type: 'uint32' }],
-    stateMutability: 'pure',
+    stateMutability: 'view',
     type: 'function'
   },
   {
@@ -159,7 +138,7 @@ export const prizePoolABI = [
   {
     inputs: [],
     name: 'getOpenDrawId',
-    outputs: [{ internalType: 'uint16', name: '', type: 'uint16' }],
+    outputs: [{ internalType: 'uint24', name: '', type: 'uint24' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -177,16 +156,6 @@ export const prizePoolABI = [
     ],
     name: 'getTierOdds',
     outputs: [{ internalType: 'SD59x18', name: '', type: 'int256' }],
-    stateMutability: 'pure',
-    type: 'function'
-  },
-  {
-    inputs: [
-      { internalType: 'uint8', name: '_tier', type: 'uint8' },
-      { internalType: 'uint8', name: '_numberOfTiers', type: 'uint8' }
-    ],
-    name: 'getTierPrizeCount',
-    outputs: [{ internalType: 'uint32', name: '', type: 'uint32' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -200,7 +169,7 @@ export const prizePoolABI = [
   {
     inputs: [{ internalType: 'uint8', name: '_tier', type: 'uint8' }],
     name: 'getTierPrizeSize',
-    outputs: [{ internalType: 'uint96', name: '', type: 'uint96' }],
+    outputs: [{ internalType: 'uint104', name: '', type: 'uint104' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -238,8 +207,8 @@ export const prizePoolABI = [
   {
     inputs: [
       { internalType: 'address', name: '_vault', type: 'address' },
-      { internalType: 'uint16', name: '_startDrawId', type: 'uint16' },
-      { internalType: 'uint16', name: '_endDrawId', type: 'uint16' }
+      { internalType: 'uint24', name: '_startDrawId', type: 'uint24' },
+      { internalType: 'uint24', name: '_endDrawId', type: 'uint24' }
     ],
     name: 'getVaultPortion',
     outputs: [{ internalType: 'SD59x18', name: '', type: 'int256' }],
@@ -269,16 +238,16 @@ export const prizePoolABI = [
   },
   {
     inputs: [],
-    name: 'hasOpenDrawFinished',
-    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+    name: 'grandPrizePeriodDraws',
+    outputs: [{ internalType: 'uint24', name: '', type: 'uint24' }],
     stateMutability: 'view',
     type: 'function'
   },
   {
-    inputs: [{ internalType: 'uint104', name: '_amount', type: 'uint104' }],
-    name: 'increaseReserve',
-    outputs: [],
-    stateMutability: 'nonpayable',
+    inputs: [],
+    name: 'hasOpenDrawFinished',
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+    stateMutability: 'view',
     type: 'function'
   },
   {
@@ -290,13 +259,6 @@ export const prizePoolABI = [
     ],
     name: 'isWinner',
     outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [],
-    name: 'largestTierClaimed',
-    outputs: [{ internalType: 'uint8', name: '', type: 'uint8' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -318,13 +280,6 @@ export const prizePoolABI = [
     inputs: [],
     name: 'lastClosedDrawStartedAt',
     outputs: [{ internalType: 'uint64', name: '', type: 'uint64' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [],
-    name: 'nextNumberOfTiers',
-    outputs: [{ internalType: 'uint8', name: '', type: 'uint8' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -366,7 +321,7 @@ export const prizePoolABI = [
   {
     inputs: [],
     name: 'reserve',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    outputs: [{ internalType: 'uint96', name: '', type: 'uint96' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -444,7 +399,7 @@ export const prizePoolABI = [
   {
     inputs: [
       { internalType: 'address', name: '_to', type: 'address' },
-      { internalType: 'uint104', name: '_amount', type: 'uint104' }
+      { internalType: 'uint96', name: '_amount', type: 'uint96' }
     ],
     name: 'withdrawReserve',
     outputs: [],
@@ -454,60 +409,15 @@ export const prizePoolABI = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'vault',
-        type: 'address'
-      },
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'winner',
-        type: 'address'
-      },
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'recipient',
-        type: 'address'
-      },
-      {
-        indexed: false,
-        internalType: 'uint16',
-        name: 'drawId',
-        type: 'uint16'
-      },
-      {
-        indexed: false,
-        internalType: 'uint8',
-        name: 'tier',
-        type: 'uint8'
-      },
-      {
-        indexed: false,
-        internalType: 'uint32',
-        name: 'prizeIndex',
-        type: 'uint32'
-      },
-      {
-        indexed: false,
-        internalType: 'uint152',
-        name: 'payout',
-        type: 'uint152'
-      },
-      {
-        indexed: false,
-        internalType: 'uint96',
-        name: 'fee',
-        type: 'uint96'
-      },
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'feeRecipient',
-        type: 'address'
-      }
+      { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'winner', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'recipient', type: 'address' },
+      { indexed: false, internalType: 'uint24', name: 'drawId', type: 'uint24' },
+      { indexed: false, internalType: 'uint8', name: 'tier', type: 'uint8' },
+      { indexed: false, internalType: 'uint32', name: 'prizeIndex', type: 'uint32' },
+      { indexed: false, internalType: 'uint152', name: 'payout', type: 'uint152' },
+      { indexed: false, internalType: 'uint96', name: 'fee', type: 'uint96' },
+      { indexed: false, internalType: 'address', name: 'feeRecipient', type: 'address' }
     ],
     name: 'ClaimedPrize',
     type: 'event'
@@ -515,24 +425,9 @@ export const prizePoolABI = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'vault',
-        type: 'address'
-      },
-      {
-        indexed: true,
-        internalType: 'uint16',
-        name: 'drawId',
-        type: 'uint16'
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256'
-      }
+      { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
+      { indexed: true, internalType: 'uint24', name: 'drawId', type: 'uint24' },
+      { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }
     ],
     name: 'ContributePrizeTokens',
     type: 'event'
@@ -540,137 +435,53 @@ export const prizePoolABI = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: true,
-        internalType: 'uint16',
-        name: 'drawId',
-        type: 'uint16'
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'winningRandomNumber',
-        type: 'uint256'
-      },
-      {
-        indexed: false,
-        internalType: 'uint8',
-        name: 'numTiers',
-        type: 'uint8'
-      },
-      {
-        indexed: false,
-        internalType: 'uint8',
-        name: 'nextNumTiers',
-        type: 'uint8'
-      },
-      {
-        indexed: false,
-        internalType: 'uint104',
-        name: 'reserve',
-        type: 'uint104'
-      },
-      {
-        indexed: false,
-        internalType: 'UD34x4',
-        name: 'prizeTokensPerShare',
-        type: 'uint128'
-      },
-      {
-        indexed: false,
-        internalType: 'uint64',
-        name: 'drawStartedAt',
-        type: 'uint64'
-      }
+      { indexed: true, internalType: 'address', name: 'user', type: 'address' },
+      { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }
+    ],
+    name: 'ContributedReserve',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'uint24', name: 'drawId', type: 'uint24' },
+      { indexed: false, internalType: 'uint256', name: 'winningRandomNumber', type: 'uint256' },
+      { indexed: false, internalType: 'uint8', name: 'numTiers', type: 'uint8' },
+      { indexed: false, internalType: 'uint8', name: 'nextNumTiers', type: 'uint8' },
+      { indexed: false, internalType: 'uint104', name: 'reserve', type: 'uint104' },
+      { indexed: false, internalType: 'UD34x4', name: 'prizeTokensPerShare', type: 'uint128' },
+      { indexed: false, internalType: 'uint64', name: 'drawStartedAt', type: 'uint64' }
     ],
     name: 'DrawClosed',
     type: 'event'
   },
   {
     anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'drawManager',
-        type: 'address'
-      }
-    ],
+    inputs: [{ indexed: true, internalType: 'address', name: 'drawManager', type: 'address' }],
     name: 'DrawManagerSet',
     type: 'event'
   },
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'to',
-        type: 'address'
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256'
-      }
+      { indexed: true, internalType: 'address', name: 'to', type: 'address' },
+      { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }
     ],
     name: 'IncreaseClaimRewards',
     type: 'event'
   },
   {
     anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: 'address',
-        name: 'user',
-        type: 'address'
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256'
-      }
-    ],
-    name: 'IncreaseReserve',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256'
-      }
-    ],
+    inputs: [{ indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }],
     name: 'ReserveConsumed',
     type: 'event'
   },
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'to',
-        type: 'address'
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256'
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'available',
-        type: 'uint256'
-      }
+      { indexed: true, internalType: 'address', name: 'to', type: 'address' },
+      { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' },
+      { indexed: false, internalType: 'uint256', name: 'available', type: 'uint256' }
     ],
     name: 'WithdrawClaimRewards',
     type: 'event'
@@ -678,33 +489,128 @@ export const prizePoolABI = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'to',
-        type: 'address'
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256'
-      }
+      { indexed: true, internalType: 'address', name: 'to', type: 'address' },
+      { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }
     ],
     name: 'WithdrawReserve',
     type: 'event'
   },
-  { inputs: [], name: 'AuctionDurationZero', type: 'error' },
-  { inputs: [], name: 'AuctionExpired', type: 'error' },
+  { inputs: [], name: 'AddToDrawZero', type: 'error' },
   {
     inputs: [
-      { internalType: 'uint64', name: 'auctionDuration', type: 'uint64' },
-      { internalType: 'uint64', name: 'auctionTargetTime', type: 'uint64' }
+      { internalType: 'address', name: 'caller', type: 'address' },
+      { internalType: 'address', name: 'drawManager', type: 'address' }
     ],
-    name: 'AuctionTargetTimeExceedsDuration',
+    name: 'CallerNotDrawManager',
     type: 'error'
   },
-  { inputs: [], name: 'AuctionTargetTimeZero', type: 'error' },
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'amount', type: 'uint256' },
+      { internalType: 'uint256', name: 'available', type: 'uint256' }
+    ],
+    name: 'ContributionGTDeltaBalance',
+    type: 'error'
+  },
+  {
+    inputs: [
+      { internalType: 'address', name: 'vault', type: 'address' },
+      { internalType: 'address', name: 'winner', type: 'address' },
+      { internalType: 'uint8', name: 'tier', type: 'uint8' },
+      { internalType: 'uint32', name: 'prizeIndex', type: 'uint32' }
+    ],
+    name: 'DidNotWin',
+    type: 'error'
+  },
+  {
+    inputs: [
+      { internalType: 'uint24', name: 'drawId', type: 'uint24' },
+      { internalType: 'uint24', name: 'newestDrawId', type: 'uint24' }
+    ],
+    name: 'DrawClosed',
+    type: 'error'
+  },
+  { inputs: [], name: 'DrawManagerAlreadySet', type: 'error' },
+  {
+    inputs: [
+      { internalType: 'uint64', name: 'drawEndsAt', type: 'uint64' },
+      { internalType: 'uint64', name: 'errorTimestamp', type: 'uint64' }
+    ],
+    name: 'DrawNotFinished',
+    type: 'error'
+  },
+  { inputs: [], name: 'FeeRecipientZeroAddress', type: 'error' },
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'fee', type: 'uint256' },
+      { internalType: 'uint256', name: 'maxFee', type: 'uint256' }
+    ],
+    name: 'FeeTooLarge',
+    type: 'error'
+  },
+  {
+    inputs: [{ internalType: 'uint104', name: 'requestedLiquidity', type: 'uint104' }],
+    name: 'InsufficientLiquidity',
+    type: 'error'
+  },
+  {
+    inputs: [
+      { internalType: 'uint104', name: 'amount', type: 'uint104' },
+      { internalType: 'uint104', name: 'reserve', type: 'uint104' }
+    ],
+    name: 'InsufficientReserve',
+    type: 'error'
+  },
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'requested', type: 'uint256' },
+      { internalType: 'uint256', name: 'available', type: 'uint256' }
+    ],
+    name: 'InsufficientRewardsError',
+    type: 'error'
+  },
+  {
+    inputs: [{ internalType: 'uint24', name: 'endDrawId', type: 'uint24' }],
+    name: 'InvalidDisbursedEndDrawId',
+    type: 'error'
+  },
+  {
+    inputs: [
+      { internalType: 'uint24', name: 'startDrawId', type: 'uint24' },
+      { internalType: 'uint24', name: 'endDrawId', type: 'uint24' }
+    ],
+    name: 'InvalidDrawRange',
+    type: 'error'
+  },
+  {
+    inputs: [
+      { internalType: 'uint32', name: 'invalidPrizeIndex', type: 'uint32' },
+      { internalType: 'uint32', name: 'prizeCount', type: 'uint32' },
+      { internalType: 'uint8', name: 'tier', type: 'uint8' }
+    ],
+    name: 'InvalidPrizeIndex',
+    type: 'error'
+  },
+  {
+    inputs: [
+      { internalType: 'uint8', name: 'tier', type: 'uint8' },
+      { internalType: 'uint8', name: 'numberOfTiers', type: 'uint8' }
+    ],
+    name: 'InvalidTier',
+    type: 'error'
+  },
+  { inputs: [], name: 'NoClosedDraw', type: 'error' },
+  { inputs: [], name: 'NotDeployer', type: 'error' },
+  {
+    inputs: [{ internalType: 'uint8', name: 'numTiers', type: 'uint8' }],
+    name: 'NumberOfTiersGreaterThanMaximum',
+    type: 'error'
+  },
+  {
+    inputs: [{ internalType: 'uint8', name: 'numTiers', type: 'uint8' }],
+    name: 'NumberOfTiersLessThanMinimum',
+    type: 'error'
+  },
   {
     inputs: [
       { internalType: 'uint256', name: 'x', type: 'uint256' },
@@ -723,11 +629,64 @@ export const prizePoolABI = [
     type: 'error'
   },
   {
+    inputs: [{ internalType: 'SD59x18', name: 'x', type: 'int256' }],
+    name: 'PRBMath_SD59x18_Ceil_Overflow',
+    type: 'error'
+  },
+  {
+    inputs: [{ internalType: 'int256', name: 'x', type: 'int256' }],
+    name: 'PRBMath_SD59x18_Convert_Overflow',
+    type: 'error'
+  },
+  {
+    inputs: [{ internalType: 'int256', name: 'x', type: 'int256' }],
+    name: 'PRBMath_SD59x18_Convert_Underflow',
+    type: 'error'
+  },
+  { inputs: [], name: 'PRBMath_SD59x18_Div_InputTooSmall', type: 'error' },
+  {
+    inputs: [
+      { internalType: 'SD59x18', name: 'x', type: 'int256' },
+      { internalType: 'SD59x18', name: 'y', type: 'int256' }
+    ],
+    name: 'PRBMath_SD59x18_Div_Overflow',
+    type: 'error'
+  },
+  {
+    inputs: [{ internalType: 'SD59x18', name: 'x', type: 'int256' }],
+    name: 'PRBMath_SD59x18_Exp2_InputTooBig',
+    type: 'error'
+  },
+  {
+    inputs: [{ internalType: 'SD59x18', name: 'x', type: 'int256' }],
+    name: 'PRBMath_SD59x18_Log_InputTooSmall',
+    type: 'error'
+  },
+  { inputs: [], name: 'PRBMath_SD59x18_Mul_InputTooSmall', type: 'error' },
+  {
+    inputs: [
+      { internalType: 'SD59x18', name: 'x', type: 'int256' },
+      { internalType: 'SD59x18', name: 'y', type: 'int256' }
+    ],
+    name: 'PRBMath_SD59x18_Mul_Overflow',
+    type: 'error'
+  },
+  {
+    inputs: [{ internalType: 'uint256', name: 'x', type: 'uint256' }],
+    name: 'PRBMath_UD34x4_fromUD60x18_Convert_Overflow',
+    type: 'error'
+  },
+  {
     inputs: [{ internalType: 'uint256', name: 'x', type: 'uint256' }],
     name: 'PRBMath_UD60x18_Convert_Overflow',
     type: 'error'
   },
-  { inputs: [], name: 'PrizePoolZeroAddress', type: 'error' },
-  { inputs: [], name: 'RngRelayerZeroAddress', type: 'error' },
-  { inputs: [], name: 'SequenceAlreadyCompleted', type: 'error' }
+  { inputs: [], name: 'PrizeIsZero', type: 'error' },
+  { inputs: [], name: 'RandomNumberIsZero', type: 'error' },
+  {
+    inputs: [{ internalType: 'int64', name: 'smoothing', type: 'int64' }],
+    name: 'SmoothingGTEOne',
+    type: 'error'
+  },
+  { inputs: [], name: 'UpperBoundGtZero', type: 'error' }
 ] as const
