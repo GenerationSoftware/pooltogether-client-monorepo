@@ -9,7 +9,7 @@ import { QUERY_KEYS } from '../constants'
 /**
  * Returns prize pool draws and their timestamps
  * @param prizePool instance of the `PrizePool` class
- * @param refetchInterval optional refetch interval
+ * @param refetchInterval optional refetch interval in ms
  * @returns
  */
 export const usePrizeDrawTimestamps = (
@@ -20,6 +20,6 @@ export const usePrizeDrawTimestamps = (
 
   return useQuery(queryKey, async () => await getPrizePoolDrawTimestamps(prizePool?.chainId), {
     enabled: !!prizePool,
-    refetchInterval
+    refetchInterval: refetchInterval ?? false
   })
 }

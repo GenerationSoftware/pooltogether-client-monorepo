@@ -1,4 +1,4 @@
-import { PrizePool, sToMs } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@pooltogether/hyperstructure-client-js'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import { useDrawPeriod } from '..'
 import { QUERY_KEYS } from '../constants'
@@ -6,7 +6,7 @@ import { QUERY_KEYS } from '../constants'
 /**
  * Returns the start and end timestamps of a prize pool's last draw (in seconds)
  * @param prizePool instance of the `PrizePool` class
- * @param refetchInterval optional refetch interval in ms (default is 300000ms or 5mins)
+ * @param refetchInterval optional refetch interval in ms
  * @returns
  */
 export const useLastDrawTimestamps = (
@@ -27,7 +27,7 @@ export const useLastDrawTimestamps = (
       return { start, end }
     },
     {
-      refetchInterval: refetchInterval ?? sToMs(300),
+      refetchInterval: refetchInterval ?? false,
       enabled
     }
   )

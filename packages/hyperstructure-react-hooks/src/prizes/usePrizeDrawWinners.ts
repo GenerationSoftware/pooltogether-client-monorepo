@@ -27,7 +27,7 @@ export const usePrizeDrawWinners = (
     queryKey,
     async () => await getPrizePoolHistoricalWins(prizePool?.chainId, options),
     {
-      refetchInterval: options?.refetchInterval,
+      refetchInterval: options?.refetchInterval ?? false,
       enabled: !!prizePool
     }
   )

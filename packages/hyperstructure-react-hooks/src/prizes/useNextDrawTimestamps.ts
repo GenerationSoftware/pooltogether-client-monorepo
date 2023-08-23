@@ -1,34 +1,61 @@
-import { PrizePool, sToMs } from '@pooltogether/hyperstructure-client-js'
-import { useQuery, UseQueryResult } from '@tanstack/react-query'
-import { useDrawPeriod } from '..'
+import { PrizePool } from '@pooltogether/hyperstructure-client-js'
+import { msToS, sToMs } from '@shared/utilities'
+import { useQuery } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
+import { NO_REFETCH, useDrawPeriod } from '..'
 import { QUERY_KEYS } from '../constants'
 
 /**
  * Returns the start and end timestamps of a prize pool's next draw (in seconds)
  * @param prizePool instance of the `PrizePool` class
- * @param refetchInterval optional refetch interval in ms (default is 300000ms or 5mins)
  * @returns
  */
-export const useNextDrawTimestamps = (
-  prizePool: PrizePool,
-  refetchInterval?: number
-): UseQueryResult<{ start: number; end: number }, unknown> => {
-  const { data: drawPeriod, isFetched: isFetchedDrawPeriod } = useDrawPeriod(prizePool)
+export const useNextDrawTimestamps = (prizePool: PrizePool) => {
+  const [nextDrawStartTimestamp, setNextDrawStartTimestamp] = useState<number>(0)
 
-  const enabled = !!prizePool && isFetchedDrawPeriod && drawPeriod !== undefined
+  const { data: drawPeriod, isFetched: isFetchedDrawPeriod } = useDrawPeriod(prizePool)
 
   const queryKey = [QUERY_KEYS.nextDrawTimestamp, prizePool?.id]
 
-  return useQuery(
+  const { data: _nextDrawStartTimestamp, isFetched: isFetchedNextDrawStartTimestamp } = useQuery(
     queryKey,
     async () => {
-      const start = await prizePool.getNextDrawStartTimestamp()
-      const end = start + (drawPeriod ?? 0)
-      return { start, end }
+      const timestamp = await prizePool.getNextDrawStartTimestamp()
+      setNextDrawStartTimestamp(timestamp)
+      return timestamp
     },
     {
-      refetchInterval: refetchInterval ?? sToMs(300),
-      enabled
+      enabled: !!prizePool,
+      ...NO_REFETCH
     }
   )
+
+  const isFetched =
+    isFetchedDrawPeriod &&
+    isFetchedNextDrawStartTimestamp &&
+    !!drawPeriod &&
+    !!_nextDrawStartTimestamp &&
+    !!nextDrawStartTimestamp
+
+  useEffect(() => {
+    if (!!drawPeriod && !!_nextDrawStartTimestamp) {
+      const currentTime = new Date().getTime()
+      const timeUntilUpdate = sToMs(nextDrawStartTimestamp) - currentTime
+      if (timeUntilUpdate > 0) {
+        setTimeout(() => {
+          const timeDiff = currentTime + timeUntilUpdate - sToMs(_nextDrawStartTimestamp)
+          const updateCount = timeDiff >= 0 ? Math.floor(msToS(timeDiff) / drawPeriod) : 0
+          const newNextDrawStartTimestamp = _nextDrawStartTimestamp + drawPeriod * (updateCount + 1)
+          setNextDrawStartTimestamp(newNextDrawStartTimestamp)
+        }, timeUntilUpdate)
+      }
+    }
+  }, [drawPeriod, _nextDrawStartTimestamp, nextDrawStartTimestamp])
+
+  if (isFetched) {
+    const data = { start: nextDrawStartTimestamp, end: nextDrawStartTimestamp + drawPeriod }
+    return { data, isFetched }
+  } else {
+    return { isFetched }
+  }
 }
