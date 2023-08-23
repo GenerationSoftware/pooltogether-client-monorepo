@@ -83,7 +83,7 @@ export const CONTRACTS: Record<
     twabController: '0x1F4823b8254bB008C36961f64D50e5a0e824949C',
     claimer: '0xbDe2D03FB278C8f9D492358E0eB1f863035892EF'
   }
-}
+} as const
 
 /**
  * Local storage keys
