@@ -63,7 +63,7 @@ export const Navbar = (props: NavbarProps) => {
         </FlowbiteNavbar.Brand>
 
         {/* Middle Content */}
-        <div className='hidden grow pl-4 gap-8 z-10 md:flex lg:absolute lg:w-full lg:justify-center lg:pr-16 lg:pl-0'>
+        <div className='hidden grow pl-8 gap-8 z-10 md:flex lg:absolute lg:w-full lg:justify-center lg:pr-16 lg:pl-0'>
           <NavbarLinks
             links={links}
             activePage={activePage}
