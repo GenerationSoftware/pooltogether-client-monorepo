@@ -1,14 +1,15 @@
 import { TrashIcon } from '@heroicons/react/24/outline'
-import { VaultList } from '@pooltogether/hyperstructure-client-js'
 import {
   useCachedVaultLists,
-  useSelectedVaultListIds,
-  useVaultList
+  useSelectedVaultListIds
 } from '@pooltogether/hyperstructure-react-hooks'
+import { VaultList } from '@shared/types'
 import { Intl } from '@shared/types'
 import { BasicIcon, ExternalLink, Toggle } from '@shared/ui'
+import { getVaultList, NETWORK } from '@shared/utilities'
 import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { usePublicClient } from 'wagmi'
 import { ImportedBadge } from '../../../Badges/ImportedBadge'
 
 interface VaultListViewProps {
@@ -23,20 +24,24 @@ interface VaultListViewProps {
       | 'numTokens'
       | 'imported'
     >
-    forms?: Intl<'invalidSrc'>
+    forms?: Intl<'invalidSrc' | 'invalidVaultList'>
   }
 }
 
 export const VaultListView = (props: VaultListViewProps) => {
   const { localVaultLists, intl } = props
 
-  const { cachedVaultLists, remove } = useCachedVaultLists()
+  const mainnetPublicClient = usePublicClient({ chainId: NETWORK.mainnet })
 
-  const { localIds, importedIds, unselect } = useSelectedVaultListIds()
+  const { cachedVaultLists, cache, remove } = useCachedVaultLists()
+
+  const { localIds, importedIds, select, unselect } = useSelectedVaultListIds()
 
   const {
     register,
     handleSubmit,
+    setError,
+    clearErrors,
     reset,
     formState: { errors }
   } = useForm<{ src: string }>({
@@ -44,16 +49,34 @@ export const VaultListView = (props: VaultListViewProps) => {
     defaultValues: { src: '' }
   })
 
+  const [isImporting, setIsImporting] = useState<boolean>(false)
+
   const error =
     !!errors.src?.message && typeof errors.src?.message === 'string' ? errors.src?.message : null
 
-  const [newVaultList, setNewVaultList] = useState<{ src: string }>({ src: '' })
-  useVaultList(newVaultList.src)
+  const onSubmit = async (data: { src: string }) => {
+    setIsImporting(true)
+    clearErrors('src')
 
-  // TODO: the form should display some form of loading indicator instead of simply resetting on successful query
-  const onSubmit = (data: { src: string }) => {
-    setNewVaultList(data)
-    reset()
+    try {
+      const vaultList = await getVaultList(data.src, mainnetPublicClient)
+
+      if (!!vaultList) {
+        cache(data.src, vaultList)
+        select(data.src, 'imported')
+        reset()
+      } else {
+        setError('src', {
+          message: intl?.forms?.('invalidVaultList') ?? 'No valid vault list found'
+        })
+      }
+    } catch (err) {
+      setError('src', {
+        message: intl?.forms?.('invalidVaultList') ?? 'No valid vault list found'
+      })
+    } finally {
+      setIsImporting(false)
+    }
   }
 
   const importedVaultLists = useMemo(() => {
@@ -110,6 +133,7 @@ export const VaultListView = (props: VaultListViewProps) => {
           type='text'
           className='w-full text-sm bg-gray-50 text-pt-purple-900 px-4 py-3 rounded-lg focus:outline-none'
           placeholder={intl?.base?.('urlInput') ?? 'https:// or ipfs:// or ENS name'}
+          disabled={isImporting}
         />
         {!!error && <span className='text-sm text-pt-warning-light'>{error}</span>}
       </form>

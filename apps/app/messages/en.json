@@ -249,6 +249,7 @@
     "return": "Return to the Pool",
     "formErrors": {
       "invalidSrc": "Not a valid URL or ENS domain",
+      "invalidVaultList": "No valid vault list found",
       "notEnoughTokens": "Not enough {symbol} in wallet",
       "invalidNumber": "Enter a valid number",
       "negativeNumber": "Enter a positive number",
