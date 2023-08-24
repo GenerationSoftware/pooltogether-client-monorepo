@@ -9,12 +9,12 @@ import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
 import { VaultButtons } from '@components/Vault/VaultButtons'
 import { AccountVaultOdds } from './AccountVaultOdds'
 
-interface AccountVaultCardProps {
+interface AccountDepositsCardProps {
   vault: Vault
   address?: Address
 }
 
-export const AccountVaultCard = (props: AccountVaultCardProps) => {
+export const AccountDepositsCard = (props: AccountDepositsCardProps) => {
   const { vault, address } = props
 
   const router = useRouter()

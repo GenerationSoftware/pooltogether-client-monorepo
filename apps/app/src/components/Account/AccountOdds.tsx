@@ -6,12 +6,12 @@ import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 
-interface AccountDepositsOddsProps {
+interface AccountOddsProps {
   address?: Address
   className?: string
 }
 
-export const AccountDepositsOdds = (props: AccountDepositsOddsProps) => {
+export const AccountOdds = (props: AccountOddsProps) => {
   const { address, className } = props
 
   const t = useTranslations('Account')
@@ -30,16 +30,16 @@ export const AccountDepositsOdds = (props: AccountDepositsOddsProps) => {
     userAddress as Address
   )
 
-  if (isFetchedPrizeOdds && !!prizeOdds) {
+  if (isFetchedPrizeOdds && !!prizeOdds?.percent) {
     return (
       <div
         className={classNames(
-          'flex w-full items-center justify-between px-4 py-1 text-pt-purple-100 rounded-lg',
-          'md:py-6 md:bg-pt-bg-purple',
+          'w-full max-w-xl flex items-center justify-between px-4 py-1 text-pt-purple-100 rounded-lg',
+          'lg:max-w-none lg:py-6 lg:bg-pt-bg-purple',
           className
         )}
       >
-        <span className='text-xs md:text-base'>{t('dailyPrizeOdds')}</span>
+        <span className='text-xs lg:text-base'>{t('dailyPrizeOdds')}</span>
         <span>
           {t('oneInXChance', {
             number: formatNumberForDisplay(prizeOdds.oneInX, { maximumSignificantDigits: 3 })

@@ -6,14 +6,14 @@ import {
 import classNames from 'classnames'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
-import { AccountVaultCard } from './AccountVaultCard'
+import { AccountDepositsCard } from './AccountDepositsCard'
 
-interface AccountVaultsCardsProps {
+interface AccountDepositsCardsProps {
   address?: Address
   className?: string
 }
 
-export const AccountVaultCards = (props: AccountVaultsCardsProps) => {
+export const AccountDepositsCards = (props: AccountDepositsCardsProps) => {
   const { address, className } = props
 
   const { address: _userAddress } = useAccount()
@@ -33,7 +33,7 @@ export const AccountVaultCards = (props: AccountVaultsCardsProps) => {
         sortedVaults.map((vault) => {
           const shareBalance = vaultBalances[vault.id]?.amount ?? 0n
           if (shareBalance > 0n && vault.decimals !== undefined) {
-            return <AccountVaultCard key={vault.id} vault={vault} address={userAddress} />
+            return <AccountDepositsCard key={vault.id} vault={vault} address={userAddress} />
           }
         })}
     </div>
