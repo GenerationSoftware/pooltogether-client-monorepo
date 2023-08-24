@@ -97,6 +97,6 @@ export const LOCAL_STORAGE_KEYS = {
  */
 export const LP_CONFIG = {
   targetFirstSaleTimeFraction: 0.5,
-  decayConstant: parseUnits('0.0015', 18),
+  decayConstant: parseUnits('0.0001115', 18),
   liquidationGasAmount: 100_000n
 }
