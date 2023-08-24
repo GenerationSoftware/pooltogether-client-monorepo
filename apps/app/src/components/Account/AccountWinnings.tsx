@@ -1,8 +1,8 @@
-import { SubgraphPrizePoolAccount } from '@pooltogether/hyperstructure-client-js'
 import {
   useAllUserPrizePoolWins,
   useLastCheckedDrawIds
 } from '@pooltogether/hyperstructure-react-hooks'
+import { SubgraphPrize } from '@shared/types'
 import { ExternalLink, LINKS } from '@shared/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -38,8 +38,7 @@ export const AccountWinnings = (props: AccountWinningsProps) => {
   const isExternalUser = !!address && address.toLowerCase() !== _userAddress?.toLowerCase()
 
   const flattenedWins = useMemo(() => {
-    const flattenedWins: (SubgraphPrizePoolAccount['prizesReceived'][0] & { chainId: number })[] =
-      []
+    const flattenedWins: (SubgraphPrize & { chainId: number })[] = []
 
     for (const key in wins) {
       const chainId = parseInt(key)
@@ -48,14 +47,13 @@ export const AccountWinnings = (props: AccountWinningsProps) => {
         : 0
 
       wins[chainId].forEach((win) => {
-        const drawId = parseInt(win.draw.id)
-        if (drawId <= lastCheckedDrawId || isExternalUser) {
+        if (win.drawId <= lastCheckedDrawId || isExternalUser) {
           flattenedWins.push({ ...win, chainId })
         }
       })
     }
 
-    return flattenedWins.sort((a, b) => parseInt(b.timestamp) - parseInt(a.timestamp))
+    return flattenedWins.sort((a, b) => b.timestamp - a.timestamp)
   }, [wins, lastCheckedDrawIds, userAddress, isExternalUser])
 
   const isEmpty = isFetchedWins && !flattenedWins?.length

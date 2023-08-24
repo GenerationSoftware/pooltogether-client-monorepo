@@ -65,7 +65,7 @@ export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
       setTimeout(() => {
         for (const key in wins) {
           const chainId = parseInt(key)
-          const winningDrawIds = wins[chainId].map((w) => parseInt(w.draw.id))
+          const winningDrawIds = wins[chainId].map((w) => w.drawId)
           const drawIdsToCheck = drawsToCheck?.draws[chainId]?.map((d) => d.id) ?? []
           if (winningDrawIds.some((id) => drawIdsToCheck.indexOf(id) >= 0)) {
             setView('win')

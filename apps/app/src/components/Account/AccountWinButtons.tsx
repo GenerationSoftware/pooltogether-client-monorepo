@@ -1,14 +1,11 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
-import {
-  getBlockExplorerName,
-  getBlockExplorerUrl,
-  SubgraphPrizePoolAccount
-} from '@pooltogether/hyperstructure-client-js'
+import { SubgraphPrize } from '@shared/types'
 import { Button } from '@shared/ui'
+import { getBlockExplorerName, getBlockExplorerUrl } from '@shared/utilities'
 import { useTranslations } from 'next-intl'
 
 interface AccountWinButtonsProps {
-  win: SubgraphPrizePoolAccount['prizesReceived'][0] & { chainId: number }
+  win: SubgraphPrize & { chainId: number }
 }
 
 export const AccountWinButtons = (props: AccountWinButtonsProps) => {

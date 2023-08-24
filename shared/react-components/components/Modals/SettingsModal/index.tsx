@@ -38,7 +38,7 @@ export interface SettingsModalProps {
       | 'numTokens'
       | 'imported'
     >
-    forms?: Intl<'invalidSrc'>
+    forms?: Intl<'invalidSrc' | 'invalidVaultList'>
   }
 }
 

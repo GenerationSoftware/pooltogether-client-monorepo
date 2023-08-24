@@ -1,16 +1,14 @@
-import {
-  getBlockExplorerUrl,
-  PrizePool,
-  SubgraphPrizePoolAccount
-} from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@pooltogether/hyperstructure-client-js'
 import { NetworkIcon } from '@shared/react-components'
+import { SubgraphPrize } from '@shared/types'
 import { ExternalLink } from '@shared/ui'
 import { getSimpleDate } from '@shared/utilities'
+import { getBlockExplorerUrl } from '@shared/utilities'
 import { useTranslations } from 'next-intl'
 import { AccountWinAmount } from './AccountWinAmount'
 
 interface AccountWinCardProps {
-  win: SubgraphPrizePoolAccount['prizesReceived'][0] & { chainId: number }
+  win: SubgraphPrize & { chainId: number }
   prizePool: PrizePool
 }
 
@@ -22,7 +20,7 @@ export const AccountWinCard = (props: AccountWinCardProps) => {
   return (
     <div className='flex items-center gap-3 bg-pt-transparent rounded-lg p-3'>
       <NetworkIcon chainId={win.chainId} className='h-6 w-6' />
-      <span className='text-sm'>{getSimpleDate(parseInt(win.timestamp))}</span>
+      <span className='text-sm'>{getSimpleDate(win.timestamp)}</span>
       {/* TODO: add txHash once subgraph has it */}
       <ExternalLink
         // href={getBlockExplorerUrl(win.chainId, win.txHash, 'tx')}
@@ -33,7 +31,7 @@ export const AccountWinCard = (props: AccountWinCardProps) => {
       />
       <AccountWinAmount
         prizePool={prizePool}
-        amount={BigInt(win.payout)}
+        amount={win.payout}
         className='!items-end lg:!items-center'
         valueClassName='font-semibold lg:font-normal'
         amountClassName='font-xs font-light lg:font-sm lg:font-normal'

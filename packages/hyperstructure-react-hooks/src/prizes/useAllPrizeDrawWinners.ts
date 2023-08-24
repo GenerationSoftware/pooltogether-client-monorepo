@@ -1,6 +1,7 @@
-import { getPrizePoolHistoricalWins, PrizePool } from '@pooltogether/hyperstructure-client-js'
-import { SubgraphPrizePoolDraw } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@pooltogether/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
+import { SubgraphDraw } from '@shared/types'
+import { getSubgraphDraws } from '@shared/utilities'
 import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { QUERY_KEYS } from '../constants'
@@ -25,7 +26,7 @@ export const useAllPrizeDrawWinners = (
         queryKey: [QUERY_KEYS.drawWinners, prizePool?.chainId, JSON.stringify(options)],
         queryFn: async () => {
           const chainId = prizePool.chainId
-          const drawWinners = await getPrizePoolHistoricalWins(chainId, options)
+          const drawWinners = await getSubgraphDraws(chainId, options)
           return drawWinners
         },
         staleTime: Infinity,
@@ -40,7 +41,7 @@ export const useAllPrizeDrawWinners = (
     const refetch = () => results?.forEach((result) => result.refetch())
 
     const formattedData: {
-      [chainId: number]: SubgraphPrizePoolDraw[]
+      [chainId: number]: SubgraphDraw[]
     } = {}
     results.forEach((result, i) => {
       if (!!result.data) {

@@ -41,8 +41,7 @@ export const useUserTotalWinnings = (
         let chainTotal = 0n
 
         wins[chainId].forEach((win) => {
-          const drawId = parseInt(win.draw.id)
-          if (drawId <= lastCheckedDrawId || options?.skipPrizeChecking) {
+          if (win.drawId <= lastCheckedDrawId || options?.skipPrizeChecking) {
             chainTotal += BigInt(win.payout)
           }
         })

@@ -1,5 +1,6 @@
-import { PrizePool, SubgraphPrizePoolAccount } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@pooltogether/hyperstructure-client-js'
 import { PrizePoolBadge } from '@shared/react-components'
+import { SubgraphPrize } from '@shared/types'
 import { Table, TableProps } from '@shared/ui'
 import { getSimpleDate } from '@shared/utilities'
 import classNames from 'classnames'
@@ -9,7 +10,7 @@ import { AccountWinAmount } from './AccountWinAmount'
 import { AccountWinButtons } from './AccountWinButtons'
 
 interface AccountWinningsTableProps extends Omit<TableProps, 'data' | 'keyPrefix'> {
-  wins: (SubgraphPrizePoolAccount['prizesReceived'][0] & { chainId: number })[]
+  wins: (SubgraphPrize & { chainId: number })[]
   prizePools: PrizePool[]
 }
 
@@ -34,7 +35,7 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
 
         if (!!prizePool) {
           const cells: TableProps['data']['rows'][0]['cells'] = {
-            date: { content: getSimpleDate(parseInt(win.timestamp)) },
+            date: { content: getSimpleDate(win.timestamp) },
             prizePool: {
               content: (
                 <PrizePoolBadge
@@ -51,7 +52,7 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
                   prizePool={
                     prizePools.find((prizePool) => prizePool.chainId === win.chainId) as PrizePool
                   }
-                  amount={BigInt(win.payout)}
+                  amount={win.payout}
                   amountClassName='text-sm'
                 />
               ),

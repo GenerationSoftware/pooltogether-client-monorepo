@@ -1,18 +1,8 @@
 import { PrizePool } from '@pooltogether/hyperstructure-client-js'
+import { SubgraphDrawTimestamp, SubgraphObservation } from '@shared/types'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAllPrizeDrawTimestamps, useAllUserBalanceUpdates } from '..'
-
-interface Draw {
-  id: number
-  timestamp: number
-}
-
-interface BalanceUpdate {
-  balance: bigint
-  delegateBalance: bigint
-  timestamp: number
-}
 
 /**
  * Returns all draws a user was eligible for
@@ -33,14 +23,18 @@ export const useAllUserEligibleDraws = (prizePools: PrizePool[], userAddress: st
 
   const data = useMemo(() => {
     if (!!drawTimestamps && !!balanceUpdates) {
-      const eligibleDraws: { [chainId: number]: Draw[] } = {}
-      const eligibleDrawsByVault: { [chainId: number]: { [vaultAddress: Address]: Draw[] } } = {}
+      const eligibleDraws: { [chainId: number]: SubgraphDrawTimestamp[] } = {}
+      const eligibleDrawsByVault: {
+        [chainId: number]: { [vaultAddress: Address]: SubgraphDrawTimestamp[] }
+      } = {}
       let totalNumEligibleDraws = 0
 
       // Looping through every chain with balance updates
-      for (const chainId in balanceUpdates) {
-        const chainDraws: Draw[] = []
-        const chainDrawsByVault: { [vaultAddress: Address]: Draw[] } = {}
+      for (const key in balanceUpdates) {
+        const chainId = parseInt(key)
+
+        const chainDraws: SubgraphDrawTimestamp[] = []
+        const chainDrawsByVault: { [vaultAddress: Address]: SubgraphDrawTimestamp[] } = {}
 
         // Looping through every vault with balance updates
         if (!!drawTimestamps[chainId] && !!balanceUpdates[chainId]) {
@@ -60,8 +54,8 @@ export const useAllUserEligibleDraws = (prizePools: PrizePool[], userAddress: st
           }
         }
 
-        eligibleDraws[parseInt(chainId)] = chainDraws.sort((a, b) => a.timestamp - b.timestamp)
-        eligibleDrawsByVault[parseInt(chainId)] = chainDrawsByVault
+        eligibleDraws[chainId] = chainDraws.sort((a, b) => a.timestamp - b.timestamp)
+        eligibleDrawsByVault[chainId] = chainDrawsByVault
         totalNumEligibleDraws += chainDraws.length
       }
 
@@ -72,9 +66,12 @@ export const useAllUserEligibleDraws = (prizePools: PrizePool[], userAddress: st
   return { data, isFetched }
 }
 
-const getVaultEligibleDraws = (draws: Draw[], balanceUpdates: BalanceUpdate[]): Draw[] => {
-  const drawsToCheck: Draw[] = [...draws]
-  const eligibleDraws: Draw[] = []
+const getVaultEligibleDraws = (
+  draws: SubgraphDrawTimestamp[],
+  balanceUpdates: SubgraphObservation[]
+): SubgraphDrawTimestamp[] => {
+  const drawsToCheck: SubgraphDrawTimestamp[] = [...draws]
+  const eligibleDraws: SubgraphDrawTimestamp[] = []
 
   for (let balanceIndex = balanceUpdates.length - 1; balanceIndex >= 0; balanceIndex--) {
     const balanceUpdate = balanceUpdates[balanceIndex]

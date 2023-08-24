@@ -1,6 +1,6 @@
 import { PrizePool } from '@pooltogether/hyperstructure-client-js'
 import { usePrizeTokenData } from '@pooltogether/hyperstructure-react-hooks'
-import { SubgraphPrizePoolAccount, TokenWithAmount } from '@shared/types'
+import { SubgraphPrize, TokenWithAmount } from '@shared/types'
 import { Intl } from '@shared/types'
 import { Button } from '@shared/ui'
 import { getSimpleDate } from '@shared/utilities'
@@ -16,7 +16,7 @@ import { winAnimation } from '../animations'
 interface WinViewProps {
   prizePools: PrizePool[]
   draws: { [chainId: number]: { id: number; timestamp: number }[] }
-  wins: { [chainId: number]: SubgraphPrizePoolAccount['prizesReceived'] }
+  wins: { [chainId: number]: SubgraphPrize[] }
   onClose: () => void
   intl?: Intl<'viewAccount' | 'youWonX' | 'xWon'>
 }
@@ -38,10 +38,9 @@ export const WinView = (props: WinViewProps) => {
       const drawIdsToCheck = draws[chainId]?.map((d) => d.id) ?? []
 
       wins[chainId].forEach((win) => {
-        const drawId = parseInt(win.draw.id)
-        if (drawIdsToCheck.includes(drawId)) {
-          const prize = BigInt(win.payout)
-          const timestamp = parseInt(win.timestamp)
+        if (drawIdsToCheck.includes(win.drawId)) {
+          const prize = win.payout
+          const timestamp = win.timestamp
           toDisplay.push({ chainId, prize, timestamp })
           totalAmount += prize
         }

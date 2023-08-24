@@ -1,9 +1,10 @@
-import { PrizePool, SubgraphPrizePoolAccount } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@pooltogether/hyperstructure-client-js'
+import { SubgraphPrize } from '@shared/types'
 import classNames from 'classnames'
 import { AccountWinCard } from './AccountWinCard'
 
 interface AccountWinCardsProps {
-  wins: (SubgraphPrizePoolAccount['prizesReceived'][0] & { chainId: number })[]
+  wins: (SubgraphPrize & { chainId: number })[]
   prizePools: PrizePool[]
   className?: string
 }

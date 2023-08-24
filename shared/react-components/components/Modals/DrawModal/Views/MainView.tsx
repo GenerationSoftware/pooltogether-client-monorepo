@@ -1,6 +1,6 @@
 import { PrizePool } from '@pooltogether/hyperstructure-client-js'
 import { usePrizeTokenData } from '@pooltogether/hyperstructure-react-hooks'
-import { Intl, SubgraphPrizePoolDraw } from '@shared/types'
+import { Intl, SubgraphDraw } from '@shared/types'
 import { ExternalLink, Spinner } from '@shared/ui'
 import {
   formatBigIntForDisplay,
@@ -12,7 +12,7 @@ import {
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 
 interface MainViewProps {
-  draw: SubgraphPrizePoolDraw
+  draw: SubgraphDraw
   prizePool: PrizePool
   intl?: { base?: Intl<'prizePool' | 'drawId'>; prizes?: Intl<'drawTotal' | 'winner' | 'prize'> }
 }
@@ -32,14 +32,14 @@ export const MainView = (props: MainViewProps) => {
 }
 
 interface MainViewHeaderProps {
-  draw: SubgraphPrizePoolDraw
+  draw: SubgraphDraw
   intl?: Intl<'drawId'>
 }
 
 const MainViewHeader = (props: MainViewHeaderProps) => {
   const { draw, intl } = props
 
-  const drawDate = new Date(sToMs(parseInt(draw.prizeClaims[0].timestamp)))
+  const drawDate = new Date(sToMs(draw.prizeClaims[0].timestamp))
   const formattedDrawDate = drawDate.toLocaleTimeString(undefined, {
     month: 'long',
     day: 'numeric',
@@ -61,7 +61,7 @@ const MainViewHeader = (props: MainViewHeaderProps) => {
 }
 
 interface DrawTotalsProps {
-  draw: SubgraphPrizePoolDraw
+  draw: SubgraphDraw
   prizePool: PrizePool
   intl?: Intl<'drawTotal'>
 }
@@ -71,7 +71,7 @@ const DrawTotals = (props: DrawTotalsProps) => {
 
   const { data: tokenData } = usePrizeTokenData(prizePool)
 
-  const totalPrizeAmount = draw.prizeClaims.reduce((a, b) => a + BigInt(b.payout), 0n)
+  const totalPrizeAmount = draw.prizeClaims.reduce((a, b) => a + b.payout, 0n)
   const formattedTotalPrizeAmount = !!tokenData
     ? formatBigIntForDisplay(totalPrizeAmount, tokenData.decimals, {
         minimumFractionDigits: 2,
@@ -99,7 +99,7 @@ const DrawTotals = (props: DrawTotalsProps) => {
 }
 
 interface DrawWinnersTableProps {
-  draw: SubgraphPrizePoolDraw
+  draw: SubgraphDraw
   prizePool: PrizePool
   intl?: Intl<'winner' | 'prize'>
 }
@@ -119,23 +119,19 @@ const DrawWinnersTable = (props: DrawWinnersTableProps) => {
       {!!draw && !!tokenData ? (
         <div className='flex flex-col w-full max-h-52 gap-3 overflow-y-auto'>
           {draw.prizeClaims
-            .sort((a, b) => sortByBigIntDesc(BigInt(a.payout), BigInt(b.payout)))
+            .sort((a, b) => sortByBigIntDesc(a.payout, b.payout))
             .map((prize) => {
-              const formattedPrize = formatBigIntForDisplay(
-                BigInt(prize.payout),
-                tokenData.decimals,
-                {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
-                }
-              )
+              const formattedPrize = formatBigIntForDisplay(prize.payout, tokenData.decimals, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              })
 
               return (
                 <div key={prize.id} className='flex w-full items-center'>
                   <span className='w-1/2'>
                     <ExternalLink
-                      href={getBlockExplorerUrl(prizePool.chainId, prize.winner.id, 'address')}
-                      text={shorten(prize.winner.id, { short: true }) as string}
+                      href={getBlockExplorerUrl(prizePool.chainId, prize.winner, 'address')}
+                      text={shorten(prize.winner, { short: true }) as string}
                     />
                   </span>
                   <span className='w-1/2 text-right whitespace-nowrap md:text-center'>

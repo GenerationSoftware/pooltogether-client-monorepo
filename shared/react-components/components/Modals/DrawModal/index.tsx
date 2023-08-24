@@ -1,11 +1,11 @@
-import { PrizePool, SubgraphPrizePoolDraw } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool, SubgraphDraw } from '@pooltogether/hyperstructure-client-js'
 import { MODAL_KEYS, useIsModalOpen, useScreenSize } from '@shared/generic-react-hooks'
 import { Intl } from '@shared/types'
 import { Button, Modal } from '@shared/ui'
 import { MainView } from './Views/MainView'
 
 export interface DrawModalProps {
-  draw?: SubgraphPrizePoolDraw
+  draw?: SubgraphDraw
   prizePool?: PrizePool
   intl?: {
     base?: Intl<'close' | 'prizePool' | 'drawId'>

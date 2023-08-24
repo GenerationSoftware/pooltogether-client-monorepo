@@ -1,14 +1,16 @@
 import { ChevronRightIcon } from '@heroicons/react/24/outline'
-import { PrizePool, SubgraphPrizePoolDraw } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@pooltogether/hyperstructure-client-js'
 import { usePrizeDrawWinners, usePrizeTokenData } from '@pooltogether/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { TokenValue } from '@shared/react-components'
+import { SubgraphDraw } from '@shared/types'
 import { atom, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
+import { Address } from 'viem'
 import { useSelectedPrizePool } from '@hooks/useSelectedPrizePool'
 
-export const drawIdAtom = atom<string>('')
+export const drawIdAtom = atom<number>(0)
 
 export const PrizePoolWinners = () => {
   const t_common = useTranslations('Common')
@@ -49,7 +51,7 @@ export const PrizePoolWinners = () => {
 }
 
 interface DrawRowProps {
-  draw: SubgraphPrizePoolDraw
+  draw: SubgraphDraw
   prizePool: PrizePool
 }
 
@@ -65,8 +67,8 @@ const DrawRow = (props: DrawRowProps) => {
 
   const setSelectedDrawId = useSetAtom(drawIdAtom)
 
-  const uniqueWallets = new Set<string>(draw.prizeClaims.map((claim) => claim.winner.id))
-  const totalPrizeAmount = draw.prizeClaims.reduce((a, b) => a + BigInt(b.payout), 0n)
+  const uniqueWallets = new Set<Address>(draw.prizeClaims.map((claim) => claim.winner))
+  const totalPrizeAmount = draw.prizeClaims.reduce((a, b) => a + b.payout, 0n)
 
   const handleClick = () => {
     setSelectedDrawId(draw.id)

@@ -33,9 +33,8 @@ export const useDrawsTotalEligiblePrizeAmount = (userAddress: Address) => {
         const lastCheckedDrawId = lastCheckedDrawIds[userAddress.toLowerCase()]?.[chainId] ?? 0
 
         allDrawWinners[chainId]?.forEach((draw) => {
-          const drawId = parseInt(draw.id)
-          if (drawId > lastCheckedDrawId && eligibleDrawIds.includes(drawId)) {
-            total += draw.prizeClaims.reduce((a, b) => a + BigInt(b.payout), 0n)
+          if (draw.id > lastCheckedDrawId && eligibleDrawIds.includes(draw.id)) {
+            total += draw.prizeClaims.reduce((a, b) => a + b.payout, 0n)
           }
         })
       }
