@@ -8,13 +8,13 @@ import { Button } from '@shared/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
+import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { PrizePoolCards } from '@components/Prizes/PrizePoolCards'
+import { AccountDepositsCards } from './AccountDepositsCards'
 import { AccountDepositsHeader } from './AccountDepositsHeader'
-import { AccountDepositsOdds } from './AccountDepositsOdds'
 import { AccountDepositsTable } from './AccountDepositsTable'
-import { AccountVaultCards } from './AccountVaultCards'
 
 interface AccountDepositsProps {
   address?: Address
@@ -29,15 +29,11 @@ export const AccountDeposits = (props: AccountDepositsProps) => {
 
   const { vaults } = useSelectedVaults()
 
-  const { data: vaultBalances, isFetched: isFetchedVaultBalances } = useAllUserVaultBalances(
-    vaults,
-    userAddress as Address
-  )
+  const { data: vaultBalances } = useAllUserVaultBalances(vaults, userAddress as Address)
 
-  const isEmpty =
-    isFetchedVaultBalances && !!vaultBalances
-      ? Object.keys(vaultBalances).every((vaultId) => vaultBalances[vaultId].amount === 0n)
-      : false
+  const isEmpty = useMemo(() => {
+    return !!vaultBalances && Object.values(vaultBalances).every((token) => token.amount === 0n)
+  }, [vaultBalances])
 
   if (typeof window !== 'undefined' && userAddress === undefined) {
     return (
@@ -64,8 +60,7 @@ export const AccountDeposits = (props: AccountDepositsProps) => {
           className='hidden mt-4 lg:block'
         />
       )}
-      {!isEmpty && <AccountVaultCards address={userAddress} className='lg:hidden' />}
-      {!isEmpty && <AccountDepositsOdds address={userAddress} />}
+      {!isEmpty && <AccountDepositsCards address={userAddress} className='lg:hidden' />}
     </div>
   )
 }

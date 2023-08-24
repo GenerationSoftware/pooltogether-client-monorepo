@@ -7,7 +7,9 @@ import {
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'
+import { Address } from 'viem'
 import {
+  useAllUserBalanceUpdates,
   useAllUserVaultBalances,
   useAllVaultPercentageContributions,
   useAllVaultShareData
@@ -32,6 +34,8 @@ export const useAllUserPrizeOdds = (
     vaults,
     userAddress
   )
+
+  const { data: balanceUpdates } = useAllUserBalanceUpdates(prizePools, userAddress)
 
   const { data: vaultContributions, isFetched: isFetchedVaultContributions } =
     useAllVaultPercentageContributions(prizePools, vaults)
@@ -61,10 +65,19 @@ export const useAllUserPrizeOdds = (
 
           const probabilities = vaultIds.map((vaultId) => {
             if (!!shareData && !!shareBalances && !!vaultContributions) {
-              const userShares = shareBalances[vaultId].amount
               const totalShares = shareData[vaultId].totalSupply
               const decimals = shareData[vaultId].decimals
               const vaultContribution = vaultContributions[vaultId]
+              let userShares = shareBalances[vaultId].amount
+
+              if (!!balanceUpdates) {
+                const vaultAddress = shareData[vaultId].address.toLowerCase() as Address
+                const latestObservation = balanceUpdates[prizePool.chainId]?.[vaultAddress]?.[0]
+                const delegatedAmount = !!latestObservation
+                  ? latestObservation.delegateBalance - latestObservation.balance
+                  : 0n
+                userShares += delegatedAmount
+              }
 
               return calculateOdds(userShares, totalShares, decimals, vaultContribution, numPrizes)
             } else {

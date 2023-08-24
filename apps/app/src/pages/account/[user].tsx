@@ -30,7 +30,7 @@ export default function ExternalAccountPage() {
 
   if (router.isReady) {
     return (
-      <Layout className='gap-12'>
+      <Layout className='gap-6 lg:gap-8'>
         <ExternalAccountPageContent queryParams={router.query} />
       </Layout>
     )

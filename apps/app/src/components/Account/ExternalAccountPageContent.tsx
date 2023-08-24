@@ -5,7 +5,9 @@ import { ParsedUrlQuery } from 'querystring'
 import { useEffect } from 'react'
 import { Address, isAddress } from 'viem'
 import { useEnsAddress } from 'wagmi'
+import { AccountDelegations } from './AccountDelegations'
 import { AccountDeposits } from './AccountDeposits'
+import { AccountOdds } from './AccountOdds'
 import { AccountWinnings } from './AccountWinnings'
 
 interface ExternalAccountPageContentProps {
@@ -48,6 +50,8 @@ export const ExternalAccountPageContent = (props: ExternalAccountPageContentProp
     return (
       <>
         <AccountDeposits address={userAddress} />
+        <AccountDelegations address={userAddress} />
+        <AccountOdds address={userAddress} className='-mt-3 lg:-mt-4' />
         <AccountWinnings address={userAddress} />
       </>
     )

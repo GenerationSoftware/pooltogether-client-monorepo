@@ -75,7 +75,8 @@
       "prizePower": "Prize Power",
       "tvl": "TVL",
       "depositAsset": "Deposit Asset",
-      "prizeAsset": "Prize Asset"
+      "prizeAsset": "Prize Asset",
+      "delegatedAmount": "Delegated Amount"
     },
     "returnToVaults": "Return to Vaults",
     "learnAboutVault": "Learn about <highlight>{vaultName}</highlight>",
@@ -90,8 +91,10 @@
     "noPrizeAssets": "You don't have any prize assets.",
     "depositNow": "Deposit now.",
     "yourDeposits": "Your Deposits",
+    "yourDelegations": "Delegated to You",
     "yourWinnings": "Your Winnings",
     "externalAccountDeposits": "{account}'s Deposits",
+    "externalAccountDelegations": "Delegations to {account}",
     "externalAccountWinnings": "{account}'s Winnings",
     "dailyPrizeOdds": "Daily Prize Odds",
     "oneInXChance": "1 in {number}",
