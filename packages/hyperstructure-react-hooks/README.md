@@ -104,6 +104,7 @@ yarn add @pooltogether/hyperstructure-react-hooks
 ### Vault Hooks
 
 - `useAllUserVaultBalances`
+- `useAllUserVaultDelegationBalances`
 - `useAllVaultBalances`
 - `useAllVaultExchangeRates`
 - `useAllVaultPercentageContributions`

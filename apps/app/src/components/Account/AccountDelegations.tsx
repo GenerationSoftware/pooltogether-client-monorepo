@@ -1,6 +1,5 @@
-import { useAllUserBalanceUpdates } from '@pooltogether/hyperstructure-react-hooks'
+import { useAllUserVaultDelegationBalances } from '@pooltogether/hyperstructure-react-hooks'
 import classNames from 'classnames'
-import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
@@ -22,26 +21,16 @@ export const AccountDelegations = (props: AccountDelegationsProps) => {
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
 
-  const { data: userBalanceUpdates, isFetched: isFetchedUserBalanceUpdates } =
-    useAllUserBalanceUpdates(prizePoolsArray, userAddress as Address)
+  const { data: delegationBalances, isFetched: isFetchedDelegationBalances } =
+    useAllUserVaultDelegationBalances(prizePoolsArray, userAddress as Address)
 
-  const isNotEmpty = useMemo(() => {
-    return (
-      !!userBalanceUpdates &&
-      Object.keys(userBalanceUpdates).some((chainId) => {
-        const chainUpdates = userBalanceUpdates[parseInt(chainId)]
-        return Object.values(chainUpdates).some(
-          (updates) => updates[0].delegateBalance - updates[0].balance > 0n
-        )
-      })
-    )
-  }, [userBalanceUpdates])
+  const isNotEmpty = !!delegationBalances && Object.keys(delegationBalances).length > 0
 
   if (
     typeof window !== undefined &&
     !!userAddress &&
-    isFetchedUserBalanceUpdates &&
-    !!userBalanceUpdates &&
+    isFetchedDelegationBalances &&
+    !!delegationBalances &&
     isNotEmpty
   ) {
     return (

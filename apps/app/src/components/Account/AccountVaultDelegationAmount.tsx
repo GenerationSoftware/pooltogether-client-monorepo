@@ -1,6 +1,6 @@
 import { Vault } from '@pooltogether/hyperstructure-client-js'
 import {
-  useAllUserBalanceUpdates,
+  useAllUserVaultDelegationBalances,
   useVaultExchangeRate,
   useVaultTokenData
 } from '@pooltogether/hyperstructure-react-hooks'
@@ -26,10 +26,8 @@ export const AccountVaultDelegationAmount = (props: AccountVaultDelegationAmount
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
 
-  const { data: balanceUpdates, isFetched: isFetchedBalanceUpdates } = useAllUserBalanceUpdates(
-    prizePoolsArray,
-    userAddress as Address
-  )
+  const { data: delegationBalances, isFetched: isFetchedDelegationBalances } =
+    useAllUserVaultDelegationBalances(prizePoolsArray, userAddress as Address)
 
   const { data: exchangeRate, isFetched: isFetchedExchangeRate } = useVaultExchangeRate(vault)
 
@@ -39,26 +37,23 @@ export const AccountVaultDelegationAmount = (props: AccountVaultDelegationAmount
     return <>-</>
   }
 
-  if (!isFetchedBalanceUpdates || !isFetchedExchangeRate || !isFetchedTokenData) {
+  if (!isFetchedDelegationBalances || !isFetchedExchangeRate || !isFetchedTokenData) {
     return <Spinner />
   }
 
-  if (!balanceUpdates || !exchangeRate || !tokenData) {
+  if (!delegationBalances || !exchangeRate || !tokenData) {
     return <>?</>
   }
 
-  const latestObservation =
-    balanceUpdates[vault.chainId]?.[vault.address.toLowerCase() as Address]?.[0]
-  const delegatedAmount = !!latestObservation
-    ? latestObservation.delegateBalance - latestObservation.balance
-    : 0n
+  const delegationBalance =
+    delegationBalances[vault.chainId]?.[vault.address.toLowerCase() as Address] ?? 0n
 
-  if (delegatedAmount > 0n) {
+  if (delegationBalance > 0n) {
     return (
       <TokenValueAndAmount
         token={{
           ...tokenData,
-          amount: getAssetsFromShares(delegatedAmount, exchangeRate, tokenData.decimals)
+          amount: getAssetsFromShares(delegationBalance, exchangeRate, tokenData.decimals)
         }}
         className={className}
         valueClassName='text-sm md:text-base'

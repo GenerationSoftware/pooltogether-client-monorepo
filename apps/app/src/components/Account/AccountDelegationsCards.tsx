@@ -1,5 +1,5 @@
 import {
-  useAllUserBalanceUpdates,
+  useAllUserVaultDelegationBalances,
   useSelectedVaults
 } from '@pooltogether/hyperstructure-react-hooks'
 import classNames from 'classnames'
@@ -23,7 +23,7 @@ export const AccountDelegationsCards = (props: AccountDelegationsCardsProps) => 
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
 
-  const { data: userBalanceUpdates } = useAllUserBalanceUpdates(
+  const { data: delegationBalances } = useAllUserVaultDelegationBalances(
     prizePoolsArray,
     userAddress as Address
   )
@@ -37,14 +37,11 @@ export const AccountDelegationsCards = (props: AccountDelegationsCardsProps) => 
 
   return (
     <div className={classNames('w-full flex flex-col gap-4', className)}>
-      {!!userBalanceUpdates &&
+      {!!delegationBalances &&
         sortedVaults.map((vault) => {
-          const latestObservation =
-            userBalanceUpdates[vault.chainId]?.[vault.address.toLowerCase() as Address]?.[0]
-          const delegatedAmount = !!latestObservation
-            ? latestObservation.delegateBalance - latestObservation.balance
-            : 0n
-          if (delegatedAmount > 0n && vault.decimals !== undefined) {
+          const delegationBalance =
+            delegationBalances[vault.chainId]?.[vault.address.toLowerCase() as Address] ?? 0n
+          if (delegationBalance > 0n && vault.decimals !== undefined) {
             return <AccountDelegationsCard key={vault.id} vault={vault} address={userAddress} />
           }
         })}

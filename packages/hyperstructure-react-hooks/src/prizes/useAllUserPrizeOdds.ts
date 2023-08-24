@@ -9,8 +9,8 @@ import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import {
-  useAllUserBalanceUpdates,
   useAllUserVaultBalances,
+  useAllUserVaultDelegationBalances,
   useAllVaultPercentageContributions,
   useAllVaultShareData
 } from '..'
@@ -35,7 +35,8 @@ export const useAllUserPrizeOdds = (
     userAddress
   )
 
-  const { data: balanceUpdates } = useAllUserBalanceUpdates(prizePools, userAddress)
+  const { data: delegationBalances, isFetched: isFetchedDelegationBalances } =
+    useAllUserVaultDelegationBalances(prizePools, userAddress)
 
   const { data: vaultContributions, isFetched: isFetchedVaultContributions } =
     useAllVaultPercentageContributions(prizePools, vaults)
@@ -53,9 +54,11 @@ export const useAllUserPrizeOdds = (
         !!userAddress &&
         isFetchedShareData &&
         isFetchedShareBalance &&
+        isFetchedDelegationBalances &&
         isFetchedVaultContributions &&
         !!shareData &&
         !!shareBalances &&
+        !!delegationBalances &&
         !!vaultContributions
 
       return {
@@ -64,22 +67,21 @@ export const useAllUserPrizeOdds = (
           const numPrizes = await prizePool.getEstimatedPrizeCount()
 
           const probabilities = vaultIds.map((vaultId) => {
-            if (!!shareData && !!shareBalances && !!vaultContributions) {
+            if (!!shareData && !!shareBalances && !!delegationBalances && !!vaultContributions) {
+              const userShares = shareBalances[vaultId].amount
               const totalShares = shareData[vaultId].totalSupply
               const decimals = shareData[vaultId].decimals
               const vaultContribution = vaultContributions[vaultId]
-              let userShares = shareBalances[vaultId].amount
+              const vaultAddress = shareData[vaultId].address.toLowerCase() as Address
+              const delegationShares = delegationBalances[prizePool.chainId]?.[vaultAddress] ?? 0n
 
-              if (!!balanceUpdates) {
-                const vaultAddress = shareData[vaultId].address.toLowerCase() as Address
-                const latestObservation = balanceUpdates[prizePool.chainId]?.[vaultAddress]?.[0]
-                const delegatedAmount = !!latestObservation
-                  ? latestObservation.delegateBalance - latestObservation.balance
-                  : 0n
-                userShares += delegatedAmount
-              }
-
-              return calculateOdds(userShares, totalShares, decimals, vaultContribution, numPrizes)
+              return calculateOdds(
+                userShares + delegationShares,
+                totalShares,
+                decimals,
+                vaultContribution,
+                numPrizes
+              )
             } else {
               return 0
             }

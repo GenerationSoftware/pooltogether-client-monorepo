@@ -1,11 +1,10 @@
 import { getAssetsFromShares } from '@pooltogether/hyperstructure-client-js'
 import {
-  useAllUserBalanceUpdates,
+  useAllUserVaultDelegationBalances,
   useAllVaultExchangeRates,
   useAllVaultTokenPrices,
   useSelectedVaults
 } from '@pooltogether/hyperstructure-react-hooks'
-import { getVaultId } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
 import { useSupportedPrizePools } from './useSupportedPrizePools'
@@ -24,8 +23,8 @@ export const useUserTotalDelegations = (userAddress: Address) => {
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
 
-  const { data: userBalanceUpdates, isFetched: isFetchedUserBalanceUpdates } =
-    useAllUserBalanceUpdates(prizePoolsArray, userAddress)
+  const { data: delegationBalances, isFetched: isFetchedDelegationBalances } =
+    useAllUserVaultDelegationBalances(prizePoolsArray, userAddress as Address)
 
   const { data: vaultExchangeRates, isFetched: isFetchedVaultExchangeRates } =
     useAllVaultExchangeRates(vaults)
@@ -33,22 +32,22 @@ export const useUserTotalDelegations = (userAddress: Address) => {
   const isFetched =
     isFetchedVaultData &&
     isFetchedAllVaultTokenPrices &&
-    isFetchedUserBalanceUpdates &&
+    isFetchedDelegationBalances &&
     isFetchedVaultExchangeRates &&
     !!allVaultTokenPrices &&
     !!vaultExchangeRates &&
-    !!userBalanceUpdates &&
+    !!delegationBalances &&
     !!vaults.underlyingTokenAddresses
 
   const data = useMemo(() => {
     if (isFetched) {
       let totalDelegations: number = 0
 
-      for (const key in userBalanceUpdates) {
+      for (const key in delegationBalances) {
         const chainId = parseInt(key)
-        const chainUpdates = userBalanceUpdates[chainId]
+        const chainBalances = delegationBalances[chainId]
 
-        for (const vaultAddress in chainUpdates) {
+        for (const vaultAddress in chainBalances) {
           const vault = Object.values(vaults.vaults).find(
             (v) => v.chainId === chainId && v.address.toLowerCase() === vaultAddress
           )
@@ -59,9 +58,7 @@ export const useUserTotalDelegations = (userAddress: Address) => {
 
             if (decimals !== undefined && !!exchangeRate) {
               const tokenAddress = vaults.underlyingTokenAddresses?.byVault[vault.id] as Address
-              const latestObservation = chainUpdates[vaultAddress as Address][0]
-              const delegationBalance =
-                latestObservation.delegateBalance - latestObservation.balance
+              const delegationBalance = chainBalances[vaultAddress as Address]
 
               if (delegationBalance > 0n) {
                 const tokenPrice =
@@ -84,8 +81,8 @@ export const useUserTotalDelegations = (userAddress: Address) => {
     isFetchedVaultData,
     isFetchedAllVaultTokenPrices,
     allVaultTokenPrices,
-    isFetchedUserBalanceUpdates,
-    userBalanceUpdates,
+    isFetchedDelegationBalances,
+    delegationBalances,
     isFetchedVaultExchangeRates,
     vaultExchangeRates,
     vaults

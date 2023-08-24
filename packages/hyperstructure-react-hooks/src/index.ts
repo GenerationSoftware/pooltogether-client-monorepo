@@ -66,6 +66,7 @@ export * from './transactions/useSendWithdrawTransaction'
  * Vault Hooks
  */
 export * from './vaults/useAllUserVaultBalances'
+export * from './vaults/useAllUserVaultDelegationBalances'
 export * from './vaults/useAllVaultBalances'
 export * from './vaults/useAllVaultExchangeRates'
 export * from './vaults/useAllVaultPercentageContributions'

@@ -1,8 +1,10 @@
 import { formatNumberForDisplay, PrizePool, Vault } from '@pooltogether/hyperstructure-client-js'
-import { useAllUserBalanceUpdates, usePrizeOdds } from '@pooltogether/hyperstructure-react-hooks'
+import {
+  useAllUserVaultDelegationBalances,
+  usePrizeOdds
+} from '@pooltogether/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
@@ -23,34 +25,27 @@ export const AccountVaultDelegationOdds = (props: AccountVaultDelegationOddsProp
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
 
-  const { data: userBalanceUpdates, isFetched: isFetchedUserBalanceUpdates } =
-    useAllUserBalanceUpdates(prizePoolsArray, userAddress as Address)
-
-  const delegationAmount = useMemo(() => {
-    if (!!userBalanceUpdates) {
-      const latestObservation =
-        userBalanceUpdates[vault.chainId]?.[vault.address.toLowerCase() as Address]?.[0]
-      return !!latestObservation
-        ? latestObservation.delegateBalance - latestObservation.balance
-        : 0n
-    }
-  }, [userBalanceUpdates])
+  const { data: delegationBalances, isFetched: isFetchedDelegationBalances } =
+    useAllUserVaultDelegationBalances(prizePoolsArray, userAddress as Address)
 
   const prizePool = Object.values(prizePools).find(
     (prizePool) => prizePool.chainId === vault.chainId
   )
 
+  const delegationBalance =
+    delegationBalances?.[vault.chainId]?.[vault.address.toLowerCase() as Address] ?? 0n
+
   const { data: prizeOdds, isFetched: isFetchedPrizeOdds } = usePrizeOdds(
     prizePool as PrizePool,
     vault,
-    delegationAmount ?? 0n
+    delegationBalance
   )
 
-  if (!userAddress || delegationAmount === 0n) {
+  if (!userAddress || delegationBalance === 0n) {
     return <>-</>
   }
 
-  if (!isFetchedUserBalanceUpdates || !isFetchedPrizeOdds) {
+  if (!isFetchedDelegationBalances || !isFetchedPrizeOdds) {
     return <Spinner />
   }
 

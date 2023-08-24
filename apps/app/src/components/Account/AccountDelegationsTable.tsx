@@ -1,6 +1,5 @@
 import {
-  useAllUserBalanceUpdates,
-  useAllUserVaultBalances,
+  useAllUserVaultDelegationBalances,
   useSelectedVaults
 } from '@pooltogether/hyperstructure-react-hooks'
 import { VaultBadge, WinChanceTooltip } from '@shared/react-components'
@@ -34,12 +33,10 @@ export const AccountDelegationsTable = (props: AccountDelegationsTableProps) => 
 
   const { vaults } = useSelectedVaults()
 
-  const { data: vaultBalances } = useAllUserVaultBalances(vaults, userAddress as Address)
-
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
 
-  const { data: userBalanceUpdates } = useAllUserBalanceUpdates(
+  const { data: delegationBalances } = useAllUserVaultDelegationBalances(
     prizePoolsArray,
     userAddress as Address
   )
@@ -75,15 +72,12 @@ export const AccountDelegationsTable = (props: AccountDelegationsTableProps) => 
     return headers
   }, [isExternalUser])
 
-  const tableRows: TableProps['data']['rows'] = !!userBalanceUpdates
+  const tableRows: TableProps['data']['rows'] = !!delegationBalances
     ? sortedVaults
         .map((vault) => {
-          const latestObservation =
-            userBalanceUpdates[vault.chainId]?.[vault.address.toLowerCase() as Address]?.[0]
-          const delegatedAmount = !!latestObservation
-            ? latestObservation.delegateBalance - latestObservation.balance
-            : 0n
-          if (delegatedAmount > 0n && vault.decimals !== undefined) {
+          const delegationBalance =
+            delegationBalances[vault.chainId]?.[vault.address.toLowerCase() as Address] ?? 0n
+          if (delegationBalance > 0n && vault.decimals !== undefined) {
             const cells: TableProps['data']['rows'][0]['cells'] = {
               token: {
                 content: (

@@ -1,12 +1,12 @@
 import { getAssetsFromShares, Vault } from '@pooltogether/hyperstructure-client-js'
 import {
-  useAllUserBalanceUpdates,
+  useAllUserVaultDelegationBalances,
   useAllVaultExchangeRates,
   useAllVaultShareData,
   useAllVaultTokenPrices,
   useVaults
 } from '@pooltogether/hyperstructure-react-hooks'
-import { SubgraphObservation, TokenWithSupply } from '@shared/types'
+import { TokenWithSupply } from '@shared/types'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
 import { useSupportedPrizePools } from './useSupportedPrizePools'
@@ -23,8 +23,8 @@ export const useSortedVaultsByDelegatedAmount = (vaultsArray: Vault[], userAddre
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
 
-  const { data: userBalanceUpdates, isFetched: isFetchedUserBalanceUpdates } =
-    useAllUserBalanceUpdates(prizePoolsArray, userAddress)
+  const { data: delegationBalances, isFetched: isFetchedDelegationBalances } =
+    useAllUserVaultDelegationBalances(prizePoolsArray, userAddress as Address)
 
   const { data: allVaultExchangeRates, isFetched: isFetchedAllVaultExchangeRates } =
     useAllVaultExchangeRates(vaults)
@@ -37,11 +37,11 @@ export const useSortedVaultsByDelegatedAmount = (vaultsArray: Vault[], userAddre
 
   const isFetched =
     !!vaults &&
-    isFetchedUserBalanceUpdates &&
+    isFetchedDelegationBalances &&
     isFetchedAllVaultExchangeRates &&
     isFetchedAllVaultTokenPrices &&
     isFetchedAllVaultShareData &&
-    !!userBalanceUpdates &&
+    !!delegationBalances &&
     !!allVaultExchangeRates &&
     !!allVaultTokenPrices &&
     !!allVaultShareData
@@ -50,7 +50,7 @@ export const useSortedVaultsByDelegatedAmount = (vaultsArray: Vault[], userAddre
     if (isFetched) {
       return sortVaultsByDelegatedAmount(
         vaultsArray,
-        userBalanceUpdates,
+        delegationBalances,
         allVaultExchangeRates,
         allVaultTokenPrices,
         allVaultShareData
@@ -68,24 +68,20 @@ export const useSortedVaultsByDelegatedAmount = (vaultsArray: Vault[], userAddre
 
 const sortVaultsByDelegatedAmount = (
   vaults: Vault[],
-  balanceUpdates: { [chainId: number]: { [vaultAddress: `0x${string}`]: SubgraphObservation[] } },
+  delegationBalances: { [chainId: number]: { [vaultAddress: `0x${string}`]: bigint } },
   exchangeRates: { [vaultId: string]: bigint },
   tokenPrices: { [chainId: number]: { [address: Address]: number } },
   shareData: { [vaultId: string]: TokenWithSupply }
 ) => {
   return vaults.sort((a, b) => {
     const price = (v: Vault) => tokenPrices[v.chainId]?.[v.address.toLowerCase() as Address] ?? 0
-    const latestObservation = (v: Vault) =>
-      balanceUpdates[v.chainId]?.[v.address.toLowerCase() as Address]?.[0]
+    const delegationBalance = (v: Vault) =>
+      delegationBalances[v.chainId]?.[v.address.toLowerCase() as Address] ?? 0n
     const decimals = (v: Vault) => shareData[v.id]?.decimals ?? 0
     const exchangeRate = (v: Vault) => exchangeRates[v.id] ?? 0n
 
-    const delegatedAmount = (v: Vault) =>
-      latestObservation(v)
-        ? latestObservation(v).delegateBalance - latestObservation(v).balance
-        : 0n
     const tokenBalance = (v: Vault) =>
-      getAssetsFromShares(delegatedAmount(v), exchangeRate(v), decimals(v))
+      getAssetsFromShares(delegationBalance(v), exchangeRate(v), decimals(v))
     const amount = (v: Vault) => parseFloat(formatUnits(tokenBalance(v), decimals(v)))
     const value = (v: Vault) => amount(v) * price(v)
 
