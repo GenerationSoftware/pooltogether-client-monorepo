@@ -82,9 +82,7 @@ export const ImportListForm = (props: ImportListFormProps) => {
   return (
     <FormProvider {...formMethods}>
       <div className={classNames('flex flex-col items-center', className)}>
-        <h3 className='mb-4 font-semibold text-pt-purple-100 lg:mb-8 lg:text-2xl'>
-          Edit Existing Vault List
-        </h3>
+        <h3 className='mb-4 text-pt-purple-300 lg:mb-8 lg:text-2xl'>Edit Existing Vault List</h3>
         <form
           onSubmit={formMethods.handleSubmit(onSubmit)}
           className='w-4/5 max-w-md flex flex-col text-pt-purple-100 lg:w-1/2'
