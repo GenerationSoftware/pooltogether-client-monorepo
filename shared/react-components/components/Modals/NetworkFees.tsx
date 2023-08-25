@@ -2,6 +2,7 @@ import { Vault } from '@pooltogether/hyperstructure-client-js'
 import { useGasCostEstimates } from '@pooltogether/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
 import { Spinner } from '@shared/ui'
+import { sToMs } from '@shared/utilities'
 import { TX_GAS_ESTIMATES } from '../../constants'
 import { CurrencyValue } from '../Currency/CurrencyValue'
 
@@ -57,7 +58,8 @@ const TXFeeEstimate = (props: TXFeeEstimateProps) => {
 
   const { data: gasEstimates, isFetched: isFetchedGasEstimates } = useGasCostEstimates(
     chainId,
-    gasAmount
+    gasAmount,
+    sToMs(10)
   )
 
   const txCost = gasEstimates?.totalGasEth

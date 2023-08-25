@@ -12,11 +12,13 @@ import { useGasPrices, useTokenPrices } from '..'
  * Returns gas cost estimates in wei and ETH
  * @param chainId chain ID to get gas prices from
  * @param gasAmount amount of gas to be spent
+ * @param refetchInterval optional refetch interval in ms
  * @returns
  */
 export const useGasCostEstimates = (
   chainId: NETWORK,
-  gasAmount: bigint
+  gasAmount: bigint,
+  refetchInterval?: number
 ): { data?: GasCostEstimates; isFetched: boolean } => {
   const { data: tokenPrices, isFetched: isFetchedTokenPrices } = useTokenPrices(chainId, [
     NULL_ADDRESS
@@ -26,7 +28,7 @@ export const useGasCostEstimates = (
     return tokenPrices?.[NULL_ADDRESS]
   }, [tokenPrices])
 
-  const { data: gasPrices, isFetched: isFetchedGasPrices } = useGasPrices(chainId)
+  const { data: gasPrices, isFetched: isFetchedGasPrices } = useGasPrices(chainId, refetchInterval)
 
   const isFetched = isFetchedTokenPrices && isFetchedGasPrices
 

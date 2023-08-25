@@ -1,15 +1,12 @@
-import {
-  getGasPrices,
-  PoolTogetherApiGasPrices,
-  sToMs
-} from '@pooltogether/hyperstructure-client-js'
+import { PoolTogetherApiGasPrices } from '@shared/types'
+import { getGasPrices, NETWORK } from '@shared/utilities'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import { QUERY_KEYS } from '../constants'
 
 /**
  * Returns gas prices for a given chain ID
  * @param chainId chain ID to get gas prices for
- * @param refetchInterval optional refetch interval in ms (default is 5000ms)
+ * @param refetchInterval optional refetch interval in ms
  * @returns
  */
 export const useGasPrices = (
@@ -18,8 +15,21 @@ export const useGasPrices = (
 ): UseQueryResult<PoolTogetherApiGasPrices, unknown> => {
   const enabled = !!chainId
 
-  return useQuery([QUERY_KEYS.gasPrices, chainId], async () => await getGasPrices(chainId), {
-    refetchInterval: refetchInterval ?? sToMs(5),
+  const redirects: { [chainId: number]: number } = {
+    [NETWORK.goerli]: NETWORK.mainnet,
+    [NETWORK.sepolia]: NETWORK.mainnet,
+    [NETWORK['bsc-testnet']]: NETWORK.bsc,
+    [NETWORK.mumbai]: NETWORK.polygon,
+    [NETWORK['optimism-goerli']]: NETWORK.optimism,
+    [NETWORK.fuji]: NETWORK.avalanche,
+    [NETWORK['celo-testnet']]: NETWORK.celo,
+    [NETWORK['arbitrum-goerli']]: NETWORK.arbitrum
+  }
+
+  const _chainId = redirects[chainId] ?? chainId
+
+  return useQuery([QUERY_KEYS.gasPrices, _chainId], async () => await getGasPrices(_chainId), {
+    refetchInterval: refetchInterval ?? false,
     enabled
   })
 }
