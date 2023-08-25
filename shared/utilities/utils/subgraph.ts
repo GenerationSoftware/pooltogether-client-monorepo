@@ -10,14 +10,20 @@ import { PRIZE_POOL_GRAPH_API_URLS, TWAB_GRAPH_API_URLS } from '../constants'
 /**
  * Returns past draws from the given network's subgraph
  *
- * NOTE: By default queries the last 100 draws
- * @param chainId the prize pool's chain ID
+ * NOTE: By default queries the last 1k draws, with a max of 1k prizes in each
+ * @param chainId the network's chain ID
  * @param options optional parameters
  * @returns
  */
 export const getSubgraphDraws = async (
   chainId: number,
-  options?: { first?: number; skip?: number; orderDirection?: 'asc' | 'desc' }
+  options?: {
+    numDraws?: number
+    numPrizes?: number
+    offsetDraws?: number
+    offsetPrizes?: number
+    orderDirection?: 'asc' | 'desc'
+  }
 ): Promise<SubgraphDraw[]> => {
   if (chainId in PRIZE_POOL_GRAPH_API_URLS) {
     const subgraphUrl = PRIZE_POOL_GRAPH_API_URLS[chainId as keyof typeof PRIZE_POOL_GRAPH_API_URLS]
@@ -25,10 +31,10 @@ export const getSubgraphDraws = async (
     const headers = { 'Content-Type': 'application/json' }
 
     const body = JSON.stringify({
-      query: `query($first: Int, $skip: Int, $orderDirection: OrderDirection, $orderBy: Draw_orderBy) {
-        draws(first: $first, skip: $skip, orderDirection: $orderDirection, orderBy: $orderBy) {
+      query: `query($numDraws: Int, $numPrizes: Int, $offsetDraws: Int, $offsetPrizes: Int, $orderDirection: OrderDirection, $orderBy: Draw_orderBy, $prizeOrderDirection: OrderDirection, $prizeOrderBy: PrizeClaim_orderBy) {
+        draws(first: $numDraws, skip: $offsetDraws, orderDirection: $orderDirection, orderBy: $orderBy) {
           id
-          prizeClaims {
+          prizeClaims(first: $numPrizes, skip: $offsetPrizes, orderDirection: $prizeOrderDirection, orderBy: $prizeOrderBy) {
             id
             winner { id }
             recipient { id }
@@ -42,10 +48,14 @@ export const getSubgraphDraws = async (
         }
       }`,
       variables: {
-        first: options?.first ?? 100,
-        skip: options?.skip ?? 0,
+        numDraws: options?.numDraws ?? 1_000,
+        numPrizes: options?.numPrizes ?? 1_000,
+        offsetDraws: options?.offsetDraws ?? 0,
+        offsetPrizes: options?.offsetPrizes ?? 0,
         orderDirection: options?.orderDirection ?? 'desc',
-        orderBy: 'id'
+        orderBy: 'id',
+        prizeOrderDirection: 'asc',
+        prizeOrderBy: 'timestamp'
       }
     })
 
@@ -89,14 +99,84 @@ export const getSubgraphDraws = async (
 }
 
 /**
+ * Returns past draws from the given network's subgraph
+ *
+ * NOTE: Wraps {@link getSubgraphDraws} to fetch all results regardless of number of entries
+ * @param chainId the network's chain ID
+ * @param options optional parameters
+ */
+export const getPaginatedSubgraphDraws = async (
+  chainId: number,
+  options?: { pageSize?: number }
+) => {
+  const draws: SubgraphDraw[] = []
+  const drawIds: number[] = []
+  const pageSize = options?.pageSize ?? 1_000
+  let drawsPage = 0
+
+  while (true) {
+    let prizesPage = 0
+
+    while (true) {
+      let needsNewPrizesPage = false
+
+      const newPage = await getSubgraphDraws(chainId, {
+        numDraws: pageSize,
+        numPrizes: pageSize,
+        offsetDraws: drawsPage * pageSize,
+        offsetPrizes: prizesPage * pageSize,
+        orderDirection: 'asc'
+      })
+
+      newPage.forEach((draw) => {
+        if (drawIds.includes(draw.id)) {
+          if (draw.prizeClaims.length > 0) {
+            const drawIndex = draws.findIndex((d) => d.id === draw.id)
+            draws[drawIndex].prizeClaims.push(...draw.prizeClaims)
+          }
+        } else {
+          draws.push(draw)
+          drawIds.push(draw.id)
+        }
+
+        if (draw.prizeClaims.length >= pageSize) {
+          needsNewPrizesPage = true
+        }
+      })
+
+      if (needsNewPrizesPage) {
+        prizesPage++
+      } else {
+        break
+      }
+    }
+
+    if (draws.length < (drawsPage + 1) * pageSize) {
+      break
+    } else {
+      drawsPage++
+    }
+  }
+
+  return draws
+}
+
+/**
  * Returns a user's prize history from the given network's subgraph
- * @param chainId the prize pool's chain ID
+ *
+ * NOTE: By default queries the last 1k prizes
+ * @param chainId the network's chain ID
  * @param userAddress the user's wallet address
+ * @param options optional parameters
  * @returns
  */
 export const getUserSubgraphPrizes = async (
   chainId: number,
-  userAddress: string
+  userAddress: string,
+  options?: {
+    numPrizes?: number
+    offsetPrizes?: number
+  }
 ): Promise<SubgraphPrize[]> => {
   if (chainId in PRIZE_POOL_GRAPH_API_URLS) {
     const subgraphUrl = PRIZE_POOL_GRAPH_API_URLS[chainId as keyof typeof PRIZE_POOL_GRAPH_API_URLS]
@@ -104,9 +184,9 @@ export const getUserSubgraphPrizes = async (
     const headers = { 'Content-Type': 'application/json' }
 
     const body = JSON.stringify({
-      query: `query($id: Bytes) {
+      query: `query($id: Bytes, $numPrizes: Int, $offsetPrizes: Int, $orderDirection: OrderDirection, $orderBy: PrizeClaim_orderBy) {
         account(id: $id) {
-          prizesReceived {
+          prizesReceived(first: $numPrizes, skip: $offsetPrizes, orderDirection: $orderDirection, orderBy: $orderBy) {
             id
             draw { id }
             tier
@@ -119,7 +199,11 @@ export const getUserSubgraphPrizes = async (
         }
       }`,
       variables: {
-        id: userAddress
+        id: userAddress,
+        numPrizes: options?.numPrizes ?? 1_000,
+        offsetPrizes: options?.offsetPrizes ?? 0,
+        orderDirection: 'asc',
+        orderBy: 'timestamp'
       }
     })
 
@@ -155,14 +239,58 @@ export const getUserSubgraphPrizes = async (
 }
 
 /**
- * Returns a user's TWAB observations from the given network's subgraph
- * @param chainId the prize pool's chain ID
+ * Returns a user's prize history from the given network's subgraph
+ *
+ * NOTE: Wraps {@link getUserSubgraphPrizes} to fetch all results regardless of number of entries
+ * @param chainId the network's chain ID
  * @param userAddress the user's wallet address
+ * @param options optional parameters
+ */
+export const getPaginatedUserSubgraphPrizes = async (
+  chainId: number,
+  userAddress: string,
+  options?: { pageSize?: number }
+) => {
+  const userPrizes: SubgraphPrize[] = []
+  const pageSize = options?.pageSize ?? 1_000
+  let page = 0
+
+  while (true) {
+    const newPage = await getUserSubgraphPrizes(chainId, userAddress, {
+      numPrizes: pageSize,
+      offsetPrizes: page * pageSize
+    })
+
+    userPrizes.push(...newPage)
+
+    if (newPage.length < pageSize) {
+      break
+    } else {
+      page++
+    }
+  }
+
+  return userPrizes
+}
+
+/**
+ * Returns a user's TWAB observations from the given network's subgraph
+ *
+ * NOTE: By default queries the last 1k observations for a max of 1k vaults
+ * @param chainId the network's chain ID
+ * @param userAddress the user's wallet address
+ * @param options optional parameters
  * @returns
  */
 export const getUserSubgraphObservations = async (
   chainId: number,
-  userAddress: string
+  userAddress: string,
+  options?: {
+    numVaults?: number
+    numObservations?: number
+    offsetVaults?: number
+    offsetObservations?: number
+  }
 ): Promise<{ [vaultAddress: `0x${string}`]: SubgraphObservation[] }> => {
   if (chainId in TWAB_GRAPH_API_URLS) {
     const subgraphUrl = TWAB_GRAPH_API_URLS[chainId as keyof typeof TWAB_GRAPH_API_URLS]
@@ -170,11 +298,11 @@ export const getUserSubgraphObservations = async (
     const headers = { 'Content-Type': 'application/json' }
 
     const body = JSON.stringify({
-      query: `query($id: Bytes, $orderBy: AccountObservation_orderBy) {
+      query: `query($id: Bytes, $numVaults: Int, $numObservations: Int, $offsetVaults: Int, $offsetObservations: Int, $orderDirection: OrderDirection, $orderBy: AccountObservation_orderBy) {
         user(id: $id) {
-          accounts {
+          accounts(first: $numVaults, skip: $offsetVaults) {
             vault { id }
-            observations(orderBy: $orderBy) {
+            observations(first: $numObservations, skip: $offsetObservations, orderDirection: $orderDirection, orderBy: $orderBy) {
               balance
               delegateBalance
               timestamp
@@ -184,6 +312,11 @@ export const getUserSubgraphObservations = async (
       }`,
       variables: {
         id: userAddress,
+        numVaults: options?.numVaults ?? 1_000,
+        numObservations: options?.numObservations ?? 1_000,
+        offsetVaults: options?.offsetVaults ?? 0,
+        offsetObservations: options?.offsetObservations ?? 0,
+        orderDirection: 'desc',
         orderBy: 'timestamp'
       }
     })
@@ -213,12 +346,87 @@ export const getUserSubgraphObservations = async (
 }
 
 /**
+ * Returns a user's TWAB observations from the given network's subgraph
+ *
+ * NOTE: Wraps {@link getUserSubgraphObservations} to fetch all results regardless of number of entries
+ * @param chainId the network's chain ID
+ * @param userAddress the user's wallet address
+ * @param options optional parameters
+ */
+export const getPaginatedUserSubgraphObservations = async (
+  chainId: number,
+  userAddress: string,
+  options?: { pageSize?: number }
+) => {
+  const userObservations: { [vaultAddress: `0x${string}`]: SubgraphObservation[] } = {}
+  const pageSize = options?.pageSize ?? 1_000
+  let vaultsPage = 0
+
+  while (true) {
+    let observationsPage = 0
+
+    while (true) {
+      let needsNewObservationsPage = false
+
+      const newPage = await getUserSubgraphObservations(chainId, userAddress, {
+        numVaults: pageSize,
+        numObservations: pageSize,
+        offsetVaults: vaultsPage * pageSize,
+        offsetObservations: observationsPage * pageSize
+      })
+
+      for (const key in newPage) {
+        const vaultAddress = key as Address
+
+        if (userObservations[vaultAddress] === undefined) {
+          userObservations[vaultAddress] = newPage[vaultAddress]
+        } else {
+          const lastAddedObservationTimestamp =
+            userObservations[vaultAddress][userObservations[vaultAddress].length - 1].timestamp
+
+          if (newPage[vaultAddress][0]?.timestamp === lastAddedObservationTimestamp) {
+            newPage[vaultAddress].shift()
+          }
+
+          userObservations[vaultAddress].push(...newPage[vaultAddress])
+
+          if (newPage[vaultAddress].length >= pageSize - 1) {
+            needsNewObservationsPage = true
+          }
+        }
+      }
+
+      if (needsNewObservationsPage) {
+        observationsPage++
+      } else {
+        break
+      }
+    }
+
+    if (Object.keys(userObservations).length < (vaultsPage + 1) * pageSize) {
+      break
+    } else {
+      vaultsPage++
+    }
+  }
+
+  return userObservations
+}
+
+/**
  * Returns all draw timestamps from the given network's subgraph
- * @param chainId the prize pool's chain ID
+ *
+ * NOTE: By default queries the last 1k draw timestamps
+ * @param chainId the network's chain ID
+ * @param options optional parameters
  * @returns
  */
 export const getSubgraphDrawTimestamps = async (
-  chainId: number
+  chainId: number,
+  options?: {
+    numDraws?: number
+    offsetDraws?: number
+  }
 ): Promise<SubgraphDrawTimestamp[]> => {
   if (chainId in PRIZE_POOL_GRAPH_API_URLS) {
     const subgraphUrl = PRIZE_POOL_GRAPH_API_URLS[chainId as keyof typeof PRIZE_POOL_GRAPH_API_URLS]
@@ -226,18 +434,22 @@ export const getSubgraphDrawTimestamps = async (
     const headers = { 'Content-Type': 'application/json' }
 
     const body = JSON.stringify({
-      query: `query($first: Int, $orderDirection: OrderDirection, $orderBy: Draw_orderBy) {
-        draws(orderDirection: $orderDirection, orderBy: $orderBy) {
+      query: `query($numDraws: Int, $offsetDraws: Int, $numPrizes: Int, $orderDirection: OrderDirection, $orderBy: Draw_orderBy, $prizeOrderDirection: OrderDirection, $prizeOrderBy: PrizeClaim_orderBy) {
+        draws(first: $numDraws, skip: $offsetDraws, orderDirection: $orderDirection, orderBy: $orderBy) {
           id
-          prizeClaims(first: $first) {
+          prizeClaims(first: $numPrizes, orderDirection: $prizeOrderDirection, orderBy: $prizeOrderBy) {
             timestamp
           }
         }
       }`,
       variables: {
+        numDraws: options?.numDraws ?? 1_000,
+        offsetDraws: options?.offsetDraws ?? 0,
+        numPrizes: 1,
         orderDirection: 'asc',
         orderBy: 'id',
-        first: 1
+        prizeOrderDirection: 'asc',
+        prizeOrderBy: 'timestamp'
       }
     })
 
@@ -256,4 +468,37 @@ export const getSubgraphDrawTimestamps = async (
     console.warn(`Could not find subgraph URL for chain ID: ${chainId}`)
     return []
   }
+}
+
+/**
+ * Returns all draw timestamps from the given network's subgraph
+ *
+ * NOTE: Wraps {@link getSubgraphDrawTimestamps} to fetch all results regardless of number of entries
+ * @param chainId the network's chain ID
+ * @param options optional parameters
+ */
+export const getPaginatedSubgraphDrawTimestamps = async (
+  chainId: number,
+  options?: { pageSize?: number }
+) => {
+  const drawTimestamps: SubgraphDrawTimestamp[] = []
+  const pageSize = options?.pageSize ?? 1_000
+  let page = 0
+
+  while (true) {
+    const newPage = await getSubgraphDrawTimestamps(chainId, {
+      numDraws: pageSize,
+      offsetDraws: page * pageSize
+    })
+
+    drawTimestamps.push(...newPage)
+
+    if (newPage.length < pageSize) {
+      break
+    } else {
+      page++
+    }
+  }
+
+  return drawTimestamps
 }

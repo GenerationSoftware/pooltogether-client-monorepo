@@ -1,7 +1,7 @@
 import { PrizePool } from '@pooltogether/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { SubgraphPrize } from '@shared/types'
-import { getUserSubgraphPrizes } from '@shared/utilities'
+import { getPaginatedUserSubgraphPrizes } from '@shared/utilities'
 import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { QUERY_KEYS } from '../constants'
@@ -19,7 +19,7 @@ export const useAllUserPrizePoolWins = (prizePools: PrizePool[], userAddress: st
         queryKey: [QUERY_KEYS.userWins, prizePool?.chainId, userAddress],
         queryFn: async () => {
           const chainId = prizePool.chainId
-          const wins = await getUserSubgraphPrizes(chainId, userAddress)
+          const wins = await getPaginatedUserSubgraphPrizes(chainId, userAddress)
           return wins
         },
         staleTime: Infinity,

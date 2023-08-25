@@ -28,9 +28,10 @@ export const PrizePoolWinners = () => {
       <div className='flex flex-col w-full max-w-[36rem] gap-4 items-center px-6 py-8 bg-pt-transparent rounded-lg md:px-11'>
         <span className='font-semibold md:text-xl'>{t_prizes('recentWinners')}</span>
         <ul className='flex flex-col w-full max-w-[36rem] pl-2 md:pl-1'>
-          {draws
-            .slice(0, numDraws)
+          {[...draws]
             .filter((draw) => draw.prizeClaims.length > 0)
+            .reverse()
+            .slice(0, numDraws)
             .map((draw) => {
               return <DrawRow key={`dr-${draw.id}`} draw={draw} prizePool={selectedPrizePool} />
             })}

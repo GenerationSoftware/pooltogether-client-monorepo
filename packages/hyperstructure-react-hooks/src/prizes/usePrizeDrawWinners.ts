@@ -1,6 +1,6 @@
 import { PrizePool } from '@pooltogether/hyperstructure-client-js'
 import { SubgraphDraw } from '@shared/types'
-import { getSubgraphDraws } from '@shared/utilities'
+import { getPaginatedSubgraphDraws } from '@shared/utilities'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import { QUERY_KEYS } from '../constants'
 
@@ -13,15 +13,12 @@ import { QUERY_KEYS } from '../constants'
 export const usePrizeDrawWinners = (
   prizePool: PrizePool,
   options?: {
-    first?: number
-    skip?: number
-    orderDirection?: 'asc' | 'desc'
     refetchInterval?: number
   }
 ): UseQueryResult<SubgraphDraw[], unknown> => {
-  const queryKey = [QUERY_KEYS.drawWinners, prizePool?.chainId, JSON.stringify(options)]
+  const queryKey = [QUERY_KEYS.drawWinners, prizePool?.chainId]
 
-  return useQuery(queryKey, async () => await getSubgraphDraws(prizePool?.chainId, options), {
+  return useQuery(queryKey, async () => await getPaginatedSubgraphDraws(prizePool?.chainId), {
     refetchInterval: options?.refetchInterval ?? false,
     enabled: !!prizePool
   })

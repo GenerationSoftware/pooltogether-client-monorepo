@@ -1,7 +1,7 @@
 import { PrizePool } from '@pooltogether/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { SubgraphDraw } from '@shared/types'
-import { getSubgraphDraws } from '@shared/utilities'
+import { getPaginatedSubgraphDraws } from '@shared/utilities'
 import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { QUERY_KEYS } from '../constants'
@@ -9,24 +9,16 @@ import { QUERY_KEYS } from '../constants'
 /**
  * Returns all historical draws and winners for any given prize pools
  * @param prizePools instances of `PrizePool`
- * @param options optional settings
  * @returns
  */
-export const useAllPrizeDrawWinners = (
-  prizePools: PrizePool[],
-  options?: {
-    first?: number
-    skip?: number
-    orderDirection?: 'asc' | 'desc'
-  }
-) => {
+export const useAllPrizeDrawWinners = (prizePools: PrizePool[]) => {
   const results = useQueries({
     queries: prizePools.map((prizePool) => {
       return {
-        queryKey: [QUERY_KEYS.drawWinners, prizePool?.chainId, JSON.stringify(options)],
+        queryKey: [QUERY_KEYS.drawWinners, prizePool?.chainId],
         queryFn: async () => {
           const chainId = prizePool.chainId
-          const drawWinners = await getSubgraphDraws(chainId, options)
+          const drawWinners = await getPaginatedSubgraphDraws(chainId)
           return drawWinners
         },
         staleTime: Infinity,

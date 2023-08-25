@@ -40,10 +40,8 @@ export const useAllUserEligibleDraws = (prizePools: PrizePool[], userAddress: st
         if (!!drawTimestamps[chainId] && !!balanceUpdates[chainId]) {
           for (const strVaultAddress in balanceUpdates[chainId]) {
             const vaultAddress = strVaultAddress as Address
-            const vaultDraws = getVaultEligibleDraws(
-              drawTimestamps[chainId],
-              balanceUpdates[chainId][vaultAddress]
-            )
+            const ascBalanceUpdates = [...balanceUpdates[chainId][vaultAddress]].reverse()
+            const vaultDraws = getVaultEligibleDraws(drawTimestamps[chainId], ascBalanceUpdates)
             vaultDraws.forEach((draw) => {
               const existingDraw = chainDraws.findIndex((d) => d.id === draw.id)
               if (existingDraw === -1) {
@@ -78,7 +76,7 @@ const getVaultEligibleDraws = (
     for (let drawIndex = drawsToCheck.length - 1; drawIndex >= 0; drawIndex--) {
       const draw = drawsToCheck[drawIndex]
       if (draw.timestamp >= balanceUpdate.timestamp) {
-        if (balanceUpdate.balance > 0 || balanceUpdate.delegateBalance > 0) {
+        if (balanceUpdate.delegateBalance > 0) {
           eligibleDraws.push(draw)
         }
         drawsToCheck.pop()
