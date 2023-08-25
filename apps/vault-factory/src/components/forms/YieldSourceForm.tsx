@@ -56,29 +56,26 @@ export const YieldSourceForm = (props: YieldSourceFormProps) => {
           text='What is ERC-4626?'
           className='text-pt-teal-dark'
         />
-        <div className='flex gap-6'>
-          <SimpleInput
-            formKey='vaultYieldSourceName'
-            validate={{
-              isNotFalsyString: (v: string) => !!v || 'Enter a valid name.',
-              isValidString: (v: string) =>
-                isValidChars(v, { allowSpaces: true }) || 'Invalid characters in name.'
-            }}
-            placeholder='Aave, Yearn, etc.'
-            label='Yield Source Name'
-            className='w-full max-w-md'
-          />
-          <SimpleInput
-            formKey='vaultYieldSourceAddress'
-            validate={{
-              isValidAddress: (v: string) =>
-                isAddress(v?.trim()) || 'Enter a valid contract address.'
-            }}
-            placeholder='0x0000...'
-            label='Yield Source Address'
-            className='w-full max-w-md'
-          />
-        </div>
+        <SimpleInput
+          formKey='vaultYieldSourceName'
+          validate={{
+            isNotFalsyString: (v: string) => !!v || 'Enter a valid name.',
+            isValidString: (v: string) =>
+              isValidChars(v, { allowSpaces: true }) || 'Invalid characters in name.'
+          }}
+          placeholder='Aave, Yearn, etc.'
+          label='Yield Source Name'
+          className='w-full max-w-sm'
+        />
+        <SimpleInput
+          formKey='vaultYieldSourceAddress'
+          validate={{
+            isValidAddress: (v: string) => isAddress(v?.trim()) || 'Enter a valid contract address.'
+          }}
+          placeholder='0x0000...'
+          label='Yield Source Address'
+          className='w-full max-w-sm'
+        />
         <div className='flex gap-2 items-center'>
           <PrevButton />
           <NextButton disabled={!formMethods.formState.isValid} />
