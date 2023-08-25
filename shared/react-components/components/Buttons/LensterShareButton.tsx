@@ -15,7 +15,9 @@ export const LensterShareButton = (props: LensterShareButtonProps) => {
   const href = new URL('http://lenster.xyz')
   !!text && href.searchParams.set('text', text)
   !!url && href.searchParams.set('url', encodeURI(url))
-  !!hashTags && hashTags.length > 0 && href.searchParams.set('hashtags', hashTags.join(','))
+  !!hashTags &&
+    hashTags.length > 0 &&
+    href.searchParams.set('hashtags', hashTags.map((h) => h.replace(' ', '')).join(','))
 
   return (
     <Button
