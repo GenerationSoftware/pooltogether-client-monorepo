@@ -1,8 +1,5 @@
-import {
-  LIQUIDATION_PAIR_FACTORY_ADDRESSES,
-  liquidationPairFactoryABI,
-  PairCreateInfo
-} from '@pooltogether/hyperstructure-client-js'
+import { PairCreateInfo } from '@shared/types'
+import { LIQUIDATION_PAIR_FACTORY_ADDRESSES, liquidationPairFactoryABI } from '@shared/utilities'
 import { useEffect } from 'react'
 import { Address, TransactionReceipt } from 'viem'
 import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
@@ -91,19 +88,17 @@ export const useSendDeployLiquidationPairTransaction = (
     data: txSendData,
     isLoading: isWaiting,
     isError: isSendingError,
-    write
+    isSuccess: isSendingSuccess,
+    write: sendDeployLiquidationPairTransaction
   } = useContractWrite(config)
 
   const txHash = txSendData?.hash
 
-  const sendDeployLiquidationPairTransaction = !!write
-    ? () => {
-        write()
-        if (!!txHash) {
-          options?.onSend?.(txHash)
-        }
-      }
-    : undefined
+  useEffect(() => {
+    if (!!txHash && isSendingSuccess) {
+      options?.onSend?.(txHash)
+    }
+  }, [isSendingSuccess])
 
   const {
     data: txReceipt,
@@ -112,13 +107,13 @@ export const useSendDeployLiquidationPairTransaction = (
     isError: isConfirmingError
   } = useWaitForTransaction({ chainId, hash: txHash })
 
-  const isError = isSendingError || isConfirmingError
-
   useEffect(() => {
     if (!!txReceipt && isSuccess) {
       options?.onSuccess?.(txReceipt)
     }
   }, [isSuccess])
+
+  const isError = isSendingError || isConfirmingError
 
   useEffect(() => {
     if (isError) {

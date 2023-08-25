@@ -40,7 +40,7 @@ export const DeployLiquidationPairButton = (props: DeployLiquidationPairButtonPr
       createDeployLiquidationPairTxToast({ chainId, txHash, addRecentTransaction })
     },
     onSuccess: (txReceipt) => {
-      const liquidationPairAddress = `0x${txReceipt.logs[0].topics[1]?.slice(-40)}`
+      const liquidationPairAddress = txReceipt.logs[0].address
       if (isAddress(liquidationPairAddress)) {
         setLiquidationPairAddress(liquidationPairAddress)
       }

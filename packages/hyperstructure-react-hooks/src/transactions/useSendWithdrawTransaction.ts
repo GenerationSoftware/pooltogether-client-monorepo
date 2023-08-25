@@ -1,4 +1,5 @@
-import { Vault, vaultABI } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@pooltogether/hyperstructure-client-js'
+import { vaultABI } from '@shared/utilities'
 import { useEffect } from 'react'
 import { Address, isAddress, TransactionReceipt } from 'viem'
 import {
@@ -20,7 +21,11 @@ import { useUserVaultTokenBalance } from '..'
 export const useSendWithdrawTransaction = (
   amount: bigint,
   vault: Vault,
-  options?: { onSend?: () => void; onSuccess?: () => void; onError?: () => void }
+  options?: {
+    onSend?: (txHash: `0x${string}`) => void
+    onSuccess?: (txReceipt: TransactionReceipt) => void
+    onError?: () => void
+  }
 ): {
   isWaiting: boolean
   isConfirming: boolean
@@ -58,17 +63,17 @@ export const useSendWithdrawTransaction = (
     data: txSendData,
     isLoading: isWaiting,
     isError: isSendingError,
-    write
+    isSuccess: isSendingSuccess,
+    write: sendWithdrawTransaction
   } = useContractWrite(config)
 
-  const sendWithdrawTransaction = !!write
-    ? () => {
-        write()
-        options?.onSend?.()
-      }
-    : undefined
-
   const txHash = txSendData?.hash
+
+  useEffect(() => {
+    if (!!txHash && isSendingSuccess) {
+      options?.onSend?.(txHash)
+    }
+  }, [isSendingSuccess])
 
   const {
     data: txReceipt,
@@ -77,13 +82,13 @@ export const useSendWithdrawTransaction = (
     isError: isConfirmingError
   } = useWaitForTransaction({ chainId: vault?.chainId, hash: txHash })
 
-  const isError = isSendingError || isConfirmingError
-
   useEffect(() => {
     if (!!txReceipt && isSuccess) {
-      options?.onSuccess?.()
+      options?.onSuccess?.(txReceipt)
     }
   }, [isSuccess])
+
+  const isError = isSendingError || isConfirmingError
 
   useEffect(() => {
     if (isError) {

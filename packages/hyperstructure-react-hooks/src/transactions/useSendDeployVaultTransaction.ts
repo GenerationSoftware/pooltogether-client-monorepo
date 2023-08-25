@@ -1,8 +1,5 @@
-import {
-  VAULT_FACTORY_ADDRESSES,
-  VaultDeployInfo,
-  vaultFactoryABI
-} from '@pooltogether/hyperstructure-client-js'
+import { VaultDeployInfo } from '@shared/types'
+import { VAULT_FACTORY_ADDRESSES, vaultFactoryABI } from '@shared/utilities'
 import { useEffect } from 'react'
 import { Address, TransactionReceipt } from 'viem'
 import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
@@ -91,19 +88,17 @@ export const useSendDeployVaultTransaction = (
     data: txSendData,
     isLoading: isWaiting,
     isError: isSendingError,
-    write
+    isSuccess: isSendingSuccess,
+    write: sendDeployVaultTransaction
   } = useContractWrite(config)
 
   const txHash = txSendData?.hash
 
-  const sendDeployVaultTransaction = !!write
-    ? () => {
-        write()
-        if (!!txHash) {
-          options?.onSend?.(txHash)
-        }
-      }
-    : undefined
+  useEffect(() => {
+    if (!!txHash && isSendingSuccess) {
+      options?.onSend?.(txHash)
+    }
+  }, [isSendingSuccess])
 
   const {
     data: txReceipt,
@@ -112,13 +107,13 @@ export const useSendDeployVaultTransaction = (
     isError: isConfirmingError
   } = useWaitForTransaction({ chainId, hash: txHash })
 
-  const isError = isSendingError || isConfirmingError
-
   useEffect(() => {
     if (!!txReceipt && isSuccess) {
       options?.onSuccess?.(txReceipt)
     }
   }, [isSuccess])
+
+  const isError = isSendingError || isConfirmingError
 
   useEffect(() => {
     if (isError) {

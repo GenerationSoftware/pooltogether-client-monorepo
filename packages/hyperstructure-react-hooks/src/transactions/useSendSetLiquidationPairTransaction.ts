@@ -1,4 +1,5 @@
-import { Vault, vaultABI } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@pooltogether/hyperstructure-client-js'
+import { vaultABI } from '@shared/utilities'
 import { useEffect } from 'react'
 import { Address, TransactionReceipt } from 'viem'
 import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
@@ -44,19 +45,16 @@ export const useSendSetLiquidationPairTransaction = (
     data: txSendData,
     isLoading: isWaiting,
     isError: isSendingError,
-    write
+    isSuccess: isSendingSuccess,
+    write: sendSetLiquidationPairTransaction
   } = useContractWrite(config)
 
   const txHash = txSendData?.hash
-
-  const sendSetLiquidationPairTransaction = !!write
-    ? () => {
-        write()
-        if (!!txHash) {
-          options?.onSend?.(txHash)
-        }
-      }
-    : undefined
+  useEffect(() => {
+    if (!!txHash && isSendingSuccess) {
+      options?.onSend?.(txHash)
+    }
+  }, [isSendingSuccess])
 
   const {
     data: txReceipt,
@@ -65,13 +63,13 @@ export const useSendSetLiquidationPairTransaction = (
     isError: isConfirmingError
   } = useWaitForTransaction({ chainId: vault?.chainId, hash: txHash })
 
-  const isError = isSendingError || isConfirmingError
-
   useEffect(() => {
     if (!!txReceipt && isSuccess) {
       options?.onSuccess?.(txReceipt)
     }
   }, [isSuccess])
+
+  const isError = isSendingError || isConfirmingError
 
   useEffect(() => {
     if (isError) {
