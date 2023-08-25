@@ -53,18 +53,13 @@ export const PrizePoolDropdown = (props: PrizePoolDropdownProps) => {
     [isDesktop]
   )
 
+  if (dropdownItems.length < 2) {
+    return <Label chainId={selectedNetwork} intl={intl?.common} />
+  }
+
   return (
     <Dropdown
-      label={
-        <PrizePoolBadge
-          chainId={selectedNetwork}
-          hideBg={true}
-          intl={intl?.common}
-          className='gap-2 pr-0'
-          iconClassName='h-8 w-8'
-          textClassName='text-[1.75rem] font-grotesk font-medium md:text-4xl'
-        />
-      }
+      label={<Label chainId={selectedNetwork} intl={intl?.common} />}
       items={dropdownItems}
       header={
         <span className='px-3 text-sm font-semibold text-pt-purple-50 md:mb-2 md:text-pt-purple-400'>
@@ -73,6 +68,26 @@ export const PrizePoolDropdown = (props: PrizePoolDropdownProps) => {
       }
       inline={true}
       placement='bottom'
+    />
+  )
+}
+
+interface LabelProps {
+  chainId: number
+  intl?: Intl<'prizePool'>
+}
+
+const Label = (props: LabelProps) => {
+  const { chainId, intl } = props
+
+  return (
+    <PrizePoolBadge
+      chainId={chainId}
+      hideBg={true}
+      intl={intl}
+      className='gap-2 pr-0'
+      iconClassName='h-8 w-8'
+      textClassName='text-[1.75rem] font-grotesk font-medium md:text-4xl'
     />
   )
 }
