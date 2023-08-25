@@ -25,12 +25,14 @@ export const LINKS = Object.freeze({
   termsOfService: `${DOMAINS.landingPage}/terms`,
   ecosystem: `${DOMAINS.protocolLandingPage}/ecosystem`,
   discord: `${DOMAINS.protocolLandingPage}/discord`,
+  appDocs: `${DOMAINS.docs}/cabana-app`,
+  prizePowerDocs: `${DOMAINS.docs}/cabana-app/prize-power`,
   toolDocs: `${DOMAINS.docs}/`, // TODO: update to tools section once available
-  factoryDocs: `${DOMAINS.docs}/`, // TODO: update to factory docs page once available
-  listDocs: `${DOMAINS.docs}/`, // TODO: update to list docs page once available
-  faq: `${DOMAINS.protocolDocs}/welcome/faq`, // TODO: update to cabana docs FAQ page once available
+  listDocs: `${DOMAINS.docs}/cabana-lists`,
+  factoryDocs: `${DOMAINS.docs}/cabana-factory`,
+  faq: `${DOMAINS.docs}/`, // TODO: update to faq section once available
   tutorials: `${DOMAINS.docs}/`, // TODO: update to tutorials section on docs once available
-  audits: `${DOMAINS.protocolDocs}/security/audits`, // TODO: update to cabana docs audits page once available
+  audits: `${DOMAINS.protocolDocs}/security/audits`, // TODO: update to cabana docs audits page once available (or PT updated audits page)
   devDocs_v5: `${DOMAINS.protocolDevDocs}/protocol/next/introduction`,
   depositDelegator: `${DOMAINS.tools_v4}/delegate`,
   prizeTierController: `${DOMAINS.tools_v4}/prize-tier-controller`,

@@ -5,7 +5,7 @@ import {
 } from '@pooltogether/hyperstructure-react-hooks'
 import { VaultList } from '@shared/types'
 import { Intl } from '@shared/types'
-import { BasicIcon, ExternalLink, Toggle } from '@shared/ui'
+import { BasicIcon, ExternalLink, LINKS, Toggle } from '@shared/ui'
 import { getVaultList, NETWORK } from '@shared/utilities'
 import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -108,9 +108,8 @@ export const VaultListView = (props: VaultListViewProps) => {
           {intl?.base?.('vaultListsDescription') ??
             'Vault lists determine what prize vaults are displayed throughout the app. Use caution when interacting with imported lists.'}
         </span>
-        {/* TODO: add link */}
         <ExternalLink
-          href='#'
+          href={LINKS.listDocs}
           text={intl?.base?.('learnMoreVaultLists') ?? 'Learn more about vault lists'}
           className='text-pt-purple-200'
         />

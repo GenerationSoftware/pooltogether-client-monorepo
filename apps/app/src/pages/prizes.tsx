@@ -1,4 +1,4 @@
-import { ExternalLink } from '@shared/ui'
+import { ExternalLink, LINKS } from '@shared/ui'
 import { SECONDS_PER_DAY } from '@shared/utilities'
 import { GetStaticProps } from 'next'
 import { useTranslations } from 'next-intl'
@@ -27,9 +27,9 @@ export default function PrizesPage() {
     <Layout className='gap-8'>
       <span className='hidden text-6xl py-2 md:block'>🏆</span>
       <PrizePoolDisplay />
-      {/* TODO: add link */}
+      {/* TODO: add more specific docs link once available */}
       <ExternalLink
-        href='#'
+        href={LINKS.docs}
         text={t('learnMore')}
         size='xs'
         className='text-pt-purple-300 md:text-base'

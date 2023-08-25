@@ -1,5 +1,5 @@
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
-import { Tooltip } from '@shared/ui'
+import { LINKS, Tooltip } from '@shared/ui'
 import classNames from 'classnames'
 
 export interface PrizePowerTooltipProps {
@@ -20,8 +20,7 @@ export const PrizePowerTooltip = (props: PrizePowerTooltipProps) => {
             {intl?.text ??
               'Vaults with higher prize power have a greater percentage of chances to win'}
           </span>
-          {/* TODO: add link */}
-          <a href='#' className='text-pt-purple-500 underline'>
+          <a href={LINKS.prizePowerDocs} className='text-pt-purple-500 underline'>
             {intl?.learnMore ?? 'Learn More'}
           </a>
         </div>

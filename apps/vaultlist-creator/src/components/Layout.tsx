@@ -56,8 +56,7 @@ const SimpleNavbar = (props: { className?: string }) => {
         onClick={() => router.reload()}
         className='w-52 h-auto cursor-pointer'
       />
-      {/* TODO: replace with better lists-specific docs once available */}
-      <a href={LINKS.docs} target='_blank' className='flex items-center'>
+      <a href={LINKS.listDocs} target='_blank' className='flex items-center'>
         <DocsSvg className='w-5 h-5' />
         <span className='text-pt-purple-300'>Docs</span>
       </a>

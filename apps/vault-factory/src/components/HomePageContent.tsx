@@ -45,7 +45,6 @@ export const HomePageContent = () => {
       {/* TODO: add video tutorial once available */}
       <div className='flex gap-4 items-center'>
         <PurpleButton onClick={onClickDeploy}>Deploy a Prize Vault</PurpleButton>
-        {/* TODO: add more specific docs link */}
         <Button href={LINKS.factoryDocs} target='_blank'>
           Read the Docs
         </Button>
