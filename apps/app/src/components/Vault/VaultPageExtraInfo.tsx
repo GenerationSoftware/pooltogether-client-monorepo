@@ -73,22 +73,19 @@ export const VaultPageExtraInfo = (props: VaultPageExtraInfoProps) => {
       >
         <div className='flex gap-2 items-center'>
           <AlertIcon className='w-5 h-5' />
-          <span className='lg:text-xl lg:font-semibold'>
-            {t_vault.rich('learnAboutVault', {
-              vaultName: vault.name ?? shareData.name,
-              highlight: (chunks) => <span className='text-pt-purple-300'>{chunks}</span>
-            })}
+          <span className='lg:font-semibold'>
+            {t_vault('learnAboutVault', { vaultName: vault.name ?? shareData.name })}
           </span>
         </div>
-        <span className='text-sm lg:text-center lg:text-base'>{t_vault('smartContractRisk')}</span>
+        <span className='text-sm lg:text-center'>{t_vault('smartContractRisk')}</span>
         <Contracts chainId={vault.chainId} contracts={contracts} />
         {vaultLists.length > 0 ? (
           <>
-            <span className='text-sm lg:text-center lg:text-base'>{t_vault('inVaultLists')}</span>
+            <span className='text-sm lg:text-center'>{t_vault('inVaultLists')}</span>
             <VaultLists vaultLists={vaultLists} />
           </>
         ) : (
-          <span className='text-sm lg:text-center lg:text-base'>{t_vault('notInVaultLists')}</span>
+          <span className='text-sm lg:text-center'>{t_vault('notInVaultLists')}</span>
         )}
         <Button href={LINKS.docs} target='_blank' color='transparent' className='mx-auto'>
           <span className='whitespace-nowrap'>{t_common('readDocs')}</span>
@@ -122,7 +119,7 @@ const Contracts = (props: ContractsProps) => {
               href={getBlockExplorerUrl(chainId, contract.address)}
               text={contract.name}
               size='sm'
-              className='text-pt-purple-300'
+              className='text-pt-purple-200'
             />
           </span>
         )
@@ -152,7 +149,7 @@ const VaultLists = (props: VaultListsProps) => {
               href={isDefaultList ? `/api/vaultList/${list.src}` : list.src}
               text={list.name}
               size='sm'
-              className='text-pt-purple-300'
+              className='text-pt-purple-200'
             />
           </span>
         )

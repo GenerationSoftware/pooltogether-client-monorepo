@@ -22,7 +22,7 @@ interface MenuViewProps {
     | 'viewEcosystem'
     | 'manageVaultLists'
     | 'getHelp'
-    | 'getHelpWithPt'
+    | 'getHelpWithCabana'
   >
 }
 
@@ -72,7 +72,7 @@ export const MenuView = (props: MenuViewProps) => {
           {
             iconContent: '?',
             iconClassName: 'font-semibold',
-            title: intl?.('getHelpWithPt') ?? 'Get Help w/ Using PoolTogether',
+            title: intl?.('getHelpWithCabana') ?? 'Get Help w/ Using Cabana',
             onClick: () => window.open(LINKS.docs)
           }
         ]}

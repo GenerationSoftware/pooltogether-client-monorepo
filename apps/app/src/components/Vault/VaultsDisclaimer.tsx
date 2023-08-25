@@ -21,14 +21,14 @@ export const VaultsDisclaimer = (props: VaultsDisclaimerProps) => {
     <div
       className={classNames(
         'relative w-full max-w-[36rem] flex flex-col gap-4 p-4 bg-pt-transparent text-pt-purple-100 rounded-lg',
-        'lg:max-w-none lg:flex-row lg:gap-6 lg:items-center',
+        'lg:max-w-none lg:flex-row lg:gap-6 lg:items-center lg:px-10',
         { hidden: isDismissed },
         className
       )}
     >
       <div className='flex gap-2 items-center'>
         <AlertIcon className='w-5 h-5' />
-        <span className='text-lg font-semibold whitespace-nowrap lg:text-xl'>
+        <span className='text-base font-semibold whitespace-nowrap'>
           {t_common('learnAboutRisks')}:
         </span>
         <XMarkIcon

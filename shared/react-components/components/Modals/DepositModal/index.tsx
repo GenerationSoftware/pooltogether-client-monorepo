@@ -184,7 +184,7 @@ const RisksDisclaimer = (props: RisksDisclaimerProps) => {
     <div className='w-full flex flex-col gap-4 p-6 text-pt-purple-100 bg-pt-transparent rounded-lg lg:items-center'>
       <div className='flex gap-2 items-center'>
         <AlertIcon className='w-5 h-5' />
-        <span className='text-xs font-semibold lg:text-base'>
+        <span className='text-xs font-semibold lg:text-sm'>
           {intl?.common?.('learnAboutRisks') ?? 'Learn about the risks'}
         </span>
       </div>

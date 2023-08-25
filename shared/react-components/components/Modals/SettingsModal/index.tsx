@@ -30,7 +30,7 @@ export interface SettingsModalProps {
       | 'viewEcosystem'
       | 'manageVaultLists'
       | 'getHelp'
-      | 'getHelpWithPt'
+      | 'getHelpWithCabana'
       | 'vaultListsDescription'
       | 'learnMoreVaultLists'
       | 'urlInput'

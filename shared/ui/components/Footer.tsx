@@ -101,7 +101,11 @@ const FooterItemContent = (props: FooterItemContentProps & { className?: string 
 
   return (
     <span
-      className={classNames(baseClassName, { 'cursor-pointer': onClick !== undefined }, className)}
+      className={classNames(
+        baseClassName,
+        { 'cursor-pointer hover:underline': onClick !== undefined },
+        className
+      )}
       onClick={onClick}
     >
       {icon}
