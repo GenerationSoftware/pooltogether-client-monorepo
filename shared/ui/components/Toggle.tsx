@@ -9,13 +9,14 @@ export interface ToggleProps {
   labelClassName?: string
 }
 
-// TODO: add tick or X inside toggle
 export const Toggle = (props: ToggleProps) => {
   const { checked, onChange, label, disabled, className, labelClassName } = props
 
   const toggle = () => {
     !disabled && onChange(!checked)
   }
+
+  const iconClassName = 'absolute rounded-full opacity-0 transition-all'
 
   return (
     <label
@@ -37,17 +38,62 @@ export const Toggle = (props: ToggleProps) => {
       <div
         className={classNames(
           'w-[74px] h-10 rounded-full border border-gray-50',
-          `after:content-[''] after:absolute after:top-1 after:left-1 after:rounded-full after:h-8 after:w-8 after:transition-all`,
-          {
-            'bg-gray-200 after:bg-gray-500': !checked,
-            'bg-green-300 after:bg-green-100 after:translate-x-full': checked
-          },
+          { 'bg-gray-200': !checked, 'bg-green-300': checked },
           { 'brightness-50': disabled }
         )}
-      />
+      >
+        <span
+          className={classNames('absolute top-1 left-1 w-8 h-8 rounded-full transition-all', {
+            'translate-x-full': checked
+          })}
+        >
+          <CheckIcon
+            className={classNames(iconClassName, 'bg-green-100 text-green-500', {
+              'opacity-100': checked
+            })}
+          />
+          <XIcon
+            className={classNames(iconClassName, 'bg-gray-500 text-gray-100', {
+              'opacity-100': !checked
+            })}
+          />
+        </span>
+      </div>
       {!!label && (
         <span className={classNames('ml-3 text-sm font-medium', labelClassName)}>{label}</span>
       )}
     </label>
   )
 }
+
+const CheckIcon = (props: { className?: string }) => (
+  <svg
+    fill='none'
+    stroke='currentColor'
+    strokeWidth={1.5}
+    viewBox='0 0 24 24'
+    xmlns='http://www.w3.org/2000/svg'
+    aria-hidden='true'
+    className={props.className}
+  >
+    <path strokeLinecap='round' strokeLinejoin='round' d='M 9 12.75 L 11.25 15 15 9.75' />
+  </svg>
+)
+
+const XIcon = (props: { className?: string }) => (
+  <svg
+    fill='none'
+    stroke='currentColor'
+    strokeWidth={1.5}
+    viewBox='0 0 24 24'
+    xmlns='http://www.w3.org/2000/svg'
+    aria-hidden='true'
+    className={props.className}
+  >
+    <path
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      d='M 9.75 9.75 l 4.5 4.5 m 0 -4.5 l -4.5 4.5'
+    />
+  </svg>
+)
