@@ -48,6 +48,8 @@ export const useNextDrawTimestamps = (prizePool: PrizePool) => {
           const newNextDrawStartTimestamp = _nextDrawStartTimestamp + drawPeriod * (updateCount + 1)
           setNextDrawStartTimestamp(newNextDrawStartTimestamp)
         }, timeUntilUpdate)
+      } else {
+        setNextDrawStartTimestamp(_nextDrawStartTimestamp + drawPeriod)
       }
     }
   }, [drawPeriod, _nextDrawStartTimestamp, nextDrawStartTimestamp])

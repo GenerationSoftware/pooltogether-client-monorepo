@@ -61,5 +61,9 @@ export const VaultListHandler = () => {
     }
   }, [isImportingVaultList, isSuccessVaultList, isErrorVaultList])
 
+  if (isImportingVaultList) {
+    return <div className='fixed inset-0 backdrop-brightness-75 z-50' />
+  }
+
   return <></>
 }
