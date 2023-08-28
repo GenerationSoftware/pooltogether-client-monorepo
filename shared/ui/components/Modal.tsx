@@ -1,7 +1,13 @@
 import { XMarkIcon } from '@heroicons/react/24/solid'
 import { useScreenSize } from '@shared/generic-react-hooks'
 import classNames from 'classnames'
-import { AnimatePresence, AnimationProps, motion, useReducedMotion } from 'framer-motion'
+import {
+  AnimatePresence,
+  AnimationProps,
+  DraggableProps,
+  motion,
+  useReducedMotion
+} from 'framer-motion'
 import { ReactNode, useEffect, useLayoutEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 
@@ -21,7 +27,6 @@ export interface ModalProps {
   mobileStyle?: MobileStyle
 }
 
-// TODO: all mobile modals should be draggable back to the direction they came from
 export const Modal = (props: ModalProps) => {
   const { className, onClose, label, mobileStyle, ...rest } = props
 
@@ -41,7 +46,11 @@ export const Modal = (props: ModalProps) => {
 
   const shouldReduceMotion = useReducedMotion()
 
-  const animations: Record<'desktop' | MobileStyle, AnimationProps> = {
+  const minVelocityToDismiss = 500
+  const minScreenHeightToDismiss = 0.35
+  const minScreenWidthToDismiss = 0.25
+
+  const animations: Record<'desktop' | MobileStyle, AnimationProps & DraggableProps> = {
     desktop: {
       initial: { opacity: 0 },
       animate: { opacity: 1 },
@@ -52,13 +61,39 @@ export const Modal = (props: ModalProps) => {
       initial: { y: '100%' },
       animate: { y: 0 },
       exit: { y: '100%' },
-      transition: { duration: shouldReduceMotion ? 0 : 0.1, ease: 'easeInOut' }
+      transition: { duration: shouldReduceMotion ? 0 : 0.1, ease: 'easeInOut' },
+      drag: 'y',
+      dragConstraints: { top: 0, bottom: 0 },
+      dragElastic: { top: 0, bottom: 1 },
+      onDragEnd: (e, i) => {
+        if (
+          !!e &&
+          i.offset.y > 0 &&
+          (i.offset.y >= window.innerHeight * minScreenHeightToDismiss ||
+            i.velocity.y >= minVelocityToDismiss)
+        ) {
+          setIsModalShown(false)
+        }
+      }
     },
     cover: {
       initial: { x: '100%' },
       animate: { x: 0 },
       exit: { x: '100%' },
-      transition: { duration: shouldReduceMotion ? 0 : 0.1, ease: 'easeInOut' }
+      transition: { duration: shouldReduceMotion ? 0 : 0.1, ease: 'easeInOut' },
+      drag: 'x',
+      dragConstraints: { left: 0, right: 0 },
+      dragElastic: { left: 0, right: 1 },
+      onDragEnd: (e, i) => {
+        if (
+          !!e &&
+          i.offset.x > 0 &&
+          (i.offset.x >= window.innerWidth * minScreenWidthToDismiss ||
+            i.velocity.x >= minVelocityToDismiss)
+        ) {
+          setIsModalShown(false)
+        }
+      }
     }
   }
 
