@@ -62,6 +62,8 @@ export const CurrencyValue = (props: CurrencyValueProps) => {
           Number(baseValue) * (1 / tokenPrices[USDC_TOKEN_ADDRESSES[NETWORK.mainnet]])
         return usdValue
       }
+    } else if (Number(baseValue) === 0) {
+      return 0
     } else {
       return undefined
     }

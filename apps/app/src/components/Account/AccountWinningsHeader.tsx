@@ -22,10 +22,9 @@ export const AccountWinningsHeader = (props: AccountWinningsHeaderProps) => {
 
   const isExternalUser = !!address && address.toLowerCase() !== _userAddress?.toLowerCase()
 
-  const { data: totalWinnings, isFetched: isFetchedTotalWinnings } = useUserTotalWinnings(
-    userAddress as Address,
-    { skipPrizeChecking: isExternalUser }
-  )
+  const { data: totalWinnings } = useUserTotalWinnings(userAddress as Address, {
+    skipPrizeChecking: isExternalUser
+  })
 
   const { data: ensName } = useEnsName({ chainId: NETWORK.mainnet, address: userAddress })
 
@@ -37,7 +36,7 @@ export const AccountWinningsHeader = (props: AccountWinningsHeaderProps) => {
           : t('yourWinnings')}
       </span>
       <span className='text-[1.75rem] font-grotesk font-medium md:text-4xl'>
-        {isFetchedTotalWinnings && !!userAddress && totalWinnings !== undefined ? (
+        {!!userAddress && totalWinnings !== undefined ? (
           <CurrencyValue baseValue={totalWinnings} countUp={true} fallback={<Spinner />} />
         ) : (
           <Spinner />

@@ -31,7 +31,7 @@ export interface DepositModalProps {
     base?: RichIntl<
       | 'depositTo'
       | 'depositToShort'
-      | 'dailyChances'
+      | 'weeklyChances'
       | 'oneInXChance'
       | 'max'
       | 'balance'

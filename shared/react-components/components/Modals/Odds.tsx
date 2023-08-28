@@ -1,20 +1,31 @@
-import { formatNumberForDisplay, PrizePool, Vault } from '@pooltogether/hyperstructure-client-js'
-import { usePrizeOdds, useVaultShareData } from '@pooltogether/hyperstructure-react-hooks'
+import { PrizePool, Vault } from '@pooltogether/hyperstructure-client-js'
+import {
+  useDrawPeriod,
+  usePrizeOdds,
+  useVaultShareData
+} from '@pooltogether/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
 import { Spinner } from '@shared/ui'
+import {
+  calculateUnionProbability,
+  formatNumberForDisplay,
+  SECONDS_PER_WEEK
+} from '@shared/utilities'
 import { useAtomValue } from 'jotai'
+import { useMemo } from 'react'
 import { parseUnits } from 'viem'
-import { depositFormShareAmountAtom } from '../Form/DepositForm'
+import { depositFormShareAmountAtom, depositFormTokenAmountAtom } from '../Form/DepositForm'
 
 interface OddsProps {
   vault: Vault
   prizePool: PrizePool
-  intl?: Intl<'dailyChances' | 'oneInXChance'>
+  intl?: Intl<'weeklyChances' | 'oneInXChance'>
 }
 
 export const Odds = (props: OddsProps) => {
   const { vault, prizePool, intl } = props
 
+  const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
   const formShareAmount = useAtomValue(depositFormShareAmountAtom)
 
   const { data: shareData } = useVaultShareData(vault)
@@ -26,24 +37,27 @@ export const Odds = (props: OddsProps) => {
     { isCumulative: true }
   )
 
+  const { data: drawPeriod, isFetched: isFetchedDrawPeriod } = useDrawPeriod(prizePool)
+
+  const isFetched = isFetchedPrizeOdds && isFetchedDrawPeriod && !!prizeOdds && !!drawPeriod
+
+  const weeklyChance = useMemo(() => {
+    if (!!prizeOdds && !!drawPeriod) {
+      const drawsPerWeek = SECONDS_PER_WEEK / drawPeriod
+      const events = Array<number>(drawsPerWeek).fill(prizeOdds.percent)
+      const value = 1 / calculateUnionProbability(events)
+      const formattedValue = formatNumberForDisplay(value, { maximumSignificantDigits: 3 })
+      return intl?.('oneInXChance', { number: formattedValue }) ?? `1 in ${formattedValue}`
+    }
+  }, [isFetched])
+
   return (
     <div className='flex flex-col items-center gap-2 font-semibold'>
       <span className='text-xs text-pt-purple-100 md:text-sm'>
-        {intl?.('dailyChances') ?? 'Daily Chance of Winning'}
+        {intl?.('weeklyChances') ?? 'Weekly Chance of Winning'}
       </span>
       <span className='text-pt-purple-50 md:text-xl'>
-        {isFetchedPrizeOdds && !!prizeOdds ? (
-          formShareAmount !== '0' ? (
-            intl?.('oneInXChance', {
-              number: formatNumberForDisplay(prizeOdds.oneInX, { maximumSignificantDigits: 3 })
-            }) ??
-            `1 in ${formatNumberForDisplay(prizeOdds.oneInX, { maximumSignificantDigits: 3 })}`
-          ) : (
-            '-'
-          )
-        ) : (
-          <Spinner />
-        )}
+        {weeklyChance !== undefined ? formTokenAmount !== '0' ? weeklyChance : '-' : <Spinner />}
       </span>
     </div>
   )

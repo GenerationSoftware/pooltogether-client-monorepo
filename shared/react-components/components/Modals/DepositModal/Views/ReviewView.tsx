@@ -12,7 +12,7 @@ interface ReviewViewProps {
   vault: Vault
   prizePool: PrizePool
   intl?: {
-    base?: Intl<'confirmDeposit' | 'dailyChances' | 'oneInXChance'>
+    base?: Intl<'confirmDeposit' | 'weeklyChances' | 'oneInXChance'>
     common?: Intl<'prizePool'>
     fees?: NetworkFeesProps['intl']
   }

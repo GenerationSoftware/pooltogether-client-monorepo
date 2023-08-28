@@ -1,8 +1,7 @@
 import {
   calculateOdds,
   calculateUnionProbability,
-  PrizePool,
-  Vaults
+  PrizePool
 } from '@pooltogether/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { useQueries } from '@tanstack/react-query'
@@ -12,34 +11,43 @@ import {
   useAllUserVaultBalances,
   useAllUserVaultDelegationBalances,
   useAllVaultPercentageContributions,
-  useAllVaultShareData
+  useAllVaultShareData,
+  useSelectedVaults
 } from '..'
 import { QUERY_KEYS } from '../constants'
 
 /**
- * Return the odds of a user winning any prize within any one draw for any prize pool or vault
+ * Return the odds of a user winning any prize within one draw for any given prize pools
  * @param prizePools array of instances of the `PrizePool` class
- * @param vaults instance of the `Vaults` class
  * @param userAddress the user's wallet address
  * @returns
  */
 export const useAllUserPrizeOdds = (
   prizePools: PrizePool[],
-  vaults: Vaults,
   userAddress: string
-): { data?: { percent: number; oneInX: number }; isFetched: boolean } => {
-  const { data: shareData, isFetched: isFetchedShareData } = useAllVaultShareData(vaults)
+): { data: { [prizePoolId: string]: number }; isFetched: boolean } => {
+  const { vaults } = useSelectedVaults()
 
-  const { data: shareBalances, isFetched: isFetchedShareBalance } = useAllUserVaultBalances(
-    vaults,
-    userAddress
-  )
+  const {
+    data: shareData,
+    isFetched: isFetchedShareData,
+    refetch: refetchShareData
+  } = useAllVaultShareData(vaults)
+
+  const {
+    data: shareBalances,
+    isFetched: isFetchedShareBalance,
+    refetch: refetchShareBalances
+  } = useAllUserVaultBalances(vaults, userAddress)
 
   const { data: delegationBalances, isFetched: isFetchedDelegationBalances } =
     useAllUserVaultDelegationBalances(prizePools, userAddress)
 
-  const { data: vaultContributions, isFetched: isFetchedVaultContributions } =
-    useAllVaultPercentageContributions(prizePools, vaults)
+  const {
+    data: vaultContributions,
+    isFetched: isFetchedVaultContributions,
+    refetch: refetchVaultContributions
+  } = useAllVaultPercentageContributions(prizePools, vaults)
 
   const results = useQueries({
     queries: prizePools.map((prizePool) => {
@@ -50,7 +58,6 @@ export const useAllUserPrizeOdds = (
 
       const enabled =
         !!prizePool &&
-        !!vaults &&
         !!userAddress &&
         isFetchedShareData &&
         isFetchedShareBalance &&
@@ -87,7 +94,10 @@ export const useAllUserPrizeOdds = (
             }
           })
 
-          return calculateUnionProbability(probabilities)
+          const prizePoolId = prizePool.id
+          const odds = calculateUnionProbability(probabilities)
+
+          return { prizePoolId, odds }
         },
         enabled,
         ...NO_REFETCH
@@ -97,12 +107,24 @@ export const useAllUserPrizeOdds = (
 
   return useMemo(() => {
     const isFetched = results?.every((result) => result.isFetched)
-    const refetch = () => results?.forEach((result) => result.refetch())
 
-    const probabilities = results.map((result) => result.data ?? 0)
-    const percent = calculateUnionProbability(probabilities)
-    const oneInX = 1 / percent
+    // TODO: should also refetch delegations
+    const refetch = () => {
+      refetchShareData()
+      refetchShareBalances()
+      refetchVaultContributions()
+      results?.forEach((result) => {
+        result.refetch()
+      })
+    }
 
-    return { isFetched, refetch, data: { percent, oneInX } }
+    const data: { [prizePoolId: string]: number } = {}
+    results.forEach((result) => {
+      if (!!result.data) {
+        data[result.data.prizePoolId] = result.data.odds
+      }
+    })
+
+    return { isFetched, refetch, data }
   }, [results])
 }

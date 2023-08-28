@@ -17,7 +17,7 @@ interface MainViewProps {
   prizePool: PrizePool
   intl?: {
     base?: Intl<
-      'depositTo' | 'depositToShort' | 'balance' | 'max' | 'dailyChances' | 'oneInXChance'
+      'depositTo' | 'depositToShort' | 'balance' | 'max' | 'weeklyChances' | 'oneInXChance'
     >
     common?: Intl<'prizePool'>
     fees?: NetworkFeesProps['intl']

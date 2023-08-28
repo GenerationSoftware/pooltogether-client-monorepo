@@ -97,6 +97,7 @@
     "externalAccountDelegations": "Delegations to {account}",
     "externalAccountWinnings": "{account}'s Winnings",
     "dailyPrizeOdds": "Daily Prize Odds",
+    "weeklyPrizeOdds": "Weekly Prize Odds",
     "oneInXChance": "1 in {number}",
     "noPrizesRecently": "You haven't won any prizes recently.",
     "learnHowItWorks": "Learn how PoolTogether works",
@@ -132,6 +133,7 @@
       "withdrawal": "Withdrawal"
     },
     "dailyChances": "Daily Chance of Winning",
+    "weeklyChances": "Weekly Chance of Winning",
     "oneInXChance": "1 in {number}",
     "max": "Max",
     "balance": "Balance:",

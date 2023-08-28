@@ -53,6 +53,8 @@ export const USDC_TOKEN_ADDRESSES: { [chainId: number]: Lowercase<Address> } = {
 export const SECONDS_PER_MINUTE = 60
 export const SECONDS_PER_HOUR = 3_600
 export const SECONDS_PER_DAY = 86_400
+export const SECONDS_PER_WEEK = 604_800
+export const SECONDS_PER_MONTH = 2_628_000
 export const SECONDS_PER_YEAR = 31_536_000
 
 /**

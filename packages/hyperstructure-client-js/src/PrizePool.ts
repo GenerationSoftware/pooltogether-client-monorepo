@@ -375,18 +375,23 @@ export class PrizePool {
     return estimatedDraws * drawPeriod
   }
 
+  // TODO: this function should emulate the logic in the contract and return a number with more decimals (less rounding)
   /**
    * Returns the estimated number of prizes awarded based on number of tiers active
+   * @param options optional settings
    * @returns
    */
-  async getEstimatedPrizeCount(): Promise<number> {
+  async getEstimatedPrizeCount(options?: { includeCanary?: boolean }): Promise<number> {
     const source = 'Prize Pool [getEstimatedPrizeCount]'
     await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    const numberOfTiers = await this.getNumberOfTiers()
 
     const estimatedPrizeCount = await this.publicClient.readContract({
       address: this.address,
       abi: prizePoolABI,
-      functionName: 'estimatedPrizeCount'
+      functionName: 'estimatedPrizeCount',
+      args: [!!options?.includeCanary ? numberOfTiers : numberOfTiers - 1]
     })
 
     return estimatedPrizeCount

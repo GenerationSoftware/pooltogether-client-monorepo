@@ -20,6 +20,7 @@ export * from './blockchain/useGasPrices'
 /**
  * Prize Pool Hooks
  */
+export * from './prizes/useAllDrawPeriods'
 export * from './prizes/useAllPrizeDrawTimestamps'
 export * from './prizes/useAllPrizeDrawWinners'
 export * from './prizes/useAllPrizeInfo'

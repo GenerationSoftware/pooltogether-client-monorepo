@@ -1,7 +1,5 @@
 import { formatUnits } from 'viem'
 
-// TODO: this assumes every prize has the same odds of being won - a better algorithm may be more precise
-// TODO: also have to decide if its ok for this function to consider canary prizes
 /**
  * Calculates the odds of a user winning any prize on any one draw for a specific vault
  * @param userShares the amount of shares the user has deposited in the vault
