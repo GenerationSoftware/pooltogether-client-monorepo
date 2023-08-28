@@ -158,6 +158,9 @@ export const getPaginatedSubgraphDraws = async (
     }
   }
 
+  // TODO: this sorting is not necessary if the subgraph would sort them correctly on ID
+  draws.sort((a, b) => a.id - b.id)
+
   return draws
 }
 

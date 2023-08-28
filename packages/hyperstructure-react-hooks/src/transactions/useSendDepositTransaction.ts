@@ -48,6 +48,7 @@ export const useSendDepositTransaction = (
   )
 
   const enabled =
+    !!amount &&
     !!vault &&
     isFetchedTokenAddress &&
     !!tokenAddress &&

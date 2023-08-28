@@ -74,41 +74,53 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
   }, [])
 
   const handleTokenAmountChange = (tokenAmount: string) => {
-    if (!!vaultExchangeRate && decimals !== undefined && isValidFormInput(tokenAmount, decimals)) {
-      setFormTokenAmount(tokenAmount)
+    if (!!vaultExchangeRate && decimals !== undefined) {
+      if (isValidFormInput(tokenAmount, decimals)) {
+        setFormTokenAmount(tokenAmount)
 
-      const tokens = parseUnits(tokenAmount, decimals)
-      const shares = getSharesFromAssets(tokens, vaultExchangeRate, decimals)
-      const formattedShares = formatUnits(shares, decimals)
-      const slicedShares = formattedShares.endsWith('.0')
-        ? formattedShares.slice(0, -2)
-        : formattedShares
+        const tokens = parseUnits(tokenAmount, decimals)
+        const shares = getSharesFromAssets(tokens, vaultExchangeRate, decimals)
+        const formattedShares = formatUnits(shares, decimals)
+        const slicedShares = formattedShares.endsWith('.0')
+          ? formattedShares.slice(0, -2)
+          : formattedShares
 
-      setFormShareAmount(slicedShares)
+        setFormShareAmount(slicedShares)
 
-      formMethods.setValue('shareAmount', slicedShares, {
-        shouldValidate: true
-      })
+        formMethods.setValue('shareAmount', slicedShares, {
+          shouldValidate: true
+        })
+      } else {
+        setFormToErroredState()
+      }
     }
   }
 
   const handleShareAmountChange = (shareAmount: string) => {
-    if (!!vaultExchangeRate && decimals !== undefined && isValidFormInput(shareAmount, decimals)) {
-      setFormShareAmount(shareAmount)
+    if (!!vaultExchangeRate && decimals !== undefined) {
+      if (isValidFormInput(shareAmount, decimals)) {
+        setFormShareAmount(shareAmount)
 
-      const shares = parseUnits(shareAmount, decimals)
-      const tokens = getAssetsFromShares(shares, vaultExchangeRate, decimals)
-      const formattedTokens = formatUnits(tokens, decimals)
-      const slicedTokens = formattedTokens.endsWith('.0')
-        ? formattedTokens.slice(0, -2)
-        : formattedTokens
+        const shares = parseUnits(shareAmount, decimals)
+        const tokens = getAssetsFromShares(shares, vaultExchangeRate, decimals)
+        const formattedTokens = formatUnits(tokens, decimals)
+        const slicedTokens = formattedTokens.endsWith('.0')
+          ? formattedTokens.slice(0, -2)
+          : formattedTokens
 
-      setFormTokenAmount(slicedTokens)
+        setFormTokenAmount(slicedTokens)
 
-      formMethods.setValue('tokenAmount', slicedTokens, {
-        shouldValidate: true
-      })
+        formMethods.setValue('tokenAmount', slicedTokens, {
+          shouldValidate: true
+        })
+      } else {
+        setFormToErroredState()
+      }
     }
+  }
+
+  const setFormToErroredState = () => {
+    setFormShareAmount('0')
   }
 
   const shareInputData = useMemo(() => {

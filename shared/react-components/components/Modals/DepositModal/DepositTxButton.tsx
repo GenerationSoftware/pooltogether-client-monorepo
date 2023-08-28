@@ -48,7 +48,6 @@ interface DepositTxButtonProps {
   }
 }
 
-// TODO: BUG - buttons should not be clickable (enabled) if there are any form errors
 export const DepositTxButton = (props: DepositTxButtonProps) => {
   const {
     vault,
@@ -137,6 +136,7 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
       refetchVaultBalance()
       refetchUserVaultTokenBalance()
       refetchUserBalances?.()
+      refetchTokenAllowance()
       setModalView('success')
     },
     onError: () => {

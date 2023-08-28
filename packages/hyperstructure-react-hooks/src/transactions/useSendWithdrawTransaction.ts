@@ -42,6 +42,7 @@ export const useSendWithdrawTransaction = (
     useUserVaultTokenBalance(vault, userAddress as Address)
 
   const enabled =
+    !!amount &&
     !!vault &&
     !!userAddress &&
     isAddress(userAddress) &&

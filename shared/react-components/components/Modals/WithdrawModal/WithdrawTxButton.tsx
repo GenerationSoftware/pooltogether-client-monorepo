@@ -39,7 +39,6 @@ interface WithdrawTxButtonProps {
   }
 }
 
-// TODO: BUG - buttons should not be clickable (enabled) if there are any form errors
 export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
   const {
     vault,

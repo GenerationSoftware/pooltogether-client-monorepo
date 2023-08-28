@@ -42,6 +42,7 @@ export const useSendRedeemTransaction = (
     useUserVaultShareBalance(vault, userAddress as Address)
 
   const enabled =
+    !!amount &&
     !!vault &&
     !!userAddress &&
     isAddress(userAddress) &&

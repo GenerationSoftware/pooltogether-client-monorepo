@@ -13,7 +13,10 @@ export const useAllVaultTokenPrices = () => {
 
   // Adding vault token addresses:
   if (!!vaults.underlyingTokenAddresses) {
-    Object.assign(tokenAddresses, vaults.underlyingTokenAddresses.byChain)
+    for (const key in vaults.underlyingTokenAddresses.byChain) {
+      const chainId = parseInt(key)
+      tokenAddresses[chainId] = [...vaults.underlyingTokenAddresses.byChain[chainId]]
+    }
   }
 
   // Adding prize token addresses:
