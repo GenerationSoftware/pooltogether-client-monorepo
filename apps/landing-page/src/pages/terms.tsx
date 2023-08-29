@@ -3,7 +3,7 @@ import { TermsOfService } from '@components/TermsOfService'
 
 export default function TermsPage() {
   return (
-    <Layout>
+    <Layout className='px-6'>
       <TermsOfService className='max-w-7xl' />
     </Layout>
   )
