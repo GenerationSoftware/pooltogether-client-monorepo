@@ -503,5 +503,8 @@ export const getPaginatedSubgraphDrawTimestamps = async (
     }
   }
 
+  // TODO: this sorting is not necessary if the subgraph would sort them correctly on ID
+  drawTimestamps.sort((a, b) => a.id - b.id)
+
   return drawTimestamps
 }
