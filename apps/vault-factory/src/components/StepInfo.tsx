@@ -22,8 +22,8 @@ export const StepInfo = (props: StepInfoProps) => {
       <span>
         {step + 1}/{stepInfo.length}
       </span>
-      <h2 className='text-3xl'>{title}</h2>
-      <span>{info}</span>
+      <h2 className='text-center text-3xl lg:text-start'>{title}</h2>
+      <span className='text-center lg:text-start'>{info}</span>
       <VaultStepGraphic
         step={step}
         maxSteps={stepInfo.length}

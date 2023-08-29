@@ -28,11 +28,13 @@ export const Layout = (props: LayoutProps) => {
 
       <Toaster />
 
-      {isSidebarActive && <div className='fixed w-[28rem] h-screen bg-pt-transparent' />}
+      {isSidebarActive && (
+        <div className='fixed hidden w-[28rem] h-screen bg-pt-transparent lg:block' />
+      )}
 
       <main
         className={classNames(
-          'w-full min-h-[calc(100vh-16rem)] relative flex flex-col items-center mx-auto md:px-4',
+          'w-full min-h-[calc(100vh-16rem)] relative flex flex-col items-center mx-auto py-10 md:py-0 lg:px-4',
           className
         )}
       >
@@ -54,11 +56,11 @@ const SimpleNavbar = (props: SimpleNavbarProps) => {
   return (
     <div
       className={classNames(
-        'flex flex-row gap-6 items-center justify-between pt-6 pb-8 px-12 z-30 md:h-36 md:pt-0 md:pb-0',
+        'flex flex-col gap-6 items-center justify-between px-12 py-6 z-30 md:h-36 md:flex-row md:py-0',
         className
       )}
     >
-      <Link href='/' className='w-[22rem] mr-12'>
+      <Link href='/' className='lg:w-[22rem] lg:mr-12'>
         <Image
           src='/cabanaLogo.svg'
           alt='Cabana Logo'
@@ -86,17 +88,22 @@ const SimpleFooter = (props: SimpleFooterProps) => {
   const { isSidebarActive, className } = props
 
   return (
-    <footer className={classNames('h-28 flex items-center mt-auto px-2 z-20 md:px-0', className)}>
+    <footer
+      className={classNames(
+        'flex flex-col gap-6 items-center mt-auto p-6 overflow-hidden z-20 lg:h-28 lg:flex-row lg:gap-0 lg:p-0',
+        className
+      )}
+    >
       <div
         className={classNames({
-          'w-[28rem]': isSidebarActive,
-          'absolute right-8': !isSidebarActive
+          'lg:w-[28rem]': isSidebarActive,
+          'lg:absolute lg:right-8': !isSidebarActive
         })}
       >
         <PoweredByPT className='mx-auto' />
       </div>
       <div className='mx-auto'>
-        <span className='text-center text-sm font-medium'>
+        <span className='inline-block text-center text-sm font-medium'>
           Made with ❤️ & 🤖 by{' '}
           <a href='https://g9software.xyz' target='_blank' className='hover:text-pt-teal'>
             Generation Software

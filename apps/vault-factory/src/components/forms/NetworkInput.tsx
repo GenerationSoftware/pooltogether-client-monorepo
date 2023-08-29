@@ -25,7 +25,7 @@ export const NetworkInput = (props: NetworkInputProps) => {
   const id = `chain-${chainId}`
 
   return (
-    <div className={classNames('max-w-[25%]', className)}>
+    <div className={classNames('max-w-sm lg:max-w-[25%]', className)}>
       <input
         id={id}
         {...register('vaultChainId', {
@@ -88,7 +88,7 @@ const NetworkCard = (props: NetworkCardProps) => {
           <Spinner />
         )}
       </span>
-      <span className='line-clamp-3'>{networkDescriptions[chainId]}</span>
+      <span className='hidden line-clamp-3 lg:block'>{networkDescriptions[chainId]}</span>
     </Card>
   )
 }

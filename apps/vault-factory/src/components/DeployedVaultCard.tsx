@@ -1,111 +1,56 @@
 import { Vault } from '@pooltogether/hyperstructure-client-js'
-import {
-  useVaultClaimer,
-  useVaultLiquidationPair,
-  useVaults
-} from '@pooltogether/hyperstructure-react-hooks'
-import { useScreenSize } from '@shared/generic-react-hooks'
+import { useVaultClaimer, useVaultLiquidationPair } from '@pooltogether/hyperstructure-react-hooks'
 import { VaultBadge } from '@shared/react-components'
-import { Button, LINKS, Spinner, Table, TableData } from '@shared/ui'
+import { Button, LINKS, Spinner } from '@shared/ui'
 import { getBlockExplorerUrl, shorten } from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { ReactNode } from 'react'
 import { VaultState } from 'src/types'
 import { zeroAddress } from 'viem'
-import { useDeployedVaults } from '@hooks/useDeployedVaults'
 import { useDeployedVaultState } from '@hooks/useDeployedVaultState'
 import { useLiquidationPairSteps } from '@hooks/useLiquidationPairSteps'
-import { DeployedVaultCard } from './DeployedVaultCard'
 
-interface DeployedVaultsTableProps {
+interface DeployedVaultCardProps {
+  vault: Vault
   className?: string
 }
 
-export const DeployedVaultsTable = (props: DeployedVaultsTableProps) => {
-  const { className } = props
-
-  const { vaultInfoArray } = useDeployedVaults()
-  const vaults = useVaults(vaultInfoArray)
-  const vaultsArray = Object.values(vaults.vaults)
-
-  const { width: screenWidth } = useScreenSize()
-  const isMobile = !!screenWidth && screenWidth < 1024
-
-  const tableData: TableData = {
-    headers: {
-      name: { content: 'Name', className: 'pl-11' },
-      address: { content: 'Address', position: 'center' },
-      liquidator: { content: 'Liquidation Pair', position: 'center' },
-      claimer: { content: 'Claimer', position: 'center' },
-      status: { content: 'Status', position: 'center' },
-      actions: { content: 'Actions', position: 'center' }
-    },
-    rows: vaultsArray.map((vault) => ({
-      id: vault.id,
-      cells: {
-        name: {
-          content: <VaultNameItem vault={vault} />
-        },
-        address: {
-          content: <VaultAddressItem vault={vault} />,
-          position: 'center'
-        },
-        liquidator: {
-          content: <VaultLiquidationPairItem vault={vault} />,
-          position: 'center'
-        },
-        claimer: {
-          content: <VaultClaimerItem vault={vault} />,
-          position: 'center'
-        },
-        status: {
-          content: <VaultStatusItem vault={vault} />,
-          position: 'center'
-        },
-        actions: {
-          content: <VaultActionsItem vault={vault} />,
-          position: 'center'
-        }
-      }
-    }))
-  }
-
-  if (tableData.rows.length === 0) {
-    return (
-      <div
-        className={classNames(
-          'flex flex-col items-center p-6 bg-pt-transparent/20 rounded-3xl',
-          className
-        )}
-      >
-        <span className='text-center text-xl text-pt-purple-200 lg:text-3xl'>
-          You haven't deployed any vaults... yet.
-        </span>
-      </div>
-    )
-  }
-
-  if (isMobile) {
-    return (
-      <div className='w-full flex flex-col gap-4 items-center'>
-        {vaultsArray.map((vault) => (
-          <DeployedVaultCard key={`deployedVault-${vault.id}`} vault={vault} />
-        ))}
-      </div>
-    )
-  }
+export const DeployedVaultCard = (props: DeployedVaultCardProps) => {
+  const { vault, className } = props
 
   return (
-    <Table
-      keyPrefix='deployedVaultsTable'
-      data={tableData}
-      className={classNames('px-6 pb-6 bg-pt-transparent/20 rounded-3xl', className)}
-      innerClassName='overflow-y-auto'
-      headerClassName='text-center font-medium text-pt-purple-300 whitespace-nowrap'
-      rowClassName='text-sm font-medium rounded-lg overflow-hidden'
-      gridColsClassName={`grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)]`}
-    />
+    <div
+      className={classNames(
+        'w-full max-w-sm flex flex-col gap-2 px-6 py-4 bg-pt-transparent/20 rounded-3xl',
+        className
+      )}
+    >
+      <VaultNameItem vault={vault} />
+      <VaultCardRow name='Address' data={<VaultAddressItem vault={vault} />} />
+      <VaultCardRow name='Liquidation Pair' data={<VaultLiquidationPairItem vault={vault} />} />
+      <VaultCardRow name='Claimer' data={<VaultClaimerItem vault={vault} />} />
+      <VaultCardRow name='Status' data={<VaultStatusItem vault={vault} />} />
+      <VaultActionsItem vault={vault} />
+    </div>
+  )
+}
+
+interface VaultCardRowProps {
+  name: ReactNode
+  data: ReactNode
+  className?: string
+}
+
+const VaultCardRow = (props: VaultCardRowProps) => {
+  const { name, data, className } = props
+
+  return (
+    <div className={classNames('inline-flex w-full items-center justify-between', className)}>
+      <span className='text-pt-purple-300'>{name}</span>
+      <span>{data}</span>
+    </div>
   )
 }
 
@@ -140,7 +85,7 @@ const VaultLiquidationPairItem = (props: ItemProps) => {
     useVaultLiquidationPair(vault)
 
   if (!isFetchedLiquidationPair) {
-    return <WrappedSpinner />
+    return <Spinner />
   }
 
   if (!liquidationPair || liquidationPair === zeroAddress) {
@@ -160,7 +105,7 @@ const VaultClaimerItem = (props: ItemProps) => {
   const { data: claimer, isFetched: isFetchedClaimer } = useVaultClaimer(vault)
 
   if (!isFetchedClaimer) {
-    return <WrappedSpinner />
+    return <Spinner />
   }
 
   if (!claimer || claimer === zeroAddress) {
@@ -192,7 +137,7 @@ const VaultStatusItem = (props: ItemProps) => {
     return <span className='text-sm text-pt-purple-300'>active</span>
   }
 
-  return <WrappedSpinner />
+  return <Spinner />
 }
 
 const VaultActionsItem = (props: ItemProps) => {
@@ -232,13 +177,4 @@ const VaultActionsItem = (props: ItemProps) => {
   }
 
   return <></>
-}
-
-// NOTE: This is wrapped to avoid table overflow on spinner animation
-const WrappedSpinner = () => {
-  return (
-    <div className='h-5 w-5 relative'>
-      <Spinner className='absolute' />
-    </div>
-  )
 }

@@ -33,6 +33,8 @@ export const CreateVaultStepContent = (props: CreateVaultStepContentProps) => {
   const content = useMemo(() => allVaultStepContent[step] ?? <></>, [step])
 
   return (
-    <div className={classNames('flex grow items-center justify-center', className)}>{content}</div>
+    <div className={classNames('flex grow items-center justify-center px-4 lg:px-0', className)}>
+      {content}
+    </div>
   )
 }
