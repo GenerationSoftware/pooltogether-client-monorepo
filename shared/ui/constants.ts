@@ -2,7 +2,7 @@
  * Domains
  */
 export const DOMAINS = Object.freeze({
-  app: 'https://app.cabana.fi',
+  app: 'https://beta.cabana.fi',
   app_v4: 'https://app.pooltogether.com',
   landingPage: 'https://cabana.fi',
   protocolLandingPage: 'https://pooltogether.com',
