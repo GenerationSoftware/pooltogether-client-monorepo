@@ -1,13 +1,20 @@
 import { getBlockExplorerUrl, shorten, Vault } from '@pooltogether/hyperstructure-client-js'
-import { useVaultShareData, useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
+import {
+  useAllUserVaultDelegationBalances,
+  useVaultShareData,
+  useVaultTokenData
+} from '@pooltogether/hyperstructure-react-hooks'
 import { PrizePowerTooltip, WinChanceTooltip } from '@shared/react-components'
 import { ExternalLink, Spinner } from '@shared/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { ReactNode } from 'react'
+import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
+import { AccountVaultDelegationAmount } from '@components/Account/AccountVaultDelegationAmount'
 import { AccountVaultOdds } from '@components/Account/AccountVaultOdds'
+import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { VaultPrizePower } from './VaultPrizePower'
 import { VaultTotalDeposits } from './VaultTotalDeposits'
 
@@ -28,6 +35,16 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
   const { data: shareData, isFetched: isFetchedShareData } = useVaultShareData(vault)
   const { data: tokenData, isFetched: isFetchedTokenData } = useVaultTokenData(vault)
 
+  // TODO: the following block can be greatly simplified with a `useUserVaultDelegationBalance` hook
+  const prizePools = useSupportedPrizePools()
+  const prizePoolsArray = Object.values(prizePools)
+  const { data: delegationBalances } = useAllUserVaultDelegationBalances(
+    prizePoolsArray,
+    userAddress as Address
+  )
+  const delegationBalance =
+    delegationBalances?.[vault.chainId]?.[vault.address.toLowerCase() as Address] ?? 0n
+
   return (
     <div
       className={classNames(
@@ -39,6 +56,12 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
         <VaultInfoRow
           name={t_vault('headers.yourBalance')}
           data={<AccountVaultBalance vault={vault} className='!flex-row gap-1' />}
+        />
+      )}
+      {!!userAddress && delegationBalance > 0n && (
+        <VaultInfoRow
+          name={t_vault('headers.delegatedToYou')}
+          data={<AccountVaultDelegationAmount vault={vault} className='!flex-row gap-1' />}
         />
       )}
       {!!userAddress && (

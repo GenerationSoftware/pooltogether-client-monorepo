@@ -76,6 +76,7 @@
       "tvl": "TVL",
       "depositAsset": "Deposit Asset",
       "prizeAsset": "Prize Asset",
+      "delegatedToYou": "Delegated To You",
       "delegatedAmount": "Delegated Amount"
     },
     "returnToVaults": "Return to Vaults",
