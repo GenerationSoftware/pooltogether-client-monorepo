@@ -11,18 +11,16 @@ import { useAllPrizeDrawTimestamps, useAllUserBalanceUpdates } from '..'
  * @returns
  */
 export const useAllUserEligibleDraws = (prizePools: PrizePool[], userAddress: string) => {
-  const { data: drawTimestamps, isFetched: isFetchedDrawTimestamps } =
+  const { data: allDrawTimestamps, isFetched: isFetchedAllDrawTimestamps } =
     useAllPrizeDrawTimestamps(prizePools)
 
-  const { data: balanceUpdates, isFetched: isFetchedBalanceUpdates } = useAllUserBalanceUpdates(
-    prizePools,
-    userAddress
-  )
+  const { data: allBalanceUpdates, isFetched: isFetchedAllBalanceUpdates } =
+    useAllUserBalanceUpdates(prizePools, userAddress)
 
-  const isFetched = isFetchedDrawTimestamps && isFetchedBalanceUpdates
+  const isFetched = isFetchedAllDrawTimestamps && isFetchedAllBalanceUpdates
 
   const data = useMemo(() => {
-    if (!!drawTimestamps && !!balanceUpdates) {
+    if (!!allDrawTimestamps && !!allBalanceUpdates) {
       const eligibleDraws: { [chainId: number]: SubgraphDrawTimestamp[] } = {}
       const eligibleDrawsByVault: {
         [chainId: number]: { [vaultAddress: Address]: SubgraphDrawTimestamp[] }
@@ -30,24 +28,34 @@ export const useAllUserEligibleDraws = (prizePools: PrizePool[], userAddress: st
       let totalNumEligibleDraws = 0
 
       // Looping through every chain with balance updates
-      for (const key in balanceUpdates) {
+      for (const key in allBalanceUpdates) {
         const chainId = parseInt(key)
+        const drawTimestamps = allDrawTimestamps[chainId]
 
         const chainDraws: SubgraphDrawTimestamp[] = []
         const chainDrawsByVault: { [vaultAddress: Address]: SubgraphDrawTimestamp[] } = {}
 
         // Looping through every vault with balance updates
-        if (!!drawTimestamps[chainId] && !!balanceUpdates[chainId]) {
-          for (const strVaultAddress in balanceUpdates[chainId]) {
+        if (!!allDrawTimestamps[chainId] && !!allBalanceUpdates[chainId]) {
+          for (const strVaultAddress in allBalanceUpdates[chainId]) {
             const vaultAddress = strVaultAddress as Address
-            const ascBalanceUpdates = [...balanceUpdates[chainId][vaultAddress]].reverse()
-            const vaultDraws = getVaultEligibleDraws(drawTimestamps[chainId], ascBalanceUpdates)
+
+            const balanceUpdates = [...allBalanceUpdates[chainId][vaultAddress]].reverse()
+            const newObservationIndex = balanceUpdates.findIndex((obs) => obs.isNew)
+            const slicedBalanceUpdates =
+              newObservationIndex !== -1
+                ? balanceUpdates.slice(0, newObservationIndex + 1)
+                : balanceUpdates
+
+            const vaultDraws = getVaultEligibleDraws(drawTimestamps, slicedBalanceUpdates)
+
             vaultDraws.forEach((draw) => {
               const existingDraw = chainDraws.findIndex((d) => d.id === draw.id)
               if (existingDraw === -1) {
                 chainDraws.push(draw)
               }
             })
+
             chainDrawsByVault[vaultAddress] = vaultDraws
           }
         }
@@ -59,7 +67,7 @@ export const useAllUserEligibleDraws = (prizePools: PrizePool[], userAddress: st
 
       return { eligibleDraws, eligibleDrawsByVault, totalNumEligibleDraws }
     }
-  }, [drawTimestamps, balanceUpdates])
+  }, [allDrawTimestamps, allBalanceUpdates])
 
   return { data, isFetched }
 }
