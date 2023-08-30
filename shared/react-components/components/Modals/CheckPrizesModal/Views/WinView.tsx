@@ -97,7 +97,7 @@ const Header = (props: HeaderProps) => {
 
   return (
     <div className={classNames('flex flex-col items-center text-center', className)}>
-      <span className='text-3xl font-medium text-gray-100'>
+      <span className='text-3xl font-grotesk font-medium text-gray-100'>
         {intl?.('youWonX') ?? `You won`} <TokenValue token={token} hideZeroes={true} />!
       </span>
       <span className='text-pt-purple-100'>
