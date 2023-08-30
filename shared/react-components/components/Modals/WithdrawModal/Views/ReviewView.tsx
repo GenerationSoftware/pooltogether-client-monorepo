@@ -64,7 +64,10 @@ const BasicWithdrawFormInput = (props: BasicWithdrawFormInputProps) => {
   return (
     <div className='bg-pt-transparent p-3 rounded-lg border border-transparent md:p-4'>
       <div className='flex justify-between gap-6'>
-        <span className='text-lg font-semibold bg-transparent text-pt-purple-50 md:text-2xl'>
+        <span
+          title={token.amount}
+          className='text-lg font-semibold bg-transparent text-pt-purple-50 whitespace-nowrap overflow-hidden overflow-ellipsis md:text-2xl'
+        >
           {token.amount}
         </span>
         <div className='flex shrink-0 items-center gap-1'>
