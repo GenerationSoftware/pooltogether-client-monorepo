@@ -5,7 +5,7 @@ import {
   useLastCheckedDrawIds
 } from '@pooltogether/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen, useScreenSize } from '@shared/generic-react-hooks'
-import { Intl } from '@shared/types'
+import { RichIntl } from '@shared/types'
 import { Modal } from '@shared/ui'
 import { sToMs } from '@shared/utilities'
 import { ReactNode, useEffect, useState } from 'react'
@@ -20,7 +20,7 @@ export type CheckPrizesModalView = 'checking' | 'win' | 'noWin'
 export interface CheckPrizesModalProps {
   prizePools: PrizePool[]
   onGoToAccount: () => void
-  intl?: Intl<'checking' | 'noPrizes' | 'viewAccount' | 'youWonX' | 'xWon'>
+  intl?: RichIntl<'checking' | 'noPrizes' | 'viewAccount' | 'youWonX' | 'xWon'>
 }
 
 export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
