@@ -17,12 +17,12 @@ interface WinViewProps {
   prizePools: PrizePool[]
   draws: { [chainId: number]: { id: number; timestamp: number }[] }
   wins: { [chainId: number]: SubgraphPrize[] }
-  onClose: () => void
+  onGoToAccount: () => void
   intl?: Intl<'viewAccount' | 'youWonX' | 'xWon'>
 }
 
 export const WinView = (props: WinViewProps) => {
-  const { prizePools, draws, wins, onClose, intl } = props
+  const { prizePools, draws, wins, onGoToAccount, intl } = props
 
   // TODO: this assumes all prize pools use the same prize token - not ideal
   const { data: prizeToken } = usePrizeTokenData(prizePools[0])
@@ -76,7 +76,7 @@ export const WinView = (props: WinViewProps) => {
           className='w-full h-auto -my-40 pointer-events-none'
           onComplete={() => setIsAnimationComplete(true)}
         />
-        <Button onClick={onClose} className={classNames('mx-auto', transitionIn)}>
+        <Button onClick={onGoToAccount} className={classNames('mx-auto', transitionIn)}>
           {intl?.('viewAccount') ?? `View Your Account`}
         </Button>
       </div>

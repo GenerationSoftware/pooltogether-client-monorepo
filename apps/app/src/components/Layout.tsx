@@ -245,7 +245,11 @@ export const Layout = (props: LayoutProps) => {
         intl={{ base: t_common, prizes: t_drawModal }}
       />
 
-      <CheckPrizesModal prizePools={prizePoolsArray} intl={t_prizeChecking} />
+      <CheckPrizesModal
+        prizePools={prizePoolsArray}
+        onGoToAccount={() => router.push('/account')}
+        intl={t_prizeChecking}
+      />
 
       <CaptchaModal
         hCaptchaSiteKey='11cdabde-af7e-42cb-ba97-76e35b7f7c39'

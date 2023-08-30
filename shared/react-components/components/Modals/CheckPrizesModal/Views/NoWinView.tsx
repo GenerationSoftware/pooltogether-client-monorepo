@@ -5,12 +5,12 @@ import Lottie from 'lottie-react'
 import { noWinAnimation } from '../animations'
 
 interface NoWinViewProps {
-  onClose: () => void
+  onGoToAccount: () => void
   intl?: Intl<'noPrizes' | 'viewAccount'>
 }
 
 export const NoWinView = (props: NoWinViewProps) => {
-  const { onClose, intl } = props
+  const { onGoToAccount, intl } = props
 
   return (
     <div className='flex flex-col items-center'>
@@ -22,7 +22,7 @@ export const NoWinView = (props: NoWinViewProps) => {
         loop={true}
         className='w-full h-auto pointer-events-none'
       />
-      <Button onClick={onClose} className={classNames('mx-auto')}>
+      <Button onClick={onGoToAccount} className={classNames('mx-auto')}>
         {intl?.('viewAccount') ?? `View Your Account`}
       </Button>
     </div>
