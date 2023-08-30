@@ -35,6 +35,10 @@ export const AccountDeposits = (props: AccountDepositsProps) => {
     return !!vaultBalances && Object.values(vaultBalances).every((token) => token.amount === 0n)
   }, [vaultBalances])
 
+  const isExternalUser = useMemo(() => {
+    return !!address && address.toLowerCase() !== _userAddress?.toLowerCase()
+  }, [address, _userAddress])
+
   if (typeof window !== 'undefined' && userAddress === undefined) {
     return (
       <div className='flex flex-col h-[80vh] w-full items-center justify-evenly'>
@@ -52,7 +56,7 @@ export const AccountDeposits = (props: AccountDepositsProps) => {
       )}
     >
       <AccountDepositsHeader address={userAddress} />
-      {isEmpty && <NoDepositsCard />}
+      {isEmpty && !isExternalUser && <NoDepositsCard />}
       {!isEmpty && (
         <AccountDepositsTable
           address={userAddress}

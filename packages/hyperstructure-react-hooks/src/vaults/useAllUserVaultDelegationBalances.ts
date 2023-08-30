@@ -22,7 +22,7 @@ export const useAllUserVaultDelegationBalances = (prizePools: PrizePool[], userA
         const chainUpdates = userBalanceUpdates[chainId]
 
         for (const vaultAddress in chainUpdates) {
-          const latestObservation = chainUpdates[vaultAddress as Address][0]
+          const latestObservation = chainUpdates[vaultAddress as Address].find((obs) => obs.isNew)
           const delegatedAmount = !!latestObservation
             ? latestObservation.delegateBalance - latestObservation.balance
             : 0n

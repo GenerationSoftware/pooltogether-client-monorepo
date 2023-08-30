@@ -33,4 +33,5 @@ export interface SubgraphObservation {
   balance: bigint
   delegateBalance: bigint
   timestamp: number
+  isNew: boolean
 }

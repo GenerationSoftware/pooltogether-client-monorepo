@@ -309,6 +309,7 @@ export const getUserSubgraphObservations = async (
               balance
               delegateBalance
               timestamp
+              isNew
             }
           }
         }
@@ -328,7 +329,12 @@ export const getUserSubgraphObservations = async (
     const jsonData = await result.json()
     const accounts: {
       vault: { id: string }
-      observations: { balance: string; delegateBalance: string; timestamp: string }[]
+      observations: {
+        balance: string
+        delegateBalance: string
+        timestamp: string
+        isNew: boolean
+      }[]
     }[] = jsonData?.data?.user?.accounts ?? []
 
     const observations: { [vaultAddress: `0x${string}`]: SubgraphObservation[] } = {}
@@ -337,7 +343,8 @@ export const getUserSubgraphObservations = async (
       observations[account.vault.id as Address] = account.observations.map((obs) => ({
         balance: BigInt(obs.balance),
         delegateBalance: BigInt(obs.delegateBalance),
-        timestamp: parseInt(obs.timestamp)
+        timestamp: parseInt(obs.timestamp),
+        isNew: obs.isNew
       }))
     })
 
