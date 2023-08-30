@@ -120,8 +120,8 @@ export const prizePoolABI = [
   {
     inputs: [
       { internalType: 'address', name: '_vault', type: 'address' },
-      { internalType: 'uint16', name: '_startDrawIdInclusive', type: 'uint16' },
-      { internalType: 'uint16', name: '_endDrawIdInclusive', type: 'uint16' }
+      { internalType: 'uint24', name: '_startDrawIdInclusive', type: 'uint24' },
+      { internalType: 'uint24', name: '_endDrawIdInclusive', type: 'uint24' }
     ],
     name: 'getContributedBetween',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
@@ -145,7 +145,7 @@ export const prizePoolABI = [
   {
     inputs: [{ internalType: 'uint8', name: '_tier', type: 'uint8' }],
     name: 'getTierAccrualDurationInDraws',
-    outputs: [{ internalType: 'uint16', name: '', type: 'uint16' }],
+    outputs: [{ internalType: 'uint24', name: '', type: 'uint24' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -182,8 +182,8 @@ export const prizePoolABI = [
   },
   {
     inputs: [
-      { internalType: 'uint16', name: '_startDrawIdInclusive', type: 'uint16' },
-      { internalType: 'uint16', name: '_endDrawIdInclusive', type: 'uint16' }
+      { internalType: 'uint24', name: '_startDrawIdInclusive', type: 'uint24' },
+      { internalType: 'uint24', name: '_endDrawIdInclusive', type: 'uint24' }
     ],
     name: 'getTotalContributedBetween',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
@@ -306,6 +306,13 @@ export const prizePoolABI = [
   },
   {
     inputs: [],
+    name: 'owner',
+    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
     name: 'prizeToken',
     outputs: [{ internalType: 'contract IERC20', name: '', type: 'address' }],
     stateMutability: 'view',
@@ -316,6 +323,13 @@ export const prizePoolABI = [
     name: 'prizeTokenPerShare',
     outputs: [{ internalType: 'UD34x4', name: '', type: 'uint128' }],
     stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'renounceOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function'
   },
   {
@@ -365,6 +379,13 @@ export const prizePoolABI = [
     name: 'totalWithdrawn',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [{ internalType: 'address', name: 'newOwner', type: 'address' }],
+    name: 'transferOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function'
   },
   {
@@ -472,6 +493,15 @@ export const prizePoolABI = [
   },
   {
     anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'previousOwner', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'newOwner', type: 'address' }
+    ],
+    name: 'OwnershipTransferred',
+    type: 'event'
+  },
+  {
+    anonymous: false,
     inputs: [{ indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }],
     name: 'ReserveConsumed',
     type: 'event'
@@ -530,7 +560,7 @@ export const prizePoolABI = [
     name: 'DrawClosed',
     type: 'error'
   },
-  { inputs: [], name: 'DrawManagerAlreadySet', type: 'error' },
+  { inputs: [], name: 'DrawManagerIsZeroAddress', type: 'error' },
   {
     inputs: [
       { internalType: 'uint64', name: 'drawEndsAt', type: 'uint64' },
@@ -548,6 +578,9 @@ export const prizePoolABI = [
     name: 'FeeTooLarge',
     type: 'error'
   },
+  { inputs: [], name: 'FirstDrawStartsInPast', type: 'error' },
+  { inputs: [], name: 'IncompatibleTwabPeriodLength', type: 'error' },
+  { inputs: [], name: 'IncompatibleTwabPeriodOffset', type: 'error' },
   {
     inputs: [{ internalType: 'uint104', name: 'requestedLiquidity', type: 'uint104' }],
     name: 'InsufficientLiquidity',
@@ -600,7 +633,6 @@ export const prizePoolABI = [
     type: 'error'
   },
   { inputs: [], name: 'NoClosedDraw', type: 'error' },
-  { inputs: [], name: 'NotDeployer', type: 'error' },
   {
     inputs: [{ internalType: 'uint8', name: 'numTiers', type: 'uint8' }],
     name: 'NumberOfTiersGreaterThanMaximum',

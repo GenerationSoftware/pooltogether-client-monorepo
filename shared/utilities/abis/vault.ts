@@ -194,21 +194,6 @@ export const vaultABI = [
     type: 'function'
   },
   {
-    inputs: [
-      { internalType: 'address', name: '_sender', type: 'address' },
-      { internalType: 'address', name: '_receiver', type: 'address' },
-      { internalType: 'address', name: '_tokenIn', type: 'address' },
-      { internalType: 'uint256', name: '_amountIn', type: 'uint256' },
-      { internalType: 'address', name: '_tokenOut', type: 'address' },
-      { internalType: 'uint256', name: '_amountOut', type: 'uint256' },
-      { internalType: 'bytes', name: '_flashSwapData', type: 'bytes' }
-    ],
-    name: 'liquidate',
-    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
-    stateMutability: 'nonpayable',
-    type: 'function'
-  },
-  {
     inputs: [],
     name: 'liquidationPair',
     outputs: [{ internalType: 'address', name: '', type: 'address' }],
@@ -412,20 +397,6 @@ export const vaultABI = [
     type: 'function'
   },
   {
-    inputs: [
-      { internalType: 'uint256', name: '_assets', type: 'uint256' },
-      { internalType: 'address', name: '_owner', type: 'address' },
-      { internalType: 'uint256', name: '_deadline', type: 'uint256' },
-      { internalType: 'uint8', name: '_v', type: 'uint8' },
-      { internalType: 'bytes32', name: '_r', type: 'bytes32' },
-      { internalType: 'bytes32', name: '_s', type: 'bytes32' }
-    ],
-    name: 'sponsorWithPermit',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-    stateMutability: 'nonpayable',
-    type: 'function'
-  },
-  {
     inputs: [],
     name: 'sweep',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
@@ -489,10 +460,33 @@ export const vaultABI = [
     type: 'function'
   },
   {
+    inputs: [
+      { internalType: 'address', name: '_sender', type: 'address' },
+      { internalType: 'address', name: '_receiver', type: 'address' },
+      { internalType: 'address', name: '_tokenOut', type: 'address' },
+      { internalType: 'uint256', name: '_amountOut', type: 'uint256' }
+    ],
+    name: 'transferTokensOut',
+    outputs: [{ internalType: 'bytes', name: '', type: 'bytes' }],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
     inputs: [],
     name: 'twabController',
     outputs: [{ internalType: 'address', name: '', type: 'address' }],
     stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      { internalType: 'address', name: '_tokenIn', type: 'address' },
+      { internalType: 'uint256', name: '_amountIn', type: 'uint256' },
+      { internalType: 'bytes', name: '', type: 'bytes' }
+    ],
+    name: 'verifyTokensIn',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function'
   },
   {
@@ -733,6 +727,14 @@ export const vaultABI = [
   },
   {
     inputs: [
+      { internalType: 'address', name: 'caller', type: 'address' },
+      { internalType: 'address', name: 'liquidationPair', type: 'address' }
+    ],
+    name: 'CallerNotLP',
+    type: 'error'
+  },
+  {
+    inputs: [
       { internalType: 'address', name: 'receiver', type: 'address' },
       { internalType: 'uint256', name: 'amount', type: 'uint256' },
       { internalType: 'uint256', name: 'max', type: 'uint256' }
@@ -751,14 +753,6 @@ export const vaultABI = [
     type: 'error'
   },
   { inputs: [], name: 'LiquidationAmountOutZero', type: 'error' },
-  {
-    inputs: [
-      { internalType: 'address', name: 'caller', type: 'address' },
-      { internalType: 'address', name: 'liquidationPair', type: 'address' }
-    ],
-    name: 'LiquidationCallerNotLP',
-    type: 'error'
-  },
   {
     inputs: [
       { internalType: 'address', name: 'tokenIn', type: 'address' },

@@ -4,20 +4,20 @@ import { LINKS } from '@shared/ui'
 const defaultVaultList: VaultList = {
   name: 'PoolTogether Testnet Vault List',
   keywords: ['pooltogether', 'cabana', 'g9', 'testnet'],
-  version: { major: 1, minor: 10, patch: 0 },
-  timestamp: '2023-08-23T21:03:19.574Z',
+  version: { major: 1, minor: 11, patch: 0 },
+  timestamp: '2023-08-30T20:42:37.930Z',
   logoURI: `${LINKS.app}/pooltogether-token-logo.svg`,
   tokens: [
     {
       chainId: 420,
-      address: '0x0BFE04201c496A9994B920DEb6087A60bDAdFbBB',
+      address: '0x3Bd1cA87F5D5C80b97D57825151715c204444C94',
       name: 'LY Prize DAI',
       decimals: 18,
       symbol: 'PTDAILYT',
       logoURI: 'https://assets.coingecko.com/coins/images/9956/small/4943.png?1636636734',
       extensions: {
         underlyingAsset: {
-          address: '0xce0B8850408caC7145E11A793f98e22aE39391E2',
+          address: '0x219b8d677eF97a1843FFD76E458dc1C6Ec5D13d0',
           symbol: 'DAI',
           name: 'Dai Stablecoin'
         }
@@ -25,14 +25,14 @@ const defaultVaultList: VaultList = {
     },
     {
       chainId: 420,
-      address: '0xfFB08a9ffC360806Be7EF8cf815c1274eF92CEA9',
+      address: '0x1430D10F71a7c328cf28aeDf66B33C511B2Aa37B',
       name: 'HY Prize DAI',
       decimals: 18,
       symbol: 'PTDAIHYT',
       logoURI: 'https://assets.coingecko.com/coins/images/9956/small/4943.png?1636636734',
       extensions: {
         underlyingAsset: {
-          address: '0xce0B8850408caC7145E11A793f98e22aE39391E2',
+          address: '0x219b8d677eF97a1843FFD76E458dc1C6Ec5D13d0',
           symbol: 'DAI',
           name: 'Dai Stablecoin'
         }
@@ -40,14 +40,14 @@ const defaultVaultList: VaultList = {
     },
     {
       chainId: 420,
-      address: '0x9e11c3D53A68c07F6D839e5D89a94052753ceDCb',
+      address: '0xfeF4a3FE03A480b1872fF0E95A30F0FA16DB323d',
       name: 'LY Prize USDC',
       decimals: 6,
       symbol: 'PTUSDCLYT',
       logoURI: 'https://etherscan.io/token/images/centre-usdc_28.png',
       extensions: {
         underlyingAsset: {
-          address: '0xa29377053623B8852306Af711Ecf6C7b855512e8',
+          address: '0x2c75541abD0e0025cA13D0DD5Ee5C9A697Dd3802',
           symbol: 'USDC',
           name: 'USD Coin'
         }
@@ -55,14 +55,14 @@ const defaultVaultList: VaultList = {
     },
     {
       chainId: 420,
-      address: '0x0410CaE69dD01f58224d54881648E35c6CB874FA',
+      address: '0xA1860843Be50A4795f2b10E2ADBA0b8e7C602041',
       name: 'HY Prize USDC',
       decimals: 6,
       symbol: 'PTUSDCHYT',
       logoURI: 'https://etherscan.io/token/images/centre-usdc_28.png',
       extensions: {
         underlyingAsset: {
-          address: '0xa29377053623B8852306Af711Ecf6C7b855512e8',
+          address: '0x2c75541abD0e0025cA13D0DD5Ee5C9A697Dd3802',
           symbol: 'USDC',
           name: 'USD Coin'
         }
@@ -70,7 +70,7 @@ const defaultVaultList: VaultList = {
     },
     {
       chainId: 420,
-      address: '0x4b7a2e1a70eA05523542C9189FA51b133884f321',
+      address: '0x3924C08a2dE571CB9713b1747B93eAc0c879De6b',
       name: 'Prize GUSD',
       decimals: 2,
       symbol: 'PTGUSDT',
@@ -78,7 +78,7 @@ const defaultVaultList: VaultList = {
         'https://assets.coingecko.com/coins/images/5992/small/gemini-dollar-gusd.png?1536745278',
       extensions: {
         underlyingAsset: {
-          address: '0x993DA7F244535B1F6f48BE745889649a8Ba21904',
+          address: '0xB654cd9f5289873BA3c732e020Df5209575E98A8',
           symbol: 'GUSD',
           name: 'Gemini dollar'
         }
@@ -86,14 +86,14 @@ const defaultVaultList: VaultList = {
     },
     {
       chainId: 420,
-      address: '0xB9A647d3391b939cB49b44D3c5e93C63D96aD4a4',
+      address: '0x98F95139A4e776e25b9C5a666A50c2462aCD32E8',
       name: 'Prize WBTC',
       decimals: 8,
       symbol: 'PTWBTCT',
       logoURI: 'https://etherscan.io/token/images/wbtc_28.png?v=1',
       extensions: {
         underlyingAsset: {
-          address: '0x3C8f76D0a36B8eCeac04e7cEe1FF62B55F6B1FA6',
+          address: '0x5BCCf4258204C5F18af7D50827a7a0A8ac65Ea6A',
           symbol: 'WBTC',
           name: 'Wrapped BTC'
         }
@@ -101,14 +101,14 @@ const defaultVaultList: VaultList = {
     },
     {
       chainId: 420,
-      address: '0xE2ef926250b0E8a07578D76d9f57E5092340a6Fa',
+      address: '0x11166D448C2A531Ab9F61962D65760582B7f0158',
       name: 'Prize WETH',
       decimals: 18,
       symbol: 'PTWETHT',
       logoURI: 'https://etherscan.io/token/images/weth_28.png',
       extensions: {
         underlyingAsset: {
-          address: '0x30F00f959897d80ae98fcb5fD513c9668884F231',
+          address: '0xDb00B687687fddf95b15f17b5f1773B8337ed6f5',
           symbol: 'WETH',
           name: 'Wrapped Ether'
         }

@@ -32,7 +32,7 @@ export const POOL_TOKEN_ADDRESSES = {
   [NETWORK.mainnet]: '0x0cEC1A9154Ff802e7934Fc916Ed7Ca50bDE6844e',
   [NETWORK.polygon]: '0x25788a1a171ec66Da6502f9975a15B609fF54CF6',
   [NETWORK.optimism]: '0x395ae52bb17aef68c2888d941736a71dc6d4e125',
-  [NETWORK['optimism-goerli']]: '0x94DC94FE29Ff0E591a284619622B493fbf3A64E8'
+  [NETWORK['optimism-goerli']]: '0x20524C0a56ec85A1aF9b0989202C5bDc1B649Def'
 } as const
 
 /**
@@ -44,7 +44,7 @@ export const USDC_TOKEN_ADDRESSES: { [chainId: number]: Lowercase<Address> } = {
   [NETWORK.mainnet]: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
   [NETWORK.polygon]: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
   [NETWORK.optimism]: '0x7f5c764cbc14f9669b88837ca1490cca17c31607',
-  [NETWORK['optimism-goerli']]: '0xa29377053623b8852306af711ecf6c7b855512e8'
+  [NETWORK['optimism-goerli']]: '0x2c75541abd0e0025ca13d0dd5ee5c9a697dd3802'
 }
 
 /**
@@ -83,10 +83,10 @@ export const PRIZE_POOLS: {
 }[] = [
   {
     chainId: NETWORK['optimism-goerli'],
-    address: '0x6A62cd64Acb8bAb35C21e9114A7F9d97e7FaB987',
+    address: '0xC64bb8Fe4f023B650940D05E79c35454e12A111F',
     options: {
-      prizeTokenAddress: '0x94DC94FE29Ff0E591a284619622B493fbf3A64E8',
-      drawPeriodInSeconds: 14_400,
+      prizeTokenAddress: '0x20524C0a56ec85A1aF9b0989202C5bDc1B649Def',
+      drawPeriodInSeconds: 3_600,
       tierShares: 100
     }
   }
@@ -97,7 +97,7 @@ export const PRIZE_POOLS: {
  */
 export const PRIZE_POOL_GRAPH_API_URLS = Object.freeze({
   [NETWORK['optimism-goerli']]:
-    'https://api.studio.thegraph.com/query/41211/pt-v5-op-goerli-prize-pool/v.0.0.1'
+    'https://api.studio.thegraph.com/query/41211/pt-v5-op-goerli-prize-pool/v0.0.2'
 })
 
 /**
@@ -105,7 +105,7 @@ export const PRIZE_POOL_GRAPH_API_URLS = Object.freeze({
  */
 export const TWAB_GRAPH_API_URLS = Object.freeze({
   [NETWORK['optimism-goerli']]:
-    'https://api.studio.thegraph.com/query/41211/pt-v5-op-goerli-twab-control/v0.0.1'
+    'https://api.studio.thegraph.com/query/41211/pt-v5-op-goerli-twab-control/v0.0.2'
 })
 
 /**
@@ -192,9 +192,9 @@ export const STABLECOIN_ADDRESSES: Record<NETWORK, string[]> = {
   [NETWORK.mumbai]: [],
   [NETWORK.optimism]: [],
   [NETWORK['optimism-goerli']]: [
-    '0xa29377053623b8852306af711ecf6c7b855512e8', // USDC
-    '0xce0b8850408cac7145e11a793f98e22ae39391e2', // DAI
-    '0x993da7f244535b1f6f48be745889649a8ba21904' // GUSD
+    '0x2c75541abd0e0025ca13d0dd5ee5c9a697dd3802', // USDC
+    '0x219b8d677ef97a1843ffd76e458dc1c6ec5d13d0', // DAI
+    '0xb654cd9f5289873ba3c732e020df5209575e98a8' // GUSD
   ],
   [NETWORK.avalanche]: [],
   [NETWORK.fuji]: [],
@@ -208,14 +208,14 @@ export const STABLECOIN_ADDRESSES: Record<NETWORK, string[]> = {
  * Vault factory addresses
  */
 export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
-  [NETWORK['optimism-goerli']]: '0xF5aB5B4e977ac7718e967f04be778f740840F725'
+  [NETWORK['optimism-goerli']]: '0x1533eaC4429F088929f0E5e9B57ddBd5Ce747f9F'
 }
 
 /**
  * Liquidation pair factory addresses
  */
 export const LIQUIDATION_PAIR_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
-  [NETWORK['optimism-goerli']]: '0x319b35D693D9AF7cCe60D5fc475e1e8035B93B29'
+  [NETWORK['optimism-goerli']]: '0x9A57732A346ad4d1aFC16dC0A84FE27a7B9426ce'
 }
 
 /**

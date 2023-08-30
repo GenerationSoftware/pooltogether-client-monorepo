@@ -12,7 +12,7 @@ export const liquidationPairFactoryABI = [
       { internalType: 'address', name: '_tokenIn', type: 'address' },
       { internalType: 'address', name: '_tokenOut', type: 'address' },
       { internalType: 'uint32', name: '_periodLength', type: 'uint32' },
-      { internalType: 'uint32', name: '_periodOffset', type: 'uint32' },
+      { internalType: 'uint32', name: '_firstPeriodStartsAt', type: 'uint32' },
       { internalType: 'uint32', name: '_targetFirstSaleTime', type: 'uint32' },
       { internalType: 'SD59x18', name: '_decayConstant', type: 'int256' },
       { internalType: 'uint104', name: '_initialAmountIn', type: 'uint104' },
@@ -42,16 +42,16 @@ export const liquidationPairFactoryABI = [
     anonymous: false,
     inputs: [
       { indexed: true, internalType: 'contract LiquidationPair', name: 'pair', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'tokenIn', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'tokenOut', type: 'address' },
       {
         indexed: false,
         internalType: 'contract ILiquidationSource',
         name: 'source',
         type: 'address'
       },
-      { indexed: false, internalType: 'address', name: 'tokenIn', type: 'address' },
-      { indexed: false, internalType: 'address', name: 'tokenOut', type: 'address' },
       { indexed: false, internalType: 'uint32', name: 'periodLength', type: 'uint32' },
-      { indexed: false, internalType: 'uint32', name: 'periodOffset', type: 'uint32' },
+      { indexed: false, internalType: 'uint32', name: 'firstPeriodStartsAt', type: 'uint32' },
       { indexed: false, internalType: 'uint32', name: 'targetFirstSaleTime', type: 'uint32' },
       { indexed: false, internalType: 'SD59x18', name: 'decayConstant', type: 'int256' },
       { indexed: false, internalType: 'uint104', name: 'initialAmountIn', type: 'uint104' },
