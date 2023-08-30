@@ -24,7 +24,7 @@ export const HomePageContent = () => {
         </div>
         <DeployedVaultsTable className='w-full' />
         <DeployNewVaultButton className='lg:hidden' />
-        <AddDeployedVaultForm className='w-full max-w-sm mt-8' />
+        <AddDeployedVaultForm className='w-full mt-8' />
       </div>
     )
   }

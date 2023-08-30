@@ -79,8 +79,9 @@ export const DeployedVaultsTable = (props: DeployedVaultsTableProps) => {
           className
         )}
       >
-        <span className='text-center text-xl text-pt-purple-200 lg:text-3xl'>
-          You haven't deployed any vaults... yet.
+        <span className='text-center text-sm text-pt-purple-200 lg:text-base'>
+          You haven't deployed any vaults{' '}
+          <span className='text-pt-purple-50'>(or you cleared your local storage)</span>
         </span>
       </div>
     )
