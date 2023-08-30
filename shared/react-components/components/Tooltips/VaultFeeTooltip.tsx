@@ -1,0 +1,38 @@
+import { InformationCircleIcon } from '@heroicons/react/24/outline'
+import { Tooltip } from '@shared/ui'
+import classNames from 'classnames'
+
+export interface VaultFeeTooltipProps {
+  iconSize?: 'sm' | 'md' | 'lg'
+  intl?: { text?: string }
+  className?: string
+  iconClassName?: string
+}
+
+export const VaultFeeTooltip = (props: VaultFeeTooltipProps) => {
+  const { iconSize, intl, className, iconClassName } = props
+
+  return (
+    <Tooltip
+      content={
+        <div className={classNames('max-w-[16ch] text-center', className)}>
+          <span>
+            {intl?.text ??
+              'This a percentage of yield that does not go towards prizes, and is determined by the vault deployer'}
+          </span>
+        </div>
+      }
+    >
+      <InformationCircleIcon
+        className={classNames(
+          {
+            'h-6 w-6': iconSize === 'lg',
+            'h-5 w-5': iconSize === 'md' || !iconSize,
+            'h-3 w-3': iconSize === 'sm'
+          },
+          iconClassName
+        )}
+      />
+    </Tooltip>
+  )
+}

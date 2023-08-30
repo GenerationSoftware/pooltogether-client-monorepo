@@ -77,7 +77,9 @@
       "depositAsset": "Deposit Asset",
       "prizeAsset": "Prize Asset",
       "delegatedToYou": "Delegated To You",
-      "delegatedAmount": "Delegated Amount"
+      "delegatedAmount": "Delegated Amount",
+      "vaultFee": "Vault Fee",
+      "feeRecipient": "Fee Recipient"
     },
     "returnToVaults": "Return to Vaults",
     "learnAboutVault": "Learn about {vaultName}",
@@ -222,7 +224,8 @@
     "prizePower": "Vaults with higher prize power have a greater percentage of chances to win",
     "winChance": "This is your chance to win a prize in any given draw",
     "exactApproval": "You'll give your approval to deposit a specific amount of {symbol}",
-    "infiniteApproval": "You won't need to approve {symbol} the next time you want to deposit"
+    "infiniteApproval": "You won't need to approve {symbol} the next time you want to deposit",
+    "vaultFee": "This a percentage of yield that does not go towards prizes, and is determined by the vault deployer"
   },
   "Toasts": {
     "transactions": {

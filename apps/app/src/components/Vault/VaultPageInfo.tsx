@@ -1,10 +1,11 @@
 import { getBlockExplorerUrl, shorten, Vault } from '@pooltogether/hyperstructure-client-js'
 import {
   useAllUserVaultDelegationBalances,
+  useVaultFeeInfo,
   useVaultShareData,
   useVaultTokenData
 } from '@pooltogether/hyperstructure-react-hooks'
-import { PrizePowerTooltip, WinChanceTooltip } from '@shared/react-components'
+import { PrizePowerTooltip, VaultFeeTooltip, WinChanceTooltip } from '@shared/react-components'
 import { ExternalLink, Spinner } from '@shared/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -15,6 +16,7 @@ import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
 import { AccountVaultDelegationAmount } from '@components/Account/AccountVaultDelegationAmount'
 import { AccountVaultOdds } from '@components/Account/AccountVaultOdds'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
+import { VaultFeePercentage } from './VaultFeePercentage'
 import { VaultPrizePower } from './VaultPrizePower'
 import { VaultTotalDeposits } from './VaultTotalDeposits'
 
@@ -44,6 +46,8 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
   )
   const delegationBalance =
     delegationBalances?.[vault.chainId]?.[vault.address.toLowerCase() as Address] ?? 0n
+
+  const { data: vaultFee } = useVaultFeeInfo(vault)
 
   return (
     <div
@@ -123,6 +127,28 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
           )
         }
       />
+      {!!vaultFee && vaultFee.percent > 0 && (
+        <>
+          <VaultInfoRow
+            name={
+              <span className='flex gap-2 items-center'>
+                {t_vault('headers.vaultFee')}
+                <VaultFeeTooltip
+                  iconSize='sm'
+                  intl={{ text: t_tooltips('vaultFee') }}
+                  className='text-sm md:text-base'
+                  iconClassName='text-pt-purple-200'
+                />
+              </span>
+            }
+            data={<VaultFeePercentage vault={vault} />}
+          />
+          <VaultInfoRow
+            name={t_vault('headers.feeRecipient')}
+            data={<VaultInfoAddress chainId={vault.chainId} address={vaultFee.recipient} />}
+          />
+        </>
+      )}
     </div>
   )
 }
@@ -156,6 +182,26 @@ const VaultInfoToken = (props: VaultInfoTokenProps) => {
       <ExternalLink
         href={getBlockExplorerUrl(token.chainId, token.address, 'token')}
         text={shorten(token.address, { short: true }) ?? ''}
+        size='sm'
+        className='text-pt-purple-200'
+      />
+    </span>
+  )
+}
+
+interface VaultInfoAddressProps {
+  chainId: number
+  address: Address
+}
+
+const VaultInfoAddress = (props: VaultInfoAddressProps) => {
+  const { chainId, address } = props
+
+  return (
+    <span>
+      <ExternalLink
+        href={getBlockExplorerUrl(chainId, address)}
+        text={shorten(address) ?? ''}
         size='sm'
         className='text-pt-purple-200'
       />
