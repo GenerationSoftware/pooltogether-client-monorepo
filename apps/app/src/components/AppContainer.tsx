@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { NextIntlProvider } from 'next-intl'
 import { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
-import { useSentryUser } from '../hooks/useSentryUser'
 
 // React Query Client:
 const queryClient = new QueryClient()
@@ -29,9 +28,6 @@ export const AppContainer = (props: AppProps) => {
     router.events?.on,
     router.events?.off
   )
-
-  // Sentry User Setup
-  useSentryUser()
 
   return (
     <Flowbite theme={{ dark: true }}>

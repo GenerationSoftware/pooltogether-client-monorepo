@@ -12,7 +12,6 @@
     "@pooltogether/hyperstructure-client-js": "workspace:*",
     "@pooltogether/hyperstructure-react-hooks": "workspace:*",
     "@rainbow-me/rainbowkit": "^1.0.7",
-    "@sentry/nextjs": "^7.51.0",
     "@tanstack/react-query": "^4.24.10",
     "axios": "^1.4.0",
     "classnames": "^2.3.2",
