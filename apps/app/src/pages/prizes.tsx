@@ -3,6 +3,7 @@ import { SECONDS_PER_DAY } from '@shared/utilities'
 import { GetStaticProps } from 'next'
 import { useTranslations } from 'next-intl'
 import { getMessages } from 'src/utils'
+import { CheckPrizesBanner } from '@components/Account/CheckPrizesBanner'
 import { Layout } from '@components/Layout'
 import { PrizePoolDisplay } from '@components/Prizes/PrizePoolDisplay'
 import { PrizePoolWinners } from '@components/Prizes/PrizePoolWinners'
@@ -25,6 +26,7 @@ export default function PrizesPage() {
 
   return (
     <Layout className='gap-8'>
+      <CheckPrizesBanner />
       <span className='hidden text-6xl py-2 md:block'>🏆</span>
       <PrizePoolDisplay />
       {/* TODO: add more specific docs link once available */}
