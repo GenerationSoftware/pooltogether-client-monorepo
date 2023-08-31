@@ -57,7 +57,7 @@ const getRedirectedTokenPrices = async (chainId: number, tokenAddresses: string[
       if (redirectedTokens[redirect.chainId] === undefined) {
         redirectedTokens[redirect.chainId] = {}
       }
-      redirectedTokens[redirect.chainId][redirect.address] = address
+      redirectedTokens[redirect.chainId][redirect.address] = address.toLowerCase()
     }
   })
 
