@@ -1,5 +1,6 @@
 import { NETWORK, STABLECOIN_ADDRESSES, Vault } from '@pooltogether/hyperstructure-client-js'
 import {
+  useAllUserVaultBalances,
   useSelectedVaults,
   useTokenBalancesAcrossChains
 } from '@pooltogether/hyperstructure-react-hooks'
@@ -45,6 +46,9 @@ export const VaultFilters = (props: VaultFiltersProps) => {
       vaults.underlyingTokenAddresses?.byChain ?? {}
     )
 
+  const { data: userVaultBalances, isFetched: isFetchedUserVaultBalances } =
+    useAllUserVaultBalances(vaults, userAddress as Address)
+
   const [filterId, setFilterId] = useAtom(filterIdAtom)
 
   const setFilteredVaults = useSetAtom(filteredVaultsAtom)
@@ -76,7 +80,8 @@ export const VaultFilters = (props: VaultFiltersProps) => {
         const userWalletBalance = !!vault.tokenAddress
           ? userTokenBalances?.[vault.chainId]?.[vault.tokenAddress]?.amount ?? 0n
           : 0n
-        return userWalletBalance > 0n
+        const userDepositedBalance = userVaultBalances?.[vault.id]?.amount ?? 0n
+        return userWalletBalance > 0n || userDepositedBalance > 0n
       })
     )
   }
@@ -110,7 +115,7 @@ export const VaultFilters = (props: VaultFiltersProps) => {
       {
         id: 'userWallet',
         content: t('filters.inWallet'),
-        disabled: !isFetchedUserTokenBalances,
+        disabled: !isFetchedUserTokenBalances || !isFetchedUserVaultBalances,
         onClick: () => {
           setFilterId('userWallet')
           filterUserWallet()
@@ -140,7 +145,7 @@ export const VaultFilters = (props: VaultFiltersProps) => {
         }
       })
     ],
-    [networks, isFetchedUserTokenBalances, vaultsArray]
+    [networks, isFetchedUserTokenBalances, isFetchedUserVaultBalances, vaultsArray]
   )
 
   useEffect(() => {
