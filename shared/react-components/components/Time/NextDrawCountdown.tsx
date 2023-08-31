@@ -16,7 +16,7 @@ export const NextDrawCountdown = (props: NextDrawCountdownProps) => {
 
   const { data: nextDraw } = useNextDrawTimestamps(prizePool)
 
-  const { hours, minutes, seconds } = useCountdown(nextDraw?.start ?? 0)
+  const { days, hours, minutes, seconds } = useCountdown(nextDraw?.start ?? 0)
 
   return (
     <div className={classNames('flex flex-col items-center gap-4', className)}>
@@ -25,7 +25,7 @@ export const NextDrawCountdown = (props: NextDrawCountdownProps) => {
       </span>
       {!!nextDraw ? (
         <div className='flex gap-4'>
-          <TimeDigits value={hours} type={TimeUnit.hour} intl={intl?.abbreviations} />
+          <TimeDigits value={hours + days * 24} type={TimeUnit.hour} intl={intl?.abbreviations} />
           <TimeDigits value={minutes} type={TimeUnit.minute} intl={intl?.abbreviations} />
           <TimeDigits value={seconds} type={TimeUnit.second} intl={intl?.abbreviations} />
         </div>
