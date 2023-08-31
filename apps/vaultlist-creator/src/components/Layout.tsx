@@ -2,6 +2,7 @@ import { LINKS } from '@shared/ui'
 import classNames from 'classnames'
 import Head from 'next/head'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
 import { AppView } from 'src/types'
@@ -72,12 +73,21 @@ const SimpleFooter = (props: { className?: string }) => {
         props.className
       )}
     >
-      <span className='text-center text-sm font-medium'>
-        Made with ❤️ & 🤖 by{' '}
-        <a href='https://g9software.xyz' target='_blank' className='hover:text-pt-teal'>
-          Generation Software
-        </a>
-      </span>
+      <div className='flex flex-col gap-2 items-center text-center'>
+        <span className='text-sm font-medium'>
+          Made with ❤️ & 🤖 by{' '}
+          <a href='https://g9software.xyz' target='_blank' className='hover:text-pt-teal'>
+            Generation Software
+          </a>
+        </span>
+        <Link
+          href={LINKS.termsOfService}
+          target='_blank'
+          className='text-xs text-pt-purple-100 hover:underline'
+        >
+          Terms and Conditions
+        </Link>
+      </div>
     </footer>
   )
 }

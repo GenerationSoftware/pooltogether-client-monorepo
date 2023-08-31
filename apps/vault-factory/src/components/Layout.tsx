@@ -1,5 +1,5 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit'
-import { Toaster } from '@shared/ui'
+import { LINKS, Toaster } from '@shared/ui'
 import classNames from 'classnames'
 import Head from 'next/head'
 import Image from 'next/image'
@@ -102,13 +102,20 @@ const SimpleFooter = (props: SimpleFooterProps) => {
       >
         <PoweredByPT className='mx-auto' />
       </div>
-      <div className='mx-auto'>
+      <div className='flex flex-col gap-2 items-center mx-auto'>
         <span className='inline-block text-center text-sm font-medium'>
           Made with ❤️ & 🤖 by{' '}
           <a href='https://g9software.xyz' target='_blank' className='hover:text-pt-teal'>
             Generation Software
           </a>
         </span>
+        <Link
+          href={LINKS.termsOfService}
+          target='_blank'
+          className='text-xs text-pt-purple-100 hover:underline'
+        >
+          Terms and Conditions
+        </Link>
       </div>
     </footer>
   )
