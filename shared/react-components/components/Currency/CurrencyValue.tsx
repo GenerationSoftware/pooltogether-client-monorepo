@@ -49,23 +49,35 @@ export const CurrencyValue = (props: CurrencyValueProps) => {
   const [isFallbackUsdCurrency, setIsFallbackUsdCurrency] = useState<boolean>(false)
 
   const currencyValue = useMemo(() => {
-    if (isFetchedExchangeRates && !!exchangeRates) {
-      const value = calculateCurrencyValue(baseValue, selectedCurrency, exchangeRates, {
-        baseCurrency
-      })
-      if (value !== undefined) {
-        setIsFallbackUsdCurrency(false)
-        return value
-      } else if (isFetchedTokenPrices && !!tokenPrices) {
-        setIsFallbackUsdCurrency(true)
-        const usdValue =
-          Number(baseValue) * (1 / tokenPrices[USDC_TOKEN_ADDRESSES[NETWORK.mainnet]])
-        return usdValue
-      }
-    } else if (Number(baseValue) === 0) {
+    setIsFallbackUsdCurrency(false)
+
+    if (Number(baseValue) === 0) {
       return 0
-    } else {
-      return undefined
+    }
+
+    if (selectedCurrency === 'eth' && (baseCurrency === 'eth' || baseCurrency === undefined)) {
+      return Number(baseValue)
+    }
+
+    if (isFetchedExchangeRates && !!exchangeRates && isFetchedTokenPrices && !!tokenPrices) {
+      const usdcTokenPrice = tokenPrices[USDC_TOKEN_ADDRESSES[NETWORK.mainnet]]
+      if (!!usdcTokenPrice) {
+        const usdValue =
+          baseCurrency === 'usd' ? Number(baseValue) : Number(baseValue) * (1 / usdcTokenPrice)
+        const value = calculateCurrencyValue(usdValue, selectedCurrency, exchangeRates, {
+          baseCurrency: 'usd'
+        })
+        if (value !== undefined) {
+          return value
+        } else {
+          setIsFallbackUsdCurrency(true)
+          return usdValue
+        }
+      } else {
+        return calculateCurrencyValue(baseValue, selectedCurrency, exchangeRates, {
+          baseCurrency
+        })
+      }
     }
   }, [
     isFetchedExchangeRates,

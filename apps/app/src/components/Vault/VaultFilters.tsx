@@ -1,4 +1,4 @@
-import { NETWORK, STABLECOIN_ADDRESSES, Vault } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@pooltogether/hyperstructure-client-js'
 import {
   useAllUserVaultBalances,
   useSelectedVaults,
@@ -7,6 +7,7 @@ import {
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { NetworkIcon } from '@shared/react-components'
 import { Selection, SelectionItem } from '@shared/ui'
+import { NETWORK, STABLECOINS } from '@shared/utilities'
 import classNames from 'classnames'
 import { atom, useAtom, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
@@ -89,8 +90,8 @@ export const VaultFilters = (props: VaultFiltersProps) => {
   const filterStablecoins = () => {
     filterOnClick(vaultsArray, (vaults) =>
       vaults.filter((vault) =>
-        STABLECOIN_ADDRESSES[vault.chainId as NETWORK].includes(
-          (vault.tokenAddress?.toLowerCase() as Lowercase<string>) ?? '?'
+        Object.keys(STABLECOINS[vault.chainId as NETWORK]).includes(
+          vault.tokenAddress?.toLowerCase() ?? '?'
         )
       )
     )

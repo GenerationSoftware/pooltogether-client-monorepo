@@ -186,38 +186,38 @@ export const BLOCK_EXPLORERS: Record<NETWORK, { name: string; url: string }> = O
 })
 
 /**
- * Stablecoin addresses
+ * Stablecoin addresses and their corresponding fiat currency
  *
  * NOTE: All addresses are lowercase
  */
-export const STABLECOIN_ADDRESSES: Record<NETWORK, string[]> = {
-  [NETWORK.mainnet]: [
-    '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', // USDC
-    '0x6b175474e89094c44da98b954eedeac495271d0f', // DAI
-    '0x056fd409e1d7a124bd7017459dfea2f387b6d5cd' // GUSD
-  ],
-  [NETWORK.goerli]: [],
-  [NETWORK.sepolia]: [],
-  [NETWORK.bsc]: [],
-  [NETWORK['bsc-testnet']]: [],
-  [NETWORK.xdai]: [],
-  [NETWORK.polygon]: [],
-  [NETWORK.mumbai]: [],
-  [NETWORK.optimism]: [
-    '0x7f5c764cbc14f9669b88837ca1490cca17c31607', // USDC
-    '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1' // DAI
-  ],
-  [NETWORK['optimism-goerli']]: [
-    '0x2c75541abd0e0025ca13d0dd5ee5c9a697dd3802', // USDC
-    '0x219b8d677ef97a1843ffd76e458dc1c6ec5d13d0', // DAI
-    '0xb654cd9f5289873ba3c732e020df5209575e98a8' // GUSD
-  ],
-  [NETWORK.avalanche]: [],
-  [NETWORK.fuji]: [],
-  [NETWORK.celo]: [],
-  [NETWORK['celo-testnet']]: [],
-  [NETWORK.arbitrum]: [],
-  [NETWORK['arbitrum-goerli']]: []
+export const STABLECOINS: Record<NETWORK, { [address: Address]: string }> = {
+  [NETWORK.mainnet]: {
+    '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48': 'usd', // USDC
+    '0x6b175474e89094c44da98b954eedeac495271d0f': 'usd', // DAI
+    '0x056fd409e1d7a124bd7017459dfea2f387b6d5cd': 'usd' // GUSD
+  },
+  [NETWORK.goerli]: {},
+  [NETWORK.sepolia]: {},
+  [NETWORK.bsc]: {},
+  [NETWORK['bsc-testnet']]: {},
+  [NETWORK.xdai]: {},
+  [NETWORK.polygon]: {},
+  [NETWORK.mumbai]: {},
+  [NETWORK.optimism]: {
+    '0x7f5c764cbc14f9669b88837ca1490cca17c31607': 'usd', // USDC
+    '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1': 'usd' // DAI
+  },
+  [NETWORK['optimism-goerli']]: {
+    '0x2c75541abd0e0025ca13d0dd5ee5c9a697dd3802': 'usd', // USDC
+    '0x219b8d677ef97a1843ffd76e458dc1c6ec5d13d0': 'usd', // DAI
+    '0xb654cd9f5289873ba3c732e020df5209575e98a8': 'usd' // GUSD
+  },
+  [NETWORK.avalanche]: {},
+  [NETWORK.fuji]: {},
+  [NETWORK.celo]: {},
+  [NETWORK['celo-testnet']]: {},
+  [NETWORK.arbitrum]: {},
+  [NETWORK['arbitrum-goerli']]: {}
 }
 
 /**
