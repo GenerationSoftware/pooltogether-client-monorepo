@@ -105,11 +105,12 @@ const NoWinsCard = (props: NoWinsCardProps) => {
         <span className='text-sm text-pt-purple-100 lg:text-lg'>{t('noPrizesRecently')}</span>
         <ExternalLink
           href={LINKS.docs}
-          text={t('learnHowItWorks')}
           size='sm'
           className='text-pt-teal lg:text-lg'
           iconClassName='lg:h-6 lg:w-6'
-        />
+        >
+          {t('learnHowItWorks')}
+        </ExternalLink>
       </div>
     </div>
   )

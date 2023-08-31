@@ -1,16 +1,17 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
+import { ReactNode } from 'react'
 
 export interface ExternalLinkProps {
   href: string
-  text: string
+  children: ReactNode
   size?: 'xs' | 'sm' | 'md' | 'lg'
   className?: string
   iconClassName?: string
 }
 
 export const ExternalLink = (props: ExternalLinkProps) => {
-  const { href, text, size, className, iconClassName } = props
+  const { href, children, size, className, iconClassName } = props
 
   return (
     <a
@@ -26,7 +27,7 @@ export const ExternalLink = (props: ExternalLinkProps) => {
         className
       )}
     >
-      {text}
+      {children}
       <ArrowTopRightOnSquareIcon
         className={classNames(
           'text-inherit',

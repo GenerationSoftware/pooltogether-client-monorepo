@@ -115,10 +115,11 @@ const VaultPreviewItem = (props: VaultPreviewItemProps) => {
       {!!href ? (
         <ExternalLink
           href={href}
-          text={value}
           size='sm'
           className={classNames('text-pt-teal-dark', valueClassName)}
-        />
+        >
+          {value}
+        </ExternalLink>
       ) : (
         <span className={classNames('text-pt-teal-dark', valueClassName)}>{value}</span>
       )}

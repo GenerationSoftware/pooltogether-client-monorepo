@@ -24,8 +24,9 @@ export const BetaBanner = (props: BetaBannerProps) => {
       <ExternalLink
         href='https://gov.pooltogether.com/t/v5-private-beta-launch-information/3021'
         size='sm'
-        text={t('learnMore')}
-      />
+      >
+        {t('learnMore')}
+      </ExternalLink>
     </div>
   )
 }

@@ -108,11 +108,9 @@ export const VaultListView = (props: VaultListViewProps) => {
           {intl?.base?.('vaultListsDescription') ??
             'Vault lists determine what prize vaults are displayed throughout the app. Use caution when interacting with imported lists.'}
         </span>
-        <ExternalLink
-          href={LINKS.listDocs}
-          text={intl?.base?.('learnMoreVaultLists') ?? 'Learn more about vault lists'}
-          className='text-pt-purple-200'
-        />
+        <ExternalLink href={LINKS.listDocs} className='text-pt-purple-200'>
+          {intl?.base?.('learnMoreVaultLists') ?? 'Learn more about vault lists'}
+        </ExternalLink>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className='mt-4 md:mt-0'>

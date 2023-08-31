@@ -131,8 +131,9 @@ const DrawWinnersTable = (props: DrawWinnersTableProps) => {
                   <span className='w-1/2'>
                     <ExternalLink
                       href={getBlockExplorerUrl(prizePool.chainId, prize.winner, 'address')}
-                      text={shorten(prize.winner, { short: true }) as string}
-                    />
+                    >
+                      {shorten(prize.winner, { short: true }) as string}
+                    </ExternalLink>
                   </span>
                   <span className='w-1/2 text-right whitespace-nowrap md:text-center'>
                     {!!tokenData ? (

@@ -85,17 +85,13 @@ const FooterContent = () => {
   return (
     <span className='text-center text-xs opacity-70'>
       This site is protected by hCaptcha and its{' '}
-      <ExternalLink
-        href='https://hcaptcha.com/privacy'
-        text='Privacy Policy'
-        className='text-xs text-pt-teal'
-      />{' '}
+      <ExternalLink href='https://hcaptcha.com/privacy' className='text-xs text-pt-teal'>
+        Privacy Policy
+      </ExternalLink>{' '}
       and{' '}
-      <ExternalLink
-        href='https://hcaptcha.com/terms'
-        text='Terms of Service'
-        className='text-xs text-pt-teal'
-      />{' '}
+      <ExternalLink href='https://hcaptcha.com/terms' className='text-xs text-pt-teal'>
+        Terms of Service
+      </ExternalLink>{' '}
       apply.
     </span>
   )

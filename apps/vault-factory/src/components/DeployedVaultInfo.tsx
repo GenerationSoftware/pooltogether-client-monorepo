@@ -104,7 +104,9 @@ const DeployedVaultInfoItem = (props: DeployedVaultInfoItemProps) => {
     <div className='w-full inline-flex justify-between text-sm leading-tight'>
       <span>{label}</span>
       {!!href ? (
-        <ExternalLink href={href} text={value} size='sm' className='text-pt-teal-dark' />
+        <ExternalLink href={href} size='sm' className='text-pt-teal-dark'>
+          {value}
+        </ExternalLink>
       ) : (
         <span className='text-pt-teal-dark'>{value}</span>
       )}

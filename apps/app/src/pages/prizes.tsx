@@ -32,11 +32,12 @@ export default function PrizesPage() {
       {/* TODO: add more specific docs link once available */}
       <ExternalLink
         href={LINKS.docs}
-        text={t('learnMore')}
         size='xs'
         className='text-pt-purple-300 md:text-base'
         iconClassName='md:h-5 md:w-5'
-      />
+      >
+        {t('learnMore')}
+      </ExternalLink>
       <PrizePoolWinners />
     </Layout>
   )

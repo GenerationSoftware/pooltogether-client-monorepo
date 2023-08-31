@@ -51,10 +51,11 @@ export const SuccessView = (props: SuccessViewProps) => {
       {!!txHash && (
         <ExternalLink
           href={getBlockExplorerUrl(vault.chainId, txHash, 'tx')}
-          text={intl?.common?.('viewOn', { name }) ?? `View on ${name}`}
           size='sm'
           className='text-pt-teal'
-        />
+        >
+          {intl?.common?.('viewOn', { name }) ?? `View on ${name}`}
+        </ExternalLink>
       )}
       {!!goToAccount && (
         <Button

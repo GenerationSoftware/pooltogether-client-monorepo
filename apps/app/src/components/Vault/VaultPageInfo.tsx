@@ -181,10 +181,11 @@ const VaultInfoToken = (props: VaultInfoTokenProps) => {
       {token.symbol ?? '?'} |{' '}
       <ExternalLink
         href={getBlockExplorerUrl(token.chainId, token.address, 'token')}
-        text={shorten(token.address, { short: true }) ?? ''}
         size='sm'
         className='text-pt-purple-200'
-      />
+      >
+        {shorten(token.address, { short: true }) ?? ''}
+      </ExternalLink>
     </span>
   )
 }
@@ -201,10 +202,11 @@ const VaultInfoAddress = (props: VaultInfoAddressProps) => {
     <span>
       <ExternalLink
         href={getBlockExplorerUrl(chainId, address)}
-        text={shorten(address) ?? ''}
         size='sm'
         className='text-pt-purple-200'
-      />
+      >
+        {shorten(address) ?? ''}
+      </ExternalLink>
     </span>
   )
 }

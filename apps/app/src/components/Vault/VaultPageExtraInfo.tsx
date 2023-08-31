@@ -117,10 +117,11 @@ const Contracts = (props: ContractsProps) => {
             {i !== 0 && <Separator className='hidden lg:block' />}
             <ExternalLink
               href={getBlockExplorerUrl(chainId, contract.address)}
-              text={contract.name}
               size='sm'
               className='text-pt-purple-200'
-            />
+            >
+              {contract.name}
+            </ExternalLink>
           </span>
         )
       })}
@@ -147,10 +148,11 @@ const VaultLists = (props: VaultListsProps) => {
             <ExternalLink
               key={`vaultListLink-${list.src}-${i}`}
               href={isDefaultList ? `/api/vaultList/${list.src}` : list.src}
-              text={list.name}
               size='sm'
               className='text-pt-purple-200'
-            />
+            >
+              {list.name}
+            </ExternalLink>
           </span>
         )
       })}

@@ -42,10 +42,11 @@ export const ConfirmingView = (props: ConfirmingViewProps) => {
         {!!txHash && (
           <ExternalLink
             href={getBlockExplorerUrl(vault.chainId, txHash, 'tx')}
-            text={intl?.common?.('viewOn', { name }) ?? `View on ${name}`}
             size='sm'
             className='mx-auto text-pt-purple-100'
-          />
+          >
+            {intl?.common?.('viewOn', { name }) ?? `View on ${name}`}
+          </ExternalLink>
         )}
         <Button fullSized={true} color='transparent' onClick={closeModal}>
           {intl?.common?.('close') ?? 'Close'}

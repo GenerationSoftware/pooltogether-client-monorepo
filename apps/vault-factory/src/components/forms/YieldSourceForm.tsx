@@ -53,9 +53,10 @@ export const YieldSourceForm = (props: YieldSourceFormProps) => {
       >
         <ExternalLink
           href='https://ethereum.org/en/developers/docs/standards/tokens/erc-4626/'
-          text='What is ERC-4626?'
           className='text-pt-teal-dark'
-        />
+        >
+          What is ERC-4626?
+        </ExternalLink>
         <SimpleInput
           formKey='vaultYieldSourceName'
           validate={{

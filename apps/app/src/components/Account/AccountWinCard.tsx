@@ -25,10 +25,11 @@ export const AccountWinCard = (props: AccountWinCardProps) => {
       <ExternalLink
         // href={getBlockExplorerUrl(win.chainId, win.txHash, 'tx')}
         href={getBlockExplorerUrl(win.chainId, '', 'tx')}
-        text={t('viewTx')}
         size='xs'
         className='grow text-pt-purple-200'
-      />
+      >
+        {t('viewTx')}
+      </ExternalLink>
       <AccountWinAmount
         prizePool={prizePool}
         amount={win.payout}
