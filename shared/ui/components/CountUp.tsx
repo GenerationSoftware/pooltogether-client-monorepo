@@ -1,7 +1,7 @@
+import { formatNumberForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import { animate, Easing, motion, useMotionValue, useTransform } from 'framer-motion'
 import { useEffect } from 'react'
-import { formatNumberForDisplay } from '../../utilities'
 
 export interface CountUpProps extends Intl.NumberFormatOptions {
   countTo: number

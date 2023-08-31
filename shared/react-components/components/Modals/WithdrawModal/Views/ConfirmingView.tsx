@@ -1,12 +1,12 @@
-import {
-  formatNumberForDisplay,
-  getBlockExplorerName,
-  getBlockExplorerUrl,
-  Vault
-} from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@pooltogether/hyperstructure-client-js'
 import { useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
 import { Button, ExternalLink, Spinner } from '@shared/ui'
+import {
+  formatNumberForDisplay,
+  getBlockExplorerName,
+  getBlockExplorerUrl
+} from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 import { withdrawFormTokenAmountAtom } from '../../../Form/WithdrawForm'

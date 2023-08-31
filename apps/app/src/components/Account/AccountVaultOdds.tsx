@@ -1,6 +1,7 @@
-import { formatNumberForDisplay, PrizePool, Vault } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool, Vault } from '@pooltogether/hyperstructure-client-js'
 import { usePrizeOdds, useUserVaultShareBalance } from '@pooltogether/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
+import { formatNumberForDisplay } from '@shared/utilities'
 import { useTranslations } from 'next-intl'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'

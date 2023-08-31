@@ -97,6 +97,20 @@ export const formatCurrencyNumberForDisplay = (
     hideZeroes?: boolean
   }
 ) => {
+  if (currency.toLowerCase() === 'eth') {
+    return `Ξ${formatNumberForDisplay(val, {
+      ...options,
+      style: 'currency',
+      currency: 'USD'
+    }).slice(1)}`
+  } else if (currency.toLowerCase() === 'btc') {
+    return `₿${formatNumberForDisplay(val, {
+      ...options,
+      style: 'currency',
+      currency: 'USD'
+    }).slice(1)}`
+  }
+
   return formatNumberForDisplay(val, { ...options, style: 'currency', currency })
 }
 

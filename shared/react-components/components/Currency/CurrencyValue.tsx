@@ -1,9 +1,3 @@
-import {
-  calculateCurrencyValue,
-  formatCurrencyNumberForDisplay,
-  NETWORK,
-  USDC_TOKEN_ADDRESSES
-} from '@pooltogether/hyperstructure-client-js'
 import { useTokenPrices } from '@pooltogether/hyperstructure-react-hooks'
 import {
   CURRENCY_ID,
@@ -12,6 +6,12 @@ import {
   useSelectedCurrency
 } from '@shared/generic-react-hooks'
 import { CountUp, Spinner } from '@shared/ui'
+import {
+  calculateCurrencyValue,
+  formatCurrencyNumberForDisplay,
+  NETWORK,
+  USDC_TOKEN_ADDRESSES
+} from '@shared/utilities'
 import { useMemo, useState } from 'react'
 
 export interface CurrencyValueProps extends Omit<Intl.NumberFormatOptions, 'style' | 'currency'> {

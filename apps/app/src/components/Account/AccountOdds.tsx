@@ -1,5 +1,5 @@
-import { formatNumberForDisplay } from '@pooltogether/hyperstructure-client-js'
 import { useAllDrawPeriods, useAllUserPrizeOdds } from '@pooltogether/hyperstructure-react-hooks'
+import { formatNumberForDisplay } from '@shared/utilities'
 import { calculateUnionProbability, SECONDS_PER_WEEK } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

@@ -1,6 +1,7 @@
-import { formatNumberForDisplay, Vault } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@pooltogether/hyperstructure-client-js'
 import { useVaultFeeInfo } from '@pooltogether/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
+import { formatNumberForDisplay } from '@shared/utilities'
 
 interface VaultFeePercentageProps {
   vault: Vault

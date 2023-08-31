@@ -1,13 +1,13 @@
+import { Vault } from '@pooltogether/hyperstructure-client-js'
+import { useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
+import { Intl } from '@shared/types'
+import { Button, ExternalLink, LINKS } from '@shared/ui'
 import {
   formatNumberForDisplay,
   getBlockExplorerName,
   getBlockExplorerUrl,
-  getNiceNetworkNameByChainId,
-  Vault
-} from '@pooltogether/hyperstructure-client-js'
-import { useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
-import { Intl } from '@shared/types'
-import { Button, ExternalLink, LINKS } from '@shared/ui'
+  getNiceNetworkNameByChainId
+} from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
