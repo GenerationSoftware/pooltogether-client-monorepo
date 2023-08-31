@@ -1,5 +1,5 @@
-import { PRIZE_POOLS } from '@pooltogether/hyperstructure-client-js'
 import { usePrizePools } from '@pooltogether/hyperstructure-react-hooks'
+import { PRIZE_POOLS } from '@shared/utilities'
 import { useNetworks } from './useNetworks'
 
 /**

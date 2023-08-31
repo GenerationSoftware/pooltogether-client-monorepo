@@ -1,4 +1,4 @@
-import { getAssetsFromShares, Vault } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@pooltogether/hyperstructure-client-js'
 import {
   useAllUserVaultDelegationBalances,
   useAllVaultExchangeRates,
@@ -7,6 +7,7 @@ import {
   useVaults
 } from '@pooltogether/hyperstructure-react-hooks'
 import { TokenWithSupply } from '@shared/types'
+import { getAssetsFromShares } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
 import { useSupportedPrizePools } from './useSupportedPrizePools'

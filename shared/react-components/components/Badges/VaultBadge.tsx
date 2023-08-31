@@ -1,5 +1,6 @@
-import { TokenWithLogo, Vault } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@pooltogether/hyperstructure-client-js'
 import { useVaultShareData, useVaultTokenAddress } from '@pooltogether/hyperstructure-react-hooks'
+import { TokenWithLogo } from '@shared/types'
 import classNames from 'classnames'
 import { NetworkIcon } from '../Icons/NetworkIcon'
 import { TokenIcon } from '../Icons/TokenIcon'

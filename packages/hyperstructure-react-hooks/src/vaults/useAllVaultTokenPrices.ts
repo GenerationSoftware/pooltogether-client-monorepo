@@ -1,4 +1,4 @@
-import { PRIZE_POOLS } from '@pooltogether/hyperstructure-client-js'
+import { PRIZE_POOLS } from '@shared/utilities'
 import { Address } from 'viem'
 import { useSelectedVaults, useTokenPricesAcrossChains } from '..'
 

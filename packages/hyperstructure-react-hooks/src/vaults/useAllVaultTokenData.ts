@@ -1,5 +1,6 @@
-import { TokenWithSupply, Vaults } from '@pooltogether/hyperstructure-client-js'
+import { Vaults } from '@pooltogether/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
+import { TokenWithSupply } from '@shared/types'
 import { useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query'
 import { populateCachePerId } from '..'
 import { QUERY_KEYS } from '../constants'

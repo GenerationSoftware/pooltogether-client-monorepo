@@ -1,4 +1,4 @@
-import { VaultList } from '@pooltogether/hyperstructure-client-js'
+import { VaultList } from '@shared/types'
 import { atom, useAtom } from 'jotai'
 import { useEffect } from 'react'
 import { LOCAL_STORAGE_KEYS } from '../constants'

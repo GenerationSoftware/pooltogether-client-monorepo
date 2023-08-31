@@ -1,4 +1,3 @@
-import { NETWORK } from '@pooltogether/hyperstructure-client-js'
 import { Wallet } from '@rainbow-me/rainbowkit'
 import {
   argentWallet,
@@ -15,6 +14,7 @@ import {
   xdefiWallet,
   zerionWallet
 } from '@rainbow-me/rainbowkit/wallets'
+import { NETWORK } from '@shared/utilities'
 import defaultVaultList from '@vaultLists/default'
 import { arbitrum, Chain, mainnet, optimism, optimismGoerli, polygon } from 'wagmi/chains'
 

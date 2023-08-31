@@ -1,4 +1,4 @@
-import { getBlockExplorerUrl, Vault } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@pooltogether/hyperstructure-client-js'
 import {
   useSelectedVaultLists,
   useVaultShareData,
@@ -6,7 +6,7 @@ import {
 } from '@pooltogether/hyperstructure-react-hooks'
 import { AlertIcon } from '@shared/react-components'
 import { Button, ExternalLink, LINKS } from '@shared/ui'
-import { getVaultId } from '@shared/utilities'
+import { getBlockExplorerUrl, getVaultId } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'

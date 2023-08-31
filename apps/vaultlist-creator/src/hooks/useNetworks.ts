@@ -1,4 +1,4 @@
-import { NETWORK } from '@pooltogether/hyperstructure-client-js'
+import { NETWORK } from '@shared/utilities'
 import { SUPPORTED_NETWORKS } from '@constants/config'
 
 /**

@@ -1,5 +1,5 @@
-import { NETWORK } from '@pooltogether/hyperstructure-client-js'
 import { BasicIcon } from '@shared/ui'
+import { NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
 
 export interface NetworkIconProps {

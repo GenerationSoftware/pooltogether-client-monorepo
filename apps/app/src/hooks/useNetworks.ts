@@ -1,6 +1,5 @@
-import { NETWORK } from '@pooltogether/hyperstructure-client-js'
 import { useIsTestnets } from '@shared/generic-react-hooks'
-import { PRIZE_POOLS } from '@shared/utilities'
+import { NETWORK, PRIZE_POOLS } from '@shared/utilities'
 import { SUPPORTED_NETWORKS } from '@constants/config'
 
 /**

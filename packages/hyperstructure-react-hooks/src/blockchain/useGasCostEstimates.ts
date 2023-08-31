@@ -1,9 +1,5 @@
-import {
-  calculatePercentageOfBigInt,
-  GasCostEstimates,
-  NETWORK,
-  NULL_ADDRESS
-} from '@pooltogether/hyperstructure-client-js'
+import { GasCostEstimates } from '@shared/types'
+import { calculatePercentageOfBigInt, NETWORK, NULL_ADDRESS } from '@shared/utilities'
 import { useMemo } from 'react'
 import { formatUnits, parseUnits } from 'viem'
 import { useGasPrices, useTokenPrices } from '..'

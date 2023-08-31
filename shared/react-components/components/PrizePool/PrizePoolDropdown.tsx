@@ -1,7 +1,7 @@
-import { NETWORK } from '@pooltogether/hyperstructure-client-js'
 import { useScreenSize } from '@shared/generic-react-hooks'
 import { Intl } from '@shared/types'
 import { Dropdown, DropdownItem } from '@shared/ui'
+import { NETWORK } from '@shared/utilities'
 import { useMemo } from 'react'
 import { PrizePoolBadge } from '../Badges/PrizePoolBadge'
 

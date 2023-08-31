@@ -1,4 +1,6 @@
-import { getAssetsFromShares, TokenWithAmount, Vault } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@pooltogether/hyperstructure-client-js'
+import { TokenWithAmount } from '@shared/types'
+import { getAssetsFromShares } from '@shared/utilities'
 import { Address } from 'viem'
 import { useUserVaultShareBalance, useVaultExchangeRate, useVaultTokenData } from '..'
 

@@ -1,5 +1,5 @@
-import { getTokenAllowances } from '@pooltogether/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
+import { getTokenAllowances } from '@shared/utilities'
 import { useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query'
 import { Address, isAddress } from 'viem'
 import { usePublicClient } from 'wagmi'

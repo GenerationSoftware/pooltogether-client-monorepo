@@ -1,9 +1,6 @@
-import {
-  getAssetsFromShares,
-  PrizePool,
-  TokenWithAmount,
-  Vault
-} from '@pooltogether/hyperstructure-client-js'
+import { PrizePool, Vault } from '@pooltogether/hyperstructure-client-js'
+import { TokenWithAmount } from '@shared/types'
+import { getAssetsFromShares } from '@shared/utilities'
 import { useMemo, useState } from 'react'
 import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'

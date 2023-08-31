@@ -1,4 +1,4 @@
-import { MAX_UINT_256, Vault } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@pooltogether/hyperstructure-client-js'
 import {
   useSendApproveTransaction,
   useSendDepositTransaction,
@@ -10,6 +10,7 @@ import {
 } from '@pooltogether/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
 import { Button, Spinner } from '@shared/ui'
+import { MAX_UINT_256 } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
 import { Address, parseUnits } from 'viem'

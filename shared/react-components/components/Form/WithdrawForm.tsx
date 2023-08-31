@@ -1,8 +1,4 @@
-import {
-  getAssetsFromShares,
-  getSharesFromAssets,
-  Vault
-} from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@pooltogether/hyperstructure-client-js'
 import {
   useTokenBalance,
   useUserVaultShareBalance,
@@ -13,6 +9,7 @@ import {
   useVaultTokenPrice
 } from '@pooltogether/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
+import { getAssetsFromShares, getSharesFromAssets } from '@shared/utilities'
 import { atom, useSetAtom } from 'jotai'
 import { useEffect, useMemo } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'

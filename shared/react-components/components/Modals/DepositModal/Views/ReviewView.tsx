@@ -1,6 +1,6 @@
-import { PrizePool, Token, TokenWithLogo, Vault } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool, Vault } from '@pooltogether/hyperstructure-client-js'
 import { useVaultShareData, useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
-import { Intl } from '@shared/types'
+import { Intl, Token, TokenWithLogo } from '@shared/types'
 import { useAtomValue } from 'jotai'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 import { depositFormShareAmountAtom, depositFormTokenAmountAtom } from '../../../Form/DepositForm'

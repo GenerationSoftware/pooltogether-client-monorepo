@@ -1,4 +1,4 @@
-import { TimeUnit } from '@pooltogether/hyperstructure-client-js'
+import { TimeUnit } from '@shared/types'
 
 export interface TimeDigitsProps {
   value: number | null

@@ -1,11 +1,11 @@
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import { Spinner, toast } from '@shared/ui'
 import {
   getBlockExplorerName,
   getBlockExplorerUrl,
   getNiceNetworkNameByChainId,
   NETWORK
-} from '@pooltogether/hyperstructure-client-js'
-import { Spinner, toast } from '@shared/ui'
+} from '@shared/utilities'
 import { ReactNode, useEffect } from 'react'
 import { useWaitForTransaction } from 'wagmi'
 

@@ -1,4 +1,4 @@
-import { NETWORK, parseQueryParam } from '@pooltogether/hyperstructure-client-js'
+import { NETWORK, parseQueryParam } from '@shared/utilities'
 import { connectorsForWallets, Wallet } from '@rainbow-me/rainbowkit'
 import deepmerge from 'deepmerge'
 import { FallbackTransport, PublicClient } from 'viem'

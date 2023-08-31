@@ -1,10 +1,5 @@
-import {
-  formatBigIntForDisplay,
-  TokenWithAmount,
-  TokenWithLogo,
-  TokenWithPrice
-} from '@pooltogether/hyperstructure-client-js'
-import { Intl } from '@shared/types'
+import { Intl, TokenWithAmount, TokenWithLogo, TokenWithPrice } from '@shared/types'
+import { formatBigIntForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import { useFormContext } from 'react-hook-form'
 import { formatUnits } from 'viem'

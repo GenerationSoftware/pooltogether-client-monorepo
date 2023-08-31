@@ -1,4 +1,4 @@
-import { getBlockExplorerUrl, shorten, Vault } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@pooltogether/hyperstructure-client-js'
 import {
   useAllUserVaultDelegationBalances,
   useVaultFeeInfo,
@@ -7,6 +7,7 @@ import {
 } from '@pooltogether/hyperstructure-react-hooks'
 import { PrizePowerTooltip, VaultFeeTooltip, WinChanceTooltip } from '@shared/react-components'
 import { ExternalLink, Spinner } from '@shared/ui'
+import { getBlockExplorerUrl, shorten } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { ReactNode } from 'react'

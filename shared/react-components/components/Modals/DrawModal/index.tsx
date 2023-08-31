@@ -1,6 +1,6 @@
-import { PrizePool, SubgraphDraw } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@pooltogether/hyperstructure-client-js'
 import { MODAL_KEYS, useIsModalOpen, useScreenSize } from '@shared/generic-react-hooks'
-import { Intl } from '@shared/types'
+import { Intl, SubgraphDraw } from '@shared/types'
 import { Button, Modal } from '@shared/ui'
 import { MainView } from './Views/MainView'
 

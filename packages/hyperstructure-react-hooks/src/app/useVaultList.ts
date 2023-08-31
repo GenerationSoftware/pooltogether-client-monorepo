@@ -1,5 +1,6 @@
-import { getVaultList, NETWORK, VaultList } from '@pooltogether/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
+import { VaultList } from '@shared/types'
+import { getVaultList, NETWORK } from '@shared/utilities'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import { usePublicClient } from 'wagmi'
 import { useCachedVaultLists, useSelectedVaultListIds } from '..'

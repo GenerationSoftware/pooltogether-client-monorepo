@@ -1,9 +1,6 @@
-import {
-  calculateOdds,
-  calculateUnionProbability,
-  PrizePool
-} from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@pooltogether/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
+import { calculateOdds, calculateUnionProbability } from '@shared/utilities'
 import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { Address } from 'viem'

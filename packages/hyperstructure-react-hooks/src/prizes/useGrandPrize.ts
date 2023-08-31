@@ -1,4 +1,5 @@
-import { PrizePool, TokenWithAmount } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@pooltogether/hyperstructure-client-js'
+import { TokenWithAmount } from '@shared/types'
 import { useMemo } from 'react'
 import { useAllPrizeInfo, usePrizeTokenData } from '..'
 

@@ -1,4 +1,4 @@
-import { getAssetsFromShares } from '@pooltogether/hyperstructure-client-js'
+import { getAssetsFromShares } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
 import {

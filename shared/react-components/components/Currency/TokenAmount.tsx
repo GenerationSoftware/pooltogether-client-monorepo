@@ -1,6 +1,7 @@
-import { formatBigIntForDisplay, TokenWithAmount } from '@pooltogether/hyperstructure-client-js'
 import { useToken } from '@pooltogether/hyperstructure-react-hooks'
+import { TokenWithAmount } from '@shared/types'
 import { Spinner } from '@shared/ui'
+import { formatBigIntForDisplay } from '@shared/utilities'
 import { Address } from 'viem'
 
 export interface TokenAmountProps extends Omit<Intl.NumberFormatOptions, 'style' | 'currency'> {

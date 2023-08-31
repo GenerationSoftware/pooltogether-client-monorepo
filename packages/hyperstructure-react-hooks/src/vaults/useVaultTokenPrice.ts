@@ -1,4 +1,5 @@
-import { TokenWithPrice, Vault } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@pooltogether/hyperstructure-client-js'
+import { TokenWithPrice } from '@shared/types'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useTokenPrices, useVaultTokenData } from '..'

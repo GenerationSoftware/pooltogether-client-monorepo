@@ -1,4 +1,4 @@
-import { NETWORK } from '@pooltogether/hyperstructure-client-js'
+import { NETWORK } from '@shared/utilities'
 import { arbitrum, mainnet, optimism, optimismGoerli, polygon } from 'wagmi/chains'
 
 /**

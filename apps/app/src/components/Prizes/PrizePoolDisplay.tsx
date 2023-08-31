@@ -1,7 +1,7 @@
-import { NETWORK } from '@pooltogether/hyperstructure-client-js'
 import { useSelectedVault, useSelectedVaults } from '@pooltogether/hyperstructure-react-hooks'
 import { PrizePoolDropdown } from '@shared/react-components'
 import { Button } from '@shared/ui'
+import { NETWORK } from '@shared/utilities'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/router'

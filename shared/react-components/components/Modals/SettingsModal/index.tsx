@@ -1,7 +1,6 @@
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
-import { VaultList } from '@pooltogether/hyperstructure-client-js'
 import { LANGUAGE_ID, MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
-import { Intl } from '@shared/types'
+import { Intl, VaultList } from '@shared/types'
 import { Modal } from '@shared/ui'
 import { ReactNode } from 'react'
 import { CurrencyView } from './Views/CurrencyView'

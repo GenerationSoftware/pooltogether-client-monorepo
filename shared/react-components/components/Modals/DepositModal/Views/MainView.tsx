@@ -1,11 +1,8 @@
-import {
-  getNiceNetworkNameByChainId,
-  PrizePool,
-  Vault
-} from '@pooltogether/hyperstructure-client-js'
+import { PrizePool, Vault } from '@pooltogether/hyperstructure-client-js'
 import { useVaultShareData } from '@pooltogether/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
 import { Spinner } from '@shared/ui'
+import { getNiceNetworkNameByChainId } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 import { DepositForm, depositFormShareAmountAtom } from '../../../Form/DepositForm'
