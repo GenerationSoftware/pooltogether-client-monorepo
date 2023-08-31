@@ -22,7 +22,7 @@ import { arbitrum, Chain, mainnet, optimism, optimismGoerli, polygon } from 'wag
 /**
  * Supported networks
  */
-export const SUPPORTED_NETWORKS = [NETWORK['optimism-goerli']] as const
+export const SUPPORTED_NETWORKS = [NETWORK.optimism, NETWORK['optimism-goerli']] as const
 
 /**
  * Wagmi networks
@@ -78,6 +78,11 @@ export const CONTRACTS: Record<
     claimer: Address
   }
 > = {
+  [NETWORK.optimism]: {
+    prizePool: '0x8CFFFfFa42407DB9DCB974C2C744425c3e58d832',
+    twabController: '0x0D51a33975024E8aFc55fde9F6b070c10AA71Dd9',
+    claimer: '0x47b55748243314Be6a341668ECDa2066c0625f70'
+  },
   [NETWORK['optimism-goerli']]: {
     prizePool: '0xC64bb8Fe4f023B650940D05E79c35454e12A111F',
     twabController: '0xc86175315BBd4519622200bF14b2fa4a974FE78C',

@@ -82,6 +82,15 @@ export const PRIZE_POOLS: {
   options: { prizeTokenAddress: Address; drawPeriodInSeconds: number; tierShares: number }
 }[] = [
   {
+    chainId: NETWORK.optimism,
+    address: '0x8CFFFfFa42407DB9DCB974C2C744425c3e58d832',
+    options: {
+      prizeTokenAddress: '0x395ae52bb17aef68c2888d941736a71dc6d4e125',
+      drawPeriodInSeconds: 86_400,
+      tierShares: 100
+    }
+  },
+  {
     chainId: NETWORK['optimism-goerli'],
     address: '0xC64bb8Fe4f023B650940D05E79c35454e12A111F',
     options: {
@@ -96,6 +105,8 @@ export const PRIZE_POOLS: {
  * Prize Pool Graph API URLs
  */
 export const PRIZE_POOL_GRAPH_API_URLS = Object.freeze({
+  [NETWORK.optimism]:
+    'https://api.studio.thegraph.com/query/41211/pt-v5-optimism-prize-pool/v0.0.1',
   [NETWORK['optimism-goerli']]:
     'https://api.studio.thegraph.com/query/41211/pt-v5-op-goerli-prize-pool/v0.0.2'
 })
@@ -104,6 +115,8 @@ export const PRIZE_POOL_GRAPH_API_URLS = Object.freeze({
  * TWAB Graph API URLs
  */
 export const TWAB_GRAPH_API_URLS = Object.freeze({
+  [NETWORK.optimism]:
+    'https://api.studio.thegraph.com/query/41211/pt-v5-optimism-twab-controller/v0.0.1',
   [NETWORK['optimism-goerli']]:
     'https://api.studio.thegraph.com/query/41211/pt-v5-op-goerli-twab-control/v0.0.2'
 })
@@ -190,7 +203,10 @@ export const STABLECOIN_ADDRESSES: Record<NETWORK, string[]> = {
   [NETWORK.xdai]: [],
   [NETWORK.polygon]: [],
   [NETWORK.mumbai]: [],
-  [NETWORK.optimism]: [],
+  [NETWORK.optimism]: [
+    '0x7f5c764cbc14f9669b88837ca1490cca17c31607', // USDC
+    '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1' // DAI
+  ],
   [NETWORK['optimism-goerli']]: [
     '0x2c75541abd0e0025ca13d0dd5ee5c9a697dd3802', // USDC
     '0x219b8d677ef97a1843ffd76e458dc1c6ec5d13d0', // DAI
@@ -208,6 +224,7 @@ export const STABLECOIN_ADDRESSES: Record<NETWORK, string[]> = {
  * Vault factory addresses
  */
 export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
+  [NETWORK.optimism]: '0xA469deff6D52C9571d13513e3cd7d94496082d81',
   [NETWORK['optimism-goerli']]: '0x1533eaC4429F088929f0E5e9B57ddBd5Ce747f9F'
 }
 
@@ -215,6 +232,7 @@ export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
  * Liquidation pair factory addresses
  */
 export const LIQUIDATION_PAIR_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
+  [NETWORK.optimism]: '0xa1697E8F6b11D0E2F00d9dC8a5AEae2b2665650a',
   [NETWORK['optimism-goerli']]: '0x9A57732A346ad4d1aFC16dC0A84FE27a7B9426ce'
 }
 

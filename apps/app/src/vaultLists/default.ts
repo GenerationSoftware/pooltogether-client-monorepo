@@ -2,12 +2,46 @@ import { VaultList } from '@shared/types'
 import { LINKS } from '@shared/ui'
 
 const defaultVaultList: VaultList = {
-  name: 'PoolTogether Testnet Vault List',
-  keywords: ['pooltogether', 'cabana', 'g9', 'testnet'],
-  version: { major: 1, minor: 11, patch: 0 },
-  timestamp: '2023-08-30T20:42:37.930Z',
+  name: 'PoolTogether Vault List',
+  keywords: ['pooltogether', 'cabana', 'g9', 'optimism'],
+  version: { major: 1, minor: 12, patch: 0 },
+  timestamp: '2023-08-31T03:56:47.662Z',
   logoURI: `${LINKS.app}/pooltogether-token-logo.svg`,
   tokens: [
+    {
+      chainId: 10,
+      address: '0x31515cfC4550d9C83E2d86E8a352886d1364E2D9',
+      name: 'Prize USDC',
+      decimals: 6,
+      symbol: 'PTUSDC',
+      logoURI: 'https://etherscan.io/token/images/centre-usdc_28.png',
+      yieldSourceURI:
+        'https://app.aave.com/reserve-overview/?underlyingAsset=0x7f5c764cbc14f9669b88837ca1490cca17c31607&marketName=proto_optimism_v3',
+      extensions: {
+        underlyingAsset: {
+          address: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+          symbol: 'USDC',
+          name: 'USD Coin'
+        }
+      }
+    },
+    {
+      chainId: 10,
+      address: '0x1732Ce5486ea47f607550Ccbe499cd0f894E0494',
+      name: 'Prize WETH',
+      decimals: 18,
+      symbol: 'PTWETH',
+      logoURI: 'https://etherscan.io/token/images/weth_28.png',
+      yieldSourceURI:
+        'https://app.aave.com/reserve-overview/?underlyingAsset=0x4200000000000000000000000000000000000006&marketName=proto_optimism_v3',
+      extensions: {
+        underlyingAsset: {
+          address: '0x4200000000000000000000000000000000000006',
+          symbol: 'WETH',
+          name: 'Wrapped Ether'
+        }
+      }
+    },
     {
       chainId: 420,
       address: '0x3Bd1cA87F5D5C80b97D57825151715c204444C94',
