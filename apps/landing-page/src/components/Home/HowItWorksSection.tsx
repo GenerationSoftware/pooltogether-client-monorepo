@@ -15,7 +15,7 @@ export const HowItWorksSection = (props: HowItWorksSectionProps) => {
         <HowItWorksItem
           imgSrc='/depositGraphic.svg'
           title='Deposit Assets'
-          description='Deposit for a change to win'
+          description='Deposit for a chance to win'
         />
         <HowItWorksItem
           imgSrc='/prizesGraphic.svg'
