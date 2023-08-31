@@ -100,7 +100,7 @@ export const Layout = (props: LayoutProps) => {
     {
       title: t_footer('titles.ecosystem'),
       content: [
-        { content: t_footer('extensions'), href: '/extensions' },
+        { content: t_footer('extensions'), href: LINKS.ecosystem },
         { content: t_footer('governance'), href: LINKS.governance },
         { content: t_footer('security'), href: LINKS.audits }
       ]
