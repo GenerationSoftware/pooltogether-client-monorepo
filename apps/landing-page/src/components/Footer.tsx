@@ -12,7 +12,7 @@ export const Footer = (props: FooterProps) => {
   const { className } = props
 
   return (
-    <footer className={classNames('flex flex-col mt-auto pb-28 z-20', className)}>
+    <footer className={classNames('flex flex-col mt-auto pb-24 z-20 md:pb-12', className)}>
       <FooterWave />
       <div className='w-full flex flex-col gap-12 items-center justify-between px-16 bg-pt-purple-700 md:flex-row'>
         <div className='flex flex-col gap-12 px-4 md:flex-row md:px-0'>
@@ -26,6 +26,9 @@ export const Footer = (props: FooterProps) => {
           </Link>
         </div>
       </div>
+      <Link href='/terms' className='mx-auto mt-20 text-sm text-pt-purple-100 hover:underline'>
+        Terms and Conditions
+      </Link>
     </footer>
   )
 }

@@ -1,6 +1,7 @@
 import classNames from 'classnames'
 import { Footer as FlowbiteFooter, FooterProps as FlowbiteFooterProps } from 'flowbite-react'
 import { ReactNode } from 'react'
+import { LINKS } from '../constants'
 
 export interface FooterItem {
   title: string
@@ -24,7 +25,7 @@ export const Footer = (props: FooterProps) => {
     <FlowbiteFooter
       theme={{
         root: {
-          base: 'w-full flex justify-center px-12 pt-12 pb-24 shadow z-40 md:px-16'
+          base: 'w-full flex flex-col gap-20 items-center px-12 pt-12 pb-24 shadow z-40 md:px-16 md:pb-12'
         }
       }}
       className={classNames(className)}
@@ -62,6 +63,13 @@ export const Footer = (props: FooterProps) => {
           )
         })}
       </div>
+      <a
+        href={LINKS.termsOfService}
+        target='_blank'
+        className='text-sm text-pt-purple-100 hover:underline'
+      >
+        Terms and Conditions
+      </a>
     </FlowbiteFooter>
   )
 }
