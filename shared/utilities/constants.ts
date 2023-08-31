@@ -237,6 +237,22 @@ export const LIQUIDATION_PAIR_FACTORY_ADDRESSES: { [chainId: number]: Address } 
 }
 
 /**
+ * Redirects for tokens without pricing data on the caching API
+ *
+ * NOTE: All addresses are lowercase
+ */
+export const TOKEN_PRICE_REDIRECTS: {
+  [chainId: number]: { [address: string]: { chainId: number; address: Address } }
+} = {
+  [NETWORK.optimism]: {
+    '0x395ae52bb17aef68c2888d941736a71dc6d4e125': {
+      chainId: NETWORK.mainnet,
+      address: POOL_TOKEN_ADDRESSES[NETWORK.mainnet].toLowerCase() as Address
+    }
+  }
+}
+
+/**
  * Vault list schema
  */
 export const VAULT_LIST_SCHEMA: JSONSchemaType<VaultList> = {
