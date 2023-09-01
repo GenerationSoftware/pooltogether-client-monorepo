@@ -1,8 +1,10 @@
+import { Vaults } from '@generationsoftware/hyperstructure-client-js'
 import {
   useAllVaultShareData,
   useAllVaultTokenData,
   useVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { TokenWithSupply, VaultInfo, Version } from '@shared/types'
 import { getVaultId } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import {
@@ -17,7 +19,18 @@ import {
  * Returns all data to build a VaultList
  * @returns
  */
-export const useAllVaultListData = () => {
+export const useAllVaultListData = (): {
+  name: string
+  version: Version
+  keywords: string[]
+  logoURI: string
+  vaultInfo: VaultInfo[]
+  filteredVaultInfo: VaultInfo[]
+  vaults: Vaults
+  shareData?: { [vaultId: string]: TokenWithSupply }
+  tokenData?: { [vaultId: string]: TokenWithSupply }
+  isFetched: boolean
+} => {
   const name = useAtomValue(listNameAtom)
 
   const version = useAtomValue(listVersionAtom)
