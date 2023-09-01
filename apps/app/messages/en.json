@@ -80,7 +80,8 @@
       "delegatedToYou": "Delegated To You",
       "delegatedAmount": "Delegated Amount",
       "vaultFee": "Vault Fee",
-      "feeRecipient": "Fee Recipient"
+      "feeRecipient": "Fee Recipient",
+      "yieldSource": "Yield Source"
     },
     "returnToVaults": "Return to Vaults",
     "learnAboutVault": "Learn about {vaultName}",

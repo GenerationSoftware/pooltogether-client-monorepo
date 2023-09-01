@@ -150,7 +150,7 @@ export const getPrizePoolAllPrizeInfo = async (
     calls
   )
 
-  const lastDrawId = Number(multicallResults[3] ?? 0)
+  const lastDrawId = Number(multicallResults[3]) || 1
   const startDrawId =
     considerPastDraws > lastDrawId ? 1 : lastDrawId - Math.floor(considerPastDraws) + 1
 
@@ -159,13 +159,10 @@ export const getPrizePoolAllPrizeInfo = async (
     abi: prizePoolABI,
     publicClient
   })
-  const totalContributions =
-    lastDrawId > 0
-      ? ((await prizePoolContract.read.getTotalContributedBetween([
-          startDrawId,
-          lastDrawId
-        ])) as bigint)
-      : 0n
+  const totalContributions = (await prizePoolContract.read.getTotalContributedBetween([
+    startDrawId,
+    lastDrawId
+  ])) as bigint
 
   const drawPeriod = Number(multicallResults[0])
 
@@ -178,12 +175,13 @@ export const getPrizePoolAllPrizeInfo = async (
 
   const tierContributionPerDraw =
     calculatePercentageOfBigInt(totalContributions, formattedTierSharePercentage) /
-    BigInt(Math.floor(considerPastDraws))
+    BigInt(lastDrawId - startDrawId + 1)
 
   tiers.forEach((tier) => {
     const tierPrizeCount = 4 ** tier
 
-    const currentPrizeSize: bigint = multicallResults[tier + tiers.length + 4] ?? 0n
+    const currentPrizeSize: bigint =
+      multicallResults[tier + tiers.length + 4] || tierContributionPerDraw / BigInt(tierPrizeCount)
 
     const accrualDraws = Number(multicallResults[tier + 4])
     const accrualSeconds = accrualDraws * drawPeriod

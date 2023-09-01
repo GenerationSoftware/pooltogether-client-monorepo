@@ -10,7 +10,7 @@ import { ExternalLink, Spinner } from '@shared/ui'
 import { getBlockExplorerUrl, shorten } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { ReactNode } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
@@ -128,6 +128,12 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
           )
         }
       />
+      {!!vault.yieldSourceURI && (
+        <VaultInfoRow
+          name={t_vault('headers.yieldSource')}
+          data={<VaultInfoURI URI={vault.yieldSourceURI} />}
+        />
+      )}
       {!!vaultFee && vaultFee.percent > 0 && (
         <>
           <VaultInfoRow
@@ -209,5 +215,31 @@ const VaultInfoAddress = (props: VaultInfoAddressProps) => {
         {shorten(address) ?? ''}
       </ExternalLink>
     </span>
+  )
+}
+
+interface VaultInfoURIProps {
+  URI: string
+}
+
+const VaultInfoURI = (props: VaultInfoURIProps) => {
+  const { URI } = props
+
+  const cleanURI = useMemo(() => {
+    if (URI.startsWith('http')) {
+      return /^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/?\n]+)/i.exec(URI)?.[1] ?? ''
+    } else if (URI.startsWith('ipfs')) {
+      return URI // TODO: prettify this output
+    } else if (URI.endsWith('.eth')) {
+      return URI // TODO: prettify this output
+    } else {
+      return URI
+    }
+  }, [URI])
+
+  return (
+    <ExternalLink href={URI} size='sm' className='text-pt-purple-200'>
+      {cleanURI}
+    </ExternalLink>
   )
 }
