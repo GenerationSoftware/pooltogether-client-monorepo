@@ -2,7 +2,7 @@ import {
   usePrizePool,
   usePrizeTokenPrice,
   useToken
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'

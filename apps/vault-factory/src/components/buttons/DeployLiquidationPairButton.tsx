@@ -1,5 +1,5 @@
+import { useSendDeployLiquidationPairTransaction } from '@generationsoftware/hyperstructure-react-hooks'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
-import { useSendDeployLiquidationPairTransaction } from '@pooltogether/hyperstructure-react-hooks'
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { createDeployLiquidationPairTxToast, TransactionButton } from '@shared/react-components'
 import { PairCreateInfo } from '@shared/types'

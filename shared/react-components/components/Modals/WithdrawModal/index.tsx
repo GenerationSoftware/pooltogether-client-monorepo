@@ -1,4 +1,4 @@
-import { useSelectedVault } from '@pooltogether/hyperstructure-react-hooks'
+import { useSelectedVault } from '@generationsoftware/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Intl, RichIntl } from '@shared/types'
 import { Modal } from '@shared/ui'

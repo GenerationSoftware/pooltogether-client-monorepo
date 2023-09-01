@@ -1,10 +1,10 @@
-import { Vault } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useAllUserVaultDelegationBalances,
   useVaultFeeInfo,
   useVaultShareData,
   useVaultTokenData
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { PrizePowerTooltip, VaultFeeTooltip, WinChanceTooltip } from '@shared/react-components'
 import { ExternalLink, Spinner } from '@shared/ui'
 import { getBlockExplorerUrl, shorten } from '@shared/utilities'

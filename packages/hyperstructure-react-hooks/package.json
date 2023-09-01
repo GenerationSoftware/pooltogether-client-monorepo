@@ -1,5 +1,5 @@
 {
-  "name": "@pooltogether/hyperstructure-react-hooks",
+  "name": "@generationsoftware/hyperstructure-react-hooks",
   "version": "1.0.3",
   "license": "MIT",
   "main": "./dist/index.mjs",
@@ -23,7 +23,7 @@
     ]
   },
   "dependencies": {
-    "@pooltogether/hyperstructure-client-js": "workspace:*"
+    "@generationsoftware/hyperstructure-client-js": "workspace:*"
   },
   "devDependencies": {
     "@tanstack/react-query": "^4.24.10",

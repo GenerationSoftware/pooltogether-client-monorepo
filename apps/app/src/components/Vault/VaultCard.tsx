@@ -1,5 +1,5 @@
-import { Vault } from '@pooltogether/hyperstructure-client-js'
-import { useUserVaultTokenBalance } from '@pooltogether/hyperstructure-react-hooks'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
+import { useUserVaultTokenBalance } from '@generationsoftware/hyperstructure-react-hooks'
 import { PrizePowerTooltip, VaultBadge } from '@shared/react-components'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/router'

@@ -1,4 +1,4 @@
-import { Vault } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { TokenWithPrice } from '@shared/types'
 import { getAssetsFromShares } from '@shared/utilities'
 import { formatEther, parseEther } from 'viem'

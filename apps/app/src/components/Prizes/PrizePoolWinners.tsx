@@ -1,6 +1,9 @@
+import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import {
+  usePrizeDrawWinners,
+  usePrizeTokenData
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { ChevronRightIcon } from '@heroicons/react/24/outline'
-import { PrizePool } from '@pooltogether/hyperstructure-client-js'
-import { usePrizeDrawWinners, usePrizeTokenData } from '@pooltogether/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { TokenValue } from '@shared/react-components'
 import { SubgraphDraw } from '@shared/types'

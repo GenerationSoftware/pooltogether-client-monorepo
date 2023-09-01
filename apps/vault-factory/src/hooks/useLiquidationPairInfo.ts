@@ -3,7 +3,7 @@ import {
   usePrizePool,
   useVault,
   useVaultSharePrice
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { PairCreateInfo } from '@shared/types'
 import { POOL_TOKEN_ADDRESSES, PRIZE_POOLS } from '@shared/utilities'
 import { useAtomValue } from 'jotai'

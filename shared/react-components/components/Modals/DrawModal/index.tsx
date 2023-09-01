@@ -1,4 +1,4 @@
-import { PrizePool } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { MODAL_KEYS, useIsModalOpen, useScreenSize } from '@shared/generic-react-hooks'
 import { Intl, SubgraphDraw } from '@shared/types'
 import { Button, Modal } from '@shared/ui'

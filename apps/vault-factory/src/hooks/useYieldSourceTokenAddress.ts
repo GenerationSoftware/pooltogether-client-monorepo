@@ -1,5 +1,5 @@
-import { Vault } from '@pooltogether/hyperstructure-client-js'
-import { NO_REFETCH, QUERY_KEYS } from '@pooltogether/hyperstructure-react-hooks'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
+import { NO_REFETCH, QUERY_KEYS } from '@generationsoftware/hyperstructure-react-hooks'
 import { getVaultId } from '@shared/utilities'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import { Address, zeroAddress } from 'viem'

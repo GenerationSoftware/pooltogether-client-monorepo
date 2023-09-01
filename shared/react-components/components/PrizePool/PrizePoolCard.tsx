@@ -1,5 +1,5 @@
-import { PrizePool } from '@pooltogether/hyperstructure-client-js'
-import { useGrandPrize } from '@pooltogether/hyperstructure-react-hooks'
+import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import { useGrandPrize } from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
 import { Card, Spinner } from '@shared/ui'
 import { PrizePoolBadge } from '../Badges/PrizePoolBadge'

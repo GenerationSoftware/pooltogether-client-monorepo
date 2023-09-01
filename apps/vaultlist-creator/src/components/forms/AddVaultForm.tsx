@@ -1,5 +1,5 @@
-import { Vault } from '@pooltogether/hyperstructure-client-js'
-import { usePublicClientsByChain } from '@pooltogether/hyperstructure-react-hooks'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
+import { usePublicClientsByChain } from '@generationsoftware/hyperstructure-react-hooks'
 import { NetworkBadge, YieldSourceURITooltip } from '@shared/react-components'
 import { VaultInfo } from '@shared/types'
 import { NETWORK } from '@shared/utilities'

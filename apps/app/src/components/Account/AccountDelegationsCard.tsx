@@ -1,4 +1,4 @@
-import { Vault } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { VaultBadge, WinChanceTooltip } from '@shared/react-components'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/router'

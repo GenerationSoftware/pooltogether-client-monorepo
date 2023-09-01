@@ -9,8 +9,8 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.0.16",
-    "@pooltogether/hyperstructure-client-js": "workspace:*",
-    "@pooltogether/hyperstructure-react-hooks": "workspace:*",
+    "@generationsoftware/hyperstructure-client-js": "workspace:*",
+    "@generationsoftware/hyperstructure-react-hooks": "workspace:*",
     "@tanstack/react-query": "^4.24.10",
     "axios": "^1.4.0",
     "classnames": "^2.3.2",

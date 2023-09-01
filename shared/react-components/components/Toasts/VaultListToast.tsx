@@ -1,5 +1,5 @@
+import { useCachedVaultLists } from '@generationsoftware/hyperstructure-react-hooks'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import { useCachedVaultLists } from '@pooltogether/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
 import { Spinner, toast } from '@shared/ui'
 import { ReactNode } from 'react'

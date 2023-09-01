@@ -1,9 +1,9 @@
-import { Vault } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useAllUserVaultDelegationBalances,
   useVaultExchangeRate,
   useVaultTokenData
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { TokenValueAndAmount } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import { getAssetsFromShares } from '@shared/utilities'

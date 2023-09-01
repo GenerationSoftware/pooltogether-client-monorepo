@@ -1,4 +1,4 @@
-import { PrizePool, Vaults } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool, Vaults } from '@generationsoftware/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'

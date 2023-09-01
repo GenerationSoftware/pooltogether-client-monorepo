@@ -1,11 +1,11 @@
-import { Vault } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useAllUserVaultDelegationBalances,
   useAllVaultExchangeRates,
   useAllVaultShareData,
   useAllVaultTokenPrices,
   useVaults
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { TokenWithSupply } from '@shared/types'
 import { getAssetsFromShares } from '@shared/utilities'
 import { useMemo } from 'react'

@@ -1,4 +1,4 @@
-import { useAllUserVaultDelegationBalances } from '@pooltogether/hyperstructure-react-hooks'
+import { useAllUserVaultDelegationBalances } from '@generationsoftware/hyperstructure-react-hooks'
 import classNames from 'classnames'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'

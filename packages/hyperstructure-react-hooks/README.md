@@ -11,8 +11,8 @@
 ![ts](https://img.shields.io/badge/typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white)
 ![viem](https://img.shields.io/static/v1?label&logo=v&logoColor=white&message=viem&color=gray)
 ![react](https://img.shields.io/badge/react-%2320232a.svg?style=flat&logo=react&logoColor=%2361DAFB)
-![npm](https://img.shields.io/npm/v/@pooltogether/hyperstructure-react-hooks)
-![license](https://img.shields.io/npm/l/@pooltogether/hyperstructure-react-hooks)
+![npm](https://img.shields.io/npm/v/@generationsoftware/hyperstructure-react-hooks)
+![license](https://img.shields.io/npm/l/@generationsoftware/hyperstructure-react-hooks)
 
 [Client Monorepo](https://github.com/GenerationSoftware/pooltogether-client-monorepo) | [Documentation](https://dev.pooltogether.com/) | [Prize Pool Contract](https://github.com/pooltogether/v5-prize-pool) | [Vault Contract](https://github.com/pooltogether/v5-vault)
 
@@ -27,19 +27,19 @@ Many hooks utilize `react-query` in order to prevent unecessary refetching. A `r
 This library is available as an NPM package:
 
 ```sh
-npm install @pooltogether/hyperstructure-react-hooks
+npm install @generationsoftware/hyperstructure-react-hooks
 ```
 
 or
 
 ```sh
-pnpm install @pooltogether/hyperstructure-react-hooks
+pnpm install @generationsoftware/hyperstructure-react-hooks
 ```
 
 or
 
 ```sh
-yarn add @pooltogether/hyperstructure-react-hooks
+yarn add @generationsoftware/hyperstructure-react-hooks
 ```
 
 ## 🐱‍👤 &nbsp; Available Hooks

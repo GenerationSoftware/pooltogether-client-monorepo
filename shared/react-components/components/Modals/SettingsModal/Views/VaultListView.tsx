@@ -1,8 +1,8 @@
-import { TrashIcon } from '@heroicons/react/24/outline'
 import {
   useCachedVaultLists,
   useSelectedVaultListIds
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
+import { TrashIcon } from '@heroicons/react/24/outline'
 import { VaultList } from '@shared/types'
 import { Intl } from '@shared/types'
 import { BasicIcon, ExternalLink, LINKS, Toggle } from '@shared/ui'

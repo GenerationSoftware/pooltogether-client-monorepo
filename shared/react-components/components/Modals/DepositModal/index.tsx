@@ -1,5 +1,5 @@
-import { PrizePool, Vault } from '@pooltogether/hyperstructure-client-js'
-import { useSelectedVault } from '@pooltogether/hyperstructure-react-hooks'
+import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
+import { useSelectedVault } from '@generationsoftware/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Intl, RichIntl } from '@shared/types'
 import { LINKS, Modal } from '@shared/ui'

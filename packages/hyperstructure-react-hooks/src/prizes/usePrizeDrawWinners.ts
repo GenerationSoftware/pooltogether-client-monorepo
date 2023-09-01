@@ -1,4 +1,4 @@
-import { PrizePool } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { SubgraphDraw } from '@shared/types'
 import { getPaginatedSubgraphDraws } from '@shared/utilities'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'

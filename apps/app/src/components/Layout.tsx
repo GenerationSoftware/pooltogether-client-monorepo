@@ -1,9 +1,9 @@
-import { PrizePool } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
   useAllUserVaultBalances,
   usePrizeDrawWinners,
   useSelectedVaults
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
 import {
   ConnectButton,
   useAddRecentTransaction,

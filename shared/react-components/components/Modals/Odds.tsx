@@ -1,9 +1,9 @@
-import { PrizePool, Vault } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useDrawPeriod,
   usePrizeOdds,
   useVaultShareData
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
 import { Spinner } from '@shared/ui'
 import {

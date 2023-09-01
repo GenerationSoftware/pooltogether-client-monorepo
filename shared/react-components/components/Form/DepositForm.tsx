@@ -1,4 +1,4 @@
-import { Vault } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useTokenBalance,
   useUserVaultShareBalance,
@@ -7,7 +7,7 @@ import {
   useVaultSharePrice,
   useVaultTokenData,
   useVaultTokenPrice
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
 import { getAssetsFromShares, getSharesFromAssets } from '@shared/utilities'
 import { atom, useSetAtom } from 'jotai'

@@ -1,4 +1,4 @@
-import { useToken, useTokenPrices } from '@pooltogether/hyperstructure-react-hooks'
+import { useToken, useTokenPrices } from '@generationsoftware/hyperstructure-react-hooks'
 import { TokenWithAmount } from '@shared/types'
 import { Spinner } from '@shared/ui'
 import { useMemo } from 'react'

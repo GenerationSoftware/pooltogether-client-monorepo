@@ -1,9 +1,9 @@
-import { Vault } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useSelectedVaultLists,
   useVaultShareData,
   useVaultYieldSource
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { AlertIcon } from '@shared/react-components'
 import { Button, ExternalLink, LINKS } from '@shared/ui'
 import { getBlockExplorerUrl, getVaultId } from '@shared/utilities'

@@ -1,4 +1,4 @@
-import { PrizePool } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { PrizePoolBadge } from '@shared/react-components'
 import { SubgraphPrize } from '@shared/types'
 import { Table, TableProps } from '@shared/ui'

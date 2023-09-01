@@ -3,7 +3,7 @@ import {
   useAllVaultExchangeRates,
   useAllVaultTokenPrices,
   useSelectedVaults
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { getAssetsFromShares } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'

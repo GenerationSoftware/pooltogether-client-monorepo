@@ -1,9 +1,9 @@
-import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import {
   useSendSetLiquidationPairTransaction,
   useVault,
   useVaultLiquidationPair
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
+import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { createSetLiquidationPairTxToast, TransactionButton } from '@shared/react-components'
 import classNames from 'classnames'

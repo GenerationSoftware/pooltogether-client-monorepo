@@ -1,4 +1,4 @@
-import { PrizePool } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { SubgraphPrize } from '@shared/types'
 import classNames from 'classnames'
 import { AccountWinCard } from './AccountWinCard'

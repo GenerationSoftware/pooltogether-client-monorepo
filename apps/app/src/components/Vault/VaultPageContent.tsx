@@ -1,9 +1,9 @@
-import { Vault } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   usePublicClientsByChain,
   useSelectedVaults,
   useVaultTokenAddress
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { ErrorPooly } from '@shared/react-components'
 import { Button } from '@shared/ui'
 import { getVaultId, NETWORK } from '@shared/utilities'

@@ -1,5 +1,8 @@
+import {
+  useSendDeployVaultTransaction,
+  useToken
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
-import { useSendDeployVaultTransaction, useToken } from '@pooltogether/hyperstructure-react-hooks'
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { createDeployVaultTxToast, TransactionButton } from '@shared/react-components'
 import { VaultDeployInfo } from '@shared/types'

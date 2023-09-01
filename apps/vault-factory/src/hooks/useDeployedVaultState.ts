@@ -1,9 +1,9 @@
-import { Vault } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useVaultClaimer,
   useVaultLiquidationPair,
   useVaultTokenData
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { VaultState } from 'src/types'
 import { zeroAddress } from 'viem'
 

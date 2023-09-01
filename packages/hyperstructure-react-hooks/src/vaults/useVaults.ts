@@ -1,4 +1,4 @@
-import { Vaults } from '@pooltogether/hyperstructure-client-js'
+import { Vaults } from '@generationsoftware/hyperstructure-client-js'
 import { VaultInfo } from '@shared/types'
 import { usePublicClientsByChain } from '..'
 

@@ -1,4 +1,4 @@
-import { PrizePool } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { msToS, sToMs } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'

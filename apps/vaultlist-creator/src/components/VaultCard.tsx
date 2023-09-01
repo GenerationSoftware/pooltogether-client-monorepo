@@ -1,6 +1,6 @@
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
+import { useVaultTokenData } from '@generationsoftware/hyperstructure-react-hooks'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
-import { Vault } from '@pooltogether/hyperstructure-client-js'
-import { useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
 import { TokenIcon } from '@shared/react-components'
 import { BasicIcon, Spinner, Tooltip } from '@shared/ui'
 import { getNiceNetworkNameByChainId, getVaultId, shorten } from '@shared/utilities'

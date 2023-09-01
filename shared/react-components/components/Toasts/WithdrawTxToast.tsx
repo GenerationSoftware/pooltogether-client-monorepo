@@ -1,5 +1,4 @@
-import { XMarkIcon } from '@heroicons/react/24/outline'
-import { Vault } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useSelectedVault,
   useTokenBalance,
@@ -7,7 +6,8 @@ import {
   useUserVaultTokenBalance,
   useVaultBalance,
   useVaultTokenData
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
+import { XMarkIcon } from '@heroicons/react/24/outline'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Intl } from '@shared/types'
 import { Spinner, toast } from '@shared/ui'

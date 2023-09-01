@@ -1,4 +1,4 @@
-import { PrizePool } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAllUserEligibleDraws, useLastCheckedDrawIds } from '..'

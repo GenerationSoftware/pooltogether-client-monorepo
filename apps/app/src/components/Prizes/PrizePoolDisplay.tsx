@@ -1,4 +1,4 @@
-import { useSelectedVault, useSelectedVaults } from '@pooltogether/hyperstructure-react-hooks'
+import { useSelectedVault, useSelectedVaults } from '@generationsoftware/hyperstructure-react-hooks'
 import { PrizePoolDropdown } from '@shared/react-components'
 import { Button } from '@shared/ui'
 import { NETWORK } from '@shared/utilities'

@@ -1,7 +1,7 @@
 import {
   useSelectedVaultListIds,
   useSelectedVaults
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { PrizePoolBadge } from '@shared/react-components'
 import { Button, Spinner } from '@shared/ui'

@@ -1,5 +1,5 @@
-import { Vault } from '@pooltogether/hyperstructure-client-js'
-import { useGasCostEstimates } from '@pooltogether/hyperstructure-react-hooks'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
+import { useGasCostEstimates } from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
 import { Spinner } from '@shared/ui'
 import { sToMs } from '@shared/utilities'

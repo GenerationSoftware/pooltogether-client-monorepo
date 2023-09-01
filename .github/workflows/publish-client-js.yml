@@ -26,7 +26,7 @@ jobs:
         uses: EndBug/version-check@v2
         with:
           file-name: ./packages/hyperstructure-client-js/package.json
-          file-url: https://unpkg.com/@pooltogether/hyperstructure-client-js@latest/package.json
+          file-url: https://unpkg.com/@generationsoftware/hyperstructure-client-js@latest/package.json
           static-checking: localIsNew
 
   publish:

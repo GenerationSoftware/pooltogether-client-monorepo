@@ -1,4 +1,4 @@
-import { useGrandPrize, usePrizePool } from '@pooltogether/hyperstructure-react-hooks'
+import { useGrandPrize, usePrizePool } from '@generationsoftware/hyperstructure-react-hooks'
 import { TokenAmount, TokenValue } from '@shared/react-components'
 import { Card, Spinner } from '@shared/ui'
 import { getNiceNetworkNameByChainId, NETWORK } from '@shared/utilities'

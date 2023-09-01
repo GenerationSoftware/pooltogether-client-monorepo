@@ -1,5 +1,8 @@
-import { Vault } from '@pooltogether/hyperstructure-client-js'
-import { useVaultClaimer, useVaultLiquidationPair } from '@pooltogether/hyperstructure-react-hooks'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
+import {
+  useVaultClaimer,
+  useVaultLiquidationPair
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { VaultBadge } from '@shared/react-components'
 import { Button, LINKS, Spinner } from '@shared/ui'
 import { getBlockExplorerUrl, shorten } from '@shared/utilities'

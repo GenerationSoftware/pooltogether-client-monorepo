@@ -1,4 +1,7 @@
-import { useAllDrawPeriods, useAllUserPrizeOdds } from '@pooltogether/hyperstructure-react-hooks'
+import {
+  useAllDrawPeriods,
+  useAllUserPrizeOdds
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { formatNumberForDisplay } from '@shared/utilities'
 import { calculateUnionProbability, SECONDS_PER_WEEK } from '@shared/utilities'
 import classNames from 'classnames'

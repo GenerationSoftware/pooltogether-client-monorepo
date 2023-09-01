@@ -1,7 +1,7 @@
 import {
   useAllUserPrizePoolWins,
   useLastCheckedDrawIds
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { SubgraphPrize } from '@shared/types'
 import { ExternalLink, LINKS } from '@shared/ui'
 import classNames from 'classnames'

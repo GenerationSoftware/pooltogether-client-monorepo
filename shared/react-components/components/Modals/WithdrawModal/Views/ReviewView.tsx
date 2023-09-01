@@ -1,5 +1,8 @@
-import { Vault } from '@pooltogether/hyperstructure-client-js'
-import { useVaultShareData, useVaultTokenData } from '@pooltogether/hyperstructure-react-hooks'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
+import {
+  useVaultShareData,
+  useVaultTokenData
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl, Token, TokenWithLogo } from '@shared/types'
 import { useAtomValue } from 'jotai'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'

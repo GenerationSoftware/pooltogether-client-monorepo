@@ -2,7 +2,7 @@ import {
   useAllPrizeDrawWinners,
   useAllUserEligibleDraws,
   useLastCheckedDrawIds
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useSupportedPrizePools } from './useSupportedPrizePools'

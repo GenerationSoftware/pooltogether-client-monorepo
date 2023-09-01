@@ -1,4 +1,4 @@
-import { useToken } from '@pooltogether/hyperstructure-react-hooks'
+import { useToken } from '@generationsoftware/hyperstructure-react-hooks'
 import { ExternalLink } from '@shared/ui'
 import { getBlockExplorerUrl, getNiceNetworkNameByChainId, shorten } from '@shared/utilities'
 import classNames from 'classnames'

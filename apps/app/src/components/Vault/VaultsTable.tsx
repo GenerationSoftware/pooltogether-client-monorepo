@@ -1,5 +1,9 @@
-import { Vault } from '@pooltogether/hyperstructure-client-js'
-import { SortDirection, SortId, useSortedVaults } from '@pooltogether/hyperstructure-react-hooks'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
+import {
+  SortDirection,
+  SortId,
+  useSortedVaults
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { PrizePowerTooltip, SortIcon, VaultBadge } from '@shared/react-components'
 import { Spinner, Table, TableProps } from '@shared/ui'
 import classNames from 'classnames'

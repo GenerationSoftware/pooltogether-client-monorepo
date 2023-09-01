@@ -1,5 +1,5 @@
-import { PrizePool } from '@pooltogether/hyperstructure-client-js'
-import { usePrizeTokenData } from '@pooltogether/hyperstructure-react-hooks'
+import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
 import { SubgraphPrize, TokenWithAmount } from '@shared/types'
 import { Intl } from '@shared/types'
 import { Button } from '@shared/ui'

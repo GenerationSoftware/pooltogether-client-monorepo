@@ -10,8 +10,8 @@
 
 ![ts](https://img.shields.io/badge/typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white)
 ![viem](https://img.shields.io/static/v1?label&logo=v&logoColor=white&message=viem&color=gray)
-![npm](https://img.shields.io/npm/v/@pooltogether/hyperstructure-client-js)
-![license](https://img.shields.io/npm/l/@pooltogether/hyperstructure-client-js)
+![npm](https://img.shields.io/npm/v/@generationsoftware/hyperstructure-client-js)
+![license](https://img.shields.io/npm/l/@generationsoftware/hyperstructure-client-js)
 
 [Client Monorepo](https://github.com/GenerationSoftware/pooltogether-client-monorepo) | [Documentation](https://dev.pooltogether.com/) | [Prize Pool Contract](https://github.com/pooltogether/v5-prize-pool) | [Vault Contract](https://github.com/pooltogether/v5-vault)
 
@@ -32,19 +32,19 @@ Useful utilities and types are also exported from internal packages. See the [ut
 This library is available as an NPM package:
 
 ```sh
-npm install @pooltogether/hyperstructure-client-js
+npm install @generationsoftware/hyperstructure-client-js
 ```
 
 or
 
 ```sh
-pnpm install @pooltogether/hyperstructure-client-js
+pnpm install @generationsoftware/hyperstructure-client-js
 ```
 
 or
 
 ```sh
-yarn add @pooltogether/hyperstructure-client-js
+yarn add @generationsoftware/hyperstructure-client-js
 ```
 
 ## 🏎️ &nbsp; Quickstart
@@ -62,7 +62,7 @@ To create an instance of a `PrizePool`, you will need:
 If you'd like to use any write methods, you must also provide a [Viem wallet client](https://viem.sh/docs/clients/wallet.html).
 
 ```ts
-import { PrizePool } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { createPublicClient, createWalletClient } from 'viem'
 
 // Viem clients
@@ -94,7 +94,7 @@ To create an instance of a `Vault`, you will need:
 If you'd like to use any write methods, you must also provide a [Viem wallet client](https://viem.sh/docs/clients/wallet.html).
 
 ```ts
-import { Vault } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { createPublicClient, createWalletClient } from 'viem'
 
 // Viem clients
@@ -127,7 +127,7 @@ To create an instance of `Vaults`, you will need:
 See the typing of a `VaultList` [here](https://github.com/GenerationSoftware/pooltogether-client-monorepo/blob/main/shared/types/types/vaults.ts).
 
 ```ts
-import { Vaults } from '@pooltogether/hyperstructure-client-js'
+import { Vaults } from '@generationsoftware/hyperstructure-client-js'
 
 // VaultList
 const vaultList = {

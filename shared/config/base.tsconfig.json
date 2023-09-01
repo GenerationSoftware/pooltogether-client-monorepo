@@ -19,8 +19,12 @@
     "skipLibCheck": true,
     "strict": true,
     "paths": {
-      "@pooltogether/hyperstructure-client-js": ["../../packages/hyperstructure-client-js/src"],
-      "@pooltogether/hyperstructure-react-hooks": ["../../packages/hyperstructure-react-hooks/src"],
+      "@generationsoftware/hyperstructure-client-js": [
+        "../../packages/hyperstructure-client-js/src"
+      ],
+      "@generationsoftware/hyperstructure-react-hooks": [
+        "../../packages/hyperstructure-react-hooks/src"
+      ],
       "@shared/config/*": ["../../shared/config/*"],
       "@shared/generic-react-hooks": ["../../shared/generic-react-hooks"],
       "@shared/react-components": ["../../shared/react-components"],

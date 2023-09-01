@@ -1,5 +1,5 @@
-import { PrizePool, Vault } from '@pooltogether/hyperstructure-client-js'
-import { useVaultPrizePower } from '@pooltogether/hyperstructure-react-hooks'
+import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
+import { useVaultPrizePower } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import { formatNumberForDisplay } from '@shared/utilities'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'

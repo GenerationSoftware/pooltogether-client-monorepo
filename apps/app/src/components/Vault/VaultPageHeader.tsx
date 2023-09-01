@@ -1,6 +1,6 @@
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
+import { useVaultShareData } from '@generationsoftware/hyperstructure-react-hooks'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
-import { Vault } from '@pooltogether/hyperstructure-client-js'
-import { useVaultShareData } from '@pooltogether/hyperstructure-react-hooks'
 import { PrizePoolBadge, TokenIcon } from '@shared/react-components'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

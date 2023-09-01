@@ -1,5 +1,5 @@
-import { Vault } from '@pooltogether/hyperstructure-client-js'
-import { useSelectedVault } from '@pooltogether/hyperstructure-react-hooks'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
+import { useSelectedVault } from '@generationsoftware/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import '@shared/ui'
 import { Button, ButtonProps } from '@shared/ui'

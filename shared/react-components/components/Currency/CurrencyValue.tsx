@@ -1,4 +1,4 @@
-import { useTokenPrices } from '@pooltogether/hyperstructure-react-hooks'
+import { useTokenPrices } from '@generationsoftware/hyperstructure-react-hooks'
 import {
   CURRENCY_ID,
   SUPPORTED_CURRENCIES,

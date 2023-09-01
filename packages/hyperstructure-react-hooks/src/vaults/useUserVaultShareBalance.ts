@@ -1,4 +1,4 @@
-import { Vault } from '@pooltogether/hyperstructure-client-js'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { TokenWithAmount } from '@shared/types'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'

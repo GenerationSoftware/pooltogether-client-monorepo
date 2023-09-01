@@ -3,7 +3,7 @@ import {
   usePrizeTokenPrice,
   useVault,
   useVaultSharePrice
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { PRIZE_POOLS } from '@shared/utilities'
 import { SupportedNetwork } from 'src/types'
 import { Address, parseUnits } from 'viem'

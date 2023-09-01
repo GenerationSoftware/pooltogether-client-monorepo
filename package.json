@@ -10,8 +10,8 @@
   "devDependencies": {
     "@hcaptcha/react-hcaptcha": "^1.8.1",
     "@heroicons/react": "^2.0.16",
-    "@pooltogether/hyperstructure-client-js": "workspace:*",
-    "@pooltogether/hyperstructure-react-hooks": "workspace:*",
+    "@generationsoftware/hyperstructure-client-js": "workspace:*",
+    "@generationsoftware/hyperstructure-react-hooks": "workspace:*",
     "@tanstack/react-query": "^4.24.10",
     "@trivago/prettier-plugin-sort-imports": "^4.1.0",
     "@types/node": "^17.0.45",

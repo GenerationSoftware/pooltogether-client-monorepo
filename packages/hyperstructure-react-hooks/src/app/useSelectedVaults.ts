@@ -1,4 +1,4 @@
-import { Vaults } from '@pooltogether/hyperstructure-client-js'
+import { Vaults } from '@generationsoftware/hyperstructure-client-js'
 import { VaultInfo, VaultList } from '@shared/types'
 import { getVaultId } from '@shared/utilities'
 import { atom, useAtom } from 'jotai'

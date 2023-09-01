@@ -1,4 +1,4 @@
-import { useUserTotalBalance } from '@pooltogether/hyperstructure-react-hooks'
+import { useUserTotalBalance } from '@generationsoftware/hyperstructure-react-hooks'
 import { CurrencyValue } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import { NETWORK, shorten } from '@shared/utilities'

@@ -1,4 +1,4 @@
-import { usePrizePools } from '@pooltogether/hyperstructure-react-hooks'
+import { usePrizePools } from '@generationsoftware/hyperstructure-react-hooks'
 import { PRIZE_POOLS } from '@shared/utilities'
 import { useNetworks } from './useNetworks'
 

@@ -1,5 +1,5 @@
 {
-  "name": "@pooltogether/hyperstructure-client-js",
+  "name": "@generationsoftware/hyperstructure-client-js",
   "version": "1.0.0",
   "license": "MIT",
   "main": "./dist/index.mjs",

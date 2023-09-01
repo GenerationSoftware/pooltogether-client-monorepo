@@ -1,8 +1,8 @@
-import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import {
   useAllUserVaultBalances,
   useSelectedVaults
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
+import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { Button } from '@shared/ui'
 import classNames from 'classnames'

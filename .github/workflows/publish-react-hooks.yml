@@ -26,7 +26,7 @@ jobs:
         uses: EndBug/version-check@v2
         with:
           file-name: ./packages/hyperstructure-react-hooks/package.json
-          file-url: https://unpkg.com/@pooltogether/hyperstructure-react-hooks@latest/package.json
+          file-url: https://unpkg.com/@generationsoftware/hyperstructure-react-hooks@latest/package.json
           static-checking: localIsNew
 
   publish:

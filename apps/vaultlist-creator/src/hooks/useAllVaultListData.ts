@@ -2,7 +2,7 @@ import {
   useAllVaultShareData,
   useAllVaultTokenData,
   useVaults
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { getVaultId } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import {

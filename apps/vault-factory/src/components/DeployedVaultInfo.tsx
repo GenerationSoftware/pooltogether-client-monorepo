@@ -6,7 +6,7 @@ import {
   useVaultShareData,
   useVaultTokenData,
   useVaultYieldSource
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { ExternalLink } from '@shared/ui'
 import { getBlockExplorerUrl, getNiceNetworkNameByChainId, shorten } from '@shared/utilities'
 import classNames from 'classnames'

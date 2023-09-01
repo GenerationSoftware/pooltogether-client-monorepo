@@ -1,5 +1,5 @@
-import { PrizePool } from '@pooltogether/hyperstructure-client-js'
-import { useAllPrizeInfo, usePrizeTokenData } from '@pooltogether/hyperstructure-react-hooks'
+import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import { useAllPrizeInfo, usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
 import { TokenAmount, TokenValue } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import { formatDailyCountToFrequency, getPrizeTextFromFrequency } from '@shared/utilities'

@@ -1,4 +1,4 @@
-import { PrizePool } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { SubgraphPrize } from '@shared/types'
 import { getPaginatedUserSubgraphPrizes } from '@shared/utilities'

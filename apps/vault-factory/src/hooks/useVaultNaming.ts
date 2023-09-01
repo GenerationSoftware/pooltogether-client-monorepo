@@ -1,4 +1,4 @@
-import { useToken } from '@pooltogether/hyperstructure-react-hooks'
+import { useToken } from '@generationsoftware/hyperstructure-react-hooks'
 import { useAtomValue } from 'jotai'
 import { vaultChainIdAtom, vaultYieldSourceAddressAtom, vaultYieldSourceNameAtom } from 'src/atoms'
 import { SupportedNetwork } from 'src/types'

@@ -1,8 +1,8 @@
-import { PrizePool, Vault } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useAllUserVaultDelegationBalances,
   usePrizeOdds
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import { formatNumberForDisplay } from '@shared/utilities'
 import { useTranslations } from 'next-intl'

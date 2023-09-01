@@ -2,7 +2,7 @@ import {
   useCachedVaultLists,
   useSelectedVaultListIds,
   useVaultList
-} from '@pooltogether/hyperstructure-react-hooks'
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { createVaultListToast } from '@shared/react-components'
 import { isNewerVersion } from '@shared/utilities'
 import { useTranslations } from 'next-intl'

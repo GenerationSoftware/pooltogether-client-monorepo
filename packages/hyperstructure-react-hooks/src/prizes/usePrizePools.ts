@@ -1,4 +1,4 @@
-import { PrizePool } from '@pooltogether/hyperstructure-client-js'
+import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { usePublicClientsByChain } from '..'

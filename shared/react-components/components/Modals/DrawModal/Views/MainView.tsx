@@ -1,5 +1,5 @@
-import { PrizePool } from '@pooltogether/hyperstructure-client-js'
-import { usePrizeTokenData } from '@pooltogether/hyperstructure-react-hooks'
+import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl, SubgraphDraw } from '@shared/types'
 import { ExternalLink, Spinner } from '@shared/ui'
 import {
