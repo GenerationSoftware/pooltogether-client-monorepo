@@ -30,16 +30,14 @@ export const Odds = (props: OddsProps) => {
 
   const { data: shareData } = useVaultShareData(vault)
 
-  const { data: prizeOdds, isFetched: isFetchedPrizeOdds } = usePrizeOdds(
+  const { data: prizeOdds } = usePrizeOdds(
     prizePool,
     vault,
     !!shareData && !!formShareAmount ? parseUnits(formShareAmount, shareData.decimals) : 0n,
     { isCumulative: true }
   )
 
-  const { data: drawPeriod, isFetched: isFetchedDrawPeriod } = useDrawPeriod(prizePool)
-
-  const isFetched = isFetchedPrizeOdds && isFetchedDrawPeriod && !!prizeOdds && !!drawPeriod
+  const { data: drawPeriod } = useDrawPeriod(prizePool)
 
   const weeklyChance = useMemo(() => {
     if (!!prizeOdds && !!drawPeriod) {
@@ -49,7 +47,7 @@ export const Odds = (props: OddsProps) => {
       const formattedValue = formatNumberForDisplay(value, { maximumSignificantDigits: 3 })
       return intl?.('oneInXChance', { number: formattedValue }) ?? `1 in ${formattedValue}`
     }
-  }, [isFetched])
+  }, [prizeOdds, drawPeriod])
 
   return (
     <div className='flex flex-col items-center gap-2 font-semibold'>

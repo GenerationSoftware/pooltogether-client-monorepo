@@ -16,13 +16,7 @@ export const calculateOdds = (
   vaultPercentageContribution: number,
   numPrizes: number
 ): number => {
-  if (
-    !userShares ||
-    !totalShares ||
-    decimals === undefined ||
-    !vaultPercentageContribution ||
-    !numPrizes
-  ) {
+  if (!userShares || !totalShares || decimals === undefined || !vaultPercentageContribution) {
     return 0
   }
 
@@ -30,12 +24,12 @@ export const calculateOdds = (
   const totalSharesFloat = Number(formatUnits(totalShares, decimals))
 
   if (userSharesFloat >= totalSharesFloat) {
-    return 1 - Math.pow(1 - vaultPercentageContribution, numPrizes)
+    return 1 - Math.pow(1 - vaultPercentageContribution, numPrizes || 4)
   }
 
   const userPercentageShares = userSharesFloat / totalSharesFloat
 
-  return 1 - Math.pow(1 - userPercentageShares * vaultPercentageContribution, numPrizes)
+  return 1 - Math.pow(1 - userPercentageShares * vaultPercentageContribution, numPrizes || 4)
 }
 
 /**
