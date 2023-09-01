@@ -93,7 +93,6 @@ export const Layout = (props: LayoutProps) => {
       title: t_footer('titles.getHelp'),
       content: [
         { content: t_footer('userDocs'), href: LINKS.docs },
-        { content: t_footer('faq'), href: LINKS.faq },
         { content: t_footer('devDocs'), href: LINKS.devDocs_v5 }
       ]
     },

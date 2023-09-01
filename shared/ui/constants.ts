@@ -31,7 +31,7 @@ export const LINKS = Object.freeze({
   listDocs: `${DOMAINS.docs}/cabana-lists`,
   factoryDocs: `${DOMAINS.docs}/cabana-factory`,
   faq: `${DOMAINS.docs}/`, // TODO: update to faq section once available
-  tutorials: `${DOMAINS.docs}/`, // TODO: update to tutorials section on docs once available
+  tutorials: `${DOMAINS.docs}/cabana-factory/guides`, // TODO: update to tutorials section on docs once available
   audits: `${DOMAINS.protocolDocs}/security/audits`, // TODO: update to cabana docs audits page once available (or PT updated audits page)
   devDocs_v5: `${DOMAINS.protocolDevDocs}/protocol/next/introduction`,
   depositDelegator: `${DOMAINS.tools_v4}/delegate`,

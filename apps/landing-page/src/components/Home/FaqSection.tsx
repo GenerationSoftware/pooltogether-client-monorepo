@@ -14,10 +14,10 @@ export const FaqSection = (props: FaqSectionProps) => {
       question: 'What is PoolTogether?',
       answer: (
         <span>
-          PoolTogether is an open source protocol that promotes financial security by making it fun
-          to save. Users deposit into the protocol, yield accrues on all deposits, and is randomly
-          awarded as prizes to the users. The protocol turns your interest into fun prizes! You
-          never lose your principal, and have a chance to win big. Learn more at{' '}
+          PoolTogether is an open-source protocol designed to enhance financial security by making
+          saving enjoyable. When users deposit into the system, the interest accumulates across all
+          deposits and is then randomly distributed as prizes. The protocol turns your interest into
+          fun rewards! You never lose your principal, and have a chance to win big. Learn more at{' '}
           <FaqLink href={LINKS.protocolLandingPage}>pooltogether.com</FaqLink>
         </span>
       )
@@ -26,12 +26,12 @@ export const FaqSection = (props: FaqSectionProps) => {
       question: 'What is Cabana?',
       answer: (
         <span>
-          Cabana is a series of open source tools for interacting with PoolTogether V5.{' '}
-          <FaqLink href={LINKS.app}>app.cabana.fi</FaqLink> allows users to deposit and withdraw
+          Cabana offers a suite of open-source tools for interacting with PoolTogether V5.{' '}
+          <FaqLink href={LINKS.app}>app.cabana.fi</FaqLink> allows anyone to deposit and withdraw
           from the protocol. <FaqLink href={LINKS.vaultFactory}>factory.cabana.fi</FaqLink> allows
-          users to deploy their own prize vaults using any ERC-4626 compatible yield source.{' '}
-          <FaqLink href={LINKS.vaultListCreator}>lists.cabana.fi</FaqLink> makes it easy for users
-          to create their own lists of prize vaults that can be accessed via the main app.
+          anyone to deploy their own prize vaults using any ERC-4626 compatible yield source.{' '}
+          <FaqLink href={LINKS.vaultListCreator}>lists.cabana.fi</FaqLink> makes it easy for anyone
+          to curate their own prize vault lists that can be shared and accessed via the main app.
         </span>
       )
     }

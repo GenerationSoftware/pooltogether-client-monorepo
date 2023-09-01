@@ -31,7 +31,7 @@ export default function PrizesPage() {
       <PrizePoolDisplay />
       {/* TODO: add more specific docs link once available */}
       <ExternalLink
-        href={LINKS.docs}
+        href={`${LINKS.docs}/protocol/what-makes-pooltogether-v5-different`}
         size='xs'
         className='text-pt-purple-300 md:text-base'
         iconClassName='md:h-5 md:w-5'
