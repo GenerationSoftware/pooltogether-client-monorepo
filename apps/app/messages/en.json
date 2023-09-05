@@ -113,7 +113,7 @@
       "moreInfo": "More Info"
     },
     "prizeChecking": {
-      "eligibleDraws": "You were eligible for {number} draws",
+      "eligibleDraws": "You were eligible for {number, plural, one {# draw} other {# draws}}",
       "totalPrizes": {
         "beforeValue": "Totalling",
         "afterValue": "in Prizes"
