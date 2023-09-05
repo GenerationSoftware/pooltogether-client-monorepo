@@ -73,7 +73,7 @@ export const WinView = (props: WinViewProps) => {
         <Lottie
           animationData={winAnimation}
           loop={false}
-          className='w-full h-auto -my-40 pointer-events-none'
+          className='w-full h-auto -my-20 pointer-events-none md:-my-40'
           onComplete={() => setIsAnimationComplete(true)}
         />
         <Button onClick={onGoToAccount} className={classNames('mx-auto', transitionIn)}>
