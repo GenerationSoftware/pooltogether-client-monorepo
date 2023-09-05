@@ -1,5 +1,8 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { useVaultShareData } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useVaultShareData,
+  useVaultTokenAddress
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { PrizePoolBadge, TokenIcon } from '@shared/react-components'
 import classNames from 'classnames'
@@ -20,6 +23,7 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
   const t = useTranslations('Common')
 
   const { data: shareData } = useVaultShareData(vault)
+  const { data: tokenAddress } = useVaultTokenAddress(vault)
 
   return (
     <>
@@ -29,17 +33,15 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
         <div className='w-full flex relative justify-center items-center'>
           <BackButton />
           <div className='w-full max-w-[85%] inline-flex justify-center gap-2 items-center md:max-w-none'>
-            {!!vault.logoURI && (
-              <TokenIcon
-                token={{
-                  chainId: vault.chainId,
-                  address: vault.address,
-                  name: vault.name,
-                  logoURI: vault.logoURI
-                }}
-                className='h-6 w-6 md:h-8 md:w-8'
-              />
-            )}
+            <TokenIcon
+              token={{
+                chainId: vault.chainId,
+                address: tokenAddress,
+                name: vault.name,
+                logoURI: vault.logoURI
+              }}
+              className='h-6 w-6 md:h-8 md:w-8'
+            />
             <span
               className={classNames(
                 'text-[1.75rem] font-medium font-grotesk line-clamp-2 overflow-hidden overflow-ellipsis',
