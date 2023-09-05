@@ -1,8 +1,8 @@
 import { GasCostEstimates } from '@shared/types'
 import { calculatePercentageOfBigInt, NETWORK, NULL_ADDRESS } from '@shared/utilities'
 import { useMemo } from 'react'
-import { formatUnits, parseUnits } from 'viem'
-import { useGasPrices, useTokenPrices } from '..'
+import { formatUnits } from 'viem'
+import { useGasPrice, useTokenPrices } from '..'
 
 /**
  * Returns gas cost estimates in wei and ETH
@@ -24,14 +24,12 @@ export const useGasCostEstimates = (
     return tokenPrices?.[NULL_ADDRESS]
   }, [tokenPrices])
 
-  const { data: gasPrices, isFetched: isFetchedGasPrices } = useGasPrices(chainId, refetchInterval)
+  const { data: gasPrice, isFetched: isFetchedGasPrice } = useGasPrice(chainId, refetchInterval)
 
-  const isFetched = isFetchedTokenPrices && isFetchedGasPrices
+  const isFetched = isFetchedTokenPrices && isFetchedGasPrice
 
-  if (isFetched && tokenPrice && !!gasPrices) {
-    const gasPriceWei =
-      (BigInt(Math.round(gasPrices.ProposeGasPrice * 1_000)) * parseUnits('1', 9)) / BigInt(1_000)
-    const totalGasWei = gasPriceWei * gasAmount
+  if (isFetched && tokenPrice && !!gasPrice) {
+    const totalGasWei = gasPrice * gasAmount
 
     const totalGasEth = Number(
       formatUnits(calculatePercentageOfBigInt(totalGasWei, tokenPrice), 18)

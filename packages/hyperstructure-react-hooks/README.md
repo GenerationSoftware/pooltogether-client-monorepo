@@ -60,7 +60,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useClientChainIds`
 - `useClients`
 - `useGasCostEstimates`
-- `useGasPrices`
+- `useGasPrice`
 
 ### Prize Pool Hooks
 

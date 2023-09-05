@@ -15,7 +15,7 @@ export * from './blockchain/useClientChainId'
 export * from './blockchain/useClientChainIds'
 export * from './blockchain/useClients'
 export * from './blockchain/useGasCostEstimates'
-export * from './blockchain/useGasPrices'
+export * from './blockchain/useGasPrice'
 
 /**
  * Prize Pool Hooks

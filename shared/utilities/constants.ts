@@ -159,11 +159,6 @@ export const COINGECKO_NATIVE_TOKEN_IDS: Record<NETWORK, string> = Object.freeze
 })
 
 /**
- * PoolTogether API URL
- */
-export const POOLTOGETHER_API_URL = 'https://pooltogether-api.com'
-
-/**
  * Block explorer mapping
  */
 export const BLOCK_EXPLORERS: Record<NETWORK, { name: string; url: string }> = Object.freeze({
