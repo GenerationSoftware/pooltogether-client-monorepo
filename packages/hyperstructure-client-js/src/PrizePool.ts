@@ -69,7 +69,7 @@ export class PrizePool {
   async getPrizeTokenAddress(): Promise<Address> {
     if (this.prizeTokenAddress !== undefined) return this.prizeTokenAddress
 
-    const source = 'Vault [getPrizeTokenAddress]'
+    const source = 'Prize Pool [getPrizeTokenAddress]'
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
     const prizeTokenAddress = await this.publicClient.readContract({
