@@ -7,7 +7,7 @@ import {
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { NetworkIcon } from '@shared/react-components'
 import { Selection, SelectionItem } from '@shared/ui'
-import { NETWORK, STABLECOINS } from '@shared/utilities'
+import { NETWORK, STABLECOINS, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import { atom, useAtom, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
@@ -44,7 +44,8 @@ export const VaultFilters = (props: VaultFiltersProps) => {
     useTokenBalancesAcrossChains(
       networks,
       userAddress as Address,
-      vaults.underlyingTokenAddresses?.byChain ?? {}
+      vaults.underlyingTokenAddresses?.byChain ?? {},
+      sToMs(300)
     )
 
   const { data: userVaultBalances, isFetched: isFetchedUserVaultBalances } =

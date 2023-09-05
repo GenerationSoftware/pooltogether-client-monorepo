@@ -84,12 +84,14 @@ export const useTokenBalance = (
  * @param chainIds chain IDs
  * @param address address to check for token balances
  * @param tokenAddresses token addresses for each chain to query balances for
+ * @param refetchInterval optional automatic refetching interval in ms
  * @returns
  */
 export const useTokenBalancesAcrossChains = (
   chainIds: number[],
   address: Address,
-  tokenAddresses: { [chainId: number]: Address[] }
+  tokenAddresses: { [chainId: number]: Address[] },
+  refetchInterval?: number
 ) => {
   const publicClients = usePublicClientsByChain()
 
@@ -125,7 +127,8 @@ export const useTokenBalancesAcrossChains = (
           return { chainId, tokenBalances }
         },
         enabled,
-        ...NO_REFETCH
+        ...NO_REFETCH,
+        refetchInterval: (refetchInterval ?? false) as number | false
       }
     })
   })

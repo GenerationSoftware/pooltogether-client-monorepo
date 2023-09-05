@@ -20,7 +20,7 @@ import {
   WithdrawModal
 } from '@shared/react-components'
 import { Footer, FooterItem, LINKS, Navbar, SocialIcon, Toaster } from '@shared/ui'
-import { getDiscordInvite } from '@shared/utilities'
+import { getDiscordInvite, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
@@ -73,7 +73,11 @@ export const Layout = (props: LayoutProps) => {
 
   const { vaults } = useSelectedVaults()
   const { address: userAddress } = useAccount()
-  const { refetch: refetchUserBalances } = useAllUserVaultBalances(vaults, userAddress as Address)
+  const { refetch: refetchUserBalances } = useAllUserVaultBalances(
+    vaults,
+    userAddress as Address,
+    sToMs(300)
+  )
 
   const { selectedPrizePool } = useSelectedPrizePool()
   const { data: draws } = usePrizeDrawWinners(selectedPrizePool as PrizePool)
