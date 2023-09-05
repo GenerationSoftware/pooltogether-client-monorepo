@@ -1,5 +1,8 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useLastCheckedPrizesTimestamps,
+  usePrizeTokenData
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { SubgraphPrize, TokenWithAmount } from '@shared/types'
 import { Intl } from '@shared/types'
 import { Button } from '@shared/ui'
@@ -8,6 +11,7 @@ import classNames from 'classnames'
 import Lottie from 'lottie-react'
 import { useMemo, useState } from 'react'
 import { Address } from 'viem'
+import { useAccount } from 'wagmi'
 import { TokenAmount } from '../../../Currency/TokenAmount'
 import { TokenValue } from '../../../Currency/TokenValue'
 import { NetworkIcon } from '../../../Icons/NetworkIcon'
@@ -15,7 +19,7 @@ import { winAnimation } from '../animations'
 
 interface WinViewProps {
   prizePools: PrizePool[]
-  draws: { [chainId: number]: { id: number; timestamp: number }[] }
+  draws: { [chainId: number]: { id: number; firstClaim: number; lastClaim: number }[] }
   wins: { [chainId: number]: SubgraphPrize[] }
   onGoToAccount: () => void
   intl?: Intl<'viewAccount' | 'youWonX' | 'xWon'>
@@ -24,8 +28,12 @@ interface WinViewProps {
 export const WinView = (props: WinViewProps) => {
   const { prizePools, draws, wins, onGoToAccount, intl } = props
 
+  const { address: userAddress } = useAccount()
+
   // TODO: this assumes all prize pools use the same prize token - not ideal
   const { data: prizeToken } = usePrizeTokenData(prizePools[0])
+
+  const { lastCheckedPrizesTimestamps } = useLastCheckedPrizesTimestamps()
 
   const [isAnimationComplete, setIsAnimationComplete] = useState<boolean>(false)
 
@@ -33,24 +41,28 @@ export const WinView = (props: WinViewProps) => {
     const toDisplay: { chainId: number; prize: bigint; timestamp: number }[] = []
     let totalAmount = 0n
 
-    for (const key in wins) {
-      const chainId = parseInt(key)
-      const drawIdsToCheck = draws[chainId]?.map((d) => d.id) ?? []
+    if (!!userAddress) {
+      for (const key in wins) {
+        const chainId = parseInt(key)
+        const drawIdsToCheck = draws[chainId]?.map((d) => d.id) ?? []
+        const lastCheckedPrizesTimestamp =
+          lastCheckedPrizesTimestamps[userAddress.toLowerCase()]?.[chainId] ?? 0
 
-      wins[chainId].forEach((win) => {
-        if (drawIdsToCheck.includes(win.drawId)) {
-          const prize = win.payout
-          const timestamp = win.timestamp
-          toDisplay.push({ chainId, prize, timestamp })
-          totalAmount += prize
-        }
-      })
+        wins[chainId].forEach((win) => {
+          if (drawIdsToCheck.includes(win.drawId) && win.timestamp > lastCheckedPrizesTimestamp) {
+            const prize = win.payout
+            const timestamp = win.timestamp
+            toDisplay.push({ chainId, prize, timestamp })
+            totalAmount += prize
+          }
+        })
+      }
     }
 
     toDisplay.sort((a, b) => b.timestamp - a.timestamp)
 
     return { toDisplay, totalAmount }
-  }, [draws, wins])
+  }, [draws, wins, userAddress])
 
   const transitionIn = classNames('transition-opacity duration-700 opacity-0', {
     'opacity-100': isAnimationComplete

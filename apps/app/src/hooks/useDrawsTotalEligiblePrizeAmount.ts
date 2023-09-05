@@ -1,7 +1,7 @@
 import {
   useAllPrizeDrawWinners,
   useAllUserEligibleDraws,
-  useLastCheckedDrawIds
+  useLastCheckedPrizesTimestamps
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { useMemo } from 'react'
 import { Address } from 'viem'
@@ -13,7 +13,7 @@ import { useSupportedPrizePools } from './useSupportedPrizePools'
  * @returns
  */
 export const useDrawsTotalEligiblePrizeAmount = (userAddress: Address) => {
-  const { lastCheckedDrawIds } = useLastCheckedDrawIds()
+  const { lastCheckedPrizesTimestamps } = useLastCheckedPrizesTimestamps()
 
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
@@ -25,23 +25,31 @@ export const useDrawsTotalEligiblePrizeAmount = (userAddress: Address) => {
     useAllPrizeDrawWinners(prizePoolsArray)
 
   const totalAmount = useMemo(() => {
-    if (!!lastCheckedDrawIds && !!allUserEligibleDraws && !!allDrawWinners) {
+    if (!!lastCheckedPrizesTimestamps && !!allUserEligibleDraws && !!allDrawWinners) {
       let total = 0n
 
       for (const chainId in allUserEligibleDraws.eligibleDraws) {
         const eligibleDrawIds = allUserEligibleDraws.eligibleDraws[chainId].map((d) => d.id)
-        const lastCheckedDrawId = lastCheckedDrawIds[userAddress.toLowerCase()]?.[chainId] ?? 0
+        const lastCheckedPrizesTimestamp =
+          lastCheckedPrizesTimestamps[userAddress.toLowerCase()]?.[chainId] ?? 0
 
         allDrawWinners[chainId]?.forEach((draw) => {
-          if (draw.id > lastCheckedDrawId && eligibleDrawIds.includes(draw.id)) {
-            total += draw.prizeClaims.reduce((a, b) => a + b.payout, 0n)
+          const lastClaimTimestamp = draw.prizeClaims[draw.prizeClaims.length - 1].timestamp
+          if (
+            lastClaimTimestamp > lastCheckedPrizesTimestamp &&
+            eligibleDrawIds.includes(draw.id)
+          ) {
+            total += draw.prizeClaims.reduce(
+              (a, b) => a + (b.timestamp > lastCheckedPrizesTimestamp ? b.payout : 0n),
+              0n
+            )
           }
         })
       }
 
       return total
     }
-  }, [lastCheckedDrawIds, userAddress, allUserEligibleDraws, allDrawWinners])
+  }, [lastCheckedPrizesTimestamps, userAddress, allUserEligibleDraws, allDrawWinners])
 
   const isFetched = isFetchedAllUserEligibleDraws && isFetchedAllDrawWinners && !!totalAmount
 

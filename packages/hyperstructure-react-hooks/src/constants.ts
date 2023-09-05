@@ -48,5 +48,5 @@ export const LOCAL_STORAGE_KEYS = Object.freeze({
   cachedVaultLists: 'cachedVaultLists',
   localVaultListIds: 'localVaultListIds',
   importedVaultListIds: 'importedVaultListIds',
-  lastCheckedDrawIds: 'lastCheckedDrawIds'
+  lastCheckedPrizesTimestamps: 'lastCheckedPrizesTimestamps'
 })

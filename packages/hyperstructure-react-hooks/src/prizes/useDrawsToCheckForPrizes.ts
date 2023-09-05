@@ -1,7 +1,7 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { useMemo } from 'react'
 import { Address } from 'viem'
-import { useAllUserEligibleDraws, useLastCheckedDrawIds } from '..'
+import { useAllUserEligibleDraws, useLastCheckedPrizesTimestamps } from '..'
 
 /**
  * Returns info on draws to check for prizes based on eligibility and last checked draw IDs
@@ -10,40 +10,42 @@ import { useAllUserEligibleDraws, useLastCheckedDrawIds } from '..'
  * @returns
  */
 export const useDrawsToCheckForPrizes = (prizePools: PrizePool[], userAddress: Address) => {
-  const { lastCheckedDrawIds } = useLastCheckedDrawIds()
+  const { lastCheckedPrizesTimestamps } = useLastCheckedPrizesTimestamps()
 
   const { data: allUserEligibleDraws, isFetched: isFetchedAllUserEligibleDraws } =
     useAllUserEligibleDraws(prizePools, userAddress)
 
   const drawsToCheck = useMemo(() => {
-    if (!!lastCheckedDrawIds && !!allUserEligibleDraws) {
-      const draws: { [chainId: number]: { id: number; timestamp: number }[] } = {}
+    if (!!lastCheckedPrizesTimestamps && !!allUserEligibleDraws) {
+      const draws: { [chainId: number]: { id: number; firstClaim: number; lastClaim: number }[] } =
+        {}
 
       let totalCount = 0
       let startTimestamp = Number.MAX_SAFE_INTEGER
       let endTimestamp = 0
 
       for (const chainId in allUserEligibleDraws.eligibleDraws) {
-        const chainDraws: { id: number; timestamp: number }[] = []
+        const chainDraws: { id: number; firstClaim: number; lastClaim: number }[] = []
 
         const eligibleDraws = allUserEligibleDraws.eligibleDraws[chainId]
-        const lastCheckedDrawId = lastCheckedDrawIds[userAddress.toLowerCase()]?.[chainId] ?? 0
+        const lastCheckedPrizesTimestamp =
+          lastCheckedPrizesTimestamps[userAddress.toLowerCase()]?.[chainId] ?? 0
 
         eligibleDraws.forEach((draw) => {
-          if (draw.id > lastCheckedDrawId) {
+          if (draw.lastClaim > lastCheckedPrizesTimestamp) {
             chainDraws.push(draw)
           }
         })
 
-        const sortedDraws = chainDraws.sort((a, b) => a.timestamp - b.timestamp)
+        const sortedDraws = chainDraws.sort((a, b) => a.firstClaim - b.firstClaim)
 
         if (chainDraws.length > 0) {
           totalCount += chainDraws.length
-          if (startTimestamp > sortedDraws[0].timestamp) {
-            startTimestamp = sortedDraws[0].timestamp
+          if (startTimestamp > sortedDraws[0].firstClaim) {
+            startTimestamp = sortedDraws[0].firstClaim
           }
-          if (endTimestamp < sortedDraws[sortedDraws.length - 1].timestamp) {
-            endTimestamp = sortedDraws[sortedDraws.length - 1].timestamp
+          if (endTimestamp < sortedDraws[sortedDraws.length - 1].lastClaim) {
+            endTimestamp = sortedDraws[sortedDraws.length - 1].lastClaim
           }
         }
 
@@ -52,7 +54,7 @@ export const useDrawsToCheckForPrizes = (prizePools: PrizePool[], userAddress: A
 
       return { draws, totalCount, timestamps: { start: startTimestamp, end: endTimestamp } }
     }
-  }, [lastCheckedDrawIds, userAddress, allUserEligibleDraws])
+  }, [lastCheckedPrizesTimestamps, userAddress, allUserEligibleDraws])
 
   const isFetched = isFetchedAllUserEligibleDraws && !!drawsToCheck
 

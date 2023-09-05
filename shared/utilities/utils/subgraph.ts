@@ -1,6 +1,6 @@
 import {
   SubgraphDraw,
-  SubgraphDrawTimestamp,
+  SubgraphDrawTimestamps,
   SubgraphObservation,
   SubgraphPrize
 } from '@shared/types'
@@ -424,7 +424,7 @@ export const getPaginatedUserSubgraphObservations = async (
 }
 
 /**
- * Returns all draw timestamps from the given network's subgraph
+ * Returns all draw timestamps (first and last claims) from the given network's subgraph
  *
  * NOTE: By default queries the last 1k draw timestamps
  * @param chainId the network's chain ID
@@ -437,17 +437,20 @@ export const getSubgraphDrawTimestamps = async (
     numDraws?: number
     offsetDraws?: number
   }
-): Promise<SubgraphDrawTimestamp[]> => {
+): Promise<SubgraphDrawTimestamps[]> => {
   if (chainId in PRIZE_POOL_GRAPH_API_URLS) {
     const subgraphUrl = PRIZE_POOL_GRAPH_API_URLS[chainId as keyof typeof PRIZE_POOL_GRAPH_API_URLS]
 
     const headers = { 'Content-Type': 'application/json' }
 
     const body = JSON.stringify({
-      query: `query($numDraws: Int, $offsetDraws: Int, $numPrizes: Int, $orderDirection: OrderDirection, $orderBy: Draw_orderBy, $prizeOrderDirection: OrderDirection, $prizeOrderBy: PrizeClaim_orderBy) {
+      query: `query($numDraws: Int, $offsetDraws: Int, $numPrizes: Int, $orderDirection: OrderDirection, $orderBy: Draw_orderBy, $firstPrizeOrderDirection: OrderDirection, $lastPrizeOrderDirection: OrderDirection, $prizeOrderBy: PrizeClaim_orderBy) {
         draws(first: $numDraws, skip: $offsetDraws, orderDirection: $orderDirection, orderBy: $orderBy) {
           id
-          prizeClaims(first: $numPrizes, orderDirection: $prizeOrderDirection, orderBy: $prizeOrderBy) {
+          firstClaim: prizeClaims(first: $numPrizes, orderDirection: $firstPrizeOrderDirection, orderBy: $prizeOrderBy) {
+            timestamp
+          }
+          lastClaim: prizeClaims(first: $numPrizes, orderDirection: $lastPrizeOrderDirection, orderBy: $prizeOrderBy) {
             timestamp
           }
         }
@@ -458,19 +461,24 @@ export const getSubgraphDrawTimestamps = async (
         numPrizes: 1,
         orderDirection: 'asc',
         orderBy: 'id',
-        prizeOrderDirection: 'asc',
+        firstPrizeOrderDirection: 'asc',
+        lastPrizeOrderDirection: 'desc',
         prizeOrderBy: 'timestamp'
       }
     })
 
     const result = await fetch(subgraphUrl, { method: 'POST', headers, body })
     const jsonData = await result.json()
-    const draws: { id: string; prizeClaims: [{ timestamp: string }] }[] =
-      jsonData?.data?.draws ?? []
+    const draws: {
+      id: string
+      firstClaim: [{ timestamp: string }]
+      lastClaim: [{ timestamp: string }]
+    }[] = jsonData?.data?.draws ?? []
 
     const formattedDraws = draws.map((draw) => ({
       id: parseInt(draw.id),
-      timestamp: parseInt(draw.prizeClaims[0].timestamp)
+      firstClaim: parseInt(draw.firstClaim[0].timestamp),
+      lastClaim: parseInt(draw.lastClaim[0].timestamp)
     }))
 
     return formattedDraws
@@ -481,7 +489,7 @@ export const getSubgraphDrawTimestamps = async (
 }
 
 /**
- * Returns all draw timestamps from the given network's subgraph
+ * Returns all draw timestamps (first and last claims) from the given network's subgraph
  *
  * NOTE: Wraps {@link getSubgraphDrawTimestamps} to fetch all results regardless of number of entries
  * @param chainId the network's chain ID
@@ -491,7 +499,7 @@ export const getPaginatedSubgraphDrawTimestamps = async (
   chainId: number,
   options?: { pageSize?: number }
 ) => {
-  const drawTimestamps: SubgraphDrawTimestamp[] = []
+  const drawTimestamps: SubgraphDrawTimestamps[] = []
   const pageSize = options?.pageSize ?? 1_000
   let page = 0
 

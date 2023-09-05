@@ -1,6 +1,6 @@
 import {
   useAllUserPrizePoolWins,
-  useLastCheckedDrawIds,
+  useLastCheckedPrizesTimestamps,
   usePrizeTokenPrice
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { useMemo } from 'react'
@@ -29,19 +29,20 @@ export const useUserTotalWinnings = (
     prizePoolsArray[0]
   )
 
-  const { lastCheckedDrawIds } = useLastCheckedDrawIds()
+  const { lastCheckedPrizesTimestamps } = useLastCheckedPrizesTimestamps()
 
   const totalTokensWonByChain = useMemo(() => {
-    if (!!wins && !!lastCheckedDrawIds) {
+    if (!!wins && !!lastCheckedPrizesTimestamps) {
       const totals: { [chainId: number]: bigint } = {}
       for (const key in wins) {
         const chainId = parseInt(key)
-        const lastCheckedDrawId = lastCheckedDrawIds[userAddress.toLowerCase()]?.[chainId] ?? 0
+        const lastCheckedPrizesTimestamp =
+          lastCheckedPrizesTimestamps[userAddress.toLowerCase()]?.[chainId] ?? 0
 
         let chainTotal = 0n
 
         wins[chainId].forEach((win) => {
-          if (win.drawId <= lastCheckedDrawId || options?.skipPrizeChecking) {
+          if (win.timestamp <= lastCheckedPrizesTimestamp || options?.skipPrizeChecking) {
             chainTotal += BigInt(win.payout)
           }
         })
@@ -50,7 +51,7 @@ export const useUserTotalWinnings = (
       }
       return totals
     }
-  }, [wins, lastCheckedDrawIds, userAddress, options])
+  }, [wins, lastCheckedPrizesTimestamps, userAddress, options])
 
   return useMemo(() => {
     const isFetched =

@@ -1,5 +1,5 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { SubgraphDrawTimestamp, SubgraphObservation } from '@shared/types'
+import { SubgraphDrawTimestamps, SubgraphObservation } from '@shared/types'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAllPrizeDrawTimestamps, useAllUserBalanceUpdates } from '..'
@@ -21,9 +21,9 @@ export const useAllUserEligibleDraws = (prizePools: PrizePool[], userAddress: st
 
   const data = useMemo(() => {
     if (!!allDrawTimestamps && !!allBalanceUpdates) {
-      const eligibleDraws: { [chainId: number]: SubgraphDrawTimestamp[] } = {}
+      const eligibleDraws: { [chainId: number]: SubgraphDrawTimestamps[] } = {}
       const eligibleDrawsByVault: {
-        [chainId: number]: { [vaultAddress: Address]: SubgraphDrawTimestamp[] }
+        [chainId: number]: { [vaultAddress: Address]: SubgraphDrawTimestamps[] }
       } = {}
       let totalNumEligibleDraws = 0
 
@@ -32,8 +32,8 @@ export const useAllUserEligibleDraws = (prizePools: PrizePool[], userAddress: st
         const chainId = parseInt(key)
         const drawTimestamps = allDrawTimestamps[chainId]
 
-        const chainDraws: SubgraphDrawTimestamp[] = []
-        const chainDrawsByVault: { [vaultAddress: Address]: SubgraphDrawTimestamp[] } = {}
+        const chainDraws: SubgraphDrawTimestamps[] = []
+        const chainDrawsByVault: { [vaultAddress: Address]: SubgraphDrawTimestamps[] } = {}
 
         // Looping through every vault with balance updates
         if (!!allDrawTimestamps[chainId] && !!allBalanceUpdates[chainId]) {
@@ -60,7 +60,7 @@ export const useAllUserEligibleDraws = (prizePools: PrizePool[], userAddress: st
           }
         }
 
-        eligibleDraws[chainId] = chainDraws.sort((a, b) => a.timestamp - b.timestamp)
+        eligibleDraws[chainId] = chainDraws.sort((a, b) => a.firstClaim - b.firstClaim)
         eligibleDrawsByVault[chainId] = chainDrawsByVault
         totalNumEligibleDraws += chainDraws.length
       }
@@ -73,17 +73,17 @@ export const useAllUserEligibleDraws = (prizePools: PrizePool[], userAddress: st
 }
 
 const getVaultEligibleDraws = (
-  draws: SubgraphDrawTimestamp[],
+  draws: SubgraphDrawTimestamps[],
   balanceUpdates: SubgraphObservation[]
-): SubgraphDrawTimestamp[] => {
-  const drawsToCheck: SubgraphDrawTimestamp[] = [...draws]
-  const eligibleDraws: SubgraphDrawTimestamp[] = []
+): SubgraphDrawTimestamps[] => {
+  const drawsToCheck: SubgraphDrawTimestamps[] = [...draws]
+  const eligibleDraws: SubgraphDrawTimestamps[] = []
 
   for (let balanceIndex = balanceUpdates.length - 1; balanceIndex >= 0; balanceIndex--) {
     const balanceUpdate = balanceUpdates[balanceIndex]
     for (let drawIndex = drawsToCheck.length - 1; drawIndex >= 0; drawIndex--) {
       const draw = drawsToCheck[drawIndex]
-      if (draw.timestamp >= balanceUpdate.timestamp) {
+      if (draw.firstClaim >= balanceUpdate.timestamp) {
         if (balanceUpdate.delegateBalance > 0) {
           eligibleDraws.push(draw)
         }
@@ -94,5 +94,5 @@ const getVaultEligibleDraws = (
     }
   }
 
-  return eligibleDraws.sort((a, b) => a.timestamp - b.timestamp)
+  return eligibleDraws.sort((a, b) => a.firstClaim - b.firstClaim)
 }

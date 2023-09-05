@@ -1,6 +1,6 @@
 import {
   useAllUserPrizePoolWins,
-  useLastCheckedDrawIds
+  useLastCheckedPrizesTimestamps
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { SubgraphPrize } from '@shared/types'
 import { ExternalLink, LINKS } from '@shared/ui'
@@ -33,7 +33,7 @@ export const AccountWinnings = (props: AccountWinningsProps) => {
     userAddress as Address
   )
 
-  const { lastCheckedDrawIds } = useLastCheckedDrawIds()
+  const { lastCheckedPrizesTimestamps } = useLastCheckedPrizesTimestamps()
 
   const isExternalUser = !!address && address.toLowerCase() !== _userAddress?.toLowerCase()
 
@@ -42,19 +42,19 @@ export const AccountWinnings = (props: AccountWinningsProps) => {
 
     for (const key in wins) {
       const chainId = parseInt(key)
-      const lastCheckedDrawId = !!userAddress
-        ? lastCheckedDrawIds[userAddress.toLowerCase()]?.[chainId] ?? 0
+      const lastCheckedPrizesTimestamp = !!userAddress
+        ? lastCheckedPrizesTimestamps[userAddress.toLowerCase()]?.[chainId] ?? 0
         : 0
 
       wins[chainId].forEach((win) => {
-        if (win.drawId <= lastCheckedDrawId || isExternalUser) {
+        if (win.timestamp <= lastCheckedPrizesTimestamp || isExternalUser) {
           flattenedWins.push({ ...win, chainId })
         }
       })
     }
 
     return flattenedWins.sort((a, b) => b.timestamp - a.timestamp)
-  }, [wins, lastCheckedDrawIds, userAddress, isExternalUser])
+  }, [wins, lastCheckedPrizesTimestamps, userAddress, isExternalUser])
 
   const isEmpty = isFetchedWins && !flattenedWins?.length
 

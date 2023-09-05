@@ -47,7 +47,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 ### App Hooks
 
 - `useCachedVaultLists`
-- `useLastCheckedDrawIds`
+- `useLastCheckedPrizesTimestamps`
 - `useSelectedVaultListIds`
 - `useSelectedVaultLists`
 - `useSelectedVaults`

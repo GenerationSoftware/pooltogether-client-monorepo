@@ -2,7 +2,7 @@
  * App Hooks
  */
 export * from './app/useCachedVaultLists'
-export * from './app/useLastCheckedDrawIds'
+export * from './app/useLastCheckedPrizesTimestamps'
 export * from './app/useSelectedVaultListIds'
 export * from './app/useSelectedVaultLists'
 export * from './app/useSelectedVaults'

@@ -1,13 +1,13 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
-import { SubgraphDrawTimestamp } from '@shared/types'
+import { SubgraphDrawTimestamps } from '@shared/types'
 import { getPaginatedSubgraphDrawTimestamps } from '@shared/utilities'
 import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { QUERY_KEYS } from '../constants'
 
 /**
- * Returns all draw timestamps for any given prize pools
+ * Returns all draw timestamps (first and last claims) for any given prize pools
  * @param prizePools instances of `PrizePool`
  * @returns
  */
@@ -32,7 +32,7 @@ export const useAllPrizeDrawTimestamps = (prizePools: PrizePool[]) => {
     const isFetched = results?.every((result) => result.isFetched)
     const refetch = () => results?.forEach((result) => result.refetch())
 
-    const formattedData: { [chainId: number]: SubgraphDrawTimestamp[] } = {}
+    const formattedData: { [chainId: number]: SubgraphDrawTimestamps[] } = {}
     results.forEach((result, i) => {
       if (!!result.data) {
         formattedData[prizePools[i].chainId] = result.data

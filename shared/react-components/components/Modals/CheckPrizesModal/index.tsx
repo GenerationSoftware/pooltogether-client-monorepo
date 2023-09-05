@@ -2,7 +2,7 @@ import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
   useAllUserPrizePoolWins,
   useDrawsToCheckForPrizes,
-  useLastCheckedDrawIds
+  useLastCheckedPrizesTimestamps
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen, useScreenSize } from '@shared/generic-react-hooks'
 import { RichIntl } from '@shared/types'
@@ -38,16 +38,16 @@ export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
 
   const { data: wins } = useAllUserPrizePoolWins(prizePools, userAddress as Address)
 
-  const { set } = useLastCheckedDrawIds()
+  const { set } = useLastCheckedPrizesTimestamps()
 
-  const updateLastCheckedDrawIds = () => {
+  const updateLastCheckedPrizesTimestamps = () => {
     if (!!drawsToCheck && !!userAddress) {
       for (const key in drawsToCheck.draws) {
         const chainId = parseInt(key)
         const draws = drawsToCheck.draws[chainId]
         if (draws.length > 0) {
-          const lastDrawId = draws[draws.length - 1].id
-          set(userAddress, chainId, lastDrawId)
+          const lastTimestamp = draws[draws.length - 1].lastClaim
+          set(userAddress, chainId, lastTimestamp)
         }
       }
     }
@@ -56,7 +56,7 @@ export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
   const handleClose = () => {
     setIsModalOpen(false)
     if (view !== 'checking') {
-      updateLastCheckedDrawIds()
+      updateLastCheckedPrizesTimestamps()
       setView('checking')
     }
   }

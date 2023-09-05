@@ -13,9 +13,10 @@ export interface SubgraphDraw {
   }[]
 }
 
-export interface SubgraphDrawTimestamp {
+export interface SubgraphDrawTimestamps {
   id: number
-  timestamp: number
+  firstClaim: number
+  lastClaim: number
 }
 
 export interface SubgraphPrize {
