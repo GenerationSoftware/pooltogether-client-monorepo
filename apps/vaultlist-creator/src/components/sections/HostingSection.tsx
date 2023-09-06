@@ -26,7 +26,8 @@ const ENSCard = () => (
     <span className='ml-4 text-sm text-pt-purple-100'>
       If you have the handy <ExternalLink id='ipfsCompanion' /> installed, this is as easy as saving
       your vault list as a JSON file and dragging and dropping it into the extension. If not, try
-      using the <ExternalLink id='ipfsDesktop' />.
+      using the <ExternalLink id='ipfsDesktop' /> or a platform like <ExternalLink id='fleek' /> or{' '}
+      <ExternalLink id='pinata' />.
     </span>
     <span>2. Add the IPFS hash to a "vaultList" record on your ENS domain.</span>
     <span className='ml-4 text-sm text-pt-purple-100'>
@@ -79,18 +80,27 @@ const InfoCard = (props: InfoCardProps) => {
 }
 
 interface ExternalLinkProps {
-  id: 'ipfsCompanion' | 'ipfsDesktop' | 'ensApp' | 'nextRoutes' | 'svelteRoutes'
+  id:
+    | 'ipfsCompanion'
+    | 'ipfsDesktop'
+    | 'fleek'
+    | 'pinata'
+    | 'ensApp'
+    | 'nextRoutes'
+    | 'svelteRoutes'
 }
 
 const ExternalLink = (props: ExternalLinkProps) => {
   const { id } = props
 
-  const links = {
+  const links: Record<ExternalLinkProps['id'], { text: string; url: string }> = {
     ipfsCompanion: {
       text: 'IPFS Companion',
       url: 'https://docs.ipfs.tech/install/ipfs-companion/'
     },
     ipfsDesktop: { text: 'Desktop App', url: 'https://docs.ipfs.tech/how-to/desktop-app/' },
+    fleek: { text: 'Fleek', url: 'https://fleek.co/' },
+    pinata: { text: 'Pinata', url: 'https://www.pinata.cloud/' },
     ensApp: { text: 'ENS App', url: 'https://app.ens.domains/' },
     nextRoutes: {
       text: 'NextJS',
