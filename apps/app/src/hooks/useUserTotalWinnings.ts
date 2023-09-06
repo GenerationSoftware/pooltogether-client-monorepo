@@ -29,15 +29,14 @@ export const useUserTotalWinnings = (
     prizePoolsArray[0]
   )
 
-  const { lastCheckedPrizesTimestamps } = useLastCheckedPrizesTimestamps()
+  const { lastCheckedPrizesTimestamps } = useLastCheckedPrizesTimestamps(userAddress)
 
   const totalTokensWonByChain = useMemo(() => {
     if (!!wins && !!lastCheckedPrizesTimestamps) {
       const totals: { [chainId: number]: bigint } = {}
       for (const key in wins) {
         const chainId = parseInt(key)
-        const lastCheckedPrizesTimestamp =
-          lastCheckedPrizesTimestamps[userAddress.toLowerCase()]?.[chainId] ?? 0
+        const lastCheckedPrizesTimestamp = lastCheckedPrizesTimestamps[chainId] ?? 0
 
         let chainTotal = 0n
 

@@ -38,7 +38,9 @@ export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
 
   const { data: wins } = useAllUserPrizePoolWins(prizePools, userAddress as Address)
 
-  const { set } = useLastCheckedPrizesTimestamps()
+  const { lastCheckedPrizesTimestamps, set } = useLastCheckedPrizesTimestamps(
+    userAddress as Address
+  )
 
   const updateLastCheckedPrizesTimestamps = () => {
     if (!!drawsToCheck && !!userAddress) {
@@ -47,7 +49,7 @@ export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
         const draws = drawsToCheck.draws[chainId]
         if (draws.length > 0) {
           const lastTimestamp = draws[draws.length - 1].lastClaim
-          set(userAddress, chainId, lastTimestamp)
+          set(chainId, lastTimestamp)
         }
       }
     }
@@ -66,9 +68,15 @@ export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
       setTimeout(() => {
         for (const key in wins) {
           const chainId = parseInt(key)
-          const winningDrawIds = wins[chainId].map((w) => w.drawId)
           const drawIdsToCheck = drawsToCheck?.draws[chainId]?.map((d) => d.id) ?? []
-          if (winningDrawIds.some((id) => drawIdsToCheck.indexOf(id) >= 0)) {
+          const lastCheckedPrizesTimestamp = lastCheckedPrizesTimestamps[chainId] ?? 0
+
+          if (
+            wins[chainId].some(
+              (win) =>
+                drawIdsToCheck.includes(win.drawId) && win.timestamp > lastCheckedPrizesTimestamp
+            )
+          ) {
             setView('win')
             return
           }

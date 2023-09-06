@@ -33,7 +33,7 @@ export const WinView = (props: WinViewProps) => {
   // TODO: this assumes all prize pools use the same prize token - not ideal
   const { data: prizeToken } = usePrizeTokenData(prizePools[0])
 
-  const { lastCheckedPrizesTimestamps } = useLastCheckedPrizesTimestamps()
+  const { lastCheckedPrizesTimestamps } = useLastCheckedPrizesTimestamps(userAddress as Address)
 
   const [isAnimationComplete, setIsAnimationComplete] = useState<boolean>(false)
 
@@ -45,8 +45,7 @@ export const WinView = (props: WinViewProps) => {
       for (const key in wins) {
         const chainId = parseInt(key)
         const drawIdsToCheck = draws[chainId]?.map((d) => d.id) ?? []
-        const lastCheckedPrizesTimestamp =
-          lastCheckedPrizesTimestamps[userAddress.toLowerCase()]?.[chainId] ?? 0
+        const lastCheckedPrizesTimestamp = lastCheckedPrizesTimestamps[chainId] ?? 0
 
         wins[chainId].forEach((win) => {
           if (drawIdsToCheck.includes(win.drawId) && win.timestamp > lastCheckedPrizesTimestamp) {

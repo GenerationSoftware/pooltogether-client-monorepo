@@ -33,7 +33,7 @@ export const AccountWinnings = (props: AccountWinningsProps) => {
     userAddress as Address
   )
 
-  const { lastCheckedPrizesTimestamps } = useLastCheckedPrizesTimestamps()
+  const { lastCheckedPrizesTimestamps } = useLastCheckedPrizesTimestamps(userAddress as Address)
 
   const isExternalUser = !!address && address.toLowerCase() !== _userAddress?.toLowerCase()
 
@@ -42,9 +42,7 @@ export const AccountWinnings = (props: AccountWinningsProps) => {
 
     for (const key in wins) {
       const chainId = parseInt(key)
-      const lastCheckedPrizesTimestamp = !!userAddress
-        ? lastCheckedPrizesTimestamps[userAddress.toLowerCase()]?.[chainId] ?? 0
-        : 0
+      const lastCheckedPrizesTimestamp = lastCheckedPrizesTimestamps[chainId] ?? 0
 
       wins[chainId].forEach((win) => {
         if (win.timestamp <= lastCheckedPrizesTimestamp || isExternalUser) {

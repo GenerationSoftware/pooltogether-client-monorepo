@@ -4,13 +4,13 @@ import { Address } from 'viem'
 import { useAllUserEligibleDraws, useLastCheckedPrizesTimestamps } from '..'
 
 /**
- * Returns info on draws to check for prizes based on eligibility and last checked draw IDs
+ * Returns info on draws to check for prizes based on eligibility and last checked timestamps
  * @param prizePools instances of `PrizePool`
  * @param userAddress a user's address to find draws for
  * @returns
  */
 export const useDrawsToCheckForPrizes = (prizePools: PrizePool[], userAddress: Address) => {
-  const { lastCheckedPrizesTimestamps } = useLastCheckedPrizesTimestamps()
+  const { lastCheckedPrizesTimestamps } = useLastCheckedPrizesTimestamps(userAddress)
 
   const { data: allUserEligibleDraws, isFetched: isFetchedAllUserEligibleDraws } =
     useAllUserEligibleDraws(prizePools, userAddress)
@@ -28,8 +28,7 @@ export const useDrawsToCheckForPrizes = (prizePools: PrizePool[], userAddress: A
         const chainDraws: { id: number; firstClaim: number; lastClaim: number }[] = []
 
         const eligibleDraws = allUserEligibleDraws.eligibleDraws[chainId]
-        const lastCheckedPrizesTimestamp =
-          lastCheckedPrizesTimestamps[userAddress.toLowerCase()]?.[chainId] ?? 0
+        const lastCheckedPrizesTimestamp = lastCheckedPrizesTimestamps[chainId] ?? 0
 
         eligibleDraws.forEach((draw) => {
           if (draw.lastClaim > lastCheckedPrizesTimestamp) {
@@ -39,13 +38,18 @@ export const useDrawsToCheckForPrizes = (prizePools: PrizePool[], userAddress: A
 
         const sortedDraws = chainDraws.sort((a, b) => a.firstClaim - b.firstClaim)
 
-        if (chainDraws.length > 0) {
-          totalCount += chainDraws.length
-          if (startTimestamp > sortedDraws[0].firstClaim) {
-            startTimestamp = sortedDraws[0].firstClaim
+        if (sortedDraws.length > 0) {
+          const firstClaimTimestamp = sortedDraws[0].firstClaim
+          const lastClaimTimestamp = sortedDraws[sortedDraws.length - 1].lastClaim
+
+          totalCount += sortedDraws.length
+
+          if (startTimestamp > firstClaimTimestamp) {
+            startTimestamp = firstClaimTimestamp
           }
-          if (endTimestamp < sortedDraws[sortedDraws.length - 1].lastClaim) {
-            endTimestamp = sortedDraws[sortedDraws.length - 1].lastClaim
+
+          if (endTimestamp < lastClaimTimestamp) {
+            endTimestamp = lastClaimTimestamp
           }
         }
 

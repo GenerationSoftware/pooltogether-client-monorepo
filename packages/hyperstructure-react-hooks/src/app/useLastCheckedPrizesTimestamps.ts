@@ -24,12 +24,12 @@ const cachedLastCheckedPrizesTimestampsAtom = atom<PrizesTimestampsAtom>(
  * Stores state in local storage
  * @returns
  */
-export const useLastCheckedPrizesTimestamps = () => {
+export const useLastCheckedPrizesTimestamps = (wallet: string) => {
   const [lastCheckedPrizesTimestamps, setLastCheckedPrizesTimestamps] = useAtom(
     cachedLastCheckedPrizesTimestampsAtom
   )
 
-  const set = (wallet: string, chainId: number, timestamp?: number) => {
+  const set = (chainId: number, timestamp?: number) => {
     setLastCheckedPrizesTimestamps((prev) => ({
       ...prev,
       [wallet.toLowerCase()]: {
@@ -39,14 +39,14 @@ export const useLastCheckedPrizesTimestamps = () => {
     }))
   }
 
-  const clear = (wallet: string, chainId: number) => {
+  const clear = (chainId: number) => {
     setLastCheckedPrizesTimestamps((prev) => ({
       ...prev,
       [wallet.toLowerCase()]: { ...prev[wallet.toLowerCase()], [chainId]: 0 }
     }))
   }
 
-  const clearWallet = (wallet: string) => {
+  const clearWallet = () => {
     setLastCheckedPrizesTimestamps((prev) => ({
       ...prev,
       [wallet.toLowerCase()]: {}
@@ -66,8 +66,12 @@ export const useLastCheckedPrizesTimestamps = () => {
     [lastCheckedPrizesTimestamps]
   )
 
+  const _lastCheckedPrizesTimestamps = !!wallet
+    ? lastCheckedPrizesTimestamps[wallet.toLowerCase()] ?? {}
+    : {}
+
   return {
-    lastCheckedPrizesTimestamps,
+    lastCheckedPrizesTimestamps: _lastCheckedPrizesTimestamps,
     set,
     clear,
     clearWallet,
