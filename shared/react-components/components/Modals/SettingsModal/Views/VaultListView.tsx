@@ -5,8 +5,9 @@ import {
 import { TrashIcon } from '@heroicons/react/24/outline'
 import { VaultList } from '@shared/types'
 import { Intl } from '@shared/types'
-import { BasicIcon, Button, ExternalLink, LINKS, Toggle } from '@shared/ui'
+import { BasicIcon, Button, ExternalLink, LINKS, Spinner, Toggle } from '@shared/ui'
 import { getVaultList, NETWORK } from '@shared/utilities'
+import classNames from 'classnames'
 import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { usePublicClient } from 'wagmi'
@@ -186,18 +187,27 @@ const ImportVaultListForm = (props: ImportVaultListFormProps) => {
           })}
           id='vaultListInput'
           type='text'
-          className='w-full text-sm bg-gray-50 text-pt-purple-900 px-4 py-3 rounded-lg focus:outline-none'
+          className={classNames(
+            'w-full text-sm bg-gray-50 text-pt-purple-900 px-4 py-3 rounded-lg focus:outline-none',
+            { 'brightness-75': isImporting }
+          )}
           placeholder={intl?.base?.('urlInput') ?? 'https:// or ipfs:// or ENS name'}
           disabled={isImporting}
         />
         <Button
           type='submit'
           color='purple'
-          className='bg-pt-purple-600 border-pt-purple-600 hover:bg-pt-purple-500 focus:outline-transparent'
+          className='relative bg-pt-purple-600 border-pt-purple-600 hover:bg-pt-purple-500 focus:outline-transparent'
+          disabled={isImporting}
         >
-          <span className='text-pt-purple-50 whitespace-nowrap'>
+          <span
+            className={classNames('py-[1px] text-pt-purple-50 whitespace-nowrap', {
+              'opacity-0': isImporting
+            })}
+          >
             {intl?.base?.('addVaultList') ?? 'Add Vault List'}
           </span>
+          {isImporting && <Spinner className='absolute left-0 right-0 mx-auto' />}
         </Button>
       </div>
       {!!error && <span className='text-sm text-pt-warning-light'>{error}</span>}
