@@ -28,8 +28,8 @@ export const PrizePoolDropdown = (props: PrizePoolDropdownProps) => {
                 chainId={network}
                 hideBg={true}
                 intl={intl?.common}
-                className='w-full justify-center p-2 hover:!bg-pt-purple-100/40'
-                textClassName='font-grotesk font-medium text-pt-purple-600'
+                className='w-full justify-center p-2 hover:!bg-pt-purple-200'
+                textClassName='font-medium text-pt-purple-600'
               />
             ),
             onClick: (id) => onSelect(parseInt(id))
@@ -62,7 +62,7 @@ export const PrizePoolDropdown = (props: PrizePoolDropdownProps) => {
       label={<Label chainId={selectedNetwork} intl={intl?.common} />}
       items={dropdownItems}
       header={
-        <span className='px-3 text-sm font-semibold text-pt-purple-50 md:mb-2 md:text-pt-purple-400'>
+        <span className='px-3 text-sm font-semibold text-pt-purple-50 md:mb-2 md:text-pt-purple-700'>
           {intl?.switchPrizePool ?? 'Switch prize pool'}
         </span>
       }

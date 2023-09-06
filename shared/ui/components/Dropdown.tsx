@@ -36,7 +36,7 @@ export const Dropdown = (props: DropdownProps) => {
           floating: {
             content: 'px-2 py-2',
             style: {
-              auto: 'bg-pt-purple-50'
+              auto: 'bg-pt-purple-100'
             }
           },
           arrowIcon: 'ml-2 h-4 w-4 stroke-[4]'
