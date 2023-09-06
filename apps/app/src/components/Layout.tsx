@@ -73,11 +73,10 @@ export const Layout = (props: LayoutProps) => {
 
   const { vaults } = useSelectedVaults()
   const { address: userAddress } = useAccount()
-  const { refetch: refetchUserBalances } = useAllUserVaultBalances(
-    vaults,
-    userAddress as Address,
-    sToMs(300)
-  )
+  const { refetch: refetchUserBalances } = useAllUserVaultBalances(vaults, userAddress as Address, {
+    refetchInterval: sToMs(300),
+    refetchOnWindowFocus: true
+  })
 
   const { selectedPrizePool } = useSelectedPrizePool()
   const { data: draws } = usePrizeDrawWinners(selectedPrizePool as PrizePool)

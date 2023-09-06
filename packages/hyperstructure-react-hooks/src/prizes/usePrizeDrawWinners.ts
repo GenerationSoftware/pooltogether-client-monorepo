@@ -1,4 +1,5 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { SubgraphDraw } from '@shared/types'
 import { getPaginatedSubgraphDraws } from '@shared/utilities'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
@@ -19,7 +20,8 @@ export const usePrizeDrawWinners = (
   const queryKey = [QUERY_KEYS.drawWinners, prizePool?.chainId]
 
   return useQuery(queryKey, async () => await getPaginatedSubgraphDraws(prizePool?.chainId), {
-    refetchInterval: options?.refetchInterval ?? false,
-    enabled: !!prizePool
+    enabled: !!prizePool,
+    ...NO_REFETCH,
+    refetchInterval: options?.refetchInterval ?? false
   })
 }

@@ -112,7 +112,7 @@ export const useSortedVaults = (
 const sortVaultsByPrizePower = (vaults: Vault[], prizePowers?: { [vaultId: string]: number }) => {
   if (!!prizePowers) {
     const prizePower = (v: Vault) => prizePowers[v.id] ?? 0
-    return vaults.sort((a, b) => prizePower(b) - prizePower(a))
+    return [...vaults].sort((a, b) => prizePower(b) - prizePower(a))
   } else {
     return vaults
   }
@@ -123,7 +123,7 @@ const sortVaultsByTotalDeposits = (
   vaultBalances: { [vaultId: string]: TokenWithAmount },
   tokenPrices: { [chainId: number]: { [address: Address]: number } }
 ) => {
-  return vaults.sort((a, b) => {
+  return [...vaults].sort((a, b) => {
     const price = (v: Vault) => tokenPrices[v.chainId]?.[v.address.toLowerCase() as Address] ?? 0
     const balance = (v: Vault) => vaultBalances[v.id]?.amount ?? 0n
     const decimals = (v: Vault) => vaultBalances[v.id]?.decimals ?? 0
@@ -141,7 +141,7 @@ const sortVaultsByUserBalances = (
   userBalances: { [vaultId: string]: TokenWithAmount },
   exchangeRates: { [vaultId: string]: bigint }
 ) => {
-  return vaults.sort((a, b) => {
+  return [...vaults].sort((a, b) => {
     const price = (v: Vault) => tokenPrices[v.chainId]?.[v.address.toLowerCase() as Address] ?? 0
     const shareBalance = (v: Vault) => userBalances[v.id]?.amount ?? 0n
     const decimals = (v: Vault) => userBalances[v.id]?.decimals ?? 0

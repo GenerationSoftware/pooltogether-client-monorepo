@@ -1,4 +1,5 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { SubgraphDrawTimestamps } from '@shared/types'
 import { getPaginatedSubgraphDrawTimestamps } from '@shared/utilities'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
@@ -21,6 +22,7 @@ export const usePrizeDrawTimestamps = (
     async () => await getPaginatedSubgraphDrawTimestamps(prizePool?.chainId),
     {
       enabled: !!prizePool,
+      ...NO_REFETCH,
       refetchInterval: refetchInterval ?? false
     }
   )

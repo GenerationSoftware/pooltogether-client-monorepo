@@ -11,13 +11,16 @@ import { QUERY_KEYS } from '../constants'
  * Stores queried vault balances in cache
  * @param vaults instance of the `Vaults` class
  * @param userAddress user address to get balances for
- * @param refetchInterval optional automatic refetching interval in ms
+ * @param options optional settings
  * @returns
  */
 export const useAllUserVaultBalances = (
   vaults: Vaults,
   userAddress: string,
-  refetchInterval?: number
+  options?: {
+    refetchInterval?: number
+    refetchOnWindowFocus?: boolean
+  }
 ): UseQueryResult<{ [vaultId: string]: TokenWithAmount }, unknown> => {
   const queryClient = useQueryClient()
 
@@ -30,7 +33,8 @@ export const useAllUserVaultBalances = (
     {
       enabled: !!vaults && !!userAddress,
       ...NO_REFETCH,
-      refetchInterval: refetchInterval ?? false,
+      refetchInterval: options?.refetchInterval ?? false,
+      refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false,
       onSuccess: (data) => populateCachePerId(queryClient, getQueryKey, data)
     }
   )
