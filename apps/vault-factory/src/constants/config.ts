@@ -81,7 +81,7 @@ export const CONTRACTS: Record<
   [NETWORK.optimism]: {
     prizePool: '0x8CFFFfFa42407DB9DCB974C2C744425c3e58d832',
     twabController: '0x0D51a33975024E8aFc55fde9F6b070c10AA71Dd9',
-    claimer: '0x47b55748243314Be6a341668ECDa2066c0625f70'
+    claimer: '0x2589ff8614f74704741EE3B51851b4Ae812F1A21'
   },
   [NETWORK['optimism-goerli']]: {
     prizePool: '0xC64bb8Fe4f023B650940D05E79c35454e12A111F',
