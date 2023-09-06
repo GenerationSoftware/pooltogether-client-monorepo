@@ -206,6 +206,7 @@
     "vaultListsDescription": "Vault lists determine what prize vaults are displayed throughout the app. Use caution when interacting with imported lists.",
     "learnMoreVaultLists": "Learn more about vault lists",
     "urlInput": "https:// or ipfs:// or ENS name",
+    "addVaultList": "Add Vault List",
     "clearImportedVaultLists": "Clear all imported vault lists",
     "numTokens": "{number, plural, one {# Token} other {# Tokens}}",
     "imported": "Imported"

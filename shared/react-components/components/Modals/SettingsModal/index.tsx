@@ -16,7 +16,7 @@ export interface SettingsModalProps {
   view: SettingsModalView
   setView: (view: SettingsModalView) => void
   locales?: LANGUAGE_ID[]
-  localVaultLists?: { [id: string]: VaultList }
+  localVaultLists: { [id: string]: VaultList }
   disable?: SettingsModalOption[]
   hide?: SettingsModalOption[]
   intl?: {
@@ -33,6 +33,7 @@ export interface SettingsModalProps {
       | 'vaultListsDescription'
       | 'learnMoreVaultLists'
       | 'urlInput'
+      | 'addVaultList'
       | 'clearImportedVaultLists'
       | 'numTokens'
       | 'imported'

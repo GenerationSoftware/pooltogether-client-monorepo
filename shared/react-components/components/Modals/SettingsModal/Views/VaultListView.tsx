@@ -5,7 +5,7 @@ import {
 import { TrashIcon } from '@heroicons/react/24/outline'
 import { VaultList } from '@shared/types'
 import { Intl } from '@shared/types'
-import { BasicIcon, ExternalLink, LINKS, Toggle } from '@shared/ui'
+import { BasicIcon, Button, ExternalLink, LINKS, Toggle } from '@shared/ui'
 import { getVaultList, NETWORK } from '@shared/utilities'
 import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -13,13 +13,14 @@ import { usePublicClient } from 'wagmi'
 import { ImportedBadge } from '../../../Badges/ImportedBadge'
 
 interface VaultListViewProps {
-  localVaultLists?: { [id: string]: VaultList }
+  localVaultLists: { [id: string]: VaultList }
   intl?: {
     base?: Intl<
       | 'manageVaultLists'
       | 'vaultListsDescription'
       | 'learnMoreVaultLists'
       | 'urlInput'
+      | 'addVaultList'
       | 'clearImportedVaultLists'
       | 'numTokens'
       | 'imported'
@@ -31,11 +32,100 @@ interface VaultListViewProps {
 export const VaultListView = (props: VaultListViewProps) => {
   const { localVaultLists, intl } = props
 
+  const { cachedVaultLists, remove } = useCachedVaultLists()
+
+  const { localIds, importedIds, unselect } = useSelectedVaultListIds()
+
+  const importedVaultLists = useMemo(() => {
+    const localVaultListIds = Object.keys(localVaultLists ?? {})
+    const newVaultLists: { [id: string]: VaultList } = {}
+    Object.keys(cachedVaultLists).forEach((key) => {
+      if (!localVaultListIds.includes(key) && !!cachedVaultLists[key]) {
+        newVaultLists[key] = cachedVaultLists[key] as VaultList
+      }
+    })
+    return newVaultLists
+  }, [localVaultLists, cachedVaultLists])
+
+  const handleClearAll = () => {
+    const ids = Object.keys(importedVaultLists)
+    ids.forEach((id) => {
+      unselect(id, 'imported')
+      remove(id)
+    })
+  }
+
+  return (
+    <div className='flex flex-col gap-4 md:gap-8'>
+      <Header intl={intl?.base} />
+
+      <ImportVaultListForm intl={intl} />
+
+      {Object.keys(localVaultLists).map((id) => (
+        <VaultListItem
+          key={`vl-local-item-${id}`}
+          id={id}
+          vaultList={localVaultLists[id]}
+          isChecked={localIds.includes(id)}
+          intl={intl?.base}
+        />
+      ))}
+
+      {Object.keys(importedVaultLists).map((id) => (
+        <VaultListItem
+          key={`vl-imported-item-${id}`}
+          id={id}
+          vaultList={importedVaultLists[id]}
+          isChecked={importedIds.includes(id)}
+          isImported={true}
+          intl={intl?.base}
+        />
+      ))}
+
+      {Object.keys(importedVaultLists).length > 0 && (
+        <ClearImportedVaultListsButton onClick={handleClearAll} intl={intl?.base} />
+      )}
+    </div>
+  )
+}
+
+interface HeaderProps {
+  intl?: Intl<'manageVaultLists' | 'vaultListsDescription' | 'learnMoreVaultLists'>
+}
+
+const Header = (props: HeaderProps) => {
+  const { intl } = props
+
+  return (
+    <div className='flex flex-col items-center gap-2 text-center'>
+      <span className='text-lg font-semibold md:text-xl'>
+        {intl?.('manageVaultLists') ?? 'Manage Vault Lists'}
+      </span>
+      <span className='text-sm text-pt-purple-50 md:text-base'>
+        {intl?.('vaultListsDescription') ??
+          'Vault lists determine what prize vaults are displayed throughout the app. Use caution when interacting with imported lists.'}
+      </span>
+      <ExternalLink href={LINKS.listDocs} className='text-pt-purple-200'>
+        {intl?.('learnMoreVaultLists') ?? 'Learn more about vault lists'}
+      </ExternalLink>
+    </div>
+  )
+}
+
+interface ImportVaultListFormProps {
+  intl?: {
+    base?: Intl<'urlInput' | 'addVaultList'>
+    forms?: Intl<'invalidSrc' | 'invalidVaultList'>
+  }
+}
+
+const ImportVaultListForm = (props: ImportVaultListFormProps) => {
+  const { intl } = props
+
   const mainnetPublicClient = usePublicClient({ chainId: NETWORK.mainnet })
 
-  const { cachedVaultLists, cache, remove } = useCachedVaultLists()
-
-  const { localIds, importedIds, select, unselect } = useSelectedVaultListIds()
+  const { cache } = useCachedVaultLists()
+  const { select } = useSelectedVaultListIds()
 
   const {
     register,
@@ -79,41 +169,9 @@ export const VaultListView = (props: VaultListViewProps) => {
     }
   }
 
-  const importedVaultLists = useMemo(() => {
-    const localVaultListIds = Object.keys(localVaultLists ?? {})
-    const newVaultLists: { [id: string]: VaultList } = {}
-    Object.keys(cachedVaultLists).forEach((key) => {
-      if (!localVaultListIds.includes(key) && !!cachedVaultLists[key]) {
-        newVaultLists[key] = cachedVaultLists[key] as VaultList
-      }
-    })
-    return newVaultLists
-  }, [localVaultLists, cachedVaultLists])
-
-  const handleClearAll = () => {
-    const ids = Object.keys(importedVaultLists)
-    ids.forEach((id) => {
-      unselect(id, 'imported')
-      remove(id)
-    })
-  }
-
   return (
-    <div className='flex flex-col gap-4 px-4 md:gap-8'>
-      <div className='flex flex-col items-center gap-2 text-center'>
-        <span className='text-lg font-semibold md:text-xl'>
-          {intl?.base?.('manageVaultLists') ?? 'Manage Vault Lists'}
-        </span>
-        <span className='text-sm text-pt-purple-50 md:text-base'>
-          {intl?.base?.('vaultListsDescription') ??
-            'Vault lists determine what prize vaults are displayed throughout the app. Use caution when interacting with imported lists.'}
-        </span>
-        <ExternalLink href={LINKS.listDocs} className='text-pt-purple-200'>
-          {intl?.base?.('learnMoreVaultLists') ?? 'Learn more about vault lists'}
-        </ExternalLink>
-      </div>
-
-      <form onSubmit={handleSubmit(onSubmit)} className='mt-4 md:mt-0'>
+    <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-2 mt-4 md:mt-0'>
+      <div className='inline-flex flex-col gap-x-4 gap-y-2 sm:flex-row'>
         <input
           {...register('src', {
             validate: {
@@ -132,40 +190,18 @@ export const VaultListView = (props: VaultListViewProps) => {
           placeholder={intl?.base?.('urlInput') ?? 'https:// or ipfs:// or ENS name'}
           disabled={isImporting}
         />
-        {!!error && <span className='text-sm text-pt-warning-light'>{error}</span>}
-      </form>
-
-      {!!localVaultLists &&
-        Object.keys(localVaultLists).map((id) => (
-          <VaultListItem
-            key={`vl-local-item-${id}`}
-            id={id}
-            vaultList={localVaultLists[id]}
-            isChecked={localIds.includes(id)}
-            intl={intl?.base}
-          />
-        ))}
-
-      {Object.keys(importedVaultLists).map((id) => (
-        <VaultListItem
-          key={`vl-imported-item-${id}`}
-          id={id}
-          vaultList={importedVaultLists[id]}
-          isChecked={importedIds.includes(id)}
-          isImported={true}
-          intl={intl?.base}
-        />
-      ))}
-
-      {Object.keys(importedVaultLists).length > 0 && (
-        <span
-          onClick={handleClearAll}
-          className='w-full text-center text-sm text-pt-purple-200 cursor-pointer'
+        <Button
+          type='submit'
+          color='purple'
+          className='bg-pt-purple-600 border-pt-purple-600 hover:bg-pt-purple-500 focus:outline-transparent'
         >
-          {intl?.base?.('clearImportedVaultLists') ?? 'Clear all imported vault lists'}
-        </span>
-      )}
-    </div>
+          <span className='text-pt-purple-50 whitespace-nowrap'>
+            {intl?.base?.('addVaultList') ?? 'Add Vault List'}
+          </span>
+        </Button>
+      </div>
+      {!!error && <span className='text-sm text-pt-warning-light'>{error}</span>}
+    </form>
   )
 }
 
@@ -228,5 +264,23 @@ const VaultListItem = (props: VaultListItemProps) => {
         <Toggle checked={!!isChecked} onChange={handleChange} />
       </div>
     </div>
+  )
+}
+
+interface ClearImportedVaultListsButtonProps {
+  onClick: () => void
+  intl?: Intl<'clearImportedVaultLists'>
+}
+
+const ClearImportedVaultListsButton = (props: ClearImportedVaultListsButtonProps) => {
+  const { onClick, intl } = props
+
+  return (
+    <span
+      onClick={onClick}
+      className='w-full text-center text-sm text-pt-purple-200 cursor-pointer'
+    >
+      {intl?.('clearImportedVaultLists') ?? 'Clear all imported vault lists'}
+    </span>
   )
 }
