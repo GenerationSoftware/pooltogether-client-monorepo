@@ -47,7 +47,7 @@ export const ImportListForm = (props: ImportListFormProps) => {
     formMethods.clearErrors('vaultListSrc')
 
     try {
-      const vaultList = await getVaultList(data.vaultListSrc, publicClient)
+      const vaultList = await getVaultList(data.vaultListSrc.trim(), publicClient)
 
       if (!!vaultList) {
         const newVersion: Version = {

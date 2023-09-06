@@ -43,7 +43,7 @@ export const VaultListHandler = () => {
   useEffect(() => {
     const vaultListSrc = router.query['list']
     if (!!vaultListSrc && typeof vaultListSrc === 'string') {
-      setUrlQueryVaultListSrc(vaultListSrc)
+      setUrlQueryVaultListSrc(vaultListSrc.trim())
     }
   }, [router.query])
 

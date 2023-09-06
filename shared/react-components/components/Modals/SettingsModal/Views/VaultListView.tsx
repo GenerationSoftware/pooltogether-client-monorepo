@@ -150,11 +150,12 @@ const ImportVaultListForm = (props: ImportVaultListFormProps) => {
     clearErrors('src')
 
     try {
-      const vaultList = await getVaultList(data.src, mainnetPublicClient)
+      const cleanSrc = data.src.trim()
+      const vaultList = await getVaultList(cleanSrc, mainnetPublicClient)
 
       if (!!vaultList) {
-        cache(data.src, vaultList)
-        select(data.src, 'imported')
+        cache(cleanSrc, vaultList)
+        select(cleanSrc, 'imported')
         reset()
       } else {
         setError('src', {
