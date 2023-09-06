@@ -9,7 +9,14 @@ export interface DrawModalProps {
   prizePool?: PrizePool
   intl?: {
     base?: Intl<'close' | 'prizePool' | 'drawId'>
-    prizes?: Intl<'drawTotal' | 'winner' | 'prize'>
+    prizes?: Intl<
+      | 'drawTotal.beforeValue'
+      | 'drawTotal.afterValue'
+      | 'drawTotal.afterValueOngoing'
+      | 'winner'
+      | 'prize'
+      | 'youWereEligible'
+    >
   }
 }
 

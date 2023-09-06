@@ -1,5 +1,8 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useAllUserEligibleDraws,
+  usePrizeTokenData
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl, SubgraphDraw } from '@shared/types'
 import { ExternalLink, Spinner } from '@shared/ui'
 import {
@@ -9,12 +12,26 @@ import {
   sortByBigIntDesc,
   sToMs
 } from '@shared/utilities'
+import { useMemo } from 'react'
+import { Address } from 'viem'
+import { useAccount } from 'wagmi'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
+import { TokenValue } from '../../../Currency/TokenValue'
 
 interface MainViewProps {
   draw: SubgraphDraw
   prizePool: PrizePool
-  intl?: { base?: Intl<'prizePool' | 'drawId'>; prizes?: Intl<'drawTotal' | 'winner' | 'prize'> }
+  intl?: {
+    base?: Intl<'prizePool' | 'drawId'>
+    prizes?: Intl<
+      | 'drawTotal.beforeValue'
+      | 'drawTotal.afterValue'
+      | 'drawTotal.afterValueOngoing'
+      | 'winner'
+      | 'prize'
+      | 'youWereEligible'
+    >
+  }
 }
 
 export const MainView = (props: MainViewProps) => {
@@ -24,7 +41,7 @@ export const MainView = (props: MainViewProps) => {
     <div className='flex flex-col gap-6 mb-6'>
       <MainViewHeader draw={draw} intl={intl?.base} />
       <PrizePoolBadge chainId={prizePool.chainId} intl={intl?.base} className='mx-auto' />
-      {/* TODO: add "you were eligible for this draw" message when applicable */}
+      <EligibilityInfo draw={draw} prizePool={prizePool} intl={intl?.prizes} />
       <DrawTotals draw={draw} prizePool={prizePool} intl={intl?.prizes} />
       <DrawWinnersTable draw={draw} prizePool={prizePool} intl={intl?.prizes} />
     </div>
@@ -60,40 +77,76 @@ const MainViewHeader = (props: MainViewHeaderProps) => {
   )
 }
 
+interface EligibilityInfoProps {
+  draw: SubgraphDraw
+  prizePool: PrizePool
+  intl?: Intl<'youWereEligible'>
+}
+
+const EligibilityInfo = (props: EligibilityInfoProps) => {
+  const { draw, prizePool, intl } = props
+
+  const { address: userAddress } = useAccount()
+
+  const { data: allUserEligibleDraws } = useAllUserEligibleDraws(
+    [prizePool],
+    userAddress as Address
+  )
+
+  const isEligible = useMemo(() => {
+    const eligibleDraws =
+      allUserEligibleDraws?.eligibleDraws[prizePool.chainId]?.map((draw) => draw.id) ?? []
+    return eligibleDraws.includes(draw.id)
+  }, [userAddress, allUserEligibleDraws])
+
+  if (!!userAddress && isEligible) {
+    return (
+      <span className='text-center font-semibold text-pt-teal'>
+        {intl?.('youWereEligible') ?? `You were eligible for this draw.`}
+      </span>
+    )
+  }
+
+  return <></>
+}
+
 interface DrawTotalsProps {
   draw: SubgraphDraw
   prizePool: PrizePool
-  intl?: Intl<'drawTotal'>
+  intl?: Intl<'drawTotal.beforeValue' | 'drawTotal.afterValue' | 'drawTotal.afterValueOngoing'>
 }
 
 const DrawTotals = (props: DrawTotalsProps) => {
   const { draw, prizePool, intl } = props
 
-  const { data: tokenData } = usePrizeTokenData(prizePool)
+  const { data: prizeToken } = usePrizeTokenData(prizePool)
 
-  const totalPrizeAmount = draw.prizeClaims.reduce((a, b) => a + b.payout, 0n)
-  const formattedTotalPrizeAmount = !!tokenData
-    ? formatBigIntForDisplay(totalPrizeAmount, tokenData.decimals, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      })
-    : undefined
-
-  if (formattedTotalPrizeAmount === undefined) {
+  if (prizeToken === undefined) {
     return <Spinner />
   }
 
+  const uniqueWallets = new Set<Address>(draw.prizeClaims.map((claim) => claim.winner))
+  const totalPrizeAmount = draw.prizeClaims.reduce((a, b) => a + b.payout, 0n)
+
+  const currentTime = Date.now() / 1_000
+  const drawEndTimestamp = 0 // TODO: calculate draw end timestamp once `openedAtTimestamp` is available on the subgraph
+  // const drawEndTimestamp = !!prizePool.drawPeriodInSeconds ? draw.openedAtTimestamp + prizePool.drawPeriodInSeconds : 0
+  const isOngoing = drawEndTimestamp > currentTime
+
   return (
-    <span className='text-center'>
-      {intl?.('drawTotal', {
-        numPrizes: draw.prizeClaims.length,
-        numTokens: `${
-          formattedTotalPrizeAmount === '0.00' ? '< 0.01' : formattedTotalPrizeAmount
-        } ${tokenData?.symbol}`
-      }) ??
-        `This draw had ${draw.prizeClaims.length} prizes totalling ${
-          formattedTotalPrizeAmount === '0.00' ? '< 0.01' : formattedTotalPrizeAmount
-        } ${tokenData?.symbol}.`}
+    <span className='inline-flex gap-x-[0.5ch] justify-center text-center'>
+      <span>
+        {intl?.('drawTotal.beforeValue', { numWallets: uniqueWallets.size }) ??
+          `This draw had ${uniqueWallets.size} unique wallets winning a total of`}
+      </span>
+      <span>
+        <TokenValue token={{ ...prizeToken, amount: totalPrizeAmount }} />
+      </span>
+      {isOngoing ? (
+        <span>{intl?.('drawTotal.afterValueOngoing') ?? `in prizes so far.`}</span>
+      ) : (
+        <span>{intl?.('drawTotal.afterValue') ?? `in prizes.`}</span>
+      )}
     </span>
   )
 }
@@ -118,7 +171,7 @@ const DrawWinnersTable = (props: DrawWinnersTableProps) => {
       </div>
       {!!draw && !!tokenData ? (
         <div className='flex flex-col w-full max-h-52 gap-3 overflow-y-auto'>
-          {draw.prizeClaims
+          {[...draw.prizeClaims]
             .sort((a, b) => sortByBigIntDesc(a.payout, b.payout))
             .map((prize) => {
               const formattedPrize = formatBigIntForDisplay(prize.payout, tokenData.decimals, {

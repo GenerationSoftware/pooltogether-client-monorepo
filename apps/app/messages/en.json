@@ -45,9 +45,14 @@
       "xInPrizes": "in prizes"
     },
     "drawModal": {
-      "drawTotal": "This draw had {numPrizes} prizes totalling {numTokens}.",
+      "drawTotal": {
+        "beforeValue": "This draw had {numWallets} unique wallets winning a total of",
+        "afterValue": "in prizes.",
+        "afterValueOngoing": "in prizes so far."
+      },
       "winner": "Winner",
-      "prize": "Prize"
+      "prize": "Prize",
+      "youWereEligible": "You were eligible for this draw."
     }
   },
   "Vaults": {
