@@ -1,4 +1,4 @@
-import { RichIntl } from '@shared/types'
+import { Intl } from '@shared/types'
 import { Button } from '@shared/ui'
 import classNames from 'classnames'
 import Lottie from 'lottie-react'
@@ -6,7 +6,7 @@ import { noWinAnimation } from '../animations'
 
 interface NoWinViewProps {
   onGoToAccount: () => void
-  intl?: RichIntl<'noPrizes' | 'viewAccount'>
+  intl?: Intl<'noPrizes' | 'viewAccount'>
 }
 
 export const NoWinView = (props: NoWinViewProps) => {
@@ -15,13 +15,7 @@ export const NoWinView = (props: NoWinViewProps) => {
   return (
     <div className='flex flex-col items-center'>
       <span className='text-center text-3xl font-grotesk font-medium text-gray-100'>
-        {intl?.rich('noPrizes', {
-          highlight: (chunks) => <span className='text-pt-purple-200'>{chunks}</span>
-        }) ?? (
-          <>
-            Sorry, no prizes <span className='text-pt-purple-200'>...yet!!!</span>
-          </>
-        )}
+        {intl?.('noPrizes') ?? `Sorry, no prizes this time.`}
       </span>
       <Lottie
         animationData={noWinAnimation}
