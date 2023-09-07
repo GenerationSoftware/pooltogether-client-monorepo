@@ -14,7 +14,7 @@ import { getVaultId } from './vaults'
  * @returns
  */
 export const getPrizePoolId = (chainId: number, address: string) => {
-  return `${address}-${chainId}`
+  return `${address.toLowerCase()}-${chainId}`
 }
 
 /**

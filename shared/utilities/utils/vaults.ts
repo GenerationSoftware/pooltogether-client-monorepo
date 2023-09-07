@@ -10,7 +10,7 @@ import { getComplexMulticallResults, getMulticallResults } from './multicall'
  * @returns
  */
 export const getVaultId = (vaultInfo: VaultInfo | { chainId: number; address: string }) => {
-  return `${vaultInfo.address}-${vaultInfo.chainId}`
+  return `${vaultInfo.address.toLowerCase()}-${vaultInfo.chainId}`
 }
 
 /**
