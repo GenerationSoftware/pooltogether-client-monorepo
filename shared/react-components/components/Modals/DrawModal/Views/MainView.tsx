@@ -1,6 +1,8 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
   useAllUserEligibleDraws,
+  useLastDrawId,
+  useLastDrawTimestamps,
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl, SubgraphDraw } from '@shared/types'
@@ -121,17 +123,24 @@ const DrawTotals = (props: DrawTotalsProps) => {
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
+  const { data: lastDrawId } = useLastDrawId(prizePool)
+  const { data: lastDrawTimestamps } = useLastDrawTimestamps(prizePool)
+
+  const isOngoing = useMemo(() => {
+    if (!!lastDrawId && draw.id === lastDrawId && !!lastDrawTimestamps) {
+      const currentTime = Date.now() / 1_000
+      const drawPeriod = lastDrawTimestamps.end - lastDrawTimestamps.start
+      const drawFinalizedTimestamp = lastDrawTimestamps.end + drawPeriod
+      return drawFinalizedTimestamp > currentTime
+    }
+  }, [lastDrawId, lastDrawTimestamps])
+
   if (prizeToken === undefined) {
     return <Spinner />
   }
 
   const uniqueWallets = new Set<Address>(draw.prizeClaims.map((claim) => claim.winner))
   const totalPrizeAmount = draw.prizeClaims.reduce((a, b) => a + b.payout, 0n)
-
-  const currentTime = Date.now() / 1_000
-  const drawEndTimestamp = 0 // TODO: calculate draw end timestamp once `openedAtTimestamp` is available on the subgraph
-  // const drawEndTimestamp = !!prizePool.drawPeriodInSeconds ? draw.openedAtTimestamp + prizePool.drawPeriodInSeconds : 0
-  const isOngoing = drawEndTimestamp > currentTime
 
   return (
     <span className='inline-flex gap-x-[0.5ch] justify-center text-center'>
