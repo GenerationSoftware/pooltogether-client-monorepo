@@ -200,7 +200,8 @@ export const STABLECOINS: Record<NETWORK, { [address: Address]: string }> = {
   [NETWORK.mumbai]: {},
   [NETWORK.optimism]: {
     '0x7f5c764cbc14f9669b88837ca1490cca17c31607': 'usd', // USDC
-    '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1': 'usd' // DAI
+    '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1': 'usd', // DAI
+    '0xc40f949f8a4e094d1b49a23ea9241d289b7b2819': 'usd' // LUSD
   },
   [NETWORK['optimism-goerli']]: {
     '0x2c75541abd0e0025ca13d0dd5ee5c9a697dd3802': 'usd', // USDC
