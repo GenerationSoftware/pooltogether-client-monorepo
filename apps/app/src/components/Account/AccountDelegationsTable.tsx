@@ -1,4 +1,5 @@
 import {
+  useAllUserVaultBalances,
   useAllUserVaultDelegationBalances,
   useSelectedVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
@@ -11,7 +12,6 @@ import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useSortedVaultsByDelegatedAmount } from '@hooks/useSortedVaultsByDelegatedAmount'
-import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { AccountVaultDelegationAmount } from './AccountVaultDelegationAmount'
 import { AccountVaultDelegationOdds } from './AccountVaultDelegationOdds'
 
@@ -33,11 +33,10 @@ export const AccountDelegationsTable = (props: AccountDelegationsTableProps) => 
 
   const { vaults } = useSelectedVaults()
 
-  const prizePools = useSupportedPrizePools()
-  const prizePoolsArray = Object.values(prizePools)
+  const { data: shareBalances } = useAllUserVaultBalances(vaults, userAddress as Address)
 
   const { data: delegationBalances } = useAllUserVaultDelegationBalances(
-    prizePoolsArray,
+    vaults,
     userAddress as Address
   )
 
@@ -72,38 +71,39 @@ export const AccountDelegationsTable = (props: AccountDelegationsTableProps) => 
     return headers
   }, [isExternalUser])
 
-  const tableRows: TableProps['data']['rows'] = !!delegationBalances
-    ? sortedVaults
-        .map((vault) => {
-          const delegationBalance =
-            delegationBalances[vault.chainId]?.[vault.address.toLowerCase() as Address] ?? 0n
-          if (delegationBalance > 0n && vault.decimals !== undefined) {
-            const cells: TableProps['data']['rows'][0]['cells'] = {
-              token: {
-                content: (
-                  <VaultBadge
-                    vault={vault}
-                    onClick={() => router.push(`/vault/${vault.chainId}/${vault.address}`)}
-                  />
-                )
-              },
-              odds: {
-                content: <AccountVaultDelegationOdds vault={vault} address={userAddress} />,
-                position: 'center'
-              },
-              amount: {
-                content: <AccountVaultDelegationAmount vault={vault} address={userAddress} />,
-                position: 'center'
-              },
-              null: { content: '' }
+  const tableRows: TableProps['data']['rows'] =
+    !!shareBalances && !!delegationBalances
+      ? sortedVaults
+          .map((vault) => {
+            const delegationBalance =
+              (delegationBalances[vault.id] ?? 0n) - (shareBalances[vault.id]?.amount ?? 0n)
+            if (delegationBalance > 0n && vault.decimals !== undefined) {
+              const cells: TableProps['data']['rows'][0]['cells'] = {
+                token: {
+                  content: (
+                    <VaultBadge
+                      vault={vault}
+                      onClick={() => router.push(`/vault/${vault.chainId}/${vault.address}`)}
+                    />
+                  )
+                },
+                odds: {
+                  content: <AccountVaultDelegationOdds vault={vault} address={userAddress} />,
+                  position: 'center'
+                },
+                amount: {
+                  content: <AccountVaultDelegationAmount vault={vault} address={userAddress} />,
+                  position: 'center'
+                },
+                null: { content: '' }
+              }
+              return { id: vault.id, cells }
+            } else {
+              return { id: vault.id, cells: {} }
             }
-            return { id: vault.id, cells }
-          } else {
-            return { id: vault.id, cells: {} }
-          }
-        })
-        .filter((row) => Object.keys(row.cells).length > 0)
-    : []
+          })
+          .filter((row) => Object.keys(row.cells).length > 0)
+      : []
 
   return (
     <Table

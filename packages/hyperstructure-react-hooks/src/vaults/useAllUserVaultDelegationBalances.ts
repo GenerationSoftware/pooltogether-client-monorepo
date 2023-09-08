@@ -1,44 +1,46 @@
-import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { useMemo } from 'react'
-import { Address } from 'viem'
-import { useAllUserBalanceUpdates } from '..'
+import { Vaults } from '@generationsoftware/hyperstructure-client-js'
+import { NO_REFETCH } from '@shared/generic-react-hooks'
+import { useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query'
+import { populateCachePerId } from '..'
+import { QUERY_KEYS } from '../constants'
 
 /**
- * Returns a user's delegated balance in each vault
- * @param prizePools array of instances of the `PrizePool` class
- * @param userAddress user address to get delegations for
+ * Returns a user's delegation balance in each vault
+ *
+ * NOTE: This is the amount delegated to the user, including their own deposits
+ *
+ * Stores queried vault balances in cache
+ * @param vaults instance of the `Vaults` class
+ * @param userAddress user address to get balances for
+ * @param options optional settings
  * @returns
  */
-export const useAllUserVaultDelegationBalances = (prizePools: PrizePool[], userAddress: string) => {
-  const { data: userBalanceUpdates, isFetched: isFetchedUserBalanceUpdates } =
-    useAllUserBalanceUpdates(prizePools, userAddress)
+export const useAllUserVaultDelegationBalances = (
+  vaults: Vaults,
+  userAddress: string,
+  options?: {
+    refetchInterval?: number
+    refetchOnWindowFocus?: boolean
+  }
+): UseQueryResult<{ [vaultId: string]: bigint }, unknown> => {
+  const queryClient = useQueryClient()
 
-  return useMemo(() => {
-    if (isFetchedUserBalanceUpdates && !!userBalanceUpdates) {
-      const data: { [chainId: number]: { [vaultAddress: Address]: bigint } } = {}
+  const vaultIds = !!vaults ? Object.keys(vaults.vaults) : []
+  const getQueryKey = (val: (string | number)[]) => [
+    QUERY_KEYS.userVaultDelegationBalances,
+    userAddress,
+    val
+  ]
 
-      for (const key in userBalanceUpdates) {
-        const chainId = parseInt(key)
-        const chainUpdates = userBalanceUpdates[chainId]
-
-        for (const vaultAddress in chainUpdates) {
-          const latestObservation = chainUpdates[vaultAddress as Address].find((obs) => obs.isNew)
-          const delegatedAmount = !!latestObservation
-            ? latestObservation.delegateBalance - latestObservation.balance
-            : 0n
-
-          if (delegatedAmount > 0n) {
-            if (data[chainId] === undefined) {
-              data[chainId] = {}
-            }
-            data[chainId][vaultAddress as Address] = delegatedAmount
-          }
-        }
-      }
-
-      return { data, isFetched: true }
+  return useQuery(
+    getQueryKey(vaultIds),
+    async () => await vaults.getUserDelegateBalances(userAddress),
+    {
+      enabled: !!vaults && !!userAddress,
+      ...NO_REFETCH,
+      refetchInterval: options?.refetchInterval ?? false,
+      refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false,
+      onSuccess: (data) => populateCachePerId(queryClient, getQueryKey, data)
     }
-
-    return { isFetched: false }
-  }, [isFetchedUserBalanceUpdates, userBalanceUpdates])
+  )
 }

@@ -1,16 +1,15 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
+  useAllUserVaultBalances,
   useAllUserVaultDelegationBalances,
   useAllVaultExchangeRates,
-  useAllVaultShareData,
   useAllVaultTokenPrices,
   useVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { TokenWithSupply } from '@shared/types'
+import { TokenWithAmount } from '@shared/types'
 import { getAssetsFromShares } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
-import { useSupportedPrizePools } from './useSupportedPrizePools'
 
 /**
  * Returns a sorted array of vaults by delegated amount
@@ -21,11 +20,13 @@ import { useSupportedPrizePools } from './useSupportedPrizePools'
 export const useSortedVaultsByDelegatedAmount = (vaultsArray: Vault[], userAddress: Address) => {
   const vaults = useVaults(vaultsArray)
 
-  const prizePools = useSupportedPrizePools()
-  const prizePoolsArray = Object.values(prizePools)
+  const { data: shareBalances, isFetched: isFetchedShareBalances } = useAllUserVaultBalances(
+    vaults,
+    userAddress
+  )
 
   const { data: delegationBalances, isFetched: isFetchedDelegationBalances } =
-    useAllUserVaultDelegationBalances(prizePoolsArray, userAddress as Address)
+    useAllUserVaultDelegationBalances(vaults, userAddress)
 
   const { data: allVaultExchangeRates, isFetched: isFetchedAllVaultExchangeRates } =
     useAllVaultExchangeRates(vaults)
@@ -33,28 +34,25 @@ export const useSortedVaultsByDelegatedAmount = (vaultsArray: Vault[], userAddre
   const { data: allVaultTokenPrices, isFetched: isFetchedAllVaultTokenPrices } =
     useAllVaultTokenPrices()
 
-  const { data: allVaultShareData, isFetched: isFetchedAllVaultShareData } =
-    useAllVaultShareData(vaults)
-
   const isFetched =
     !!vaults &&
+    isFetchedShareBalances &&
     isFetchedDelegationBalances &&
     isFetchedAllVaultExchangeRates &&
     isFetchedAllVaultTokenPrices &&
-    isFetchedAllVaultShareData &&
+    shareBalances &&
     !!delegationBalances &&
     !!allVaultExchangeRates &&
-    !!allVaultTokenPrices &&
-    !!allVaultShareData
+    !!allVaultTokenPrices
 
   const data = useMemo(() => {
     if (isFetched) {
       return sortVaultsByDelegatedAmount(
         vaultsArray,
+        shareBalances,
         delegationBalances,
         allVaultExchangeRates,
-        allVaultTokenPrices,
-        allVaultShareData
+        allVaultTokenPrices
       )
     } else {
       return []
@@ -69,16 +67,16 @@ export const useSortedVaultsByDelegatedAmount = (vaultsArray: Vault[], userAddre
 
 const sortVaultsByDelegatedAmount = (
   vaults: Vault[],
-  delegationBalances: { [chainId: number]: { [vaultAddress: `0x${string}`]: bigint } },
+  shareBalances: { [vaultId: string]: TokenWithAmount },
+  delegationBalances: { [vaultId: string]: bigint },
   exchangeRates: { [vaultId: string]: bigint },
-  tokenPrices: { [chainId: number]: { [address: Address]: number } },
-  shareData: { [vaultId: string]: TokenWithSupply }
+  tokenPrices: { [chainId: number]: { [address: Address]: number } }
 ) => {
   return vaults.sort((a, b) => {
     const price = (v: Vault) => tokenPrices[v.chainId]?.[v.address.toLowerCase() as Address] ?? 0
     const delegationBalance = (v: Vault) =>
-      delegationBalances[v.chainId]?.[v.address.toLowerCase() as Address] ?? 0n
-    const decimals = (v: Vault) => shareData[v.id]?.decimals ?? 0
+      (delegationBalances[v.id] ?? 0n) - (shareBalances[v.id]?.amount ?? 0n)
+    const decimals = (v: Vault) => shareBalances[v.id]?.decimals ?? 18
     const exchangeRate = (v: Vault) => exchangeRates[v.id] ?? 0n
 
     const tokenBalance = (v: Vault) =>

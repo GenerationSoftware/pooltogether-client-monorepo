@@ -1,8 +1,12 @@
-import { useAllUserVaultDelegationBalances } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useAllUserVaultBalances,
+  useAllUserVaultDelegationBalances,
+  useSelectedVaults
+} from '@generationsoftware/hyperstructure-react-hooks'
 import classNames from 'classnames'
+import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
-import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { AccountDelegationsCards } from './AccountDelegationsCards'
 import { AccountDelegationsHeader } from './AccountDelegationsHeader'
 import { AccountDelegationsTable } from './AccountDelegationsTable'
@@ -18,21 +22,26 @@ export const AccountDelegations = (props: AccountDelegationsProps) => {
   const { address: _userAddress } = useAccount()
   const userAddress = address ?? _userAddress
 
-  const prizePools = useSupportedPrizePools()
-  const prizePoolsArray = Object.values(prizePools)
+  const { vaults } = useSelectedVaults()
 
-  const { data: delegationBalances, isFetched: isFetchedDelegationBalances } =
-    useAllUserVaultDelegationBalances(prizePoolsArray, userAddress as Address)
+  const { data: shareBalances } = useAllUserVaultBalances(vaults, userAddress as Address)
 
-  const isNotEmpty = !!delegationBalances && Object.keys(delegationBalances).length > 0
+  const { data: delegationBalances } = useAllUserVaultDelegationBalances(
+    vaults,
+    userAddress as Address
+  )
 
-  if (
-    typeof window !== undefined &&
-    !!userAddress &&
-    isFetchedDelegationBalances &&
-    !!delegationBalances &&
-    isNotEmpty
-  ) {
+  const isNotEmpty = useMemo(() => {
+    if (!!shareBalances && !!delegationBalances) {
+      return Object.keys(shareBalances).some(
+        (vaultId) =>
+          (delegationBalances[vaultId] ?? 0n) - (shareBalances[vaultId]?.amount ?? 0n) > 0n
+      )
+    }
+    return false
+  }, [shareBalances, delegationBalances])
+
+  if (typeof window !== undefined && !!userAddress && isNotEmpty) {
     return (
       <div
         className={classNames(

@@ -1,4 +1,5 @@
 import {
+  useAllUserVaultBalances,
   useAllUserVaultDelegationBalances,
   useSelectedVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
@@ -6,7 +7,6 @@ import classNames from 'classnames'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useSortedVaultsByDelegatedAmount } from '@hooks/useSortedVaultsByDelegatedAmount'
-import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { AccountDelegationsCard } from './AccountDelegationsCard'
 
 interface AccountDelegationsCardsProps {
@@ -20,15 +20,14 @@ export const AccountDelegationsCards = (props: AccountDelegationsCardsProps) => 
   const { address: _userAddress } = useAccount()
   const userAddress = address ?? _userAddress
 
-  const prizePools = useSupportedPrizePools()
-  const prizePoolsArray = Object.values(prizePools)
+  const { vaults } = useSelectedVaults()
+
+  const { data: shareBalances } = useAllUserVaultBalances(vaults, userAddress as Address)
 
   const { data: delegationBalances } = useAllUserVaultDelegationBalances(
-    prizePoolsArray,
+    vaults,
     userAddress as Address
   )
-
-  const { vaults } = useSelectedVaults()
 
   const { data: sortedVaults } = useSortedVaultsByDelegatedAmount(
     Object.values(vaults.vaults),
@@ -37,10 +36,11 @@ export const AccountDelegationsCards = (props: AccountDelegationsCardsProps) => 
 
   return (
     <div className={classNames('w-full flex flex-col gap-4', className)}>
-      {!!delegationBalances &&
+      {!!shareBalances &&
+        !!delegationBalances &&
         sortedVaults.map((vault) => {
           const delegationBalance =
-            delegationBalances[vault.chainId]?.[vault.address.toLowerCase() as Address] ?? 0n
+            (delegationBalances[vault.id] ?? 0n) - (shareBalances[vault.id]?.amount ?? 0n)
           if (delegationBalance > 0n && vault.decimals !== undefined) {
             return <AccountDelegationsCard key={vault.id} vault={vault} address={userAddress} />
           }

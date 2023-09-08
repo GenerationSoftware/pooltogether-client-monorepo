@@ -3,7 +3,6 @@ import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { calculateOdds, calculateUnionProbability } from '@shared/utilities'
 import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'
-import { Address } from 'viem'
 import {
   useAllUserVaultBalances,
   useAllUserVaultDelegationBalances,
@@ -31,14 +30,13 @@ export const useAllUserPrizeOdds = (
     refetch: refetchShareData
   } = useAllVaultShareData(vaults)
 
-  const {
-    data: shareBalances,
-    isFetched: isFetchedShareBalance,
-    refetch: refetchShareBalances
-  } = useAllUserVaultBalances(vaults, userAddress)
+  const { refetch: refetchShareBalances } = useAllUserVaultBalances(vaults, userAddress)
 
-  const { data: delegationBalances, isFetched: isFetchedDelegationBalances } =
-    useAllUserVaultDelegationBalances(prizePools, userAddress)
+  const {
+    data: delegationBalances,
+    isFetched: isFetchedDelegationBalances,
+    refetch: refetchDelegationBalances
+  } = useAllUserVaultDelegationBalances(vaults, userAddress)
 
   const {
     data: vaultContributions,
@@ -57,11 +55,9 @@ export const useAllUserPrizeOdds = (
         !!prizePool &&
         !!userAddress &&
         isFetchedShareData &&
-        isFetchedShareBalance &&
         isFetchedDelegationBalances &&
         isFetchedVaultContributions &&
         !!shareData &&
-        !!shareBalances &&
         !!delegationBalances &&
         !!vaultContributions
 
@@ -71,21 +67,13 @@ export const useAllUserPrizeOdds = (
           const numPrizes = await prizePool.getEstimatedPrizeCount()
 
           const probabilities = vaultIds.map((vaultId) => {
-            if (!!shareData && !!shareBalances && !!delegationBalances && !!vaultContributions) {
-              const userShares = shareBalances[vaultId].amount
+            if (!!shareData && !!delegationBalances && !!vaultContributions) {
+              const userShares = delegationBalances[vaultId]
               const totalShares = shareData[vaultId].totalSupply
               const decimals = shareData[vaultId].decimals
               const vaultContribution = vaultContributions[vaultId]
-              const vaultAddress = shareData[vaultId].address.toLowerCase() as Address
-              const delegationShares = delegationBalances[prizePool.chainId]?.[vaultAddress] ?? 0n
 
-              return calculateOdds(
-                userShares + delegationShares,
-                totalShares,
-                decimals,
-                vaultContribution,
-                numPrizes
-              )
+              return calculateOdds(userShares, totalShares, decimals, vaultContribution, numPrizes)
             } else {
               return 0
             }
@@ -105,10 +93,10 @@ export const useAllUserPrizeOdds = (
   return useMemo(() => {
     const isFetched = results?.every((result) => result.isFetched)
 
-    // TODO: should also refetch delegations
     const refetch = () => {
       refetchShareData()
       refetchShareBalances()
+      refetchDelegationBalances()
       refetchVaultContributions()
       results?.forEach((result) => {
         result.refetch()

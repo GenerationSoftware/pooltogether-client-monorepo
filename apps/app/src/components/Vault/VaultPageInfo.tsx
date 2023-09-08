@@ -1,6 +1,7 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
-  useAllUserVaultDelegationBalances,
+  useUserVaultDelegationBalance,
+  useUserVaultShareBalance,
   useVaultFeeInfo,
   useVaultShareData,
   useVaultTokenData
@@ -16,7 +17,6 @@ import { useAccount } from 'wagmi'
 import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
 import { AccountVaultDelegationAmount } from '@components/Account/AccountVaultDelegationAmount'
 import { AccountVaultOdds } from '@components/Account/AccountVaultOdds'
-import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { VaultFeePercentage } from './VaultFeePercentage'
 import { VaultPrizePower } from './VaultPrizePower'
 import { VaultTotalDeposits } from './VaultTotalDeposits'
@@ -38,15 +38,8 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
   const { data: shareData, isFetched: isFetchedShareData } = useVaultShareData(vault)
   const { data: tokenData, isFetched: isFetchedTokenData } = useVaultTokenData(vault)
 
-  // TODO: the following block can be greatly simplified with a `useUserVaultDelegationBalance` hook
-  const prizePools = useSupportedPrizePools()
-  const prizePoolsArray = Object.values(prizePools)
-  const { data: delegationBalances } = useAllUserVaultDelegationBalances(
-    prizePoolsArray,
-    userAddress as Address
-  )
-  const delegationBalance =
-    delegationBalances?.[vault.chainId]?.[vault.address.toLowerCase() as Address] ?? 0n
+  const { data: shareBalance } = useUserVaultShareBalance(vault, userAddress as Address)
+  const { data: delegationBalance } = useUserVaultDelegationBalance(vault, userAddress as Address)
 
   const { data: vaultFee } = useVaultFeeInfo(vault)
 
@@ -63,12 +56,15 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
           data={<AccountVaultBalance vault={vault} className='!flex-row gap-1' />}
         />
       )}
-      {!!userAddress && delegationBalance > 0n && (
-        <VaultInfoRow
-          name={t_vault('headers.delegatedToYou')}
-          data={<AccountVaultDelegationAmount vault={vault} className='!flex-row gap-1' />}
-        />
-      )}
+      {!!userAddress &&
+        !!shareBalance &&
+        !!delegationBalance &&
+        delegationBalance - shareBalance.amount > 0n && (
+          <VaultInfoRow
+            name={t_vault('headers.delegatedToYou')}
+            data={<AccountVaultDelegationAmount vault={vault} className='!flex-row gap-1' />}
+          />
+        )}
       {!!userAddress && (
         <VaultInfoRow
           name={

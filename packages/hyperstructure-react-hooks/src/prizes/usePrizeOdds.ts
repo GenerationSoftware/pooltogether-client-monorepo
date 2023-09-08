@@ -27,7 +27,7 @@ export const usePrizeOdds = (
   const isSuccess = !!shareData && vaultContribution !== undefined && prizeCount !== undefined
 
   const percent =
-    isSuccess && !!shares
+    isSuccess && !!shares && shares > 0n
       ? calculateOdds(
           shares,
           shareData.totalSupply + (options?.isCumulative ? shares : 0n),

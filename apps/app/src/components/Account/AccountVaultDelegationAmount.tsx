@@ -1,6 +1,7 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
-  useAllUserVaultDelegationBalances,
+  useUserVaultDelegationBalance,
+  useUserVaultShareBalance,
   useVaultExchangeRate,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
@@ -9,7 +10,6 @@ import { Spinner } from '@shared/ui'
 import { getAssetsFromShares } from '@shared/utilities'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
-import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 
 interface AccountVaultDelegationAmountProps {
   vault: Vault
@@ -23,11 +23,14 @@ export const AccountVaultDelegationAmount = (props: AccountVaultDelegationAmount
   const { address: _userAddress } = useAccount()
   const userAddress = address ?? _userAddress
 
-  const prizePools = useSupportedPrizePools()
-  const prizePoolsArray = Object.values(prizePools)
-
-  const { data: delegationBalances, isFetched: isFetchedDelegationBalances } =
-    useAllUserVaultDelegationBalances(prizePoolsArray, userAddress as Address)
+  const { data: shareBalance, isFetched: isFetchedShareBalance } = useUserVaultShareBalance(
+    vault,
+    userAddress as Address
+  )
+  const { data: _delegationBalance, isFetched: isFetchedDelegationBalance } =
+    useUserVaultDelegationBalance(vault, userAddress as Address)
+  const delegationBalance =
+    !!_delegationBalance && !!shareBalance ? _delegationBalance - shareBalance.amount : 0n
 
   const { data: exchangeRate, isFetched: isFetchedExchangeRate } = useVaultExchangeRate(vault)
 
@@ -37,16 +40,13 @@ export const AccountVaultDelegationAmount = (props: AccountVaultDelegationAmount
     return <>-</>
   }
 
-  if (!isFetchedDelegationBalances || !isFetchedExchangeRate || !isFetchedTokenData) {
+  if (!isFetchedDelegationBalance || !isFetchedExchangeRate || !isFetchedTokenData) {
     return <Spinner />
   }
 
-  if (!delegationBalances || !exchangeRate || !tokenData) {
+  if (!isFetchedShareBalance || !exchangeRate || !tokenData) {
     return <>?</>
   }
-
-  const delegationBalance =
-    delegationBalances[vault.chainId]?.[vault.address.toLowerCase() as Address] ?? 0n
 
   if (delegationBalance > 0n) {
     return (

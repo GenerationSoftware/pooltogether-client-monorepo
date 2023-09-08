@@ -1,7 +1,8 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
-  useAllUserVaultDelegationBalances,
-  usePrizeOdds
+  usePrizeOdds,
+  useUserVaultDelegationBalance,
+  useUserVaultShareBalance
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import { formatNumberForDisplay } from '@shared/utilities'
@@ -23,18 +24,19 @@ export const AccountVaultDelegationOdds = (props: AccountVaultDelegationOddsProp
   const { address: _userAddress } = useAccount()
   const userAddress = address ?? _userAddress
 
+  const { data: shareBalance, isFetched: isFetchedShareBalance } = useUserVaultShareBalance(
+    vault,
+    userAddress as Address
+  )
+  const { data: _delegationBalance, isFetched: isFetchedDelegationBalance } =
+    useUserVaultDelegationBalance(vault, userAddress as Address)
+  const delegationBalance =
+    !!_delegationBalance && !!shareBalance ? _delegationBalance - shareBalance.amount : 0n
+
   const prizePools = useSupportedPrizePools()
-  const prizePoolsArray = Object.values(prizePools)
-
-  const { data: delegationBalances, isFetched: isFetchedDelegationBalances } =
-    useAllUserVaultDelegationBalances(prizePoolsArray, userAddress as Address)
-
   const prizePool = Object.values(prizePools).find(
     (prizePool) => prizePool.chainId === vault.chainId
   )
-
-  const delegationBalance =
-    delegationBalances?.[vault.chainId]?.[vault.address.toLowerCase() as Address] ?? 0n
 
   const { data: prizeOdds, isFetched: isFetchedPrizeOdds } = usePrizeOdds(
     prizePool as PrizePool,
@@ -42,11 +44,11 @@ export const AccountVaultDelegationOdds = (props: AccountVaultDelegationOddsProp
     delegationBalance
   )
 
-  if (!userAddress || delegationBalance === 0n) {
+  if (!userAddress || delegationBalance <= 0n) {
     return <>-</>
   }
 
-  if (!isFetchedDelegationBalances || !isFetchedPrizeOdds) {
+  if (!isFetchedShareBalance || !isFetchedDelegationBalance || !isFetchedPrizeOdds) {
     return <Spinner />
   }
 

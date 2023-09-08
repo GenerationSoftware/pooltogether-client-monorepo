@@ -1,8 +1,13 @@
 import { VaultInfo } from '@shared/types'
 import { Address, formatUnits, parseUnits, PublicClient } from 'viem'
+import { twabControllerABI } from '../abis/twabController'
 import { vaultABI } from '../abis/vault'
 import { formatStringWithPrecision } from './formatting'
-import { getComplexMulticallResults, getMulticallResults } from './multicall'
+import {
+  getComplexMulticallResults,
+  getMulticallResults,
+  getSimpleMulticallResults
+} from './multicall'
 
 /**
  * Returns a unique vault ID
@@ -21,6 +26,49 @@ export const getVaultId = (vaultInfo: VaultInfo | { chainId: number; address: st
  */
 export const getVaultsByChainId = (chainId: number, vaults: VaultInfo[]) => {
   return vaults.filter((vault) => vault.chainId === chainId)
+}
+
+/**
+ * Returns an address's delegate balances for the provided vault addresses
+ * @param publicClient a public Viem client for the chain that should be queried
+ * @param userAddress the user's address to get balances for
+ * @param vaultAddresses the vault addresses to query balances in
+ * @param twabController the address of the TWAB controller to query through
+ * @returns
+ */
+export const getVaultDelegateBalances = async (
+  publicClient: PublicClient,
+  userAddress: Address,
+  vaultAddresses: Address[],
+  twabController: Address
+): Promise<{
+  [vaultId: string]: bigint
+}> => {
+  const delegateBalances: { [vaultId: string]: bigint } = {}
+  const chainId = await publicClient.getChainId()
+
+  if (vaultAddresses.length > 0) {
+    const calls = vaultAddresses.map((vaultAddress) => ({
+      functionName: 'delegateBalanceOf',
+      args: [vaultAddress, userAddress]
+    }))
+
+    const multicallResults = await getSimpleMulticallResults(
+      publicClient,
+      twabController,
+      twabControllerABI,
+      calls
+    )
+
+    vaultAddresses.forEach((vaultAddress, i) => {
+      const result = multicallResults[i]
+      const delegateBalance: bigint = typeof result === 'bigint' ? result : 0n
+      const vaultId = getVaultId({ chainId, address: vaultAddress })
+      delegateBalances[vaultId] = delegateBalance
+    })
+  }
+
+  return delegateBalances
 }
 
 /**

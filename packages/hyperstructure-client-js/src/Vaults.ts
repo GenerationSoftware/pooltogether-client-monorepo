@@ -4,10 +4,12 @@ import {
   getTokenInfo,
   getVaultAddresses,
   getVaultBalances,
+  getVaultDelegateBalances,
   getVaultExchangeRates,
   getVaultId,
   getVaultsByChainId,
   getVaultUnderlyingTokenAddresses,
+  TWAB_CONTROLLER_ADDRESSES,
   validateAddress,
   validateClientNetwork
 } from '@shared/utilities'
@@ -266,6 +268,48 @@ export class Vaults {
     )
 
     return tokenBalances
+  }
+
+  /**
+   * Returns a user's delegate balances for each vaults' share tokens
+   * @param userAddress the user's address to get balances for
+   * @param chainIds optional chain IDs to query (by default queries all)
+   * @returns
+   */
+  async getUserDelegateBalances(
+    userAddress: string,
+    chainIds?: number[]
+  ): Promise<{ [vaultId: string]: bigint }> {
+    const source = `Vaults [getUserDelegateBalances]`
+    const delegateBalances: { [vaultId: string]: bigint } = {}
+    const networksToQuery = chainIds ?? this.chainIds
+    validateAddress(userAddress, source)
+
+    await Promise.allSettled(
+      networksToQuery.map((chainId) =>
+        (async () => {
+          const vaultAddresses = this.vaultAddresses[chainId]
+          const twabControllerAddress = TWAB_CONTROLLER_ADDRESSES[chainId]
+          if (!!vaultAddresses && !!twabControllerAddress) {
+            const client = this.publicClients[chainId]
+            if (!!client) {
+              await validateClientNetwork(chainId, client, source + ` [${chainId}]`)
+              const chainDelegateBalances = await getVaultDelegateBalances(
+                client,
+                userAddress as Address,
+                vaultAddresses,
+                twabControllerAddress
+              )
+              for (const vaultId in chainDelegateBalances) {
+                delegateBalances[vaultId] = chainDelegateBalances[vaultId]
+              }
+            }
+          }
+        })()
+      )
+    )
+
+    return delegateBalances
   }
 
   /**

@@ -1,4 +1,5 @@
 import {
+  useAllUserVaultBalances,
   useAllUserVaultDelegationBalances,
   useAllVaultExchangeRates,
   useAllVaultTokenPrices,
@@ -7,7 +8,6 @@ import {
 import { getAssetsFromShares } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
-import { useSupportedPrizePools } from './useSupportedPrizePools'
 
 /**
  * Returns a user's total received delegations in ETH
@@ -20,11 +20,13 @@ export const useUserTotalDelegations = (userAddress: Address) => {
   const { data: allVaultTokenPrices, isFetched: isFetchedAllVaultTokenPrices } =
     useAllVaultTokenPrices()
 
-  const prizePools = useSupportedPrizePools()
-  const prizePoolsArray = Object.values(prizePools)
+  const { data: shareBalances, isFetched: isFetchedShareBalances } = useAllUserVaultBalances(
+    vaults,
+    userAddress
+  )
 
   const { data: delegationBalances, isFetched: isFetchedDelegationBalances } =
-    useAllUserVaultDelegationBalances(prizePoolsArray, userAddress as Address)
+    useAllUserVaultDelegationBalances(vaults, userAddress)
 
   const { data: vaultExchangeRates, isFetched: isFetchedVaultExchangeRates } =
     useAllVaultExchangeRates(vaults)
@@ -32,43 +34,36 @@ export const useUserTotalDelegations = (userAddress: Address) => {
   const isFetched =
     isFetchedVaultData &&
     isFetchedAllVaultTokenPrices &&
+    isFetchedShareBalances &&
     isFetchedDelegationBalances &&
     isFetchedVaultExchangeRates &&
     !!allVaultTokenPrices &&
-    !!vaultExchangeRates &&
+    !!shareBalances &&
     !!delegationBalances &&
+    !!vaultExchangeRates &&
     !!vaults.underlyingTokenAddresses
 
   const data = useMemo(() => {
     if (isFetched) {
       let totalDelegations: number = 0
 
-      for (const key in delegationBalances) {
-        const chainId = parseInt(key)
-        const chainBalances = delegationBalances[chainId]
+      for (const vaultId in shareBalances) {
+        const shareToken = shareBalances[vaultId]
+        const chainId = shareToken.chainId
+        const decimals = shareToken.decimals
+        const exchangeRate = vaultExchangeRates[vaultId]
 
-        for (const vaultAddress in chainBalances) {
-          const vault = Object.values(vaults.vaults).find(
-            (v) => v.chainId === chainId && v.address.toLowerCase() === vaultAddress
-          )
+        if (decimals !== undefined && !!exchangeRate) {
+          const tokenAddress = vaults.underlyingTokenAddresses?.byVault[vaultId] as Address
+          const delegationBalance = delegationBalances[vaultId] - shareToken.amount
 
-          if (!!vault) {
-            const decimals = vault.decimals
-            const exchangeRate = vaultExchangeRates[vault.id]
+          if (delegationBalance > 0n) {
+            const tokenPrice =
+              allVaultTokenPrices[chainId]?.[tokenAddress.toLowerCase() as Address] ?? 0
+            const tokenBalance = getAssetsFromShares(delegationBalance, exchangeRate, decimals)
 
-            if (decimals !== undefined && !!exchangeRate) {
-              const tokenAddress = vaults.underlyingTokenAddresses?.byVault[vault.id] as Address
-              const delegationBalance = chainBalances[vaultAddress as Address]
-
-              if (delegationBalance > 0n) {
-                const tokenPrice =
-                  allVaultTokenPrices[chainId]?.[tokenAddress.toLowerCase() as Address] ?? 0
-                const tokenBalance = getAssetsFromShares(delegationBalance, exchangeRate, decimals)
-
-                const formattedTokenBalance = formatUnits(tokenBalance, decimals)
-                totalDelegations += Number(formattedTokenBalance) * tokenPrice
-              }
-            }
+            const formattedTokenBalance = formatUnits(tokenBalance, decimals)
+            totalDelegations += Number(formattedTokenBalance) * tokenPrice
           }
         }
       }
@@ -81,6 +76,8 @@ export const useUserTotalDelegations = (userAddress: Address) => {
     isFetchedVaultData,
     isFetchedAllVaultTokenPrices,
     allVaultTokenPrices,
+    isFetchedShareBalances,
+    shareBalances,
     isFetchedDelegationBalances,
     delegationBalances,
     isFetchedVaultExchangeRates,

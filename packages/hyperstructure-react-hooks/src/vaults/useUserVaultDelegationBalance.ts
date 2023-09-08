@@ -1,6 +1,5 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
-import { TokenWithAmount } from '@shared/types'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import { Address } from 'viem'
 import { QUERY_KEYS } from '../constants'
@@ -18,7 +17,7 @@ export const useUserVaultDelegationBalance = (
   vault: Vault,
   userAddress: Address,
   refetchInterval?: number
-): UseQueryResult<TokenWithAmount, unknown> => {
+): UseQueryResult<bigint, unknown> => {
   const queryKey = [QUERY_KEYS.userVaultDelegationBalances, userAddress, vault?.id]
 
   return useQuery(queryKey, async () => await vault.getUserDelegateBalance(userAddress), {
