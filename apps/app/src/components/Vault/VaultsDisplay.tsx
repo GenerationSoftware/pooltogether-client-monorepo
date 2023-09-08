@@ -10,7 +10,7 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/router'
 import { useNetworks } from '@hooks/useNetworks'
 import { VaultCards } from './VaultCards'
-import { filteredVaultsAtom, filterIdAtom } from './VaultFilters'
+import { filteredVaultsAtom, filterIdAtom, vaultListFilterIdAtom } from './VaultFilters'
 import { VaultsTable } from './VaultsTable'
 
 export const VaultsDisplay = () => {
@@ -94,6 +94,12 @@ const NoValidVaultsCard = () => {
   const { setIsModalOpen: setIsSettingsModalOpen } = useIsModalOpen(MODAL_KEYS.settings)
 
   const setFilterId = useSetAtom(filterIdAtom)
+  const setVaultListFilterId = useSetAtom(vaultListFilterIdAtom)
+
+  const onClearFilters = () => {
+    setFilterId('all')
+    setVaultListFilterId('all')
+  }
 
   return (
     <div className='flex flex-col items-center text-center p-6 bg-pt-transparent rounded-lg md:min-w-[480px]'>
@@ -101,7 +107,7 @@ const NoValidVaultsCard = () => {
       <span className='text-xl font-semibold py-2 text-pt-purple-400'>{t_error('oops')}</span>
       <span className='text-pt-purple-100'>{t_error('noVaultsMatchingFilters')}</span>
       <div className='flex flex-col gap-2 mt-6'>
-        <Button onClick={() => setFilterId('all')} color='transparent' fullSized={true}>
+        <Button onClick={onClearFilters} color='transparent' fullSized={true}>
           {t_vaults('clearFilters')}
         </Button>
         <Button onClick={() => setIsSettingsModalOpen(true)} color='transparent' fullSized={true}>
