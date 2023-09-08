@@ -14,7 +14,7 @@ import {
   xdefiWallet,
   zerionWallet
 } from '@rainbow-me/rainbowkit/wallets'
-import { NETWORK } from '@shared/utilities'
+import { DEFAULT_CLAIMER_ADDRESSES, NETWORK, TWAB_CONTROLLER_ADDRESSES } from '@shared/utilities'
 import { SupportedNetwork } from 'src/types'
 import { Address, parseUnits } from 'viem'
 import { arbitrum, Chain, mainnet, optimism, optimismGoerli, polygon } from 'wagmi/chains'
@@ -80,13 +80,13 @@ export const CONTRACTS: Record<
 > = {
   [NETWORK.optimism]: {
     prizePool: '0x8CFFFfFa42407DB9DCB974C2C744425c3e58d832',
-    twabController: '0x0D51a33975024E8aFc55fde9F6b070c10AA71Dd9',
-    claimer: '0x2589ff8614f74704741EE3B51851b4Ae812F1A21'
+    twabController: TWAB_CONTROLLER_ADDRESSES[NETWORK.optimism],
+    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism]
   },
   [NETWORK['optimism-goerli']]: {
     prizePool: '0xC64bb8Fe4f023B650940D05E79c35454e12A111F',
-    twabController: '0xc86175315BBd4519622200bF14b2fa4a974FE78C',
-    claimer: '0x121aeCa0e662D6F89b5Da401894451Bfa76E134D'
+    twabController: TWAB_CONTROLLER_ADDRESSES[NETWORK['optimism-goerli']],
+    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK['optimism-goerli']]
   }
 } as const
 

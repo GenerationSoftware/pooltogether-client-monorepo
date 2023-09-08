@@ -217,6 +217,14 @@ export const STABLECOINS: Record<NETWORK, { [address: Address]: string }> = {
 }
 
 /**
+ * TWAB controller addresses
+ */
+export const TWAB_CONTROLLER_ADDRESSES: { [chainId: number]: Address } = {
+  [NETWORK.optimism]: '0x0D51a33975024E8aFc55fde9F6b070c10AA71Dd9',
+  [NETWORK['optimism-goerli']]: '0xc86175315BBd4519622200bF14b2fa4a974FE78C'
+}
+
+/**
  * Vault factory addresses
  */
 export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
@@ -230,6 +238,14 @@ export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
 export const LIQUIDATION_PAIR_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.optimism]: '0xa1697E8F6b11D0E2F00d9dC8a5AEae2b2665650a',
   [NETWORK['optimism-goerli']]: '0x9A57732A346ad4d1aFC16dC0A84FE27a7B9426ce'
+}
+
+/**
+ * Default claimer addresses
+ */
+export const DEFAULT_CLAIMER_ADDRESSES: { [chainId: number]: Address } = {
+  [NETWORK.optimism]: '0x2589ff8614f74704741EE3B51851b4Ae812F1A21',
+  [NETWORK['optimism-goerli']]: '0x121aeCa0e662D6F89b5Da401894451Bfa76E134D'
 }
 
 /**
