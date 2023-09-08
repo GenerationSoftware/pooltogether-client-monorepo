@@ -4,6 +4,7 @@
 export * from './abis/erc20'
 export * from './abis/liquidationPairFactory'
 export * from './abis/prizePool'
+export * from './abis/twabController'
 export * from './abis/vault'
 export * from './abis/vaultFactory'
 

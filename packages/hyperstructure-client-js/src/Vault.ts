@@ -5,6 +5,7 @@ import {
   getTokenBalances,
   getTokenInfo,
   getVaultId,
+  twabControllerABI,
   validateAddress,
   validateClientNetwork,
   vaultABI
@@ -25,6 +26,7 @@ export class Vault {
   liquidationPair: Address | undefined
   claimer: Address | undefined
   yieldSource: Address | undefined
+  twabController: Address | undefined
   feePercent: number | undefined
   feeRecipient: Address | undefined
   feesAvailable: bigint | undefined
@@ -195,6 +197,27 @@ export class Vault {
   }
 
   /**
+   * Returns a user's delegate balance for the vault's share token
+   * @param userAddress the user's address to get a balance for
+   * @returns
+   */
+  async getUserDelegateBalance(userAddress: string): Promise<bigint> {
+    const source = 'Vault [getUserDelegateBalance]'
+    await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    const twabController = await this.getTWABController()
+
+    const delegateBalance = await this.publicClient.readContract({
+      address: twabController,
+      abi: twabControllerABI,
+      functionName: 'delegateBalanceOf',
+      args: [this.address, userAddress as Address]
+    })
+
+    return delegateBalance
+  }
+
+  /**
    * Returns a user's allowance for the vault's underlying asset
    * @param userAddress the user's address to get an allowance for
    * @returns
@@ -347,6 +370,26 @@ export class Vault {
 
     this.yieldSource = yieldSource
     return this.yieldSource
+  }
+
+  /**
+   * Returns the address of the vault's TWAB controller
+   * @returns
+   */
+  async getTWABController(): Promise<Address> {
+    if (this.twabController !== undefined) return this.twabController
+
+    const source = 'Vault [getTWABController]'
+    await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    const twabController = await this.publicClient.readContract({
+      address: this.address,
+      abi: vaultABI,
+      functionName: 'twabController'
+    })
+
+    this.twabController = twabController
+    return this.twabController
   }
 
   /**
