@@ -99,8 +99,12 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 ### Transaction Hooks
 
 - `useSendApproveTransaction`
+- `useSendClaimVaultFeesTransaction`
+- `useSendDeployLiquidationPairTransaction`
+- `useSendDeployVaultTransaction`
 - `useSendDepositTransaction`
 - `useSendRedeemTransaction`
+- `useSendSetLiquidationPairTransaction`
 - `useSendWithdrawTransaction`
 
 ### Vault Hooks
@@ -124,6 +128,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useVaultClaimer`
 - `useVaultExchangeRate`
 - `useVaultFeeInfo`
+- `useVaultFeesAvailable`
 - `useVaultLiquidationPair`
 - `useVaultOwner`
 - `useVaultPercentageContribution`

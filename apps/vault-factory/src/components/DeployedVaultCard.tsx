@@ -1,6 +1,7 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useVaultClaimer,
+  useVaultFeesAvailable,
   useVaultLiquidationPair
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { VaultBadge } from '@shared/react-components'
@@ -12,8 +13,10 @@ import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
 import { VaultState } from 'src/types'
 import { zeroAddress } from 'viem'
+import { useAccount } from 'wagmi'
 import { useDeployedVaultState } from '@hooks/useDeployedVaultState'
 import { useLiquidationPairSteps } from '@hooks/useLiquidationPairSteps'
+import { ClaimVaultFeesButton } from './buttons/ClaimVaultFeesButton'
 
 interface DeployedVaultCardProps {
   vault: Vault
@@ -148,9 +151,13 @@ const VaultActionsItem = (props: ItemProps) => {
 
   const router = useRouter()
 
+  const { address: userAddress } = useAccount()
+
   const { vaultState } = useDeployedVaultState(vault)
 
   const { setStep: setLpStep } = useLiquidationPairSteps()
+
+  const { data: vaultFeesAvailable } = useVaultFeesAvailable(vault)
 
   const onClickCompleteSetup = (state: VaultState) => {
     if (state === 'missingLiquidationPair') {
@@ -167,16 +174,8 @@ const VaultActionsItem = (props: ItemProps) => {
     )
   }
 
-  const onClickClaimFees = () => {
-    // TODO: claim fees' functionality and enable button
-  }
-
-  if (vaultState === 'active') {
-    return (
-      <Button onClick={onClickClaimFees} color='transparent' disabled={true}>
-        Claim Fees
-      </Button>
-    )
+  if (vaultState === 'active' && !!userAddress && !!vaultFeesAvailable) {
+    return <ClaimVaultFeesButton vault={vault} />
   }
 
   return <></>

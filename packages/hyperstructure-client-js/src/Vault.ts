@@ -27,6 +27,7 @@ export class Vault {
   yieldSource: Address | undefined
   feePercent: number | undefined
   feeRecipient: Address | undefined
+  feesAvailable: bigint | undefined
   owner: Address | undefined
   name: string | undefined
   logoURI: string | undefined
@@ -384,6 +385,24 @@ export class Vault {
   }
 
   /**
+   * Returns the vault's currently available fee balance to claim
+   * @returns
+   */
+  async getFeesAvailable(): Promise<bigint> {
+    const source = 'Vault [getFeesAvailable]'
+    await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    const feesAvailable = await this.publicClient.readContract({
+      address: this.address,
+      abi: vaultABI,
+      functionName: 'availableYieldFeeBalance'
+    })
+
+    this.feesAvailable = feesAvailable
+    return this.feesAvailable
+  }
+
+  /**
    * Returns the address of the vault's owner
    * @returns
    */
@@ -412,7 +431,7 @@ export class Vault {
    * @returns
    */
   async deposit(amount: bigint, overrides?: TxOverrides) {
-    const source = 'User [deposit]'
+    const source = 'Vault [deposit]'
 
     if (!this.walletClient?.account) {
       throw new Error(`${source} | Invalid/Unavailable Viem Wallet Client`)
@@ -441,7 +460,7 @@ export class Vault {
    * @returns
    */
   async depositTo(amount: bigint, receiver: Address, overrides?: TxOverrides) {
-    const source = 'User [depositTo]'
+    const source = 'Vault [depositTo]'
 
     if (!this.walletClient?.account) {
       throw new Error(`${source} | Invalid/Unavailable Viem Wallet Client`)
@@ -471,7 +490,7 @@ export class Vault {
    * @returns
    */
   async withdraw(amount: bigint, overrides?: TxOverrides) {
-    const source = 'User [withdraw]'
+    const source = 'Vault [withdraw]'
 
     if (!this.walletClient?.account) {
       throw new Error(`${source} | Invalid/Unavailable Viem Wallet Client`)
@@ -500,7 +519,7 @@ export class Vault {
    * @returns
    */
   async withdrawTo(amount: bigint, receiver: Address, overrides?: TxOverrides) {
-    const source = 'User [withdrawTo]'
+    const source = 'Vault [withdrawTo]'
 
     if (!this.walletClient?.account) {
       throw new Error(`${source} | Invalid/Unavailable Viem Wallet Client`)
@@ -530,7 +549,7 @@ export class Vault {
    * @returns
    */
   async redeem(amount: bigint, overrides?: TxOverrides) {
-    const source = 'User [redeem]'
+    const source = 'Vault [redeem]'
 
     if (!this.walletClient?.account) {
       throw new Error(`${source} | Invalid/Unavailable Viem Wallet Client`)
@@ -559,7 +578,7 @@ export class Vault {
    * @returns
    */
   async redeemTo(amount: bigint, receiver: Address, overrides?: TxOverrides) {
-    const source = 'User [redeemTo]'
+    const source = 'Vault [redeemTo]'
 
     if (!this.walletClient?.account) {
       throw new Error(`${source} | Invalid/Unavailable Viem Wallet Client`)
@@ -589,7 +608,7 @@ export class Vault {
    * @returns
    */
   async approveDeposit(amount: bigint, overrides?: TxOverrides) {
-    const source = 'User [approveDeposit]'
+    const source = 'Vault [approveDeposit]'
 
     if (!this.walletClient?.account) {
       throw new Error(`${source} | Invalid/Unavailable Viem Wallet Client`)
@@ -618,7 +637,7 @@ export class Vault {
    * @returns
    */
   async revokeAllowance(overrides?: TxOverrides) {
-    const source = 'User [revokeAllowance]'
+    const source = 'Vault [revokeAllowance]'
 
     if (!this.walletClient?.account) {
       throw new Error(`${source} | Invalid/Unavailable Viem Wallet Client`)
@@ -632,6 +651,34 @@ export class Vault {
       abi: erc20ABI,
       functionName: 'approve',
       args: [this.address, 0n],
+      chain: this.walletClient.chain,
+      ...overrides
+    })
+
+    const txHash = await this.walletClient.writeContract(request)
+
+    return txHash
+  }
+
+  /**
+   * Submits a transaction to claim yield fees
+   * @param amount an unformatted share amount (w/ decimals)
+   * @param overrides optional overrides for this transaction
+   * @returns
+   */
+  async claimFees(amount: bigint, overrides?: TxOverrides) {
+    const source = 'Vault [claimFees]'
+
+    if (!this.walletClient?.account) {
+      throw new Error(`${source} | Invalid/Unavailable Viem Wallet Client`)
+    }
+
+    const { request } = await this.publicClient.simulateContract({
+      account: this.walletClient.account,
+      address: this.address,
+      abi: vaultABI,
+      functionName: 'mintYieldFee',
+      args: [amount],
       chain: this.walletClient.chain,
       ...overrides
     })
