@@ -28,10 +28,11 @@ export const useLiquidationPairInitialAmountIn = (
 
   const isFetched = isFetchedShareToken && isFetchedPrizeToken
 
-  const initialAmountIn =
-    !!shareToken && !!prizeToken
+  const initialAmountIn = isFetched
+    ? !!shareToken && !!prizeToken
       ? parseUnits(`${shareToken.price / prizeToken.price}`, prizeToken.decimals)
-      : undefined
+      : parseUnits('1', prizeToken?.decimals ?? 18)
+    : undefined
 
   return { data: initialAmountIn, isFetched }
 }

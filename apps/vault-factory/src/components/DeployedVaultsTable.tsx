@@ -29,7 +29,7 @@ export const DeployedVaultsTable = (props: DeployedVaultsTableProps) => {
   const { className } = props
 
   const { vaultInfoArray } = useDeployedVaults()
-  const vaults = useVaults(vaultInfoArray)
+  const vaults = useVaults(vaultInfoArray, { useAllChains: true })
   const vaultsArray = Object.values(vaults.vaults)
 
   const { width: screenWidth } = useScreenSize()

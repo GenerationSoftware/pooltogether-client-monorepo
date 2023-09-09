@@ -39,7 +39,7 @@ export const VaultPreview = (props: VaultPreviewProps) => {
   return (
     <div
       className={classNames(
-        'flex flex-col gap-3 items-center px-8 py-5 border border-pt-purple-100 rounded-2xl',
+        'w-full flex flex-col gap-3 items-center px-8 py-5 border border-pt-purple-100 rounded-2xl',
         className
       )}
     >

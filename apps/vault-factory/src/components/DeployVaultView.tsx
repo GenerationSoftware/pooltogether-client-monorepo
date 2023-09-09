@@ -15,7 +15,7 @@ export const DeployVaultView = (props: DeployVaultViewProps) => {
 
   return (
     <div className={classNames('flex flex-col grow gap-12 items-center', className)}>
-      <VaultPreview className='w-full max-w-md' />
+      <VaultPreview className='max-w-md' />
       <div className='flex gap-2 items-center'>
         <PrevButton className='w-36' />
         <DeployVaultButton onSuccess={nextStep} />

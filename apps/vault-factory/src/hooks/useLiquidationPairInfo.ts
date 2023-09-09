@@ -2,7 +2,7 @@ import {
   useFirstDrawStartTimestamp,
   usePrizePool,
   useVault,
-  useVaultSharePrice
+  useVaultShareData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { PairCreateInfo } from '@shared/types'
 import { POOL_TOKEN_ADDRESSES, PRIZE_POOLS } from '@shared/utilities'
@@ -29,7 +29,7 @@ export const useLiquidationPairInfo = (
   const minimumAuctionAmount = useAtomValue(liquidationPairMinimumAuctionAmountAtom)
 
   const vault = useVault({ chainId, address: vaultAddress })
-  const { data: shareToken } = useVaultSharePrice(vault)
+  const { data: shareToken } = useVaultShareData(vault)
 
   const prizePoolInfo = PRIZE_POOLS.find((pool) => pool.chainId === chainId) as {
     chainId: SupportedNetwork
