@@ -44,7 +44,8 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
   const { data: tokenWithAmount, isFetched: isFetchedTokenBalance } = useTokenBalance(
     vault.chainId,
     userAddress as Address,
-    tokenData?.address as Address
+    tokenData?.address as Address,
+    { refetchOnWindowFocus: true }
   )
   const tokenBalance = isFetchedTokenBalance && !!tokenWithAmount ? tokenWithAmount.amount : 0n
 

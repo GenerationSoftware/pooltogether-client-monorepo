@@ -15,14 +15,17 @@ import { QUERY_KEYS } from '../constants'
  * @param chainId chain ID
  * @param address address to check for token balances
  * @param tokenAddresses token addresses to query balances for
- * @param refetchInterval optional automatic refetching interval in ms
+ * @param options optional settings
  * @returns
  */
 export const useTokenBalances = (
   chainId: number,
   address: Address,
   tokenAddresses: Address[],
-  refetchInterval?: number
+  options?: {
+    refetchInterval?: number
+    refetchOnWindowFocus?: boolean
+  }
 ): UseQueryResult<{ [tokenAddress: Address]: TokenWithAmount }, unknown> => {
   const queryClient = useQueryClient()
 
@@ -50,7 +53,8 @@ export const useTokenBalances = (
     {
       enabled,
       ...NO_REFETCH,
-      refetchInterval: refetchInterval ?? false,
+      refetchInterval: options?.refetchInterval ?? false,
+      refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false,
       onSuccess: (data) => populateCachePerId(queryClient, getQueryKey, data)
     }
   )
@@ -63,19 +67,22 @@ export const useTokenBalances = (
  * @param chainId chain ID
  * @param address address to check for token balance
  * @param tokenAddress token address to query balance for
- * @param refetchInterval optional automatic refetching interval in ms
+ * @param options optional settings
  * @returns
  */
 export const useTokenBalance = (
   chainId: number,
   address: Address,
   tokenAddress: Address,
-  refetchInterval?: number
+  options?: {
+    refetchInterval?: number
+    refetchOnWindowFocus?: boolean
+  }
 ): { data?: TokenWithAmount } & Omit<
   UseQueryResult<{ [tokenAddress: Address]: TokenWithAmount }>,
   'data'
 > => {
-  const result = useTokenBalances(chainId, address, [tokenAddress], refetchInterval)
+  const result = useTokenBalances(chainId, address, [tokenAddress], options)
   return { ...result, data: result.data?.[tokenAddress] }
 }
 

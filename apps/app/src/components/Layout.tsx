@@ -1,6 +1,7 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
   useAllUserVaultBalances,
+  useAllUserVaultDelegationBalances,
   usePrizeDrawWinners,
   useSelectedVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
@@ -73,10 +74,21 @@ export const Layout = (props: LayoutProps) => {
 
   const { vaults } = useSelectedVaults()
   const { address: userAddress } = useAccount()
-  const { refetch: refetchUserBalances } = useAllUserVaultBalances(vaults, userAddress as Address, {
-    refetchInterval: sToMs(300),
-    refetchOnWindowFocus: true
-  })
+  const { refetch: refetchUserVaultBalances } = useAllUserVaultBalances(
+    vaults,
+    userAddress as Address,
+    { refetchOnWindowFocus: true }
+  )
+  const { refetch: refetchUserVaultDelegationBalances } = useAllUserVaultDelegationBalances(
+    vaults,
+    userAddress as Address,
+    { refetchOnWindowFocus: true }
+  )
+
+  const refetchUserBalances = () => {
+    refetchUserVaultBalances()
+    refetchUserVaultDelegationBalances()
+  }
 
   const { selectedPrizePool } = useSelectedPrizePool()
   const { data: draws } = usePrizeDrawWinners(selectedPrizePool as PrizePool)

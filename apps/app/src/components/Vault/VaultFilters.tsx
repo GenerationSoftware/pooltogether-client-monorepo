@@ -45,7 +45,7 @@ export const VaultFilters = (props: VaultFiltersProps) => {
       networks,
       userAddress as Address,
       vaults.underlyingTokenAddresses?.byChain ?? {},
-      { refetchInterval: sToMs(300), refetchOnWindowFocus: true }
+      { refetchOnWindowFocus: true }
     )
 
   const { data: userVaultBalances, isFetched: isFetchedUserVaultBalances } =
