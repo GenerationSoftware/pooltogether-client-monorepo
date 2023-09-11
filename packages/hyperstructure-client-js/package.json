@@ -32,10 +32,10 @@
     "tslib": "^2.5.0",
     "tsup": "^6.6.3",
     "typescript": "^5.0.4",
-    "viem": "^1.2.12"
+    "viem": "^1.10.9"
   },
   "peerDependencies": {
     "fathom-client": "^3.5.0",
-    "viem": "^1.2.12"
+    "viem": "^1.10.9"
   }
 }
