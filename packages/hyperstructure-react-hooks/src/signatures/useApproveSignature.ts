@@ -119,7 +119,14 @@ export const useApproveSignature = (
     }
   }, [isSigningError])
 
-  const enabled = !!userAddress && !!token && nonces !== undefined && !!domain && !!message.value
+  const enabled =
+    !!userAddress &&
+    !!token &&
+    nonces !== undefined &&
+    nonces !== -1n &&
+    !!domain &&
+    !!message.value
+
   const signApprove = enabled ? signTypedData : undefined
 
   const isError = isSigningError || isInvalidSignature
