@@ -2,6 +2,7 @@ import { Wallet } from '@rainbow-me/rainbowkit'
 import {
   argentWallet,
   braveWallet,
+  coin98Wallet,
   coinbaseWallet,
   injectedWallet,
   ledgerWallet,
@@ -10,6 +11,7 @@ import {
   safeWallet,
   tahoWallet,
   trustWallet,
+  uniswapWallet,
   walletConnectWallet,
   xdefiWallet,
   zerionWallet
@@ -55,7 +57,9 @@ export const WALLETS: {
   zerion: zerionWallet,
   brave: braveWallet,
   safe: safeWallet,
-  xdefi: xdefiWallet
+  xdefi: xdefiWallet,
+  uniswap: uniswapWallet,
+  coin98: coin98Wallet
 })
 
 /**

@@ -1,5 +1,5 @@
-import { NETWORK, parseQueryParam } from '@shared/utilities'
 import { connectorsForWallets, Wallet } from '@rainbow-me/rainbowkit'
+import { NETWORK, parseQueryParam } from '@shared/utilities'
 import deepmerge from 'deepmerge'
 import { FallbackTransport, PublicClient } from 'viem'
 import {
@@ -50,7 +50,18 @@ const getWalletConnectors = (chains: Chain[]): (() => Connector[]) => {
   const walletGroups: { groupName: string; wallets: Wallet[] }[] = []
 
   const defaultWallets = ['metamask', 'walletconnect', 'rainbow', 'injected', 'coinbase']
-  const otherWallets = ['argent', 'ledger', 'taho', 'trust', 'zerion', 'brave', 'safe', 'xdefi']
+  const otherWallets = [
+    'argent',
+    'ledger',
+    'taho',
+    'trust',
+    'zerion',
+    'brave',
+    'safe',
+    'xdefi',
+    'coin98',
+    'uniswap'
+  ]
 
   const highlightedWallet = parseQueryParam('wallet', { validValues: Object.keys(WALLETS) })
 
