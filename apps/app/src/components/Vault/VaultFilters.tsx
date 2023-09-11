@@ -1,15 +1,18 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useAllUserVaultBalances,
+  useSelectedVaultLists,
   useSelectedVaults,
   useTokenBalancesAcrossChains
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { Cog6ToothIcon } from '@heroicons/react/24/outline'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { NetworkIcon } from '@shared/react-components'
+import { VaultList } from '@shared/types'
 import { Selection, SelectionItem } from '@shared/ui'
-import { NETWORK, STABLECOINS, sToMs } from '@shared/utilities'
+import { getVaultId, NETWORK, STABLECOINS, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
-import { atom, useAtom, useSetAtom } from 'jotai'
+import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/router'
 import { useEffect, useMemo } from 'react'
@@ -17,8 +20,10 @@ import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useNetworks } from '@hooks/useNetworks'
 import { useSettingsModalView } from '@hooks/useSettingsModalView'
+import { VaultListFilterSelect } from './VaultListFilterSelect'
 
 export const filterIdAtom = atom<string>('all')
+export const vaultListFilterIdAtom = atom<string>('all')
 
 export const filteredVaultsAtom = atom<{ [chainId: number]: Vault[] }>({})
 
@@ -36,7 +41,17 @@ export const VaultFilters = (props: VaultFiltersProps) => {
   const networks = useNetworks()
 
   const { vaults } = useSelectedVaults()
-  const vaultsArray = useMemo(() => Object.values(vaults.vaults), [vaults])
+
+  const { localVaultLists, importedVaultLists } = useSelectedVaultLists()
+
+  const vaultListFilterId = useAtomValue(vaultListFilterIdAtom)
+
+  const vaultsArray = useMemo(() => {
+    return getVaultListIdFilteredVaults(vaultListFilterId, Object.values(vaults.vaults), {
+      ...localVaultLists,
+      ...importedVaultLists
+    })
+  }, [vaults, vaultListFilterId])
 
   const { address: userAddress } = useAccount()
 
@@ -107,10 +122,7 @@ export const VaultFilters = (props: VaultFiltersProps) => {
       {
         id: 'all',
         content: t('filters.showAll'),
-        onClick: () => {
-          setFilterId('all')
-          filterAll()
-        },
+        onClick: () => setFilterId('all'),
         filter: filterAll,
         className: 'whitespace-nowrap'
       },
@@ -118,20 +130,14 @@ export const VaultFilters = (props: VaultFiltersProps) => {
         id: 'userWallet',
         content: t('filters.inWallet'),
         disabled: !isFetchedUserTokenBalances || !isFetchedUserVaultBalances,
-        onClick: () => {
-          setFilterId('userWallet')
-          filterUserWallet()
-        },
+        onClick: () => setFilterId('userWallet'),
         filter: filterUserWallet,
         className: 'whitespace-nowrap'
       },
       {
         id: 'stablecoin',
         content: t('filters.stablecoins'),
-        onClick: () => {
-          setFilterId('stablecoin')
-          filterStablecoins()
-        },
+        onClick: () => setFilterId('stablecoin'),
         filter: filterStablecoins,
         className: 'whitespace-nowrap'
       },
@@ -139,10 +145,7 @@ export const VaultFilters = (props: VaultFiltersProps) => {
         return {
           id: network.toString(),
           content: <NetworkIcon chainId={network} className='h-5 w-5' />,
-          onClick: () => {
-            setFilterId(network.toString())
-            filterNetwork(network)
-          },
+          onClick: () => setFilterId(network.toString()),
           filter: () => filterNetwork(network)
         }
       })
@@ -169,15 +172,16 @@ export const VaultFilters = (props: VaultFiltersProps) => {
             <span className='hidden text-lg lg:block'>{t('filter')}</span>
             <Selection items={filterItems} activeItem={filterId} buttonColor='purple' />
           </div>
-          <span
-            onClick={() => {
-              setSettingsModalView('vaultLists')
-              setIsSettingsModalOpen(true)
-            }}
-            className='hidden text-lg text-pt-purple-100 cursor-pointer whitespace-nowrap lg:block'
-          >
-            {t('manageVaultLists')}
-          </span>
+          <div className='hidden gap-2 items-center lg:flex'>
+            <Cog6ToothIcon
+              onClick={() => {
+                setSettingsModalView('vaultLists')
+                setIsSettingsModalOpen(true)
+              }}
+              className='h-6 w-6 text-pt-purple-100 cursor-pointer'
+            />
+            <VaultListFilterSelect />
+          </div>
         </div>
       </div>
     )
@@ -201,4 +205,20 @@ const formatVaultsByChain = (
   })
 
   return vaultsByChain
+}
+
+const getVaultListIdFilteredVaults = (
+  id: string,
+  vaults: Vault[],
+  vaultLists: {
+    [id: string]: VaultList
+  }
+) => {
+  if (!!id && id !== 'all') {
+    const vaultList = vaultLists[id]
+    if (!!vaultList) {
+      return vaults.filter((vault) => vaultList.tokens.find((v) => vault.id === getVaultId(v)))
+    }
+  }
+  return vaults
 }

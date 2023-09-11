@@ -8,6 +8,7 @@ export interface SelectionItem {
   onClick?: () => void
   disabled?: boolean
   hidden?: boolean
+  noButton?: boolean
   className?: string
 }
 
@@ -24,19 +25,29 @@ export const Selection = (props: SelectionProps) => {
   return (
     <div className={classNames('flex gap-2 lg:gap-4', className)}>
       {items.map((item) => {
-        return (
-          <Button
-            key={`sl-${item.id}`}
-            color={buttonColor}
-            outline={item.id !== activeItem}
-            className={item.className}
-            disabled={item.disabled}
-            hidden={item.hidden}
-            onClick={item.onClick}
-          >
-            {item.content}
-          </Button>
-        )
+        const key = `sl-${item.id}`
+
+        if (item.noButton) {
+          return (
+            <div key={key} onClick={item.onClick} className={item.className} hidden={item.hidden}>
+              {item.content}
+            </div>
+          )
+        } else {
+          return (
+            <Button
+              key={key}
+              onClick={item.onClick}
+              color={buttonColor}
+              outline={item.id !== activeItem}
+              className={item.className}
+              disabled={item.disabled}
+              hidden={item.hidden}
+            >
+              {item.content}
+            </Button>
+          )
+        }
       })}
     </div>
   )

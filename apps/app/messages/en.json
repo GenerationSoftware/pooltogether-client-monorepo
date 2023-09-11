@@ -60,7 +60,8 @@
     "filters": {
       "showAll": "Show All",
       "inWallet": "In Your Wallet",
-      "stablecoins": "Stablecoins"
+      "stablecoins": "Stablecoins",
+      "allVaultLists": "All Vault Lists"
     },
     "manageVaultLists": "Manage Vault Lists",
     "clearFilters": "Clear Filters",
