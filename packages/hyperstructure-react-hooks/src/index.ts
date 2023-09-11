@@ -45,10 +45,16 @@ export * from './prizes/usePrizeTokenData'
 export * from './prizes/usePrizeTokenPrice'
 
 /**
+ * Signature Hooks
+ */
+export * from './signatures/useApproveSignature'
+
+/**
  * Token Hooks
  */
 export * from './tokens/useTokenAllowances'
 export * from './tokens/useTokenBalances'
+export * from './tokens/useTokenNonces'
 export * from './tokens/useTokenPrices'
 export * from './tokens/useTokenPricesAcrossChains'
 export * from './tokens/useTokens'

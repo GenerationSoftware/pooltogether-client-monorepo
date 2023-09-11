@@ -118,3 +118,24 @@ export const getTokenBalances = async (
 
   return formattedResult
 }
+
+/**
+ * Returns an address's nonces for the provided token address
+ * @param publicClient a public Viem client to query through
+ * @param address address to check nonces for
+ * @param tokenAddress token address to check nonces for
+ */
+export const getTokenNonces = async (
+  publicClient: PublicClient,
+  address: Address,
+  tokenAddress: Address
+) => {
+  const nonces = await publicClient.readContract({
+    address: tokenAddress,
+    abi: erc20ABI,
+    functionName: 'nonces',
+    args: [address]
+  })
+
+  return nonces
+}

@@ -88,10 +88,15 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `usePrizeTokenData`
 - `usePrizeTokenPrice`
 
+### Signature Hooks
+
+- `useApproveSignature`
+
 ### Token Hooks
 
 - `useTokenAllowances`
 - `useTokenBalances`
+- `useTokenNonces`
 - `useTokenPrices`
 - `useTokenPricesAcrossChains`
 - `useTokens`
