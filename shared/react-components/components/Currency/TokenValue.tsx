@@ -37,8 +37,6 @@ export const TokenValue = (props: TokenValueProps) => {
         return formattedAmount * tokenPrice
       }
     }
-
-    return undefined
   }, [tokenPrice, token, tokenData])
 
   if (isFetchingTokenData || isFetchingTokenPrices) {

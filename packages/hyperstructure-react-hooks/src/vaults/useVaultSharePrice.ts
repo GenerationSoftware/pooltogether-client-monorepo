@@ -35,8 +35,7 @@ export const useVaultSharePrice = (vault: Vault) => {
       )
     : undefined
 
-  const data: TokenWithPrice | undefined =
-    enabled && sharePrice !== undefined ? { ...shareData, price: sharePrice } : undefined
+  const data: TokenWithPrice | undefined = enabled ? { ...shareData, price: sharePrice } : undefined
 
   const refetch = () => {
     refetchTokenPrice()

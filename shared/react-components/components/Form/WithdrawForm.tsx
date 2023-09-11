@@ -3,9 +3,7 @@ import {
   useTokenBalance,
   useUserVaultShareBalance,
   useVaultExchangeRate,
-  useVaultShareData,
   useVaultSharePrice,
-  useVaultTokenData,
   useVaultTokenPrice
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
@@ -36,15 +34,15 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
 
   const { address: userAddress } = useAccount()
 
-  const { data: shareData } = useVaultShareData(vault)
-  const { data: tokenData } = useVaultTokenData(vault)
+  const { data: shareToken } = useVaultSharePrice(vault)
+  const { data: vaultToken } = useVaultTokenPrice(vault)
 
-  const decimals = vault.decimals ?? shareData?.decimals
+  const decimals = vault.decimals ?? shareToken?.decimals
 
   const { data: tokenWithAmount, isFetched: isFetchedTokenBalance } = useTokenBalance(
     vault.chainId,
     userAddress as Address,
-    tokenData?.address as Address,
+    vaultToken?.address as Address,
     { refetchOnWindowFocus: true }
   )
   const tokenBalance = isFetchedTokenBalance && !!tokenWithAmount ? tokenWithAmount.amount : 0n
@@ -54,9 +52,6 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
     userAddress as Address
   )
   const shareBalance = isFetchedVaultBalance && !!vaultBalance ? vaultBalance.amount : 0n
-
-  const { data: tokenWithPrice } = useVaultTokenPrice(vault)
-  const { data: shareWithPrice } = useVaultSharePrice(vault)
 
   const formMethods = useForm<TxFormValues>({
     mode: 'onChange',
@@ -122,26 +117,26 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
   }
 
   const shareInputData = useMemo(() => {
-    if (!!shareData) {
+    if (!!shareToken) {
       return {
-        ...shareData,
+        ...shareToken,
         amount: shareBalance,
-        price: shareWithPrice?.price ?? 0,
+        price: shareToken?.price ?? 0,
         logoURI: vault.logoURI
       }
     }
-  }, [vault, shareData, shareBalance, shareWithPrice])
+  }, [vault, shareToken, shareBalance])
 
   const tokenInputData = useMemo(() => {
-    if (!!tokenData) {
+    if (!!vaultToken) {
       return {
-        ...tokenData,
+        ...vaultToken,
         amount: tokenBalance,
-        price: tokenWithPrice?.price ?? 0,
+        price: vaultToken?.price ?? 0,
         logoURI: vault.tokenLogoURI
       }
     }
-  }, [vault, tokenData, tokenBalance, tokenWithPrice])
+  }, [vault, vaultToken, tokenBalance])
 
   return (
     <div className='flex flex-col'>
@@ -156,8 +151,8 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
                   parseFloat(formatUnits(shareBalance, decimals)) >= parseFloat(v) ||
                   !isFetchedVaultBalance ||
                   !vaultBalance ||
-                  (intl?.formErrors?.('notEnoughTokens', { symbol: shareData?.symbol ?? '?' }) ??
-                    `Not enough ${shareData?.symbol ?? '?'} in wallet`)
+                  (intl?.formErrors?.('notEnoughTokens', { symbol: shareToken?.symbol ?? '?' }) ??
+                    `Not enough ${shareToken?.symbol ?? '?'} in wallet`)
               }}
               onChange={handleShareAmountChange}
               showInfoRow={showInputInfoRows}

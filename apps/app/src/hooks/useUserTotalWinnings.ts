@@ -64,7 +64,7 @@ export const useUserTotalWinnings = (
         const tokenAmount = parseFloat(
           formatUnits(totalTokensWonByChain[chainId], prizeToken.decimals)
         )
-        totalWinnings += tokenAmount * prizeToken.price
+        totalWinnings += tokenAmount * (prizeToken.price ?? 0)
       }
     }
 

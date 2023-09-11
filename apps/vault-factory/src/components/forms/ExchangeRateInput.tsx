@@ -81,7 +81,7 @@ export const ExchangeRateInput = (props: ExchangeRateInputProps) => {
           ≈{' '}
           <CurrencyValue
             baseValue={
-              !!initialExchangeRate && initialExchangeRate !== ''
+              !!initialExchangeRate && initialExchangeRate !== '' && !!prizeToken.price
                 ? parseFloat(initialExchangeRate) * prizeToken.price
                 : 0
             }

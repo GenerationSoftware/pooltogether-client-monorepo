@@ -14,10 +14,7 @@ import { useAllPrizeInfo, usePrizeTokenPrice } from '..'
 export const useLargestGrandPrize = (
   prizePools: PrizePool[],
   options?: { useCurrentPrizeSizes?: boolean }
-): {
-  data?: { prizePool: PrizePool; token: TokenWithAmount & TokenWithPrice }
-  isFetched: boolean
-} => {
+) => {
   const { data: allPrizeInfo, isFetched: isFetchedAllPrizeInfo } = useAllPrizeInfo(prizePools)
 
   let largestGrandPrizeAmount = 0n
@@ -48,7 +45,7 @@ export const useLargestGrandPrize = (
     (isFetchedAllPrizeInfo && isFetchedTokenPrice) ||
     (isFetchedAllPrizeInfo && Object.keys(allPrizeInfo).length === 0)
 
-  const data =
+  const data: { prizePool: PrizePool; token: TokenWithAmount & TokenWithPrice } | undefined =
     !!prizePool && !!tokenWithPrice
       ? {
           prizePool: prizePool,

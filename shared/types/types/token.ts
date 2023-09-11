@@ -7,7 +7,7 @@ export interface Token {
 }
 
 export interface TokenWithPrice extends Token {
-  price: number
+  price?: number
 }
 
 export interface TokenWithLogo extends Token {

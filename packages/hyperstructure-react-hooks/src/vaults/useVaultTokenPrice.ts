@@ -27,7 +27,7 @@ export const useVaultTokenPrice = (vault: Vault) => {
   const isFetched = isFetchedTokenData && isFetchedTokenPrices
 
   const data: TokenWithPrice | undefined =
-    !!tokenData && tokenPrice !== undefined ? { ...tokenData, price: tokenPrice } : undefined
+    isFetched && !!tokenData ? { ...tokenData, price: tokenPrice } : undefined
 
   return { data, isFetched, refetch }
 }
