@@ -11,7 +11,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 interface VaultPageHeaderProps {
-  vault: Vault
+  vault?: Vault
   className?: string
 }
 
@@ -22,8 +22,8 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
 
   const t = useTranslations('Common')
 
-  const { data: shareData } = useVaultShareData(vault)
-  const { data: tokenAddress } = useVaultTokenAddress(vault)
+  const { data: shareData } = useVaultShareData(vault as Vault)
+  const { data: tokenAddress } = useVaultTokenAddress(vault as Vault)
 
   return (
     <>
@@ -32,30 +32,32 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
       >
         <div className='w-full flex relative justify-center items-center'>
           <BackButton />
-          <div className='w-full max-w-[85%] inline-flex justify-center gap-2 items-center md:max-w-none'>
-            {(vault.logoURI || tokenAddress) && (
-              <TokenIcon
-                token={{
-                  chainId: vault.chainId,
-                  address: tokenAddress,
-                  name: vault.name,
-                  logoURI: vault.logoURI
-                }}
-                className='h-6 w-6 md:h-8 md:w-8'
-              />
-            )}
-            <span
-              className={classNames(
-                'text-[1.75rem] font-medium font-grotesk line-clamp-2 overflow-hidden overflow-ellipsis',
-                'md:max-w-[65%] md:text-4xl',
-                { 'text-center': !vault.logoURI }
+          {!!vault && (
+            <div className='w-full max-w-[85%] inline-flex justify-center gap-2 items-center md:max-w-none'>
+              {(vault.logoURI || tokenAddress) && (
+                <TokenIcon
+                  token={{
+                    chainId: vault.chainId,
+                    address: tokenAddress,
+                    name: vault.name,
+                    logoURI: vault.logoURI
+                  }}
+                  className='h-6 w-6 md:h-8 md:w-8'
+                />
               )}
-            >
-              {vault.name ?? shareData?.name}
-            </span>
-          </div>
+              <span
+                className={classNames(
+                  'text-[1.75rem] font-medium font-grotesk line-clamp-2 overflow-hidden overflow-ellipsis',
+                  'md:max-w-[65%] md:text-4xl',
+                  { 'text-center': !vault.logoURI }
+                )}
+              >
+                {vault.name ?? shareData?.name}
+              </span>
+            </div>
+          )}
         </div>
-        {(!!vault.name || !!shareData?.name) && (
+        {!!vault && (!!vault.name || !!shareData?.name) && (
           <PrizePoolBadge
             chainId={vault.chainId}
             onClick={() => router.push(`/prizes?network=${vault.chainId}`)}
