@@ -25,16 +25,18 @@ export const Selection = (props: SelectionProps) => {
   return (
     <div className={classNames('flex gap-2 lg:gap-4', className)}>
       {items.map((item) => {
+        const key = `sl-${item.id}`
+
         if (item.noButton) {
           return (
-            <div onClick={item.onClick} className={item.className} hidden={item.hidden}>
+            <div key={key} onClick={item.onClick} className={item.className} hidden={item.hidden}>
               {item.content}
             </div>
           )
         } else {
           return (
             <Button
-              key={`sl-${item.id}`}
+              key={key}
               onClick={item.onClick}
               color={buttonColor}
               outline={item.id !== activeItem}

@@ -26,9 +26,10 @@ export const VaultListFilterSelect = (props: VaultListFilterSelectProps) => {
         field: {
           base: 'relative w-full',
           select: {
+            base: 'block w-full py-[11.5px] border-r-8 border-transparent outline outline-1 hover:bg-pt-transparent disabled:cursor-not-allowed disabled:opacity-50',
             colors: {
               custom:
-                'bg-pt-bg-purple-dark text-pt-purple-100 border-pt-purple-100 focus:ring-2 focus:ring-pt-purple-50'
+                'bg-pt-bg-purple-dark text-pt-purple-100 outline-pt-purple-100 focus:ring-2 focus:ring-pt-purple-50'
             }
           }
         }
@@ -37,9 +38,13 @@ export const VaultListFilterSelect = (props: VaultListFilterSelectProps) => {
       shadow={false}
       className={classNames('max-w-[12.5rem]', className)}
     >
-      <option value='all'>{t('allVaultLists')}</option>
+      <option value='all' className='bg-pt-bg-purple-dark'>
+        {t('allVaultLists')}
+      </option>
       {Object.entries({ ...localVaultLists, ...importedVaultLists }).map(([id, list]) => (
-        <option value={id}>{list.name}</option>
+        <option key={id} value={id} className='bg-pt-bg-purple-dark'>
+          {list.name}
+        </option>
       ))}
     </Select>
   )

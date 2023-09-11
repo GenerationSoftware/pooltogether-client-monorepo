@@ -5,6 +5,7 @@ import {
   useSelectedVaults,
   useTokenBalancesAcrossChains
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { Cog6ToothIcon } from '@heroicons/react/24/outline'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { NetworkIcon } from '@shared/react-components'
 import { VaultList } from '@shared/types'
@@ -140,12 +141,6 @@ export const VaultFilters = (props: VaultFiltersProps) => {
         filter: filterStablecoins,
         className: 'whitespace-nowrap'
       },
-      {
-        id: 'vaultList',
-        content: <VaultListFilterSelect />,
-        filter: () => {},
-        noButton: true
-      },
       ...networks.map((network) => {
         return {
           id: network.toString(),
@@ -177,15 +172,16 @@ export const VaultFilters = (props: VaultFiltersProps) => {
             <span className='hidden text-lg lg:block'>{t('filter')}</span>
             <Selection items={filterItems} activeItem={filterId} buttonColor='purple' />
           </div>
-          <span
-            onClick={() => {
-              setSettingsModalView('vaultLists')
-              setIsSettingsModalOpen(true)
-            }}
-            className='hidden text-lg text-pt-purple-100 cursor-pointer whitespace-nowrap lg:block'
-          >
-            {t('manageVaultLists')}
-          </span>
+          <div className='hidden gap-2 items-center lg:flex'>
+            <Cog6ToothIcon
+              onClick={() => {
+                setSettingsModalView('vaultLists')
+                setIsSettingsModalOpen(true)
+              }}
+              className='h-6 w-6 text-pt-purple-100 cursor-pointer'
+            />
+            <VaultListFilterSelect />
+          </div>
         </div>
       </div>
     )
