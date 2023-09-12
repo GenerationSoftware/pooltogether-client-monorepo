@@ -1,5 +1,5 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { vaultABI } from '@shared/utilities'
+import { calculatePercentageOfBigInt, vaultABI } from '@shared/utilities'
 import { useEffect } from 'react'
 import { Address, isAddress, TransactionReceipt } from 'viem'
 import {
@@ -9,7 +9,7 @@ import {
   usePrepareContractWrite,
   useWaitForTransaction
 } from 'wagmi'
-import { useTokenAllowance, useVaultTokenAddress } from '..'
+import { useGasAmountEstimate, useTokenAllowance, useVaultTokenAddress } from '..'
 
 /**
  * Prepares and submits a `deposit` transaction to a vault
@@ -59,12 +59,25 @@ export const useSendDepositTransaction = (
     !!allowance &&
     allowance >= amount
 
+  const { data: gasEstimate } = useGasAmountEstimate(
+    vault?.chainId,
+    {
+      address: vault?.address,
+      abi: vaultABI,
+      functionName: 'deposit',
+      args: [amount, userAddress as Address],
+      account: userAddress as Address
+    },
+    { enabled }
+  )
+
   const { config } = usePrepareContractWrite({
     chainId: vault?.chainId,
     address: vault?.address,
     abi: vaultABI,
     functionName: 'deposit',
     args: [amount, userAddress as Address],
+    gas: !!gasEstimate ? calculatePercentageOfBigInt(gasEstimate, 1.2) : undefined,
     enabled
   })
 
