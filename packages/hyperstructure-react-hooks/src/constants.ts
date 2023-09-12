@@ -21,6 +21,7 @@ export const QUERY_KEYS = Object.freeze({
   tokenAllowances: 'tokenAllowances',
   tokenBalances: 'tokenBalances',
   tokenNonces: 'tokenNonces',
+  tokenPermitSupport: 'tokenPermitSupport',
   tokenPrices: 'tokenPrices',
   tokenVersions: 'tokenVersions',
   tokens: 'tokens',

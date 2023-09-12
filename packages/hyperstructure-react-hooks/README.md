@@ -97,6 +97,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useTokenAllowances`
 - `useTokenBalances`
 - `useTokenNonces`
+- `useTokenPermitSupport`
 - `useTokenPrices`
 - `useTokenPricesAcrossChains`
 - `useTokens`

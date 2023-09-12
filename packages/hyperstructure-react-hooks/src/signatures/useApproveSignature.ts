@@ -1,8 +1,9 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
+import { EIP2612_PERMIT_TYPES, OLD_DAI_PERMIT_TYPES } from '@shared/utilities'
 import { useEffect, useMemo, useState } from 'react'
 import { Address, TypedDataDomain, verifyTypedData, zeroAddress } from 'viem'
 import { useAccount, useSignTypedData } from 'wagmi'
-import { useTokenNonces, useVaultTokenData } from '..'
+import { useTokenNonces, useTokenPermitSupport, useTokenVersion, useVaultTokenData } from '..'
 
 /**
  * Requests an EIP-2612 signature for a vault to spend tokens
@@ -20,6 +21,7 @@ export const useApproveSignature = (
   }
 ): {
   signature?: `0x${string}`
+  deadline?: bigint
   isLoading: boolean
   isSuccess: boolean
   isError: boolean
@@ -29,6 +31,16 @@ export const useApproveSignature = (
 
   const { data: token } = useVaultTokenData(vault)
 
+  const { data: tokenPermitSupport } = useTokenPermitSupport(
+    token?.chainId as number,
+    token?.address as Address
+  )
+
+  const { data: tokenVersion } = useTokenVersion(
+    token?.chainId as number,
+    token?.address as Address
+  )
+
   const { data: nonces } = useTokenNonces(
     token?.chainId as number,
     userAddress as Address,
@@ -37,37 +49,50 @@ export const useApproveSignature = (
   )
 
   const [isInvalidSignature, setIsInvalidSignature] = useState<boolean>(false)
+  const [deadline, setDeadline] = useState<bigint>(0n)
 
   const domain: TypedDataDomain | undefined = useMemo(() => {
-    if (!!token) {
+    if (!!token && !!tokenVersion && Number(tokenVersion) >= 1) {
       return {
         chainId: token.chainId,
         name: token.name,
         verifyingContract: token.address,
-        version: '1'
+        version: tokenVersion
       }
     }
-  }, [token])
+  }, [token, tokenVersion])
 
   const message = useMemo(() => {
-    const owner = userAddress ?? zeroAddress
-    const spender = vault.address
-    const value = amount
-    const nonce = nonces ?? 0n
-    const deadline = BigInt(Math.floor(Date.now() / 1_000) + 300)
+    if (tokenPermitSupport === 'eip2612') {
+      return {
+        owner: userAddress ?? zeroAddress,
+        spender: vault.address,
+        value: amount,
+        nonce: nonces ?? 0n,
+        deadline: BigInt(Math.floor(Date.now() / 1_000) + 300)
+      }
+    } else if (tokenPermitSupport === 'daiPermit') {
+      return {
+        holder: userAddress ?? zeroAddress,
+        spender: vault.address,
+        nonce: nonces ?? 0n,
+        expiry: BigInt(Math.floor(Date.now() / 1_000) + 300),
+        allowed: true
+      }
+    } else {
+      return {}
+    }
+  }, [amount, vault, userAddress, tokenPermitSupport, nonces])
 
-    return { owner, spender, value, nonce, deadline }
-  }, [amount, vault, userAddress, nonces])
-
-  const types = {
-    Permit: [
-      { name: 'owner', type: 'address' },
-      { name: 'spender', type: 'address' },
-      { name: 'value', type: 'uint256' },
-      { name: 'nonce', type: 'uint256' },
-      { name: 'deadline', type: 'uint256' }
-    ]
-  } as const
+  const types = useMemo(() => {
+    if (tokenPermitSupport === 'eip2612') {
+      return EIP2612_PERMIT_TYPES
+    } else if (tokenPermitSupport === 'daiPermit') {
+      return OLD_DAI_PERMIT_TYPES
+    } else {
+      return { Permit: [] }
+    }
+  }, [tokenPermitSupport])
 
   const {
     data: signature,
@@ -81,6 +106,15 @@ export const useApproveSignature = (
     types,
     primaryType: 'Permit'
   })
+
+  const _signTypedData = () => {
+    if (tokenPermitSupport === 'eip2612') {
+      setDeadline(message.deadline as bigint)
+    } else if (tokenPermitSupport === 'daiPermit') {
+      setDeadline(message.expiry as bigint)
+    }
+    signTypedData()
+  }
 
   const verifySignature = async (
     sigToVerify: `0x${string}`,
@@ -122,14 +156,17 @@ export const useApproveSignature = (
   const enabled =
     !!userAddress &&
     !!token &&
+    tokenPermitSupport !== undefined &&
+    tokenPermitSupport !== 'none' &&
+    !!tokenVersion &&
     nonces !== undefined &&
     nonces !== -1n &&
     !!domain &&
     !!message.value
 
-  const signApprove = enabled ? signTypedData : undefined
+  const signApprove = enabled ? _signTypedData : undefined
 
   const isError = isSigningError || isInvalidSignature
 
-  return { signature, isLoading, isSuccess, isError, signApprove }
+  return { signature, deadline, isLoading, isSuccess, isError, signApprove }
 }

@@ -330,3 +330,29 @@ export const MAX_UINT_256 = 2n ** 256n - 1n
  * Null Address
  */
 export const NULL_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+
+/**
+ * EIP2612 Permit Types
+ */
+export const EIP2612_PERMIT_TYPES = {
+  Permit: [
+    { name: 'owner', type: 'address' },
+    { name: 'spender', type: 'address' },
+    { name: 'value', type: 'uint256' },
+    { name: 'nonce', type: 'uint256' },
+    { name: 'deadline', type: 'uint256' }
+  ]
+} as const
+
+/**
+ * Old DAI Permit Types
+ */
+export const OLD_DAI_PERMIT_TYPES = {
+  Permit: [
+    { name: 'holder', type: 'address' },
+    { name: 'spender', type: 'address' },
+    { name: 'nonce', type: 'uint256' },
+    { name: 'expiry', type: 'uint256' },
+    { name: 'allowed', type: 'bool' }
+  ]
+} as const

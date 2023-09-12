@@ -1,6 +1,7 @@
 import { TokenWithAmount, TokenWithSupply } from '@shared/types'
-import { Address, PublicClient } from 'viem'
+import { Address, ContractFunctionExecutionError, pad, PublicClient, zeroAddress } from 'viem'
 import { erc20ABI } from '../abis/erc20'
+import { erc20OldPermitABI } from '../abis/erc20-oldPermit'
 import { getMulticallResults } from './multicall'
 
 /**
@@ -161,4 +162,48 @@ export const getTokenVersion = async (publicClient: PublicClient, tokenAddress: 
   } catch {
     return '-1'
   }
+}
+
+/**
+ * Returns the type of permit a token supports
+ * @param publicClient a public Viem client to query through
+ * @param tokenAddress token address to check permit support for
+ */
+export const getTokenPermitSupport = async (
+  publicClient: PublicClient,
+  tokenAddress: Address
+): Promise<'eip2612' | 'daiPermit' | 'none'> => {
+  try {
+    await publicClient.simulateContract({
+      address: tokenAddress,
+      abi: erc20ABI,
+      functionName: 'permit',
+      args: [zeroAddress, zeroAddress, 0n, 0n, 0, pad('0x'), pad('0x')]
+    })
+  } catch (err) {
+    if (
+      err instanceof ContractFunctionExecutionError &&
+      err.shortMessage.startsWith('The contract function "permit" reverted')
+    ) {
+      return 'eip2612'
+    }
+
+    try {
+      await publicClient.simulateContract({
+        address: tokenAddress,
+        abi: erc20OldPermitABI,
+        functionName: 'permit',
+        args: [zeroAddress, zeroAddress, 0n, 0n, false, 0, pad('0x'), pad('0x')]
+      })
+    } catch (err) {
+      if (
+        err instanceof ContractFunctionExecutionError &&
+        err.shortMessage.startsWith('The contract function "permit" reverted')
+      ) {
+        return 'daiPermit'
+      }
+    }
+  }
+
+  return 'none'
 }
