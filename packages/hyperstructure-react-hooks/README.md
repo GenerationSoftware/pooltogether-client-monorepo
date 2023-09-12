@@ -88,13 +88,20 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `usePrizeTokenData`
 - `usePrizeTokenPrice`
 
+### Signature Hooks
+
+- `useApproveSignature`
+
 ### Token Hooks
 
 - `useTokenAllowances`
 - `useTokenBalances`
+- `useTokenNonces`
+- `useTokenPermitSupport`
 - `useTokenPrices`
 - `useTokenPricesAcrossChains`
 - `useTokens`
+- `useTokenVersion`
 
 ### Transaction Hooks
 
@@ -103,6 +110,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useSendDeployLiquidationPairTransaction`
 - `useSendDeployVaultTransaction`
 - `useSendDepositTransaction`
+- `useSendDepositWithPermitTransaction`
 - `useSendRedeemTransaction`
 - `useSendSetLiquidationPairTransaction`
 - `useSendWithdrawTransaction`

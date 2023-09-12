@@ -45,13 +45,21 @@ export * from './prizes/usePrizeTokenData'
 export * from './prizes/usePrizeTokenPrice'
 
 /**
+ * Signature Hooks
+ */
+export * from './signatures/useApproveSignature'
+
+/**
  * Token Hooks
  */
 export * from './tokens/useTokenAllowances'
 export * from './tokens/useTokenBalances'
+export * from './tokens/useTokenNonces'
+export * from './tokens/useTokenPermitSupport'
 export * from './tokens/useTokenPrices'
 export * from './tokens/useTokenPricesAcrossChains'
 export * from './tokens/useTokens'
+export * from './tokens/useTokenVersion'
 
 /**
  * Transaction Hooks
@@ -61,6 +69,7 @@ export * from './transactions/useSendClaimVaultFeesTransaction'
 export * from './transactions/useSendDeployLiquidationPairTransaction'
 export * from './transactions/useSendDeployVaultTransaction'
 export * from './transactions/useSendDepositTransaction'
+export * from './transactions/useSendDepositWithPermitTransaction'
 export * from './transactions/useSendRedeemTransaction'
 export * from './transactions/useSendSetLiquidationPairTransaction'
 export * from './transactions/useSendWithdrawTransaction'
