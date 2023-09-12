@@ -100,6 +100,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useTokenPrices`
 - `useTokenPricesAcrossChains`
 - `useTokens`
+- `useTokenVersion`
 
 ### Transaction Hooks
 

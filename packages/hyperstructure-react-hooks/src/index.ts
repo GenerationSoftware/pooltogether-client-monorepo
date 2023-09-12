@@ -58,6 +58,7 @@ export * from './tokens/useTokenNonces'
 export * from './tokens/useTokenPrices'
 export * from './tokens/useTokenPricesAcrossChains'
 export * from './tokens/useTokens'
+export * from './tokens/useTokenVersion'
 
 /**
  * Transaction Hooks

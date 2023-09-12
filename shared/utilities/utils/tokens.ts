@@ -143,3 +143,22 @@ export const getTokenNonces = async (
     return -1n
   }
 }
+
+/**
+ * Returns a token's version
+ *
+ * NOTE: Returns "-1" if the token does not support the EIP-2612 interface
+ * @param publicClient a public Viem client to query through
+ * @param tokenAddress token address to check version for
+ */
+export const getTokenVersion = async (publicClient: PublicClient, tokenAddress: Address) => {
+  try {
+    return await publicClient.readContract({
+      address: tokenAddress,
+      abi: erc20ABI,
+      functionName: 'version'
+    })
+  } catch {
+    return '-1'
+  }
+}
