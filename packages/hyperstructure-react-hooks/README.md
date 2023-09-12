@@ -59,6 +59,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useClientChainId`
 - `useClientChainIds`
 - `useClients`
+- `useGasAmountEstimate`
 - `useGasCostEstimates`
 - `useGasPrice`
 

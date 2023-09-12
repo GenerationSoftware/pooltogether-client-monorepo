@@ -14,6 +14,7 @@ export * from './app/useVaultList'
 export * from './blockchain/useClientChainId'
 export * from './blockchain/useClientChainIds'
 export * from './blockchain/useClients'
+export * from './blockchain/useGasAmountEstimate'
 export * from './blockchain/useGasCostEstimates'
 export * from './blockchain/useGasPrice'
 

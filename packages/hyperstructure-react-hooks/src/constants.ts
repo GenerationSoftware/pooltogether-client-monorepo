@@ -9,6 +9,7 @@ export const QUERY_KEYS = Object.freeze({
   drawWinners: 'drawWinners',
   estimatedPrizeCount: 'estimatedPrizeCount',
   firstDrawStartTimestamp: 'firstDrawStartTimestamp',
+  gasAmountEstimates: 'gasAmountEstimates',
   gasPrices: 'gasPrices',
   lastDrawId: 'lastDrawId',
   lastDrawTimestamp: 'lastDrawTimestamp',
