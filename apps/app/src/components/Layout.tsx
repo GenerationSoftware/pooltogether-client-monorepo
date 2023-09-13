@@ -21,7 +21,7 @@ import {
   WithdrawModal
 } from '@shared/react-components'
 import { Footer, FooterItem, LINKS, Navbar, SocialIcon, Toaster } from '@shared/ui'
-import { getDiscordInvite, sToMs } from '@shared/utilities'
+import { getDiscordInvite } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'

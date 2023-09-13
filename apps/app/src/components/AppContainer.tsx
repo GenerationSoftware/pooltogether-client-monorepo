@@ -1,6 +1,6 @@
 import { useFathom } from '@shared/generic-react-hooks'
 import { useSelectedLanguage } from '@shared/generic-react-hooks'
-import { Flowbite } from '@shared/ui'
+import { DOMAINS, Flowbite } from '@shared/ui'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { NextIntlProvider } from 'next-intl'
 import { AppProps } from 'next/app'
@@ -24,7 +24,7 @@ export const AppContainer = (props: AppProps) => {
   // Fathom Analytics
   useFathom(
     process.env.NEXT_PUBLIC_FATHOM_SITE_ID as string,
-    ['mvp-pt-app.netlify.app/'],
+    [`${DOMAINS.app.slice(8)}/`],
     router.events?.on,
     router.events?.off
   )

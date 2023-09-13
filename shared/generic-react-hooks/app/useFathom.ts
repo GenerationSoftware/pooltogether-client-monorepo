@@ -12,6 +12,7 @@ type FathomEventId =
 /**
  * Optimally paired with a next.js Router
  * @param fathomSiteId ID from Fathom Analytics dashboard
+ * @param sideDomains domains to include stats for
  * @param addRouteChangeListener router.events?.on
  * @param removeRouteChangeListener router.events?.off
  */
