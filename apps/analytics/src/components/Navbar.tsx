@@ -1,5 +1,5 @@
-import { Logo } from '@shared/ui'
 import classNames from 'classnames'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
@@ -15,16 +15,27 @@ export const Navbar = (props: NavbarProps) => {
     <>
       <div
         className={classNames(
-          'flex items-center justify-between px-6 py-3 z-30',
-          'md:px-24 md:py-12',
+          'flex items-center justify-center px-6 py-3 z-30',
+          'md:justify-between md:px-12 md:py-6',
           className
         )}
       >
-        <Link href='/'>
-          <Logo smLogoClassName='w-11' mdLogoClassName='w-52' />
+        <Link href='/' className='flex gap-1 items-center'>
+          <Image src='/cabanaLogo.svg' alt='Cabana' width={32} height={32} priority={true} />
+          <span className='-mt-[.2rem] font-grotesk font-bold text-[2rem] text-pt-purple-900'>
+            Cabanalytics
+          </span>
         </Link>
-        <div className='hidden gap-6 items-center md:flex'>
+        <div className='hidden gap-12 items-center md:flex'>
           <NavbarActions />
+          <Image
+            src='/pooly.svg'
+            alt='Pooly'
+            width={93}
+            height={91}
+            className='w-20 h-auto -ml-10'
+            priority={true}
+          />
         </div>
       </div>
       <MobileNavbar className='z-50 md:hidden'>
@@ -46,7 +57,7 @@ const MobileNavbar = (props: MobileNavbarProps) => {
     <div
       className={classNames(
         'fixed bottom-0 flex w-full h-[60px] justify-center items-center gap-6 font-medium',
-        'bg-pt-purple-600 border-t-2 border-pt-purple-500',
+        'bg-pt-purple-200 border-t-2 border-pt-purple-500',
         className
       )}
     >
@@ -90,10 +101,10 @@ const NavbarLink = (props: NavbarLinkProps) => {
       href={href}
       target={href.startsWith('http') ? '_blank' : '_self'}
       className={classNames(
-        'border-b-2',
+        'font-semibold border-b-2 md:text-xl md:border-b-4',
         {
-          'text-pt-purple-50 border-b-pt-teal-dark': isActive,
-          'text-pt-purple-200 border-b-transparent hover:text-pt-purple-50': !isActive
+          'text-pt-purple-500 border-b-current': isActive,
+          'text-gray-600 border-b-transparent hover:text-pt-purple-500': !isActive
         },
         className
       )}
