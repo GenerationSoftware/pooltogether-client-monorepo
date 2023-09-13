@@ -1,5 +1,4 @@
 import { XMarkIcon } from '@heroicons/react/24/solid'
-import classNames from 'classnames'
 import { useAtom } from 'jotai'
 import { FormProvider, useForm } from 'react-hook-form'
 import { listKeywordsAtom } from 'src/atoms'
@@ -49,7 +48,7 @@ export const ListKeywordsForm = (props: ListKeywordsFormProps) => {
 
   return (
     <FormProvider {...formMethods}>
-      <div className={classNames('', className)}>
+      <div className={className}>
         <form
           onSubmit={formMethods.handleSubmit(onSubmit)}
           onBlur={formMethods.handleSubmit(onSubmit)}
