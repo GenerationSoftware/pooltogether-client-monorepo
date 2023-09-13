@@ -20,6 +20,7 @@ A library of shared React hooks with minimal dependencies.
 ### App Hooks
 
 - `useCountdown`
+- `useCountup`
 - `useFathom`
 - `useIsDismissed`
 - `useIsModalOpen`

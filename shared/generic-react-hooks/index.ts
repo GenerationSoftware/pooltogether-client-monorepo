@@ -2,6 +2,7 @@
  * App Hooks
  */
 export * from './app/useCountdown'
+export * from './app/useCountup'
 export * from './app/useFathom'
 export * from './app/useIsDismissed'
 export * from './app/useIsModalOpen'
