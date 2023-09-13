@@ -45,7 +45,11 @@ export const ReviewView = (props: ReviewViewProps) => {
       {!!shareData && !!tokenData && (
         <div className='flex flex-col w-full gap-1'>
           <BasicWithdrawFormInput
-            token={{ ...shareData, amount: formShareAmount, logoURI: vault.logoURI }}
+            token={{
+              ...shareData,
+              amount: formShareAmount,
+              logoURI: vault.logoURI ?? vault.tokenLogoURI
+            }}
           />
           <BasicWithdrawFormInput
             token={{ ...tokenData, amount: formTokenAmount, logoURI: vault.tokenLogoURI }}

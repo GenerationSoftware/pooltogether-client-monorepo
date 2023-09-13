@@ -48,7 +48,11 @@ export const ReviewView = (props: ReviewViewProps) => {
             token={{ ...tokenData, amount: formTokenAmount, logoURI: vault.tokenLogoURI }}
           />
           <BasicDepositFormInput
-            token={{ ...shareData, amount: formShareAmount, logoURI: vault.logoURI }}
+            token={{
+              ...shareData,
+              amount: formShareAmount,
+              logoURI: vault.logoURI ?? vault.tokenLogoURI
+            }}
           />
         </div>
       )}

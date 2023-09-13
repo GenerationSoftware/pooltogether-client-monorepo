@@ -122,7 +122,7 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
         ...shareToken,
         amount: shareBalance,
         price: shareToken?.price ?? 0,
-        logoURI: vault.logoURI
+        logoURI: vault.logoURI ?? vault.tokenLogoURI
       }
     }
   }, [vault, shareToken, shareBalance])
