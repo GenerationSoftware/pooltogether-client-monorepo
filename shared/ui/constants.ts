@@ -14,7 +14,8 @@ export const DOMAINS = Object.freeze({
   tools_v4: 'https://tools.pooltogether.com',
   notion: 'https://pooltogetherdao.notion.site',
   vaultListCreator: 'https://lists.cabana.fi',
-  vaultFactory: 'https://factory.cabana.fi'
+  vaultFactory: 'https://factory.cabana.fi',
+  analytics: 'https://analytics.cabana.fi'
 })
 
 /**

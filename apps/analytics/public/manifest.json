@@ -1,0 +1,17 @@
+{
+  "short_name": "Cabanalytics",
+  "name": "Cabanalytics",
+  "description": "View analytics and health metrics for the PoolTogether Hyperstructure.",
+  "start_url": "/",
+  "scope": "/",
+  "theme_color": "#8050E3",
+  "background_color": "#F5F0FF",
+  "display": "fullscreen",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ]
+}

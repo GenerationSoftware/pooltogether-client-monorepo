@@ -65,6 +65,65 @@ importers:
       viem: 1.10.9_typescript@5.0.4
       wagmi: 1.3.9_4cnk5mqy3ziltp57y6fboxfl5e
 
+  apps/analytics:
+    specifiers:
+      '@generationsoftware/hyperstructure-client-js': workspace:*
+      '@generationsoftware/hyperstructure-react-hooks': workspace:*
+      '@heroicons/react': ^2.0.16
+      '@tanstack/react-query': ^4.24.10
+      '@types/node': ^17.0.45
+      '@types/react': ^18.2.0
+      '@types/react-dom': ^18.2.0
+      autoprefixer: ^10.4.13
+      axios: ^1.4.0
+      classnames: ^2.3.2
+      fathom-client: ^3.5.0
+      flowbite: 1.6.5
+      flowbite-react: 0.4.7
+      framer-motion: ^10.12.16
+      jotai: ^1.13.1
+      lottie-react: ^2.4.0
+      next: 13.3.0
+      postcss: ^8.4.21
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      react-hook-form: ^7.43.2
+      sonner: ^0.4.0
+      tailwindcss: ^3.3.1
+      tslib: ^2.5.0
+      typescript: ^5.0.4
+      viem: ^1.10.9
+      wagmi: ^1.3.9
+    dependencies:
+      '@generationsoftware/hyperstructure-client-js': link:../../packages/hyperstructure-client-js
+      '@generationsoftware/hyperstructure-react-hooks': link:../../packages/hyperstructure-react-hooks
+      '@heroicons/react': 2.0.17_react@18.2.0
+      '@tanstack/react-query': 4.29.5_biqbaboplfbrettd7655fr4n2y
+      axios: 1.4.0
+      classnames: 2.3.2
+      fathom-client: 3.5.0
+      flowbite: 1.6.5
+      flowbite-react: 0.4.7_pob4ffeafvx74vtuaxxqyesgwy
+      framer-motion: 10.12.16_biqbaboplfbrettd7655fr4n2y
+      jotai: 1.13.1_react@18.2.0
+      lottie-react: 2.4.0_biqbaboplfbrettd7655fr4n2y
+      next: 13.3.0_biqbaboplfbrettd7655fr4n2y
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      react-hook-form: 7.44.3_react@18.2.0
+      sonner: 0.4.0_biqbaboplfbrettd7655fr4n2y
+      viem: 1.10.9_typescript@5.0.4
+      wagmi: 1.3.9_4cnk5mqy3ziltp57y6fboxfl5e
+    devDependencies:
+      '@types/node': 17.0.45
+      '@types/react': 18.2.8
+      '@types/react-dom': 18.2.4
+      autoprefixer: 10.4.14_postcss@8.4.23
+      postcss: 8.4.23
+      tailwindcss: 3.3.1_postcss@8.4.23
+      tslib: 2.5.0
+      typescript: 5.0.4
+
   apps/app:
     specifiers:
       '@generationsoftware/hyperstructure-client-js': workspace:*
@@ -1423,12 +1482,6 @@ packages:
     transitivePeerDependencies:
       - encoding
 
-  /@scure/base/1.1.1:
-    resolution:
-      {
-        integrity: sha512-ZxOhsSyxYwLJj3pLZCefNitxsj093tb2vq90mp2txoYeBqbcjDjqFhyM8eUjq/uFm6zJ+mUuqxlS2FkuSY1MTA==
-      }
-
   /@scure/base/1.1.3:
     resolution:
       {
@@ -1452,7 +1505,7 @@ packages:
       }
     dependencies:
       '@noble/hashes': 1.3.2
-      '@scure/base': 1.1.1
+      '@scure/base': 1.1.3
 
   /@solana/buffer-layout/4.0.1:
     resolution:
@@ -2048,19 +2101,6 @@ packages:
       '@walletconnect/time': 1.0.2
       tslib: 1.14.1
 
-  /@walletconnect/jsonrpc-http-connection/1.0.6:
-    resolution:
-      {
-        integrity: sha512-/3zSqDi7JDN06E4qm0NmVYMitngXfh21UWwy8zeJcBeJc+Jcs094EbLsIxtziIIKTCCbT88lWuTjl1ZujxN7cw==
-      }
-    dependencies:
-      '@walletconnect/jsonrpc-utils': 1.0.8
-      '@walletconnect/safe-json': 1.0.2
-      cross-fetch: 3.1.5
-      tslib: 1.14.1
-    transitivePeerDependencies:
-      - encoding
-
   /@walletconnect/jsonrpc-http-connection/1.0.7:
     resolution:
       {
@@ -2073,16 +2113,6 @@ packages:
       tslib: 1.14.1
     transitivePeerDependencies:
       - encoding
-
-  /@walletconnect/jsonrpc-provider/1.0.12:
-    resolution:
-      {
-        integrity: sha512-6uI2y5281gloZSzICOjk+CVC7CVu0MhtMt2Yzpj05lPb0pzm/bK2oZ2ibxwLerPrqpNt/5bIFVRmoOgPw1mHAQ==
-      }
-    dependencies:
-      '@walletconnect/jsonrpc-utils': 1.0.8
-      '@walletconnect/safe-json': 1.0.2
-      tslib: 1.14.1
 
   /@walletconnect/jsonrpc-provider/1.0.13:
     resolution:
@@ -2180,8 +2210,8 @@ packages:
         integrity: sha512-A8xPebMI1A+50HbWwTpFCbwP7G+1NGKdTKyg8BUUg3h3Y9JucpC1W6w/x0v1Xw7qFEqQnz74LoIN/A3ytH9xrQ==
       }
     dependencies:
-      '@walletconnect/jsonrpc-http-connection': 1.0.6
-      '@walletconnect/jsonrpc-provider': 1.0.12
+      '@walletconnect/jsonrpc-http-connection': 1.0.7
+      '@walletconnect/jsonrpc-provider': 1.0.13
       '@walletconnect/legacy-client': 2.0.0
       '@walletconnect/legacy-modal': 2.0.0
       '@walletconnect/legacy-types': 2.0.0
