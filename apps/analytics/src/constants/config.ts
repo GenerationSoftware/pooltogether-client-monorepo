@@ -28,6 +28,10 @@ export const RPC_URLS = {
 }
 
 /**
- * RNG queries' start block
+ * RNG queries' start blocks
  */
-export const RNG_QUERY_START_BLOCK = 18052000n
+export const RNG_QUERY_START_BLOCK: { [chainId: number]: bigint } = {
+  [NETWORK.mainnet]: 18052000n,
+  [NETWORK.optimism]: 108927000n,
+  [NETWORK['optimism-goerli']]: 14002000n
+}

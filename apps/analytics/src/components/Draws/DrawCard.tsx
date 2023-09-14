@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import { DrawClaimFees } from './DrawClaimFees'
 import { DrawLiqEfficiency } from './DrawLiqEfficiency'
 import { DrawPrizes } from './DrawPrizes'
+import { DrawRelayFee } from './DrawRelayFee'
 import { DrawRngFee } from './DrawRngFee'
 import { DrawStatus } from './DrawStatus'
 import { DrawTimer } from './DrawTimer'
@@ -17,7 +18,7 @@ export const DrawCard = (props: DrawCardProps) => {
   const { prizePool, drawId, className } = props
 
   const gridColsClassName =
-    'grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,0.8fr)_minmax(0,1.8fr)_repeat(3,minmax(0,1fr))]'
+    'grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,0.8fr)_minmax(0,1.8fr)_minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1.3fr)]'
 
   return (
     <div
@@ -33,7 +34,7 @@ export const DrawCard = (props: DrawCardProps) => {
       <DrawClaimFees prizePool={prizePool} drawId={drawId} />
       <DrawLiqEfficiency prizePool={prizePool} drawId={drawId} />
       <DrawRngFee prizePool={prizePool} drawId={drawId} />
-      {/* <DrawRelayFee prizePool={prizePool} drawId={drawId} /> */}
+      <DrawRelayFee prizePool={prizePool} drawId={drawId} />
     </div>
   )
 }

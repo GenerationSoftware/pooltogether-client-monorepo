@@ -217,14 +217,21 @@ export const STABLECOINS: Record<NETWORK, { [address: Address]: string }> = {
 }
 
 /**
- * RNG auction contract address (mainnet)
+ * RNG auction contract (mainnet)
  */
-export const RNG_AUCTION_ADDRESS = '0x8CFFFfFa42407DB9DCB974C2C744425c3e58d832'
+export const RNG_AUCTION: { address: Address; sequenceOffset: number; sequencePeriod: number } = {
+  address: '0x8CFFFfFa42407DB9DCB974C2C744425c3e58d832',
+  sequenceOffset: 1_693_335_600,
+  sequencePeriod: 86_400
+}
 
 /**
- * RNG relay contract address (mainnet)
+ * RNG relay addresses
  */
-export const RNG_RELAY_ADDRESS = '0xF4c47dacFda99bE38793181af9Fd1A2Ec7576bBF'
+export const RNG_RELAY_ADDRESSES: { [chainId: number]: Address } = {
+  [NETWORK.optimism]: '0xF4c47dacFda99bE38793181af9Fd1A2Ec7576bBF',
+  [NETWORK['optimism-goerli']]: '0xA847394a0D9D5fEF624766D47cB6142A988b00e0'
+}
 
 /**
  * TWAB controller addresses

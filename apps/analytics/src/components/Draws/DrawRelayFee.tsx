@@ -1,29 +1,24 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
 import { ExternalLink, Spinner } from '@shared/ui'
-import {
-  formatBigIntForDisplay,
-  getBlockExplorerUrl,
-  NETWORK,
-  shorten,
-  sToMs
-} from '@shared/utilities'
+import { formatBigIntForDisplay, getBlockExplorerUrl, shorten, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import { useDrawRngFeePercentage } from '@hooks/useDrawRngFeePercentage'
 import { useRngTxs } from '@hooks/useRngTxs'
 import { DrawCardItemTitle } from './DrawCardItemTitle'
 
-interface DrawRngFeeProps {
+interface DrawRelayFeeProps {
   prizePool: PrizePool
   drawId: number
   className?: string
 }
 
-export const DrawRngFee = (props: DrawRngFeeProps) => {
+// TODO: display percentage of reserve somehow
+export const DrawRelayFee = (props: DrawRelayFeeProps) => {
   const { prizePool, drawId, className } = props
 
   const { data: allRngTxs, isFetched: isFetchedAllRngTxs } = useRngTxs(prizePool)
-  const rngTx = allRngTxs?.find((txs) => txs.rng.drawId === drawId)?.rng
+  const relayTx = allRngTxs?.find((txs) => txs.rng.drawId === drawId)?.relay
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
@@ -31,38 +26,22 @@ export const DrawRngFee = (props: DrawRngFeeProps) => {
 
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
-      <DrawCardItemTitle>{isFetchedAllRngTxs && !rngTx ? 'Current ' : ''}RNG Fee</DrawCardItemTitle>
+      <DrawCardItemTitle>
+        {isFetchedAllRngTxs && !relayTx ? 'Current ' : ''}RNG Fee
+      </DrawCardItemTitle>
       <div className='flex flex-col gap-1 text-sm text-pt-purple-700 whitespace-nowrap'>
-        {isFetchedAllRngTxs ? (
+        {isFetchedAllRngTxs && !!prizeToken ? (
           <>
             <span>
-              {!!rngTx ? (
+              {!!relayTx ? (
                 <>
-                  {!!rngTx.fee && !!prizeToken ? (
-                    <>
-                      <span className='text-xl font-semibold'>
-                        {formatBigIntForDisplay(rngTx.fee, prizeToken.decimals, {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2
-                        })}
-                      </span>{' '}
-                      {prizeToken.symbol} (
-                      {rngTx.feePercentage.toLocaleString(undefined, {
-                        maximumFractionDigits: 0
-                      })}
-                      %)
-                    </>
-                  ) : (
-                    <>
-                      <span className='text-xl font-semibold'>
-                        {rngTx.feePercentage.toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2
-                        })}
-                      </span>
-                      %
-                    </>
-                  )}
+                  <span className='text-xl font-semibold'>
+                    {formatBigIntForDisplay(relayTx.fee, prizeToken.decimals, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2
+                    })}
+                  </span>{' '}
+                  {prizeToken.symbol}
                 </>
               ) : !!currentFeePercentage ? (
                 <>
@@ -78,9 +57,9 @@ export const DrawRngFee = (props: DrawRngFeeProps) => {
                 <span>-</span>
               )}
             </span>
-            {!!rngTx ? (
-              <ExternalLink href={getBlockExplorerUrl(NETWORK.mainnet, rngTx.hash, 'tx')}>
-                {shorten(rngTx.hash, { short: true })}
+            {!!relayTx ? (
+              <ExternalLink href={getBlockExplorerUrl(prizePool.chainId, relayTx.hash, 'tx')}>
+                {shorten(relayTx.hash, { short: true })}
               </ExternalLink>
             ) : (
               !!currentFeePercentage && <span>Not Yet Awarded</span>

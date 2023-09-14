@@ -1,19 +1,17 @@
-import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
-import { NETWORK, RNG_AUCTION_ADDRESS } from '@shared/utilities'
+import { NETWORK, RNG_AUCTION } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
-import { formatUnits } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { RNG_QUERY_START_BLOCK } from '@constants/config'
 
-export const useDrawRngTx = (prizePool: PrizePool, drawId: number) => {
-  const publicClient = usePublicClient({ chainId: NETWORK.mainnet })
+export const useRngAuctionEvents = () => {
+  const mainnetPublicClient = usePublicClient({ chainId: NETWORK.mainnet })
 
-  const { data: rngTxs, isFetched: isFetchedRngTxs } = useQuery(
-    ['drawRngTxs'],
+  return useQuery(
+    ['rngAuctionEvents'],
     async () => {
-      const logs = await publicClient.getLogs({
-        address: RNG_AUCTION_ADDRESS,
+      return await mainnetPublicClient.getLogs({
+        address: RNG_AUCTION.address,
         event: {
           inputs: [
             { indexed: true, internalType: 'address', name: 'sender', type: 'address' },
@@ -27,28 +25,14 @@ export const useDrawRngTx = (prizePool: PrizePool, drawId: number) => {
           name: 'RngAuctionCompleted',
           type: 'event'
         },
-        fromBlock: RNG_QUERY_START_BLOCK,
+        fromBlock: RNG_QUERY_START_BLOCK[NETWORK.mainnet],
         toBlock: 'latest',
         strict: true
       })
-
-      return logs.map((log) => ({
-        feePercentage: parseFloat(formatUnits(log.args.rewardFraction, 18)) * 100,
-        feeRecipient: log.args.recipient,
-        hash: log.transactionHash,
-        block: Number(log.blockNumber)
-      }))
     },
     {
-      enabled: !!prizePool && !!publicClient,
+      enabled: !!mainnetPublicClient,
       ...NO_REFETCH
     }
   )
-
-  // TODO: get proper tx that matches period of drawId (different prize pools have different draw IDs)
-  const data = rngTxs?.[drawId - 1]
-
-  const isFetched = isFetchedRngTxs
-
-  return { data, isFetched }
 }
