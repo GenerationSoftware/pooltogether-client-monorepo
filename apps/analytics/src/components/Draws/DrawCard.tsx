@@ -1,6 +1,7 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import classNames from 'classnames'
 import { DrawClaimFees } from './DrawClaimFees'
+import { DrawLiqEfficiency } from './DrawLiqEfficiency'
 import { DrawPrizes } from './DrawPrizes'
 import { DrawStatus } from './DrawStatus'
 import { DrawTimer } from './DrawTimer'
@@ -29,7 +30,7 @@ export const DrawCard = (props: DrawCardProps) => {
       <DrawTimer prizePool={prizePool} drawId={drawId} />
       <DrawPrizes prizePool={prizePool} drawId={drawId} />
       <DrawClaimFees prizePool={prizePool} drawId={drawId} />
-      {/* <DrawLiqEfficiency prizePool={prizePool} drawId={drawId} /> */}
+      <DrawLiqEfficiency prizePool={prizePool} drawId={drawId} />
       {/* <DrawRngFee prizePool={prizePool} drawId={drawId} /> */}
       {/* <DrawRelayFee prizePool={prizePool} drawId={drawId} /> */}
     </div>
