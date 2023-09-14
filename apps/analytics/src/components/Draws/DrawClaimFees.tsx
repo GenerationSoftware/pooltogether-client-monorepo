@@ -33,18 +33,18 @@ export const DrawClaimFees = (props: DrawClaimFeesProps) => {
       const sumPrizeAmount = prizeClaims.reduce((a, b) => a + b.payout, 0n)
 
       const maxClaimFee = prizeClaims.reduce(
-        (a, b) =>
-          a.amount < b.fee
-            ? { amount: b.fee, percentage: divideBigInts(b.fee, b.payout + b.fee) * 100 }
-            : a,
+        (a, b) => {
+          const percentage = divideBigInts(b.fee, b.payout + b.fee) * 100
+          return a.percentage < percentage ? { amount: b.fee, percentage } : a
+        },
         { amount: 0n, percentage: 0 }
       )
 
       const minClaimFee = prizeClaims.reduce(
-        (a, b) =>
-          a.amount > b.fee
-            ? { amount: b.fee, percentage: divideBigInts(b.fee, b.payout + b.fee) * 100 }
-            : a,
+        (a, b) => {
+          const percentage = divideBigInts(b.fee, b.payout + b.fee) * 100
+          return a.percentage > percentage ? { amount: b.fee, percentage } : a
+        },
         { amount: MAX_UINT_256, percentage: 100 }
       )
 
