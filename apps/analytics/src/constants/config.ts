@@ -26,3 +26,8 @@ export const RPC_URLS = {
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
   [NETWORK['optimism-goerli']]: process.env.NEXT_PUBLIC_OPTIMISM_GOERLI_RPC_URL
 }
+
+/**
+ * RNG queries' start block
+ */
+export const RNG_QUERY_START_BLOCK = 18052000n

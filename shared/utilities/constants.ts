@@ -217,6 +217,16 @@ export const STABLECOINS: Record<NETWORK, { [address: Address]: string }> = {
 }
 
 /**
+ * RNG auction contract address (mainnet)
+ */
+export const RNG_AUCTION_ADDRESS = '0x8CFFFfFa42407DB9DCB974C2C744425c3e58d832'
+
+/**
+ * RNG relay contract address (mainnet)
+ */
+export const RNG_RELAY_ADDRESS = '0xF4c47dacFda99bE38793181af9Fd1A2Ec7576bBF'
+
+/**
  * TWAB controller addresses
  */
 export const TWAB_CONTROLLER_ADDRESSES: { [chainId: number]: Address } = {
