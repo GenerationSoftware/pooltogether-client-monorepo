@@ -35,7 +35,7 @@ const DrawStatusBadge = (props: DrawStatusBadgeProps) => {
   return (
     <div
       className={classNames(
-        'w-full px-2 py-1 text-center text-xl rounded',
+        'w-full px-2 py-1 text-center text-xl rounded whitespace-nowrap',
         {
           'bg-blue-100 text-blue-600': status === 'open',
           'bg-yellow-100 text-yellow-500': status === 'closed',

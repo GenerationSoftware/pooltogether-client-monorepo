@@ -15,12 +15,12 @@ export const DrawCard = (props: DrawCardProps) => {
   const { prizePool, drawId, className } = props
 
   const gridColsClassName =
-    'grid-cols-[repeat(3,minmax(0,1fr))_minmax(0,2fr)_repeat(3,minmax(0,1fr))]'
+    'grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,0.8fr)_minmax(0,1.8fr)_repeat(3,minmax(0,1fr))]'
 
   return (
     <div
       className={classNames(
-        'w-full grid gap-10 p-4 bg-pt-purple-100/50 rounded-2xl',
+        'w-full grid gap-12 p-4 bg-pt-purple-100/50 rounded-2xl',
         gridColsClassName,
         className
       )}

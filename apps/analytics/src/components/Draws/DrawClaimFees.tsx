@@ -30,10 +30,7 @@ export const DrawClaimFees = (props: DrawClaimFeesProps) => {
   const claimFeeStats = useMemo(() => {
     if (prizeClaims.length > 0) {
       const sumClaimFeeAmount = prizeClaims.reduce((a, b) => a + b.fee, 0n)
-      const sumClaimFeePercentage = prizeClaims.reduce(
-        (a, b) => a + divideBigInts(b.fee, b.payout) * 100,
-        0
-      )
+      const sumPrizeAmount = prizeClaims.reduce((a, b) => a + b.payout, 0n)
 
       const maxClaimFee = prizeClaims.reduce(
         (a, b) =>
@@ -53,7 +50,7 @@ export const DrawClaimFees = (props: DrawClaimFeesProps) => {
 
       const avg = {
         amount: BigInt(Math.floor(divideBigInts(sumClaimFeeAmount, BigInt(prizeClaims.length)))),
-        percentage: sumClaimFeePercentage / prizeClaims.length
+        percentage: divideBigInts(sumClaimFeeAmount, sumPrizeAmount + sumClaimFeeAmount) * 100
       }
       const high = {
         amount: maxClaimFee.amount,
@@ -101,7 +98,7 @@ const ClaimFeeStat = (props: ClaimFeeStatProps) => {
   return (
     <div
       className={classNames(
-        'grid grid-cols-[minmax(0,1fr)_minmax(0,2.5fr)_minmax(0,1.5fr)] items-center text-sm',
+        'grid grid-cols-[minmax(0,1fr)_minmax(0,3fr)_minmax(0,1fr)] items-center text-sm',
         {
           'text-pt-purple-700': type === 'avg',
           'text-red-600': type === 'high',
@@ -110,7 +107,7 @@ const ClaimFeeStat = (props: ClaimFeeStatProps) => {
         className
       )}
     >
-      <span className='w-10 pr-2'>{type.toUpperCase()}</span>
+      <span className='w-10'>{type.toUpperCase()}</span>
       <span className='px-2 text-right text-xl font-semibold border-x border-x-pt-purple-100'>
         {formatBigIntForDisplay(data.amount, prizeToken.decimals, {
           minimumFractionDigits: 2,
