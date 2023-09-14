@@ -13,7 +13,7 @@
 ![tailwind](https://img.shields.io/static/v1?label&logo=tailwindcss&logoColor=white&message=tailwind&color=38B2AC)
 ![version](https://img.shields.io/github/package-json/v/GenerationSoftware/pooltogether-client-monorepo?filename=apps%2Fanalytics%2Fpackage.json&color=brightgreen)
 
-<!-- [![Netlify Status](https://api.netlify.com/api/v1/badges/82229846-14bf-465b-b539-46b0beb68f6d/deploy-status)](https://app.netlify.com/sites/cabanalytics/deploys) -->
+[![Netlify Status](https://api.netlify.com/api/v1/badges/d28ecd4c-294d-4567-87a9-d98b38acf826/deploy-status)](https://app.netlify.com/sites/cabanalytics/deploys)
 
 # 🏆 &nbsp; Overview
 
