@@ -35,3 +35,9 @@ export const RNG_QUERY_START_BLOCK: { [chainId: number]: bigint } = {
   [NETWORK.optimism]: 108927000n,
   [NETWORK['optimism-goerli']]: 14002000n
 }
+
+/**
+ * Draw results URL
+ */
+export const DRAW_RESULTS_URL =
+  'https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results/main/prizes'
