@@ -1,11 +1,11 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { usePrizeDrawTimestamps } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import { PRIZE_POOLS } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
+import { useRngTxs } from '@hooks/useRngTxs'
 import { DrawCard } from './DrawCard'
 
 interface DrawCardsProps {
@@ -33,15 +33,13 @@ export const DrawCards = (props: DrawCardsProps) => {
     )
   }, [chainId])
 
-  // TODO: this should be refetched periodically to pick up new draws
-  const { data: allDrawTimestamps, isFetched: isFetchedAllDrawTimestamps } =
-    usePrizeDrawTimestamps(prizePool)
+  const { data: rngTxs, isFetched: isFetchedRngTxs } = useRngTxs(prizePool)
 
-  if (!isFetchedAllDrawTimestamps || !allDrawTimestamps) {
+  if (!isFetchedRngTxs || !rngTxs) {
     return <Spinner />
   }
 
-  const lastDrawId = allDrawTimestamps[allDrawTimestamps.length - 1].id
+  const lastDrawId = rngTxs[rngTxs.length - 1].rng.drawId
 
   // TODO: should cap draws rendered in at once and add a "show more" at the bottom
   return (
@@ -51,8 +49,12 @@ export const DrawCards = (props: DrawCardsProps) => {
         prizePool={prizePool}
         drawId={lastDrawId + 1}
       />
-      {[...allDrawTimestamps].reverse().map((draw) => (
-        <DrawCard key={`draw-${draw.id}-${chainId}`} prizePool={prizePool} drawId={draw.id} />
+      {[...rngTxs].reverse().map((txs) => (
+        <DrawCard
+          key={`draw-${txs.rng.drawId}-${chainId}`}
+          prizePool={prizePool}
+          drawId={txs.rng.drawId}
+        />
       ))}
     </div>
   )

@@ -18,7 +18,7 @@ export const DrawCard = (props: DrawCardProps) => {
   const { prizePool, drawId, className } = props
 
   const gridColsClassName =
-    'grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,0.8fr)_minmax(0,1.8fr)_minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1.3fr)]'
+    'grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_minmax(0,0.8fr)_minmax(0,1.8fr)_minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1.3fr)]'
 
   return (
     <div
