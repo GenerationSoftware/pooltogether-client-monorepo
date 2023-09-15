@@ -2,51 +2,57 @@ import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
 import { Token } from '@shared/types'
 import { Spinner } from '@shared/ui'
-import { formatBigIntForDisplay, SECONDS_PER_DAY } from '@shared/utilities'
+import { formatBigIntForDisplay, MAX_UINT_256 } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import { parseUnits } from 'viem'
-import { useBlockAtTimestamp } from '@hooks/useBlockAtTimestamp'
 import { useManualContributionEvents } from '@hooks/useManualContributionEvents'
 import { useRngTxs } from '@hooks/useRngTxs'
 
 interface ReserveCardProps {
   prizePool: PrizePool
+  minBlock?: bigint
+  maxBlock?: bigint
   className?: string
 }
 
 export const ReserveCard = (props: ReserveCardProps) => {
-  const { prizePool, className } = props
-
-  const minTime = useMemo(() => Date.now() / 1_000 - SECONDS_PER_DAY, [])
-  const { data: minBlock } = useBlockAtTimestamp(prizePool.chainId, minTime)
+  const { prizePool, minBlock, maxBlock, className } = props
 
   // TODO: get POOL amount in liquidations in the last 24hrs
   const validLiquidations = parseUnits('0', 18)
 
   const { data: manualContributionEvents } = useManualContributionEvents(prizePool)
   const validManualContributions = useMemo(() => {
-    if (!!manualContributionEvents && !!minBlock) {
+    if (!!manualContributionEvents) {
       return manualContributionEvents.reduce(
-        (a, b) => a + (b.blockNumber >= minBlock.number ? b.args.amount : 0n),
+        (a, b) =>
+          a +
+          (b.blockNumber >= (minBlock ?? 0n) && b.blockNumber <= (maxBlock ?? MAX_UINT_256)
+            ? b.args.amount
+            : 0n),
         0n
       )
     }
     return 0n
-  }, [manualContributionEvents, minBlock])
+  }, [manualContributionEvents, minBlock, maxBlock])
 
   const { data: rngTxs } = useRngTxs(prizePool)
   const validRngFees = useMemo(() => {
-    if (!!rngTxs && !!minBlock) {
+    if (!!rngTxs) {
       return rngTxs.reduce(
         (a, b) =>
           a +
-          (!!b.relay && b.relay.block >= minBlock.number ? (b.rng.fee ?? 0n) + b.relay.fee : 0n),
+          (!!b.relay &&
+          b.relay.block >= (minBlock ?? 0n) &&
+          b.relay.block <= (maxBlock ?? MAX_UINT_256)
+            ? (b.rng.fee ?? 0n) + b.relay.fee
+            : 0n),
         0n
       )
     }
     return 0n
-  }, [rngTxs, minBlock])
+  }, [rngTxs, minBlock, maxBlock])
 
   // TODO: get any prize backstops in the last 24hrs
   const validPrizeBackstops = parseUnits('0', 18)
