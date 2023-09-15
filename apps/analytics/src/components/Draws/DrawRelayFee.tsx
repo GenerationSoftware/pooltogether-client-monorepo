@@ -13,7 +13,6 @@ interface DrawRelayFeeProps {
   className?: string
 }
 
-// TODO: display percentage of reserve somehow
 export const DrawRelayFee = (props: DrawRelayFeeProps) => {
   const { prizePool, drawId, className } = props
 
@@ -41,7 +40,16 @@ export const DrawRelayFee = (props: DrawRelayFeeProps) => {
                       maximumFractionDigits: 2
                     })}
                   </span>{' '}
-                  {prizeToken.symbol}
+                  {prizeToken.symbol}{' '}
+                  {!!relayTx.feeFraction && (
+                    <>
+                      (
+                      {formatBigIntForDisplay(relayTx.feeFraction, 16, {
+                        maximumFractionDigits: 0
+                      })}
+                      %)
+                    </>
+                  )}
                 </>
               ) : !!currentFeePercentage ? (
                 <>

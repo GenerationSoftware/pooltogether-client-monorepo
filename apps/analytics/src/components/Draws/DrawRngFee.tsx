@@ -47,15 +47,13 @@ export const DrawRngFee = (props: DrawRngFeeProps) => {
                         })}
                       </span>{' '}
                       {prizeToken.symbol} (
-                      {rngTx.feePercentage.toLocaleString(undefined, {
-                        maximumFractionDigits: 0
-                      })}
+                      {formatBigIntForDisplay(rngTx.feeFraction, 16, { maximumFractionDigits: 0 })}
                       %)
                     </>
                   ) : (
                     <>
                       <span className='text-xl font-semibold'>
-                        {rngTx.feePercentage.toLocaleString(undefined, {
+                        {formatBigIntForDisplay(rngTx.feeFraction, 16, {
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 2
                         })}

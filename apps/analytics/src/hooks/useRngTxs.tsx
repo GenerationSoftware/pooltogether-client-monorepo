@@ -2,21 +2,22 @@ import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { usePrizeDrawTimestamps } from '@generationsoftware/hyperstructure-react-hooks'
 import { RNG_AUCTION } from '@shared/utilities'
 import { useMemo } from 'react'
-import { Address, formatUnits } from 'viem'
+import { Address } from 'viem'
 import { useRelayAuctionEvents } from './useRelayAuctionEvents'
 import { useRngAuctionEvents } from './useRngAuctionEvents'
 
 interface RngTx {
   drawId: number
-  feePercentage: number
+  fee?: bigint
+  feeFraction: bigint
   feeRecipient: Address
   hash: `0x${string}`
-  fee?: bigint
 }
 
 interface RelayTx {
   drawId: number
   fee: bigint
+  feeFraction?: bigint
   feeRecipient: Address
   hash: `0x${string}`
   endedAt: number
@@ -60,16 +61,19 @@ export const useRngTxs = (prizePool: PrizePool) => {
 
             const rng: RngTx = {
               drawId: drawId,
-              feePercentage: parseFloat(formatUnits(rngAuctionEvent.args.rewardFraction, 18)) * 100,
+              fee: firstRelayEvent?.args.reward,
+              feeFraction: rngAuctionEvent.args.rewardFraction,
               feeRecipient: rngAuctionEvent.args.recipient,
-              hash: rngAuctionEvent.transactionHash,
-              fee: firstRelayEvent?.args.reward
+              hash: rngAuctionEvent.transactionHash
             }
 
             const relay: RelayTx | undefined = !!secondRelayEvent
               ? {
                   drawId: drawId,
                   fee: secondRelayEvent.args.reward,
+                  feeFraction: !!rng.fee
+                    ? secondRelayEvent.args.reward / (rng.fee / rng.feeFraction)
+                    : undefined,
                   feeRecipient: secondRelayEvent.args.recipient,
                   hash: secondRelayEvent.transactionHash,
                   endedAt: periodStart
