@@ -8,8 +8,10 @@ import { RNG_QUERY_START_BLOCK } from '@constants/config'
 export const useRelayAuctionEvents = (prizePool: PrizePool) => {
   const publicClient = usePublicClient({ chainId: prizePool.chainId })
 
+  const queryKey = ['relayAuctionEvents', prizePool?.chainId]
+
   return useQuery(
-    ['relayAuctionEvents'],
+    queryKey,
     async () => {
       return await publicClient.getLogs({
         address: RNG_RELAY_ADDRESSES[prizePool.chainId],
