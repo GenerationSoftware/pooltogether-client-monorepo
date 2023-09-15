@@ -1,9 +1,11 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
 import { Token } from '@shared/types'
-import { formatBigIntForDisplay } from '@shared/utilities'
+import { formatBigIntForDisplay, SECONDS_PER_DAY } from '@shared/utilities'
 import classNames from 'classnames'
+import { useMemo } from 'react'
 import { parseUnits } from 'viem'
+import { useRngTxs } from '@hooks/useRngTxs'
 
 interface ReserveCardProps {
   prizePool: PrizePool
@@ -13,14 +15,24 @@ interface ReserveCardProps {
 export const ReserveCard = (props: ReserveCardProps) => {
   const { prizePool, className } = props
 
+  const minTime = Date.now() / 1_000 - SECONDS_PER_DAY
+
   // TODO: get POOL amount in liquidations in the last 24hrs
   const liquidationsToday = parseUnits('0', 18)
 
   // TODO: get manual contributions in the last 24hrs
   const manualContributionsToday = parseUnits('0', 18)
 
-  // TODO: get RNG fees in the last 24hrs
-  const rngFeesToday = parseUnits('0', 18)
+  const { data: rngTxs } = useRngTxs(prizePool)
+  const rngFeesToday = useMemo(() => {
+    return (
+      rngTxs?.reduce(
+        (a, b) =>
+          a + (!!b.relay && b.relay.endedAt > minTime ? (b.rng.fee ?? 0n) + b.relay.fee : 0n),
+        0n
+      ) ?? 0n
+    )
+  }, [rngTxs])
 
   // TODO: get any prize backstops in the last 24hrs
   const prizeBackstopsToday = parseUnits('0', 18)
@@ -85,7 +97,7 @@ const ReserveCardItem = (props: ReserveCardItemProps) => {
           })}
         >
           <span className='text-2xl'>
-            {amount >= 0n && '+'}
+            {amount > 0n && '+'}
             {formattedAmount}
           </span>
           {token.symbol}
