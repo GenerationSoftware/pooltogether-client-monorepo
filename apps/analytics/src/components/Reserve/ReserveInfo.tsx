@@ -65,7 +65,8 @@ export const ReserveInfo = (props: ReserveInfoProps) => {
           {prizeToken?.symbol}
         </span>
       </div>
-      <ReserveCard prizePool={prizePool} minBlock={minBlock?.number} className='max-w-md' />
+      {!!minBlock && <ReserveCard prizePool={prizePool} minBlock={minBlock} className='max-w-md' />}
+      <ReserveCard prizePool={prizePool} className='max-w-md' />
     </div>
   )
 }
