@@ -10,7 +10,6 @@ interface DrawTimerProps {
   className?: string
 }
 
-// TODO: handle cases where closedAt is in the future (may not be necessary depending on how the subgraph is setup)
 export const DrawTimer = (props: DrawTimerProps) => {
   const { prizePool, drawId, className } = props
 

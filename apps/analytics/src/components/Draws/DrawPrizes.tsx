@@ -2,7 +2,6 @@ import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { usePrizeDrawWinners } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
-import { useMemo } from 'react'
 import { DrawCardItemTitle } from './DrawCardItemTitle'
 
 interface DrawPrizesProps {
@@ -17,15 +16,9 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
   const { data: allDraws, isFetched: isFetchedAllDraws } = usePrizeDrawWinners(prizePool)
   const draw = allDraws?.find((d) => d.id === drawId)
 
-  const numTiers = 4 // TODO: this should come from the `draw` object once available on the subgraph
+  const numPrizes = '?' // TODO: this should be fetched from the github draw results
 
-  const numPrizes = 48 // TODO: this should be fetched from the github draw results
-
-  const numPrizesClaimed = useMemo(() => {
-    if (!!draw) {
-      return draw.prizeClaims.filter((prize) => prize.tier < numTiers - 1).length
-    }
-  }, [draw])
+  const numPrizesClaimed = draw?.prizeClaims.length // TODO: hide canary tiers once numTiers is available on subgraph
 
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
@@ -34,7 +27,9 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
         {!!draw ? (
           <>
             <span>
-              <span className='text-xl font-semibold'>{numTiers}</span> tiers
+              {/* TODO: show numTiers once available */}
+              <span className='text-xl font-semibold'>?</span> tiers
+              {/* <span className='text-xl font-semibold'>{draw.numTiers}</span> tiers */}
             </span>
             <span>
               <span className='text-xl font-semibold'>{numPrizes}</span> prizes

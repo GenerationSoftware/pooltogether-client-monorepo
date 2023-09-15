@@ -20,7 +20,7 @@ export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
     <div className={classNames('flex flex-col gap-3', className)}>
       <DrawCardItemTitle>Liq. Efficiency</DrawCardItemTitle>
       <div className='flex flex-col gap-1 text-sm text-pt-purple-700'>
-        {!!liquidationStats && !!isFetchedLiquidations ? (
+        {/* {!!liquidationStats && !!isFetchedLiquidations ? (
           <>
             <LiqEffiencyStat type='avg' percentage={liquidationStats.avg} />
             <LiqEffiencyStat type='high' percentage={liquidationStats.high} />
@@ -30,7 +30,8 @@ export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
           <span>-</span>
         ) : (
           <Spinner />
-        )}
+        )} */}
+        <span>-</span>
       </div>
     </div>
   )

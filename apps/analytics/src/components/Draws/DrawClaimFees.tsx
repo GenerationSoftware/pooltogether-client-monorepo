@@ -20,10 +20,9 @@ export const DrawClaimFees = (props: DrawClaimFeesProps) => {
   const { prizePool, drawId, className } = props
 
   const { data: allDraws, isFetched: isFetchedAllDraws } = usePrizeDrawWinners(prizePool)
+
   const draw = allDraws?.find((d) => d.id === drawId)
-  // const prizeClaims = draw?.prizeClaims.filter(prize => prize.tier < draw.numTiers - 1  && prize.fee > 0n) ?? []
-  const prizeClaims =
-    draw?.prizeClaims.filter((prize) => prize.tier < 4 - 1 && prize.fee > 0n) ?? [] // TODO: replace hardcoded number with numTiers from draw
+  const prizeClaims = draw?.prizeClaims.filter((prize) => prize.fee > 0n) ?? [] // TODO: hide canary tiers once numTiers is available on subgraph
 
   const { data: prizeToken, isFetched: isFetchedPrizeToken } = usePrizeTokenData(prizePool)
 
