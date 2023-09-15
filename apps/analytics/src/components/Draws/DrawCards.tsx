@@ -39,16 +39,19 @@ export const DrawCards = (props: DrawCardsProps) => {
     return <Spinner />
   }
 
-  const lastDrawId = rngTxs[rngTxs.length - 1].rng.drawId
+  const lastRngTxs = rngTxs[rngTxs.length - 1]
+  const lastDrawId = lastRngTxs.rng.drawId
 
   // TODO: should cap draws rendered in at once and add a "show more" at the bottom
   return (
     <div className={classNames('w-full flex flex-col gap-3 items-center', className)}>
-      <DrawCard
-        key={`draw-${lastDrawId + 1}-${chainId}`}
-        prizePool={prizePool}
-        drawId={lastDrawId + 1}
-      />
+      {!!lastRngTxs.relay && (
+        <DrawCard
+          key={`draw-${lastDrawId + 1}-${chainId}`}
+          prizePool={prizePool}
+          drawId={lastDrawId + 1}
+        />
+      )}
       {[...rngTxs].reverse().map((txs) => (
         <DrawCard
           key={`draw-${txs.rng.drawId}-${chainId}`}
