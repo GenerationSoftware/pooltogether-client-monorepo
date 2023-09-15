@@ -1,6 +1,7 @@
 /**
  * ABIs
  */
+export * from './abis/chainlinkVrf'
 export * from './abis/erc20-oldPermit'
 export * from './abis/erc20'
 export * from './abis/liquidationPairFactory'

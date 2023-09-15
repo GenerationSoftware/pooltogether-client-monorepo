@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { usePublicClient } from 'wagmi'
 
 export const useReserve = (prizePool: PrizePool) => {
-  const publicClient = usePublicClient({ chainId: prizePool.chainId })
+  const publicClient = usePublicClient({ chainId: prizePool?.chainId })
 
   const queryKey = ['reserve', prizePool?.chainId]
 

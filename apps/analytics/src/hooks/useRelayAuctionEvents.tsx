@@ -6,7 +6,7 @@ import { usePublicClient } from 'wagmi'
 import { QUERY_START_BLOCK } from '@constants/config'
 
 export const useRelayAuctionEvents = (prizePool: PrizePool) => {
-  const publicClient = usePublicClient({ chainId: prizePool.chainId })
+  const publicClient = usePublicClient({ chainId: prizePool?.chainId })
 
   const queryKey = ['relayAuctionEvents', prizePool?.chainId]
 

@@ -118,7 +118,7 @@ export const ReserveCard = (props: ReserveCardProps) => {
       />
       <hr className='w-full border-gray-400' />
       <ReserveCardItem
-        name={`${timeText} change`}
+        name={`${timeText} changes`}
         amount={validLiquidations + validManualContributions - validRngFees - validPrizeBackstops}
         token={prizeToken}
         alwaysShow={true}

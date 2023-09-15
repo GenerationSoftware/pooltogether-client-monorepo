@@ -29,7 +29,7 @@ export const useDrawStatus = (
       const openedAt = prevRngTxs?.relay?.endedAt ?? firstDrawOpenedAt
       const closedAt = rngTxs?.relay?.endedAt
 
-      const timeSinceClosed = !!closedAt ? Date.now() / 1_000 - closedAt : -1
+      const timeSinceClosed = !!closedAt ? Math.floor(Date.now() / 1_000) - closedAt : -1
       const drawPeriod = prizePool.drawPeriodInSeconds as number
       const isFinalized = timeSinceClosed > drawPeriod
 

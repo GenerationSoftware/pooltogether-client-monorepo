@@ -3,6 +3,8 @@ import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hook
 import { ExternalLink, Spinner } from '@shared/ui'
 import { formatBigIntForDisplay, getBlockExplorerUrl, shorten } from '@shared/utilities'
 import classNames from 'classnames'
+import { formatUnits } from 'viem'
+import { useDrawRelayFeePercentage } from '@hooks/useDrawRelayFeePercentage'
 import { useRngTxs } from '@hooks/useRngTxs'
 import { DrawCardItemTitle } from './DrawCardItemTitle'
 
@@ -19,13 +21,13 @@ export const DrawRelayFee = (props: DrawRelayFeeProps) => {
   const rngTxs = allRngTxs?.find((txs) => txs.rng.drawId === drawId)
   const relayTx = rngTxs?.relay
 
+  const rngTxFeeFraction = !!rngTxs
+    ? parseFloat(formatUnits(rngTxs.rng.feeFraction, 18))
+    : undefined
+
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
-  // TODO: get current relay reward fraction
-  // 1. https://etherscan.io/address/0x8cfffffa42407db9dcb974c2c744425c3e58d832#readContract#F7
-  // 2. https://etherscan.io/address/0x0D51a33975024E8aFc55fde9F6b070c10AA71Dd9#readContract#F1 w/ rngRequestId
-  // 3. https://optimistic.etherscan.io/address/0xf4c47dacfda99be38793181af9fd1a2ec7576bbf#readContract#F2 w/ currentTimestamp - completedAt
-  const currentFeePercentage = 0
+  const { data: currentFeePercentage } = useDrawRelayFeePercentage(prizePool)
 
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
@@ -55,17 +57,17 @@ export const DrawRelayFee = (props: DrawRelayFeeProps) => {
                     </>
                   )}
                 </>
+              ) : !!currentFeePercentage && !!rngTxFeeFraction ? (
+                <>
+                  <span className='text-xl font-semibold'>
+                    {((1 - rngTxFeeFraction) * currentFeePercentage).toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2
+                    })}
+                  </span>
+                  %
+                </>
               ) : (
-                // ) : !!currentFeePercentage && !!rngTxs?.rng ? (
-                //   <>
-                //     <span className='text-xl font-semibold'>
-                //       {currentFeePercentage.toLocaleString(undefined, {
-                //         minimumFractionDigits: 2,
-                //         maximumFractionDigits: 2
-                //       })}
-                //     </span>
-                //     %
-                //   </>
                 <span>-</span>
               )}
             </span>
@@ -74,7 +76,7 @@ export const DrawRelayFee = (props: DrawRelayFeeProps) => {
                 {shorten(relayTx.hash, { short: true })}
               </ExternalLink>
             ) : (
-              !!currentFeePercentage && !!rngTxs?.rng && <span>Not Yet Awarded</span>
+              !!currentFeePercentage && !!rngTxs && <span>Not Yet Awarded</span>
             )}
           </>
         ) : (

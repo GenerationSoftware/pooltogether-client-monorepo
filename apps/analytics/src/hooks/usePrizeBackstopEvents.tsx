@@ -5,7 +5,7 @@ import { usePublicClient } from 'wagmi'
 import { QUERY_START_BLOCK } from '@constants/config'
 
 export const usePrizeBackstopEvents = (prizePool: PrizePool) => {
-  const publicClient = usePublicClient({ chainId: prizePool.chainId })
+  const publicClient = usePublicClient({ chainId: prizePool?.chainId })
 
   const queryKey = ['prizeBackstopEvents', prizePool?.chainId]
 
