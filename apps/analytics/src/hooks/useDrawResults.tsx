@@ -4,7 +4,11 @@ import { useQuery } from '@tanstack/react-query'
 import { Address } from 'viem'
 import { DRAW_RESULTS_URL } from '@constants/config'
 
-export const useDrawResults = (prizePool: PrizePool, drawId: number) => {
+export const useDrawResults = (
+  prizePool: PrizePool,
+  drawId: number,
+  options?: { refetchInterval?: number }
+) => {
   const queryKey = ['drawResults', prizePool?.chainId, drawId]
 
   return useQuery(
@@ -36,7 +40,8 @@ export const useDrawResults = (prizePool: PrizePool, drawId: number) => {
     },
     {
       enabled: !!prizePool && !!drawId,
-      ...NO_REFETCH
+      ...NO_REFETCH,
+      refetchInterval: options?.refetchInterval ?? false
     }
   )
 }

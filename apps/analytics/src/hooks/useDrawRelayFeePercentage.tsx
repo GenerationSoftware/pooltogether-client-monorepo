@@ -6,15 +6,12 @@ import { formatUnits } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { useRelayAuctionElapsedTime } from './useRelayAuctionElapsedTime'
 
-export const useDrawRelayFeePercentage = (
-  prizePool: PrizePool,
-  options?: { refetchInterval?: number }
-) => {
+export const useDrawRelayFeePercentage = (prizePool: PrizePool) => {
   const publicClient = usePublicClient({ chainId: prizePool?.chainId })
 
   const { data: elapsedTime } = useRelayAuctionElapsedTime()
 
-  const queryKey = ['drawRelayFeePercentage', prizePool?.chainId]
+  const queryKey = ['drawRelayFeePercentage', prizePool?.chainId, elapsedTime?.toString()]
 
   return useQuery(
     queryKey,
@@ -30,8 +27,7 @@ export const useDrawRelayFeePercentage = (
     },
     {
       enabled: !!prizePool && !!publicClient && !!elapsedTime,
-      ...NO_REFETCH,
-      refetchInterval: options?.refetchInterval ?? false
+      ...NO_REFETCH
     }
   )
 }

@@ -1,10 +1,15 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import { usePrizeDrawTimestamps } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
-import { PRIZE_POOLS } from '@shared/utilities'
+import { PRIZE_POOLS, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
+import { useDrawRngFeePercentage } from '@hooks/useDrawRngFeePercentage'
+import { useRelayAuctionElapsedTime } from '@hooks/useRelayAuctionElapsedTime'
+import { useRelayAuctionEvents } from '@hooks/useRelayAuctionEvents'
+import { useRngAuctionEvents } from '@hooks/useRngAuctionEvents'
 import { useRngTxs } from '@hooks/useRngTxs'
 import { DrawCard } from './DrawCard'
 
@@ -35,6 +40,28 @@ export const DrawCards = (props: DrawCardsProps) => {
 
   const { data: rngTxs, isFetched: isFetchedRngTxs } = useRngTxs(prizePool)
 
+  const { refetch: refetchDrawRngFeePercentage } = useDrawRngFeePercentage()
+  const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents()
+  const { refetch: refetchRelayAuctionElapsedTime } = useRelayAuctionElapsedTime()
+  const { refetch: refetchRelayAuctionEvents } = useRelayAuctionEvents(prizePool)
+  const { refetch: refetchPrizeDrawTimestamps } = usePrizeDrawTimestamps(prizePool)
+
+  // Automatic data refetching
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetchDrawRngFeePercentage()
+      refetchRngAuctionEvents()
+      refetchRelayAuctionElapsedTime()
+      refetchRelayAuctionEvents()
+      refetchPrizeDrawTimestamps()
+    }, sToMs(300))
+
+    return () => clearInterval(interval)
+  }, [])
+
+  const baseNumDraws = 7
+  const [numDraws, setNumDraws] = useState<number>(baseNumDraws)
+
   if (!isFetchedRngTxs || !rngTxs) {
     return <Spinner />
   }
@@ -42,7 +69,6 @@ export const DrawCards = (props: DrawCardsProps) => {
   const lastRngTxs = rngTxs[rngTxs.length - 1]
   const lastDrawId = lastRngTxs.rng.drawId
 
-  // TODO: should cap draws rendered in at once and add a "show more" at the bottom
   return (
     <div className={classNames('w-full flex flex-col gap-3 items-center', className)}>
       {!!lastRngTxs.relay && (
@@ -52,13 +78,21 @@ export const DrawCards = (props: DrawCardsProps) => {
           drawId={lastDrawId + 1}
         />
       )}
-      {[...rngTxs].reverse().map((txs) => (
-        <DrawCard
-          key={`draw-${txs.rng.drawId}-${chainId}`}
-          prizePool={prizePool}
-          drawId={txs.rng.drawId}
-        />
-      ))}
+      {[...rngTxs]
+        .reverse()
+        .slice(0, numDraws)
+        .map((txs) => (
+          <DrawCard
+            key={`draw-${txs.rng.drawId}-${chainId}`}
+            prizePool={prizePool}
+            drawId={txs.rng.drawId}
+          />
+        ))}
+      {rngTxs.length > numDraws && (
+        <span onClick={() => setNumDraws(numDraws + baseNumDraws)} className='cursor-pointer'>
+          Show More Draws
+        </span>
+      )}
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { usePrizeDrawWinners } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
+import { sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import { useDrawResults } from '@hooks/useDrawResults'
 import { DrawCardItemTitle } from './DrawCardItemTitle'
@@ -16,7 +17,8 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
 
   const { data: prizesAvailable, isFetched: isFetchedPrizesAvailable } = useDrawResults(
     prizePool,
-    drawId
+    drawId,
+    { refetchInterval: sToMs(300) }
   )
 
   const { data: allDraws, isFetched: isFetchedAllDraws } = usePrizeDrawWinners(prizePool)

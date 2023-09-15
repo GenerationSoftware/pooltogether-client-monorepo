@@ -1,15 +1,22 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  usePrizeDrawTimestamps,
+  usePrizeTokenData
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
-import { formatBigIntForDisplay, PRIZE_POOLS, SECONDS_PER_DAY } from '@shared/utilities'
+import { formatBigIntForDisplay, PRIZE_POOLS, SECONDS_PER_DAY, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
-import { useAtomValue } from 'jotai'
-import { useMemo } from 'react'
+import { useAtom } from 'jotai'
+import { useEffect, useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { useBlockAtTimestamp } from '@hooks/useBlockAtTimestamp'
+import { useManualContributionEvents } from '@hooks/useManualContributionEvents'
+import { usePrizeBackstopEvents } from '@hooks/usePrizeBackstopEvents'
+import { useRelayAuctionEvents } from '@hooks/useRelayAuctionEvents'
 import { useReserve } from '@hooks/useReserve'
+import { useRngAuctionEvents } from '@hooks/useRngAuctionEvents'
 import { ReserveCard } from './ReserveCard'
 
 interface ReserveInfoProps {
@@ -22,7 +29,7 @@ export const ReserveInfo = (props: ReserveInfoProps) => {
 
   const publicClient = usePublicClient({ chainId })
 
-  const currentTimestamp = useAtomValue(currentTimestampAtom)
+  const [currentTimestamp, setCurrentTimestamp] = useAtom(currentTimestampAtom)
 
   const prizePool = useMemo(() => {
     const prizePoolInfo = PRIZE_POOLS.find((pool) => pool.chainId === chainId) as {
@@ -39,7 +46,7 @@ export const ReserveInfo = (props: ReserveInfoProps) => {
     )
   }, [chainId])
 
-  const { data: reserve } = useReserve(prizePool)
+  const { data: reserve, refetch: refetchReserve } = useReserve(prizePool)
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
@@ -47,6 +54,28 @@ export const ReserveInfo = (props: ReserveInfoProps) => {
     prizePool.chainId,
     currentTimestamp - SECONDS_PER_DAY
   )
+
+  // TODO: refetch liquidation events here once setup
+  const { refetch: refetchManualContributionEvents } = useManualContributionEvents(prizePool)
+  const { refetch: refetchPrizeBackstopEvents } = usePrizeBackstopEvents(prizePool)
+  const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents()
+  const { refetch: refetchRelayAuctionEvents } = useRelayAuctionEvents(prizePool)
+  const { refetch: refetchPrizeDrawTimestamps } = usePrizeDrawTimestamps(prizePool)
+
+  // Automatic data refetching
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetchReserve()
+      refetchManualContributionEvents()
+      refetchPrizeBackstopEvents()
+      refetchRngAuctionEvents()
+      refetchRelayAuctionEvents()
+      refetchPrizeDrawTimestamps()
+      setCurrentTimestamp(Math.floor(Date.now() / 1_000))
+    }, sToMs(300))
+
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <div className={classNames('w-full flex flex-col gap-6 items-center', className)}>

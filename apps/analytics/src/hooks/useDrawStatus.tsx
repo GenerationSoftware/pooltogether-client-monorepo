@@ -20,7 +20,6 @@ export const useDrawStatus = (
 
   const { data: allRngTxs, isFetched: isFetchedAllRngTxs } = useRngTxs(prizePool)
 
-  // TODO: this data needs to be dynamic - if a draw is closed or another period goes by without closing this data should update (need to watch txs? or just periodically refetch?)
   const data = useMemo(() => {
     if (!!firstDrawOpenedAt && !!allRngTxs) {
       const rngTxs = allRngTxs.find((txs) => txs.rng.drawId === drawId)

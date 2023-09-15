@@ -4,7 +4,7 @@ import { getSimpleMulticallResults, prizePoolABI } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { usePublicClient } from 'wagmi'
 
-export const useReserve = (prizePool: PrizePool) => {
+export const useReserve = (prizePool: PrizePool, options?: { refetchInterval?: number }) => {
   const publicClient = usePublicClient({ chainId: prizePool?.chainId })
 
   const queryKey = ['reserve', prizePool?.chainId]
@@ -26,7 +26,8 @@ export const useReserve = (prizePool: PrizePool) => {
     },
     {
       enabled: !!prizePool && !!publicClient,
-      ...NO_REFETCH
+      ...NO_REFETCH,
+      refetchInterval: options?.refetchInterval ?? false
     }
   )
 }
