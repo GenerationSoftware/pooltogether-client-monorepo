@@ -12,6 +12,7 @@ interface RngTx {
   feeFraction: bigint
   feeRecipient: Address
   hash: `0x${string}`
+  block: bigint
 }
 
 interface RelayTx {
@@ -21,6 +22,7 @@ interface RelayTx {
   feeRecipient: Address
   hash: `0x${string}`
   endedAt: number
+  block: bigint
 }
 
 export const useRngTxs = (prizePool: PrizePool) => {
@@ -64,7 +66,8 @@ export const useRngTxs = (prizePool: PrizePool) => {
               fee: firstRelayEvent?.args.reward,
               feeFraction: rngAuctionEvent.args.rewardFraction,
               feeRecipient: rngAuctionEvent.args.recipient,
-              hash: rngAuctionEvent.transactionHash
+              hash: rngAuctionEvent.transactionHash,
+              block: rngAuctionEvent.blockNumber
             }
 
             const relay: RelayTx | undefined = !!secondRelayEvent
@@ -76,7 +79,8 @@ export const useRngTxs = (prizePool: PrizePool) => {
                     : undefined,
                   feeRecipient: secondRelayEvent.args.recipient,
                   hash: secondRelayEvent.transactionHash,
-                  endedAt: periodStart
+                  endedAt: periodStart,
+                  block: secondRelayEvent.blockNumber
                 }
               : undefined
 

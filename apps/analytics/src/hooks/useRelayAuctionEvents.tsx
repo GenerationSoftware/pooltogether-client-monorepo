@@ -3,7 +3,7 @@ import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { RNG_RELAY_ADDRESSES } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { usePublicClient } from 'wagmi'
-import { RNG_QUERY_START_BLOCK } from '@constants/config'
+import { QUERY_START_BLOCK } from '@constants/config'
 
 export const useRelayAuctionEvents = (prizePool: PrizePool) => {
   const publicClient = usePublicClient({ chainId: prizePool.chainId })
@@ -27,7 +27,7 @@ export const useRelayAuctionEvents = (prizePool: PrizePool) => {
             type: 'event'
           }
         ],
-        fromBlock: RNG_QUERY_START_BLOCK[prizePool.chainId],
+        fromBlock: QUERY_START_BLOCK[prizePool.chainId],
         toBlock: 'latest',
         strict: true
       })

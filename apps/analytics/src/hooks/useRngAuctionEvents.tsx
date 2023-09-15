@@ -2,7 +2,7 @@ import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { NETWORK, RNG_AUCTION } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { usePublicClient } from 'wagmi'
-import { RNG_QUERY_START_BLOCK } from '@constants/config'
+import { QUERY_START_BLOCK } from '@constants/config'
 
 export const useRngAuctionEvents = () => {
   const mainnetPublicClient = usePublicClient({ chainId: NETWORK.mainnet })
@@ -25,7 +25,7 @@ export const useRngAuctionEvents = () => {
           name: 'RngAuctionCompleted',
           type: 'event'
         },
-        fromBlock: RNG_QUERY_START_BLOCK[NETWORK.mainnet],
+        fromBlock: QUERY_START_BLOCK[NETWORK.mainnet],
         toBlock: 'latest',
         strict: true
       })

@@ -16,6 +16,7 @@ export * from './abis/vaultFactory'
  */
 export * from './utils/addresses'
 export * from './utils/blockExplorers'
+export * from './utils/blocks'
 export * from './utils/coingecko'
 export * from './utils/currencies'
 export * from './utils/discord'

@@ -50,3 +50,10 @@ export const sortByBigIntDesc = (a: bigint, b: bigint) => {
   if (bSubA < 0n) return -1
   return 1
 }
+
+/**
+ * Returns the absolute value of a bigint
+ * @param n bigint to get absolute value for
+ * @returns
+ */
+export const abs = (n: bigint) => (n < 0n ? -n : n)
