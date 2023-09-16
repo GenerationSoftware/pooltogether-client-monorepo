@@ -29,7 +29,7 @@ export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
         ) : isFetchedLiquidations ? (
           <span>-</span>
         ) : (
-          <Spinner />
+          <Spinner className='after:border-y-pt-purple-800' />
         )} */}
         <span>-</span>
       </div>

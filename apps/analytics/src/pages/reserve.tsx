@@ -1,11 +1,11 @@
 import { NETWORK } from '@shared/utilities'
+import { ReserveView } from 'src/views/ReserveView'
 import { Layout } from '@components/Layout'
-import { ReserveInfo } from '@components/Reserve/ReserveInfo'
 
 export default function ReservePage() {
   return (
     <Layout>
-      <ReserveInfo chainId={NETWORK.optimism} className='mt-32' />
+      <ReserveView chainId={NETWORK.optimism} className='mt-32' />
     </Layout>
   )
 }

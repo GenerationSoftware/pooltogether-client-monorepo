@@ -77,7 +77,7 @@ export const DrawClaimFees = (props: DrawClaimFeesProps) => {
         ) : isFetchedAllDraws && isFetchedPrizeToken ? (
           <span>-</span>
         ) : (
-          <Spinner />
+          <Spinner className='after:border-y-pt-purple-800' />
         )}
       </div>
     </div>

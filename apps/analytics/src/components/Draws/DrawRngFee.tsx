@@ -85,7 +85,7 @@ export const DrawRngFee = (props: DrawRngFeeProps) => {
             )}
           </>
         ) : (
-          <Spinner />
+          <Spinner className='after:border-y-pt-purple-800' />
         )}
       </div>
     </div>

@@ -32,6 +32,7 @@ Open [http://localhost:3004](http://localhost:3004) on your browser to see the r
 The app follows the following structure:
 
 - `pages` - All of the pages in the app!
+- `views` - Different views available to simplify page logic.
 - `components` - React components that make up the contents of the pages.
 - `hooks` - App-specific hooks not included in other hook packages.
 - `constants` - Constant values, references and configurations to deploy and run this app.

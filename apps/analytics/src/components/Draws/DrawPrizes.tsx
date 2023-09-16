@@ -37,14 +37,22 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
             </span>
             <span>
               <span className='text-xl font-semibold'>
-                {isFetchedPrizesAvailable ? prizesAvailable?.length ?? '?' : <Spinner />}
+                {isFetchedPrizesAvailable ? (
+                  prizesAvailable?.length ?? '?'
+                ) : (
+                  <Spinner className='after:border-y-pt-purple-800' />
+                )}
               </span>{' '}
               prizes
             </span>
             <span>
               {/* TODO: hide canary tiers once numTiers is available on subgraph */}
               <span className='text-xl font-semibold'>
-                {isFetchedAllDraws ? draw?.prizeClaims.length ?? 0 : <Spinner />}
+                {isFetchedAllDraws ? (
+                  draw?.prizeClaims.length ?? 0
+                ) : (
+                  <Spinner className='after:border-y-pt-purple-800' />
+                )}
               </span>{' '}
               claimed
             </span>
@@ -52,7 +60,7 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
         ) : isFetchedAllDraws && isFetchedPrizesAvailable ? (
           <span>-</span>
         ) : (
-          <Spinner />
+          <Spinner className='after:border-y-pt-purple-800' />
         )}
       </div>
     </div>

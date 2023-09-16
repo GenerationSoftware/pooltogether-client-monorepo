@@ -37,7 +37,7 @@ export const useDrawStatus = (
 
       return { status, openedAt, closedAt, periodsSkipped }
     }
-  }, [firstDrawOpenedAt, allRngTxs])
+  }, [drawId, firstDrawOpenedAt, allRngTxs])
 
   const isFetched = isFetchedFirstDrawOpenedAt && isFetchedAllRngTxs
 

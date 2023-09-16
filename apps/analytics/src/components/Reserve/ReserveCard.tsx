@@ -88,7 +88,7 @@ export const ReserveCard = (props: ReserveCardProps) => {
     !isFetchedRngTxs ||
     !isFetchedPrizeBackstopEvents
   ) {
-    return <Spinner />
+    return <Spinner className='after:border-y-pt-purple-800' />
   }
 
   const minTimestamp = Number(minBlock?.timestamp ?? 0)

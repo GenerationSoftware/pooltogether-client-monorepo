@@ -1,11 +1,11 @@
 import { NETWORK } from '@shared/utilities'
-import { DrawCards } from '@components/Draws/DrawCards'
+import { DrawsView } from 'src/views/DrawsView'
 import { Layout } from '@components/Layout'
 
 export default function DrawsPage() {
   return (
     <Layout>
-      <DrawCards chainId={NETWORK.optimism} />
+      <DrawsView chainId={NETWORK.optimism} />
     </Layout>
   )
 }

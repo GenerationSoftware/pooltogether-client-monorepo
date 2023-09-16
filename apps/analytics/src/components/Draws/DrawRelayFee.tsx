@@ -80,7 +80,7 @@ export const DrawRelayFee = (props: DrawRelayFeeProps) => {
             )}
           </>
         ) : (
-          <Spinner />
+          <Spinner className='after:border-y-pt-purple-800' />
         )}
       </div>
     </div>
