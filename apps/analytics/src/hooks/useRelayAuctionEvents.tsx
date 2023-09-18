@@ -15,18 +15,16 @@ export const useRelayAuctionEvents = (prizePool: PrizePool) => {
     async () => {
       return await publicClient.getLogs({
         address: RNG_RELAY_ADDRESSES[prizePool.chainId],
-        events: [
-          {
-            inputs: [
-              { indexed: true, internalType: 'uint32', name: 'sequenceId', type: 'uint32' },
-              { indexed: true, internalType: 'address', name: 'recipient', type: 'address' },
-              { indexed: true, internalType: 'uint32', name: 'index', type: 'uint32' },
-              { indexed: false, internalType: 'uint256', name: 'reward', type: 'uint256' }
-            ],
-            name: 'AuctionRewardDistributed',
-            type: 'event'
-          }
-        ],
+        event: {
+          inputs: [
+            { indexed: true, internalType: 'uint32', name: 'sequenceId', type: 'uint32' },
+            { indexed: true, internalType: 'address', name: 'recipient', type: 'address' },
+            { indexed: true, internalType: 'uint32', name: 'index', type: 'uint32' },
+            { indexed: false, internalType: 'uint256', name: 'reward', type: 'uint256' }
+          ],
+          name: 'AuctionRewardDistributed',
+          type: 'event'
+        },
         fromBlock: QUERY_START_BLOCK[prizePool.chainId],
         toBlock: 'latest',
         strict: true

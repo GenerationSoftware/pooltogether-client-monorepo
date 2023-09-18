@@ -14,16 +14,14 @@ export const useManualContributionEvents = (prizePool: PrizePool) => {
     async () => {
       return await publicClient.getLogs({
         address: prizePool.address,
-        events: [
-          {
-            inputs: [
-              { indexed: true, internalType: 'address', name: 'user', type: 'address' },
-              { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }
-            ],
-            name: 'ContributedReserve',
-            type: 'event'
-          }
-        ],
+        event: {
+          inputs: [
+            { indexed: true, internalType: 'address', name: 'user', type: 'address' },
+            { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }
+          ],
+          name: 'ContributedReserve',
+          type: 'event'
+        },
         fromBlock: QUERY_START_BLOCK[prizePool.chainId],
         toBlock: 'latest',
         strict: true

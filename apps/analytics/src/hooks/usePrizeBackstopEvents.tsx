@@ -14,13 +14,11 @@ export const usePrizeBackstopEvents = (prizePool: PrizePool) => {
     async () => {
       return await publicClient.getLogs({
         address: prizePool.address,
-        events: [
-          {
-            inputs: [{ indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }],
-            name: 'ReserveConsumed',
-            type: 'event'
-          }
-        ],
+        event: {
+          inputs: [{ indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }],
+          name: 'ReserveConsumed',
+          type: 'event'
+        },
         fromBlock: QUERY_START_BLOCK[prizePool.chainId],
         toBlock: 'latest',
         strict: true

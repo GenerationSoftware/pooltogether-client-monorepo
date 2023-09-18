@@ -266,6 +266,14 @@ export const DEFAULT_CLAIMER_ADDRESSES: { [chainId: number]: Address } = {
 }
 
 /**
+ * Liquidation router addresses
+ */
+export const LIQUIDATION_ROUTER_ADDRESSES: { [chainId: number]: Address } = {
+  [NETWORK.optimism]: '0xf4cFa53dF258d78AAd153AC11C644703651983f5',
+  [NETWORK['optimism-goerli']]: '0xecFfa258d1fE0007ce88820859BceafA04158bad'
+}
+
+/**
  * Redirects for tokens without pricing data on the caching API
  *
  * NOTE: All addresses are lowercase
