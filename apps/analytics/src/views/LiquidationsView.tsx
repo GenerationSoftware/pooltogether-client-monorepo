@@ -1,5 +1,4 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { usePrizeDrawTimestamps } from '@generationsoftware/hyperstructure-react-hooks'
 import { PRIZE_POOLS, SECONDS_PER_DAY, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtom } from 'jotai'
@@ -7,21 +6,16 @@ import { useEffect, useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
-import { ReserveCard } from '@components/Reserve/ReserveCard'
-import { ReserveHeader } from '@components/Reserve/ReserveHeader'
+import { LiquidationsTable } from '@components/Liquidations/LiquidationsTable'
 import { useBlockAtTimestamp } from '@hooks/useBlockAtTimestamp'
 import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
-import { useManualContributionEvents } from '@hooks/useManualContributionEvents'
-import { usePrizeBackstopEvents } from '@hooks/usePrizeBackstopEvents'
-import { useRelayAuctionEvents } from '@hooks/useRelayAuctionEvents'
-import { useRngAuctionEvents } from '@hooks/useRngAuctionEvents'
 
-interface ReserveViewProps {
+interface LiquidationsViewProps {
   chainId: number
   className?: string
 }
 
-export const ReserveView = (props: ReserveViewProps) => {
+export const LiquidationsView = (props: LiquidationsViewProps) => {
   const { chainId, className } = props
 
   const publicClient = usePublicClient({ chainId })
@@ -49,21 +43,11 @@ export const ReserveView = (props: ReserveViewProps) => {
   )
 
   const { refetch: refetchLiquidationEvents } = useLiquidationEvents(prizePool)
-  const { refetch: refetchManualContributionEvents } = useManualContributionEvents(prizePool)
-  const { refetch: refetchPrizeBackstopEvents } = usePrizeBackstopEvents(prizePool)
-  const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents()
-  const { refetch: refetchRelayAuctionEvents } = useRelayAuctionEvents(prizePool)
-  const { refetch: refetchPrizeDrawTimestamps } = usePrizeDrawTimestamps(prizePool)
 
   // Automatic data refetching
   useEffect(() => {
     const interval = setInterval(() => {
       refetchLiquidationEvents()
-      refetchManualContributionEvents()
-      refetchPrizeBackstopEvents()
-      refetchRngAuctionEvents()
-      refetchRelayAuctionEvents()
-      refetchPrizeDrawTimestamps()
       setCurrentTimestamp(Math.floor(Date.now() / 1_000))
     }, sToMs(300))
 
@@ -72,9 +56,7 @@ export const ReserveView = (props: ReserveViewProps) => {
 
   return (
     <div className={classNames('w-full flex flex-col gap-6 items-center', className)}>
-      <ReserveHeader prizePool={prizePool} />
-      {!!minBlock && <ReserveCard prizePool={prizePool} minBlock={minBlock} className='max-w-md' />}
-      <ReserveCard prizePool={prizePool} className='max-w-md' />
+      {!!minBlock && <LiquidationsTable prizePool={prizePool} minBlock={minBlock} />}
     </div>
   )
 }

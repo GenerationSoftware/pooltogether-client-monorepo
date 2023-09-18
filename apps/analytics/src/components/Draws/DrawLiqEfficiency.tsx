@@ -1,6 +1,8 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
+import { useMemo } from 'react'
+import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
 import { DrawCardItemTitle } from './DrawCardItemTitle'
 
 interface DrawLiqEfficiencyProps {
@@ -12,21 +14,31 @@ interface DrawLiqEfficiencyProps {
 export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
   const { prizePool, drawId, className } = props
 
-  // TODO: get liquidation events from subgraph
-  const isFetchedLiquidations = true
-  const liquidationStats = { avg: 0, high: 0, low: 0 }
+  const { data: liquidationEvents, isFetched: isFetchedLiquidationEvents } =
+    useLiquidationEvents(prizePool)
+
+  // TODO: need to get liquidations that occured during this specific draw
+  const drawLiquidations = liquidationEvents ?? []
+
+  const liqEfficiencyStats = useMemo(() => {
+    if (drawLiquidations.length > 0) {
+      // TODO: calculate avg, high and low efficiency during this draw
+      // ^ total value in pool swapped in / total value in tokens swapped out
+      return { avg: 0, high: 0, low: 0 }
+    }
+  }, [drawLiquidations])
 
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
       <DrawCardItemTitle>Liq. Efficiency</DrawCardItemTitle>
       <div className='flex flex-col gap-1 text-sm text-pt-purple-700'>
-        {/* {!!liquidationStats && !!isFetchedLiquidations ? (
+        {/* {!!liqEfficiencyStats && !!isFetchedLiquidationEvents ? (
           <>
-            <LiqEffiencyStat type='avg' percentage={liquidationStats.avg} />
-            <LiqEffiencyStat type='high' percentage={liquidationStats.high} />
-            <LiqEffiencyStat type='low' percentage={liquidationStats.low} />
+            <LiqEffiencyStat type='avg' percentage={liqEfficiencyStats.avg} />
+            <LiqEffiencyStat type='high' percentage={liqEfficiencyStats.high} />
+            <LiqEffiencyStat type='low' percentage={liqEfficiencyStats.low} />
           </>
-        ) : isFetchedLiquidations ? (
+        ) : isFetchedLiquidationEvents ? (
           <span>-</span>
         ) : (
           <Spinner className='after:border-y-pt-purple-800' />

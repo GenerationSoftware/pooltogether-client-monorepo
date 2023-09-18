@@ -7,7 +7,8 @@ import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
-import { Block, parseUnits } from 'viem'
+import { Block } from 'viem'
+import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
 import { useManualContributionEvents } from '@hooks/useManualContributionEvents'
 import { usePrizeBackstopEvents } from '@hooks/usePrizeBackstopEvents'
 import { useRngTxs } from '@hooks/useRngTxs'
@@ -24,9 +25,22 @@ export const ReserveCard = (props: ReserveCardProps) => {
 
   const currentTimestamp = useAtomValue(currentTimestampAtom)
 
-  // TODO: get POOL amount in liquidations in the last 24hrs
-  const isFetchedLiquidations = true
-  const validLiquidations = parseUnits('0', 18)
+  const { data: liquidationEvents, isFetched: isFetchedLiquidationEvents } =
+    useLiquidationEvents(prizePool)
+  const validLiquidations = useMemo(() => {
+    if (!!liquidationEvents) {
+      return liquidationEvents.reduce(
+        (a, b) =>
+          a +
+          (b.blockNumber >= (minBlock?.number ?? 0n) &&
+          b.blockNumber <= (maxBlock?.number ?? MAX_UINT_256)
+            ? b.args.amountIn
+            : 0n),
+        0n
+      )
+    }
+    return 0n
+  }, [liquidationEvents, minBlock, maxBlock])
 
   const { data: manualContributionEvents, isFetched: isFetchedManualContributionEvents } =
     useManualContributionEvents(prizePool)
@@ -83,7 +97,7 @@ export const ReserveCard = (props: ReserveCardProps) => {
 
   if (
     !prizeToken ||
-    !isFetchedLiquidations ||
+    !isFetchedLiquidationEvents ||
     !isFetchedManualContributionEvents ||
     !isFetchedRngTxs ||
     !isFetchedPrizeBackstopEvents
