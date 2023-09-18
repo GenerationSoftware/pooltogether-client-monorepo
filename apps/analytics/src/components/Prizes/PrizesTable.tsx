@@ -8,6 +8,7 @@ import { Spinner } from '@shared/ui'
 import { formatBigIntForDisplay, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import Image from 'next/image'
+import { ClaimFees } from '@components/ClaimFees'
 import { useDrawResults } from '@hooks/useDrawResults'
 import { useDrawStatus } from '@hooks/useDrawStatus'
 
@@ -55,6 +56,8 @@ export const PrizesTable = (props: PrizesTableProps) => {
       {[...Array(numTiers).keys()].map((tier) => (
         <PrizesTableRow
           key={`prizesTier-${tier}`}
+          prizePool={prizePool}
+          drawId={drawId}
           wins={drawWins}
           tier={tier}
           closedAt={closedAt}
@@ -86,6 +89,8 @@ const PrizesTableHeaders = (props: PrizesTableHeadersProps) => {
 }
 
 interface PrizesTableRowProps {
+  prizePool: PrizePool
+  drawId: number
   wins: SubgraphDraw['prizeClaims']
   tier: number
   closedAt: number
@@ -101,14 +106,14 @@ interface PrizesTableRowProps {
 }
 
 const PrizesTableRow = (props: PrizesTableRowProps) => {
-  const { wins, tier, closedAt, prizes, prizeToken, className } = props
+  const { prizePool, drawId, wins, tier, closedAt, prizes, prizeToken, className } = props
 
   return (
     <div className={classNames('py-3 text-sm bg-pt-purple-100/20 rounded-xl', className)}>
       <PrizeTier tier={tier} />
       <PrizeSize tier={tier} prizes={prizes} prizeToken={prizeToken} />
       <PrizesClaimed wins={wins} tier={tier} prizes={prizes} />
-      <PrizeClaimFees tier={tier} />
+      <ClaimFees prizePool={prizePool} drawId={drawId} tier={tier} />
       <PrizeClaimTime tier={tier} />
     </div>
   )
@@ -121,7 +126,9 @@ interface PrizeTierProps {
 const PrizeTier = (props: PrizeTierProps) => {
   const { tier } = props
 
-  return <span className='text-xl font-semibold text-pt-purple-400'>{tier + 1}</span>
+  return (
+    <span className='text-xl font-semibold text-pt-purple-400'>{tier === 0 ? 'GP' : tier}</span>
+  )
 }
 
 interface PrizeSizeProps {
@@ -189,16 +196,6 @@ const PrizesClaimed = (props: PrizesClaimedProps) => {
       {numTierWins} / {numTierPrizes}
     </span>
   )
-}
-
-interface PrizeClaimFeesProps {
-  tier: number
-}
-
-const PrizeClaimFees = (props: PrizeClaimFeesProps) => {
-  const { tier } = props
-
-  return <span className=''>-</span>
 }
 
 interface PrizeClaimTimeProps {
