@@ -3,6 +3,7 @@ import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { useQuery } from '@tanstack/react-query'
 import { Address } from 'viem'
 import { DRAW_RESULTS_URL } from '@constants/config'
+import { useDrawStatus } from './useDrawStatus'
 
 export const useDrawResults = (
   prizePool: PrizePool,
@@ -11,7 +12,9 @@ export const useDrawResults = (
 ) => {
   const queryKey = ['drawResults', prizePool?.chainId, drawId]
 
-  return useQuery(
+  const { status, isFetched: isFetchedStatus } = useDrawStatus(prizePool, drawId)
+
+  const { data, isFetched: isFetchedDrawResults } = useQuery(
     queryKey,
     async () => {
       try {
@@ -39,9 +42,14 @@ export const useDrawResults = (
       }
     },
     {
-      enabled: !!prizePool && !!drawId,
+      enabled: !!prizePool && !!drawId && !!status && status !== 'open',
       ...NO_REFETCH,
-      refetchInterval: options?.refetchInterval ?? false
+      refetchInterval:
+        !!status && status !== 'finalized' ? options?.refetchInterval ?? false : false
     }
   )
+
+  const isFetched = isFetchedStatus && (status === 'open' || isFetchedDrawResults)
+
+  return { data, isFetched }
 }

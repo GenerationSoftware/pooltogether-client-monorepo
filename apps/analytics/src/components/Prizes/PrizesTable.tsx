@@ -23,10 +23,10 @@ export const PrizesTable = (props: PrizesTableProps) => {
   const { data: wins, isFetched: isFetchedWins } = usePrizeDrawWinners(prizePool)
   const drawWins = wins?.find((draw) => draw.id === drawId)?.prizeClaims
 
-  const { status, closedAt, isFetched: isFetchedDrawStatus } = useDrawStatus(prizePool, drawId)
+  const { closedAt, isFetched: isFetchedDrawStatus } = useDrawStatus(prizePool, drawId)
 
   const { data: prizes, isFetched: isFetchedPrizes } = useDrawResults(prizePool, drawId, {
-    refetchInterval: status !== 'finalized' ? sToMs(300) : undefined
+    refetchInterval: sToMs(300)
   })
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
