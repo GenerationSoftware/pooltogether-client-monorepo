@@ -1,4 +1,4 @@
-import { PrizePool, sToMs } from '@generationsoftware/hyperstructure-client-js'
+import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import { formatBigIntForDisplay } from '@shared/utilities'
@@ -13,7 +13,7 @@ interface ReserveHeaderProps {
 export const ReserveHeader = (props: ReserveHeaderProps) => {
   const { prizePool, className } = props
 
-  const { data: reserve } = useReserve(prizePool, { refetchInterval: sToMs(300) })
+  const { data: reserve } = useReserve(prizePool)
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 

@@ -39,6 +39,7 @@ interface PrizeTierProps {
   tier: number
 }
 
+// TODO: show canary tier as "Canary"
 const PrizeTier = (props: PrizeTierProps) => {
   const { tier } = props
 

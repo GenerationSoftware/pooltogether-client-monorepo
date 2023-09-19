@@ -14,6 +14,7 @@ import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
 import { useManualContributionEvents } from '@hooks/useManualContributionEvents'
 import { usePrizeBackstopEvents } from '@hooks/usePrizeBackstopEvents'
 import { useRelayAuctionEvents } from '@hooks/useRelayAuctionEvents'
+import { useReserve } from '@hooks/useReserve'
 import { useRngAuctionEvents } from '@hooks/useRngAuctionEvents'
 
 interface ReserveViewProps {
@@ -48,6 +49,7 @@ export const ReserveView = (props: ReserveViewProps) => {
     currentTimestamp - SECONDS_PER_DAY
   )
 
+  const { refetch: refetchReserve } = useReserve(prizePool)
   const { refetch: refetchLiquidationEvents } = useLiquidationEvents(prizePool)
   const { refetch: refetchManualContributionEvents } = useManualContributionEvents(prizePool)
   const { refetch: refetchPrizeBackstopEvents } = usePrizeBackstopEvents(prizePool)
@@ -58,6 +60,7 @@ export const ReserveView = (props: ReserveViewProps) => {
   // Automatic data refetching
   useEffect(() => {
     const interval = setInterval(() => {
+      refetchReserve()
       refetchLiquidationEvents()
       refetchManualContributionEvents()
       refetchPrizeBackstopEvents()

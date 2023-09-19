@@ -7,10 +7,10 @@ import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
-import { Block } from 'viem'
-import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
+import { Block, Log } from 'viem'
 import { useManualContributionEvents } from '@hooks/useManualContributionEvents'
 import { usePrizeBackstopEvents } from '@hooks/usePrizeBackstopEvents'
+import { useReserve } from '@hooks/useReserve'
 import { useRngTxs } from '@hooks/useRngTxs'
 
 interface ReserveCardProps {
@@ -25,34 +25,22 @@ export const ReserveCard = (props: ReserveCardProps) => {
 
   const currentTimestamp = useAtomValue(currentTimestampAtom)
 
-  const { data: liquidationEvents, isFetched: isFetchedLiquidationEvents } =
-    useLiquidationEvents(prizePool)
-  const validLiquidations = useMemo(() => {
-    if (!!liquidationEvents) {
-      return liquidationEvents.reduce(
-        (a, b) =>
-          a +
-          (b.blockNumber >= (minBlock?.number ?? 0n) &&
-          b.blockNumber <= (maxBlock?.number ?? MAX_UINT_256)
-            ? b.args.amountIn
-            : 0n),
-        0n
-      )
-    }
-    return 0n
-  }, [liquidationEvents, minBlock, maxBlock])
+  const { data: reserve, isFetched: isFetchedReserve } = useReserve(prizePool)
+
+  const isValidEvent = (event?: Log<bigint, number, false> | { blockNumber: bigint }) => {
+    return (
+      !!event &&
+      event.blockNumber >= (minBlock?.number ?? 0n) &&
+      event.blockNumber <= (maxBlock?.number ?? MAX_UINT_256)
+    )
+  }
 
   const { data: manualContributionEvents, isFetched: isFetchedManualContributionEvents } =
     useManualContributionEvents(prizePool)
   const validManualContributions = useMemo(() => {
     if (!!manualContributionEvents) {
       return manualContributionEvents.reduce(
-        (a, b) =>
-          a +
-          (b.blockNumber >= (minBlock?.number ?? 0n) &&
-          b.blockNumber <= (maxBlock?.number ?? MAX_UINT_256)
-            ? b.args.amount
-            : 0n),
+        (a, b) => a + (isValidEvent(b) ? b.args.amount : 0n),
         0n
       )
     }
@@ -63,13 +51,7 @@ export const ReserveCard = (props: ReserveCardProps) => {
   const validRngFees = useMemo(() => {
     if (!!rngTxs) {
       return rngTxs.reduce(
-        (a, b) =>
-          a +
-          (!!b.relay &&
-          b.relay.block >= (minBlock?.number ?? 0n) &&
-          b.relay.block <= (maxBlock?.number ?? MAX_UINT_256)
-            ? (b.rng.fee ?? 0n) + b.relay.fee
-            : 0n),
+        (a, b) => a + (isValidEvent(b.relay) ? (b.rng.fee ?? 0n) + (b.relay?.fee ?? 0n) : 0n),
         0n
       )
     }
@@ -80,15 +62,7 @@ export const ReserveCard = (props: ReserveCardProps) => {
     usePrizeBackstopEvents(prizePool)
   const validPrizeBackstops = useMemo(() => {
     if (!!prizeBackstopEvents) {
-      return prizeBackstopEvents.reduce(
-        (a, b) =>
-          a +
-          (b.blockNumber >= (minBlock?.number ?? 0n) &&
-          b.blockNumber <= (maxBlock?.number ?? MAX_UINT_256)
-            ? b.args.amount
-            : 0n),
-        0n
-      )
+      return prizeBackstopEvents.reduce((a, b) => a + (isValidEvent(b) ? b.args.amount : 0n), 0n)
     }
     return 0n
   }, [prizeBackstopEvents, minBlock, maxBlock])
@@ -97,10 +71,11 @@ export const ReserveCard = (props: ReserveCardProps) => {
 
   if (
     !prizeToken ||
-    !isFetchedLiquidationEvents ||
+    !isFetchedReserve ||
     !isFetchedManualContributionEvents ||
     !isFetchedRngTxs ||
-    !isFetchedPrizeBackstopEvents
+    !isFetchedPrizeBackstopEvents ||
+    reserve === undefined
   ) {
     return <Spinner className='after:border-y-pt-purple-800' />
   }
@@ -110,6 +85,8 @@ export const ReserveCard = (props: ReserveCardProps) => {
   const hours = Math.round((maxTimestamp - minTimestamp) / SECONDS_PER_HOUR)
   const timeText = minTimestamp === 0 ? `All time` : `${hours}hr`
 
+  const fauxLiquidations = reserve - validManualContributions + validRngFees + validPrizeBackstops
+
   return (
     <div
       className={classNames(
@@ -118,7 +95,11 @@ export const ReserveCard = (props: ReserveCardProps) => {
       )}
     >
       <span className='text-center'>{timeText} reserve changes</span>
-      <ReserveCardItem name='Liquidations' amount={validLiquidations} token={prizeToken} />
+      <ReserveCardItem
+        name='Liquidations'
+        amount={reserve - validManualContributions + validRngFees + validPrizeBackstops}
+        token={prizeToken}
+      />
       <ReserveCardItem
         name='Manual Contributions'
         amount={validManualContributions}
@@ -133,7 +114,7 @@ export const ReserveCard = (props: ReserveCardProps) => {
       <hr className='w-full border-gray-400' />
       <ReserveCardItem
         name={`${timeText} changes`}
-        amount={validLiquidations + validManualContributions - validRngFees - validPrizeBackstops}
+        amount={fauxLiquidations + validManualContributions - validRngFees - validPrizeBackstops}
         token={prizeToken}
         alwaysShow={true}
         nameClassName='capitalize'
