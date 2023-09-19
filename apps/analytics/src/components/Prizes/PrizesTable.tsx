@@ -32,7 +32,7 @@ export const PrizesTable = (props: PrizesTableProps) => {
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
   // TODO: get number of tiers from draw object once available
-  const numTiers = 8
+  const numTiers = 6
 
   if (!isFetchedWins || !isFetchedDrawStatus || !isFetchedPrizes || !prizeToken) {
     return <Spinner className='after:border-y-pt-purple-800' />
@@ -52,19 +52,21 @@ export const PrizesTable = (props: PrizesTableProps) => {
   return (
     <div className={classNames('w-full flex flex-col gap-2 items-center', className)}>
       <PrizesTableHeaders className={gridClassName} />
-      {[...Array(numTiers).keys()].map((tier) => (
-        <PrizesTableRow
-          key={`prizesTier-${tier}`}
-          prizePool={prizePool}
-          drawId={drawId}
-          wins={drawWins}
-          tier={tier}
-          closedAt={closedAt}
-          prizes={prizes}
-          prizeToken={prizeToken}
-          className={gridClassName}
-        />
-      ))}
+      <div className='w-full h-[50vh] flex flex-col grow gap-2 items-center overflow-auto'>
+        {[...Array(numTiers).keys()].map((tier) => (
+          <PrizesTableRow
+            key={`prizesTier-${tier}`}
+            prizePool={prizePool}
+            drawId={drawId}
+            wins={drawWins}
+            tier={tier}
+            closedAt={closedAt}
+            prizes={prizes}
+            prizeToken={prizeToken}
+            className={gridClassName}
+          />
+        ))}
+      </div>
     </div>
   )
 }

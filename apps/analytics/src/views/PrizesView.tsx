@@ -57,11 +57,9 @@ export const PrizesView = (props: PrizesViewProps) => {
 
   return (
     <div className={classNames('w-full flex flex-col gap-6 items-center', className)}>
+      {!!drawIdSelected && <DrawStatusBadge prizePool={prizePool} drawId={drawIdSelected} />}
       {!!drawIdSelected && (
-        <>
-          <DrawStatusBadge prizePool={prizePool} drawId={drawIdSelected} />
-          <PrizesTable prizePool={prizePool} drawId={drawIdSelected} className='mt-6' />
-        </>
+        <PrizesTable prizePool={prizePool} drawId={drawIdSelected} className='mt-6' />
       )}
       <DrawSelector prizePool={prizePool} />
     </div>
