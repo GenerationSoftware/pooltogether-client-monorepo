@@ -1,5 +1,5 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
+import { usePrizeTokenPrice } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import { MAX_UINT_256, SECONDS_PER_HOUR } from '@shared/utilities'
 import classNames from 'classnames'
@@ -26,7 +26,7 @@ export const LiquidationsTable = (props: LiquidationsTableProps) => {
   const { data: liquidationEvents, isFetched: isFetchedLiquidationEvents } =
     useLiquidationEvents(prizePool)
 
-  const { data: prizeToken } = usePrizeTokenData(prizePool)
+  const { data: prizeToken } = usePrizeTokenPrice(prizePool)
 
   const validLiquidationEvents = useMemo(() => {
     return (

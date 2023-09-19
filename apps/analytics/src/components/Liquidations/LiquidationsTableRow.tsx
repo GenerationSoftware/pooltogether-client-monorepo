@@ -1,7 +1,7 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { Token } from '@shared/types'
+import { Token, TokenWithPrice } from '@shared/types'
 import { ExternalLink, Spinner } from '@shared/ui'
-import { formatBigIntForDisplay, getBlockExplorerUrl, shorten } from '@shared/utilities'
+import { formatBigIntForDisplay, getBlockExplorerUrl } from '@shared/utilities'
 import classNames from 'classnames'
 import { Address } from 'viem'
 import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
@@ -11,14 +11,12 @@ interface LiquidationsTableRowProps {
   prizePool: PrizePool
   lpAddress: Address
   liquidations: NonNullable<ReturnType<typeof useLiquidationEvents>['data']>
-  prizeToken: Token
+  prizeToken: TokenWithPrice
   className?: string
 }
 
 export const LiquidationsTableRow = (props: LiquidationsTableRowProps) => {
-  const { prizePool, lpAddress, liquidations, className } = props
-
-  const { data: lpToken } = useLiquidationPairTokenPrice(prizePool.chainId, lpAddress)
+  const { prizePool, lpAddress, liquidations, prizeToken, className } = props
 
   const lpLiquidations = liquidations.filter(
     (liq) => liq.args.liquidationPair.toLowerCase() === lpAddress.toLowerCase()
@@ -26,12 +24,16 @@ export const LiquidationsTableRow = (props: LiquidationsTableRowProps) => {
 
   return (
     <div className={classNames('py-3 text-sm bg-pt-purple-100/20 rounded-xl', className)}>
-      <LiquidationPairLink chainId={prizePool.chainId} lpAddress={lpAddress} />
-      {!!lpToken ? (
-        <YieldAuctioned liquidations={lpLiquidations} token={lpToken} />
-      ) : (
-        <Spinner className='after:border-y-pt-purple-800' />
-      )}
+      <LiquidationPairLink
+        chainId={prizePool.chainId}
+        lpAddress={lpAddress}
+        prizeToken={prizeToken}
+      />
+      <YieldAuctioned
+        chainId={prizePool.chainId}
+        lpAddress={lpAddress}
+        liquidations={lpLiquidations}
+      />
       <AvgLiquidationPrice />
       <CurrentAvailableYield />
       <AvgEfficiency />
@@ -42,41 +44,54 @@ export const LiquidationsTableRow = (props: LiquidationsTableRowProps) => {
 interface LiquidationPairLinkProps {
   chainId: number
   lpAddress: Address
+  prizeToken: Token
   className?: string
 }
 
 const LiquidationPairLink = (props: LiquidationPairLinkProps) => {
-  const { chainId, lpAddress, className } = props
+  const { chainId, lpAddress, prizeToken, className } = props
 
-  // TODO: display ptUSDC/POOL (for example), not the lp address
+  const { data: lpToken } = useLiquidationPairTokenPrice(chainId, lpAddress)
+
+  if (!lpToken) {
+    return <Spinner className='after:border-y-pt-purple-800' />
+  }
+
   return (
     <ExternalLink
       href={getBlockExplorerUrl(chainId, lpAddress)}
       className={classNames('text-xl font-semibold', className)}
       iconClassName='text-pt-purple-400'
     >
-      {shorten(lpAddress)}
+      {lpToken.symbol ?? '?'}/{prizeToken.symbol}
     </ExternalLink>
   )
 }
 
 interface YieldAuctionedProps {
+  chainId: number
+  lpAddress: Address
   liquidations: LiquidationsTableRowProps['liquidations']
-  token: Token
   className?: string
 }
 
 const YieldAuctioned = (props: YieldAuctionedProps) => {
-  const { liquidations, token, className } = props
+  const { chainId, lpAddress, liquidations, className } = props
+
+  const { data: lpToken } = useLiquidationPairTokenPrice(chainId, lpAddress)
+
+  if (!lpToken) {
+    return <Spinner className='after:border-y-pt-purple-800' />
+  }
 
   const totalYieldAuctioned = liquidations.reduce((a, b) => a + b.args.amountOut, 0n)
 
   return (
     <div className={classNames('text-sm', className)}>
       <span className='text-xl font-semibold'>
-        {formatBigIntForDisplay(totalYieldAuctioned, token.decimals, { hideZeroes: true })}
+        {formatBigIntForDisplay(totalYieldAuctioned, lpToken.decimals, { hideZeroes: true })}
       </span>{' '}
-      {token.symbol}
+      {lpToken.symbol}
     </div>
   )
 }
