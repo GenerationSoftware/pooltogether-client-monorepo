@@ -10,7 +10,8 @@ import classNames from 'classnames'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
 import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
-import { useLiquidationPairTokenPrice } from '@hooks/useLiquidationPairTokenOutPrice'
+import { useLiquidationPairLiquidatableBalance } from '@hooks/useLiquidationPairLiquidatableBalance'
+import { useLiquidationPairTokenOutData } from '@hooks/useLiquidationPairTokenOutData'
 
 interface LiquidationsTableRowProps {
   prizePool: PrizePool
@@ -45,7 +46,7 @@ export const LiquidationsTableRow = (props: LiquidationsTableRowProps) => {
         liquidations={lpLiquidations}
         prizeToken={prizeToken}
       />
-      <CurrentAvailableYield />
+      <CurrentAvailableYield chainId={prizePool.chainId} lpAddress={lpAddress} />
       <AvgEfficiency />
     </div>
   )
@@ -61,7 +62,7 @@ interface LiquidationPairLinkProps {
 const LiquidationPairLink = (props: LiquidationPairLinkProps) => {
   const { chainId, lpAddress, prizeToken, className } = props
 
-  const { data: lpToken } = useLiquidationPairTokenPrice(chainId, lpAddress)
+  const { data: lpToken } = useLiquidationPairTokenOutData(chainId, lpAddress)
 
   if (!lpToken) {
     return <Spinner className='after:border-y-pt-purple-800' />
@@ -88,7 +89,7 @@ interface YieldAuctionedProps {
 const YieldAuctioned = (props: YieldAuctionedProps) => {
   const { chainId, lpAddress, liquidations, className } = props
 
-  const { data: lpToken } = useLiquidationPairTokenPrice(chainId, lpAddress)
+  const { data: lpToken } = useLiquidationPairTokenOutData(chainId, lpAddress)
 
   if (!lpToken) {
     return <Spinner className='after:border-y-pt-purple-800' />
@@ -117,7 +118,7 @@ interface AvgLiquidationPriceProps {
 const AvgLiquidationPrice = (props: AvgLiquidationPriceProps) => {
   const { chainId, lpAddress, liquidations, prizeToken, className } = props
 
-  const { data: lpToken } = useLiquidationPairTokenPrice(chainId, lpAddress)
+  const { data: lpToken } = useLiquidationPairTokenOutData(chainId, lpAddress)
 
   const avgPrice = useMemo(() => {
     if (!!lpToken) {
@@ -161,13 +162,30 @@ const AvgLiquidationPrice = (props: AvgLiquidationPriceProps) => {
 }
 
 interface CurrentAvailableYieldProps {
+  chainId: number
+  lpAddress: Address
   className?: string
 }
 
 const CurrentAvailableYield = (props: CurrentAvailableYieldProps) => {
-  const { className } = props
+  const { chainId, lpAddress, className } = props
 
-  return <span>-</span>
+  const { data: liquidatableBalance } = useLiquidationPairLiquidatableBalance(chainId, lpAddress)
+
+  const { data: lpToken } = useLiquidationPairTokenOutData(chainId, lpAddress)
+
+  if (!liquidatableBalance || !lpToken) {
+    return <Spinner className='after:border-y-pt-purple-800' />
+  }
+
+  return (
+    <div className={classNames('text-sm', className)}>
+      <span className='text-xl font-semibold'>
+        {formatBigIntForDisplay(liquidatableBalance, lpToken.decimals, { hideZeroes: true })}
+      </span>{' '}
+      {lpToken.symbol}
+    </div>
+  )
 }
 
 interface AvgEfficiencyProps {

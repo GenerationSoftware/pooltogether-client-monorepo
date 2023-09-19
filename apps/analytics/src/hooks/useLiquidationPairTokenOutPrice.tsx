@@ -10,7 +10,7 @@ import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { useLiquidationPairTokenOutAddress } from './useLiquidationPairTokenOutAddress'
 
-export const useLiquidationPairTokenPrice = (
+export const useLiquidationPairTokenOutPrice = (
   chainId: number,
   lpAddress: Address
 ): { data?: TokenWithPrice; isFetched: boolean } => {
