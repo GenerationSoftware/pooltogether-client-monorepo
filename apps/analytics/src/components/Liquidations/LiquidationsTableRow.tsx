@@ -1,4 +1,5 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { Token, TokenWithPrice } from '@shared/types'
 import { ExternalLink, Spinner } from '@shared/ui'
 import {
@@ -7,11 +8,12 @@ import {
   getBlockExplorerUrl
 } from '@shared/utilities'
 import classNames from 'classnames'
-import { useMemo } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
 import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
 import { useLiquidationPairLiquidatableBalance } from '@hooks/useLiquidationPairLiquidatableBalance'
 import { useLiquidationPairTokenOutData } from '@hooks/useLiquidationPairTokenOutData'
+import { useLiquidationPairTokenOutPrice } from '@hooks/useLiquidationPairTokenOutPrice'
 
 interface LiquidationsTableRowProps {
   prizePool: PrizePool
@@ -47,7 +49,12 @@ export const LiquidationsTableRow = (props: LiquidationsTableRowProps) => {
         prizeToken={prizeToken}
       />
       <CurrentAvailableYield chainId={prizePool.chainId} lpAddress={lpAddress} />
-      <AvgEfficiency />
+      <AvgEfficiency
+        chainId={prizePool.chainId}
+        lpAddress={lpAddress}
+        liquidations={lpLiquidations}
+        prizeToken={prizeToken}
+      />
     </div>
   )
 }
@@ -189,11 +196,74 @@ const CurrentAvailableYield = (props: CurrentAvailableYieldProps) => {
 }
 
 interface AvgEfficiencyProps {
+  chainId: number
+  lpAddress: Address
+  liquidations: LiquidationsTableRowProps['liquidations']
+  prizeToken: TokenWithPrice
   className?: string
 }
 
 const AvgEfficiency = (props: AvgEfficiencyProps) => {
-  const { className } = props
+  const { chainId, lpAddress, liquidations, prizeToken, className } = props
 
-  return <span>-</span>
+  const { data: lpToken } = useLiquidationPairTokenOutPrice(chainId, lpAddress)
+
+  const efficiency = useMemo(() => {
+    if (!!prizeToken?.price && !!lpToken?.price) {
+      const totalAmountIn = liquidations.reduce((a, b) => a + b.args.amountIn, 0n)
+      const totalAmountOut = liquidations.reduce((a, b) => a + b.args.amountOut, 0n)
+
+      const totalValueIn =
+        parseFloat(formatUnits(totalAmountIn, prizeToken.decimals)) * prizeToken.price
+      const totalValueOut =
+        parseFloat(formatUnits(totalAmountOut, lpToken.decimals)) * lpToken.price
+
+      const prizes = (totalValueIn / totalValueOut) * 100
+      const gas = 0 // TODO: calculate percentage spent in gas
+      const bots = 100 - prizes - gas
+
+      return { prizes, gas, bots }
+    }
+  }, [liquidations, prizeToken, lpToken])
+
+  if (!efficiency) {
+    return <Spinner className='after:border-y-pt-purple-800' />
+  }
+
+  return (
+    <div className={classNames('flex flex-col gap-1', className)}>
+      {/* TODO: bar with percentages */}
+      <AvgEfficiencyItem efficiency={efficiency.prizes} label='prizes' color='green' />
+      <AvgEfficiencyItem efficiency={efficiency.bots} label='bots (WIP)' color='yellow' />
+      <AvgEfficiencyItem efficiency={efficiency.gas} label='gas (WIP)' color='red' />
+    </div>
+  )
+}
+
+interface AvgEfficiencyItemProps {
+  efficiency: number
+  label: ReactNode
+  color: 'green' | 'yellow' | 'red'
+  className?: string
+}
+
+const AvgEfficiencyItem = (props: AvgEfficiencyItemProps) => {
+  const { efficiency, label, color, className } = props
+
+  return (
+    <div
+      className={classNames('w-full flex gap-1 items-center text-sm whitespace-nowrap', className)}
+    >
+      <div
+        className={classNames('w-3 h-3 rounded mr-1', {
+          'bg-green-600': color === 'green',
+          'bg-yellow-200': color === 'yellow',
+          'bg-red-600': color === 'red'
+        })}
+      />
+      <span>{formatNumberForDisplay(efficiency, { hideZeroes: true })}%</span>
+      <ArrowRightIcon className='w-auto h-3' />
+      <span>{label}</span>
+    </div>
+  )
 }

@@ -57,7 +57,6 @@ export const LiquidationsView = (props: LiquidationsViewProps) => {
   return (
     <div className={classNames('w-full flex flex-col gap-12 items-center', className)}>
       {!!minBlock && <LiquidationsTable prizePool={prizePool} minBlock={minBlock} />}
-      {<LiquidationsTable prizePool={prizePool} />}
     </div>
   )
 }
