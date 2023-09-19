@@ -1,10 +1,11 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { Token } from '@shared/types'
-import { ExternalLink } from '@shared/ui'
+import { ExternalLink, Spinner } from '@shared/ui'
 import { formatBigIntForDisplay, getBlockExplorerUrl, shorten } from '@shared/utilities'
 import classNames from 'classnames'
 import { Address } from 'viem'
 import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
+import { useLiquidationPairTokenPrice } from '@hooks/useLiquidationPairTokenOutPrice'
 
 interface LiquidationsTableRowProps {
   prizePool: PrizePool
@@ -17,7 +18,7 @@ interface LiquidationsTableRowProps {
 export const LiquidationsTableRow = (props: LiquidationsTableRowProps) => {
   const { prizePool, lpAddress, liquidations, className } = props
 
-  // TODO: get token out info
+  const { data: lpToken } = useLiquidationPairTokenPrice(prizePool.chainId, lpAddress)
 
   const lpLiquidations = liquidations.filter(
     (liq) => liq.args.liquidationPair.toLowerCase() === lpAddress.toLowerCase()
@@ -26,7 +27,11 @@ export const LiquidationsTableRow = (props: LiquidationsTableRowProps) => {
   return (
     <div className={classNames('py-3 text-sm bg-pt-purple-100/20 rounded-xl', className)}>
       <LiquidationPairLink chainId={prizePool.chainId} lpAddress={lpAddress} />
-      {/* <YieldAuctioned liquidations={lpLiquidations} token={tokenOut} /> */}
+      {!!lpToken ? (
+        <YieldAuctioned liquidations={lpLiquidations} token={lpToken} />
+      ) : (
+        <Spinner className='after:border-y-pt-purple-800' />
+      )}
       <AvgLiquidationPrice />
       <CurrentAvailableYield />
       <AvgEfficiency />
