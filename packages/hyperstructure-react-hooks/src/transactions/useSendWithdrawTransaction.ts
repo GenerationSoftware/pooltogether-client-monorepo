@@ -1,5 +1,5 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { vaultABI } from '@shared/utilities'
+import { calculatePercentageOfBigInt, vaultABI } from '@shared/utilities'
 import { useEffect } from 'react'
 import { Address, isAddress, TransactionReceipt } from 'viem'
 import {
@@ -9,7 +9,7 @@ import {
   usePrepareContractWrite,
   useWaitForTransaction
 } from 'wagmi'
-import { useUserVaultTokenBalance } from '..'
+import { useGasAmountEstimate, useUserVaultTokenBalance } from '..'
 
 /**
  * Prepares and submits a `withdraw` transaction to a vault
@@ -51,12 +51,25 @@ export const useSendWithdrawTransaction = (
     !!vaultTokenBalance &&
     amount <= vaultTokenBalance.amount
 
+  const { data: gasEstimate } = useGasAmountEstimate(
+    vault?.chainId,
+    {
+      address: vault?.address,
+      abi: vaultABI,
+      functionName: 'withdraw',
+      args: [amount, userAddress as Address, userAddress as Address],
+      account: userAddress as Address
+    },
+    { enabled }
+  )
+
   const { config } = usePrepareContractWrite({
     chainId: vault?.chainId,
     address: vault?.address,
     abi: vaultABI,
     functionName: 'withdraw',
     args: [amount, userAddress as Address, userAddress as Address],
+    gas: !!gasEstimate ? calculatePercentageOfBigInt(gasEstimate, 1.2) : undefined,
     enabled
   })
 
