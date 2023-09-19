@@ -16,7 +16,7 @@ export const useVaultTokenPrice = (vault: Vault) => {
     data: tokenPrices,
     isFetched: isFetchedTokenPrices,
     refetch
-  } = useTokenPrices(vault.chainId, !!tokenData ? [tokenData.address] : [])
+  } = useTokenPrices(vault?.chainId, !!tokenData ? [tokenData.address] : [])
 
   const tokenPrice = useMemo(() => {
     return !!tokenData && !!tokenPrices
