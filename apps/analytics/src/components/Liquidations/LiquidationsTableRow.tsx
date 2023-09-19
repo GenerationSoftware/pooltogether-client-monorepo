@@ -1,9 +1,14 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { Token, TokenWithPrice } from '@shared/types'
 import { ExternalLink, Spinner } from '@shared/ui'
-import { formatBigIntForDisplay, getBlockExplorerUrl } from '@shared/utilities'
+import {
+  formatBigIntForDisplay,
+  formatNumberForDisplay,
+  getBlockExplorerUrl
+} from '@shared/utilities'
 import classNames from 'classnames'
-import { Address } from 'viem'
+import { useMemo } from 'react'
+import { Address, formatUnits } from 'viem'
 import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
 import { useLiquidationPairTokenPrice } from '@hooks/useLiquidationPairTokenOutPrice'
 
@@ -34,7 +39,12 @@ export const LiquidationsTableRow = (props: LiquidationsTableRowProps) => {
         lpAddress={lpAddress}
         liquidations={lpLiquidations}
       />
-      <AvgLiquidationPrice />
+      <AvgLiquidationPrice
+        chainId={prizePool.chainId}
+        lpAddress={lpAddress}
+        liquidations={lpLiquidations}
+        prizeToken={prizeToken}
+      />
       <CurrentAvailableYield />
       <AvgEfficiency />
     </div>
@@ -97,13 +107,57 @@ const YieldAuctioned = (props: YieldAuctionedProps) => {
 }
 
 interface AvgLiquidationPriceProps {
+  chainId: number
+  lpAddress: Address
+  liquidations: LiquidationsTableRowProps['liquidations']
+  prizeToken: Token
   className?: string
 }
 
 const AvgLiquidationPrice = (props: AvgLiquidationPriceProps) => {
-  const { className } = props
+  const { chainId, lpAddress, liquidations, prizeToken, className } = props
 
-  return <span>-</span>
+  const { data: lpToken } = useLiquidationPairTokenPrice(chainId, lpAddress)
+
+  const avgPrice = useMemo(() => {
+    if (!!lpToken) {
+      if (!liquidations.length) return 0
+      const avgAmountIn =
+        parseFloat(
+          formatUnits(
+            liquidations.reduce((a, b) => a + b.args.amountIn, 0n),
+            prizeToken.decimals
+          )
+        ) / liquidations.length
+      const avgAmountOut =
+        parseFloat(
+          formatUnits(
+            liquidations.reduce((a, b) => a + b.args.amountOut, 0n),
+            lpToken.decimals
+          )
+        ) / liquidations.length
+      return avgAmountIn / avgAmountOut
+    }
+  }, [liquidations, lpToken])
+
+  return (
+    <div className={classNames('text-sm whitespace-nowrap', className)}>
+      {!!lpToken && !!avgPrice ? (
+        <>
+          <span className='text-xl font-semibold'>1</span> {lpToken.symbol} ={' '}
+          <span className='text-xl font-semibold'>
+            {formatNumberForDisplay(
+              avgPrice,
+              avgPrice > 100 ? { hideZeroes: true } : { maximumFractionDigits: 2 }
+            )}
+          </span>{' '}
+          {prizeToken.symbol}
+        </>
+      ) : (
+        <Spinner className='after:border-y-pt-purple-800' />
+      )}
+    </div>
+  )
 }
 
 interface CurrentAvailableYieldProps {
