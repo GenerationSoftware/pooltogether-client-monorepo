@@ -2,10 +2,17 @@ import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   SortDirection,
   SortId,
+  useSelectedVaultLists,
   useSortedVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { PrizePowerTooltip, SortIcon, VaultBadge } from '@shared/react-components'
+import {
+  ImportedVaultTooltip,
+  PrizePowerTooltip,
+  SortIcon,
+  VaultBadge
+} from '@shared/react-components'
 import { Spinner, Table, TableProps } from '@shared/ui'
+import { getVaultId } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -42,6 +49,8 @@ export const VaultsTable = (props: VaultsTableProps) => {
     isFetched
   } = useSortedVaults(vaults, { prizePool })
 
+  const { localVaultLists, importedVaultLists } = useSelectedVaultLists()
+
   const handleHeaderClick = (id: SortId) => {
     if (sortVaultsBy === id) {
       toggleSortDirection()
@@ -59,6 +68,32 @@ export const VaultsTable = (props: VaultsTableProps) => {
 
   if (!isFetched) {
     return <Spinner className={className} />
+  }
+
+  const getImportedVaultSrcs = (vault: Vault) => {
+    const listsWithVault: { name: string; href: string }[] = []
+
+    const isOnLocalVaultLists = Object.values(localVaultLists).some((list) => {
+      for (const listVault of list.tokens) {
+        if (vault.id === getVaultId(listVault)) {
+          return true
+        }
+      }
+    })
+
+    if (!isOnLocalVaultLists) {
+      Object.entries(importedVaultLists).forEach(([href, list]) => {
+        for (const listVault of list.tokens) {
+          if (vault.id === getVaultId(listVault)) {
+            const name = list.name
+            listsWithVault.push({ name, href })
+            break
+          }
+        }
+      })
+    }
+
+    return listsWithVault
   }
 
   const tableData: TableProps['data'] = {
@@ -102,36 +137,43 @@ export const VaultsTable = (props: VaultsTableProps) => {
       },
       manage: { content: <ManageHeader />, position: 'right' }
     },
-    rows: sortedVaults.map((vault) => ({
-      id: vault.id,
-      cells: {
-        token: {
-          content: (
-            <Link href={`/vault/${vault.chainId}/${vault.address}`}>
-              <VaultBadge vault={vault} onClick={() => {}} className='max-w-full' />
-            </Link>
-          ),
-          className: 'pr-0'
-        },
-        prizePower: {
-          content: (
-            <span className='text-xl font-semibold text-pt-purple-400'>
-              <VaultPrizePower vault={vault} />
-            </span>
-          ),
-          position: 'center'
-        },
-        totalDeposits: {
-          content: <VaultTotalDeposits vault={vault} />,
-          position: 'center'
-        },
-        balance: {
-          content: <AccountVaultBalance vault={vault} />,
-          position: 'center'
-        },
-        manage: { content: <VaultButtons vault={vault} inverseOrder={true} />, position: 'right' }
+    rows: sortedVaults.map((vault) => {
+      const importedSrcs = getImportedVaultSrcs(vault)
+
+      return {
+        id: vault.id,
+        cells: {
+          token: {
+            content: (
+              <>
+                <Link href={`/vault/${vault.chainId}/${vault.address}`}>
+                  <VaultBadge vault={vault} onClick={() => {}} className='max-w-full' />
+                </Link>
+                {importedSrcs.length > 0 && <ImportedVaultTooltip vaultLists={importedSrcs} />}
+              </>
+            ),
+            className: 'gap-2 pr-0'
+          },
+          prizePower: {
+            content: (
+              <span className='text-xl font-semibold text-pt-purple-400'>
+                <VaultPrizePower vault={vault} />
+              </span>
+            ),
+            position: 'center'
+          },
+          totalDeposits: {
+            content: <VaultTotalDeposits vault={vault} />,
+            position: 'center'
+          },
+          balance: {
+            content: <AccountVaultBalance vault={vault} />,
+            position: 'center'
+          },
+          manage: { content: <VaultButtons vault={vault} inverseOrder={true} />, position: 'right' }
+        }
       }
-    }))
+    })
   }
 
   return (

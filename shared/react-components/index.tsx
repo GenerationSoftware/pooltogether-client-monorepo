@@ -81,6 +81,7 @@ export * from './components/Toasts/WithdrawTxToast'
  * Tooltips
  */
 export * from './components/Tooltips/ExactApprovalTooltip'
+export * from './components/Tooltips/ImportedVaultTooltip'
 export * from './components/Tooltips/InfiniteApprovalTooltip'
 export * from './components/Tooltips/PrizePowerTooltip'
 export * from './components/Tooltips/VaultFeeTooltip'

@@ -47,11 +47,10 @@ export const VaultPageExtraInfo = (props: VaultPageExtraInfoProps) => {
 
   const vaultLists = useMemo(() => {
     const listsWithVault: { name: string; src: string }[] = []
-    const vaultId = getVaultId(vault)
 
     Object.entries(allVaultLists).forEach(([src, list]) => {
       for (const listVault of list.tokens) {
-        if (vaultId === getVaultId(listVault)) {
+        if (vault.id === getVaultId(listVault)) {
           const name = list.name
           listsWithVault.push({ name, src })
           break
