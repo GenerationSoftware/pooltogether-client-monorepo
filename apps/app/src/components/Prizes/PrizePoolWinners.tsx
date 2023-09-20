@@ -7,6 +7,7 @@ import { ChevronRightIcon } from '@heroicons/react/24/outline'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { TokenValue } from '@shared/react-components'
 import { SubgraphDraw } from '@shared/types'
+import { getSecondsSinceEpoch, getSimpleDate, SECONDS_PER_DAY } from '@shared/utilities'
 import { atom, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
@@ -71,29 +72,45 @@ const DrawRow = (props: DrawRowProps) => {
 
   const setSelectedDrawId = useSetAtom(drawIdAtom)
 
-  const uniqueWallets = new Set<Address>(draw.prizeClaims.map((claim) => claim.winner))
-  const totalPrizeAmount = draw.prizeClaims.reduce((a, b) => a + b.payout, 0n)
-
   const handleClick = () => {
     setSelectedDrawId(draw.id)
     setIsModalOpen(true)
   }
 
+  const uniqueWallets = new Set<Address>(draw.prizeClaims.map((claim) => claim.winner))
+  const totalPrizeAmount = draw.prizeClaims.reduce((a, b) => a + b.payout, 0n)
+
+  const firstPrizeTimestamp = draw.prizeClaims[0].timestamp
+  const currentTime = getSecondsSinceEpoch()
+  const timeTextType =
+    firstPrizeTimestamp > currentTime - SECONDS_PER_DAY
+      ? 'today'
+      : firstPrizeTimestamp > currentTime - SECONDS_PER_DAY * 2
+      ? 'yesterday'
+      : 'onXDate'
+
   return (
     <div
       onClick={handleClick}
-      className='inline-flex gap-4 justify-between px-3 py-2 font-semibold text-pt-purple-100 rounded-lg cursor-pointer whitespace-nowrap hover:bg-pt-transparent'
+      className='inline-flex gap-4 justify-between pl-3 pr-1 py-2 font-semibold text-pt-purple-100 rounded-lg cursor-pointer whitespace-nowrap hover:bg-pt-transparent'
     >
       <span>{t_common('drawId', { id: draw.id })}</span>
       {!!tokenData && (
-        <span className='inline-flex gap-2'>
+        <span className='inline-flex gap-1'>
           <span className='hidden md:block'>
-            {t_prizes('drawWinners.xWalletsWon', { numWallets: uniqueWallets.size })}{' '}
+            {t_prizes('drawWinners.beforeValue', { numWallets: uniqueWallets.size })}{' '}
           </span>
           <span className='text-pt-purple-50'>
             <TokenValue token={{ ...tokenData, amount: totalPrizeAmount }} />
           </span>{' '}
-          {t_prizes('drawWinners.xInPrizes')} <ChevronRightIcon className='h-6 w-6' />
+          {timeTextType === 'today'
+            ? t_prizes('drawWinners.afterValue.today')
+            : timeTextType === 'yesterday'
+            ? t_prizes('drawWinners.afterValue.yesterday')
+            : t_prizes('drawWinners.afterValue.onXDate', {
+                date: getSimpleDate(firstPrizeTimestamp)
+              })}{' '}
+          <ChevronRightIcon className='h-6 w-6' />
         </span>
       )}
       {!tokenData && <>-</>}

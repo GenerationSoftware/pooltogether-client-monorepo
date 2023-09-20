@@ -40,8 +40,12 @@
     "estPrizeFreq": "Estimated Frequency",
     "recentWinners": "Recent Prize Pool Winners",
     "drawWinners": {
-      "xWalletsWon": "{numWallets, plural, one {# wallet} other {# wallets}} won",
-      "xInPrizes": "in prizes"
+      "beforeValue": "{numWallets, plural, one {# wallet} other {# wallets}} won",
+      "afterValue": {
+        "today": "today",
+        "yesterday": "yesterday",
+        "onXDate": "on {date}"
+      }
     },
     "drawModal": {
       "drawTotal": {
