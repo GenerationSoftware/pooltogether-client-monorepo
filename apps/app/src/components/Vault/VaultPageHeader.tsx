@@ -4,10 +4,11 @@ import {
   useVaultTokenAddress
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
-import { PrizePoolBadge, TokenIcon } from '@shared/react-components'
+import { ImportedVaultTooltip, PrizePoolBadge, TokenIcon } from '@shared/react-components'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
+import { useVaultImportedListSrcs } from '@hooks/useVaultImportedListSrcs'
 
 interface VaultPageHeaderProps {
   vault?: Vault
@@ -17,10 +18,13 @@ interface VaultPageHeaderProps {
 export const VaultPageHeader = (props: VaultPageHeaderProps) => {
   const { vault, className } = props
 
-  const t = useTranslations('Common')
+  const t_common = useTranslations('Common')
+  const t_tooltips = useTranslations('Tooltips')
 
   const { data: shareData } = useVaultShareData(vault as Vault)
   const { data: tokenAddress } = useVaultTokenAddress(vault as Vault)
+
+  const importedSrcs = useVaultImportedListSrcs(vault as Vault)
 
   return (
     <>
@@ -51,12 +55,18 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
               >
                 {vault.name ?? shareData?.name}
               </span>
+              {importedSrcs.length > 0 && (
+                <ImportedVaultTooltip
+                  vaultLists={importedSrcs}
+                  intl={t_tooltips('importedVault')}
+                />
+              )}
             </div>
           )}
         </div>
         {!!vault && (!!vault.name || !!shareData?.name) && (
           <Link href={`/prizes?network=${vault.chainId}`}>
-            <PrizePoolBadge chainId={vault.chainId} onClick={() => {}} intl={t} />
+            <PrizePoolBadge chainId={vault.chainId} onClick={() => {}} intl={t_common} />
           </Link>
         )}
       </div>

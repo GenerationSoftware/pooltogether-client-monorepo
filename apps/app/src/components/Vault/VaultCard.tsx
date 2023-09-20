@@ -1,16 +1,12 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import {
-  useSelectedVaultLists,
-  useUserVaultTokenBalance
-} from '@generationsoftware/hyperstructure-react-hooks'
+import { useUserVaultTokenBalance } from '@generationsoftware/hyperstructure-react-hooks'
 import { ImportedVaultTooltip, PrizePowerTooltip, VaultBadge } from '@shared/react-components'
-import { getVaultId } from '@shared/utilities'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
+import { useVaultImportedListSrcs } from '@hooks/useVaultImportedListSrcs'
 import { VaultButtons } from './VaultButtons'
 import { VaultPrizePower } from './VaultPrizePower'
 import { VaultTotalDeposits } from './VaultTotalDeposits'
@@ -30,35 +26,9 @@ export const VaultCard = (props: VaultCardProps) => {
   const { address: _userAddress } = useAccount()
   const userAddress = address ?? _userAddress
 
-  const { localVaultLists, importedVaultLists } = useSelectedVaultLists()
-
   const { data: tokenBalance } = useUserVaultTokenBalance(vault, userAddress as Address)
 
-  const importedSrcs = useMemo(() => {
-    const listsWithVault: { name: string; href: string }[] = []
-
-    const isOnLocalVaultLists = Object.values(localVaultLists).some((list) => {
-      for (const listVault of list.tokens) {
-        if (vault.id === getVaultId(listVault)) {
-          return true
-        }
-      }
-    })
-
-    if (!isOnLocalVaultLists) {
-      Object.entries(importedVaultLists).forEach(([href, list]) => {
-        for (const listVault of list.tokens) {
-          if (vault.id === getVaultId(listVault)) {
-            const name = list.name
-            listsWithVault.push({ name, href })
-            break
-          }
-        }
-      })
-    }
-
-    return listsWithVault
-  }, [vault, localVaultLists, importedVaultLists])
+  const importedSrcs = useVaultImportedListSrcs(vault)
 
   return (
     <div className='flex flex-col gap-4 bg-pt-transparent rounded-lg px-3 pt-3 pb-6'>
