@@ -1,16 +1,18 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
+  useLastDrawId,
+  useLastDrawTimestamps,
   usePrizeDrawWinners,
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { ChevronRightIcon } from '@heroicons/react/24/outline'
+import { ChevronRightIcon, ClockIcon } from '@heroicons/react/24/outline'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { TokenValue } from '@shared/react-components'
 import { SubgraphDraw } from '@shared/types'
 import { getSecondsSinceEpoch, getSimpleDate, SECONDS_PER_DAY } from '@shared/utilities'
 import { atom, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Address } from 'viem'
 import { useSelectedPrizePool } from '@hooks/useSelectedPrizePool'
 
@@ -24,8 +26,25 @@ export const PrizePoolWinners = () => {
 
   const { data: draws } = usePrizeDrawWinners(selectedPrizePool as PrizePool)
 
+  const { data: lastDrawId } = useLastDrawId(selectedPrizePool as PrizePool)
+  const { data: lastDrawTimestamps } = useLastDrawTimestamps(selectedPrizePool as PrizePool)
+
   const baseNumDraws = 6
   const [numDraws, setNumDraws] = useState<number>(baseNumDraws)
+
+  const isLastDrawOngoing = useMemo(() => {
+    if (
+      !!draws &&
+      !!lastDrawId &&
+      draws[draws.length - 1].id === lastDrawId &&
+      !!lastDrawTimestamps
+    ) {
+      const currentTime = getSecondsSinceEpoch()
+      const drawPeriod = lastDrawTimestamps.end - lastDrawTimestamps.start
+      const drawFinalizedTimestamp = lastDrawTimestamps.end + drawPeriod
+      return drawFinalizedTimestamp > currentTime
+    }
+  }, [draws, lastDrawId, lastDrawTimestamps])
 
   if (!!selectedPrizePool && !!draws && draws.length > 0) {
     return (
@@ -37,7 +56,14 @@ export const PrizePoolWinners = () => {
             .reverse()
             .slice(0, numDraws)
             .map((draw) => {
-              return <DrawRow key={`dr-${draw.id}`} draw={draw} prizePool={selectedPrizePool} />
+              return (
+                <DrawRow
+                  key={`dr-${draw.id}`}
+                  prizePool={selectedPrizePool}
+                  draw={draw}
+                  isOngoing={draw.id === lastDrawId ? isLastDrawOngoing : false}
+                />
+              )
             })}
         </ul>
         {draws.length > numDraws && (
@@ -48,6 +74,11 @@ export const PrizePoolWinners = () => {
             {t_common('showMore')}
           </span>
         )}
+        {isLastDrawOngoing && (
+          <span className='inline-flex gap-1 items-center text-xs text-pt-pink-dark'>
+            <ClockIcon className='h-5 w-5' /> {t_prizes('drawWinners.drawIsOngoing')}
+          </span>
+        )}
       </div>
     )
   }
@@ -56,12 +87,13 @@ export const PrizePoolWinners = () => {
 }
 
 interface DrawRowProps {
-  draw: SubgraphDraw
   prizePool: PrizePool
+  draw: SubgraphDraw
+  isOngoing?: boolean
 }
 
 const DrawRow = (props: DrawRowProps) => {
-  const { draw, prizePool } = props
+  const { prizePool, draw, isOngoing } = props
 
   const t_common = useTranslations('Common')
   const t_prizes = useTranslations('Prizes')
@@ -94,9 +126,12 @@ const DrawRow = (props: DrawRowProps) => {
       onClick={handleClick}
       className='inline-flex gap-4 justify-between pl-3 pr-1 py-2 font-semibold text-pt-purple-100 rounded-lg cursor-pointer whitespace-nowrap hover:bg-pt-transparent'
     >
-      <span>{t_common('drawId', { id: draw.id })}</span>
+      <div className='inline-flex gap-1 items-center'>
+        <span>{t_common('drawId', { id: draw.id })}</span>
+        {isOngoing && <ClockIcon className='h-5 w-5 text-pt-pink-dark' />}
+      </div>
       {!!tokenData && (
-        <span className='inline-flex gap-1'>
+        <div className='inline-flex gap-1 items-center'>
           <span className='hidden md:block'>
             {t_prizes('drawWinners.beforeValue', { numWallets: uniqueWallets.size })}{' '}
           </span>
@@ -110,8 +145,8 @@ const DrawRow = (props: DrawRowProps) => {
             : t_prizes('drawWinners.afterValue.onXDate', {
                 date: getSimpleDate(firstPrizeTimestamp)
               })}{' '}
-          <ChevronRightIcon className='h-6 w-6' />
-        </span>
+          <ChevronRightIcon className='h-5 w-5' />
+        </div>
       )}
       {!tokenData && <>-</>}
     </div>

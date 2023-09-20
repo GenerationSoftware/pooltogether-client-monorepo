@@ -45,7 +45,8 @@
         "today": "today",
         "yesterday": "yesterday",
         "onXDate": "on {date}"
-      }
+      },
+      "drawIsOngoing": "Draw is ongoing"
     },
     "drawModal": {
       "drawTotal": {
