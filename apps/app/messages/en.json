@@ -28,11 +28,10 @@
   },
   "Home": {
     "winUpTo": {
-      "beforeValue": "Deposit for a chance to win up to",
+      "beforeValue": "Deposit for a daily chance to win up to",
       "afterValue": ""
     },
-    "chanceToWin": "Deposit into prize pools for a daily chance to win.",
-    "nextDrawIn": "Next Draw In"
+    "withdrawAnyTime": "You can withdraw your full deposit at any time"
   },
   "Prizes": {
     "learnMore": "Learn more about how prizes work",
