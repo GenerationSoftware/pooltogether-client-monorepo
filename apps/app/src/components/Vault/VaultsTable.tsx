@@ -149,7 +149,12 @@ export const VaultsTable = (props: VaultsTableProps) => {
                 <Link href={`/vault/${vault.chainId}/${vault.address}`}>
                   <VaultBadge vault={vault} onClick={() => {}} className='max-w-full' />
                 </Link>
-                {importedSrcs.length > 0 && <ImportedVaultTooltip vaultLists={importedSrcs} />}
+                {importedSrcs.length > 0 && (
+                  <ImportedVaultTooltip
+                    vaultLists={importedSrcs}
+                    intl={t_tooltips('importedVault')}
+                  />
+                )}
               </>
             ),
             className: 'gap-2 pr-0'
