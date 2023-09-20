@@ -48,9 +48,9 @@ export const PrizePoolWinners = () => {
 
   if (!!selectedPrizePool && !!draws && draws.length > 0) {
     return (
-      <div className='flex flex-col w-full max-w-[36rem] gap-4 items-center px-6 py-8 bg-pt-transparent rounded-lg md:px-11'>
+      <div className='flex flex-col w-full max-w-2xl gap-4 items-center px-6 py-8 bg-pt-transparent rounded-lg md:px-11'>
         <span className='font-semibold md:text-xl'>{t_prizes('recentWinners')}</span>
-        <ul className='flex flex-col w-full max-w-[36rem] pl-2 md:pl-1'>
+        <ul className='flex flex-col w-full max-w-2xl pl-2 md:pl-1'>
           {[...draws]
             .filter((draw) => draw.prizeClaims.length > 0)
             .reverse()
