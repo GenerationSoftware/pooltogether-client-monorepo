@@ -1,7 +1,7 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { VaultBadge, WinChanceTooltip } from '@shared/react-components'
 import { useTranslations } from 'next-intl'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
@@ -17,8 +17,6 @@ interface AccountDepositsCardProps {
 export const AccountDepositsCard = (props: AccountDepositsCardProps) => {
   const { vault, address } = props
 
-  const router = useRouter()
-
   const t_vault = useTranslations('Vault')
   const t_tooltips = useTranslations('Tooltips')
 
@@ -32,10 +30,9 @@ export const AccountDepositsCard = (props: AccountDepositsCardProps) => {
   return (
     <div className='flex flex-col gap-4 bg-pt-transparent rounded-lg px-3 pt-3 pb-6'>
       <span>
-        <VaultBadge
-          vault={vault}
-          onClick={() => router.push(`/vault/${vault.chainId}/${vault.address}`)}
-        />
+        <Link href={`/vault/${vault.chainId}/${vault.address}`}>
+          <VaultBadge vault={vault} onClick={() => {}} />
+        </Link>
       </span>
       <div className='w-full flex flex-col gap-1 px-3'>
         <div className='flex items-center justify-between'>

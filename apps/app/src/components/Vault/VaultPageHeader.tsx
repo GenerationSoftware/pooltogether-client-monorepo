@@ -8,7 +8,6 @@ import { PrizePoolBadge, TokenIcon } from '@shared/react-components'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 
 interface VaultPageHeaderProps {
   vault?: Vault
@@ -17,8 +16,6 @@ interface VaultPageHeaderProps {
 
 export const VaultPageHeader = (props: VaultPageHeaderProps) => {
   const { vault, className } = props
-
-  const router = useRouter()
 
   const t = useTranslations('Common')
 
@@ -58,11 +55,9 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
           )}
         </div>
         {!!vault && (!!vault.name || !!shareData?.name) && (
-          <PrizePoolBadge
-            chainId={vault.chainId}
-            onClick={() => router.push(`/prizes?network=${vault.chainId}`)}
-            intl={t}
-          />
+          <Link href={`/prizes?network=${vault.chainId}`}>
+            <PrizePoolBadge chainId={vault.chainId} onClick={() => {}} intl={t} />
+          </Link>
         )}
       </div>
     </>

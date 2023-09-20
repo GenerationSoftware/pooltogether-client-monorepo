@@ -8,7 +8,7 @@ import { PrizePowerTooltip, SortIcon, VaultBadge } from '@shared/react-component
 import { Spinner, Table, TableProps } from '@shared/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 import { ReactNode } from 'react'
 import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
@@ -24,8 +24,6 @@ interface VaultsTableProps {
 
 export const VaultsTable = (props: VaultsTableProps) => {
   const { chainId, vaults, className } = props
-
-  const router = useRouter()
 
   const t_common = useTranslations('Common')
   const t_vaults = useTranslations('Vaults')
@@ -109,11 +107,9 @@ export const VaultsTable = (props: VaultsTableProps) => {
       cells: {
         token: {
           content: (
-            <VaultBadge
-              vault={vault}
-              onClick={() => router.push(`/vault/${vault.chainId}/${vault.address}`)}
-              className='max-w-full'
-            />
+            <Link href={`/vault/${vault.chainId}/${vault.address}`}>
+              <VaultBadge vault={vault} onClick={() => {}} className='max-w-full' />
+            </Link>
           ),
           className: 'pr-0'
         },

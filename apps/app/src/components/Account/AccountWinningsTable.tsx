@@ -5,7 +5,7 @@ import { Table, TableProps } from '@shared/ui'
 import { getSimpleDate } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 import { AccountWinAmount } from './AccountWinAmount'
 import { AccountWinButtons } from './AccountWinButtons'
 
@@ -16,8 +16,6 @@ interface AccountWinningsTableProps extends Omit<TableProps, 'data' | 'keyPrefix
 
 export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
   const { wins, prizePools, className, ...rest } = props
-
-  const router = useRouter()
 
   const t_common = useTranslations('Common')
   const t_account = useTranslations('Account')
@@ -38,11 +36,9 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
             date: { content: getSimpleDate(win.timestamp) },
             prizePool: {
               content: (
-                <PrizePoolBadge
-                  chainId={win.chainId}
-                  onClick={() => router.push(`/prizes?network=${win.chainId}`)}
-                  intl={t_common}
-                />
+                <Link href={`/prizes?network=${win.chainId}`}>
+                  <PrizePoolBadge chainId={win.chainId} onClick={() => {}} intl={t_common} />
+                </Link>
               ),
               position: 'center'
             },

@@ -2,7 +2,7 @@ import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useUserVaultTokenBalance } from '@generationsoftware/hyperstructure-react-hooks'
 import { PrizePowerTooltip, VaultBadge } from '@shared/react-components'
 import { useTranslations } from 'next-intl'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
@@ -18,8 +18,6 @@ interface VaultCardProps {
 export const VaultCard = (props: VaultCardProps) => {
   const { vault, address } = props
 
-  const router = useRouter()
-
   const t_common = useTranslations('Common')
   const t_vaults = useTranslations('Vaults')
   const t_tooltips = useTranslations('Tooltips')
@@ -32,10 +30,9 @@ export const VaultCard = (props: VaultCardProps) => {
   return (
     <div className='flex flex-col gap-4 bg-pt-transparent rounded-lg px-3 pt-3 pb-6'>
       <span>
-        <VaultBadge
-          vault={vault}
-          onClick={() => router.push(`/vault/${vault.chainId}/${vault.address}`)}
-        />
+        <Link href={`/vault/${vault.chainId}/${vault.address}`}>
+          <VaultBadge vault={vault} onClick={() => {}} />
+        </Link>
       </span>
       <div className='w-full flex flex-col gap-1 px-3'>
         {!!tokenBalance && tokenBalance.amount > 0n && (

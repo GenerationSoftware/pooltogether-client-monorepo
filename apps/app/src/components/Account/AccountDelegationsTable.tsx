@@ -7,7 +7,7 @@ import { VaultBadge, WinChanceTooltip } from '@shared/react-components'
 import { Table, TableProps } from '@shared/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
@@ -21,8 +21,6 @@ interface AccountDelegationsTableProps extends Omit<TableProps, 'data' | 'keyPre
 
 export const AccountDelegationsTable = (props: AccountDelegationsTableProps) => {
   const { address, className, ...rest } = props
-
-  const router = useRouter()
 
   const t_vaults = useTranslations('Vaults')
   const t_vault = useTranslations('Vault')
@@ -81,10 +79,9 @@ export const AccountDelegationsTable = (props: AccountDelegationsTableProps) => 
               const cells: TableProps['data']['rows'][0]['cells'] = {
                 token: {
                   content: (
-                    <VaultBadge
-                      vault={vault}
-                      onClick={() => router.push(`/vault/${vault.chainId}/${vault.address}`)}
-                    />
+                    <Link href={`/vault/${vault.chainId}/${vault.address}`}>
+                      <VaultBadge vault={vault} onClick={() => {}} />
+                    </Link>
                   )
                 },
                 odds: {

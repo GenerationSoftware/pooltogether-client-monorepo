@@ -7,15 +7,13 @@ import { PrizePoolBadge } from '@shared/react-components'
 import { Button, Spinner } from '@shared/ui'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 import { useNetworks } from '@hooks/useNetworks'
 import { VaultCards } from './VaultCards'
 import { filteredVaultsAtom, filterIdAtom, vaultListFilterIdAtom } from './VaultFilters'
 import { VaultsTable } from './VaultsTable'
 
 export const VaultsDisplay = () => {
-  const router = useRouter()
-
   const t_common = useTranslations('Common')
 
   const networks = useNetworks()
@@ -50,12 +48,14 @@ export const VaultsDisplay = () => {
         if (filteredVaults[network] === undefined || filteredVaults[network].length === 0) return
         return (
           <div key={`pp-${network}`} className='w-full flex flex-col items-center gap-4 lg:gap-6'>
-            <PrizePoolBadge
-              chainId={network}
-              textClassName='text-lg font-medium'
-              onClick={() => router.push(`/prizes?network=${network}`)}
-              intl={t_common}
-            />
+            <Link href={`/prizes?network=${network}`}>
+              <PrizePoolBadge
+                chainId={network}
+                textClassName='text-lg font-medium'
+                onClick={() => {}}
+                intl={t_common}
+              />
+            </Link>
             <VaultsTable
               chainId={network}
               vaults={filteredVaults[network]}
