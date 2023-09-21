@@ -8,7 +8,7 @@ import { Layout } from '@components/Layout'
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: [],
-    fallback: 'blocking'
+    fallback: true
   }
 }
 
@@ -28,7 +28,7 @@ export const getStaticProps: GetStaticProps<ExternalAccountPageProps> = async ({
 export default function ExternalAccountPage() {
   const router = useRouter()
 
-  if (router.isReady) {
+  if (router.isReady && !router.isFallback) {
     return (
       <Layout className='gap-6 lg:gap-8'>
         <ExternalAccountPageContent queryParams={router.query} />

@@ -8,7 +8,7 @@ import { VaultPageContent } from '@components/Vault/VaultPageContent'
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: [],
-    fallback: 'blocking'
+    fallback: true
   }
 }
 
@@ -28,7 +28,7 @@ export const getStaticProps: GetStaticProps<VaultPageProps> = async ({ locale })
 export default function VaultPage() {
   const router = useRouter()
 
-  if (router.isReady) {
+  if (router.isReady && !router.isFallback) {
     return (
       <Layout className='gap-12'>
         <VaultPageContent queryParams={router.query} />
