@@ -419,27 +419,6 @@ export class PrizePool {
     return allPrizeInfo
   }
 
-  /**
-   * Returns given vaults' prize power (percentage of latest contributions)
-   * @param vaultAddresses vault addresses to get prize power from
-   * @returns
-   */
-  async getVaultPrizePowers(
-    vaultAddresses: Address[],
-    numDraws: number = 7
-  ): Promise<{ [vaultId: string]: number }> {
-    const lastDrawId = (await this.getLastDrawId()) || 1
-    const startDrawId = numDraws > lastDrawId ? 1 : lastDrawId - Math.floor(numDraws) + 1
-
-    const prizePowers = await this.getVaultContributedPercentages(
-      vaultAddresses,
-      startDrawId,
-      lastDrawId
-    )
-
-    return prizePowers
-  }
-
   /* ============================== Write Functions ============================== */
 
   /**
