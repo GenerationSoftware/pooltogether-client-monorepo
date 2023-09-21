@@ -6,6 +6,7 @@ import { getSimpleDate } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
+import { useState } from 'react'
 import { AccountWinAmount } from './AccountWinAmount'
 import { AccountWinButtons } from './AccountWinButtons'
 
@@ -15,10 +16,13 @@ interface AccountWinningsTableProps extends Omit<TableProps, 'data' | 'keyPrefix
 }
 
 export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
-  const { wins, prizePools, className, ...rest } = props
+  const { wins, prizePools, className, rounded, ...rest } = props
 
   const t_common = useTranslations('Common')
   const t_account = useTranslations('Account')
+
+  const baseNumWins = 10
+  const [numWins, setNumWins] = useState<number>(baseNumWins)
 
   const tableData: TableProps['data'] = {
     headers: {
@@ -28,6 +32,7 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
       info: { content: t_account('winHeaders.moreInfo'), position: 'center' }
     },
     rows: wins
+      .slice(0, numWins)
       .map((win) => {
         const prizePool = prizePools.find((prizePool) => prizePool.chainId === win.chainId)
 
@@ -65,11 +70,28 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
   }
 
   return (
-    <Table
-      data={tableData}
-      keyPrefix='accountWinningsTable'
-      className={classNames('w-full', className)}
-      {...rest}
-    />
+    <div
+      className={classNames(
+        'w-full flex flex-col bg-pt-bg-purple-dark',
+        { 'rounded-lg': rounded },
+        className
+      )}
+    >
+      <Table
+        data={tableData}
+        keyPrefix='accountWinningsTable'
+        className='w-full bg-transparent'
+        rounded={rounded}
+        {...rest}
+      />
+      {wins.length > numWins && (
+        <span
+          className='w-full flex pb-4 justify-center text-pt-purple-300 cursor-pointer'
+          onClick={() => setNumWins(numWins + baseNumWins)}
+        >
+          {t_common('showMore')}
+        </span>
+      )}
+    </div>
   )
 }
