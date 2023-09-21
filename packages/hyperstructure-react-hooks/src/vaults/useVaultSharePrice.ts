@@ -17,7 +17,6 @@ export const useVaultSharePrice = (vault: Vault) => {
     isFetched: isFetchedTokenPrice,
     refetch: refetchTokenPrice
   } = useVaultTokenPrice(vault)
-  const tokenPrice = parseEther(`${tokenWithPrice?.price ?? 0}`)
 
   const {
     data: exchangeRate,
@@ -29,11 +28,18 @@ export const useVaultSharePrice = (vault: Vault) => {
 
   const enabled = isFetched && !!shareData && !!tokenWithPrice && !!exchangeRate
 
-  const sharePrice = enabled
-    ? parseFloat(
-        formatEther(getAssetsFromShares(tokenPrice, exchangeRate, tokenWithPrice.decimals))
-      )
-    : undefined
+  const sharePrice =
+    enabled && !!tokenWithPrice.price
+      ? parseFloat(
+          formatEther(
+            getAssetsFromShares(
+              parseEther(`${tokenWithPrice.price}`),
+              exchangeRate,
+              tokenWithPrice.decimals
+            )
+          )
+        )
+      : undefined
 
   const data: (TokenWithSupply & TokenWithPrice) | undefined = enabled
     ? { ...shareData, price: sharePrice }
