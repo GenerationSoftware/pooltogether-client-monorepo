@@ -1,5 +1,5 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { TokenWithPrice } from '@shared/types'
+import { TokenWithPrice, TokenWithSupply } from '@shared/types'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { usePrizeTokenData, useTokenPrices } from '..'
@@ -26,7 +26,7 @@ export const usePrizeTokenPrice = (prizePool: PrizePool) => {
 
   const isFetched = isFetchedPrizeToken && isFetchedTokenPrices
 
-  const data: TokenWithPrice | undefined =
+  const data: (TokenWithSupply & TokenWithPrice) | undefined =
     isFetched && !!prizeToken ? { ...prizeToken, price: tokenPrice } : undefined
 
   return { data, isFetched, refetch }

@@ -1,5 +1,5 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { TokenWithPrice } from '@shared/types'
+import { TokenWithPrice, TokenWithSupply } from '@shared/types'
 import { getAssetsFromShares } from '@shared/utilities'
 import { formatEther, parseEther } from 'viem'
 import { useVaultExchangeRate, useVaultShareData, useVaultTokenPrice } from '..'
@@ -35,7 +35,9 @@ export const useVaultSharePrice = (vault: Vault) => {
       )
     : undefined
 
-  const data: TokenWithPrice | undefined = enabled ? { ...shareData, price: sharePrice } : undefined
+  const data: (TokenWithSupply & TokenWithPrice) | undefined = enabled
+    ? { ...shareData, price: sharePrice }
+    : undefined
 
   const refetch = () => {
     refetchTokenPrice()

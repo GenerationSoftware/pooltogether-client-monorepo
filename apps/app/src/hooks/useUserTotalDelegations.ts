@@ -1,11 +1,9 @@
 import {
   useAllUserVaultBalances,
   useAllUserVaultDelegationBalances,
-  useAllVaultExchangeRates,
-  useAllVaultTokenPrices,
+  useAllVaultSharePrices,
   useSelectedVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { getAssetsFromShares } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
 
@@ -17,8 +15,8 @@ import { Address, formatUnits } from 'viem'
 export const useUserTotalDelegations = (userAddress: Address) => {
   const { vaults, isFetched: isFetchedVaultData } = useSelectedVaults()
 
-  const { data: allVaultTokenPrices, isFetched: isFetchedAllVaultTokenPrices } =
-    useAllVaultTokenPrices()
+  const { data: allVaultSharePrices, isFetched: isFetchedAllVaultSharePrices } =
+    useAllVaultSharePrices(vaults)
 
   const { data: shareBalances, isFetched: isFetchedShareBalances } = useAllUserVaultBalances(
     vaults,
@@ -28,19 +26,14 @@ export const useUserTotalDelegations = (userAddress: Address) => {
   const { data: delegationBalances, isFetched: isFetchedDelegationBalances } =
     useAllUserVaultDelegationBalances(vaults, userAddress)
 
-  const { data: vaultExchangeRates, isFetched: isFetchedVaultExchangeRates } =
-    useAllVaultExchangeRates(vaults)
-
   const isFetched =
     isFetchedVaultData &&
-    isFetchedAllVaultTokenPrices &&
+    isFetchedAllVaultSharePrices &&
     isFetchedShareBalances &&
     isFetchedDelegationBalances &&
-    isFetchedVaultExchangeRates &&
-    !!allVaultTokenPrices &&
+    !!allVaultSharePrices &&
     !!shareBalances &&
     !!delegationBalances &&
-    !!vaultExchangeRates &&
     !!vaults.underlyingTokenAddresses
 
   const data = useMemo(() => {
@@ -51,19 +44,16 @@ export const useUserTotalDelegations = (userAddress: Address) => {
         const shareToken = shareBalances[vaultId]
         const chainId = shareToken.chainId
         const decimals = shareToken.decimals
-        const exchangeRate = vaultExchangeRates[vaultId]
 
-        if (decimals !== undefined && !!exchangeRate) {
+        if (decimals !== undefined) {
           const tokenAddress = vaults.underlyingTokenAddresses?.byVault[vaultId] as Address
           const delegationBalance = delegationBalances[vaultId] - shareToken.amount
 
           if (delegationBalance > 0n) {
-            const tokenPrice =
-              allVaultTokenPrices[chainId]?.[tokenAddress.toLowerCase() as Address] ?? 0
-            const tokenBalance = getAssetsFromShares(delegationBalance, exchangeRate, decimals)
+            const sharePrice = allVaultSharePrices[vaultId]?.price ?? 0
 
-            const formattedTokenBalance = formatUnits(tokenBalance, decimals)
-            totalDelegations += Number(formattedTokenBalance) * tokenPrice
+            const formattedBalance = formatUnits(delegationBalance, decimals)
+            totalDelegations += Number(formattedBalance) * sharePrice
           }
         }
       }
@@ -74,14 +64,12 @@ export const useUserTotalDelegations = (userAddress: Address) => {
     }
   }, [
     isFetchedVaultData,
-    isFetchedAllVaultTokenPrices,
-    allVaultTokenPrices,
+    isFetchedAllVaultSharePrices,
+    allVaultSharePrices,
     isFetchedShareBalances,
     shareBalances,
     isFetchedDelegationBalances,
     delegationBalances,
-    isFetchedVaultExchangeRates,
-    vaultExchangeRates,
     vaults
   ])
 

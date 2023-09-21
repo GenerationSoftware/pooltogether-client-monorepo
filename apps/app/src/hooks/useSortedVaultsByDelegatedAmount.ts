@@ -2,12 +2,10 @@ import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useAllUserVaultBalances,
   useAllUserVaultDelegationBalances,
-  useAllVaultExchangeRates,
-  useAllVaultTokenPrices,
+  useAllVaultSharePrices,
   useVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { TokenWithAmount } from '@shared/types'
-import { getAssetsFromShares } from '@shared/utilities'
+import { TokenWithAmount, TokenWithPrice, TokenWithSupply } from '@shared/types'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
 
@@ -28,22 +26,17 @@ export const useSortedVaultsByDelegatedAmount = (vaultsArray: Vault[], userAddre
   const { data: delegationBalances, isFetched: isFetchedDelegationBalances } =
     useAllUserVaultDelegationBalances(vaults, userAddress)
 
-  const { data: allVaultExchangeRates, isFetched: isFetchedAllVaultExchangeRates } =
-    useAllVaultExchangeRates(vaults)
-
-  const { data: allVaultTokenPrices, isFetched: isFetchedAllVaultTokenPrices } =
-    useAllVaultTokenPrices()
+  const { data: allVaultSharePrices, isFetched: isFetchedAllVaultSharePrices } =
+    useAllVaultSharePrices(vaults)
 
   const isFetched =
     !!vaults &&
     isFetchedShareBalances &&
     isFetchedDelegationBalances &&
-    isFetchedAllVaultExchangeRates &&
-    isFetchedAllVaultTokenPrices &&
+    isFetchedAllVaultSharePrices &&
     shareBalances &&
     !!delegationBalances &&
-    !!allVaultExchangeRates &&
-    !!allVaultTokenPrices
+    !!allVaultSharePrices
 
   const data = useMemo(() => {
     if (isFetched) {
@@ -51,8 +44,7 @@ export const useSortedVaultsByDelegatedAmount = (vaultsArray: Vault[], userAddre
         vaultsArray,
         shareBalances,
         delegationBalances,
-        allVaultExchangeRates,
-        allVaultTokenPrices
+        allVaultSharePrices
       )
     } else {
       return []
@@ -69,19 +61,15 @@ const sortVaultsByDelegatedAmount = (
   vaults: Vault[],
   shareBalances: { [vaultId: string]: TokenWithAmount },
   delegationBalances: { [vaultId: string]: bigint },
-  exchangeRates: { [vaultId: string]: bigint },
-  tokenPrices: { [chainId: number]: { [address: Address]: number } }
+  sharePrices: { [vaultId: string]: TokenWithSupply & TokenWithPrice }
 ) => {
   return vaults.sort((a, b) => {
-    const price = (v: Vault) => tokenPrices[v.chainId]?.[v.address.toLowerCase() as Address] ?? 0
+    const price = (v: Vault) => sharePrices[v.id]?.price ?? 0
     const delegationBalance = (v: Vault) =>
       (delegationBalances[v.id] ?? 0n) - (shareBalances[v.id]?.amount ?? 0n)
     const decimals = (v: Vault) => shareBalances[v.id]?.decimals ?? 18
-    const exchangeRate = (v: Vault) => exchangeRates[v.id] ?? 0n
 
-    const tokenBalance = (v: Vault) =>
-      getAssetsFromShares(delegationBalance(v), exchangeRate(v), decimals(v))
-    const amount = (v: Vault) => parseFloat(formatUnits(tokenBalance(v), decimals(v)))
+    const amount = (v: Vault) => parseFloat(formatUnits(delegationBalance(v), decimals(v)))
     const value = (v: Vault) => amount(v) * price(v)
 
     return value(b) - value(a)

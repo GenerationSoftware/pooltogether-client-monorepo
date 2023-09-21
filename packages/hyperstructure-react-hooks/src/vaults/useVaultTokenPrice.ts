@@ -1,5 +1,5 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { TokenWithPrice } from '@shared/types'
+import { TokenWithPrice, TokenWithSupply } from '@shared/types'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useTokenPrices, useVaultTokenData } from '..'
@@ -26,7 +26,7 @@ export const useVaultTokenPrice = (vault: Vault) => {
 
   const isFetched = isFetchedTokenData && isFetchedTokenPrices
 
-  const data: TokenWithPrice | undefined =
+  const data: (TokenWithSupply & TokenWithPrice) | undefined =
     isFetched && !!tokenData ? { ...tokenData, price: tokenPrice } : undefined
 
   return { data, isFetched, refetch }

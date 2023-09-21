@@ -1,12 +1,6 @@
-import { getAssetsFromShares } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
-import {
-  useAllUserVaultBalances,
-  useAllVaultExchangeRates,
-  useAllVaultTokenPrices,
-  useSelectedVaults
-} from '..'
+import { useAllUserVaultBalances, useAllVaultSharePrices, useSelectedVaults } from '..'
 
 /**
  * Returns a user's total balance in ETH
@@ -16,25 +10,20 @@ import {
 export const useUserTotalBalance = (userAddress: Address) => {
   const { vaults, isFetched: isFetchedVaultData } = useSelectedVaults()
 
-  const { data: allVaultTokenPrices, isFetched: isFetchedAllVaultTokenPrices } =
-    useAllVaultTokenPrices()
+  const { data: allVaultShareTokens, isFetched: isFetchedAllVaultShareTokens } =
+    useAllVaultSharePrices(vaults)
 
   const { data: vaultBalances, isFetched: isFetchedVaultBalances } = useAllUserVaultBalances(
     vaults,
     userAddress
   )
 
-  const { data: vaultExchangeRates, isFetched: isFetchedVaultExchangeRates } =
-    useAllVaultExchangeRates(vaults)
-
   const isFetched =
     isFetchedVaultData &&
-    isFetchedAllVaultTokenPrices &&
+    isFetchedAllVaultShareTokens &&
     isFetchedVaultBalances &&
-    isFetchedVaultExchangeRates &&
-    !!allVaultTokenPrices &&
+    !!allVaultShareTokens &&
     !!vaultBalances &&
-    !!vaultExchangeRates &&
     !!vaults.underlyingTokenAddresses
 
   const data = useMemo(() => {
@@ -43,19 +32,12 @@ export const useUserTotalBalance = (userAddress: Address) => {
       for (const vaultId in vaultBalances) {
         const decimals = vaultBalances[vaultId].decimals
         if (!isNaN(decimals)) {
-          const exchangeRate = vaultExchangeRates[vaultId]
-          if (!!exchangeRate) {
-            const chainId = vaultBalances[vaultId].chainId
-            const tokenAddress = vaults.underlyingTokenAddresses?.byVault[vaultId] as Address
-            const shareBalance = vaultBalances[vaultId].amount
+          const shareBalance = vaultBalances[vaultId].amount
 
-            const tokenPrice =
-              allVaultTokenPrices[chainId]?.[tokenAddress.toLowerCase() as Address] ?? 0
-            const tokenBalance = getAssetsFromShares(shareBalance, exchangeRate, decimals)
+          const sharePrice = allVaultShareTokens[vaultId]?.price ?? 0
 
-            const formattedTokenBalance = formatUnits(tokenBalance, decimals)
-            totalBalance += Number(formattedTokenBalance) * tokenPrice
-          }
+          const formattedShareBalance = formatUnits(shareBalance, decimals)
+          totalBalance += Number(formattedShareBalance) * sharePrice
         }
       }
       return totalBalance
@@ -64,12 +46,10 @@ export const useUserTotalBalance = (userAddress: Address) => {
     }
   }, [
     isFetchedVaultData,
-    isFetchedAllVaultTokenPrices,
-    allVaultTokenPrices,
+    isFetchedAllVaultShareTokens,
+    allVaultShareTokens,
     isFetchedVaultBalances,
     vaultBalances,
-    isFetchedVaultExchangeRates,
-    vaultExchangeRates,
     vaults
   ])
 

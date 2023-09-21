@@ -1,36 +1,42 @@
+import { Vaults } from '@generationsoftware/hyperstructure-client-js'
 import { PRIZE_POOLS } from '@shared/utilities'
+import { useMemo } from 'react'
 import { Address } from 'viem'
-import { useSelectedVaults, useTokenPricesAcrossChains } from '..'
+import { useAllVaultTokenAddresses, useTokenPricesAcrossChains } from '..'
 
 /**
  * Returns token prices for all vaults' underlying tokens
+ * @param vaults instance of the `Vaults` class
  * @returns
  */
-export const useAllVaultTokenPrices = () => {
-  const { vaults, isFetched: isFetchedVaultData } = useSelectedVaults()
+export const useAllVaultTokenPrices = (vaults: Vaults) => {
+  const { data: allTokenAddresses, isFetched: isFetchedAllTokenAddresses } =
+    useAllVaultTokenAddresses(vaults)
 
-  const tokenAddresses: { [chainId: number]: Address[] } = {}
+  const tokenAddresses = useMemo(() => {
+    const addresses: { [chainId: number]: Address[] } = {}
 
-  // Adding vault token addresses:
-  if (!!vaults.underlyingTokenAddresses) {
-    for (const key in vaults.underlyingTokenAddresses.byChain) {
-      const chainId = parseInt(key)
-      tokenAddresses[chainId] = [...vaults.underlyingTokenAddresses.byChain[chainId]]
-    }
-  }
-
-  // Adding prize token addresses:
-  if (!!vaults.underlyingTokenAddresses) {
-    PRIZE_POOLS.forEach((prizePool) => {
-      const chainId = prizePool.chainId
-      const prizeTokenAddress = prizePool.options.prizeTokenAddress
-      if (tokenAddresses[chainId] === undefined) {
-        tokenAddresses[chainId] = [prizeTokenAddress]
-      } else if (!tokenAddresses[chainId].includes(prizeTokenAddress)) {
-        tokenAddresses[chainId].push(prizeTokenAddress)
+    if (!!allTokenAddresses) {
+      // Adding vault token addresses:
+      for (const key in allTokenAddresses.byChain) {
+        const chainId = parseInt(key)
+        addresses[chainId] = [...allTokenAddresses.byChain[chainId]]
       }
-    })
-  }
+
+      // Adding prize token addresses:
+      PRIZE_POOLS.forEach((prizePool) => {
+        const chainId = prizePool.chainId
+        const prizeTokenAddress = prizePool.options.prizeTokenAddress
+        if (addresses[chainId] === undefined) {
+          addresses[chainId] = [prizeTokenAddress]
+        } else if (!addresses[chainId].includes(prizeTokenAddress)) {
+          addresses[chainId].push(prizeTokenAddress)
+        }
+      })
+    }
+
+    return addresses
+  }, [allTokenAddresses])
 
   const {
     data: tokenPrices,
@@ -38,7 +44,7 @@ export const useAllVaultTokenPrices = () => {
     refetch: refetchTokenPrices
   } = useTokenPricesAcrossChains(tokenAddresses)
 
-  const isFetched = isFetchedVaultData && isFetchedTokenPrices
+  const isFetched = isFetchedAllTokenAddresses && isFetchedTokenPrices
 
   return { data: tokenPrices, isFetched, refetch: refetchTokenPrices }
 }
