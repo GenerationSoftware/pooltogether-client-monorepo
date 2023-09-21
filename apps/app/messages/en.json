@@ -99,7 +99,8 @@
     "vaultContract": "Vault Contract",
     "yieldSourceContract": "Yield Source Contract",
     "inVaultLists": "This prize vault is in the following vault lists you have selected:",
-    "notInVaultLists": "This prize vault is not in any of the vault lists you have selected."
+    "notInVaultLists": "This prize vault is not in any of the vault lists you have selected.",
+    "shortWarningNotInVaultLists": "Warning! This vault is not in any of your active lists."
   },
   "Account": {
     "connectWallet": "Connect your wallet to view account status",

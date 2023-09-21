@@ -1,5 +1,6 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
+  useSelectedVaultLists,
   useUserVaultDelegationBalance,
   useUserVaultShareBalance,
   useVaultFeeInfo,
@@ -8,7 +9,7 @@ import {
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { PrizePowerTooltip, VaultFeeTooltip, WinChanceTooltip } from '@shared/react-components'
 import { ExternalLink, Spinner } from '@shared/ui'
-import { getBlockExplorerUrl, shorten } from '@shared/utilities'
+import { getBlockExplorerUrl, getVaultId, shorten } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo } from 'react'
@@ -43,13 +44,20 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
 
   const { data: vaultFee } = useVaultFeeInfo(vault)
 
+  const { localVaultLists, importedVaultLists } = useSelectedVaultLists()
+
+  const foundInVaultLists = useMemo(() => {
+    return Object.values({ ...localVaultLists, ...importedVaultLists }).some((list) => {
+      for (const listVault of list.tokens) {
+        if (vault.id === getVaultId(listVault)) {
+          return true
+        }
+      }
+    })
+  }, [vault, localVaultLists, importedVaultLists])
+
   return (
-    <div
-      className={classNames(
-        'flex flex-col w-full max-w-screen-md gap-2 px-9 text-sm md:text-base',
-        className
-      )}
-    >
+    <div className={classNames('flex flex-col w-full gap-2 text-sm md:text-base', className)}>
       {!!userAddress && (
         <VaultInfoRow
           name={t_vault('headers.yourBalance')}
@@ -152,6 +160,7 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
           />
         </>
       )}
+      {!foundInVaultLists && <NotInVaultListsWarning />}
     </div>
   )
 }
@@ -237,5 +246,26 @@ const VaultInfoURI = (props: VaultInfoURIProps) => {
     <ExternalLink href={URI} size='sm' className='text-pt-purple-200'>
       {cleanURI}
     </ExternalLink>
+  )
+}
+
+interface NotInVaultListsWarningProps {
+  className?: string
+}
+
+const NotInVaultListsWarning = (props: NotInVaultListsWarningProps) => {
+  const { className } = props
+
+  const t = useTranslations('Vault')
+
+  return (
+    <span
+      className={classNames(
+        'w-full px-6 py-1 text-center text-sm font-medium bg-pt-warning-light text-pt-warning-dark rounded',
+        className
+      )}
+    >
+      {t('shortWarningNotInVaultLists')}
+    </span>
   )
 }

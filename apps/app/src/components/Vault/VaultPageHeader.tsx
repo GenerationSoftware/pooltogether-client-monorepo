@@ -28,9 +28,7 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
 
   return (
     <>
-      <div
-        className={classNames('w-full max-w-screen-md flex flex-col gap-2 items-center', className)}
-      >
+      <div className={classNames('w-full flex flex-col gap-2 items-center', className)}>
         <div className='w-full flex relative justify-center items-center'>
           <BackButton />
           {!!vault && (
@@ -80,7 +78,7 @@ const BackButton = () => {
   return (
     <Link
       href='/vaults'
-      className='absolute left-0 flex items-center gap-2 text-pt-purple-100 cursor-pointer md:left-9'
+      className='absolute left-0 flex items-center gap-2 text-pt-purple-100 cursor-pointer'
     >
       <ArrowLeftIcon className='h-6 w-6 md:h-4 md:w-4' />
       <span className='hidden text-xs font-medium md:block'>{t('back')}</span>

@@ -67,12 +67,12 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
 
   return (
     <>
-      <VaultPageHeader vault={vault} />
+      <VaultPageHeader vault={vault} className='max-w-[44rem]' />
       {!!vault && !!vaultTokenAddress ? (
         <>
-          <VaultPageInfo vault={vault} />
-          <VaultPageButtons vault={vault} />
-          <VaultPageExtraInfo vault={vault} />
+          <VaultPageInfo vault={vault} className='max-w-[44rem]' />
+          <VaultPageButtons vault={vault} className='max-w-[44rem]' />
+          <VaultPageExtraInfo vault={vault} className='max-w-[44rem]' />
         </>
       ) : (
         <ErrorState chainId={rawChainId} tokenAddress={vaultTokenAddress} />

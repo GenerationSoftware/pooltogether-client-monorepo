@@ -25,7 +25,6 @@ export const VaultPageExtraInfo = (props: VaultPageExtraInfoProps) => {
   const t_vault = useTranslations('Vault')
 
   const { localVaultLists, importedVaultLists } = useSelectedVaultLists()
-  const allVaultLists = { ...localVaultLists, ...importedVaultLists }
 
   const { data: shareData } = useVaultShareData(vault)
 
@@ -48,7 +47,7 @@ export const VaultPageExtraInfo = (props: VaultPageExtraInfoProps) => {
   const vaultLists = useMemo(() => {
     const listsWithVault: { name: string; src: string }[] = []
 
-    Object.entries(allVaultLists).forEach(([src, list]) => {
+    Object.entries({ ...localVaultLists, ...importedVaultLists }).forEach(([src, list]) => {
       for (const listVault of list.tokens) {
         if (vault.id === getVaultId(listVault)) {
           const name = list.name
@@ -59,13 +58,13 @@ export const VaultPageExtraInfo = (props: VaultPageExtraInfoProps) => {
     })
 
     return listsWithVault
-  }, [vault, allVaultLists])
+  }, [vault, localVaultLists, importedVaultLists])
 
   if (!!shareData && !!yieldSourceAddress) {
     return (
       <div
         className={classNames(
-          'w-full max-w-screen-md flex flex-col gap-4 p-6 text-pt-purple-100 bg-pt-transparent rounded-lg',
+          'w-full flex flex-col gap-4 p-6 text-pt-purple-100 bg-pt-transparent rounded-lg',
           'lg:gap-5 lg:items-center lg:p-10',
           className
         )}
