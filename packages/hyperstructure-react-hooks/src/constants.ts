@@ -40,7 +40,6 @@ export const QUERY_KEYS = Object.freeze({
   vaultList: 'vaultList',
   vaultOwner: 'vaultOwner',
   vaultPercentageContributions: 'vaultPercentageContributions',
-  vaultPrizePower: 'vaultPrizePower',
   vaultShareData: 'vaultShareData',
   vaultTokenAddresses: 'vaultTokenAddresses',
   vaultTokenData: 'vaultTokenData',

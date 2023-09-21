@@ -1,31 +1,45 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
-import { NO_REFETCH } from '@shared/generic-react-hooks'
-import { useQuery, UseQueryResult } from '@tanstack/react-query'
-import { QUERY_KEYS } from '../constants'
+import { useMemo } from 'react'
+import { formatUnits } from 'viem'
+import { useVaultPercentageContribution, useVaultSharePrice } from '..'
 
 /**
  * Returns a vault's prize power
  * @param vault instance of the `Vault` class
  * @param prizePool instance of the `PrizePool` class
- * @param refetchInterval optional automatic refetching interval in ms
+ * @param options optional settings
  * @returns
  */
 export const useVaultPrizePower = (
   vault: Vault,
   prizePool: PrizePool,
-  refetchInterval?: number
-): { data?: number } & Omit<UseQueryResult<{ [vaultId: string]: number }>, 'data'> => {
-  const queryKey = [QUERY_KEYS.vaultPrizePower, prizePool?.id, vault?.id]
+  options?: {
+    numDraws?: number
+  }
+) => {
+  const {
+    data: percentageContribution,
+    isFetched: isFetchedPercentageContribution,
+    refetch: refetchPercentageContribution
+  } = useVaultPercentageContribution(prizePool, vault, options?.numDraws)
 
-  const result = useQuery(
-    queryKey,
-    async () => await prizePool.getVaultPrizePowers([vault?.address]),
-    {
-      enabled: !!vault && !!prizePool,
-      ...NO_REFETCH,
-      refetchInterval: refetchInterval ?? false
+  const { data: shareToken, isFetched: isFetchedShareToken } = useVaultSharePrice(vault)
+
+  const data = useMemo(() => {
+    if (percentageContribution === 0 || shareToken?.price === 0) return 0
+
+    if (!!percentageContribution && !!shareToken?.price) {
+      const supply = parseFloat(formatUnits(shareToken.totalSupply, shareToken.decimals))
+      const tvl = supply * shareToken.price
+      return percentageContribution / tvl
     }
-  )
+  }, [percentageContribution, shareToken])
 
-  return { ...result, data: result.data?.[vault?.id] }
+  const isFetched = isFetchedPercentageContribution && isFetchedShareToken
+
+  const refetch = () => {
+    refetchPercentageContribution()
+  }
+
+  return { data, isFetched, refetch }
 }

@@ -1,8 +1,7 @@
 import { PrizePool, Vaults } from '@generationsoftware/hyperstructure-client-js'
-import { NO_REFETCH } from '@shared/generic-react-hooks'
-import { useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query'
-import { populateCachePerId } from '..'
-import { QUERY_KEYS } from '../constants'
+import { useMemo } from 'react'
+import { formatUnits } from 'viem'
+import { useAllVaultPercentageContributions, useAllVaultSharePrices } from '..'
 
 /**
  * Returns each vault's prize power on a given prize pool
@@ -10,29 +9,50 @@ import { QUERY_KEYS } from '../constants'
  * Stores queried vault prize powers in cache
  * @param vaults instance of the `Vaults` class
  * @param prizePool instance of the `PrizePool` class
- * @param refetchInterval optional automatic refetching interval in ms
+ * @param options optional settings
  * @returns
  */
 export const useAllVaultPrizePowers = (
   vaults: Vaults,
   prizePool: PrizePool,
-  refetchInterval?: number
-): UseQueryResult<{ [vaultId: string]: number }, unknown> => {
-  const queryClient = useQueryClient()
+  options?: {
+    numDraws?: number
+  }
+) => {
+  const {
+    data: percentageContributions,
+    isFetched: isFetchedPercentageContributions,
+    refetch: refetchPercentageContributions
+  } = useAllVaultPercentageContributions([prizePool], vaults, options?.numDraws)
 
-  const vaultIds = !!vaults ? Object.keys(vaults.vaults) : []
-  const getQueryKey = (val: (string | number)[]) => [QUERY_KEYS.vaultPrizePower, prizePool?.id, val]
+  const { data: allShareTokens, isFetched: isFetchedAllShareTokens } =
+    useAllVaultSharePrices(vaults)
 
-  const vaultAddresses = !!vaults ? Object.values(vaults.vaults).map((vault) => vault.address) : []
+  const data = useMemo(() => {
+    const prizePowers: { [vaultId: string]: number } = {}
 
-  return useQuery(
-    getQueryKey(vaultIds),
-    async () => await prizePool.getVaultPrizePowers(vaultAddresses),
-    {
-      enabled: !!vaults && !!prizePool,
-      ...NO_REFETCH,
-      refetchInterval: refetchInterval ?? false,
-      onSuccess: (data) => populateCachePerId(queryClient, getQueryKey, data)
+    if (!!percentageContributions && !!allShareTokens) {
+      Object.entries(percentageContributions).forEach(([vaultId, percentageContribution]) => {
+        const shareToken = allShareTokens[vaultId]
+
+        if (percentageContribution === 0 || shareToken?.price === 0) {
+          prizePowers[vaultId] = 0
+        } else if (!!percentageContribution && !!shareToken?.price) {
+          const supply = parseFloat(formatUnits(shareToken.totalSupply, shareToken.decimals))
+          const tvl = supply * shareToken.price
+          prizePowers[vaultId] = percentageContribution / tvl
+        }
+      })
     }
-  )
+
+    return prizePowers
+  }, [percentageContributions])
+
+  const isFetched = isFetchedPercentageContributions && isFetchedAllShareTokens
+
+  const refetch = () => {
+    refetchPercentageContributions()
+  }
+
+  return { data, isFetched, refetch }
 }

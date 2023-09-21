@@ -1,15 +1,12 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
-import { TokenWithAmount } from '@shared/types'
-import { getAssetsFromShares } from '@shared/utilities'
+import { TokenWithAmount, TokenWithPrice, TokenWithSupply } from '@shared/types'
 import { useMemo, useState } from 'react'
 import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import {
   useAllUserVaultBalances,
-  useAllVaultBalances,
-  useAllVaultExchangeRates,
   useAllVaultPrizePowers,
-  useAllVaultTokenPrices,
+  useAllVaultSharePrices,
   useVaults
 } from '..'
 
@@ -28,7 +25,7 @@ export const useSortedVaults = (
   vaultsArray: Vault[],
   options?: { prizePool?: PrizePool; defaultSortId?: SortId; defaultSortDirection?: SortDirection }
 ) => {
-  const [sortVaultsBy, setSortVaultsBy] = useState<SortId>(options?.defaultSortId ?? 'prizePower')
+  const [sortVaultsBy, setSortVaultsBy] = useState<SortId>(options?.defaultSortId ?? 'totalBalance')
   const [sortDirection, setSortDirection] = useState<SortDirection>(
     options?.defaultSortDirection ?? 'desc'
   )
@@ -37,8 +34,8 @@ export const useSortedVaults = (
 
   const { address: userAddress } = useAccount()
 
-  const { data: allVaultBalances, isFetched: isFetchedAllVaultBalances } =
-    useAllVaultBalances(vaults)
+  const { data: allVaultShareTokens, isFetched: isFetchedAllVaultShareTokens } =
+    useAllVaultSharePrices(vaults)
 
   const { data: allUserVaultBalances, isFetched: isFetchedAllUserVaultBalances } =
     useAllUserVaultBalances(vaults, userAddress as Address)
@@ -48,39 +45,22 @@ export const useSortedVaults = (
     options?.prizePool as PrizePool
   )
 
-  const { data: allVaultExchangeRates, isFetched: isFetchedAllVaultExchangeRates } =
-    useAllVaultExchangeRates(vaults)
-
-  const { data: allVaultTokenPrices, isFetched: isFetchedAllVaultTokenPrices } =
-    useAllVaultTokenPrices()
-
   const isFetched =
     !!vaults &&
-    isFetchedAllVaultBalances &&
+    isFetchedAllVaultShareTokens &&
     (isFetchedAllUserVaultBalances || !userAddress) &&
-    (isFetchedAllPrizePowers || !options?.prizePool) &&
-    isFetchedAllVaultExchangeRates &&
-    isFetchedAllVaultTokenPrices
+    (isFetchedAllPrizePowers || !options?.prizePool)
 
   const sortedVaults = useMemo(() => {
-    if (isFetched) {
-      let sortedVaults = sortVaultsByPrizePower(vaultsArray, allPrizePowers)
-      if (sortVaultsBy === 'totalBalance' && !!allVaultBalances) {
-        sortedVaults = sortVaultsByTotalDeposits(
-          sortedVaults,
-          allVaultBalances,
-          allVaultTokenPrices
-        )
-      } else if (
-        sortVaultsBy === 'userBalance' &&
-        !!allUserVaultBalances &&
-        !!allVaultExchangeRates
-      ) {
+    if (isFetched && !!allVaultShareTokens) {
+      let sortedVaults = sortVaultsByTotalDeposits(vaultsArray, allVaultShareTokens)
+      if (sortVaultsBy === 'prizePower') {
+        sortedVaults = sortVaultsByPrizePower(sortedVaults, allPrizePowers)
+      } else if (sortVaultsBy === 'userBalance' && !!allUserVaultBalances && allVaultShareTokens) {
         sortedVaults = sortVaultsByUserBalances(
           sortedVaults,
-          allVaultTokenPrices,
-          allUserVaultBalances,
-          allVaultExchangeRates
+          allVaultShareTokens,
+          allUserVaultBalances
         )
       }
 
@@ -120,13 +100,12 @@ const sortVaultsByPrizePower = (vaults: Vault[], prizePowers?: { [vaultId: strin
 
 const sortVaultsByTotalDeposits = (
   vaults: Vault[],
-  vaultBalances: { [vaultId: string]: TokenWithAmount },
-  tokenPrices: { [chainId: number]: { [address: Address]: number } }
+  shareTokens: { [vaultId: string]: TokenWithSupply & TokenWithPrice }
 ) => {
   return [...vaults].sort((a, b) => {
-    const price = (v: Vault) => tokenPrices[v.chainId]?.[v.address.toLowerCase() as Address] ?? 0
-    const balance = (v: Vault) => vaultBalances[v.id]?.amount ?? 0n
-    const decimals = (v: Vault) => vaultBalances[v.id]?.decimals ?? 0
+    const price = (v: Vault) => shareTokens[v.id]?.price ?? 0
+    const balance = (v: Vault) => shareTokens[v.id]?.totalSupply ?? 0n
+    const decimals = (v: Vault) => shareTokens[v.id]?.decimals ?? 0
 
     const amount = (v: Vault) => parseFloat(formatUnits(balance(v), decimals(v)))
     const value = (v: Vault) => amount(v) * price(v)
@@ -137,18 +116,15 @@ const sortVaultsByTotalDeposits = (
 
 const sortVaultsByUserBalances = (
   vaults: Vault[],
-  tokenPrices: { [chainId: number]: { [address: Address]: number } },
-  userBalances: { [vaultId: string]: TokenWithAmount },
-  exchangeRates: { [vaultId: string]: bigint }
+  shareTokens: { [vaultId: string]: TokenWithSupply & TokenWithPrice },
+  userBalances: { [vaultId: string]: TokenWithAmount }
 ) => {
   return [...vaults].sort((a, b) => {
-    const price = (v: Vault) => tokenPrices[v.chainId]?.[v.address.toLowerCase() as Address] ?? 0
+    const price = (v: Vault) => shareTokens[v.id]?.price ?? 0
     const shareBalance = (v: Vault) => userBalances[v.id]?.amount ?? 0n
-    const decimals = (v: Vault) => userBalances[v.id]?.decimals ?? 0
-    const exchangeRate = (v: Vault) => exchangeRates[v.id] ?? 0n
+    const decimals = (v: Vault) => shareTokens[v.id]?.decimals ?? 0
 
-    const balance = (v: Vault) => getAssetsFromShares(shareBalance(v), exchangeRate(v), decimals(v))
-    const amount = (v: Vault) => parseFloat(formatUnits(balance(v), decimals(v)))
+    const amount = (v: Vault) => parseFloat(formatUnits(shareBalance(v), decimals(v)))
     const value = (v: Vault) => amount(v) * price(v)
 
     return value(b) - value(a)
