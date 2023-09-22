@@ -29,13 +29,10 @@ export const VaultPrizePower = (props: VaultPrizePowerProps) => {
     return <>?</>
   }
 
-  return (
-    <>
-      {formatNumberForDisplay(prizePower * 100, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      })}
-      %
-    </>
+  const formattedPrizePower = formatNumberForDisplay(
+    prizePower * 10_000_000 - ((prizePower * 10_000_000) % 100),
+    { maximumFractionDigits: 0 }
   )
+
+  return <>{formattedPrizePower}</>
 }

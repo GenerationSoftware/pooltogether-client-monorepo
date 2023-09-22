@@ -40,7 +40,10 @@ export const useAllVaultPrizePowers = (
         } else if (!!percentageContribution && !!shareToken?.price) {
           const supply = parseFloat(formatUnits(shareToken.totalSupply, shareToken.decimals))
           const tvl = supply * shareToken.price
-          prizePowers[vaultId] = percentageContribution / tvl
+
+          if (tvl >= 1) {
+            prizePowers[vaultId] = percentageContribution / tvl
+          }
         }
       })
     }
