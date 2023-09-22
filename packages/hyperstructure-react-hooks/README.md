@@ -129,6 +129,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useAllVaultTokenAddresses`
 - `useAllVaultTokenData`
 - `useAllVaultTokenPrices`
+- `useAllVaultTotalSupplyTwabs`
 - `useSortedVaults`
 - `useUserTotalBalance`
 - `useUserVaultDelegationBalance`
@@ -150,4 +151,5 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useVaultTokenAddress`
 - `useVaultTokenData`
 - `useVaultTokenPrice`
+- `useVaultTotalSupplyTwab`
 - `useVaultYieldSource`

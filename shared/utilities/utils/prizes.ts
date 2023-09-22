@@ -1,5 +1,5 @@
 import { PrizeInfo } from '@shared/types'
-import { Address, formatUnits, getContract, PublicClient } from 'viem'
+import { Address, formatUnits, getContract, PublicClient, zeroAddress } from 'viem'
 import { prizePoolABI } from '../abis/prizePool'
 import { SECONDS_PER_DAY } from '../constants'
 import { formatStringWithPrecision } from './formatting'
@@ -112,6 +112,48 @@ export const getPrizePoolContributionPercentages = async (
   }
 
   return contributionPercentages
+}
+
+/**
+ * Returns the total supply TWAB for any vaults over the last N draws
+ * @param publicClient a public Viem client for the prize pool's chain
+ * @param prizePoolAddress the prize pool's address
+ * @param vaultAddresses the addresses for any vaults to get total supply TWAB for
+ * @param numDraws the number of draws to look back on
+ * @returns
+ */
+export const getPrizePoolTotalSupplyTwabs = async (
+  publicClient: PublicClient,
+  prizePoolAddress: Address,
+  vaultAddresses: Address[],
+  numDraws: number
+): Promise<{ [vaultId: string]: bigint }> => {
+  const totalSupplyTwabs: { [vaultId: string]: bigint } = {}
+
+  const chainId = await publicClient.getChainId()
+
+  if (vaultAddresses.length > 0 && numDraws >= 0) {
+    const calls = vaultAddresses.map((vaultAddress) => ({
+      functionName: 'getVaultUserBalanceAndTotalSupplyTwab',
+      args: [vaultAddress, zeroAddress, Math.floor(numDraws)]
+    }))
+
+    const multicallResults = await getSimpleMulticallResults(
+      publicClient,
+      prizePoolAddress,
+      prizePoolABI,
+      calls
+    )
+
+    vaultAddresses.forEach((vaultAddress, i) => {
+      const result = multicallResults[i]
+      const totalSupplyTwab: bigint = !!result && typeof result[1] === 'bigint' ? result[1] : 0n
+      const vaultId = getVaultId({ chainId, address: vaultAddress })
+      totalSupplyTwabs[vaultId] = totalSupplyTwab
+    })
+  }
+
+  return totalSupplyTwabs
 }
 
 /**

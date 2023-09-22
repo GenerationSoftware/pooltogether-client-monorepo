@@ -4,6 +4,7 @@ import {
   getPrizePoolContributionAmounts,
   getPrizePoolContributionPercentages,
   getPrizePoolId,
+  getPrizePoolTotalSupplyTwabs,
   getTokenInfo,
   prizePoolABI,
   validateAddress,
@@ -247,6 +248,29 @@ export class PrizePool {
     )
 
     return contributedPercentages
+  }
+
+  /**
+   * Returns the total supply TWAB for any vaults over the last N draws
+   * @param vaultAddresses vault addresses to get total supply TWAB for
+   * @param numDraws the number of draws to look back on
+   * @returns
+   */
+  async getVaultTotalSupplyTwabs(
+    vaultAddresses: Address[],
+    numDraws: number
+  ): Promise<{ [vaultId: string]: bigint }> {
+    const source = 'Prize Pool [getVaultTotalSupplyTwab]'
+    await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    const totalSupplyTwabs = await getPrizePoolTotalSupplyTwabs(
+      this.publicClient,
+      this.address,
+      vaultAddresses,
+      numDraws
+    )
+
+    return totalSupplyTwabs
   }
 
   /**
