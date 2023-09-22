@@ -235,7 +235,7 @@
     "xPrizesYearly": "{number, plural, one {# prize} other {# prizes}} yearly"
   },
   "Tooltips": {
-    "prizePower": "Vaults with higher prize power have a greater percentage of chances to win",
+    "prizePower": "Vaults with greater prize power give you better chances to win",
     "winChance": "This is your chance to win a prize in any given draw",
     "exactApproval": "You'll give your approval to deposit a specific amount of {symbol}",
     "infiniteApproval": "You won't need to approve {symbol} the next time you want to deposit",
