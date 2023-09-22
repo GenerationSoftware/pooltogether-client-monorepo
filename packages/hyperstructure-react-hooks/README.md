@@ -138,6 +138,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useVault`
 - `useVaultBalance`
 - `useVaultClaimer`
+- `useVaultContributionAmount`
 - `useVaultExchangeRate`
 - `useVaultFeeInfo`
 - `useVaultFeesAvailable`
