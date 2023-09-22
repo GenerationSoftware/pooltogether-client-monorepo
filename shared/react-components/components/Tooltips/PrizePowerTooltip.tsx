@@ -15,7 +15,7 @@ export const PrizePowerTooltip = (props: PrizePowerTooltipProps) => {
   return (
     <Tooltip
       content={
-        <div className={classNames('flex flex-col max-w-[16ch] text-center', className)}>
+        <div className={classNames('flex flex-col max-w-[17ch] text-center', className)}>
           <span>
             {intl?.text ?? 'Vaults with greater prize power give you better chances to win'}
           </span>
