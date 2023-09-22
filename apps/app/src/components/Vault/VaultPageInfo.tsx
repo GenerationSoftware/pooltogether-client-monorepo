@@ -18,6 +18,7 @@ import { useAccount } from 'wagmi'
 import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
 import { AccountVaultDelegationAmount } from '@components/Account/AccountVaultDelegationAmount'
 import { AccountVaultOdds } from '@components/Account/AccountVaultOdds'
+import { VaultContributions } from './VaultContributions'
 import { VaultFeePercentage } from './VaultFeePercentage'
 import { VaultPrizePower } from './VaultPrizePower'
 import { VaultTotalDeposits } from './VaultTotalDeposits'
@@ -104,6 +105,11 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
         data={<VaultPrizePower vault={vault} />}
       />
       <VaultInfoRow name={t_vault('headers.tvl')} data={<VaultTotalDeposits vault={vault} />} />
+      {/* TODO: need tooltip explaining what this contribution means */}
+      <VaultInfoRow
+        name={t_vault('headers.contributions', { number: 7 })}
+        data={<VaultContributions vault={vault} />}
+      />
       <VaultInfoRow
         name={t_vault('headers.depositAsset')}
         data={

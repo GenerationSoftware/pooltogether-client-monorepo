@@ -85,6 +85,7 @@
       "winChance": "Win Chance",
       "prizePower": "Prize Power",
       "tvl": "TVL",
+      "contributions": "{number}D Prize Pool Contribution",
       "depositAsset": "Deposit Asset",
       "prizeAsset": "Prize Asset",
       "delegatedToYou": "Delegated To You",
