@@ -26,7 +26,7 @@ export const useAllVaultPercentageContributions = (
       ]
 
       const vaultIds = Object.keys(vaults.vaults).filter(
-        (vaultId) => vaults.vaults[vaultId].chainId === prizePool.chainId
+        (vaultId) => vaults.vaults[vaultId].chainId === prizePool?.chainId
       )
 
       return {
