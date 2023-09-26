@@ -19,10 +19,10 @@ export const useReserve = (prizePool: PrizePool, options?: { refetchInterval?: n
         [{ functionName: 'reserve' }, { functionName: 'reserveForOpenDraw' }]
       )
 
-      const reserve = typeof multicallResults[0] === 'bigint' ? multicallResults[0] : 0n
-      const reserveForOpenDraw = typeof multicallResults[1] === 'bigint' ? multicallResults[1] : 0n
+      const current = typeof multicallResults[0] === 'bigint' ? multicallResults[0] : 0n
+      const forOpenDraw = typeof multicallResults[1] === 'bigint' ? multicallResults[1] : 0n
 
-      return reserve + reserveForOpenDraw
+      return { current, forOpenDraw }
     },
     {
       enabled: !!prizePool && !!publicClient,

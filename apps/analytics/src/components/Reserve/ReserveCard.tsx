@@ -85,7 +85,12 @@ export const ReserveCard = (props: ReserveCardProps) => {
   const hours = Math.round((maxTimestamp - minTimestamp) / SECONDS_PER_HOUR)
   const timeText = minTimestamp === 0 ? `All time` : `${hours}hr`
 
-  const fauxLiquidations = reserve - validManualContributions + validRngFees + validPrizeBackstops
+  const fauxLiquidations =
+    reserve.current +
+    reserve.forOpenDraw -
+    validManualContributions +
+    validRngFees +
+    validPrizeBackstops
 
   return (
     <div
@@ -95,11 +100,7 @@ export const ReserveCard = (props: ReserveCardProps) => {
       )}
     >
       <span className='text-center'>{timeText} reserve changes</span>
-      <ReserveCardItem
-        name='Liquidations'
-        amount={fauxLiquidations}
-        token={prizeToken}
-      />
+      <ReserveCardItem name='Liquidations' amount={fauxLiquidations} token={prizeToken} />
       <ReserveCardItem
         name='Manual Contributions'
         amount={validManualContributions}
