@@ -1,8 +1,9 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { usePrizeDrawTimestamps } from '@generationsoftware/hyperstructure-react-hooks'
 import { RNG_AUCTION } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address } from 'viem'
+import { useBlocks } from './useBlocks'
+import { useDrawClosedEvents } from './useDrawClosedEvents'
 import { useRelayAuctionEvents } from './useRelayAuctionEvents'
 import { useRngAuctionEvents } from './useRngAuctionEvents'
 
@@ -30,11 +31,17 @@ export const useRngTxs = (prizePool: PrizePool) => {
   const { data: relayAuctionEvents, isFetched: isFetchedRelayAuctionEvents } =
     useRelayAuctionEvents(prizePool)
 
-  const { data: drawTimestamps, isFetched: isFetchedDrawTimestamps } =
-    usePrizeDrawTimestamps(prizePool)
+  const { data: drawClosedEvents, isFetched: isFetchedDrawClosedEvents } =
+    useDrawClosedEvents(prizePool)
+  const drawClosedBlockNumbers = new Set<bigint>(drawClosedEvents?.map((e) => e.blockNumber) ?? [])
+
+  const { data: drawClosedBlocks, isFetched: isFetchedDrawClosedBlocks } = useBlocks(
+    prizePool?.chainId,
+    [...drawClosedBlockNumbers]
+  )
 
   const data = useMemo(() => {
-    if (!!rngAuctionEvents && !!relayAuctionEvents && !!drawTimestamps) {
+    if (!!rngAuctionEvents && !!relayAuctionEvents && !!drawClosedEvents && !!drawClosedBlocks) {
       const rngTxs = rngAuctionEvents
         .map((rngAuctionEvent, i) => {
           const periodStart =
@@ -42,10 +49,13 @@ export const useRngTxs = (prizePool: PrizePool) => {
             RNG_AUCTION.sequencePeriod * rngAuctionEvent.args.sequenceId
           const periodEnd = periodStart + RNG_AUCTION.sequencePeriod
 
-          const lastDrawId = drawTimestamps[drawTimestamps.length - 1].id
-          let drawId = drawTimestamps.find(
-            (draw) => draw.firstClaim > periodStart && draw.firstClaim < periodEnd // TODO: should be `draw.endedAt` (both cases)
-          )?.id
+          const drawClosedBlock = drawClosedBlocks.find(
+            (block) => block.timestamp > periodStart && block.timestamp < periodEnd
+          )
+
+          const lastDrawId = drawClosedEvents[drawClosedEvents.length - 1].args.drawId
+          let drawId = drawClosedEvents.find((e) => e.blockNumber === drawClosedBlock?.number)?.args
+            .drawId
           if (!drawId && i === rngAuctionEvents.length - 1) {
             drawId = lastDrawId + 1
           }
@@ -91,10 +101,13 @@ export const useRngTxs = (prizePool: PrizePool) => {
 
       return rngTxs
     }
-  }, [rngAuctionEvents, relayAuctionEvents, drawTimestamps])
+  }, [rngAuctionEvents, relayAuctionEvents, drawClosedEvents, drawClosedBlocks])
 
   const isFetched =
-    isFetchedRngAuctionEvents && isFetchedRelayAuctionEvents && isFetchedDrawTimestamps
+    isFetchedRngAuctionEvents &&
+    isFetchedRelayAuctionEvents &&
+    isFetchedDrawClosedEvents &&
+    isFetchedDrawClosedBlocks
 
   return { data, isFetched }
 }

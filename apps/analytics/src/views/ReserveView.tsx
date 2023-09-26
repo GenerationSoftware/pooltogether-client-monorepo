@@ -1,5 +1,4 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { usePrizeDrawTimestamps } from '@generationsoftware/hyperstructure-react-hooks'
 import { PRIZE_POOLS, SECONDS_PER_DAY, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtom } from 'jotai'
@@ -10,6 +9,7 @@ import { usePublicClient } from 'wagmi'
 import { ReserveCard } from '@components/Reserve/ReserveCard'
 import { ReserveHeader } from '@components/Reserve/ReserveHeader'
 import { useBlockAtTimestamp } from '@hooks/useBlockAtTimestamp'
+import { useDrawClosedEvents } from '@hooks/useDrawClosedEvents'
 import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
 import { useManualContributionEvents } from '@hooks/useManualContributionEvents'
 import { usePrizeBackstopEvents } from '@hooks/usePrizeBackstopEvents'
@@ -55,7 +55,7 @@ export const ReserveView = (props: ReserveViewProps) => {
   const { refetch: refetchPrizeBackstopEvents } = usePrizeBackstopEvents(prizePool)
   const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents()
   const { refetch: refetchRelayAuctionEvents } = useRelayAuctionEvents(prizePool)
-  const { refetch: refetchPrizeDrawTimestamps } = usePrizeDrawTimestamps(prizePool)
+  const { refetch: refetchDrawClosedEvents } = useDrawClosedEvents(prizePool)
 
   // Automatic data refetching
   useEffect(() => {
@@ -66,7 +66,7 @@ export const ReserveView = (props: ReserveViewProps) => {
       refetchPrizeBackstopEvents()
       refetchRngAuctionEvents()
       refetchRelayAuctionEvents()
-      refetchPrizeDrawTimestamps()
+      refetchDrawClosedEvents()
       setCurrentTimestamp(Math.floor(Date.now() / 1_000))
     }, sToMs(300))
 

@@ -1,5 +1,4 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { usePrizeDrawTimestamps } from '@generationsoftware/hyperstructure-react-hooks'
 import { PRIZE_POOLS, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
@@ -10,6 +9,7 @@ import { usePublicClient } from 'wagmi'
 import { DrawSelector } from '@components/Draws/DrawSelector'
 import { DrawStatusBadge } from '@components/Draws/DrawStatusBadge'
 import { PrizesTable } from '@components/Prizes/PrizesTable'
+import { useDrawClosedEvents } from '@hooks/useDrawClosedEvents'
 import { useRelayAuctionEvents } from '@hooks/useRelayAuctionEvents'
 import { useRngAuctionEvents } from '@hooks/useRngAuctionEvents'
 
@@ -40,14 +40,14 @@ export const PrizesView = (props: PrizesViewProps) => {
 
   const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents()
   const { refetch: refetchRelayAuctionEvents } = useRelayAuctionEvents(prizePool)
-  const { refetch: refetchPrizeDrawTimestamps } = usePrizeDrawTimestamps(prizePool)
+  const { refetch: refetchDrawClosedEvents } = useDrawClosedEvents(prizePool)
 
   // Automatic data refetching
   useEffect(() => {
     const interval = setInterval(() => {
       refetchRngAuctionEvents()
       refetchRelayAuctionEvents()
-      refetchPrizeDrawTimestamps()
+      refetchDrawClosedEvents()
     }, sToMs(300))
 
     return () => clearInterval(interval)

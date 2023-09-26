@@ -1,10 +1,10 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { usePrizeDrawTimestamps } from '@generationsoftware/hyperstructure-react-hooks'
 import { PRIZE_POOLS, sToMs } from '@shared/utilities'
 import { useEffect, useMemo } from 'react'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { DrawCards } from '@components/Draws/DrawCards'
+import { useDrawClosedEvents } from '@hooks/useDrawClosedEvents'
 import { useDrawRngFeePercentage } from '@hooks/useDrawRngFeePercentage'
 import { useRelayAuctionElapsedTime } from '@hooks/useRelayAuctionElapsedTime'
 import { useRelayAuctionEvents } from '@hooks/useRelayAuctionEvents'
@@ -39,7 +39,7 @@ export const DrawsView = (props: DrawsViewProps) => {
   const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents()
   const { refetch: refetchRelayAuctionElapsedTime } = useRelayAuctionElapsedTime()
   const { refetch: refetchRelayAuctionEvents } = useRelayAuctionEvents(prizePool)
-  const { refetch: refetchPrizeDrawTimestamps } = usePrizeDrawTimestamps(prizePool)
+  const { refetch: refetchDrawClosedEvents } = useDrawClosedEvents(prizePool)
 
   // Automatic data refetching
   useEffect(() => {
@@ -48,7 +48,7 @@ export const DrawsView = (props: DrawsViewProps) => {
       refetchRngAuctionEvents()
       refetchRelayAuctionElapsedTime()
       refetchRelayAuctionEvents()
-      refetchPrizeDrawTimestamps()
+      refetchDrawClosedEvents()
     }, sToMs(300))
 
     return () => clearInterval(interval)
