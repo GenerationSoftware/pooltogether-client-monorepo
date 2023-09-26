@@ -97,7 +97,7 @@ export const ReserveCard = (props: ReserveCardProps) => {
       <span className='text-center'>{timeText} reserve changes</span>
       <ReserveCardItem
         name='Liquidations'
-        amount={reserve - validManualContributions + validRngFees + validPrizeBackstops}
+        amount={fauxLiquidations}
         token={prizeToken}
       />
       <ReserveCardItem

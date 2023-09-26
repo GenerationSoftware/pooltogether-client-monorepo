@@ -76,7 +76,8 @@ export const ReserveView = (props: ReserveViewProps) => {
   return (
     <div className={classNames('w-full flex flex-col gap-6 items-center', className)}>
       <ReserveHeader prizePool={prizePool} />
-      {!!minBlock && <ReserveCard prizePool={prizePool} minBlock={minBlock} className='max-w-md' />}
+      {/* TODO: this is not accurate atm - would need actual liquidations or reserve amount at X block */}
+      {/* {!!minBlock && <ReserveCard prizePool={prizePool} minBlock={minBlock} className='max-w-md' />} */}
       <ReserveCard prizePool={prizePool} className='max-w-md' />
     </div>
   )
