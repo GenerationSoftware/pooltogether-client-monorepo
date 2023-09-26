@@ -15,7 +15,7 @@ export const DrawClaimFees = (props: DrawClaimFeesProps) => {
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
       <DrawCardItemTitle>Claim Fees</DrawCardItemTitle>
-      <ClaimFees prizePool={prizePool} drawId={drawId} />
+      <ClaimFees prizePool={prizePool} drawId={drawId} hideCanary={true} />
     </div>
   )
 }
