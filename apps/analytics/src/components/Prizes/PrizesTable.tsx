@@ -7,6 +7,7 @@ import { Spinner } from '@shared/ui'
 import { sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import Image from 'next/image'
+import { useDrawClosedEvents } from '@hooks/useDrawClosedEvents'
 import { useDrawResults } from '@hooks/useDrawResults'
 import { useDrawStatus } from '@hooks/useDrawStatus'
 import { PrizesTableRow } from './PrizesTableRow'
@@ -29,12 +30,21 @@ export const PrizesTable = (props: PrizesTableProps) => {
     refetchInterval: sToMs(300)
   })
 
+  const { data: drawClosedEvents, isFetched: isFetchedDrawClosedEvents } =
+    useDrawClosedEvents(prizePool)
+  const drawClosedEvent = drawClosedEvents?.find((e) => e.args.drawId === drawId)
+  const prevDrawClosedEvent = drawClosedEvents?.find((e) => e.args.drawId === drawId - 1)
+  const numTiers = drawClosedEvent?.args.numTiers ?? prevDrawClosedEvent?.args.nextNumTiers ?? 0
+
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
-  // TODO: get number of tiers from draw object once available
-  const numTiers = 6
-
-  if (!isFetchedWins || !isFetchedDrawStatus || !isFetchedPrizes || !prizeToken) {
+  if (
+    !isFetchedWins ||
+    !isFetchedDrawStatus ||
+    !isFetchedPrizes ||
+    !prizeToken ||
+    !isFetchedDrawClosedEvents
+  ) {
     return <Spinner className='after:border-y-pt-purple-800' />
   }
 
@@ -60,6 +70,7 @@ export const PrizesTable = (props: PrizesTableProps) => {
             drawId={drawId}
             wins={drawWins}
             tier={tier}
+            numTiers={numTiers}
             closedAt={closedAt}
             prizes={prizes}
             prizeToken={prizeToken}

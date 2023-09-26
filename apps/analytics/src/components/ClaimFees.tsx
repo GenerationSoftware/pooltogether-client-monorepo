@@ -3,11 +3,12 @@ import {
   usePrizeDrawWinners,
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { Token } from '@shared/types'
+import { SubgraphDraw, Token } from '@shared/types'
 import { Spinner } from '@shared/ui'
 import { divideBigInts, formatBigIntForDisplay, MAX_UINT_256 } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
+import { useDrawClosedEvents } from '@hooks/useDrawClosedEvents'
 
 interface ClaimFeesProps {
   prizePool: PrizePool
@@ -21,16 +22,29 @@ export const ClaimFees = (props: ClaimFeesProps) => {
   const { prizePool, drawId, tier, hideCanary, className } = props
 
   const { data: allDraws, isFetched: isFetchedAllDraws } = usePrizeDrawWinners(prizePool)
+  const draw = allDraws?.find((d) => d.id === drawId)
+
+  const { data: drawClosedEvents, isFetched: isFetchedDrawClosedEvents } =
+    useDrawClosedEvents(prizePool)
+  const drawClosedEvent = drawClosedEvents?.find((e) => e.args.drawId === drawId)
 
   const { data: prizeToken, isFetched: isFetchedPrizeToken } = usePrizeTokenData(prizePool)
 
-  // TODO: hide canary tiers once numTiers is available on subgraph (if `hideCanary` is enabled)
-  const wins =
-    allDraws
-      ?.find((d) => d.id === drawId)
-      ?.prizeClaims.filter(
-        (prize) => prize.fee > 0n && (tier === undefined || prize.tier === tier)
-      ) ?? []
+  const wins = useMemo(() => {
+    const filteredWins: SubgraphDraw['prizeClaims'] = []
+    if (!!draw) {
+      draw.prizeClaims.forEach((prize) => {
+        const isValidTier = tier === undefined || prize.tier === tier
+        const isCanaryTier = !!drawClosedEvent
+          ? prize.tier === drawClosedEvent.args.numTiers - 1
+          : false
+        if (prize.fee > 0n && isValidTier && (!hideCanary || !isCanaryTier)) {
+          filteredWins.push(prize)
+        }
+      })
+    }
+    return filteredWins
+  }, [tier, draw, drawClosedEvent])
 
   const claimFeeStats = useMemo(() => {
     if (wins.length > 0) {
@@ -78,7 +92,7 @@ export const ClaimFees = (props: ClaimFeesProps) => {
           <ClaimFeeStat type='high' data={claimFeeStats.high} prizeToken={prizeToken} />
           <ClaimFeeStat type='low' data={claimFeeStats.low} prizeToken={prizeToken} />
         </>
-      ) : isFetchedAllDraws && isFetchedPrizeToken ? (
+      ) : isFetchedAllDraws && isFetchedPrizeToken && isFetchedDrawClosedEvents ? (
         <span>-</span>
       ) : (
         <Spinner className='after:border-y-pt-purple-800' />

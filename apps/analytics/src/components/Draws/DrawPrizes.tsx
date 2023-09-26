@@ -3,6 +3,7 @@ import { usePrizeDrawWinners } from '@generationsoftware/hyperstructure-react-ho
 import { Spinner } from '@shared/ui'
 import { sToMs } from '@shared/utilities'
 import classNames from 'classnames'
+import { useDrawClosedEvents } from '@hooks/useDrawClosedEvents'
 import { useDrawResults } from '@hooks/useDrawResults'
 import { DrawCardItemTitle } from './DrawCardItemTitle'
 
@@ -24,17 +25,26 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
   const { data: allDraws, isFetched: isFetchedAllDraws } = usePrizeDrawWinners(prizePool)
   const draw = allDraws?.find((d) => d.id === drawId)
 
+  const { data: drawClosedEvents, isFetched: isFetchedDrawClosedEvents } =
+    useDrawClosedEvents(prizePool)
+  const drawClosedEvent = drawClosedEvents?.find((e) => e.args.drawId === drawId)
+
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
       <DrawCardItemTitle>Prizes</DrawCardItemTitle>
       <div className='flex flex-col gap-1 text-sm text-pt-purple-700 whitespace-nowrap'>
         {!!prizesAvailable?.length || !!draw?.prizeClaims.length ? (
           <>
-            <span>
-              {/* TODO: show numTiers once available */}
-              <span className='text-xl font-semibold'>?</span> tiers
-              {/* <span className='text-xl font-semibold'>{draw.numTiers}</span> tiers */}
-            </span>
+            {isFetchedDrawClosedEvents ? (
+              <span>
+                <span className='text-xl font-semibold'>
+                  {drawClosedEvent?.args.numTiers ?? '?'}
+                </span>{' '}
+                tiers
+              </span>
+            ) : (
+              <Spinner className='after:border-y-pt-purple-800' />
+            )}
             <span>
               <span className='text-xl font-semibold'>
                 {isFetchedPrizesAvailable ? (
@@ -46,7 +56,6 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
               prizes
             </span>
             <span>
-              {/* TODO: hide canary tiers once numTiers is available on subgraph */}
               <span className='text-xl font-semibold'>
                 {isFetchedAllDraws ? (
                   draw?.prizeClaims.length ?? 0

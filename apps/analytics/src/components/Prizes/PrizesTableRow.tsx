@@ -9,6 +9,7 @@ interface PrizesTableRowProps {
   drawId: number
   wins: SubgraphDraw['prizeClaims']
   tier: number
+  numTiers: number
   closedAt: number
   prizes?: {
     vault: `0x${string}`
@@ -22,11 +23,11 @@ interface PrizesTableRowProps {
 }
 
 export const PrizesTableRow = (props: PrizesTableRowProps) => {
-  const { prizePool, drawId, wins, tier, closedAt, prizes, prizeToken, className } = props
+  const { prizePool, drawId, wins, tier, numTiers, closedAt, prizes, prizeToken, className } = props
 
   return (
     <div className={classNames('py-3 text-sm bg-pt-purple-100/20 rounded-xl', className)}>
-      <PrizeTier tier={tier} />
+      <PrizeTier tier={tier} numTiers={numTiers} />
       <PrizeSize tier={tier} prizes={prizes} prizeToken={prizeToken} />
       <PrizesClaimed wins={wins} tier={tier} prizes={prizes} />
       <ClaimFees prizePool={prizePool} drawId={drawId} tier={tier} />
@@ -37,14 +38,16 @@ export const PrizesTableRow = (props: PrizesTableRowProps) => {
 
 interface PrizeTierProps {
   tier: number
+  numTiers: number
 }
 
-// TODO: show canary tier as "Canary"
 const PrizeTier = (props: PrizeTierProps) => {
-  const { tier } = props
+  const { tier, numTiers } = props
 
   return (
-    <span className='text-xl font-semibold text-pt-purple-400'>{tier === 0 ? 'GP' : tier}</span>
+    <span className='text-xl font-semibold text-pt-purple-400'>
+      {tier === 0 ? 'GP' : tier === numTiers - 1 ? 'Canary' : tier}
+    </span>
   )
 }
 
