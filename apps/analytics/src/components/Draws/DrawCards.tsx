@@ -15,8 +15,8 @@ export const DrawCards = (props: DrawCardsProps) => {
 
   const { data: rngTxs, isFetched: isFetchedRngTxs } = useRngTxs(prizePool)
 
-  const baseNumDraws = 7
-  const [numDraws, setNumDraws] = useState<number>(baseNumDraws)
+  const baseNumDraws = 5
+  const [numDraws, setNumDraws] = useState<number>(4)
 
   if (!isFetchedRngTxs || !rngTxs) {
     return <Spinner className='after:border-y-pt-purple-800' />
