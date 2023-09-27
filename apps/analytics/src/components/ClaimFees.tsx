@@ -124,13 +124,13 @@ export const ClaimFeeStat = (props: ClaimFeeStatProps) => {
       )}
     >
       <span className='w-10'>{type.toUpperCase()}</span>
-      <span className='w-14 px-2 text-right border-x border-x-pt-purple-100'>
+      <span className='w-14 px-2 text-right border-l border-x-pt-purple-100 md:border-r'>
         <span className='text-xl'>
           {data.percentage.toLocaleString(undefined, { maximumFractionDigits: 0 })}
         </span>
         %
       </span>
-      <span className='pl-2 text-pt-purple-700'>
+      <span className='hidden pl-2 text-pt-purple-700 md:block'>
         {formatBigIntForDisplay(data.amount, prizeToken.decimals, {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2
