@@ -39,9 +39,11 @@ export const DrawCard = (props: DrawCardProps) => {
         className='w-full md:w-auto'
         badgeClassName='max-w-[50%] md:max-w-none'
       />
-      {shouldDisplayTimer && (
-        <DrawTimer prizePool={prizePool} drawId={drawId} className='w-1/2 md:w-auto' />
-      )}
+      <DrawTimer
+        prizePool={prizePool}
+        drawId={drawId}
+        className={classNames('w-1/2 md:w-auto', { 'hidden md:flex': !shouldDisplayTimer })}
+      />
       <DrawPrizes
         prizePool={prizePool}
         drawId={drawId}
