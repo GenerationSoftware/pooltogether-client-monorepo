@@ -95,7 +95,7 @@ export const ReserveCard = (props: ReserveCardProps) => {
   return (
     <div
       className={classNames(
-        'w-full max-w-md flex flex-col gap-4 items-center p-5 bg-pt-purple-100/20 rounded-lg',
+        'w-full max-w-md flex flex-col gap-4 items-center p-5 bg-pt-purple-100/50 rounded-lg',
         className
       )}
     >
@@ -144,7 +144,7 @@ const ReserveCardItem = (props: ReserveCardItemProps) => {
   if (!!amount || alwaysShow) {
     return (
       <div className={classNames('w-full flex justify-between whitespace-nowrap', className)}>
-        <span className={classNames('text-2xl', nameClassName)}>{name}</span>
+        <span className={classNames('md:text-2xl', nameClassName)}>{name}</span>
         <span
           className={classNames(
             'flex gap-1 items-center',
@@ -159,7 +159,7 @@ const ReserveCardItem = (props: ReserveCardItemProps) => {
             {amount > 0n && '+'}
             {formattedAmount}
           </span>
-          {token.symbol}
+          <span className='text-sm md:text-base'>{token.symbol}</span>
         </span>
       </div>
     )

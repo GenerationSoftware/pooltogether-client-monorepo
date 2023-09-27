@@ -14,6 +14,7 @@ import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
 import { useLiquidationPairLiquidatableBalance } from '@hooks/useLiquidationPairLiquidatableBalance'
 import { useLiquidationPairTokenOutData } from '@hooks/useLiquidationPairTokenOutData'
 import { useLiquidationPairTokenOutPrice } from '@hooks/useLiquidationPairTokenOutPrice'
+import { liquidationHeaders } from './LiquidationsTable'
 
 interface LiquidationsTableRowProps {
   prizePool: PrizePool
@@ -31,29 +32,37 @@ export const LiquidationsTableRow = (props: LiquidationsTableRowProps) => {
   )
 
   return (
-    <div className={classNames('py-3 text-sm bg-pt-purple-100/20 rounded-xl', className)}>
+    <div className={classNames('py-3 text-sm bg-pt-purple-100/50 rounded-xl', className)}>
       <LiquidationPairLink
         chainId={prizePool.chainId}
         lpAddress={lpAddress}
         prizeToken={prizeToken}
+        className='w-full md:w-auto'
       />
       <YieldAuctioned
         chainId={prizePool.chainId}
         lpAddress={lpAddress}
         liquidations={lpLiquidations}
+        className='w-1/2 md:w-auto'
       />
       <AvgLiquidationPrice
         chainId={prizePool.chainId}
         lpAddress={lpAddress}
         liquidations={lpLiquidations}
         prizeToken={prizeToken}
+        className='w-1/2 md:w-auto'
       />
-      <CurrentAvailableYield chainId={prizePool.chainId} lpAddress={lpAddress} />
+      <CurrentAvailableYield
+        chainId={prizePool.chainId}
+        lpAddress={lpAddress}
+        className='w-1/2 md:w-auto'
+      />
       <AvgEfficiency
         chainId={prizePool.chainId}
         lpAddress={lpAddress}
         liquidations={lpLiquidations}
         prizeToken={prizeToken}
+        className='w-1/2 md:w-auto'
       />
     </div>
   )
@@ -105,11 +114,14 @@ const YieldAuctioned = (props: YieldAuctionedProps) => {
   const totalYieldAuctioned = liquidations.reduce((a, b) => a + b.args.amountOut, 0n)
 
   return (
-    <div className={classNames('text-sm', className)}>
-      <span className='text-xl font-semibold'>
-        {formatBigIntForDisplay(totalYieldAuctioned, lpToken.decimals, { hideZeroes: true })}
-      </span>{' '}
-      {lpToken.symbol}
+    <div className={classNames('flex flex-col gap-3 text-sm', className)}>
+      <span className='text-pt-purple-500 md:hidden'>{liquidationHeaders.auctioned}</span>
+      <span>
+        <span className='text-xl font-semibold'>
+          {formatBigIntForDisplay(totalYieldAuctioned, lpToken.decimals, { hideZeroes: true })}
+        </span>{' '}
+        {lpToken.symbol}
+      </span>
     </div>
   )
 }
@@ -149,21 +161,24 @@ const AvgLiquidationPrice = (props: AvgLiquidationPriceProps) => {
   }, [liquidations, lpToken])
 
   return (
-    <div className={classNames('text-sm whitespace-nowrap', className)}>
-      {!!lpToken && !!avgPrice ? (
-        <>
-          <span className='text-xl font-semibold'>1</span> {lpToken.symbol} ={' '}
-          <span className='text-xl font-semibold'>
-            {formatNumberForDisplay(
-              avgPrice,
-              avgPrice > 100 ? { hideZeroes: true } : { maximumFractionDigits: 2 }
-            )}
-          </span>{' '}
-          {prizeToken.symbol}
-        </>
-      ) : (
-        <Spinner className='after:border-y-pt-purple-800' />
-      )}
+    <div className={classNames('flex flex-col gap-3 text-sm', className)}>
+      <span className='text-pt-purple-500 md:hidden'>{liquidationHeaders.price}</span>
+      <span className='whitespace-nowrap'>
+        {!!lpToken && !!avgPrice ? (
+          <>
+            <span className='text-xl font-semibold'>1</span> {lpToken.symbol} ={' '}
+            <span className='text-xl font-semibold'>
+              {formatNumberForDisplay(
+                avgPrice,
+                avgPrice > 100 ? { hideZeroes: true } : { maximumFractionDigits: 2 }
+              )}
+            </span>{' '}
+            {prizeToken.symbol}
+          </>
+        ) : (
+          <Spinner className='after:border-y-pt-purple-800' />
+        )}
+      </span>
     </div>
   )
 }
@@ -186,11 +201,14 @@ const CurrentAvailableYield = (props: CurrentAvailableYieldProps) => {
   }
 
   return (
-    <div className={classNames('text-sm', className)}>
-      <span className='text-xl font-semibold'>
-        {formatBigIntForDisplay(liquidatableBalance, lpToken.decimals, { hideZeroes: true })}
-      </span>{' '}
-      {lpToken.symbol}
+    <div className={classNames('flex flex-col gap-3 text-sm', className)}>
+      <span className='text-pt-purple-500 md:hidden'>{liquidationHeaders.available}</span>
+      <span>
+        <span className='text-xl font-semibold'>
+          {formatBigIntForDisplay(liquidatableBalance, lpToken.decimals, { hideZeroes: true })}
+        </span>{' '}
+        {lpToken.symbol}
+      </span>
     </div>
   )
 }
@@ -231,11 +249,14 @@ const AvgEfficiency = (props: AvgEfficiencyProps) => {
   }
 
   return (
-    <div className={classNames('flex flex-col gap-1', className)}>
-      {/* TODO: bar with percentages */}
-      <AvgEfficiencyItem efficiency={efficiency.prizes} label='prizes' color='green' />
-      <AvgEfficiencyItem efficiency={efficiency.bots} label='bots (WIP)' color='yellow' />
-      <AvgEfficiencyItem efficiency={efficiency.gas} label='gas (WIP)' color='red' />
+    <div className={classNames('flex flex-col gap-3 text-sm', className)}>
+      <span className='text-pt-purple-500 md:hidden'>{liquidationHeaders.efficiency}</span>
+      <div className='flex flex-col gap-1'>
+        {/* TODO: bar with percentages */}
+        <AvgEfficiencyItem efficiency={efficiency.prizes} label='prizes' color='green' />
+        <AvgEfficiencyItem efficiency={efficiency.bots} label='bots (WIP)' color='yellow' />
+        <AvgEfficiencyItem efficiency={efficiency.gas} label='gas (WIP)' color='red' />
+      </div>
     </div>
   )
 }
@@ -251,9 +272,7 @@ const AvgEfficiencyItem = (props: AvgEfficiencyItemProps) => {
   const { efficiency, label, color, className } = props
 
   return (
-    <div
-      className={classNames('w-full flex gap-1 items-center text-sm whitespace-nowrap', className)}
-    >
+    <div className={classNames('w-full flex gap-1 items-center whitespace-nowrap', className)}>
       <div
         className={classNames('w-3 h-3 rounded mr-1', {
           'bg-green-600': color === 'green',
