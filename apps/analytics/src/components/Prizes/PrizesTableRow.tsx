@@ -26,7 +26,7 @@ export const PrizesTableRow = (props: PrizesTableRowProps) => {
   const { prizePool, drawId, wins, tier, numTiers, closedAt, prizes, prizeToken, className } = props
 
   return (
-    <div className={classNames('py-3 text-sm bg-pt-purple-100/20 rounded-xl', className)}>
+    <div className={classNames('py-3 text-sm bg-pt-purple-100/50 rounded-xl', className)}>
       <PrizeTier tier={tier} numTiers={numTiers} />
       <PrizeSize tier={tier} prizes={prizes} prizeToken={prizeToken} />
       <PrizesClaimed wins={wins} tier={tier} prizes={prizes} />

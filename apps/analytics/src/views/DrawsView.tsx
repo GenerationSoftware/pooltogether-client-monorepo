@@ -1,6 +1,5 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { PRIZE_POOLS, sToMs } from '@shared/utilities'
-import classNames from 'classnames'
 import { useEffect, useMemo } from 'react'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
@@ -61,5 +60,5 @@ export const DrawsView = (props: DrawsViewProps) => {
     return () => clearInterval(interval)
   }, [])
 
-  return <DrawCards prizePool={prizePool} className={classNames('p-4 md:p-0', className)} />
+  return <DrawCards prizePool={prizePool} className={className} />
 }

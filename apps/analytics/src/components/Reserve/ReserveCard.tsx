@@ -95,7 +95,7 @@ export const ReserveCard = (props: ReserveCardProps) => {
   return (
     <div
       className={classNames(
-        'w-full max-w-md flex flex-col gap-4 items-center p-5 bg-pt-purple-100/20 rounded-lg',
+        'w-full max-w-md flex flex-col gap-4 items-center p-5 bg-pt-purple-100/50 rounded-lg',
         className
       )}
     >

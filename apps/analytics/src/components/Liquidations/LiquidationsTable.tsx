@@ -11,6 +11,14 @@ import { Address, Block } from 'viem'
 import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
 import { LiquidationsTableRow } from './LiquidationsTableRow'
 
+export const liquidationHeaders = {
+  pair: 'Liquidation Pair',
+  auctioned: 'Yield Auctioned',
+  price: 'Avg. Liquidation Price',
+  available: 'Curr. Available Yield',
+  efficiency: 'Avg. Efficiency'
+}
+
 interface LiquidationsTableProps {
   prizePool: PrizePool
   minBlock?: Block
@@ -64,14 +72,14 @@ export const LiquidationsTable = (props: LiquidationsTableProps) => {
   }
 
   const gridClassName =
-    'w-full grid gap-12 grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] px-4'
+    'w-full gap-y-6 grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] px-4 md:grid md:gap-x-12'
 
   return (
     <div className={classNames('w-full flex flex-col gap-6 items-center', className)}>
       <span className='text-center text-3xl font-semibold text-pt-purple-500'>
         {timeText} yield liquidations
       </span>
-      <LiquidationsTableHeaders className={gridClassName} />
+      <LiquidationsTableHeaders className={classNames('hidden', gridClassName)} />
       {lpAddresses.map((lpAddress) => (
         <LiquidationsTableRow
           key={`lpLiquidations-${lpAddress}`}
@@ -79,7 +87,7 @@ export const LiquidationsTable = (props: LiquidationsTableProps) => {
           lpAddress={lpAddress}
           liquidations={validLiquidationEvents}
           prizeToken={prizeToken}
-          className={gridClassName}
+          className={classNames('flex flex-wrap', gridClassName)}
         />
       ))}
     </div>
@@ -95,11 +103,11 @@ const LiquidationsTableHeaders = (props: LiquidationsTableHeadersProps) => {
 
   return (
     <div className={classNames('text-sm text-pt-purple-400', className)}>
-      <span>Liquidation Pair</span>
-      <span>Yield Auctioned</span>
-      <span>Avg. Liquidation Price</span>
-      <span>Current Available Yield</span>
-      <span>Avg. Efficiency</span>
+      <span>{liquidationHeaders.pair}</span>
+      <span>{liquidationHeaders.auctioned}</span>
+      <span>{liquidationHeaders.price}</span>
+      <span>{liquidationHeaders.available}</span>
+      <span>{liquidationHeaders.efficiency}</span>
     </div>
   )
 }
