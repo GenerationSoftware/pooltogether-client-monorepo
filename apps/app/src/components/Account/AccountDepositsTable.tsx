@@ -1,10 +1,13 @@
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useAllUserVaultBalances,
+  useSelectedVaultLists,
   useSelectedVaults,
   useSortedVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { VaultBadge, WinChanceTooltip } from '@shared/react-components'
+import { ImportedVaultTooltip, VaultBadge, WinChanceTooltip } from '@shared/react-components'
 import { Table, TableProps } from '@shared/ui'
+import { getVaultId } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -30,12 +33,39 @@ export const AccountDepositsTable = (props: AccountDepositsTableProps) => {
   const userAddress = address ?? _userAddress
 
   const { vaults } = useSelectedVaults()
+  const { localVaultLists, importedVaultLists } = useSelectedVaultLists()
 
   const { data: vaultBalances } = useAllUserVaultBalances(vaults, userAddress as Address)
 
   const { sortedVaults } = useSortedVaults(Object.values(vaults.vaults), {
     defaultSortId: 'userBalance'
   })
+
+  const getImportedVaultSrcs = (vault: Vault) => {
+    const listsWithVault: { name: string; href: string }[] = []
+
+    const isOnLocalVaultLists = Object.values(localVaultLists).some((list) => {
+      for (const listVault of list.tokens) {
+        if (vault.id === getVaultId(listVault)) {
+          return true
+        }
+      }
+    })
+
+    if (!isOnLocalVaultLists) {
+      Object.entries(importedVaultLists).forEach(([href, list]) => {
+        for (const listVault of list.tokens) {
+          if (vault.id === getVaultId(listVault)) {
+            const name = list.name
+            listsWithVault.push({ name, href })
+            break
+          }
+        }
+      })
+    }
+
+    return listsWithVault
+  }
 
   const isExternalUser = useMemo(() => {
     return !!address && address.toLowerCase() !== _userAddress?.toLowerCase()
@@ -70,14 +100,25 @@ export const AccountDepositsTable = (props: AccountDepositsTableProps) => {
     ? sortedVaults
         .map((vault) => {
           const shareBalance = vaultBalances[vault.id]?.amount ?? 0n
+          const importedSrcs = getImportedVaultSrcs(vault)
+
           if (!!vaultBalances[vault.id] && shareBalance > 0n && vault.decimals !== undefined) {
             const cells: TableProps['data']['rows'][0]['cells'] = {
               token: {
                 content: (
-                  <Link href={`/vault/${vault.chainId}/${vault.address}`}>
-                    <VaultBadge vault={vault} onClick={() => {}} />
-                  </Link>
-                )
+                  <>
+                    <Link href={`/vault/${vault.chainId}/${vault.address}`}>
+                      <VaultBadge vault={vault} onClick={() => {}} />
+                    </Link>
+                    {importedSrcs.length > 0 && (
+                      <ImportedVaultTooltip
+                        vaultLists={importedSrcs}
+                        intl={t_tooltips('importedVault')}
+                      />
+                    )}
+                  </>
+                ),
+                className: 'gap-2'
               },
               odds: {
                 content: <AccountVaultOdds vault={vault} address={userAddress} />,

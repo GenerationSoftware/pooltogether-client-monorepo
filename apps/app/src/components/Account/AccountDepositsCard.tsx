@@ -1,5 +1,5 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { VaultBadge, WinChanceTooltip } from '@shared/react-components'
+import { ImportedVaultTooltip, VaultBadge, WinChanceTooltip } from '@shared/react-components'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo } from 'react'
@@ -7,6 +7,7 @@ import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
 import { VaultButtons } from '@components/Vault/VaultButtons'
+import { useVaultImportedListSrcs } from '@hooks/useVaultImportedListSrcs'
 import { AccountVaultOdds } from './AccountVaultOdds'
 
 interface AccountDepositsCardProps {
@@ -23,17 +24,22 @@ export const AccountDepositsCard = (props: AccountDepositsCardProps) => {
   const { address: _userAddress } = useAccount()
   const userAddress = address ?? _userAddress
 
+  const importedSrcs = useVaultImportedListSrcs(vault)
+
   const isExternalUser = useMemo(() => {
     return !!address && address.toLowerCase() !== _userAddress?.toLowerCase()
   }, [address, _userAddress])
 
   return (
     <div className='flex flex-col gap-4 bg-pt-transparent rounded-lg px-3 pt-3 pb-6'>
-      <span>
+      <div className='inline-flex gap-2 items-center'>
         <Link href={`/vault/${vault.chainId}/${vault.address}`}>
           <VaultBadge vault={vault} onClick={() => {}} />
         </Link>
-      </span>
+        {importedSrcs.length > 0 && (
+          <ImportedVaultTooltip vaultLists={importedSrcs} intl={t_tooltips('importedVault')} />
+        )}
+      </div>
       <div className='w-full flex flex-col gap-1 px-3'>
         <div className='flex items-center justify-between'>
           <span className='text-xs text-pt-purple-200'>
