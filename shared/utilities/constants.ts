@@ -229,8 +229,16 @@ export const RNG_AUCTION: { address: Address; sequenceOffset: number; sequencePe
  * RNG relay addresses
  */
 export const RNG_RELAY_ADDRESSES: { [chainId: number]: Address } = {
+  [NETWORK.mainnet]: '0xF4c47dacFda99bE38793181af9Fd1A2Ec7576bBF',
   [NETWORK.optimism]: '0xF4c47dacFda99bE38793181af9Fd1A2Ec7576bBF',
   [NETWORK['optimism-goerli']]: '0xA847394a0D9D5fEF624766D47cB6142A988b00e0'
+}
+
+/**
+ * Message executor addresses
+ */
+export const MSG_EXECUTOR_ADDRESSES: { [chainId: number]: Address } = {
+  [NETWORK.optimism]: '0x890a87E71E731342a6d10e7628bd1F0733ce3296'
 }
 
 /**

@@ -12,6 +12,8 @@ import { PrizesTable } from '@components/Prizes/PrizesTable'
 import { useDrawClosedEvents } from '@hooks/useDrawClosedEvents'
 import { useRelayAuctionEvents } from '@hooks/useRelayAuctionEvents'
 import { useRngAuctionEvents } from '@hooks/useRngAuctionEvents'
+import { useRngL1RelayMsgEvents } from '@hooks/useRngL1RelayMsgEvents'
+import { useRngL2RelayMsgEvents } from '@hooks/useRngL2RelayMsgEvents'
 
 interface PrizesViewProps {
   chainId: number
@@ -39,15 +41,19 @@ export const PrizesView = (props: PrizesViewProps) => {
   }, [chainId])
 
   const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents()
+  const { refetch: refetchRngL1RelayMsgEvents } = useRngL1RelayMsgEvents()
   const { refetch: refetchRelayAuctionEvents } = useRelayAuctionEvents(prizePool)
   const { refetch: refetchDrawClosedEvents } = useDrawClosedEvents(prizePool)
+  const { refetch: refetchRngL2RelayMsgEvents } = useRngL2RelayMsgEvents(prizePool)
 
   // Automatic data refetching
   useEffect(() => {
     const interval = setInterval(() => {
       refetchRngAuctionEvents()
+      refetchRngL1RelayMsgEvents()
       refetchRelayAuctionEvents()
       refetchDrawClosedEvents()
+      refetchRngL2RelayMsgEvents()
     }, sToMs(300))
 
     return () => clearInterval(interval)

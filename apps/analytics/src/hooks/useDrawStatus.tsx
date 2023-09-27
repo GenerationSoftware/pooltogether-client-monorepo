@@ -41,8 +41,8 @@ export const useDrawStatus = (
       const rngTxs = allRngTxs.find((txs) => txs.rng.drawId === drawId)
       const prevRngTxs = allRngTxs.find((txs) => txs.rng.drawId === drawId - 1)
 
-      const openedAt = prevRngTxs?.relay?.endedAt ?? firstDrawOpenedAt
-      const endedAt = rngTxs?.relay?.endedAt
+      const openedAt = prevRngTxs?.relay.l2?.endedAt ?? firstDrawOpenedAt
+      const endedAt = rngTxs?.relay.l2?.endedAt
       const closedAt = !!closeBlock ? Number(closeBlock.timestamp) : undefined
 
       const timeSinceEnded = !!endedAt ? getSecondsSinceEpoch() - endedAt : -1

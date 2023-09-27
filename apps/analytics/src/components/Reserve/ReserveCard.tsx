@@ -51,7 +51,7 @@ export const ReserveCard = (props: ReserveCardProps) => {
   const validRngFees = useMemo(() => {
     if (!!rngTxs) {
       return rngTxs.reduce(
-        (a, b) => a + (isValidEvent(b.relay) ? (b.rng.fee ?? 0n) + (b.relay?.fee ?? 0n) : 0n),
+        (a, b) => a + (isValidEvent(b.relay.l2) ? (b.rng.fee ?? 0n) + (b.relay.l2?.fee ?? 0n) : 0n),
         0n
       )
     }

@@ -6,6 +6,8 @@ import { useBlocks } from './useBlocks'
 import { useDrawClosedEvents } from './useDrawClosedEvents'
 import { useRelayAuctionEvents } from './useRelayAuctionEvents'
 import { useRngAuctionEvents } from './useRngAuctionEvents'
+import { useRngL1RelayMsgEvents } from './useRngL1RelayMsgEvents'
+import { useRngL2RelayMsgEvents } from './useRngL2RelayMsgEvents'
 
 interface RngTx {
   drawId: number
@@ -26,6 +28,13 @@ interface RelayTx {
   blockNumber: bigint
 }
 
+interface RelayMsgTx {
+  drawId: number
+  msgId: `0x${string}`
+  hash: `0x${string}`
+  blockNumber: bigint
+}
+
 export const useRngTxs = (prizePool: PrizePool) => {
   const { data: rngAuctionEvents, isFetched: isFetchedRngAuctionEvents } = useRngAuctionEvents()
   const { data: relayAuctionEvents, isFetched: isFetchedRelayAuctionEvents } =
@@ -40,8 +49,20 @@ export const useRngTxs = (prizePool: PrizePool) => {
     [...drawClosedBlockNumbers]
   )
 
+  const { data: rngL1RelayMsgEvents, isFetched: isFetchedRngL1RelayMsgEvents } =
+    useRngL1RelayMsgEvents()
+  const { data: rngL2RelayMsgEvents, isFetched: isFetchedRngL2RelayMsgEvents } =
+    useRngL2RelayMsgEvents(prizePool)
+
   const data = useMemo(() => {
-    if (!!rngAuctionEvents && !!relayAuctionEvents && !!drawClosedEvents && !!drawClosedBlocks) {
+    if (
+      !!rngAuctionEvents &&
+      !!relayAuctionEvents &&
+      !!drawClosedEvents &&
+      !!drawClosedBlocks &&
+      !!rngL1RelayMsgEvents &&
+      !!rngL2RelayMsgEvents
+    ) {
       const rngTxs = rngAuctionEvents
         .map((rngAuctionEvent, i) => {
           const periodStart =
@@ -71,6 +92,20 @@ export const useRngTxs = (prizePool: PrizePool) => {
               (event) => event.args.index === 1
             )
 
+            const relayMsgReceivedEvent = !!secondRelayEvent
+              ? rngL2RelayMsgEvents.find(
+                  (event) => event.blockNumber === secondRelayEvent.blockNumber
+                )
+              : undefined
+            const relayMsgEvent = !!relayMsgReceivedEvent
+              ? rngL1RelayMsgEvents.find(
+                  (event) =>
+                    Number(event.args.remoteOwnerChainId) === prizePool.chainId &&
+                    event.args.messageId.toLowerCase() ===
+                      relayMsgReceivedEvent.args.messageId.toLowerCase()
+                )
+              : undefined
+
             const rng: RngTx = {
               drawId: drawId,
               fee: firstRelayEvent?.args.reward,
@@ -80,24 +115,34 @@ export const useRngTxs = (prizePool: PrizePool) => {
               blockNumber: rngAuctionEvent.blockNumber
             }
 
-            const relay: RelayTx | undefined = !!secondRelayEvent
-              ? {
-                  drawId: drawId,
-                  fee: secondRelayEvent.args.reward,
-                  feeFraction: !!rng.fee
-                    ? secondRelayEvent.args.reward / (rng.fee / rng.feeFraction)
-                    : undefined,
-                  feeRecipient: secondRelayEvent.args.recipient,
-                  hash: secondRelayEvent.transactionHash,
-                  endedAt: periodStart,
-                  blockNumber: secondRelayEvent.blockNumber
-                }
-              : undefined
+            const relay: { l1?: RelayMsgTx; l2?: RelayTx } = {
+              l1: !!relayMsgEvent
+                ? {
+                    drawId: drawId,
+                    msgId: relayMsgEvent.args.messageId,
+                    hash: relayMsgEvent.transactionHash,
+                    blockNumber: relayMsgEvent.blockNumber
+                  }
+                : undefined,
+              l2: !!secondRelayEvent
+                ? {
+                    drawId: drawId,
+                    fee: secondRelayEvent.args.reward,
+                    feeFraction: !!rng.fee
+                      ? secondRelayEvent.args.reward / (rng.fee / rng.feeFraction)
+                      : undefined,
+                    feeRecipient: secondRelayEvent.args.recipient,
+                    hash: secondRelayEvent.transactionHash,
+                    endedAt: periodStart,
+                    blockNumber: secondRelayEvent.blockNumber
+                  }
+                : undefined
+            }
 
             return { rng, relay }
           }
         })
-        .filter((tx) => !!tx) as { rng: RngTx; relay?: RelayTx }[]
+        .filter((tx) => !!tx) as { rng: RngTx; relay: { l1?: RelayMsgTx; l2?: RelayTx } }[]
 
       return rngTxs
     }
@@ -107,7 +152,9 @@ export const useRngTxs = (prizePool: PrizePool) => {
     isFetchedRngAuctionEvents &&
     isFetchedRelayAuctionEvents &&
     isFetchedDrawClosedEvents &&
-    isFetchedDrawClosedBlocks
+    isFetchedDrawClosedBlocks &&
+    isFetchedRngL1RelayMsgEvents &&
+    isFetchedRngL2RelayMsgEvents
 
   return { data, isFetched }
 }

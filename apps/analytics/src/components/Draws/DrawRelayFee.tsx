@@ -1,7 +1,7 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
 import { ExternalLink, Spinner } from '@shared/ui'
-import { formatBigIntForDisplay, getBlockExplorerUrl, shorten } from '@shared/utilities'
+import { formatBigIntForDisplay, getBlockExplorerUrl, NETWORK, shorten } from '@shared/utilities'
 import classNames from 'classnames'
 import { formatUnits } from 'viem'
 import { useDrawRelayFeePercentage } from '@hooks/useDrawRelayFeePercentage'
@@ -19,7 +19,8 @@ export const DrawRelayFee = (props: DrawRelayFeeProps) => {
 
   const { data: allRngTxs, isFetched: isFetchedAllRngTxs } = useRngTxs(prizePool)
   const rngTxs = allRngTxs?.find((txs) => txs.rng.drawId === drawId)
-  const relayTx = rngTxs?.relay
+  const relayMsgTx = rngTxs?.relay.l1
+  const relayTx = rngTxs?.relay.l2
 
   const rngTxFeeFraction = !!rngTxs
     ? parseFloat(formatUnits(rngTxs.rng.feeFraction, 18))
@@ -72,9 +73,16 @@ export const DrawRelayFee = (props: DrawRelayFeeProps) => {
               )}
             </span>
             {!!relayTx ? (
-              <ExternalLink href={getBlockExplorerUrl(prizePool.chainId, relayTx.hash, 'tx')}>
-                {shorten(relayTx.hash, { short: true })}
-              </ExternalLink>
+              <>
+                {!!relayMsgTx && (
+                  <ExternalLink href={getBlockExplorerUrl(NETWORK.mainnet, relayMsgTx.hash, 'tx')}>
+                    {shorten(relayMsgTx.hash, { short: true })}
+                  </ExternalLink>
+                )}
+                <ExternalLink href={getBlockExplorerUrl(prizePool.chainId, relayTx.hash, 'tx')}>
+                  {shorten(relayTx.hash, { short: true })}
+                </ExternalLink>
+              </>
             ) : (
               !!currentFeePercentage && !!rngTxs && <span>Not Yet Awarded</span>
             )}

@@ -1,5 +1,5 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { PRIZE_POOLS, SECONDS_PER_DAY, sToMs } from '@shared/utilities'
+import { getSecondsSinceEpoch, PRIZE_POOLS, SECONDS_PER_DAY, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtom } from 'jotai'
 import { useEffect, useMemo } from 'react'
@@ -16,6 +16,8 @@ import { usePrizeBackstopEvents } from '@hooks/usePrizeBackstopEvents'
 import { useRelayAuctionEvents } from '@hooks/useRelayAuctionEvents'
 import { useReserve } from '@hooks/useReserve'
 import { useRngAuctionEvents } from '@hooks/useRngAuctionEvents'
+import { useRngL1RelayMsgEvents } from '@hooks/useRngL1RelayMsgEvents'
+import { useRngL2RelayMsgEvents } from '@hooks/useRngL2RelayMsgEvents'
 
 interface ReserveViewProps {
   chainId: number
@@ -54,8 +56,10 @@ export const ReserveView = (props: ReserveViewProps) => {
   const { refetch: refetchManualContributionEvents } = useManualContributionEvents(prizePool)
   const { refetch: refetchPrizeBackstopEvents } = usePrizeBackstopEvents(prizePool)
   const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents()
+  const { refetch: refetchRngL1RelayMsgEvents } = useRngL1RelayMsgEvents()
   const { refetch: refetchRelayAuctionEvents } = useRelayAuctionEvents(prizePool)
   const { refetch: refetchDrawClosedEvents } = useDrawClosedEvents(prizePool)
+  const { refetch: refetchRngL2RelayMsgEvents } = useRngL2RelayMsgEvents(prizePool)
 
   // Automatic data refetching
   useEffect(() => {
@@ -65,9 +69,11 @@ export const ReserveView = (props: ReserveViewProps) => {
       refetchManualContributionEvents()
       refetchPrizeBackstopEvents()
       refetchRngAuctionEvents()
+      refetchRngL1RelayMsgEvents()
       refetchRelayAuctionEvents()
       refetchDrawClosedEvents()
-      setCurrentTimestamp(Math.floor(Date.now() / 1_000))
+      refetchRngL2RelayMsgEvents()
+      setCurrentTimestamp(getSecondsSinceEpoch())
     }, sToMs(300))
 
     return () => clearInterval(interval)

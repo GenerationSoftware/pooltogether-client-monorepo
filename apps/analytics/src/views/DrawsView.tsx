@@ -9,6 +9,8 @@ import { useDrawRngFeePercentage } from '@hooks/useDrawRngFeePercentage'
 import { useRelayAuctionElapsedTime } from '@hooks/useRelayAuctionElapsedTime'
 import { useRelayAuctionEvents } from '@hooks/useRelayAuctionEvents'
 import { useRngAuctionEvents } from '@hooks/useRngAuctionEvents'
+import { useRngL1RelayMsgEvents } from '@hooks/useRngL1RelayMsgEvents'
+import { useRngL2RelayMsgEvents } from '@hooks/useRngL2RelayMsgEvents'
 
 interface DrawsViewProps {
   chainId: number
@@ -37,18 +39,22 @@ export const DrawsView = (props: DrawsViewProps) => {
 
   const { refetch: refetchDrawRngFeePercentage } = useDrawRngFeePercentage()
   const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents()
+  const { refetch: refetchRngL1RelayMsgEvents } = useRngL1RelayMsgEvents()
   const { refetch: refetchRelayAuctionElapsedTime } = useRelayAuctionElapsedTime()
   const { refetch: refetchRelayAuctionEvents } = useRelayAuctionEvents(prizePool)
   const { refetch: refetchDrawClosedEvents } = useDrawClosedEvents(prizePool)
+  const { refetch: refetchRngL2RelayMsgEvents } = useRngL2RelayMsgEvents(prizePool)
 
   // Automatic data refetching
   useEffect(() => {
     const interval = setInterval(() => {
       refetchDrawRngFeePercentage()
       refetchRngAuctionEvents()
+      refetchRngL1RelayMsgEvents()
       refetchRelayAuctionElapsedTime()
       refetchRelayAuctionEvents()
       refetchDrawClosedEvents()
+      refetchRngL2RelayMsgEvents()
     }, sToMs(300))
 
     return () => clearInterval(interval)
