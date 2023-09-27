@@ -27,7 +27,7 @@ export const DrawCards = (props: DrawCardsProps) => {
 
   return (
     <div className={classNames('w-full flex flex-col gap-3 items-center', className)}>
-      {!!lastRngTxs.relay && (
+      {!!lastRngTxs.relay.l2 && (
         <DrawCard
           key={`draw-${lastDrawId + 1}-${prizePool.chainId}`}
           prizePool={prizePool}
