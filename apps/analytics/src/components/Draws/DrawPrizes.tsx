@@ -20,8 +20,7 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
   const { data: drawClosedEvents, isFetched: isFetchedDrawClosedEvents } =
     useDrawClosedEvents(prizePool)
   const drawClosedEvent = drawClosedEvents?.find((e) => e.args.drawId === drawId)
-  const prevDrawClosedEvent = drawClosedEvents?.find((e) => e.args.drawId === drawId - 1)
-  const numTiers = drawClosedEvent?.args.numTiers ?? prevDrawClosedEvent?.args.nextNumTiers
+  const numTiers = drawClosedEvent?.args.nextNumTiers // TODO: switch to `args.numTiers` once event is fixed
 
   const { data: prizesAvailable } = useDrawResults(prizePool, drawId, {
     refetchInterval: sToMs(300)
@@ -54,9 +53,13 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
       <DrawCardItemTitle>Prizes</DrawCardItemTitle>
       <div className='flex flex-col gap-1 text-sm text-pt-purple-700 whitespace-nowrap'>
         {isFetchedDrawClosedEvents ? (
-          <span>
-            <BigText>{numTiers ?? '?'}</BigText> tiers
-          </span>
+          !!numTiers ? (
+            <span>
+              <BigText>{numTiers}</BigText> tiers
+            </span>
+          ) : (
+            <span>-</span>
+          )
         ) : (
           <Spinner className='after:border-y-pt-purple-800' />
         )}

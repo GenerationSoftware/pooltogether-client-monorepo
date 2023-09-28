@@ -27,6 +27,7 @@ export const ClaimFees = (props: ClaimFeesProps) => {
   const { data: drawClosedEvents, isFetched: isFetchedDrawClosedEvents } =
     useDrawClosedEvents(prizePool)
   const drawClosedEvent = drawClosedEvents?.find((e) => e.args.drawId === drawId)
+  const numTiers = drawClosedEvent?.args.nextNumTiers // TODO: switch to `args.numTiers` once event is fixed
 
   const { data: prizeToken, isFetched: isFetchedPrizeToken } = usePrizeTokenData(prizePool)
 
@@ -35,16 +36,14 @@ export const ClaimFees = (props: ClaimFeesProps) => {
     if (!!draw) {
       draw.prizeClaims.forEach((prize) => {
         const isValidTier = tier === undefined || prize.tier === tier
-        const isCanaryTier = !!drawClosedEvent
-          ? prize.tier === drawClosedEvent.args.numTiers - 1
-          : false
+        const isCanaryTier = !!numTiers ? prize.tier === numTiers - 1 : false
         if (prize.fee > 0n && isValidTier && (!hideCanary || !isCanaryTier)) {
           filteredWins.push(prize)
         }
       })
     }
     return filteredWins
-  }, [tier, draw, drawClosedEvent])
+  }, [tier, draw, numTiers])
 
   const claimFeeStats = useMemo(() => {
     if (wins.length > 0) {

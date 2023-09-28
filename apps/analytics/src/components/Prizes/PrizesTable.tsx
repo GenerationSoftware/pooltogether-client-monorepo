@@ -41,8 +41,7 @@ export const PrizesTable = (props: PrizesTableProps) => {
   const { data: drawClosedEvents, isFetched: isFetchedDrawClosedEvents } =
     useDrawClosedEvents(prizePool)
   const drawClosedEvent = drawClosedEvents?.find((e) => e.args.drawId === drawId)
-  const prevDrawClosedEvent = drawClosedEvents?.find((e) => e.args.drawId === drawId - 1)
-  const numTiers = drawClosedEvent?.args.numTiers ?? prevDrawClosedEvent?.args.nextNumTiers ?? 0
+  const numTiers = drawClosedEvent?.args.nextNumTiers ?? 0 // TODO: switch to `args.numTiers` once event is fixed
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
