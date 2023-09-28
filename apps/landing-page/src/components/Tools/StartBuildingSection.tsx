@@ -26,6 +26,12 @@ export const StartBuildingSection = (props: StartBuildingSectionProps) => {
           title='Cabana Lists'
           description='Create and host your own vault lists so users can view, interact with and share your prize vaults on the Cabana App.'
         />
+        <StartBuildingItem
+          href={LINKS.analytics}
+          imgSrc='/cabanalyticsScreenshot.png'
+          title='Cabanalytics'
+          description='View analytics and health metrics for the PoolTogether Hyperstructure.'
+        />
       </div>
     </section>
   )
