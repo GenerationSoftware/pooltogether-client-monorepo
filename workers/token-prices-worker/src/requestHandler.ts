@@ -8,6 +8,7 @@ export const handleRequest = async (event: FetchEvent): Promise<Response> => {
   try {
     const url = new URL(event.request.url)
 
+    // Route: "/"
     if (url.pathname === '/') {
       const tokenPrices = await fetchAllTokenPrices()
       if (!!tokenPrices) {
@@ -23,9 +24,32 @@ export const handleRequest = async (event: FetchEvent): Promise<Response> => {
       }
     }
 
+    // Route: "/{chainId}*"
     const chainId = parseInt(url.pathname.split('/')[1])
-
     if (!!chainId && (SUPPORTED_NETWORKS as readonly number[]).includes(chainId)) {
+      // Route: "/{chainId}/{tokenAddress}"
+      const singleToken = url.pathname.split('/')[2]
+      if (!!singleToken && isAddress(singleToken)) {
+        const tokenPrices = await fetchTokenPrices(
+          event,
+          chainId as SUPPORTED_NETWORK,
+          [singleToken],
+          { includeHistory: true }
+        )
+        if (!!tokenPrices) {
+          return new Response(tokenPrices, {
+            ...DEFAULT_HEADERS,
+            status: 200
+          })
+        } else {
+          return new Response(tokenPrices, {
+            ...DEFAULT_HEADERS,
+            status: 500
+          })
+        }
+      }
+
+      // Route: "/{chainId}?tokens={tokenAddresses}"
       const urlTokens = url.searchParams.get('tokens')
       if (!!urlTokens) {
         const tokens = urlTokens
@@ -48,6 +72,7 @@ export const handleRequest = async (event: FetchEvent): Promise<Response> => {
           })
         }
       } else {
+        // Route: "/{chainId}"
         const tokenPrices = await fetchTokenPrices(event, chainId as SUPPORTED_NETWORK)
         if (!!tokenPrices) {
           return new Response(tokenPrices, {

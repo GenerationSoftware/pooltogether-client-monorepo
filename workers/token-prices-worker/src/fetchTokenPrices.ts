@@ -6,26 +6,33 @@ import { getCovalentTokenPrices } from './utils'
 export const fetchTokenPrices = async (
   event: FetchEvent,
   chainId: (typeof SUPPORTED_NETWORKS)[number],
-  tokens?: `0x${string}`[]
+  tokens?: `0x${string}`[],
+  options?: {
+    includeHistory?: boolean
+  }
 ) => {
   try {
     const { value: allCachedChainTokenPrices } = await TOKEN_PRICES.getWithMetadata(
       KV_PRICE_KEYS[chainId]
     )
+    const parsedAllCachedChainTokenPrices = !!allCachedChainTokenPrices
+      ? (JSON.parse(allCachedChainTokenPrices) as ChainTokenPrices)
+      : undefined
 
     if (!!tokens) {
       const chainTokenPrices: ChainTokenPrices = {}
       const tokenSet = new Set(tokens)
 
       // Getting prices from existing cache
-      const parsedAllCachedChainTokenPrices = !!allCachedChainTokenPrices
-        ? (JSON.parse(allCachedChainTokenPrices) as ChainTokenPrices)
-        : undefined
       if (!!parsedAllCachedChainTokenPrices) {
         tokenSet.forEach((address) => {
-          const cachedPrice = parsedAllCachedChainTokenPrices[address]
-          if (cachedPrice !== undefined) {
-            chainTokenPrices[address] = cachedPrice
+          const cachedPrices = parsedAllCachedChainTokenPrices[address]
+          if (!!cachedPrices) {
+            if (options?.includeHistory) {
+              chainTokenPrices[address] = cachedPrices
+            } else {
+              chainTokenPrices[address] = [cachedPrices[0]]
+            }
             tokenSet.delete(address)
           }
         })
@@ -36,14 +43,24 @@ export const fetchTokenPrices = async (
         const missingTokenPrices = await getCovalentTokenPrices(chainId, Array.from(tokenSet))
         for (const strAddress in missingTokenPrices) {
           const address = strAddress as `0x${string}`
-          chainTokenPrices[address] = missingTokenPrices[address]
+          chainTokenPrices[address] = options?.includeHistory
+            ? missingTokenPrices[address]
+            : [missingTokenPrices[address][0]]
         }
-        await updateHandler(event, { [chainId]: chainTokenPrices })
+        await updateHandler(event, { [chainId]: missingTokenPrices })
       }
 
       return JSON.stringify(chainTokenPrices)
     } else {
-      return allCachedChainTokenPrices
+      if (!!parsedAllCachedChainTokenPrices) {
+        Object.keys(parsedAllCachedChainTokenPrices).forEach((strAddress) => {
+          const address = strAddress as `0x${string}`
+          parsedAllCachedChainTokenPrices[address].splice(1)
+        })
+        return JSON.stringify(parsedAllCachedChainTokenPrices)
+      } else {
+        return JSON.stringify({})
+      }
     }
   } catch (e) {
     return null

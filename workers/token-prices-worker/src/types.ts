@@ -5,7 +5,7 @@ export interface TokenPrices {
 }
 
 export interface ChainTokenPrices {
-  [address: `0x${string}`]: number
+  [address: `0x${string}`]: { date: string; price: number }[]
 }
 
 export type SUPPORTED_NETWORK = (typeof SUPPORTED_NETWORKS)[number]

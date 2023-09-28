@@ -1,5 +1,5 @@
 import { KV_PRICE_KEYS, SUPPORTED_NETWORKS } from './constants'
-import { TokenPrices } from './types'
+import { ChainTokenPrices, TokenPrices } from './types'
 
 export const fetchAllTokenPrices = async () => {
   try {
@@ -12,7 +12,12 @@ export const fetchAllTokenPrices = async () => {
             KV_PRICE_KEYS[chainId]
           )
           if (!!chainTokenPrices) {
-            allTokenPrices[chainId] = JSON.parse(chainTokenPrices)
+            const parsedChainTokenPrices = JSON.parse(chainTokenPrices) as ChainTokenPrices
+            Object.keys(parsedChainTokenPrices).forEach((strAddress) => {
+              const address = strAddress as `0x${string}`
+              parsedChainTokenPrices[address].splice(1)
+            })
+            allTokenPrices[chainId] = parsedChainTokenPrices
           }
         })()
       )

@@ -1,5 +1,6 @@
 import { KV_ADDRESS_KEYS, KV_PRICE_KEYS, SUPPORTED_NETWORKS } from './constants'
 import { ChainTokenPrices, SUPPORTED_NETWORK, TokenPrices } from './types'
+import { sortTokenPricesByDate } from './utils'
 
 export const updateHandler = async (
   event: FetchEvent | ScheduledEvent,
@@ -18,14 +19,28 @@ export const updateHandler = async (
             ? JSON.parse(data.value)
             : {}
 
+          const newChainTokenPrices: ChainTokenPrices = { ...cachedChainTokenPrices }
+          Object.keys(chainTokenPrices).forEach((strAddress) => {
+            const address = strAddress as `0x${string}`
+            if (newChainTokenPrices[address] === undefined) {
+              newChainTokenPrices[address] = sortTokenPricesByDate(chainTokenPrices[address])
+            } else {
+              chainTokenPrices[address].forEach((item) => {
+                const foundExistingItem = newChainTokenPrices[address].find(
+                  (i) => i.date === item.date
+                )
+                if (!foundExistingItem) {
+                  newChainTokenPrices[address].push(item)
+                }
+              })
+              newChainTokenPrices[address] = sortTokenPricesByDate(newChainTokenPrices[address])
+            }
+          })
+
           event.waitUntil(
-            TOKEN_PRICES.put(
-              KV_PRICE_KEYS[chainId],
-              JSON.stringify({ ...cachedChainTokenPrices, ...chainTokenPrices }),
-              {
-                metadata: { lastUpdated: new Date(Date.now()).toUTCString() }
-              }
-            )
+            TOKEN_PRICES.put(KV_PRICE_KEYS[chainId], JSON.stringify(newChainTokenPrices), {
+              metadata: { lastUpdated: new Date(Date.now()).toUTCString() }
+            })
           )
         })
       )

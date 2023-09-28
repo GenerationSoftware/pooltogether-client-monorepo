@@ -23,3 +23,5 @@ export const KV_ADDRESS_KEYS = {
 } as const
 
 export const COVALENT_API_URL = 'https://api.covalenthq.com/v1'
+
+export const START_DATE = '2023-08-31'
