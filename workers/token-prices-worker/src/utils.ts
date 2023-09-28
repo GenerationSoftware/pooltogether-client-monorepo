@@ -5,10 +5,10 @@ export const isAddress = (address: string): address is `0x${string}` => {
   return /^0x[a-fA-F0-9]{40}$/.test(address)
 }
 
-// TODO: should take in a var of the last date queried, in order to only query recent data
 export const getCovalentTokenPrices = async (
   chainId: SUPPORTED_NETWORK,
-  tokenAddresses: `0x${string}`[]
+  tokenAddresses: `0x${string}`[],
+  options?: { from?: string }
 ) => {
   try {
     const strTokenAddresses = tokenAddresses.join(',')
@@ -16,7 +16,7 @@ export const getCovalentTokenPrices = async (
       `${COVALENT_API_URL}/pricing/historical_by_addresses_v2/${chainId}/eth/${strTokenAddresses}/`
     )
     url.searchParams.set('key', COVALENT_API_KEY)
-    url.searchParams.set('from', START_DATE)
+    url.searchParams.set('from', options?.from ?? START_DATE)
     const response = await fetch(url.toString())
     const tokenPricesArray = (await response.json<{ data: CovalentPricingApiResponse[] }>()).data
     const tokenPrices: ChainTokenPrices = {}

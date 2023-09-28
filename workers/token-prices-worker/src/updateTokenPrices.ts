@@ -24,6 +24,7 @@ const getAllChainTokenPrices = async () => {
           )
           if (!!cachedTokenAddresses) {
             const tokenAddresses = cachedTokenAddresses.split(',') as `0x${string}`[]
+            // TODO: check for least recent token price and use `from` appropriately to only query needed data
             const tokenPrices = await getCovalentTokenPrices(chainId, tokenAddresses)
             for (const strAddress in tokenPrices) {
               const address = strAddress as `0x${string}`
