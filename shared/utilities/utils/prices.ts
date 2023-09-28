@@ -13,13 +13,22 @@ export const getTokenPrices = async (
 ): Promise<{ [address: Address]: number }> => {
   try {
     const url = new URL(`${TOKEN_PRICES_API_URL}/${chainId}`)
+    const tokenPrices: { [address: Address]: number } = {}
 
     if (!!tokenAddresses && tokenAddresses.length > 0) {
       url.searchParams.set('tokens', tokenAddresses.join(','))
     }
 
     const response = await fetch(url.toString())
-    const tokenPrices: { [address: Address]: number } = await response.json()
+    const rawTokenPrices: { [address: Address]: { date: string; price: number }[] } =
+      await response.json()
+    Object.keys(rawTokenPrices).forEach((key) => {
+      const address = key as Address
+      const tokenPrice = rawTokenPrices[address][0]?.price
+      if (tokenPrice !== undefined) {
+        tokenPrices[address] = tokenPrice
+      }
+    })
 
     if (
       !!tokenAddresses &&
