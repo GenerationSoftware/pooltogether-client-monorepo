@@ -62,7 +62,7 @@ export const PrizesView = (props: PrizesViewProps) => {
   const drawIdSelected = useAtomValue(selectedDrawIdAtom)
 
   return (
-    <div className={classNames('w-full flex flex-col gap-2 items-center md:gap-6', className)}>
+    <div className={classNames('w-full flex flex-col grow gap-2 items-center md:gap-6', className)}>
       {!!drawIdSelected && <DrawStatusBadge prizePool={prizePool} drawId={drawIdSelected} />}
       {!!drawIdSelected && (
         <PrizesTable prizePool={prizePool} drawId={drawIdSelected} className='md:mt-6' />

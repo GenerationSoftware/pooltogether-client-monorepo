@@ -67,9 +67,9 @@ export const PrizesTable = (props: PrizesTableProps) => {
     'w-full gap-y-6 grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,3fr)_minmax(0,3fr)_minmax(0,3fr)] px-4 md:grid md:gap-x-12'
 
   return (
-    <div className={classNames('w-full flex flex-col gap-2 items-center', className)}>
+    <div className={classNames('w-full flex flex-col grow gap-2 items-center', className)}>
       <PrizesTableHeaders className={classNames('hidden', gridClassName)} />
-      <div className='w-full h-[50vh] flex flex-col grow gap-2 items-center overflow-auto'>
+      <div className='w-full flex flex-col gap-2 items-center overflow-y-auto md:max-h-[48vh]'>
         {[...Array(numTiers).keys()].map((tier) => (
           <PrizesTableRow
             key={`prizesTier-${tier}`}
