@@ -26,11 +26,13 @@ export const updateHandler = async (
               newChainTokenPrices[address] = sortTokenPricesByDate(chainTokenPrices[address])
             } else {
               chainTokenPrices[address].forEach((item) => {
-                const foundExistingItem = newChainTokenPrices[address].find(
+                const itemIndex = newChainTokenPrices[address].findIndex(
                   (i) => i.date === item.date
                 )
-                if (!foundExistingItem) {
+                if (itemIndex === -1) {
                   newChainTokenPrices[address].push(item)
+                } else {
+                  newChainTokenPrices[address][itemIndex].price = item.price
                 }
               })
               newChainTokenPrices[address] = sortTokenPricesByDate(newChainTokenPrices[address])
