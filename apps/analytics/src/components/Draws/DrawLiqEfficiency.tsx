@@ -165,9 +165,7 @@ const LiqEffiencyStat = (props: LiqEffiencyStatProps) => {
       <span className='w-10 border-r border-r-pt-purple-100'>{type.toUpperCase()}</span>
       <span className='pl-2'>
         <span className='text-xl'>
-          {(percentage <= 100 ? percentage : 100).toLocaleString(undefined, {
-            maximumFractionDigits: 0
-          })}
+          {percentage.toLocaleString(undefined, { maximumFractionDigits: 0 })}
         </span>
         %
       </span>
