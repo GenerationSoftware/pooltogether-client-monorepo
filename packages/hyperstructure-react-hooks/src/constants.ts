@@ -11,6 +11,7 @@ export const QUERY_KEYS = Object.freeze({
   firstDrawStartTimestamp: 'firstDrawStartTimestamp',
   gasAmountEstimates: 'gasAmountEstimates',
   gasPrices: 'gasPrices',
+  historicalTokenPrices: 'historicalTokenPrices',
   lastDrawId: 'lastDrawId',
   lastDrawTimestamp: 'lastDrawTimestamp',
   nextDrawTimestamp: 'nextDrawTimestamp',

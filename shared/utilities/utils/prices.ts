@@ -1,4 +1,4 @@
-import { Address } from 'viem'
+import { Address, isAddress } from 'viem'
 import { TOKEN_PRICE_REDIRECTS, TOKEN_PRICES_API_URL } from '../constants'
 
 /**
@@ -40,6 +40,32 @@ export const getTokenPrices = async (
         tokenPrices[address as Address] = price
       })
     }
+
+    return tokenPrices
+  } catch (e) {
+    console.error(e)
+    return {}
+  }
+}
+
+/**
+ * Returns a token's historical prices in ETH from the CloudFlare API
+ * @param chainId chain ID where the token addresses provided is from
+ * @param tokenAddress token address to query historical prices for
+ * @returns
+ */
+export const getHistoricalTokenPrices = async (
+  chainId: number,
+  tokenAddress: string
+): Promise<{ [address: Address]: { date: string; price: number }[] }> => {
+  if (!isAddress(tokenAddress)) return {}
+
+  try {
+    const url = new URL(`${TOKEN_PRICES_API_URL}/${chainId}/${tokenAddress}`)
+
+    const response = await fetch(url.toString())
+    const tokenPrices: { [address: Address]: { date: string; price: number }[] } =
+      await response.json()
 
     return tokenPrices
   } catch (e) {

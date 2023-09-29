@@ -53,6 +53,7 @@ export * from './signatures/useApproveSignature'
 /**
  * Token Hooks
  */
+export * from './tokens/useHistoricalTokenPrices'
 export * from './tokens/useTokenAllowances'
 export * from './tokens/useTokenBalances'
 export * from './tokens/useTokenNonces'
