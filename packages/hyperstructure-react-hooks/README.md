@@ -123,6 +123,8 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useAllUserVaultDelegationBalances`
 - `useAllVaultBalances`
 - `useAllVaultExchangeRates`
+- `useAllVaultHistoricalSharePrices`
+- `useAllVaultHistoricalTokenPrices`
 - `useAllVaultPercentageContributions`
 - `useAllVaultPrizePowers`
 - `useAllVaultShareData`
