@@ -321,6 +321,8 @@ export class Vaults {
     const exchangeRates: { [vaultId: string]: bigint } = {}
     const networksToQuery = chainIds ?? this.chainIds
 
+    const shareData = await this.getShareData(networksToQuery)
+
     await Promise.allSettled(
       networksToQuery.map((chainId) =>
         (async () => {
@@ -328,7 +330,7 @@ export class Vaults {
           if (!!client) {
             const source = `Vaults [getExchangeRates] [${chainId}]`
             await validateClientNetwork(chainId, client, source)
-            const chainVaults = getVaultsByChainId(chainId, this.allVaultInfo)
+            const chainVaults = getVaultsByChainId(chainId, Object.values(shareData))
             const chainExchangeRates = await getVaultExchangeRates(client, chainVaults)
             Object.assign(exchangeRates, chainExchangeRates)
 
