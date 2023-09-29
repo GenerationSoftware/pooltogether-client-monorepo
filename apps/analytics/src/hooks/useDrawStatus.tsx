@@ -8,16 +8,7 @@ import { useRngTxs } from './useRngTxs'
 
 type DrawStatus = 'open' | 'closed' | 'finalized'
 
-export const useDrawStatus = (
-  prizePool: PrizePool,
-  drawId: number
-): {
-  status?: DrawStatus
-  openedAt?: number
-  closedAt?: number
-  periodsSkipped?: number
-  isFetched: boolean
-} => {
+export const useDrawStatus = (prizePool: PrizePool, drawId: number) => {
   const { data: firstDrawOpenedAt, isFetched: isFetchedFirstDrawOpenedAt } =
     useFirstDrawStartTimestamp(prizePool)
 
