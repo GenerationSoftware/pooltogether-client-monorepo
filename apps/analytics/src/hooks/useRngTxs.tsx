@@ -146,7 +146,14 @@ export const useRngTxs = (prizePool: PrizePool) => {
 
       return rngTxs
     }
-  }, [rngAuctionEvents, relayAuctionEvents, drawClosedEvents, drawClosedBlocks])
+  }, [
+    rngAuctionEvents,
+    relayAuctionEvents,
+    drawClosedEvents,
+    drawClosedBlocks,
+    rngL1RelayMsgEvents,
+    rngL2RelayMsgEvents
+  ])
 
   const isFetched =
     isFetchedRngAuctionEvents &&
