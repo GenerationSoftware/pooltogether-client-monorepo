@@ -1,7 +1,8 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { SubgraphDraw, Token } from '@shared/types'
-import { formatBigIntForDisplay } from '@shared/utilities'
+import { formatBigIntForDisplay, getTimeBreakdown } from '@shared/utilities'
 import classNames from 'classnames'
+import { useMemo } from 'react'
 import { ClaimFees } from '@components/ClaimFees'
 import { prizesHeaders } from './PrizesTable'
 
@@ -37,7 +38,7 @@ export const PrizesTableRow = (props: PrizesTableRowProps) => {
       <PrizeSize tier={tier} prizes={prizes} prizeToken={prizeToken} className='w-1/2 md:w-auto' />
       <PrizesClaimed wins={wins} tier={tier} prizes={prizes} className='w-1/2 md:w-auto' />
       <PrizeFees prizePool={prizePool} drawId={drawId} tier={tier} className='w-full md:w-auto' />
-      <PrizeClaimTime tier={tier} className='w-full md:w-auto' />
+      <PrizeClaimTime wins={wins} tier={tier} closedAt={closedAt} className='w-full md:w-auto' />
     </div>
   )
 }
@@ -161,24 +162,97 @@ const PrizeFees = (props: PrizeFeesProps) => {
         prizePool={prizePool}
         drawId={drawId}
         tier={tier}
-        className='items-center text-start'
+        className='items-center text-start md:items-start'
       />
     </div>
   )
 }
 
 interface PrizeClaimTimeProps {
+  wins: SubgraphDraw['prizeClaims']
   tier: number
+  closedAt: number
   className?: string
 }
 
 const PrizeClaimTime = (props: PrizeClaimTimeProps) => {
-  const { tier, className } = props
+  const { wins, tier, closedAt, className } = props
+
+  const claimTimeStats = useMemo(() => {
+    const tierWins = wins.filter((win) => win.tier === tier)
+
+    if (!!tierWins.length) {
+      let sumSeconds = 0
+      let high = 0
+      let low = Number.MAX_SAFE_INTEGER
+
+      tierWins.forEach((win) => {
+        const seconds = win.timestamp - closedAt
+
+        if (seconds > high) high = seconds
+        if (seconds < low) low = seconds
+
+        sumSeconds += seconds
+      })
+
+      const avg = sumSeconds / tierWins.length
+
+      return { avg, high, low }
+    }
+  }, [wins, tier, closedAt])
 
   return (
-    <div className={classNames('flex flex-col gap-2', className)}>
+    <div className={classNames('flex flex-col gap-2 items-center md:items-start', className)}>
       <span className='text-pt-purple-500 md:hidden'>{prizesHeaders.time}</span>
-      <span>-</span>
+      {!!claimTimeStats ? (
+        <div className='flex flex-col gap-1'>
+          <ClaimTimeStat type='avg' seconds={claimTimeStats.avg} />
+          <ClaimTimeStat type='high' seconds={claimTimeStats.high} />
+          <ClaimTimeStat type='low' seconds={claimTimeStats.low} />
+        </div>
+      ) : (
+        <span>-</span>
+      )}
+    </div>
+  )
+}
+
+interface ClaimTimeStatProps {
+  type: 'avg' | 'high' | 'low'
+  seconds: number
+  className?: string
+}
+
+const ClaimTimeStat = (props: ClaimTimeStatProps) => {
+  const { type, seconds, className } = props
+
+  const { hours, minutes } = getTimeBreakdown(seconds)
+
+  return (
+    <div
+      className={classNames(
+        'flex items-center text-sm',
+        {
+          'text-pt-purple-700': type === 'avg',
+          'text-green-600': type === 'high',
+          'text-red-600': type === 'low'
+        },
+        className
+      )}
+    >
+      <span className='w-10 border-r border-r-pt-purple-100'>{type.toUpperCase()}</span>
+      <div className='flex gap-1 items-center pl-2'>
+        {!!hours && (
+          <span className='flex items-center'>
+            <span className='text-xl'>{hours}</span>Hr{hours > 1 ? 's' : ''}
+          </span>
+        )}
+        {!!minutes && (
+          <span className='flex items-center'>
+            <span className='text-xl'>{minutes}</span>Min{minutes > 1 ? 's' : ''}
+          </span>
+        )}
+      </div>
     </div>
   )
 }
