@@ -45,6 +45,7 @@ export const ClaimFees = (props: ClaimFeesProps) => {
     return filteredWins
   }, [tier, draw, numTiers])
 
+  // TODO: include tx hashes on high and low to display link once available on subgraph
   const claimFeeStats = useMemo(() => {
     if (wins.length > 0) {
       const sumClaimFeeAmount = wins.reduce((a, b) => a + b.fee, 0n)

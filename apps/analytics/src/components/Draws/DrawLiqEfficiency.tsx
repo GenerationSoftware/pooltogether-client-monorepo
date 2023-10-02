@@ -3,8 +3,8 @@ import {
   useHistoricalTokenPrices,
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { Spinner } from '@shared/ui'
-import { NETWORK, POOL_TOKEN_ADDRESSES } from '@shared/utilities'
+import { ExternalLink, Spinner } from '@shared/ui'
+import { getBlockExplorerUrl, NETWORK, POOL_TOKEN_ADDRESSES } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
@@ -73,8 +73,10 @@ export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
       const prizeTokenPrice = prizeTokenPrices.find((entry) => entry.date === targetDate)?.price
 
       if (!!prizeTokenPrice) {
-        let high = -1
-        let low = 101
+        type Stat = { efficiency: number; hash?: `0x${string}` }
+
+        let high: Stat = { efficiency: -Number.MAX_SAFE_INTEGER }
+        let low: Stat = { efficiency: Number.MAX_SAFE_INTEGER }
 
         let totalValueIn = 0
         let totalValueOut = 0
@@ -94,11 +96,11 @@ export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
 
             const efficiency = (valueIn / valueOut) * 100
 
-            if (efficiency > high) {
-              high = efficiency
+            if (efficiency > high.efficiency) {
+              high = { efficiency, hash: event.transactionHash }
             }
-            if (efficiency < low) {
-              low = efficiency
+            if (efficiency < low.efficiency) {
+              low = { efficiency, hash: event.transactionHash }
             }
 
             totalValueIn += valueIn
@@ -106,7 +108,7 @@ export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
           }
         })
 
-        if (high >= 0 && low <= 100 && !!totalValueIn && !!totalValueOut) {
+        if (!!high.hash && !!low.hash && !!totalValueIn && !!totalValueOut) {
           const avg = (totalValueIn / totalValueOut) * 100
 
           return { avg, high, low }
@@ -128,8 +130,18 @@ export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
         {isFetched && !!liqEfficiencyStats ? (
           <>
             <LiqEffiencyStat type='avg' percentage={liqEfficiencyStats.avg} />
-            <LiqEffiencyStat type='high' percentage={liqEfficiencyStats.high} />
-            <LiqEffiencyStat type='low' percentage={liqEfficiencyStats.low} />
+            <LiqEffiencyStat
+              type='high'
+              percentage={liqEfficiencyStats.high.efficiency}
+              chainId={prizePool?.chainId}
+              txHash={liqEfficiencyStats.high.hash}
+            />
+            <LiqEffiencyStat
+              type='low'
+              percentage={liqEfficiencyStats.low.efficiency}
+              chainId={prizePool?.chainId}
+              txHash={liqEfficiencyStats.low.hash}
+            />
           </>
         ) : isFetched ? (
           <span>-</span>
@@ -144,11 +156,22 @@ export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
 interface LiqEffiencyStatProps {
   type: 'avg' | 'high' | 'low'
   percentage: number
+  chainId?: number
+  txHash?: string
   className?: string
 }
 
 const LiqEffiencyStat = (props: LiqEffiencyStatProps) => {
-  const { type, percentage, className } = props
+  const { type, percentage, chainId, txHash, className } = props
+
+  const formattedPercentage = (
+    <span className='pl-2'>
+      <span className='text-xl'>
+        {percentage.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+      </span>
+      %
+    </span>
+  )
 
   return (
     <div
@@ -163,12 +186,13 @@ const LiqEffiencyStat = (props: LiqEffiencyStatProps) => {
       )}
     >
       <span className='w-10 border-r border-r-pt-purple-100'>{type.toUpperCase()}</span>
-      <span className='pl-2'>
-        <span className='text-xl'>
-          {percentage.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-        </span>
-        %
-      </span>
+      {!!chainId && !!txHash ? (
+        <ExternalLink href={getBlockExplorerUrl(chainId, txHash, 'tx')} size='sm'>
+          {formattedPercentage}
+        </ExternalLink>
+      ) : (
+        formattedPercentage
+      )}
     </div>
   )
 }
