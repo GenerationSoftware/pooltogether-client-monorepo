@@ -60,7 +60,7 @@ importers:
       sonner: 0.4.0_biqbaboplfbrettd7655fr4n2y
       tailwindcss: 3.3.1_postcss@8.4.23
       tslib: 2.5.0
-      turbo: 1.10.13
+      turbo: 1.10.14
       typescript: 5.0.4
       viem: 1.10.9_typescript@5.0.4
       wagmi: 1.3.9_4cnk5mqy3ziltp57y6fboxfl5e
@@ -230,6 +230,65 @@ importers:
       react-hook-form: 7.44.3_react@18.2.0
       sonner: 0.4.0_biqbaboplfbrettd7655fr4n2y
       viem: 1.10.9_typescript@5.0.4
+    devDependencies:
+      '@types/node': 17.0.45
+      '@types/react': 18.2.8
+      '@types/react-dom': 18.2.4
+      autoprefixer: 10.4.14_postcss@8.4.23
+      postcss: 8.4.23
+      tailwindcss: 3.3.1_postcss@8.4.23
+      tslib: 2.5.0
+      typescript: 5.0.4
+
+  apps/swaps:
+    specifiers:
+      '@generationsoftware/hyperstructure-client-js': workspace:*
+      '@generationsoftware/hyperstructure-react-hooks': workspace:*
+      '@heroicons/react': ^2.0.16
+      '@tanstack/react-query': ^4.24.10
+      '@types/node': ^17.0.45
+      '@types/react': ^18.2.0
+      '@types/react-dom': ^18.2.0
+      autoprefixer: ^10.4.13
+      axios: ^1.4.0
+      classnames: ^2.3.2
+      fathom-client: ^3.5.0
+      flowbite: 1.6.5
+      flowbite-react: 0.4.7
+      framer-motion: ^10.12.16
+      jotai: ^1.13.1
+      lottie-react: ^2.4.0
+      next: 13.3.0
+      postcss: ^8.4.21
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      react-hook-form: ^7.43.2
+      sonner: ^0.4.0
+      tailwindcss: ^3.3.1
+      tslib: ^2.5.0
+      typescript: ^5.0.4
+      viem: ^1.10.9
+      wagmi: ^1.3.9
+    dependencies:
+      '@generationsoftware/hyperstructure-client-js': link:../../packages/hyperstructure-client-js
+      '@generationsoftware/hyperstructure-react-hooks': link:../../packages/hyperstructure-react-hooks
+      '@heroicons/react': 2.0.17_react@18.2.0
+      '@tanstack/react-query': 4.29.5_biqbaboplfbrettd7655fr4n2y
+      axios: 1.4.0
+      classnames: 2.3.2
+      fathom-client: 3.5.0
+      flowbite: 1.6.5
+      flowbite-react: 0.4.7_pob4ffeafvx74vtuaxxqyesgwy
+      framer-motion: 10.12.16_biqbaboplfbrettd7655fr4n2y
+      jotai: 1.13.1_react@18.2.0
+      lottie-react: 2.4.0_biqbaboplfbrettd7655fr4n2y
+      next: 13.3.0_biqbaboplfbrettd7655fr4n2y
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      react-hook-form: 7.44.3_react@18.2.0
+      sonner: 0.4.0_biqbaboplfbrettd7655fr4n2y
+      viem: 1.10.9_typescript@5.0.4
+      wagmi: 1.3.9_4cnk5mqy3ziltp57y6fboxfl5e
     devDependencies:
       '@types/node': 17.0.45
       '@types/react': 18.2.8
@@ -5616,10 +5675,10 @@ packages:
       - ts-node
     dev: true
 
-  /turbo-darwin-64/1.10.13:
+  /turbo-darwin-64/1.10.14:
     resolution:
       {
-        integrity: sha512-vmngGfa2dlYvX7UFVncsNDMuT4X2KPyPJ2Jj+xvf5nvQnZR/3IeDEGleGVuMi/hRzdinoxwXqgk9flEmAYp0Xw==
+        integrity: sha512-I8RtFk1b9UILAExPdG/XRgGQz95nmXPE7OiGb6ytjtNIR5/UZBS/xVX/7HYpCdmfriKdVwBKhalCoV4oDvAGEg==
       }
     cpu: [x64]
     os: [darwin]
@@ -5627,10 +5686,10 @@ packages:
     dev: true
     optional: true
 
-  /turbo-darwin-arm64/1.10.13:
+  /turbo-darwin-arm64/1.10.14:
     resolution:
       {
-        integrity: sha512-eMoJC+k7gIS4i2qL6rKmrIQGP6Wr9nN4odzzgHFngLTMimok2cGLK3qbJs5O5F/XAtEeRAmuxeRnzQwTl/iuAw==
+        integrity: sha512-KAdUWryJi/XX7OD0alOuOa0aJ5TLyd4DNIYkHPHYcM6/d7YAovYvxRNwmx9iv6Vx6IkzTnLeTiUB8zy69QkG9Q==
       }
     cpu: [arm64]
     os: [darwin]
@@ -5638,10 +5697,10 @@ packages:
     dev: true
     optional: true
 
-  /turbo-linux-64/1.10.13:
+  /turbo-linux-64/1.10.14:
     resolution:
       {
-        integrity: sha512-0CyYmnKTs6kcx7+JRH3nPEqCnzWduM0hj8GP/aodhaIkLNSAGAa+RiYZz6C7IXN+xUVh5rrWTnU2f1SkIy7Gdg==
+        integrity: sha512-BOBzoREC2u4Vgpap/WDxM6wETVqVMRcM8OZw4hWzqCj2bqbQ6L0wxs1LCLWVrghQf93JBQtIGAdFFLyCSBXjWQ==
       }
     cpu: [x64]
     os: [linux]
@@ -5649,10 +5708,10 @@ packages:
     dev: true
     optional: true
 
-  /turbo-linux-arm64/1.10.13:
+  /turbo-linux-arm64/1.10.14:
     resolution:
       {
-        integrity: sha512-0iBKviSGQQlh2OjZgBsGjkPXoxvRIxrrLLbLObwJo3sOjIH0loGmVIimGS5E323soMfi/o+sidjk2wU1kFfD7Q==
+        integrity: sha512-D8T6XxoTdN5D4V5qE2VZG+/lbZX/89BkAEHzXcsSUTRjrwfMepT3d2z8aT6hxv4yu8EDdooZq/2Bn/vjMI32xw==
       }
     cpu: [arm64]
     os: [linux]
@@ -5660,10 +5719,10 @@ packages:
     dev: true
     optional: true
 
-  /turbo-windows-64/1.10.13:
+  /turbo-windows-64/1.10.14:
     resolution:
       {
-        integrity: sha512-S5XySRfW2AmnTeY1IT+Jdr6Goq7mxWganVFfrmqU+qqq3Om/nr0GkcUX+KTIo9mPrN0D3p5QViBRzulwB5iuUQ==
+        integrity: sha512-zKNS3c1w4i6432N0cexZ20r/aIhV62g69opUn82FLVs/zk3Ie0GVkSB6h0rqIvMalCp7enIR87LkPSDGz9K4UA==
       }
     cpu: [x64]
     os: [win32]
@@ -5671,10 +5730,10 @@ packages:
     dev: true
     optional: true
 
-  /turbo-windows-arm64/1.10.13:
+  /turbo-windows-arm64/1.10.14:
     resolution:
       {
-        integrity: sha512-nKol6+CyiExJIuoIc3exUQPIBjP9nIq5SkMJgJuxsot2hkgGrafAg/izVDRDrRduQcXj2s8LdtxJHvvnbI8hEQ==
+        integrity: sha512-rkBwrTPTxNSOUF7of8eVvvM+BkfkhA2OvpHM94if8tVsU+khrjglilp8MTVPHlyS9byfemPAmFN90oRIPB05BA==
       }
     cpu: [arm64]
     os: [win32]
@@ -5682,19 +5741,19 @@ packages:
     dev: true
     optional: true
 
-  /turbo/1.10.13:
+  /turbo/1.10.14:
     resolution:
       {
-        integrity: sha512-vOF5IPytgQPIsgGtT0n2uGZizR2N3kKuPIn4b5p5DdeLoI0BV7uNiydT7eSzdkPRpdXNnO8UwS658VaI4+YSzQ==
+        integrity: sha512-hr9wDNYcsee+vLkCDIm8qTtwhJ6+UAMJc3nIY6+PNgUTtXcQgHxCq8BGoL7gbABvNWv76CNbK5qL4Lp9G3ZYRA==
       }
     hasBin: true
     optionalDependencies:
-      turbo-darwin-64: 1.10.13
-      turbo-darwin-arm64: 1.10.13
-      turbo-linux-64: 1.10.13
-      turbo-linux-arm64: 1.10.13
-      turbo-windows-64: 1.10.13
-      turbo-windows-arm64: 1.10.13
+      turbo-darwin-64: 1.10.14
+      turbo-darwin-arm64: 1.10.14
+      turbo-linux-64: 1.10.14
+      turbo-linux-arm64: 1.10.14
+      turbo-windows-64: 1.10.14
+      turbo-windows-arm64: 1.10.14
     dev: true
 
   /typedarray-to-buffer/3.1.5:
