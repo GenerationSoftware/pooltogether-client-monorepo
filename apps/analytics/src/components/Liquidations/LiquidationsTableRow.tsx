@@ -285,7 +285,13 @@ const AvgEfficiency = (props: AvgEfficiencyProps) => {
     <div className={classNames('flex flex-col gap-3 text-sm', className)}>
       <span className='text-pt-purple-500 md:hidden'>{liquidationHeaders.efficiency}</span>
       <div className='flex flex-col gap-1'>
-        {/* TODO: bar with percentages */}
+        <AvgEfficiencyBar
+          items={[
+            { id: 'prizes', value: efficiency.prizes, color: 'green' },
+            { id: 'bots', value: efficiency.bots, color: 'yellow' },
+            { id: 'gas', value: efficiency.gas, color: 'red' }
+          ]}
+        />
         <AvgEfficiencyItem efficiency={efficiency.prizes} label='prizes' color='green' />
         <AvgEfficiencyItem efficiency={efficiency.bots} label='bots' color='yellow' />
         <AvgEfficiencyItem efficiency={efficiency.gas} label='gas' color='red' />
@@ -294,10 +300,39 @@ const AvgEfficiency = (props: AvgEfficiencyProps) => {
   )
 }
 
+type AvgEfficiencyColor = 'green' | 'yellow' | 'red'
+
+interface AvgEfficiencyBarProps {
+  items: { id: string; value: number; color: AvgEfficiencyColor }[]
+  className?: string
+}
+
+const AvgEfficiencyBar = (props: AvgEfficiencyBarProps) => {
+  const { items, className } = props
+
+  const totalValue = items.reduce((a, b) => a + b.value, 0)
+
+  return (
+    <div className={classNames('w-full h-6 flex rounded overflow-hidden', className)}>
+      {items.map((item) => (
+        <span
+          key={`avgEfficiencyBar-${item.id}`}
+          className={classNames({
+            'bg-green-600': item.color === 'green',
+            'bg-yellow-200': item.color === 'yellow',
+            'bg-red-600': item.color === 'red'
+          })}
+          style={{ width: `${(item.value / totalValue) * 100}%` }}
+        />
+      ))}
+    </div>
+  )
+}
+
 interface AvgEfficiencyItemProps {
   efficiency: number
   label: ReactNode
-  color: 'green' | 'yellow' | 'red'
+  color: AvgEfficiencyColor
   className?: string
 }
 
