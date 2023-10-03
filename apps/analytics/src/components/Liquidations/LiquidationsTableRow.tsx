@@ -200,7 +200,7 @@ const CurrentAvailableYield = (props: CurrentAvailableYieldProps) => {
 
   const { data: lpToken } = useLiquidationPairTokenOutData(chainId, lpAddress)
 
-  if (!liquidatableBalance || !lpToken) {
+  if (liquidatableBalance === undefined || !lpToken) {
     return <Spinner className='after:border-y-pt-purple-800' />
   }
 
