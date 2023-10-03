@@ -10,7 +10,12 @@ export const Navbar = (props: NavbarProps) => {
   const { className } = props
 
   return (
-    <div className={classNames('flex items-center justify-between', className)}>
+    <div
+      className={classNames(
+        'w-full max-w-[1440px] flex items-center justify-between mx-auto px-20 py-10',
+        className
+      )}
+    >
       <Logo smLogoClassName='w-11' mdLogoClassName='w-52' />
       <PoweredByPT />
     </div>
