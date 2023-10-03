@@ -59,7 +59,9 @@ export const RecentWinners = (props: RecentWinnersProps) => {
     >
       <span className='font-grotesk font-semibold text-5xl text-pt-pink'>Recent Winners</span>
       {!!prizeToken && !!highlightedWins.length ? (
-        highlightedWins.map((win) => <Win win={win} prizeToken={prizeToken} />)
+        highlightedWins.map((win) => (
+          <Win key={`win-${win.id}`} win={win} prizeToken={prizeToken} />
+        ))
       ) : (
         <Spinner />
       )}

@@ -4,10 +4,9 @@ import {
   usePrizeTokenPrice
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { CurrencyValue } from '@shared/react-components'
-import { LINKS, Spinner } from '@shared/ui'
+import { ExternalLink, LINKS, Spinner } from '@shared/ui'
 import { NETWORK, PRIZE_POOLS } from '@shared/utilities'
 import classNames from 'classnames'
-import Link from 'next/link'
 import { formatUnits } from 'viem'
 
 interface GrandPrizeProps {
@@ -47,13 +46,12 @@ export const GrandPrize = (props: GrandPrizeProps) => {
       <span className='font-grotesk font-bold text-5xl'>
         {!!gpValue ? <CurrencyValue baseValue={gpValue} hideZeroes={true} /> : <Spinner />}
       </span>
-      <Link
+      <ExternalLink
         href={`${LINKS.app}/prizes?network=${chainId}`}
-        target='_blank'
         className='mt-2 text-pt-purple-100'
       >
         See All Prizes
-      </Link>
+      </ExternalLink>
     </div>
   )
 }
