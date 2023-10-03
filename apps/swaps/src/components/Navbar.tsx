@@ -13,7 +13,8 @@ export const Navbar = (props: NavbarProps) => {
   return (
     <div
       className={classNames(
-        'w-full max-w-[1440px] flex items-center justify-between mx-auto px-20 py-10',
+        'w-full max-w-[1440px] flex items-center justify-between mx-auto px-4 py-10',
+        'md:px-20',
         className
       )}
     >

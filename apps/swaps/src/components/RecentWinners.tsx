@@ -93,12 +93,17 @@ const Win = (props: WinProps) => {
   const timeText = daysAgo > 1 ? `${daysAgo} days ago` : daysAgo === 1 ? 'yesterday' : 'today'
 
   return (
-    <span className={classNames('font-grotesk text-2xl text-pt-purple-100', className)}>
-      {winner} won{' '}
+    <span
+      className={classNames(
+        'inline-flex gap-2 font-grotesk text-2xl text-pt-purple-100',
+        className
+      )}
+    >
+      <span>{winner} won</span>{' '}
       <span className='text-pt-pink'>
         <CurrencyValue baseValue={prize} hideZeroes={true} />
       </span>{' '}
-      {timeText}
+      <span className='hidden md:block'>{timeText}</span>
     </span>
   )
 }

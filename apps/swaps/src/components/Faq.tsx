@@ -74,7 +74,7 @@ export const Faq = (props: FaqProps) => {
           ]}
           collapseAll={true}
           className='w-full !border-solid border-0 border-b-2 !border-pt-purple-200 rounded-none'
-          titleClassName='w-full py-5 text-xl text-pt-purple-50 bg-transparent'
+          titleClassName='w-full py-5 text-start text-xl text-pt-purple-50 bg-transparent'
           contentClassName='pt-0 pb-5 text-pt-purple-100 bg-transparent'
         />
       ))}
