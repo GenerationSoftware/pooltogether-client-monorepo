@@ -33,10 +33,11 @@ Each app is already setup with its own port through its `package.json` dev scrip
 - `vault-factory`: App to create and manage 4626 vaults.
 - `vaultlist-creator`: App to create, edit and distribute vault lists.
 - `analytics` - App to visualize analytics and general health metrics of the PoolTogether protocol.
+- `swaps` - Simple app to guide users to swap into PoolTogether vaults.
 
 All apps above are [Next.js](https://nextjs.org/) apps with [Tailwind CSS](https://tailwindcss.com/) support, written in [TypeScript](https://www.typescriptlang.org/).
 
-**Repo Links:** [App](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/app) | [Landing Page](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/landing-page) | [Vault Factory](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/vault-factory) | [VaultList Creator](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/vaultlist-creator) | [Analytics](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/analytics)
+**Repo Links:** [App](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/app) | [Landing Page](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/landing-page) | [Vault Factory](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/vault-factory) | [VaultList Creator](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/vaultlist-creator) | [Analytics](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/analytics) | [Swaps](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/swaps)
 
 ---
 

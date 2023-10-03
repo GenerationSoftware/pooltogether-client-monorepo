@@ -1,0 +1,17 @@
+{
+  "short_name": "Cabana Swaps",
+  "name": "Cabana Swaps",
+  "description": "Browse and swap into your favorite PoolTogether vaults.",
+  "start_url": "/",
+  "scope": "/",
+  "theme_color": "#8050E3",
+  "background_color": "#6538C1",
+  "display": "fullscreen",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ]
+}
