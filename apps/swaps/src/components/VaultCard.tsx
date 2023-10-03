@@ -86,19 +86,19 @@ const VaultCardActions = (props: VaultCardActionsProps) => {
   return (
     <div className={classNames('w-full flex flex-col gap-2', className)}>
       <VaultCardLink href={`https://swap.defillama.com/?chain=${network}&to=${shareToken.address}`}>
-        Buy on Llamaswap
+        Swap on Llamaswap
       </VaultCardLink>
       <VaultCardLink
         href={`https://app.paraswap.io/#/${NULL_ADDRESS}-${shareToken.address}?network=${network}`}
       >
-        Buy on Paraswap
+        Swap on Paraswap
       </VaultCardLink>
       <VaultCardLink href={`https://app.uniswap.org/tokens/${network}/${shareToken.address}`}>
-        Buy on Uniswap
+        Swap on Uniswap
       </VaultCardLink>
       {!!curvePool && (
         <VaultCardLink href={`https://curve.fi/#/${network}/pools/${curvePool}/swap`}>
-          Buy on Curve
+          Swap on Curve
         </VaultCardLink>
       )}
       <VaultCardLink href={`${LINKS.app}/vault/${shareToken.chainId}/${shareToken.address}`}>
