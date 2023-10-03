@@ -3,6 +3,7 @@ import { NETWORK } from '@shared/utilities'
 import { GrandPrize } from '@components/GrandPrize'
 import { Header } from '@components/Header'
 import { Layout } from '@components/Layout'
+import { VaultCards } from '@components/VaultCards'
 
 export default function HomePage() {
   return (
@@ -10,6 +11,7 @@ export default function HomePage() {
       <Header />
       <PrizePoolBadge chainId={NETWORK.optimism} className='mt-8' />
       <GrandPrize chainId={NETWORK.optimism} className='mt-6' />
+      <VaultCards chainId={NETWORK.optimism} className='mt-8' />
     </Layout>
   )
 }

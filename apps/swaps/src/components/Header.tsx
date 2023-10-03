@@ -15,6 +15,7 @@ export const Header = (props: HeaderProps) => {
         width={157}
         height={155}
         alt='Party Popper'
+        priority={true}
         className='w-40 h-auto'
       />
       <h2 className='mt-4 font-grotesk font-semibold text-5xl'>Save to Win</h2>
