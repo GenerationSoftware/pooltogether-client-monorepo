@@ -365,6 +365,11 @@ export const MAX_UINT_256 = 2n ** 256n - 1n
 export const NULL_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
 /**
+ * Dead Address
+ */
+export const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead'
+
+/**
  * EIP2612 Permit Types
  */
 export const EIP2612_PERMIT_TYPES = {

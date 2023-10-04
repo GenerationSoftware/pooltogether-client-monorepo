@@ -1,4 +1,5 @@
 import { NETWORK } from '@shared/utilities'
+import { Address } from 'viem'
 import { mainnet, optimism, optimismGoerli } from 'wagmi/chains'
 
 /**
@@ -41,3 +42,13 @@ export const QUERY_START_BLOCK: { [chainId: number]: bigint } = {
  */
 export const DRAW_RESULTS_URL =
   'https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results/main/prizes'
+
+/**
+ * POOL burn addresses
+ */
+export const BURN_ADDRESSES: { [chainId: number]: Address[] } = {
+  [NETWORK.optimism]: [
+    '0xb1B9DcB9F3a25e390fB37F597C2bF90B16889e41',
+    '0xF93329E78FefF1145fCe03A79d5b356588DeA215'
+  ]
+}
