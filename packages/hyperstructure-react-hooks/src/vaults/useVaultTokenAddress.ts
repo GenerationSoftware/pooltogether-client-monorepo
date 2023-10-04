@@ -12,18 +12,10 @@ import { QUERY_KEYS } from '../constants'
  * @returns
  */
 export const useVaultTokenAddress = (vault: Vault): UseQueryResult<Address, unknown> => {
-  const vaultId = !!vault ? [vault.id] : []
-  const queryKey = [QUERY_KEYS.vaultTokenAddresses, vaultId]
+  const queryKey = [QUERY_KEYS.vaultTokenAddresses, vault?.id]
 
-  return useQuery(
-    queryKey,
-    async () => {
-      const tokenAddress = await vault.getTokenAddress()
-      return tokenAddress
-    },
-    {
-      enabled: !!vault,
-      ...NO_REFETCH
-    }
-  )
+  return useQuery(queryKey, async () => await vault.getTokenAddress(), {
+    enabled: !!vault,
+    ...NO_REFETCH
+  })
 }

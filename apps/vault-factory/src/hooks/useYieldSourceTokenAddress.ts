@@ -19,7 +19,7 @@ export const useYieldSourceTokenAddress = (
 ): UseQueryResult<Address, unknown> => {
   const publicClient = usePublicClient({ chainId })
 
-  const id = !!chainId && !!address ? [getVaultId({ chainId, address })] : []
+  const id = !!chainId && !!address ? getVaultId({ chainId, address }) : undefined
   const queryKey = [QUERY_KEYS.vaultTokenAddresses, id]
 
   return useQuery(

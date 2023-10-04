@@ -1,6 +1,6 @@
 {
   "name": "@generationsoftware/hyperstructure-react-hooks",
-  "version": "1.4.8",
+  "version": "1.4.9",
   "license": "MIT",
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
