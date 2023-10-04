@@ -65,7 +65,7 @@ const VaultCardHeader = (props: VaultCardHeaderProps) => {
         href={`${LINKS.app}/vault/${shareToken.chainId}/${shareToken.address}`}
         size='sm'
       >
-        Learn about this asset
+        Learn about this token
       </ExternalLink>
     </div>
   )

@@ -108,7 +108,7 @@ const NoDepositsCard = (props: NoDepositsCardProps) => {
   return (
     <div className={classNames('w-full rounded-lg lg:p-4 lg:bg-pt-bg-purple', className)}>
       <div className='flex flex-col w-full gap-2 items-center justify-center p-3 text-sm bg-pt-transparent rounded-lg lg:flex-row lg:gap-3 lg:text-lg lg:font-medium'>
-        <span className='text-pt-purple-100'>{t('noPrizeAssets')}</span>
+        <span className='text-pt-purple-100'>{t('noPrizeTokens')}</span>
         <Link href='/vaults' className='text-pt-teal'>
           {t('depositNow')}
         </Link>

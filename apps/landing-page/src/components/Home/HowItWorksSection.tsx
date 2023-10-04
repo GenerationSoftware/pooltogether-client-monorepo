@@ -14,7 +14,7 @@ export const HowItWorksSection = (props: HowItWorksSectionProps) => {
       <div className='flex flex-col gap-10 md:flex-row'>
         <HowItWorksItem
           imgSrc='/depositGraphic.svg'
-          title='Deposit Assets'
+          title='Deposit Tokens'
           description='Deposit for a chance to win'
         />
         <HowItWorksItem

@@ -59,7 +59,7 @@ export const MenuView = (props: MenuViewProps) => {
           },
           {
             iconContent: <ClipboardListIcon className='h-6 w-6 text-pt-purple-100' />,
-            title: intl?.('manageVaultLists') ?? 'Manage Prize Asset Lists',
+            title: intl?.('manageVaultLists') ?? 'Manage Vault Lists',
             onClick: () => setView('vaultLists'),
             disabled: disable?.includes('vaultLists'),
             hidden: hide?.includes('vaultLists')

@@ -15,7 +15,7 @@ export const Faq = (props: FaqProps) => {
       question: 'Are there any fees?',
       answer: (
         <span>
-          PoolTogether prize vaults take no fees. You can always withdraw underlying assets 1:1.
+          PoolTogether prize vaults take no fees. You can always withdraw underlying tokens 1:1.
           However, when swapping through a decentralized exchange like{' '}
           <FaqLink href='https://uniswap.org/'>Uniswap</FaqLink> or{' '}
           <FaqLink href='https://curve.fi/'>Curve</FaqLink> there may be small fees that go to users

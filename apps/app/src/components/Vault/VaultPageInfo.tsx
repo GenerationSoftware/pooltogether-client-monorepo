@@ -111,7 +111,7 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
         data={<VaultContributions vault={vault} />}
       />
       <VaultInfoRow
-        name={t_vault('headers.depositAsset')}
+        name={t_vault('headers.depositToken')}
         data={
           isFetchedTokenData ? (
             !!tokenData ? (
@@ -125,7 +125,7 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
         }
       />
       <VaultInfoRow
-        name={t_vault('headers.prizeAsset')}
+        name={t_vault('headers.prizeToken')}
         data={
           isFetchedShareData ? (
             !!shareData ? (
