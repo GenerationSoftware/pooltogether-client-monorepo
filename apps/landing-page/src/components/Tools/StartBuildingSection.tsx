@@ -13,7 +13,7 @@ export const StartBuildingSection = (props: StartBuildingSectionProps) => {
   return (
     <section className={classNames('w-full flex flex-col gap-4 items-center md:gap-12', className)}>
       <span className='text-pt-teal-dark md:text-xl'>Start Building Today</span>
-      <div className='flex flex-col gap-10 md:flex-row'>
+      <div className='flex flex-col gap-10 md:flex-row md:flex-wrap md:justify-center'>
         <StartBuildingItem
           href={LINKS.vaultFactory}
           imgSrc='/factoryScreenshot.png'
@@ -31,6 +31,12 @@ export const StartBuildingSection = (props: StartBuildingSectionProps) => {
           imgSrc='/cabanalyticsScreenshot.png'
           title='Cabanalytics'
           description='View analytics and health metrics for the PoolTogether Hyperstructure.'
+        />
+        <StartBuildingItem
+          href={LINKS.swaps}
+          imgSrc='/swapScreenshot.png'
+          title='Cabana Swaps'
+          description='Browse and swap into your favorite PoolTogether vaults.'
         />
       </div>
     </section>
