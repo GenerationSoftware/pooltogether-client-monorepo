@@ -29,14 +29,14 @@ export const Navbar = (props: NavbarProps) => {
             BETA
           </span>
         </Link>
-        <div className='hidden gap-12 items-center md:flex'>
+        <div className='hidden gap-6 items-center md:flex lg:gap-12'>
           <NavbarActions />
           <Image
             src='/pooly.svg'
             alt='Pooly'
             width={93}
             height={91}
-            className='w-20 h-auto -ml-10'
+            className='w-20 h-auto -ml-5 lg:-ml-10'
             priority={true}
           />
         </div>
@@ -59,8 +59,9 @@ const MobileNavbar = (props: MobileNavbarProps) => {
   return (
     <div
       className={classNames(
-        'fixed bottom-0 flex w-full h-[60px] justify-center items-center gap-6 font-medium',
+        'fixed bottom-0 flex w-full h-[60px] justify-center items-center gap-3 font-medium text-sm',
         'bg-pt-purple-200 border-t-2 border-pt-purple-500',
+        'min-[350px]:text-base min-[400px]:gap-6',
         className
       )}
     >
@@ -105,7 +106,7 @@ const NavbarLink = (props: NavbarLinkProps) => {
       href={href}
       target={href.startsWith('http') ? '_blank' : '_self'}
       className={classNames(
-        'font-semibold border-b-2 md:text-xl md:border-b-4',
+        'font-semibold border-b-2 lg:text-xl md:border-b-4',
         {
           'text-pt-purple-500 border-b-current': isActive,
           'text-gray-600 border-b-transparent hover:text-pt-purple-500': !isActive

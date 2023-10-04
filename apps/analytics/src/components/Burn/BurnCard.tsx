@@ -83,13 +83,13 @@ export const BurnCard = (props: BurnCardProps) => {
       )}
     >
       <span className='text-center'>{timeText} burn</span>
-      <BurnCardItem name='Prizes to LPs' amount={burnAmounts.lp} token={prizeToken} />
-      <BurnCardItem name='Manual Burns' amount={burnAmounts.manual} token={prizeToken} />
-      <BurnCardItem name='Other' amount={burnAmounts.other} token={prizeToken} />
+      <BurnCardItem name='Prizes to LPs' amount={0n - burnAmounts.lp} token={prizeToken} />
+      <BurnCardItem name='Manual Burns' amount={0n - burnAmounts.manual} token={prizeToken} />
+      <BurnCardItem name='Other' amount={0n - burnAmounts.other} token={prizeToken} />
       <hr className='w-full border-gray-400' />
       <BurnCardItem
         name={`${timeText} changes`}
-        amount={burnAmounts.lp + burnAmounts.manual + burnAmounts.other}
+        amount={0n - (burnAmounts.lp + burnAmounts.manual + burnAmounts.other)}
         token={prizeToken}
         alwaysShow={true}
         nameClassName='capitalize'
