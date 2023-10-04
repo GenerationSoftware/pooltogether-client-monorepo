@@ -82,6 +82,7 @@ const NavbarActions = (props: NavbarActionsProps) => {
       <NavbarLink href='/liquidations' name='Liquidations' className={linkClassName} />
       <NavbarLink href='/prizes' name='Prizes' className={linkClassName} />
       <NavbarLink href='/reserve' name='Reserve' className={linkClassName} />
+      <NavbarLink href='/burn' name='Burn' className={linkClassName} />
     </>
   )
 }
