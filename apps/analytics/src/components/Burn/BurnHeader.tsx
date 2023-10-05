@@ -30,16 +30,20 @@ export const BurnHeader = (props: BurnHeaderProps) => {
     <div className={classNames('flex flex-col items-center', className)}>
       <span>Total {prizeToken?.symbol} Burned:</span>
       <span className='flex gap-1 items-center text-pt-purple-500'>
-        <span className='text-4xl font-semibold'>
-          {!!totalBurned && !!prizeToken ? (
-            formatBigIntForDisplay(totalBurned, prizeToken.decimals, {
-              hideZeroes: true
-            })
-          ) : (
-            <Spinner className='after:border-y-pt-purple-800' />
-          )}
-        </span>{' '}
-        {prizeToken?.symbol}
+        {!!totalBurned && !!prizeToken ? (
+          <>
+            <span className='text-2xl'>🔥</span>
+            <span className='text-4xl font-semibold'>
+              {formatBigIntForDisplay(totalBurned, prizeToken.decimals, {
+                hideZeroes: true
+              })}
+            </span>
+            <span>{prizeToken?.symbol}</span>
+            <span className='text-2xl'>🔥</span>
+          </>
+        ) : (
+          <Spinner className='after:border-y-pt-purple-800' />
+        )}
       </span>
     </div>
   )

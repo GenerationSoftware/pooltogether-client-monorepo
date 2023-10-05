@@ -83,13 +83,13 @@ export const BurnCard = (props: BurnCardProps) => {
       )}
     >
       <span className='text-center'>{timeText} burn</span>
-      <BurnCardItem name='Prizes to LPs' amount={0n - burnAmounts.lp} token={prizeToken} />
-      <BurnCardItem name='Manual Burns' amount={0n - burnAmounts.manual} token={prizeToken} />
-      <BurnCardItem name='Other' amount={0n - burnAmounts.other} token={prizeToken} />
+      <BurnCardItem name='Prizes to LPs' amount={burnAmounts.lp} token={prizeToken} />
+      <BurnCardItem name='Manual Burns' amount={burnAmounts.manual} token={prizeToken} />
+      <BurnCardItem name='Other' amount={burnAmounts.other} token={prizeToken} />
       <hr className='w-full border-gray-400' />
       <BurnCardItem
         name={`${timeText} changes`}
-        amount={0n - (burnAmounts.lp + burnAmounts.manual + burnAmounts.other)}
+        amount={burnAmounts.lp + burnAmounts.manual + burnAmounts.other}
         token={prizeToken}
         alwaysShow={true}
         nameClassName='capitalize'
@@ -119,21 +119,10 @@ const BurnCardItem = (props: BurnCardItemProps) => {
     return (
       <div className={classNames('w-full flex justify-between whitespace-nowrap', className)}>
         <span className={classNames('md:text-2xl', nameClassName)}>{name}</span>
-        <span
-          className={classNames(
-            'flex gap-1 items-center',
-            {
-              'text-green-600': amount > 0n,
-              'text-red-600': amount < 0n
-            },
-            amountClassName
-          )}
-        >
-          <span className='text-2xl'>
-            {amount > 0n && '+'}
-            {formattedAmount}
-          </span>
+        <span className={classNames('flex gap-1 items-center text-red-600', amountClassName)}>
+          <span className='text-2xl'>{formattedAmount}</span>
           <span className='text-sm md:text-base'>{token.symbol}</span>
+          <span className='text-lg'>🔥</span>
         </span>
       </div>
     )
