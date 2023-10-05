@@ -293,6 +293,10 @@ export const TOKEN_PRICE_REDIRECTS: {
     '0x395ae52bb17aef68c2888d941736a71dc6d4e125': {
       chainId: NETWORK.mainnet,
       address: POOL_TOKEN_ADDRESSES[NETWORK.mainnet].toLowerCase() as Address
+    },
+    '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': {
+      chainId: NETWORK.mainnet,
+      address: '0x1a7e4e63778b4f12a199c062f3efdd288afcbce8'
     }
   }
 }

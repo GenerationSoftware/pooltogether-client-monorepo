@@ -9,7 +9,8 @@ const tokenLogoUrls = Object.freeze({
   gusd: 'https://assets.coingecko.com/coins/images/5992/small/gemini-dollar-gusd.png?1536745278',
   weth: 'https://etherscan.io/token/images/weth_28.png',
   wbtc: 'https://etherscan.io/token/images/wbtc_28.png?v=1',
-  lusd: 'https://etherscan.io/token/images/liquitylusd_32.png'
+  lusd: 'https://etherscan.io/token/images/liquitylusd_32.png',
+  ageur: 'https://etherscan.io/token/images/ageur_32.png?=v982'
 })
 
 /**
@@ -44,7 +45,8 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1': tokenLogoUrls.dai,
     '0x4200000000000000000000000000000000000006': tokenLogoUrls.weth,
     '0x68f180fcce6836688e9084f035309e29bf0a2095': tokenLogoUrls.wbtc,
-    '0xc40f949f8a4e094d1b49a23ea9241d289b7b2819': tokenLogoUrls.lusd
+    '0xc40f949f8a4e094d1b49a23ea9241d289b7b2819': tokenLogoUrls.lusd,
+    '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': tokenLogoUrls.ageur
   },
   [NETWORK['optimism-goerli']]: {
     '0x2c75541abd0e0025ca13d0dd5ee5c9a697dd3802': tokenLogoUrls.usdc,
