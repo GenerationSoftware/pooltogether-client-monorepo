@@ -10,7 +10,7 @@ import {
 } from 'recharts'
 import { LineDot } from 'recharts/types/cartesian/Line'
 import { CurveType } from 'recharts/types/shape/Curve'
-import { AxisInterval } from 'recharts/types/util/types'
+import { AxisDomain, AxisInterval } from 'recharts/types/util/types'
 
 const DEFAULT: {
   aspect: number
@@ -37,8 +37,18 @@ interface LineChartProps {
     animate?: boolean
   }[]
   aspect?: number
-  xAxis?: { stroke?: string; interval?: AxisInterval }
-  yAxis?: { stroke?: string; tickFormatter?: (tick: string) => string }
+  xAxis?: {
+    type?: 'number' | 'category'
+    domain?: AxisDomain
+    stroke?: string
+    interval?: AxisInterval
+  }
+  yAxis?: {
+    type?: 'number' | 'category'
+    domain?: AxisDomain
+    stroke?: string
+    tickFormatter?: (tick: string) => string
+  }
   tooltip?: {
     show?: boolean
     formatter?: (value: number, name: string) => ReactNode | ReactNode[]
@@ -79,10 +89,14 @@ export const LineChart = (props: LineChartProps) => {
         )}
         <XAxis
           dataKey='name'
+          type={xAxis?.type}
+          domain={xAxis?.domain}
           stroke={xAxis?.stroke ?? DEFAULT.xAxis.stroke}
           interval={xAxis?.interval}
         />
         <YAxis
+          type={yAxis?.type}
+          domain={yAxis?.domain}
           stroke={yAxis?.stroke ?? DEFAULT.yAxis.stroke}
           tickFormatter={yAxis?.tickFormatter}
         />
