@@ -26,6 +26,7 @@ interface RelayTx {
   hash: `0x${string}`
   endedAt: number
   blockNumber: bigint
+  timestamp: number
 }
 
 interface RelayMsgTx {
@@ -134,7 +135,8 @@ export const useRngTxs = (prizePool: PrizePool) => {
                     feeRecipient: secondRelayEvent.args.recipient,
                     hash: secondRelayEvent.transactionHash,
                     endedAt: periodStart,
-                    blockNumber: secondRelayEvent.blockNumber
+                    blockNumber: secondRelayEvent.blockNumber,
+                    timestamp: Number(drawClosedBlock?.timestamp as bigint)
                   }
                 : undefined
             }
