@@ -121,7 +121,7 @@ export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
     isFetchedLiquidationEvents &&
     isFetchedDrawStatus &&
     isFetchedTokenInPrices &&
-    isFetchedTokenOutPrices
+    (!lpAddresses.length || isFetchedTokenOutPrices)
 
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
