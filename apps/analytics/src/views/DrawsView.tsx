@@ -5,6 +5,7 @@ import { useEffect, useMemo } from 'react'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { AvgClaimFeePercentagesChart } from '@components/Charts/AvgClaimFeePercentagesChart'
+import { AvgLiqEfficiencyChart } from '@components/Charts/AvgLiqEfficiencyChart'
 import { DrawCards } from '@components/Draws/DrawCards'
 import { useDrawClosedEvents } from '@hooks/useDrawClosedEvents'
 import { useDrawRngFeePercentage } from '@hooks/useDrawRngFeePercentage'
@@ -66,6 +67,7 @@ export const DrawsView = (props: DrawsViewProps) => {
     <div className={classNames('w-full flex flex-col gap-6 items-center', className)}>
       <div className='w-full grid grid-cols-1 gap-6 md:grid-cols-2'>
         <AvgClaimFeePercentagesChart prizePool={prizePool} />
+        <AvgLiqEfficiencyChart prizePool={prizePool} />
       </div>
       <DrawCards prizePool={prizePool} />
     </div>
