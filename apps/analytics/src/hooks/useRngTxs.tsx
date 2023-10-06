@@ -9,7 +9,7 @@ import { useRngAuctionEvents } from './useRngAuctionEvents'
 import { useRngL1RelayMsgEvents } from './useRngL1RelayMsgEvents'
 import { useRngL2RelayMsgEvents } from './useRngL2RelayMsgEvents'
 
-interface RngTx {
+export interface RngTx {
   drawId: number
   fee?: bigint
   feeFraction: bigint
@@ -18,18 +18,19 @@ interface RngTx {
   blockNumber: bigint
 }
 
-interface RelayTx {
+export interface RelayTx {
   drawId: number
   fee: bigint
   feeFraction?: bigint
   feeRecipient: Address
+  reserve: bigint
   hash: `0x${string}`
   endedAt: number
   blockNumber: bigint
   timestamp: number
 }
 
-interface RelayMsgTx {
+export interface RelayMsgTx {
   drawId: number
   msgId: `0x${string}`
   hash: `0x${string}`
@@ -76,8 +77,10 @@ export const useRngTxs = (prizePool: PrizePool) => {
           )
 
           const lastDrawId = drawClosedEvents[drawClosedEvents.length - 1].args.drawId
-          let drawId = drawClosedEvents.find((e) => e.blockNumber === drawClosedBlock?.number)?.args
-            .drawId
+          const drawClosedEvent = drawClosedEvents.find(
+            (e) => e.blockNumber === drawClosedBlock?.number
+          )
+          let drawId = drawClosedEvent?.args.drawId
           if (!drawId && i === rngAuctionEvents.length - 1) {
             drawId = lastDrawId + 1
           }
@@ -125,20 +128,22 @@ export const useRngTxs = (prizePool: PrizePool) => {
                     blockNumber: relayMsgEvent.blockNumber
                   }
                 : undefined,
-              l2: !!secondRelayEvent
-                ? {
-                    drawId: drawId,
-                    fee: secondRelayEvent.args.reward,
-                    feeFraction: !!rng.fee
-                      ? secondRelayEvent.args.reward / (rng.fee / rng.feeFraction)
-                      : undefined,
-                    feeRecipient: secondRelayEvent.args.recipient,
-                    hash: secondRelayEvent.transactionHash,
-                    endedAt: periodStart,
-                    blockNumber: secondRelayEvent.blockNumber,
-                    timestamp: Number(drawClosedBlock?.timestamp as bigint)
-                  }
-                : undefined
+              l2:
+                !!secondRelayEvent && !!drawClosedEvent && !!drawClosedBlock
+                  ? {
+                      drawId: drawId,
+                      fee: secondRelayEvent.args.reward,
+                      feeFraction: !!rng.fee
+                        ? secondRelayEvent.args.reward / (rng.fee / rng.feeFraction)
+                        : undefined,
+                      feeRecipient: secondRelayEvent.args.recipient,
+                      reserve: drawClosedEvent.args.reserve,
+                      hash: secondRelayEvent.transactionHash,
+                      endedAt: periodStart,
+                      blockNumber: secondRelayEvent.blockNumber,
+                      timestamp: Number(drawClosedBlock.timestamp)
+                    }
+                  : undefined
             }
 
             return { rng, relay }

@@ -1,14 +1,13 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { getSecondsSinceEpoch, PRIZE_POOLS, SECONDS_PER_DAY, sToMs } from '@shared/utilities'
+import { getSecondsSinceEpoch, PRIZE_POOLS, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
-import { useAtom } from 'jotai'
+import { useSetAtom } from 'jotai'
 import { useEffect, useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
-import { ReserveCard } from '@components/Reserve/ReserveCard'
+import { ReserveChart } from '@components/Charts/ReserveChart'
 import { ReserveHeader } from '@components/Reserve/ReserveHeader'
-import { useBlockAtTimestamp } from '@hooks/useBlockAtTimestamp'
 import { useDrawClosedEvents } from '@hooks/useDrawClosedEvents'
 import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
 import { useManualContributionEvents } from '@hooks/useManualContributionEvents'
@@ -29,7 +28,7 @@ export const ReserveView = (props: ReserveViewProps) => {
 
   const publicClient = usePublicClient({ chainId })
 
-  const [currentTimestamp, setCurrentTimestamp] = useAtom(currentTimestampAtom)
+  const setCurrentTimestamp = useSetAtom(currentTimestampAtom)
 
   const prizePool = useMemo(() => {
     const prizePoolInfo = PRIZE_POOLS.find((pool) => pool.chainId === chainId) as {
@@ -45,11 +44,6 @@ export const ReserveView = (props: ReserveViewProps) => {
       prizePoolInfo.options
     )
   }, [chainId])
-
-  const { data: minBlock } = useBlockAtTimestamp(
-    prizePool.chainId,
-    currentTimestamp - SECONDS_PER_DAY
-  )
 
   const { refetch: refetchReserve } = useReserve(prizePool)
   const { refetch: refetchLiquidationEvents } = useLiquidationEvents(prizePool)
@@ -82,9 +76,7 @@ export const ReserveView = (props: ReserveViewProps) => {
   return (
     <div className={classNames('w-full flex flex-col gap-6 items-center', className)}>
       <ReserveHeader prizePool={prizePool} />
-      {/* TODO: this is not accurate atm - would need actual liquidations or reserve amount at X block */}
-      {/* {!!minBlock && <ReserveCard prizePool={prizePool} minBlock={minBlock} className='max-w-md' />} */}
-      <ReserveCard prizePool={prizePool} className='max-w-md' />
+      <ReserveChart prizePool={prizePool} />
     </div>
   )
 }

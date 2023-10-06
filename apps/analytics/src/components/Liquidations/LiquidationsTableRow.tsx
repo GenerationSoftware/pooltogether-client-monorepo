@@ -348,7 +348,9 @@ const AvgEfficiencyItem = (props: AvgEfficiencyItemProps) => {
           'bg-red-600': color === 'red'
         })}
       />
-      <span>{formatNumberForDisplay(efficiency, { hideZeroes: true })}%</span>
+      <span>
+        {formatNumberForDisplay(efficiency, { hideZeroes: true, maximumFractionDigits: 1 })}%
+      </span>
       <ArrowRightIcon className='w-auto h-3' />
       <span>{label}</span>
     </div>

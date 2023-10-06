@@ -9,6 +9,7 @@ import {
   YAxis
 } from 'recharts'
 import { LineDot } from 'recharts/types/cartesian/Line'
+import { ContentType } from 'recharts/types/component/Tooltip'
 import { CurveType } from 'recharts/types/shape/Curve'
 import { AxisDomain, AxisInterval } from 'recharts/types/util/types'
 
@@ -58,6 +59,7 @@ export interface LineChartProps {
   }
   tooltip?: {
     show?: boolean
+    content?: ContentType<number, string | number>
     formatter?: (value: number, name: string | number) => ReactNode | ReactNode[]
     labelFormatter?: (label: string) => ReactNode
   }
@@ -92,7 +94,11 @@ export const LineChart = (props: LineChartProps) => {
           />
         ))}
         {tooltip?.show && (
-          <Tooltip formatter={tooltip.formatter} labelFormatter={tooltip.labelFormatter} />
+          <Tooltip
+            content={tooltip.content}
+            formatter={tooltip.formatter}
+            labelFormatter={tooltip.labelFormatter}
+          />
         )}
         <XAxis
           dataKey='name'
