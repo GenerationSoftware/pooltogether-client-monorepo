@@ -354,3 +354,16 @@ export const getSimpleDate = (timestamp: number) => {
     timeZone: 'UTC'
   })
 }
+
+/**
+ * Returns a simple time showing hours and minutes in the current locale
+ * @param timestamp timestamp in seconds
+ * @returns
+ */
+export const getSimpleTime = (timestamp: number) => {
+  return new Date(timestamp * 1e3).toLocaleTimeString(undefined, {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: false
+  })
+}

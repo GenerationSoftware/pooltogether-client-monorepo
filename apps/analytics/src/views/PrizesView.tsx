@@ -6,6 +6,7 @@ import { useEffect, useMemo } from 'react'
 import { selectedDrawIdAtom } from 'src/atoms'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
+import { DrawAvgClaimFeesChart } from '@components/Charts/DrawAvgClaimFeesChart'
 import { DrawSelector } from '@components/Draws/DrawSelector'
 import { DrawStatusBadge } from '@components/Draws/DrawStatusBadge'
 import { PrizesTable } from '@components/Prizes/PrizesTable'
@@ -63,9 +64,16 @@ export const PrizesView = (props: PrizesViewProps) => {
 
   return (
     <div className={classNames('w-full flex flex-col grow gap-2 items-center md:gap-6', className)}>
-      {!!drawIdSelected && <DrawStatusBadge prizePool={prizePool} drawId={drawIdSelected} />}
       {!!drawIdSelected && (
-        <PrizesTable prizePool={prizePool} drawId={drawIdSelected} className='md:mt-6' />
+        <>
+          <DrawStatusBadge prizePool={prizePool} drawId={drawIdSelected} />
+          <DrawAvgClaimFeesChart
+            prizePool={prizePool}
+            drawId={drawIdSelected}
+            className='max-w-4xl'
+          />
+          <PrizesTable prizePool={prizePool} drawId={drawIdSelected} className='md:mt-6' />
+        </>
       )}
       <DrawSelector prizePool={prizePool} />
     </div>
