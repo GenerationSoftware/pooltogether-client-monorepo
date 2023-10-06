@@ -43,7 +43,7 @@ export const GrandPrize = (props: GrandPrizeProps) => {
       )}
     >
       <span className='text-2xl'>Grand Prize</span>
-      <span className='font-grotesk font-bold text-5xl'>
+      <span className='font-grotesk font-medium text-5xl'>
         {!!gpValue ? <CurrencyValue baseValue={gpValue} hideZeroes={true} /> : <Spinner />}
       </span>
       <ExternalLink
