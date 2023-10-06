@@ -29,7 +29,7 @@ const DEFAULT: {
 interface LineChartProps {
   data: any[]
   lines: {
-    id: string
+    id: string | number
     type?: CurveType
     stroke?: string
     strokeWidth?: number

@@ -6,13 +6,13 @@ import { useMemo } from 'react'
 import { useDrawClosedEvents } from '@hooks/useDrawClosedEvents'
 import { LineChart } from './LineChart'
 
-interface AvgClaimFeePercentagesChartProps {
+interface DrawsAvgClaimFeesChartProps {
   prizePool: PrizePool
   hideCanary?: boolean
   className?: string
 }
 
-export const AvgClaimFeePercentagesChart = (props: AvgClaimFeePercentagesChartProps) => {
+export const DrawsAvgClaimFeesChart = (props: DrawsAvgClaimFeesChartProps) => {
   const { prizePool, hideCanary, className } = props
 
   const { data: allDraws } = usePrizeDrawWinners(prizePool)

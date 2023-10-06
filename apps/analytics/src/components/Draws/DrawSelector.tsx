@@ -16,8 +16,11 @@ export const DrawSelector = (props: DrawSelectorProps) => {
 
   const [drawIdSelected, setDrawIdSelected] = useAtom(selectedDrawIdAtom)
 
-  const { data: rngTxs } = useRngTxs(prizePool)
-  const drawIds = rngTxs?.filter((txs) => !!txs.relay.l2).map((txs) => txs.rng.drawId) ?? []
+  const { data: rngTxs, isFetched: isFetchedRngTxs } = useRngTxs(prizePool)
+  const drawIds =
+    isFetchedRngTxs && !!rngTxs
+      ? rngTxs.filter((txs) => !!txs.relay.l2).map((txs) => txs.rng.drawId)
+      : []
 
   useEffect(() => {
     if (drawIds.length > 0 && !drawIdSelected) {

@@ -14,12 +14,12 @@ import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
 import { useRngTxs } from '@hooks/useRngTxs'
 import { LineChart } from './LineChart'
 
-interface AvgLiqEfficiencyChartProps {
+interface DrawsAvgLiqEfficiencyChartProps {
   prizePool: PrizePool
   className?: string
 }
 
-export const AvgLiqEfficiencyChart = (props: AvgLiqEfficiencyChartProps) => {
+export const DrawsAvgLiqEfficiencyChart = (props: DrawsAvgLiqEfficiencyChartProps) => {
   const { prizePool, className } = props
 
   const { data: liquidationEvents } = useLiquidationEvents(prizePool)
