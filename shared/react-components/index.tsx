@@ -62,12 +62,6 @@ export * from './components/PrizePool/PrizePoolCard'
 export * from './components/PrizePool/PrizePoolDropdown'
 
 /**
- * Time
- */
-export * from './components/Time/NextDrawCountdown'
-export * from './components/Time/TimeDigits'
-
-/**
  * Toasts
  */
 export * from './components/Toasts/DeployLiquidationPairTxToast'

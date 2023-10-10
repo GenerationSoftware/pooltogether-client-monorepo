@@ -72,11 +72,6 @@ A React componponent library utilizing some simpler components from the internal
 - `PrizePoolCard`
 - `PrizePoolDropdown`
 
-### Time Components
-
-- `NextDrawCountdown`
-- `TimeDigits`
-
 ### Toast Components
 
 - `DeployLiquidationPairTxToast`
