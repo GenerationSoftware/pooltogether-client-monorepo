@@ -1,4 +1,5 @@
-import { FallbackTransport, PublicClient } from 'viem'
+import { calculatePercentageOfBigInt } from '@shared/utilities'
+import { FallbackTransport, hexToBigInt, PublicClient, TransactionReceipt } from 'viem'
 import { Chain, Config, configureChains, createConfig, WebSocketPublicClient } from 'wagmi'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import { publicProvider } from 'wagmi/providers/public'
@@ -26,4 +27,32 @@ export const createCustomWagmiConfig = (): Config<
   ])
 
   return createConfig({ publicClient })
+}
+
+// TODO: improve typing for rollups
+/**
+ * Returns the amount spent on gas for a given transaction
+ * @param txReceipt the transaction's receipt
+ * @returns
+ */
+export const getTxGasSpent = (txReceipt: TransactionReceipt) => {
+  if (
+    !!(txReceipt as any).l1GasUsed &&
+    !!(txReceipt as any).l1GasPrice &&
+    !!(txReceipt as any).l1FeeScalar
+  ) {
+    const l2TxReceipt = txReceipt as TransactionReceipt & {
+      l1GasUsed: `0x${string}`
+      l1GasPrice: `0x${string}`
+      l1FeeScalar: string
+    }
+    const l1Gas = calculatePercentageOfBigInt(
+      hexToBigInt(l2TxReceipt.l1GasUsed) * hexToBigInt(l2TxReceipt.l1GasPrice),
+      parseFloat(l2TxReceipt.l1FeeScalar)
+    )
+    const l2Gas = l2TxReceipt.gasUsed * l2TxReceipt.effectiveGasPrice
+    return l1Gas + l2Gas
+  } else {
+    return txReceipt.gasUsed * txReceipt.effectiveGasPrice
+  }
 }

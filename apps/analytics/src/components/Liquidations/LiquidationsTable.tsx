@@ -72,14 +72,14 @@ export const LiquidationsTable = (props: LiquidationsTableProps) => {
   }
 
   const gridClassName =
-    'w-full gap-y-6 grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] px-4 md:grid md:gap-x-12'
+    'w-full gap-y-6 grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] md:grid md:gap-x-12'
 
   return (
     <div className={classNames('w-full flex flex-col gap-6 items-center', className)}>
       <span className='text-center text-3xl font-semibold text-pt-purple-500'>
         {timeText} yield liquidations
       </span>
-      <LiquidationsTableHeaders className={classNames('hidden', gridClassName)} />
+      <LiquidationsTableHeaders className={classNames('hidden px-4', gridClassName)} />
       {lpAddresses.map((lpAddress) => (
         <LiquidationsTableRow
           key={`lpLiquidations-${lpAddress}`}
@@ -87,7 +87,8 @@ export const LiquidationsTable = (props: LiquidationsTableProps) => {
           lpAddress={lpAddress}
           liquidations={validLiquidationEvents}
           prizeToken={prizeToken}
-          className={classNames('flex flex-wrap', gridClassName)}
+          className='py-3 px-4'
+          gridClassName={classNames('flex flex-wrap', gridClassName)}
         />
       ))}
     </div>

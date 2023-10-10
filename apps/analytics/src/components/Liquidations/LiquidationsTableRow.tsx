@@ -4,7 +4,6 @@ import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { Token, TokenWithPrice } from '@shared/types'
 import { ExternalLink, Spinner } from '@shared/ui'
 import {
-  calculatePercentageOfBigInt,
   formatBigIntForDisplay,
   formatNumberForDisplay,
   getBlockExplorerUrl,
@@ -12,13 +11,15 @@ import {
 } from '@shared/utilities'
 import classNames from 'classnames'
 import { ReactNode, useMemo } from 'react'
-import { Address, formatEther, formatUnits, hexToBigInt, TransactionReceipt } from 'viem'
+import { getTxGasSpent } from 'src/utils'
+import { Address, formatEther, formatUnits } from 'viem'
 import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
 import { useLiquidationPairLiquidatableBalance } from '@hooks/useLiquidationPairLiquidatableBalance'
 import { useLiquidationPairTokenOutData } from '@hooks/useLiquidationPairTokenOutData'
 import { useLiquidationPairTokenOutPrice } from '@hooks/useLiquidationPairTokenOutPrice'
 import { useTxReceipts } from '@hooks/useTxReceipts'
 import { liquidationHeaders } from './LiquidationsTable'
+import { LiquidationTxsDropdown } from './LiquidationTxsDropdown'
 
 interface LiquidationsTableRowProps {
   prizePool: PrizePool
@@ -26,47 +27,61 @@ interface LiquidationsTableRowProps {
   liquidations: NonNullable<ReturnType<typeof useLiquidationEvents>['data']>
   prizeToken: TokenWithPrice
   className?: string
+  gridClassName?: string
 }
 
 export const LiquidationsTableRow = (props: LiquidationsTableRowProps) => {
-  const { prizePool, lpAddress, liquidations, prizeToken, className } = props
+  const { prizePool, lpAddress, liquidations, prizeToken, className, gridClassName } = props
 
   const lpLiquidations = liquidations.filter(
     (liq) => liq.args.liquidationPair.toLowerCase() === lpAddress.toLowerCase()
   )
 
   return (
-    <div className={classNames('py-3 text-sm bg-pt-purple-100/50 rounded-xl', className)}>
-      <LiquidationPairLink
-        chainId={prizePool.chainId}
-        lpAddress={lpAddress}
-        prizeToken={prizeToken}
-        className='w-full md:w-auto'
-      />
-      <YieldAuctioned
-        chainId={prizePool.chainId}
+    <div
+      className={classNames(
+        'w-full flex flex-col gap-4 text-sm bg-pt-purple-100/50 rounded-xl',
+        className
+      )}
+    >
+      <div className={gridClassName}>
+        <LiquidationPairLink
+          chainId={prizePool.chainId}
+          lpAddress={lpAddress}
+          prizeToken={prizeToken}
+          className='w-full md:w-auto'
+        />
+        <YieldAuctioned
+          chainId={prizePool.chainId}
+          lpAddress={lpAddress}
+          liquidations={lpLiquidations}
+          className='w-1/2 md:w-auto'
+        />
+        <AvgLiquidationPrice
+          chainId={prizePool.chainId}
+          lpAddress={lpAddress}
+          liquidations={lpLiquidations}
+          prizeToken={prizeToken}
+          className='w-1/2 md:w-auto'
+        />
+        <CurrentAvailableYield
+          chainId={prizePool.chainId}
+          lpAddress={lpAddress}
+          className='w-1/2 md:w-auto'
+        />
+        <AvgEfficiency
+          chainId={prizePool.chainId}
+          lpAddress={lpAddress}
+          liquidations={lpLiquidations}
+          prizeToken={prizeToken}
+          className='w-1/2 md:w-auto'
+        />
+      </div>
+      <LiquidationTxsDropdown
+        prizePool={prizePool}
         lpAddress={lpAddress}
         liquidations={lpLiquidations}
-        className='w-1/2 md:w-auto'
-      />
-      <AvgLiquidationPrice
-        chainId={prizePool.chainId}
-        lpAddress={lpAddress}
-        liquidations={lpLiquidations}
         prizeToken={prizeToken}
-        className='w-1/2 md:w-auto'
-      />
-      <CurrentAvailableYield
-        chainId={prizePool.chainId}
-        lpAddress={lpAddress}
-        className='w-1/2 md:w-auto'
-      />
-      <AvgEfficiency
-        chainId={prizePool.chainId}
-        lpAddress={lpAddress}
-        liquidations={lpLiquidations}
-        prizeToken={prizeToken}
-        className='w-1/2 md:w-auto'
       />
     </div>
   )
@@ -246,27 +261,7 @@ const AvgEfficiency = (props: AvgEfficiencyProps) => {
       const totalValueOut =
         parseFloat(formatUnits(totalAmountOut, lpToken.decimals)) * lpToken.price
 
-      const totalGasSpent = liquidationTxReceipts.reduce((a, b) => {
-        // TODO: improve typing for rollups
-        if (!!(b as any).l1GasUsed && !!(b as any).l1GasPrice && !!(b as any).l1FeeScalar) {
-          const l2TxReceipt = b as TransactionReceipt & {
-            l1GasUsed: `0x${string}`
-            l1GasPrice: `0x${string}`
-            l1FeeScalar: string
-          }
-          const l1Gas = calculatePercentageOfBigInt(
-            hexToBigInt(l2TxReceipt.l1GasUsed) * hexToBigInt(l2TxReceipt.l1GasPrice),
-            parseFloat(l2TxReceipt.l1FeeScalar)
-          )
-          const l2Gas = l2TxReceipt.gasUsed * l2TxReceipt.effectiveGasPrice
-          const gas = l1Gas + l2Gas
-          return a + gas
-        } else {
-          const gas = b.gasUsed * b.effectiveGasPrice
-          return a + gas
-        }
-      }, 0n)
-
+      const totalGasSpent = liquidationTxReceipts.reduce((a, b) => a + getTxGasSpent(b), 0n)
       const totalGasValueSpent = parseFloat(formatEther(totalGasSpent)) * nativeTokenPrice
 
       const prizes = (totalValueIn / totalValueOut) * 100
