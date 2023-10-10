@@ -180,7 +180,7 @@ export const getPrizePoolAllPrizeInfo = async (
     { functionName: 'drawPeriodSeconds' },
     { functionName: 'tierShares' },
     { functionName: 'getTotalShares' },
-    { functionName: 'getLastClosedDrawId' },
+    { functionName: 'getLastAwardedDrawId' },
     ...tiers.map((tier) => ({ functionName: 'getTierAccrualDurationInDraws', args: [tier] })),
     ...tiers.map((tier) => ({ functionName: 'getTierPrizeSize', args: [tier] }))
   ]
