@@ -91,7 +91,7 @@ const LiquidationPairLink = (props: LiquidationPairLinkProps) => {
   return (
     <ExternalLink
       href={getBlockExplorerUrl(chainId, lpAddress)}
-      className={classNames('text-xl font-semibold', className)}
+      className={classNames('h-min text-xl font-semibold', className)}
       iconClassName='text-pt-purple-400'
     >
       {lpToken.symbol ?? '?'}/{prizeToken.symbol}
