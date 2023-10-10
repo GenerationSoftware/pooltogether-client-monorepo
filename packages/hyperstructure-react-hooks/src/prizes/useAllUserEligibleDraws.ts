@@ -83,6 +83,7 @@ const getVaultEligibleDraws = (
     const balanceUpdate = balanceUpdates[balanceIndex]
     for (let drawIndex = drawsToCheck.length - 1; drawIndex >= 0; drawIndex--) {
       const draw = drawsToCheck[drawIndex]
+      // TODO: balance update timestamps are now relative, need to add first draw starts at timestamp before comparison
       if (draw.firstClaim >= balanceUpdate.timestamp) {
         if (balanceUpdate.delegateBalance > 0) {
           eligibleDraws.push(draw)
