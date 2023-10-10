@@ -93,6 +93,11 @@ const VaultCardActions = (props: VaultCardActionsProps) => {
       >
         Swap on Paraswap
       </VaultCardLink>
+      <VaultCardLink
+        href={`https://app.1inch.io/#/${shareToken.chainId}/simple/swap/${NULL_ADDRESS}/${shareToken.address}`}
+      >
+        Swap on 1inch
+      </VaultCardLink>
       <VaultCardLink href={`https://app.uniswap.org/tokens/${network}/${shareToken.address}`}>
         Swap on Uniswap
       </VaultCardLink>
