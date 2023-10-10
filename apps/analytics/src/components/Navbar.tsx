@@ -25,9 +25,6 @@ export const Navbar = (props: NavbarProps) => {
           <span className='-mt-[.2rem] font-grotesk font-bold text-[2rem] text-pt-purple-900'>
             Cabanalytics
           </span>
-          <span className='ml-2 px-1 font-grotesk font-semibold leading-5 text-red-600 border border-current rounded-[0.2rem]'>
-            BETA
-          </span>
         </Link>
         <div className='hidden gap-6 items-center md:flex lg:gap-12'>
           <NavbarActions />

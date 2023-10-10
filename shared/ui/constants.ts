@@ -2,7 +2,7 @@
  * Domains
  */
 export const DOMAINS = Object.freeze({
-  app: 'https://beta.cabana.fi',
+  app: 'https://app.cabana.fi',
   app_v4: 'https://app.pooltogether.com',
   landingPage: 'https://cabana.fi',
   protocolLandingPage: 'https://pooltogether.com',
@@ -15,7 +15,7 @@ export const DOMAINS = Object.freeze({
   notion: 'https://pooltogetherdao.notion.site',
   vaultListCreator: 'https://lists.cabana.fi',
   vaultFactory: 'https://factory.cabana.fi',
-  analytics: 'https://beta-analytics.cabana.fi',
+  analytics: 'https://analytics.cabana.fi',
   swaps: 'https://swap.cabana.fi'
 })
 
@@ -34,7 +34,7 @@ export const LINKS = Object.freeze({
   factoryDocs: `${DOMAINS.docs}/cabana-factory`,
   faq: `${DOMAINS.docs}/`, // TODO: update to faq section once available
   tutorials: `${DOMAINS.docs}/cabana-factory/guides`, // TODO: update to tutorials section on docs once available
-  audits: `${DOMAINS.protocolDocs}/security/audits`, // TODO: update to cabana docs audits page once available (or PT updated audits page)
+  audits: `${DOMAINS.protocolDocs}/security/audits`,
   devDocs_v5: `${DOMAINS.protocolDevDocs}/protocol/next/introduction`,
   depositDelegator: `${DOMAINS.tools_v4}/delegate`,
   prizeTierController: `${DOMAINS.tools_v4}/prize-tier-controller`,
