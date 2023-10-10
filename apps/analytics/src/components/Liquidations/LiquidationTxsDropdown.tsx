@@ -101,7 +101,7 @@ const LiquidationTx = (props: LiquidationTxProps) => {
   return (
     <div
       className={classNames(
-        'flex gap-2 items-center justify-center p-1 bg-pt-purple-50 rounded',
+        'flex flex-col gap-2 items-center justify-center py-1 px-4 text-center bg-pt-purple-50 rounded md:flex-row',
         className
       )}
     >
@@ -118,11 +118,11 @@ const LiquidationTx = (props: LiquidationTxProps) => {
         for{' '}
         <Highlight>
           {formattedTokenInAmount} {prizeToken.symbol}
-        </Highlight>
+        </Highlight>{' '}
+        {profit !== undefined && (
+          <span>({formatNumberForDisplay(profit, { maximumFractionDigits: 1 })}% profit)</span>
+        )}
       </span>
-      {profit !== undefined && (
-        <span>({formatNumberForDisplay(profit, { maximumFractionDigits: 1 })}% profit)</span>
-      )}
       <ExternalLink
         href={getBlockExplorerUrl(chainId, liquidation.transactionHash, 'tx')}
         size='sm'
