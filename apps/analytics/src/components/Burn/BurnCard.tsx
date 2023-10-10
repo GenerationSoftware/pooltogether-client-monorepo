@@ -1,98 +1,43 @@
 import { Token } from '@shared/types'
-import { Spinner } from '@shared/ui'
-import {
-  DEAD_ADDRESS,
-  formatBigIntForDisplay,
-  MAX_UINT_256,
-  SECONDS_PER_HOUR
-} from '@shared/utilities'
+import { formatNumberForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
-import { useAtomValue } from 'jotai'
-import { useMemo } from 'react'
-import { currentTimestampAtom } from 'src/atoms'
-import { Address, Block, Log } from 'viem'
-import { BURN_ADDRESSES, QUERY_START_BLOCK, VAULT_LPS } from '@constants/config'
-import { useTransferEvents } from '@hooks/useTransferEvents'
 
 interface BurnCardProps {
+  name: string
+  lp: { total: number; change: number }
+  manual: { total: number; change: number }
+  other: { total: number; change: number }
   prizeToken: Token
-  minBlock?: Block
-  maxBlock?: Block
   className?: string
 }
 
 export const BurnCard = (props: BurnCardProps) => {
-  const { prizeToken, minBlock, maxBlock, className } = props
-
-  const currentTimestamp = useAtomValue(currentTimestampAtom)
-
-  const lpAddresses = VAULT_LPS[prizeToken.chainId] ?? []
-  const miscBurnAddresses = BURN_ADDRESSES[prizeToken.chainId] ?? []
-
-  const { data: burnEvents } = useTransferEvents(prizeToken.chainId, prizeToken.address, {
-    to: [...lpAddresses, ...miscBurnAddresses, DEAD_ADDRESS],
-    fromBlock: QUERY_START_BLOCK[prizeToken.chainId]
-  })
-
-  const isValidEvent = (event?: Log<bigint, number, false> | { blockNumber: bigint }) => {
-    return (
-      !!event &&
-      event.blockNumber >= (minBlock?.number ?? 0n) &&
-      event.blockNumber <= (maxBlock?.number ?? MAX_UINT_256)
-    )
-  }
-
-  const burnAmounts = useMemo(() => {
-    if (!!burnEvents) {
-      let lp = 0n
-      let manual = 0n
-      let other = 0n
-
-      burnEvents.forEach((event) => {
-        if (isValidEvent(event)) {
-          const toAddress = event.args.to.toLowerCase() as Lowercase<Address>
-
-          if (lpAddresses.includes(toAddress)) {
-            lp += event.args.value
-          } else if (toAddress === DEAD_ADDRESS) {
-            manual += event.args.value
-          } else {
-            other += event.args.value
-          }
-        }
-      })
-
-      return { lp, manual, other }
-    }
-  }, [burnEvents, minBlock, maxBlock])
-
-  if (!prizeToken || !burnAmounts) {
-    return <Spinner className='after:border-y-pt-purple-800' />
-  }
-
-  const minTimestamp = Number(minBlock?.timestamp ?? 0)
-  const maxTimestamp = Number(maxBlock?.timestamp ?? currentTimestamp)
-  const hours = Math.round((maxTimestamp - minTimestamp) / SECONDS_PER_HOUR)
-  const timeText = minTimestamp === 0 ? `All time` : `${hours}hr`
+  const { name, lp, manual, other, prizeToken, className } = props
 
   return (
     <div
       className={classNames(
-        'w-full max-w-md flex flex-col gap-4 items-center p-5 bg-pt-purple-100/50 rounded-lg',
+        'w-72 flex flex-col gap-4 p-5 text-sm bg-blue-100 rounded-lg',
         className
       )}
     >
-      <span className='text-center'>{timeText} burn</span>
-      <BurnCardItem name='Prizes to LPs' amount={burnAmounts.lp} token={prizeToken} />
-      <BurnCardItem name='Manual Burns' amount={burnAmounts.manual} token={prizeToken} />
-      <BurnCardItem name='Other' amount={burnAmounts.other} token={prizeToken} />
+      <span className='font-bold'>{name}</span>
+      <BurnCardItem name='Prizes to LPs' total={lp.total} change={lp.change} token={prizeToken} />
+      <BurnCardItem
+        name='Manual Burns'
+        total={manual.total}
+        change={manual.change}
+        token={prizeToken}
+      />
+      <BurnCardItem name='Other' total={other.total} change={other.change} token={prizeToken} />
       <hr className='w-full border-gray-400' />
       <BurnCardItem
-        name={`${timeText} changes`}
-        amount={burnAmounts.lp + burnAmounts.manual + burnAmounts.other}
+        name='Total Burned'
+        total={lp.total + manual.total + other.total}
+        change={lp.change + manual.change + other.change}
         token={prizeToken}
         alwaysShow={true}
-        nameClassName='capitalize'
+        nameClassName='font-bold'
       />
     </div>
   )
@@ -100,29 +45,32 @@ export const BurnCard = (props: BurnCardProps) => {
 
 interface BurnCardItemProps {
   name: string
-  amount: bigint
+  total: number
+  change: number
   token: Token
   alwaysShow?: boolean
   className?: string
   nameClassName?: string
-  amountClassName?: string
+  valueClassName?: string
 }
 
 const BurnCardItem = (props: BurnCardItemProps) => {
-  const { name, amount, token, alwaysShow, className, nameClassName, amountClassName } = props
+  const { name, total, change, token, alwaysShow, className, nameClassName, valueClassName } = props
 
-  const formattedAmount = formatBigIntForDisplay(amount, token.decimals, {
-    maximumFractionDigits: 0
-  })
+  const formattedTotal = formatNumberForDisplay(total, { maximumFractionDigits: 0 })
+  const formattedChange = formatNumberForDisplay(change, { maximumFractionDigits: 0 })
 
-  if (!!amount || alwaysShow) {
+  if (!!total || alwaysShow) {
     return (
       <div className={classNames('w-full flex justify-between whitespace-nowrap', className)}>
-        <span className={classNames('md:text-2xl', nameClassName)}>{name}</span>
-        <span className={classNames('flex gap-1 items-center text-red-600', amountClassName)}>
-          <span className='text-2xl'>{formattedAmount}</span>
-          <span className='text-sm md:text-base'>{token.symbol}</span>
-          <span className='text-lg'>🔥</span>
+        <span className={nameClassName}>{name}</span>
+        <span className={classNames('flex gap-1 items-center', valueClassName)}>
+          {!!change && formattedChange !== '0' && (
+            <span className='text-green-600'>(+{formattedChange})</span>
+          )}
+          <span>{formattedTotal}</span>
+          <span>{token.symbol}</span>
+          <span>🔥</span>
         </span>
       </div>
     )
