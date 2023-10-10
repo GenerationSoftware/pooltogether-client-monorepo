@@ -36,14 +36,12 @@ export const useVaultInfo = (): Partial<VaultDeployInfo> => {
   )
 
   const prizePool = !!chainId ? CONTRACTS[chainId].prizePool : undefined
-  const twabController = !!chainId ? CONTRACTS[chainId].twabController : undefined
 
   return {
     chainId,
     token,
     name,
     symbol,
-    twabController,
     yieldSourceName,
     yieldSourceAddress,
     prizePool,

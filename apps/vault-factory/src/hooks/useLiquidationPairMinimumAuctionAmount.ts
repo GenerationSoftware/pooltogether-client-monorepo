@@ -23,7 +23,7 @@ export const useLiquidationPairMinimumAuctionAmount = (
 
   const { data: gasCostEstimates, isFetched: isFetchedGasCostEstimates } = useGasCostEstimates(
     chainId,
-    LP_CONFIG.liquidationGasAmount
+    LP_CONFIG[chainId].liquidationGasAmount
   )
 
   const isFetched = isFetchedShareToken && isFetchedGasCostEstimates
