@@ -11,14 +11,14 @@ export const useDrawRngFeePercentage = (options?: { refetchInterval?: number }) 
     ['drawRngFeePercentage'],
     async () => {
       const isAuctionOpen = await publicClient.readContract({
-        address: RNG_AUCTION.address,
+        address: RNG_AUCTION[NETWORK.mainnet].address,
         abi: rngAuctionABI,
         functionName: 'isAuctionOpen'
       })
 
       if (isAuctionOpen) {
         const rewardFraction = await publicClient.readContract({
-          address: RNG_AUCTION.address,
+          address: RNG_AUCTION[NETWORK.mainnet].address,
           abi: rngAuctionABI,
           functionName: 'currentFractionalReward'
         })

@@ -139,7 +139,7 @@ export const rngRelayABI = [
       { indexed: true, internalType: 'uint32', name: 'index', type: 'uint32' },
       { indexed: false, internalType: 'uint256', name: 'reward', type: 'uint256' }
     ],
-    name: 'AuctionRewardDistributed',
+    name: 'AuctionRewardAllocated',
     type: 'event'
   },
   {
@@ -189,6 +189,7 @@ export const rngRelayABI = [
   { inputs: [], name: 'RewardRecipientIsZeroAddress', type: 'error' },
   { inputs: [], name: 'RngRelayerZeroAddress', type: 'error' },
   { inputs: [], name: 'SequenceAlreadyCompleted', type: 'error' },
+  { inputs: [], name: 'TargetRewardFractionGTOne', type: 'error' },
   {
     inputs: [{ internalType: 'address', name: 'relayer', type: 'address' }],
     name: 'UnauthorizedRelayer',

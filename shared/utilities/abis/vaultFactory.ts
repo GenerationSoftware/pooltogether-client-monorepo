@@ -11,12 +11,11 @@ export const vaultFactoryABI = [
       { internalType: 'contract IERC20', name: '_asset', type: 'address' },
       { internalType: 'string', name: '_name', type: 'string' },
       { internalType: 'string', name: '_symbol', type: 'string' },
-      { internalType: 'contract TwabController', name: '_twabController', type: 'address' },
       { internalType: 'contract IERC4626', name: '_yieldVault', type: 'address' },
       { internalType: 'contract PrizePool', name: '_prizePool', type: 'address' },
       { internalType: 'address', name: '_claimer', type: 'address' },
       { internalType: 'address', name: '_yieldFeeRecipient', type: 'address' },
-      { internalType: 'uint256', name: '_yieldFeePercentage', type: 'uint256' },
+      { internalType: 'uint32', name: '_yieldFeePercentage', type: 'uint32' },
       { internalType: 'address', name: '_owner', type: 'address' }
     ],
     name: 'deployVault',

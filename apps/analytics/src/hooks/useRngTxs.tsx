@@ -1,5 +1,5 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { RNG_AUCTION } from '@shared/utilities'
+import { NETWORK, RNG_AUCTION } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useBlocks } from './useBlocks'
@@ -68,9 +68,9 @@ export const useRngTxs = (prizePool: PrizePool) => {
       const rngTxs = rngAuctionEvents
         .map((rngAuctionEvent, i) => {
           const periodStart =
-            RNG_AUCTION.sequenceOffset +
-            RNG_AUCTION.sequencePeriod * rngAuctionEvent.args.sequenceId
-          const periodEnd = periodStart + RNG_AUCTION.sequencePeriod
+            RNG_AUCTION[NETWORK.mainnet].sequenceOffset +
+            RNG_AUCTION[NETWORK.mainnet].sequencePeriod * rngAuctionEvent.args.sequenceId
+          const periodEnd = periodStart + RNG_AUCTION[NETWORK.mainnet].sequencePeriod
 
           const drawClosedBlock = drawClosedBlocks.find(
             (block) => block.timestamp > periodStart && block.timestamp < periodEnd

@@ -2,14 +2,14 @@ export const twabControllerABI = [
   {
     inputs: [],
     name: 'PERIOD_LENGTH',
-    outputs: [{ internalType: 'uint48', name: '', type: 'uint48' }],
+    outputs: [{ internalType: 'uint32', name: '', type: 'uint32' }],
     stateMutability: 'view',
     type: 'function'
   },
   {
     inputs: [],
     name: 'PERIOD_OFFSET',
-    outputs: [{ internalType: 'uint48', name: '', type: 'uint48' }],
+    outputs: [{ internalType: 'uint32', name: '', type: 'uint32' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -26,7 +26,7 @@ export const twabControllerABI = [
   {
     inputs: [
       { internalType: 'address', name: '_from', type: 'address' },
-      { internalType: 'uint112', name: '_amount', type: 'uint112' }
+      { internalType: 'uint96', name: '_amount', type: 'uint96' }
     ],
     name: 'burn',
     outputs: [],
@@ -36,7 +36,7 @@ export const twabControllerABI = [
   {
     inputs: [],
     name: 'currentOverwritePeriodStartedAt',
-    outputs: [{ internalType: 'uint48', name: '', type: 'uint48' }],
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -81,8 +81,8 @@ export const twabControllerABI = [
         components: [
           {
             components: [
-              { internalType: 'uint112', name: 'balance', type: 'uint112' },
-              { internalType: 'uint112', name: 'delegateBalance', type: 'uint112' },
+              { internalType: 'uint96', name: 'balance', type: 'uint96' },
+              { internalType: 'uint96', name: 'delegateBalance', type: 'uint96' },
               { internalType: 'uint16', name: 'nextObservationIndex', type: 'uint16' },
               { internalType: 'uint16', name: 'cardinality', type: 'uint16' }
             ],
@@ -92,12 +92,13 @@ export const twabControllerABI = [
           },
           {
             components: [
-              { internalType: 'uint160', name: 'cumulativeBalance', type: 'uint160' },
-              { internalType: 'uint48', name: 'timestamp', type: 'uint48' }
+              { internalType: 'uint128', name: 'cumulativeBalance', type: 'uint128' },
+              { internalType: 'uint96', name: 'balance', type: 'uint96' },
+              { internalType: 'uint32', name: 'timestamp', type: 'uint32' }
             ],
-            internalType: 'struct ObservationLib.Observation[9600]',
+            internalType: 'struct ObservationLib.Observation[17520]',
             name: 'observations',
-            type: 'tuple[9600]'
+            type: 'tuple[17520]'
           }
         ],
         internalType: 'struct TwabLib.Account',
@@ -112,7 +113,7 @@ export const twabControllerABI = [
     inputs: [
       { internalType: 'address', name: 'vault', type: 'address' },
       { internalType: 'address', name: 'user', type: 'address' },
-      { internalType: 'uint48', name: 'periodEndOnOrAfterTime', type: 'uint48' }
+      { internalType: 'uint256', name: 'periodEndOnOrAfterTime', type: 'uint256' }
     ],
     name: 'getBalanceAt',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
@@ -129,8 +130,9 @@ export const twabControllerABI = [
       { internalType: 'uint16', name: '', type: 'uint16' },
       {
         components: [
-          { internalType: 'uint160', name: 'cumulativeBalance', type: 'uint160' },
-          { internalType: 'uint48', name: 'timestamp', type: 'uint48' }
+          { internalType: 'uint128', name: 'cumulativeBalance', type: 'uint128' },
+          { internalType: 'uint96', name: 'balance', type: 'uint96' },
+          { internalType: 'uint32', name: 'timestamp', type: 'uint32' }
         ],
         internalType: 'struct ObservationLib.Observation',
         name: '',
@@ -147,8 +149,9 @@ export const twabControllerABI = [
       { internalType: 'uint16', name: '', type: 'uint16' },
       {
         components: [
-          { internalType: 'uint160', name: 'cumulativeBalance', type: 'uint160' },
-          { internalType: 'uint48', name: 'timestamp', type: 'uint48' }
+          { internalType: 'uint128', name: 'cumulativeBalance', type: 'uint128' },
+          { internalType: 'uint96', name: 'balance', type: 'uint96' },
+          { internalType: 'uint32', name: 'timestamp', type: 'uint32' }
         ],
         internalType: 'struct ObservationLib.Observation',
         name: '',
@@ -168,8 +171,9 @@ export const twabControllerABI = [
       { internalType: 'uint16', name: '', type: 'uint16' },
       {
         components: [
-          { internalType: 'uint160', name: 'cumulativeBalance', type: 'uint160' },
-          { internalType: 'uint48', name: 'timestamp', type: 'uint48' }
+          { internalType: 'uint128', name: 'cumulativeBalance', type: 'uint128' },
+          { internalType: 'uint96', name: 'balance', type: 'uint96' },
+          { internalType: 'uint32', name: 'timestamp', type: 'uint32' }
         ],
         internalType: 'struct ObservationLib.Observation',
         name: '',
@@ -186,8 +190,9 @@ export const twabControllerABI = [
       { internalType: 'uint16', name: '', type: 'uint16' },
       {
         components: [
-          { internalType: 'uint160', name: 'cumulativeBalance', type: 'uint160' },
-          { internalType: 'uint48', name: 'timestamp', type: 'uint48' }
+          { internalType: 'uint128', name: 'cumulativeBalance', type: 'uint128' },
+          { internalType: 'uint96', name: 'balance', type: 'uint96' },
+          { internalType: 'uint32', name: 'timestamp', type: 'uint32' }
         ],
         internalType: 'struct ObservationLib.Observation',
         name: '',
@@ -198,9 +203,9 @@ export const twabControllerABI = [
     type: 'function'
   },
   {
-    inputs: [{ internalType: 'uint48', name: 'time', type: 'uint48' }],
+    inputs: [{ internalType: 'uint256', name: 'time', type: 'uint256' }],
     name: 'getTimestampPeriod',
-    outputs: [{ internalType: 'uint48', name: '', type: 'uint48' }],
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -212,8 +217,8 @@ export const twabControllerABI = [
         components: [
           {
             components: [
-              { internalType: 'uint112', name: 'balance', type: 'uint112' },
-              { internalType: 'uint112', name: 'delegateBalance', type: 'uint112' },
+              { internalType: 'uint96', name: 'balance', type: 'uint96' },
+              { internalType: 'uint96', name: 'delegateBalance', type: 'uint96' },
               { internalType: 'uint16', name: 'nextObservationIndex', type: 'uint16' },
               { internalType: 'uint16', name: 'cardinality', type: 'uint16' }
             ],
@@ -223,12 +228,13 @@ export const twabControllerABI = [
           },
           {
             components: [
-              { internalType: 'uint160', name: 'cumulativeBalance', type: 'uint160' },
-              { internalType: 'uint48', name: 'timestamp', type: 'uint48' }
+              { internalType: 'uint128', name: 'cumulativeBalance', type: 'uint128' },
+              { internalType: 'uint96', name: 'balance', type: 'uint96' },
+              { internalType: 'uint32', name: 'timestamp', type: 'uint32' }
             ],
-            internalType: 'struct ObservationLib.Observation[9600]',
+            internalType: 'struct ObservationLib.Observation[17520]',
             name: 'observations',
-            type: 'tuple[9600]'
+            type: 'tuple[17520]'
           }
         ],
         internalType: 'struct TwabLib.Account',
@@ -242,7 +248,7 @@ export const twabControllerABI = [
   {
     inputs: [
       { internalType: 'address', name: 'vault', type: 'address' },
-      { internalType: 'uint48', name: 'periodEndOnOrAfterTime', type: 'uint48' }
+      { internalType: 'uint256', name: 'periodEndOnOrAfterTime', type: 'uint256' }
     ],
     name: 'getTotalSupplyAt',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
@@ -252,8 +258,8 @@ export const twabControllerABI = [
   {
     inputs: [
       { internalType: 'address', name: 'vault', type: 'address' },
-      { internalType: 'uint48', name: 'startTime', type: 'uint48' },
-      { internalType: 'uint48', name: 'endTime', type: 'uint48' }
+      { internalType: 'uint256', name: 'startTime', type: 'uint256' },
+      { internalType: 'uint256', name: 'endTime', type: 'uint256' }
     ],
     name: 'getTotalSupplyTwabBetween',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
@@ -264,8 +270,8 @@ export const twabControllerABI = [
     inputs: [
       { internalType: 'address', name: 'vault', type: 'address' },
       { internalType: 'address', name: 'user', type: 'address' },
-      { internalType: 'uint48', name: 'startTime', type: 'uint48' },
-      { internalType: 'uint48', name: 'endTime', type: 'uint48' }
+      { internalType: 'uint256', name: 'startTime', type: 'uint256' },
+      { internalType: 'uint256', name: 'endTime', type: 'uint256' }
     ],
     name: 'getTwabBetween',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
@@ -273,7 +279,7 @@ export const twabControllerABI = [
     type: 'function'
   },
   {
-    inputs: [{ internalType: 'uint48', name: 'time', type: 'uint48' }],
+    inputs: [{ internalType: 'uint256', name: 'time', type: 'uint256' }],
     name: 'hasFinalized',
     outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
     stateMutability: 'view',
@@ -282,7 +288,7 @@ export const twabControllerABI = [
   {
     inputs: [
       { internalType: 'address', name: '_to', type: 'address' },
-      { internalType: 'uint112', name: '_amount', type: 'uint112' }
+      { internalType: 'uint96', name: '_amount', type: 'uint96' }
     ],
     name: 'mint',
     outputs: [],
@@ -290,9 +296,9 @@ export const twabControllerABI = [
     type: 'function'
   },
   {
-    inputs: [{ internalType: 'uint48', name: '_timestamp', type: 'uint48' }],
+    inputs: [{ internalType: 'uint256', name: '_timestamp', type: 'uint256' }],
     name: 'periodEndOnOrAfter',
-    outputs: [{ internalType: 'uint48', name: '', type: 'uint48' }],
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -321,7 +327,7 @@ export const twabControllerABI = [
     inputs: [
       { internalType: 'address', name: '_from', type: 'address' },
       { internalType: 'address', name: '_to', type: 'address' },
-      { internalType: 'uint112', name: '_amount', type: 'uint112' }
+      { internalType: 'uint96', name: '_amount', type: 'uint96' }
     ],
     name: 'transfer',
     outputs: [],
@@ -333,8 +339,8 @@ export const twabControllerABI = [
     inputs: [
       { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
       { indexed: true, internalType: 'address', name: 'user', type: 'address' },
-      { indexed: false, internalType: 'uint112', name: 'amount', type: 'uint112' },
-      { indexed: false, internalType: 'uint112', name: 'delegateAmount', type: 'uint112' }
+      { indexed: false, internalType: 'uint96', name: 'amount', type: 'uint96' },
+      { indexed: false, internalType: 'uint96', name: 'delegateAmount', type: 'uint96' }
     ],
     name: 'DecreasedBalance',
     type: 'event'
@@ -343,8 +349,8 @@ export const twabControllerABI = [
     anonymous: false,
     inputs: [
       { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
-      { indexed: false, internalType: 'uint112', name: 'amount', type: 'uint112' },
-      { indexed: false, internalType: 'uint112', name: 'delegateAmount', type: 'uint112' }
+      { indexed: false, internalType: 'uint96', name: 'amount', type: 'uint96' },
+      { indexed: false, internalType: 'uint96', name: 'delegateAmount', type: 'uint96' }
     ],
     name: 'DecreasedTotalSupply',
     type: 'event'
@@ -364,8 +370,8 @@ export const twabControllerABI = [
     inputs: [
       { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
       { indexed: true, internalType: 'address', name: 'user', type: 'address' },
-      { indexed: false, internalType: 'uint112', name: 'amount', type: 'uint112' },
-      { indexed: false, internalType: 'uint112', name: 'delegateAmount', type: 'uint112' }
+      { indexed: false, internalType: 'uint96', name: 'amount', type: 'uint96' },
+      { indexed: false, internalType: 'uint96', name: 'delegateAmount', type: 'uint96' }
     ],
     name: 'IncreasedBalance',
     type: 'event'
@@ -374,8 +380,8 @@ export const twabControllerABI = [
     anonymous: false,
     inputs: [
       { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
-      { indexed: false, internalType: 'uint112', name: 'amount', type: 'uint112' },
-      { indexed: false, internalType: 'uint112', name: 'delegateAmount', type: 'uint112' }
+      { indexed: false, internalType: 'uint96', name: 'amount', type: 'uint96' },
+      { indexed: false, internalType: 'uint96', name: 'delegateAmount', type: 'uint96' }
     ],
     name: 'IncreasedTotalSupply',
     type: 'event'
@@ -385,13 +391,14 @@ export const twabControllerABI = [
     inputs: [
       { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
       { indexed: true, internalType: 'address', name: 'user', type: 'address' },
-      { indexed: false, internalType: 'uint112', name: 'balance', type: 'uint112' },
-      { indexed: false, internalType: 'uint112', name: 'delegateBalance', type: 'uint112' },
+      { indexed: false, internalType: 'uint96', name: 'balance', type: 'uint96' },
+      { indexed: false, internalType: 'uint96', name: 'delegateBalance', type: 'uint96' },
       { indexed: false, internalType: 'bool', name: 'isNew', type: 'bool' },
       {
         components: [
-          { internalType: 'uint160', name: 'cumulativeBalance', type: 'uint160' },
-          { internalType: 'uint48', name: 'timestamp', type: 'uint48' }
+          { internalType: 'uint128', name: 'cumulativeBalance', type: 'uint128' },
+          { internalType: 'uint96', name: 'balance', type: 'uint96' },
+          { internalType: 'uint32', name: 'timestamp', type: 'uint32' }
         ],
         indexed: false,
         internalType: 'struct ObservationLib.Observation',
@@ -406,13 +413,14 @@ export const twabControllerABI = [
     anonymous: false,
     inputs: [
       { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
-      { indexed: false, internalType: 'uint112', name: 'balance', type: 'uint112' },
-      { indexed: false, internalType: 'uint112', name: 'delegateBalance', type: 'uint112' },
+      { indexed: false, internalType: 'uint96', name: 'balance', type: 'uint96' },
+      { indexed: false, internalType: 'uint96', name: 'delegateBalance', type: 'uint96' },
       { indexed: false, internalType: 'bool', name: 'isNew', type: 'bool' },
       {
         components: [
-          { internalType: 'uint160', name: 'cumulativeBalance', type: 'uint160' },
-          { internalType: 'uint48', name: 'timestamp', type: 'uint48' }
+          { internalType: 'uint128', name: 'cumulativeBalance', type: 'uint128' },
+          { internalType: 'uint96', name: 'balance', type: 'uint96' },
+          { internalType: 'uint32', name: 'timestamp', type: 'uint32' }
         ],
         indexed: false,
         internalType: 'struct ObservationLib.Observation',
@@ -425,8 +433,8 @@ export const twabControllerABI = [
   },
   {
     inputs: [
-      { internalType: 'uint112', name: 'balance', type: 'uint112' },
-      { internalType: 'uint112', name: 'amount', type: 'uint112' },
+      { internalType: 'uint96', name: 'balance', type: 'uint96' },
+      { internalType: 'uint96', name: 'amount', type: 'uint96' },
       { internalType: 'string', name: 'message', type: 'string' }
     ],
     name: 'BalanceLTAmount',
@@ -435,8 +443,8 @@ export const twabControllerABI = [
   { inputs: [], name: 'CannotTransferToSponsorshipAddress', type: 'error' },
   {
     inputs: [
-      { internalType: 'uint112', name: 'delegateBalance', type: 'uint112' },
-      { internalType: 'uint112', name: 'delegateAmount', type: 'uint112' },
+      { internalType: 'uint96', name: 'delegateBalance', type: 'uint96' },
+      { internalType: 'uint96', name: 'delegateAmount', type: 'uint96' },
       { internalType: 'string', name: 'message', type: 'string' }
     ],
     name: 'DelegateBalanceLTAmount',
@@ -444,8 +452,8 @@ export const twabControllerABI = [
   },
   {
     inputs: [
-      { internalType: 'uint48', name: 'requestedTimestamp', type: 'uint48' },
-      { internalType: 'uint48', name: 'oldestTimestamp', type: 'uint48' }
+      { internalType: 'PeriodOffsetRelativeTimestamp', name: 'requestedTimestamp', type: 'uint32' },
+      { internalType: 'PeriodOffsetRelativeTimestamp', name: 'oldestTimestamp', type: 'uint32' }
     ],
     name: 'InsufficientHistory',
     type: 'error'
@@ -460,7 +468,7 @@ export const twabControllerABI = [
   },
   { inputs: [], name: 'PeriodLengthTooShort', type: 'error' },
   {
-    inputs: [{ internalType: 'uint48', name: 'periodOffset', type: 'uint48' }],
+    inputs: [{ internalType: 'uint32', name: 'periodOffset', type: 'uint32' }],
     name: 'PeriodOffsetInFuture',
     type: 'error'
   },

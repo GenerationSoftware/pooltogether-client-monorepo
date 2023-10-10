@@ -10,7 +10,7 @@ export const useRelayAuctionElapsedTime = (options?: { refetchInterval?: number 
     ['relayAuctionElapsedTime'],
     async () => {
       const lastAuction = await mainnetPublicClient.readContract({
-        address: RNG_AUCTION.address,
+        address: RNG_AUCTION[NETWORK.mainnet].address,
         abi: rngAuctionABI,
         functionName: 'getLastAuction'
       })

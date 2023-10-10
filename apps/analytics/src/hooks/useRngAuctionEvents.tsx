@@ -11,7 +11,7 @@ export const useRngAuctionEvents = () => {
     ['rngAuctionEvents'],
     async () => {
       return await mainnetPublicClient.getLogs({
-        address: RNG_AUCTION.address,
+        address: RNG_AUCTION[NETWORK.mainnet].address,
         event: {
           inputs: [
             { indexed: true, internalType: 'address', name: 'sender', type: 'address' },
