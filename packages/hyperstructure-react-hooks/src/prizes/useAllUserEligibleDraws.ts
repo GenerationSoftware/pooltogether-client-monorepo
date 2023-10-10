@@ -72,6 +72,7 @@ export const useAllUserEligibleDraws = (prizePools: PrizePool[], userAddress: st
   return { data, isFetched }
 }
 
+// TODO: this should take into account twab decay - users are still eligible a while after full withdrawal
 const getVaultEligibleDraws = (
   draws: SubgraphDrawTimestamps[],
   balanceUpdates: SubgraphObservation[]
