@@ -32,9 +32,13 @@ export const RPC_URLS = {
  * Vaults to display
  */
 export const VAULT_ADDRESSES = {
-  [NETWORK.optimism]: [
-    '0x31515cfC4550d9C83E2d86E8a352886d1364E2D9',
-    '0x1732Ce5486ea47f607550Ccbe499cd0f894E0494'
+  // [NETWORK.optimism]: [
+  //   '0x31515cfC4550d9C83E2d86E8a352886d1364E2D9',
+  //   '0x1732Ce5486ea47f607550Ccbe499cd0f894E0494'
+  // ],
+  [NETWORK['optimism-goerli']]: [
+    '0x171df7a2D8547322de5BA27FD9856B04620A3562',
+    '0x7da2c9C9F3147275837Be99029A2437f8d7b54D6'
   ]
 } as const
 
@@ -44,7 +48,7 @@ export const VAULT_ADDRESSES = {
  * NOTE: All vault addresses are lowercase
  */
 export const CURVE_POOLS: { [chainId: number]: { [vaultAddress: Address]: string } } = {
-  [NETWORK.optimism]: { '0x31515cfc4550d9c83e2d86e8a352886d1364e2d9': 'factory-v2-76' }
+  // [NETWORK.optimism]: { '0x31515cfc4550d9c83e2d86e8a352886d1364e2d9': 'factory-v2-76' }
 }
 
 /**
