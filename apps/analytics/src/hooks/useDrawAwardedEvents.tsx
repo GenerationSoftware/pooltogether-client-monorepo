@@ -4,10 +4,10 @@ import { useQuery } from '@tanstack/react-query'
 import { usePublicClient } from 'wagmi'
 import { QUERY_START_BLOCK } from '@constants/config'
 
-export const useDrawClosedEvents = (prizePool: PrizePool) => {
+export const useDrawAwardedEvents = (prizePool: PrizePool) => {
   const publicClient = usePublicClient({ chainId: prizePool?.chainId })
 
-  const queryKey = ['drawClosedEvents', prizePool?.chainId]
+  const queryKey = ['drawAwardedEvents', prizePool?.chainId]
 
   return useQuery(
     queryKey,
@@ -23,8 +23,8 @@ export const useDrawClosedEvents = (prizePool: PrizePool) => {
               name: 'winningRandomNumber',
               type: 'uint256'
             },
+            { indexed: false, internalType: 'uint8', name: 'lastNumTiers', type: 'uint8' },
             { indexed: false, internalType: 'uint8', name: 'numTiers', type: 'uint8' },
-            { indexed: false, internalType: 'uint8', name: 'nextNumTiers', type: 'uint8' },
             { indexed: false, internalType: 'uint104', name: 'reserve', type: 'uint104' },
             {
               indexed: false,
@@ -32,9 +32,9 @@ export const useDrawClosedEvents = (prizePool: PrizePool) => {
               name: 'prizeTokensPerShare',
               type: 'uint128'
             },
-            { indexed: false, internalType: 'uint64', name: 'drawStartedAt', type: 'uint64' }
+            { indexed: false, internalType: 'uint48', name: 'drawOpenedAt', type: 'uint48' }
           ],
-          name: 'DrawClosed',
+          name: 'DrawAwarded',
           type: 'event'
         },
         fromBlock: QUERY_START_BLOCK[prizePool.chainId],

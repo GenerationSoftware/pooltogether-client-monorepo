@@ -7,7 +7,7 @@ import { Spinner } from '@shared/ui'
 import { sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import Image from 'next/image'
-import { useDrawClosedEvents } from '@hooks/useDrawClosedEvents'
+import { useDrawAwardedEvents } from '@hooks/useDrawAwardedEvents'
 import { useDrawResults } from '@hooks/useDrawResults'
 import { useDrawStatus } from '@hooks/useDrawStatus'
 import { PrizesTableRow } from './PrizesTableRow'
@@ -32,33 +32,34 @@ export const PrizesTable = (props: PrizesTableProps) => {
   const { data: wins, isFetched: isFetchedWins } = usePrizeDrawWinners(prizePool)
   const drawWins = wins?.find((draw) => draw.id === drawId)?.prizeClaims
 
-  const { closedAt, isFetched: isFetchedDrawStatus } = useDrawStatus(prizePool, drawId)
+  const { status, awardedAt, isFetched: isFetchedDrawStatus } = useDrawStatus(prizePool, drawId)
 
   const { data: prizes, isFetched: isFetchedPrizes } = useDrawResults(prizePool, drawId, {
     refetchInterval: sToMs(300)
   })
 
-  const { data: drawClosedEvents, isFetched: isFetchedDrawClosedEvents } =
-    useDrawClosedEvents(prizePool)
-  const drawClosedEvent = drawClosedEvents?.find((e) => e.args.drawId === drawId)
-  const numTiers = drawClosedEvent?.args.nextNumTiers ?? 0 // TODO: switch to `args.numTiers` once event is fixed
+  const { data: drawAwardedEvents, isFetched: isFetchedDrawAwardedEvents } =
+    useDrawAwardedEvents(prizePool)
+  const drawAwardedEvent = drawAwardedEvents?.find((e) => e.args.drawId === drawId)
+  const numTiers = drawAwardedEvent?.args.numTiers ?? 0
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
   if (
     !isFetchedWins ||
     !isFetchedDrawStatus ||
-    !isFetchedPrizes ||
+    (!!awardedAt && !isFetchedPrizes) ||
     !prizeToken ||
-    !isFetchedDrawClosedEvents
+    !isFetchedDrawAwardedEvents
   ) {
     return <Spinner className='after:border-y-pt-purple-800' />
   }
 
-  if (!drawWins || !closedAt) {
+  if (!drawWins || !awardedAt) {
     return (
       <span className='flex gap-2 items-center'>
-        No claims so far... <Image src='/thinkies.png' width={24} height={24} alt='thinkies' />
+        No claims{status === 'awarded' ? 'so far' : ''}...{' '}
+        <Image src='/thinkies.png' width={24} height={24} alt='thinkies' />
       </span>
     )
   }
@@ -78,7 +79,7 @@ export const PrizesTable = (props: PrizesTableProps) => {
             wins={drawWins}
             tier={tier}
             numTiers={numTiers}
-            closedAt={closedAt}
+            awardedAt={awardedAt}
             prizes={prizes}
             prizeToken={prizeToken}
             className={classNames('flex flex-wrap', gridClassName)}

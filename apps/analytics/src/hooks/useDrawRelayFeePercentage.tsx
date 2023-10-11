@@ -9,7 +9,7 @@ import { useRelayAuctionElapsedTime } from './useRelayAuctionElapsedTime'
 export const useDrawRelayFeePercentage = (prizePool: PrizePool) => {
   const publicClient = usePublicClient({ chainId: prizePool?.chainId })
 
-  const { data: elapsedTime } = useRelayAuctionElapsedTime()
+  const { data: elapsedTime } = useRelayAuctionElapsedTime(prizePool)
 
   const queryKey = ['drawRelayFeePercentage', prizePool?.chainId, elapsedTime?.toString()]
 

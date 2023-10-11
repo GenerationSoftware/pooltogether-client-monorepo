@@ -10,7 +10,7 @@ import { DrawAvgClaimFeesChart } from '@components/Charts/DrawAvgClaimFeesChart'
 import { DrawSelector } from '@components/Draws/DrawSelector'
 import { DrawStatusBadge } from '@components/Draws/DrawStatusBadge'
 import { PrizesTable } from '@components/Prizes/PrizesTable'
-import { useDrawClosedEvents } from '@hooks/useDrawClosedEvents'
+import { useDrawAwardedEvents } from '@hooks/useDrawAwardedEvents'
 import { useRelayAuctionEvents } from '@hooks/useRelayAuctionEvents'
 import { useRngAuctionEvents } from '@hooks/useRngAuctionEvents'
 import { useRngL1RelayMsgEvents } from '@hooks/useRngL1RelayMsgEvents'
@@ -41,10 +41,10 @@ export const PrizesView = (props: PrizesViewProps) => {
     )
   }, [chainId])
 
-  const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents()
-  const { refetch: refetchRngL1RelayMsgEvents } = useRngL1RelayMsgEvents()
+  const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents(prizePool)
+  const { refetch: refetchRngL1RelayMsgEvents } = useRngL1RelayMsgEvents(prizePool)
   const { refetch: refetchRelayAuctionEvents } = useRelayAuctionEvents(prizePool)
-  const { refetch: refetchDrawClosedEvents } = useDrawClosedEvents(prizePool)
+  const { refetch: refetchDrawAwardedEvents } = useDrawAwardedEvents(prizePool)
   const { refetch: refetchRngL2RelayMsgEvents } = useRngL2RelayMsgEvents(prizePool)
 
   // Automatic data refetching
@@ -53,7 +53,7 @@ export const PrizesView = (props: PrizesViewProps) => {
       refetchRngAuctionEvents()
       refetchRngL1RelayMsgEvents()
       refetchRelayAuctionEvents()
-      refetchDrawClosedEvents()
+      refetchDrawAwardedEvents()
       refetchRngL2RelayMsgEvents()
     }, sToMs(300))
 

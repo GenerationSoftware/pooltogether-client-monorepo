@@ -1,8 +1,10 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import { useDrawPeriod, useFirstDrawOpenedAt } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
-import { useState } from 'react'
-import { useRngTxs } from '@hooks/useRngTxs'
+import { useAtomValue } from 'jotai'
+import { useMemo, useState } from 'react'
+import { currentTimestampAtom } from 'src/atoms'
 import { DrawCard } from './DrawCard'
 
 interface DrawCardsProps {
@@ -13,38 +15,42 @@ interface DrawCardsProps {
 export const DrawCards = (props: DrawCardsProps) => {
   const { prizePool, className } = props
 
-  const { data: rngTxs, isFetched: isFetchedRngTxs } = useRngTxs(prizePool)
+  const { data: firstDrawOpenedAt } = useFirstDrawOpenedAt(prizePool)
+
+  const { data: drawPeriod } = useDrawPeriod(prizePool)
+
+  const currentTimestamp = useAtomValue(currentTimestampAtom)
+
+  const allDrawIds = useMemo(() => {
+    const drawIds: number[] = []
+    if (!!firstDrawOpenedAt && !!drawPeriod) {
+      for (let i = firstDrawOpenedAt; i < currentTimestamp; i += drawPeriod) {
+        drawIds.push(drawIds.length + 1)
+      }
+    }
+    return drawIds
+  }, [firstDrawOpenedAt, drawPeriod, currentTimestamp])
 
   const baseNumDraws = 5
   const [numDraws, setNumDraws] = useState<number>(4)
 
-  if (!isFetchedRngTxs || !rngTxs) {
+  if (!firstDrawOpenedAt || !drawPeriod) {
     return <Spinner className='after:border-y-pt-purple-800' />
   }
 
-  const lastRngTxs = rngTxs[rngTxs.length - 1]
-  const lastDrawId = lastRngTxs.rng.drawId
-
   return (
     <div className={classNames('w-full flex flex-col gap-3 items-center', className)}>
-      {!!lastRngTxs.relay.l2 && (
-        <DrawCard
-          key={`draw-${lastDrawId + 1}-${prizePool.chainId}`}
-          prizePool={prizePool}
-          drawId={lastDrawId + 1}
-        />
-      )}
-      {[...rngTxs]
+      {[...allDrawIds]
         .reverse()
         .slice(0, numDraws)
-        .map((txs) => (
+        .map((drawId) => (
           <DrawCard
-            key={`draw-${txs.rng.drawId}-${prizePool.chainId}`}
+            key={`draw-${drawId}-${prizePool.chainId}`}
             prizePool={prizePool}
-            drawId={txs.rng.drawId}
+            drawId={drawId}
           />
         ))}
-      {rngTxs.length > numDraws && (
+      {allDrawIds.length > numDraws && (
         <span onClick={() => setNumDraws(numDraws + baseNumDraws)} className='cursor-pointer'>
           Show More Draws
         </span>

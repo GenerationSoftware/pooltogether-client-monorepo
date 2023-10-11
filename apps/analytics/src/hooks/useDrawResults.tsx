@@ -14,6 +14,8 @@ export const useDrawResults = (
 
   const { status, isFetched: isFetchedStatus } = useDrawStatus(prizePool, drawId)
 
+  const isValidStatus = !!status && (status === 'awarded' || status === 'finalized')
+
   const { data, isFetched: isFetchedDrawResults } = useQuery(
     queryKey,
     async () => {
@@ -42,7 +44,7 @@ export const useDrawResults = (
       }
     },
     {
-      enabled: !!prizePool && !!drawId && !!status && status !== 'open',
+      enabled: !!prizePool && !!drawId && isValidStatus,
       ...NO_REFETCH,
       refetchInterval:
         !!status && status !== 'finalized' ? options?.refetchInterval ?? false : false

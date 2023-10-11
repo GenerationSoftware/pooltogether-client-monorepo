@@ -8,7 +8,7 @@ import { Spinner } from '@shared/ui'
 import { divideBigInts, formatBigIntForDisplay, MAX_UINT_256 } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
-import { useDrawClosedEvents } from '@hooks/useDrawClosedEvents'
+import { useDrawAwardedEvents } from '@hooks/useDrawAwardedEvents'
 
 interface ClaimFeesProps {
   prizePool: PrizePool
@@ -24,10 +24,10 @@ export const ClaimFees = (props: ClaimFeesProps) => {
   const { data: allDraws, isFetched: isFetchedAllDraws } = usePrizeDrawWinners(prizePool)
   const draw = allDraws?.find((d) => d.id === drawId)
 
-  const { data: drawClosedEvents, isFetched: isFetchedDrawClosedEvents } =
-    useDrawClosedEvents(prizePool)
-  const drawClosedEvent = drawClosedEvents?.find((e) => e.args.drawId === drawId)
-  const numTiers = drawClosedEvent?.args.nextNumTiers // TODO: switch to `args.numTiers` once event is fixed
+  const { data: drawAwardedEvents, isFetched: isFetchedDrawAwardedEvents } =
+    useDrawAwardedEvents(prizePool)
+  const drawAwardedEvent = drawAwardedEvents?.find((e) => e.args.drawId === drawId)
+  const numTiers = drawAwardedEvent?.args.numTiers
 
   const { data: prizeToken, isFetched: isFetchedPrizeToken } = usePrizeTokenData(prizePool)
 
@@ -92,7 +92,7 @@ export const ClaimFees = (props: ClaimFeesProps) => {
           <ClaimFeeStat type='high' data={claimFeeStats.high} prizeToken={prizeToken} />
           <ClaimFeeStat type='low' data={claimFeeStats.low} prizeToken={prizeToken} />
         </>
-      ) : isFetchedAllDraws && isFetchedPrizeToken && isFetchedDrawClosedEvents ? (
+      ) : isFetchedAllDraws && isFetchedPrizeToken && isFetchedDrawAwardedEvents ? (
         <span>-</span>
       ) : (
         <Spinner className='after:border-y-pt-purple-800' />

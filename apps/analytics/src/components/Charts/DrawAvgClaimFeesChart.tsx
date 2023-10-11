@@ -1,5 +1,5 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { useDrawPeriod, usePrizeDrawWinners } from '@generationsoftware/hyperstructure-react-hooks'
+import { usePrizeDrawWinners } from '@generationsoftware/hyperstructure-react-hooks'
 import {
   divideBigInts,
   formatNumberForDisplay,
@@ -10,7 +10,7 @@ import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
-import { useDrawClosedEvents } from '@hooks/useDrawClosedEvents'
+import { useDrawAwardedEvents } from '@hooks/useDrawAwardedEvents'
 import { useDrawStatus } from '@hooks/useDrawStatus'
 import { LineChart, LineChartProps } from './LineChart'
 
@@ -27,21 +27,19 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
   const { data: allDraws } = usePrizeDrawWinners(prizePool)
   const draw = allDraws?.find((d) => d.id === drawId)
 
-  const { endedAt, closedAt } = useDrawStatus(prizePool, drawId)
+  const { closedAt, awardedAt, finalizedAt } = useDrawStatus(prizePool, drawId)
 
-  const { data: drawPeriod } = useDrawPeriod(prizePool)
-
-  const { data: drawClosedEvents } = useDrawClosedEvents(prizePool)
-  const numTiers = drawClosedEvents?.find((e) => e.args.drawId === drawId)?.args.nextNumTiers // TODO: switch to `args.numTiers` once event is fixed
+  const { data: drawAwardedEvents } = useDrawAwardedEvents(prizePool)
+  const numTiers = drawAwardedEvents?.find((e) => e.args.drawId === drawId)?.args.numTiers
 
   const currentTimestamp = useAtomValue(currentTimestampAtom)
 
   const chartTimestamps = useMemo(() => {
     const timestamps: number[] = []
 
-    if (!!endedAt && !!closedAt && !!drawPeriod) {
-      const startTimestamp = closedAt
-      const endTimestamp = Math.min(endedAt + drawPeriod, currentTimestamp)
+    if (!!closedAt && !!awardedAt && !!finalizedAt) {
+      const startTimestamp = awardedAt
+      const endTimestamp = Math.min(finalizedAt, currentTimestamp)
       const checkpointSize = SECONDS_PER_HOUR
 
       for (let i = startTimestamp; i <= endTimestamp; i += checkpointSize) {
@@ -51,7 +49,7 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
     }
 
     return timestamps
-  }, [endedAt, closedAt, drawPeriod, currentTimestamp])
+  }, [closedAt, awardedAt, currentTimestamp])
 
   const chartData = useMemo(() => {
     if (!!draw && !!numTiers) {

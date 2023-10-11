@@ -230,7 +230,7 @@ export const RNG_AUCTION: {
   [NETWORK.goerli]: {
     address: '0x076Ecca6FD357cB83b038D70DB61805b611ba6C7',
     sequenceOffset: 1_696_420_800,
-    sequencePeriod: 21600
+    sequencePeriod: 21_600
   }
 }
 

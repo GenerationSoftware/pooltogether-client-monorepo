@@ -1,13 +1,13 @@
 import { NETWORK } from '@shared/utilities'
 import { Address } from 'viem'
-import { mainnet, optimism, optimismGoerli } from 'wagmi/chains'
+import { goerli, mainnet, optimism, optimismGoerli } from 'wagmi/chains'
 
 /**
  * Supported networks
  */
 export const SUPPORTED_NETWORKS = Object.freeze({
   mainnets: [NETWORK.mainnet, NETWORK.optimism],
-  testnets: [NETWORK['optimism-goerli']]
+  testnets: [NETWORK.goerli, NETWORK['optimism-goerli']]
 })
 
 /**
@@ -16,6 +16,7 @@ export const SUPPORTED_NETWORKS = Object.freeze({
 export const WAGMI_CHAINS = Object.freeze({
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism,
+  [NETWORK.goerli]: goerli,
   [NETWORK['optimism-goerli']]: optimismGoerli
 })
 
@@ -25,6 +26,7 @@ export const WAGMI_CHAINS = Object.freeze({
 export const RPC_URLS = {
   [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
+  [NETWORK.goerli]: process.env.NEXT_PUBLIC_GOERLI_RPC_URL,
   [NETWORK['optimism-goerli']]: process.env.NEXT_PUBLIC_OPTIMISM_GOERLI_RPC_URL
 }
 
@@ -34,7 +36,8 @@ export const RPC_URLS = {
 export const QUERY_START_BLOCK: { [chainId: number]: bigint } = {
   [NETWORK.mainnet]: 18052000n,
   [NETWORK.optimism]: 108927000n,
-  [NETWORK['optimism-goerli']]: 14002000n
+  [NETWORK.goerli]: 9820000n,
+  [NETWORK['optimism-goerli']]: 15600000n
 }
 
 /**
@@ -55,4 +58,12 @@ export const VAULT_LPS: { [chainId: number]: Lowercase<Address>[] } = {
  */
 export const BURN_ADDRESSES: { [chainId: number]: Lowercase<Address>[] } = {
   [NETWORK.optimism]: ['0xf93329e78feff1145fce03a79d5b356588dea215']
+}
+
+/**
+ * Relay TX origins
+ */
+export const RELAY_ORIGINS: { [chainId: number]: number } = {
+  [NETWORK.optimism]: NETWORK.mainnet,
+  [NETWORK['optimism-goerli']]: NETWORK.goerli
 }

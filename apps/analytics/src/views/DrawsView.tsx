@@ -7,7 +7,7 @@ import { usePublicClient } from 'wagmi'
 import { DrawsAvgClaimFeesChart } from '@components/Charts/DrawsAvgClaimFeesChart'
 import { DrawsAvgLiqEfficiencyChart } from '@components/Charts/DrawsAvgLiqEfficiencyChart'
 import { DrawCards } from '@components/Draws/DrawCards'
-import { useDrawClosedEvents } from '@hooks/useDrawClosedEvents'
+import { useDrawAwardedEvents } from '@hooks/useDrawAwardedEvents'
 import { useDrawRngFeePercentage } from '@hooks/useDrawRngFeePercentage'
 import { useRelayAuctionElapsedTime } from '@hooks/useRelayAuctionElapsedTime'
 import { useRelayAuctionEvents } from '@hooks/useRelayAuctionEvents'
@@ -40,12 +40,12 @@ export const DrawsView = (props: DrawsViewProps) => {
     )
   }, [chainId])
 
-  const { refetch: refetchDrawRngFeePercentage } = useDrawRngFeePercentage()
-  const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents()
-  const { refetch: refetchRngL1RelayMsgEvents } = useRngL1RelayMsgEvents()
-  const { refetch: refetchRelayAuctionElapsedTime } = useRelayAuctionElapsedTime()
+  const { refetch: refetchDrawRngFeePercentage } = useDrawRngFeePercentage(prizePool)
+  const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents(prizePool)
+  const { refetch: refetchRngL1RelayMsgEvents } = useRngL1RelayMsgEvents(prizePool)
+  const { refetch: refetchRelayAuctionElapsedTime } = useRelayAuctionElapsedTime(prizePool)
   const { refetch: refetchRelayAuctionEvents } = useRelayAuctionEvents(prizePool)
-  const { refetch: refetchDrawClosedEvents } = useDrawClosedEvents(prizePool)
+  const { refetch: refetchDrawAwardedEvents } = useDrawAwardedEvents(prizePool)
   const { refetch: refetchRngL2RelayMsgEvents } = useRngL2RelayMsgEvents(prizePool)
 
   // Automatic data refetching
@@ -56,7 +56,7 @@ export const DrawsView = (props: DrawsViewProps) => {
       refetchRngL1RelayMsgEvents()
       refetchRelayAuctionElapsedTime()
       refetchRelayAuctionEvents()
-      refetchDrawClosedEvents()
+      refetchDrawAwardedEvents()
       refetchRngL2RelayMsgEvents()
     }, sToMs(300))
 

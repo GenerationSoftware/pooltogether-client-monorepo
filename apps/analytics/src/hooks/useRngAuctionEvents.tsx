@@ -1,17 +1,19 @@
+import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
-import { NETWORK, RNG_AUCTION } from '@shared/utilities'
+import { RNG_AUCTION } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { usePublicClient } from 'wagmi'
-import { QUERY_START_BLOCK } from '@constants/config'
+import { QUERY_START_BLOCK, RELAY_ORIGINS } from '@constants/config'
 
-export const useRngAuctionEvents = () => {
-  const mainnetPublicClient = usePublicClient({ chainId: NETWORK.mainnet })
+export const useRngAuctionEvents = (prizePool: PrizePool) => {
+  const originChainId = !!prizePool ? RELAY_ORIGINS[prizePool.chainId] : undefined
+  const publicClient = usePublicClient({ chainId: originChainId })
 
   return useQuery(
     ['rngAuctionEvents'],
     async () => {
-      return await mainnetPublicClient.getLogs({
-        address: RNG_AUCTION[NETWORK.mainnet].address,
+      return await publicClient.getLogs({
+        address: RNG_AUCTION[originChainId as number].address,
         event: {
           inputs: [
             { indexed: true, internalType: 'address', name: 'sender', type: 'address' },
@@ -25,13 +27,13 @@ export const useRngAuctionEvents = () => {
           name: 'RngAuctionCompleted',
           type: 'event'
         },
-        fromBlock: QUERY_START_BLOCK[NETWORK.mainnet],
+        fromBlock: QUERY_START_BLOCK[originChainId as number],
         toBlock: 'latest',
         strict: true
       })
     },
     {
-      enabled: !!mainnetPublicClient,
+      enabled: !!originChainId && !!publicClient,
       ...NO_REFETCH
     }
   )

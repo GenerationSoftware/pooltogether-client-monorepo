@@ -1,6 +1,6 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
-  useFirstDrawStartTimestamp,
+  useFirstDrawOpenedAt,
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { getSimpleDate, MAX_UINT_256 } from '@shared/utilities'
@@ -41,7 +41,7 @@ export const ReserveChart = (props: ReserveChartProps) => {
 
   const { data: prizeBackstopEvents } = usePrizeBackstopEvents(prizePool)
 
-  const { data: firstDrawStartTimestamp } = useFirstDrawStartTimestamp(prizePool)
+  const { data: firstDrawOpenedAt } = useFirstDrawOpenedAt(prizePool)
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
@@ -52,7 +52,7 @@ export const ReserveChart = (props: ReserveChartProps) => {
       !!reserve &&
       !!rngTxs &&
       isFetchedRngTxs &&
-      !!firstDrawStartTimestamp &&
+      !!firstDrawOpenedAt &&
       !!manualContributionEvents &&
       !!prizeBackstopEvents &&
       !!prizeToken
@@ -77,7 +77,7 @@ export const ReserveChart = (props: ReserveChartProps) => {
       }
 
       data.push({
-        name: `Start-${firstDrawStartTimestamp}`,
+        name: `Start-${firstDrawOpenedAt}`,
         reserve: 0,
         liquidations: 0,
         manual: 0,
@@ -135,7 +135,7 @@ export const ReserveChart = (props: ReserveChartProps) => {
 
       return data
     }
-  }, [reserve, rngTxs, firstDrawStartTimestamp, currentTimestamp])
+  }, [reserve, rngTxs, firstDrawOpenedAt, currentTimestamp])
 
   if (!!chartData?.length && !!prizeToken) {
     return (

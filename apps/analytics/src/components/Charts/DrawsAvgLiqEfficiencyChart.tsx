@@ -5,7 +5,9 @@ import {
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { formatNumberForDisplay, NETWORK, POOL_TOKEN_ADDRESSES } from '@shared/utilities'
 import classNames from 'classnames'
+import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
+import { currentTimestampAtom } from 'src/atoms'
 import { Address, formatUnits } from 'viem'
 import { useAllDrawsStatus } from '@hooks/useAllDrawsStatus'
 import { useBlocksAtTimestamps } from '@hooks/useBlocksAtTimestamps'
@@ -29,15 +31,17 @@ export const DrawsAvgLiqEfficiencyChart = (props: DrawsAvgLiqEfficiencyChartProp
 
   const { data: allDrawsStatus } = useAllDrawsStatus(prizePool, drawIds)
 
+  const currentTimestamp = useAtomValue(currentTimestampAtom)
+
   const uniqueOpenedAtTimestamps = new Set(allDrawsStatus?.map((draw) => draw.openedAt))
   const { data: openedAtBlocksByTimestamp } = useBlocksAtTimestamps(prizePool?.chainId, [
     ...uniqueOpenedAtTimestamps
   ])
 
-  const uniqueEndedAtTimestamps = new Set(allDrawsStatus?.map((draw) => draw.endedAt))
-  const { data: endedAtBlocksByTimestamp } = useBlocksAtTimestamps(
+  const uniqueClosedAtTimestamps = new Set(allDrawsStatus?.map((draw) => draw.closedAt))
+  const { data: closedAtBlocksByTimestamp } = useBlocksAtTimestamps(
     prizePool?.chainId,
-    [...uniqueEndedAtTimestamps].filter((t) => !!t) as number[]
+    [...uniqueClosedAtTimestamps].filter((t) => !!t) as number[]
   )
 
   // TODO: this assumes the tokenIn is always POOL (and uses mainnet pricing) - not ideal
@@ -64,7 +68,7 @@ export const DrawsAvgLiqEfficiencyChart = (props: DrawsAvgLiqEfficiencyChartProp
       !!liquidationEvents &&
       !!allDrawsStatus &&
       !!openedAtBlocksByTimestamp &&
-      !!endedAtBlocksByTimestamp &&
+      !!closedAtBlocksByTimestamp &&
       !!prizeToken &&
       !!prizeTokenPrices &&
       !!Object.keys(tokenOutPrices).length
@@ -72,24 +76,22 @@ export const DrawsAvgLiqEfficiencyChart = (props: DrawsAvgLiqEfficiencyChartProp
       const data: { name: string; percentage: number }[] = []
 
       allDrawsStatus.forEach((draw) => {
-        const targetTimestamp = !!draw.endedAt
-          ? draw.endedAt - (draw.endedAt - draw.openedAt) / 2
-          : draw.openedAt
+        const targetTimestamp =
+          draw.closedAt < currentTimestamp
+            ? draw.closedAt - (draw.closedAt - draw.openedAt) / 2
+            : draw.openedAt
         const targetDate = new Date(targetTimestamp * 1_000).toISOString().split('T')[0]
         const prizeTokenPrice = prizeTokenPrices.find((entry) => entry.date === targetDate)?.price
 
         const openedAtBlock = openedAtBlocksByTimestamp[draw.openedAt]
-        const endedAtBlock = !!draw.endedAt ? endedAtBlocksByTimestamp[draw.endedAt] : undefined
+        const closedAtBlock = !!draw.closedAt ? closedAtBlocksByTimestamp[draw.closedAt] : undefined
 
-        if (!!prizeTokenPrice && !!openedAtBlock) {
+        if (!!prizeTokenPrice && !!openedAtBlock && !!closedAtBlock) {
           let totalValueIn = 0
           let totalValueOut = 0
 
           const drawLiquidationEvents = liquidationEvents.filter(
-            (e) =>
-              e.blockNumber > openedAtBlock.number &&
-              (draw.endedAt === undefined ||
-                (!!endedAtBlock && e.blockNumber <= endedAtBlock.number))
+            (e) => e.blockNumber > openedAtBlock.number && e.blockNumber <= closedAtBlock.number
           )
 
           drawLiquidationEvents.forEach((event) => {
@@ -122,7 +124,7 @@ export const DrawsAvgLiqEfficiencyChart = (props: DrawsAvgLiqEfficiencyChartProp
     liquidationEvents,
     allDrawsStatus,
     openedAtBlocksByTimestamp,
-    endedAtBlocksByTimestamp,
+    closedAtBlocksByTimestamp,
     prizeToken,
     prizeTokenPrices,
     tokenOutPrices

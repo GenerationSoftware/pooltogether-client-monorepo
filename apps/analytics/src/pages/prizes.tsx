@@ -5,7 +5,7 @@ import { Layout } from '@components/Layout'
 export default function PrizesPage() {
   return (
     <Layout>
-      <PrizesView chainId={NETWORK.optimism} />
+      <PrizesView chainId={NETWORK['optimism-goerli']} />
     </Layout>
   )
 }

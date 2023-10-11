@@ -8,7 +8,7 @@ import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { ReserveChart } from '@components/Charts/ReserveChart'
 import { ReserveHeader } from '@components/Reserve/ReserveHeader'
-import { useDrawClosedEvents } from '@hooks/useDrawClosedEvents'
+import { useDrawAwardedEvents } from '@hooks/useDrawAwardedEvents'
 import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
 import { useManualContributionEvents } from '@hooks/useManualContributionEvents'
 import { usePrizeBackstopEvents } from '@hooks/usePrizeBackstopEvents'
@@ -49,10 +49,10 @@ export const ReserveView = (props: ReserveViewProps) => {
   const { refetch: refetchLiquidationEvents } = useLiquidationEvents(prizePool)
   const { refetch: refetchManualContributionEvents } = useManualContributionEvents(prizePool)
   const { refetch: refetchPrizeBackstopEvents } = usePrizeBackstopEvents(prizePool)
-  const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents()
-  const { refetch: refetchRngL1RelayMsgEvents } = useRngL1RelayMsgEvents()
+  const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents(prizePool)
+  const { refetch: refetchRngL1RelayMsgEvents } = useRngL1RelayMsgEvents(prizePool)
   const { refetch: refetchRelayAuctionEvents } = useRelayAuctionEvents(prizePool)
-  const { refetch: refetchDrawClosedEvents } = useDrawClosedEvents(prizePool)
+  const { refetch: refetchDrawAwardedEvents } = useDrawAwardedEvents(prizePool)
   const { refetch: refetchRngL2RelayMsgEvents } = useRngL2RelayMsgEvents(prizePool)
 
   // Automatic data refetching
@@ -65,7 +65,7 @@ export const ReserveView = (props: ReserveViewProps) => {
       refetchRngAuctionEvents()
       refetchRngL1RelayMsgEvents()
       refetchRelayAuctionEvents()
-      refetchDrawClosedEvents()
+      refetchDrawAwardedEvents()
       refetchRngL2RelayMsgEvents()
       setCurrentTimestamp(getSecondsSinceEpoch())
     }, sToMs(300))

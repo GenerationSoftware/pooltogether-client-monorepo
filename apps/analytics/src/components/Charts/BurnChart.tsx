@@ -1,5 +1,5 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { useFirstDrawStartTimestamp } from '@generationsoftware/hyperstructure-react-hooks'
+import { useFirstDrawOpenedAt } from '@generationsoftware/hyperstructure-react-hooks'
 import { Token } from '@shared/types'
 import { DEAD_ADDRESS, getSimpleDate, MAX_UINT_256 } from '@shared/utilities'
 import classNames from 'classnames'
@@ -39,12 +39,12 @@ export const BurnChart = (props: BurnChartProps) => {
 
   const { data: rngTxs, isFetched: isFetchedRngTxs } = useRngTxs(prizePool)
 
-  const { data: firstDrawStartTimestamp } = useFirstDrawStartTimestamp(prizePool)
+  const { data: firstDrawOpenedAt } = useFirstDrawOpenedAt(prizePool)
 
   const currentTimestamp = useAtomValue(currentTimestampAtom)
 
   const chartData = useMemo(() => {
-    if (!!burnEvents?.length && !!rngTxs && isFetchedRngTxs && !!firstDrawStartTimestamp) {
+    if (!!burnEvents?.length && !!rngTxs && isFetchedRngTxs && !!firstDrawOpenedAt) {
       const data: DataPoint[] = []
 
       const formatBurnNum = (val: bigint) => {
@@ -68,7 +68,7 @@ export const BurnChart = (props: BurnChartProps) => {
       }
 
       data.push({
-        name: `Start-${firstDrawStartTimestamp}`,
+        name: `Start-${firstDrawOpenedAt}`,
         lp: { total: lp.total, change: lp.change },
         manual: { total: manual.total, change: manual.change },
         other: { total: other.total, change: other.change }
@@ -141,7 +141,7 @@ export const BurnChart = (props: BurnChartProps) => {
 
       return data
     }
-  }, [burnEvents, rngTxs, firstDrawStartTimestamp, currentTimestamp])
+  }, [burnEvents, rngTxs, firstDrawOpenedAt, currentTimestamp])
 
   if (!!chartData?.length) {
     return (

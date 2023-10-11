@@ -3,7 +3,7 @@ import { usePrizeDrawWinners } from '@generationsoftware/hyperstructure-react-ho
 import { divideBigInts, formatNumberForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
-import { useDrawClosedEvents } from '@hooks/useDrawClosedEvents'
+import { useDrawAwardedEvents } from '@hooks/useDrawAwardedEvents'
 import { LineChart } from './LineChart'
 
 interface DrawsAvgClaimFeesChartProps {
@@ -17,15 +17,14 @@ export const DrawsAvgClaimFeesChart = (props: DrawsAvgClaimFeesChartProps) => {
 
   const { data: allDraws } = usePrizeDrawWinners(prizePool)
 
-  const { data: drawClosedEvents } = useDrawClosedEvents(prizePool)
+  const { data: drawAwardedEvents } = useDrawAwardedEvents(prizePool)
 
   const chartData = useMemo(() => {
-    if (!!allDraws && !!drawClosedEvents) {
+    if (!!allDraws && !!drawAwardedEvents) {
       const data: { name: string; percentage: number }[] = []
 
       allDraws.forEach((draw) => {
-        // TODO: switch to `args.numTiers` once event is fixed
-        const numTiers = drawClosedEvents?.find((e) => e.args.drawId === draw.id)?.args.nextNumTiers
+        const numTiers = drawAwardedEvents?.find((e) => e.args.drawId === draw.id)?.args.numTiers
         if (!!numTiers) {
           const wins = draw.prizeClaims.filter(
             (win) => win.fee > 0n && (!hideCanary || win.tier !== numTiers - 1)
@@ -43,7 +42,7 @@ export const DrawsAvgClaimFeesChart = (props: DrawsAvgClaimFeesChartProps) => {
 
       return data
     }
-  }, [allDraws, drawClosedEvents])
+  }, [allDraws, drawAwardedEvents])
 
   if (!!chartData?.length) {
     return (

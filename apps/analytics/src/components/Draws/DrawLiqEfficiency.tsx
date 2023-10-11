@@ -6,7 +6,9 @@ import {
 import { ExternalLink, Spinner } from '@shared/ui'
 import { getBlockExplorerUrl, NETWORK, POOL_TOKEN_ADDRESSES } from '@shared/utilities'
 import classNames from 'classnames'
+import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
+import { currentTimestampAtom } from 'src/atoms'
 import { Address, formatUnits } from 'viem'
 import { useBlockAtTimestamp } from '@hooks/useBlockAtTimestamp'
 import { useDrawStatus } from '@hooks/useDrawStatus'
@@ -26,10 +28,12 @@ export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
   const { data: liquidationEvents, isFetched: isFetchedLiquidationEvents } =
     useLiquidationEvents(prizePool)
 
-  const { openedAt, endedAt, isFetched: isFetchedDrawStatus } = useDrawStatus(prizePool, drawId)
+  const { openedAt, closedAt, isFetched: isFetchedDrawStatus } = useDrawStatus(prizePool, drawId)
+
+  const currentTimestamp = useAtomValue(currentTimestampAtom)
 
   const { data: openedAtBlock } = useBlockAtTimestamp(prizePool?.chainId, openedAt as number)
-  const { data: endedAtBlock } = useBlockAtTimestamp(prizePool?.chainId, endedAt as number)
+  const { data: closedAtBlock } = useBlockAtTimestamp(prizePool?.chainId, closedAt as number)
 
   // TODO: this assumes the tokenIn is always POOL (and uses mainnet pricing) - not ideal
   const { data: prizeToken } = usePrizeTokenData(prizePool)
@@ -41,15 +45,14 @@ export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
     tokenInPrices[POOL_TOKEN_ADDRESSES[NETWORK.mainnet].toLowerCase() as Address]
 
   const drawLiquidationEvents = useMemo(() => {
-    if (!!liquidationEvents?.length && isFetchedDrawStatus && !!openedAtBlock) {
+    if (!!liquidationEvents?.length && isFetchedDrawStatus && !!openedAtBlock && !!closedAtBlock) {
       return liquidationEvents.filter(
         (event) =>
-          event.blockNumber > openedAtBlock.number &&
-          (endedAtBlock === undefined || event.blockNumber <= endedAtBlock.number)
+          event.blockNumber > openedAtBlock.number && event.blockNumber <= closedAtBlock.number
       )
     }
     return []
-  }, [liquidationEvents, isFetchedDrawStatus, openedAtBlock, endedAtBlock])
+  }, [liquidationEvents, isFetchedDrawStatus, openedAtBlock, closedAtBlock])
 
   const lpAddresses = useMemo(() => {
     const addresses = new Set<Address>()
@@ -66,9 +69,11 @@ export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
       !!prizeToken &&
       !!prizeTokenPrices &&
       !!Object.keys(tokenOutPrices).length &&
-      !!openedAt
+      !!openedAt &&
+      !!closedAt
     ) {
-      const targetTimestamp = !!endedAt ? endedAt - (endedAt - openedAt) / 2 : openedAt
+      const targetTimestamp =
+        closedAt < currentTimestamp ? closedAt - (closedAt - openedAt) / 2 : openedAt
       const targetDate = new Date(targetTimestamp * 1_000).toISOString().split('T')[0]
       const prizeTokenPrice = prizeTokenPrices.find((entry) => entry.date === targetDate)?.price
 
@@ -115,7 +120,7 @@ export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
         }
       }
     }
-  }, [drawLiquidationEvents, prizeToken, prizeTokenPrices, tokenOutPrices])
+  }, [drawLiquidationEvents, prizeToken, prizeTokenPrices, tokenOutPrices, openedAt, closedAt])
 
   const isFetched =
     isFetchedLiquidationEvents &&
