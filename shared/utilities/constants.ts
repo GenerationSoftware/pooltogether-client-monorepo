@@ -248,7 +248,7 @@ export const RNG_RELAY_ADDRESSES: { [chainId: number]: Address } = {
  */
 export const MSG_EXECUTOR_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.optimism]: '0x890a87E71E731342a6d10e7628bd1F0733ce3296',
-  [NETWORK['optimism-goerli']]: '0xc5165406dB791549f0D2423D1483c1EA10A3A206'
+  [NETWORK['optimism-goerli']]: '0x59Ba766ff229c21b97184647292706039aF63dA1'
 }
 
 /**
