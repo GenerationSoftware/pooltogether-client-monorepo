@@ -240,7 +240,8 @@ export const RNG_AUCTION: {
 export const RNG_RELAY_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.mainnet]: '0xF4c47dacFda99bE38793181af9Fd1A2Ec7576bBF',
   [NETWORK.optimism]: '0xF4c47dacFda99bE38793181af9Fd1A2Ec7576bBF',
-  [NETWORK['optimism-goerli']]: '0xABDf9A2fc7a26a62c37b3F446454F2B0EF4ADD68'
+  [NETWORK.goerli]: '0x1977822061d8a394726803e2c2F6524a4E3e7Aff',
+  [NETWORK['optimism-goerli']]: '0x7C77fE5a4261fe27e9219410c65f9d42747e5F69'
 }
 
 /**

@@ -16,7 +16,7 @@ export const useRngL1RelayMsgEvents = () => {
           inputs: [
             {
               indexed: false,
-              internalType: 'contract IMessageDispatcher',
+              internalType: 'contract IMessageDispatcherOptimism', // TODO: need to check that this doesn't break for other chains (use just `IMessageDispatcher`?)
               name: 'messageDispatcher',
               type: 'address'
             },
