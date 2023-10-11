@@ -300,13 +300,47 @@ export const TOKEN_PRICE_REDIRECTS: {
   [chainId: number]: { [address: string]: { chainId: number; address: Address } }
 } = {
   [NETWORK.optimism]: {
+    /* POOL */
     '0x395ae52bb17aef68c2888d941736a71dc6d4e125': {
       chainId: NETWORK.mainnet,
       address: POOL_TOKEN_ADDRESSES[NETWORK.mainnet].toLowerCase() as Address
     },
+    /* agEUR */
     '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': {
       chainId: NETWORK.mainnet,
       address: '0x1a7e4e63778b4f12a199c062f3efdd288afcbce8'
+    }
+  },
+  [NETWORK['optimism-goerli']]: {
+    /* DAI */
+    '0x2b311e07bce542a73bb4887d0f503f0b6ea70711': {
+      chainId: NETWORK.optimism,
+      address: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1'
+    },
+    /* USDC */
+    '0x880027cc134a07ddc9e5c7e7659a11ecfd828705': {
+      chainId: NETWORK.optimism,
+      address: USDC_TOKEN_ADDRESSES[NETWORK.optimism]
+    },
+    /* GUSD */
+    '0x206acf3bbec50972880e665ee7d03342a2ff9f5d': {
+      chainId: NETWORK.mainnet,
+      address: '0x056fd409e1d7a124bd7017459dfea2f387b6d5cd'
+    },
+    /* WBTC */
+    '0x8778da5ed4b586960094d43c5a3a52da3a4ae613': {
+      chainId: NETWORK.optimism,
+      address: '0x68f180fcce6836688e9084f035309e29bf0a2095'
+    },
+    /* WETH */
+    '0xe62ac4184f04f0ba3c99dd2fe931cdc4d0489ac9': {
+      chainId: NETWORK.optimism,
+      address: '0x4200000000000000000000000000000000000006'
+    },
+    /* POOL */
+    '0x722701e470b556571a7a3586adafa2e866cfd1a1': {
+      chainId: NETWORK.mainnet,
+      address: POOL_TOKEN_ADDRESSES[NETWORK.mainnet].toLowerCase() as Address
     }
   }
 }

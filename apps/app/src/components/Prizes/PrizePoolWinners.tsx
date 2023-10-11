@@ -1,7 +1,7 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
-  useLastDrawId,
-  useLastDrawTimestamps,
+  useLastAwardedDrawId,
+  useLastAwardedDrawTimestamps,
   usePrizeDrawWinners,
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
@@ -26,8 +26,8 @@ export const PrizePoolWinners = () => {
 
   const { data: draws } = usePrizeDrawWinners(selectedPrizePool as PrizePool)
 
-  const { data: lastDrawId } = useLastDrawId(selectedPrizePool as PrizePool)
-  const { data: lastDrawTimestamps } = useLastDrawTimestamps(selectedPrizePool as PrizePool)
+  const { data: lastDrawId } = useLastAwardedDrawId(selectedPrizePool as PrizePool)
+  const { data: lastDrawTimestamps } = useLastAwardedDrawTimestamps(selectedPrizePool as PrizePool)
 
   const baseNumDraws = 6
   const [numDraws, setNumDraws] = useState<number>(baseNumDraws)
@@ -40,8 +40,8 @@ export const PrizePoolWinners = () => {
       !!lastDrawTimestamps
     ) {
       const currentTime = getSecondsSinceEpoch()
-      const drawPeriod = lastDrawTimestamps.end - lastDrawTimestamps.start
-      const drawFinalizedTimestamp = lastDrawTimestamps.end + drawPeriod
+      const drawPeriod = lastDrawTimestamps.closedAt - lastDrawTimestamps.openedAt
+      const drawFinalizedTimestamp = lastDrawTimestamps.closedAt + drawPeriod
       return drawFinalizedTimestamp > currentTime
     }
   }, [draws, lastDrawId, lastDrawTimestamps])
