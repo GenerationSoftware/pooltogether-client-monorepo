@@ -34,10 +34,10 @@ export const PrizePoolWinners = () => {
 
   const isLastDrawOngoing = useMemo(() => {
     if (
-      !!draws &&
       !!lastDrawId &&
-      draws[draws.length - 1].id === lastDrawId &&
-      !!lastDrawTimestamps
+      !!lastDrawTimestamps &&
+      !!draws?.length &&
+      draws[draws.length - 1].id === lastDrawId
     ) {
       const currentTime = getSecondsSinceEpoch()
       const drawPeriod = lastDrawTimestamps.closedAt - lastDrawTimestamps.openedAt
