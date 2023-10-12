@@ -58,7 +58,7 @@ export const PrizesTable = (props: PrizesTableProps) => {
   if (!drawWins || !awardedAt) {
     return (
       <span className='flex gap-2 items-center'>
-        No claims{status === 'awarded' ? 'so far' : ''}...{' '}
+        No claims{status === 'awarded' ? ' so far' : ''}...{' '}
         <Image src='/thinkies.png' width={24} height={24} alt='thinkies' />
       </span>
     )
