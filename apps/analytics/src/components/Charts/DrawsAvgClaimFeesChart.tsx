@@ -21,7 +21,10 @@ export const DrawsAvgClaimFeesChart = (props: DrawsAvgClaimFeesChartProps) => {
 
   const chartData = useMemo(() => {
     if (!!allDraws && !!drawAwardedEvents) {
-      const data: { name: string; percentage: number }[] = []
+      const data: { name: string; percentage: number; rollingAvg: number }[] = []
+
+      let numValues = 0
+      let sumValues = 0
 
       allDraws.forEach((draw) => {
         const numTiers = drawAwardedEvents?.find((e) => e.args.drawId === draw.id)?.args.numTiers
@@ -32,11 +35,14 @@ export const DrawsAvgClaimFeesChart = (props: DrawsAvgClaimFeesChartProps) => {
 
           const sumClaimFeeAmount = wins.reduce((a, b) => a + b.fee, 0n)
           const sumPrizeAmount = wins.reduce((a, b) => a + b.payout, 0n)
+          const percentage =
+            divideBigInts(sumClaimFeeAmount, sumPrizeAmount + sumClaimFeeAmount) * 100
 
-          data.push({
-            name: `#${draw.id}`,
-            percentage: divideBigInts(sumClaimFeeAmount, sumPrizeAmount + sumClaimFeeAmount) * 100
-          })
+          numValues++
+          sumValues += percentage
+          const rollingAvg = sumValues / numValues
+
+          data.push({ name: `#${draw.id}`, percentage, rollingAvg })
         }
       })
 
@@ -50,12 +56,12 @@ export const DrawsAvgClaimFeesChart = (props: DrawsAvgClaimFeesChartProps) => {
         <span className='ml-2 md:ml-6'>Average Claim Fee Percentages</span>
         <LineChart
           data={chartData}
-          lines={[{ id: 'percentage' }]}
+          lines={[{ id: 'percentage' }, { id: 'rollingAvg', strokeDashArray: 4 }]}
           tooltip={{
             show: true,
-            formatter: (value) => [
+            formatter: (value, name) => [
               `${formatNumberForDisplay(value, { maximumFractionDigits: 2 })}%`,
-              'Avg Claim Fee'
+              name === 'percentage' ? 'Avg Claim Fee' : 'Cumulative Avg'
             ],
             labelFormatter: (label) => `Draw ${label}`
           }}
