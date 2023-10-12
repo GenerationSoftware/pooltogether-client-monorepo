@@ -69,7 +69,10 @@ export const DrawsAvgLiqEfficiencyChart = (props: DrawsAvgLiqEfficiencyChartProp
       !!prizeTokenPrices &&
       !!Object.keys(tokenOutPrices).length
     ) {
-      const data: { name: string; percentage: number }[] = []
+      const data: { name: string; percentage: number; cumAvg: number }[] = []
+
+      let numValues = 0
+      let sumValues = 0
 
       allDrawsStatus.forEach((draw) => {
         const targetTimestamp = !!draw.endedAt
@@ -111,7 +114,11 @@ export const DrawsAvgLiqEfficiencyChart = (props: DrawsAvgLiqEfficiencyChartProp
           })
 
           if (!!totalValueIn && !!totalValueOut) {
-            data.push({ name: `#${draw.id}`, percentage: (totalValueIn / totalValueOut) * 100 })
+            const percentage = (totalValueIn / totalValueOut) * 100
+            numValues++
+            sumValues += percentage
+            const cumAvg = sumValues / numValues
+            data.push({ name: `#${draw.id}`, percentage, cumAvg })
           }
         }
       })
@@ -134,12 +141,12 @@ export const DrawsAvgLiqEfficiencyChart = (props: DrawsAvgLiqEfficiencyChartProp
         <span className='ml-2 md:ml-6'>Average Liquidation Efficiency</span>
         <LineChart
           data={chartData}
-          lines={[{ id: 'percentage' }]}
+          lines={[{ id: 'percentage' }, { id: 'cumAvg', strokeDashArray: 5 }]}
           tooltip={{
             show: true,
-            formatter: (value) => [
+            formatter: (value, name) => [
               `${formatNumberForDisplay(value, { maximumFractionDigits: 2 })}%`,
-              'Avg Liq. Efficiency'
+              name === 'percentage' ? 'Avg Liq. Efficiency' : 'Cumulative Avg'
             ],
             labelFormatter: (label) => `Draw ${label}`
           }}
