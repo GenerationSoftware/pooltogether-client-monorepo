@@ -193,7 +193,7 @@ export const getUserSubgraphPrizes = async (
             prizeIndex
             payout
             fee
-            feeRecipient { id }
+            feeRecipient { user { address } }
             timestamp
             txHash
           }
