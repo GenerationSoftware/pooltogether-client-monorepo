@@ -1,11 +1,6 @@
-import {
-  SubgraphDraw,
-  SubgraphDrawTimestamps,
-  SubgraphObservation,
-  SubgraphPrize
-} from '@shared/types'
+import { SubgraphDraw, SubgraphObservation, SubgraphPrize } from '@shared/types'
 import { Address } from 'viem'
-import { PRIZE_POOL_GRAPH_API_URLS, TWAB_GRAPH_API_URLS } from '../constants'
+import { SUBGRAPH_API_URLS } from '../constants'
 
 /**
  * Returns past draws from the given network's subgraph
@@ -25,25 +20,26 @@ export const getSubgraphDraws = async (
     orderDirection?: 'asc' | 'desc'
   }
 ): Promise<SubgraphDraw[]> => {
-  if (chainId in PRIZE_POOL_GRAPH_API_URLS) {
-    const subgraphUrl = PRIZE_POOL_GRAPH_API_URLS[chainId as keyof typeof PRIZE_POOL_GRAPH_API_URLS]
+  if (chainId in SUBGRAPH_API_URLS) {
+    const subgraphUrl = SUBGRAPH_API_URLS[chainId as keyof typeof SUBGRAPH_API_URLS]
 
     const headers = { 'Content-Type': 'application/json' }
 
     const body = JSON.stringify({
       query: `query($numDraws: Int, $numPrizes: Int, $offsetDraws: Int, $offsetPrizes: Int, $orderDirection: OrderDirection, $orderBy: Draw_orderBy, $prizeOrderDirection: OrderDirection, $prizeOrderBy: PrizeClaim_orderBy) {
         draws(first: $numDraws, skip: $offsetDraws, orderDirection: $orderDirection, orderBy: $orderBy) {
-          id
+          drawId
           prizeClaims(first: $numPrizes, skip: $offsetPrizes, orderDirection: $prizeOrderDirection, orderBy: $prizeOrderBy) {
             id
-            winner { id }
-            recipient { id }
+            winner { user { address } }
+            recipient
             tier
             prizeIndex
             payout
             fee
-            feeRecipient { id }
+            feeRecipient { user { address } }
             timestamp
+            txHash
           }
         }
       }`,
@@ -53,7 +49,7 @@ export const getSubgraphDraws = async (
         offsetDraws: options?.offsetDraws ?? 0,
         offsetPrizes: options?.offsetPrizes ?? 0,
         orderDirection: options?.orderDirection ?? 'desc',
-        orderBy: 'id',
+        orderBy: 'drawId',
         prizeOrderDirection: 'asc',
         prizeOrderBy: 'timestamp'
       }
@@ -62,32 +58,34 @@ export const getSubgraphDraws = async (
     const result = await fetch(subgraphUrl, { method: 'POST', headers, body })
     const jsonData = await result.json()
     const draws: {
-      id: string
+      drawId: number
       prizeClaims: {
         id: string
-        winner: { id: string }
-        recipient: { id: string }
+        winner: { user: { address: string } }
+        recipient: string
         tier: number
         prizeIndex: string
         payout: string
         fee: string
-        feeRecipient: { id: string }
+        feeRecipient: { user: { address: string } }
         timestamp: string
+        txHash: string
       }[]
     }[] = jsonData?.data?.draws ?? []
 
     const formattedDraws = draws.map((draw) => ({
-      id: parseInt(draw.id),
+      id: draw.drawId,
       prizeClaims: draw.prizeClaims.map((claim) => ({
         id: claim.id,
-        winner: claim.winner.id as Address,
-        recipient: claim.recipient.id as Address,
+        winner: claim.winner.user.address as Address,
+        recipient: claim.recipient as Address,
         tier: claim.tier,
         prizeIndex: parseInt(claim.prizeIndex),
         payout: BigInt(claim.payout),
         fee: BigInt(claim.fee),
-        feeRecipient: claim.feeRecipient.id as Address,
-        timestamp: parseInt(claim.timestamp)
+        feeRecipient: claim.feeRecipient.user.address as Address,
+        timestamp: parseInt(claim.timestamp),
+        txHash: claim.txHash as `0x${string}`
       }))
     }))
 
@@ -158,7 +156,6 @@ export const getPaginatedSubgraphDraws = async (
     }
   }
 
-  // TODO: this sorting is not necessary if the subgraph would sort them correctly on ID
   draws.sort((a, b) => a.id - b.id)
 
   return draws
@@ -181,8 +178,8 @@ export const getUserSubgraphPrizes = async (
     offsetPrizes?: number
   }
 ): Promise<SubgraphPrize[]> => {
-  if (chainId in PRIZE_POOL_GRAPH_API_URLS) {
-    const subgraphUrl = PRIZE_POOL_GRAPH_API_URLS[chainId as keyof typeof PRIZE_POOL_GRAPH_API_URLS]
+  if (chainId in SUBGRAPH_API_URLS) {
+    const subgraphUrl = SUBGRAPH_API_URLS[chainId as keyof typeof SUBGRAPH_API_URLS]
 
     const headers = { 'Content-Type': 'application/json' }
 
@@ -191,13 +188,14 @@ export const getUserSubgraphPrizes = async (
         account(id: $id) {
           prizesReceived(first: $numPrizes, skip: $offsetPrizes, orderDirection: $orderDirection, orderBy: $orderBy) {
             id
-            draw { id }
+            draw { drawId }
             tier
             prizeIndex
             payout
             fee
             feeRecipient { id }
             timestamp
+            txHash
           }
         }
       }`,
@@ -214,24 +212,26 @@ export const getUserSubgraphPrizes = async (
     const jsonData = await result.json()
     const wins: {
       id: string
-      draw: { id: string }
+      draw: { drawId: number }
       tier: number
       prizeIndex: string
       payout: string
       fee: string
-      feeRecipient: { id: string }
+      feeRecipient: { user: { address: string } }
       timestamp: string
+      txHash: string
     }[] = jsonData?.data?.account?.prizesReceived ?? []
 
     const formattedWins = wins.map((win) => ({
       id: win.id,
-      drawId: parseInt(win.draw.id),
+      drawId: win.draw.drawId,
       tier: win.tier,
       prizeIndex: parseInt(win.prizeIndex),
       payout: BigInt(win.payout),
       fee: BigInt(win.fee),
-      feeRecipient: win.feeRecipient.id as Address,
-      timestamp: parseInt(win.timestamp)
+      feeRecipient: win.feeRecipient.user.address as Address,
+      timestamp: parseInt(win.timestamp),
+      txHash: win.txHash as `0x${string}`
     }))
 
     return formattedWins
@@ -295,16 +295,16 @@ export const getUserSubgraphObservations = async (
     offsetObservations?: number
   }
 ): Promise<{ [vaultAddress: `0x${string}`]: SubgraphObservation[] }> => {
-  if (chainId in TWAB_GRAPH_API_URLS) {
-    const subgraphUrl = TWAB_GRAPH_API_URLS[chainId as keyof typeof TWAB_GRAPH_API_URLS]
+  if (chainId in SUBGRAPH_API_URLS) {
+    const subgraphUrl = SUBGRAPH_API_URLS[chainId as keyof typeof SUBGRAPH_API_URLS]
 
     const headers = { 'Content-Type': 'application/json' }
 
     const body = JSON.stringify({
-      query: `query($id: Bytes, $numVaults: Int, $numObservations: Int, $offsetVaults: Int, $offsetObservations: Int, $orderDirection: OrderDirection, $orderBy: AccountObservation_orderBy) {
+      query: `query($address: Bytes, $numVaults: Int, $numObservations: Int, $offsetVaults: Int, $offsetObservations: Int, $orderDirection: OrderDirection, $orderBy: AccountObservation_orderBy) {
         user(id: $id) {
           accounts(first: $numVaults, skip: $offsetVaults) {
-            vault { id }
+            vault { address }
             observations(first: $numObservations, skip: $offsetObservations, orderDirection: $orderDirection, orderBy: $orderBy) {
               balance
               delegateBalance
@@ -328,7 +328,7 @@ export const getUserSubgraphObservations = async (
     const result = await fetch(subgraphUrl, { method: 'POST', headers, body })
     const jsonData = await result.json()
     const accounts: {
-      vault: { id: string }
+      vault: { address: string }
       observations: {
         balance: string
         delegateBalance: string
@@ -340,7 +340,7 @@ export const getUserSubgraphObservations = async (
     const observations: { [vaultAddress: `0x${string}`]: SubgraphObservation[] } = {}
 
     accounts.forEach((account) => {
-      observations[account.vault.id as Address] = account.observations.map((obs) => ({
+      observations[account.vault.address as Address] = account.observations.map((obs) => ({
         balance: BigInt(obs.balance),
         delegateBalance: BigInt(obs.delegateBalance),
         timestamp: parseInt(obs.timestamp),
@@ -421,105 +421,4 @@ export const getPaginatedUserSubgraphObservations = async (
   }
 
   return userObservations
-}
-
-/**
- * Returns all draw timestamps (first and last claims) from the given network's subgraph
- *
- * NOTE: By default queries the last 1k draw timestamps
- * @param chainId the network's chain ID
- * @param options optional parameters
- * @returns
- */
-export const getSubgraphDrawTimestamps = async (
-  chainId: number,
-  options?: {
-    numDraws?: number
-    offsetDraws?: number
-  }
-): Promise<SubgraphDrawTimestamps[]> => {
-  if (chainId in PRIZE_POOL_GRAPH_API_URLS) {
-    const subgraphUrl = PRIZE_POOL_GRAPH_API_URLS[chainId as keyof typeof PRIZE_POOL_GRAPH_API_URLS]
-
-    const headers = { 'Content-Type': 'application/json' }
-
-    const body = JSON.stringify({
-      query: `query($numDraws: Int, $offsetDraws: Int, $numPrizes: Int, $orderDirection: OrderDirection, $orderBy: Draw_orderBy, $firstPrizeOrderDirection: OrderDirection, $lastPrizeOrderDirection: OrderDirection, $prizeOrderBy: PrizeClaim_orderBy) {
-        draws(first: $numDraws, skip: $offsetDraws, orderDirection: $orderDirection, orderBy: $orderBy) {
-          id
-          firstClaim: prizeClaims(first: $numPrizes, orderDirection: $firstPrizeOrderDirection, orderBy: $prizeOrderBy) {
-            timestamp
-          }
-          lastClaim: prizeClaims(first: $numPrizes, orderDirection: $lastPrizeOrderDirection, orderBy: $prizeOrderBy) {
-            timestamp
-          }
-        }
-      }`,
-      variables: {
-        numDraws: options?.numDraws ?? 1_000,
-        offsetDraws: options?.offsetDraws ?? 0,
-        numPrizes: 1,
-        orderDirection: 'asc',
-        orderBy: 'id',
-        firstPrizeOrderDirection: 'asc',
-        lastPrizeOrderDirection: 'desc',
-        prizeOrderBy: 'timestamp'
-      }
-    })
-
-    const result = await fetch(subgraphUrl, { method: 'POST', headers, body })
-    const jsonData = await result.json()
-    const draws: {
-      id: string
-      firstClaim: [{ timestamp: string }]
-      lastClaim: [{ timestamp: string }]
-    }[] = jsonData?.data?.draws ?? []
-
-    const formattedDraws = draws.map((draw) => ({
-      id: parseInt(draw.id),
-      firstClaim: parseInt(draw.firstClaim[0].timestamp),
-      lastClaim: parseInt(draw.lastClaim[0].timestamp)
-    }))
-
-    return formattedDraws
-  } else {
-    console.warn(`Could not find subgraph URL for chain ID: ${chainId}`)
-    return []
-  }
-}
-
-/**
- * Returns all draw timestamps (first and last claims) from the given network's subgraph
- *
- * NOTE: Wraps {@link getSubgraphDrawTimestamps} to fetch all results regardless of number of entries
- * @param chainId the network's chain ID
- * @param options optional parameters
- */
-export const getPaginatedSubgraphDrawTimestamps = async (
-  chainId: number,
-  options?: { pageSize?: number }
-) => {
-  const drawTimestamps: SubgraphDrawTimestamps[] = []
-  const pageSize = options?.pageSize ?? 1_000
-  let page = 0
-
-  while (true) {
-    const newPage = await getSubgraphDrawTimestamps(chainId, {
-      numDraws: pageSize,
-      offsetDraws: page * pageSize
-    })
-
-    drawTimestamps.push(...newPage)
-
-    if (newPage.length < pageSize) {
-      break
-    } else {
-      page++
-    }
-  }
-
-  // TODO: this sorting is not necessary if the subgraph would sort them correctly on ID
-  drawTimestamps.sort((a, b) => a.id - b.id)
-
-  return drawTimestamps
 }

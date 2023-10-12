@@ -1,14 +1,10 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import {
-  useDrawPeriod,
-  useFirstDrawOpenedAt,
-  useLastAwardedDrawId
-} from '@generationsoftware/hyperstructure-react-hooks'
+import { useDrawIds, useLastAwardedDrawId } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
-import { useAtom, useAtomValue } from 'jotai'
+import { useAtom } from 'jotai'
 import { ReactNode, useEffect, useMemo } from 'react'
-import { currentTimestampAtom, selectedDrawIdAtom } from 'src/atoms'
+import { selectedDrawIdAtom } from 'src/atoms'
 
 interface DrawSelectorProps {
   prizePool: PrizePool
@@ -18,23 +14,9 @@ interface DrawSelectorProps {
 export const DrawSelector = (props: DrawSelectorProps) => {
   const { prizePool, className } = props
 
+  const { data: drawIds } = useDrawIds(prizePool)
+
   const [drawIdSelected, setDrawIdSelected] = useAtom(selectedDrawIdAtom)
-
-  const { data: firstDrawOpenedAt } = useFirstDrawOpenedAt(prizePool)
-
-  const { data: drawPeriod } = useDrawPeriod(prizePool)
-
-  const currentTimestamp = useAtomValue(currentTimestampAtom)
-
-  const allDrawIds = useMemo(() => {
-    const drawIds: number[] = []
-    if (!!firstDrawOpenedAt && !!drawPeriod) {
-      for (let i = firstDrawOpenedAt; i < currentTimestamp; i += drawPeriod) {
-        drawIds.push(drawIds.length + 1)
-      }
-    }
-    return drawIds
-  }, [firstDrawOpenedAt, drawPeriod, currentTimestamp])
 
   const { data: lastDrawId } = useLastAwardedDrawId(prizePool)
 
@@ -46,9 +28,9 @@ export const DrawSelector = (props: DrawSelectorProps) => {
 
   const drawIdArray = useMemo(() => {
     return !!drawIdSelected && !!lastDrawId
-      ? getDrawIdsArray(drawIdSelected, allDrawIds[0], lastDrawId)
+      ? getDrawIdsArray(drawIdSelected, drawIds[0], lastDrawId)
       : Array(7).fill(0)
-  }, [allDrawIds, lastDrawId, drawIdSelected])
+  }, [drawIds, lastDrawId, drawIdSelected])
 
   if (!drawIdSelected || !lastDrawId) {
     return <Spinner className='after:border-y-pt-purple-800' />
@@ -57,9 +39,9 @@ export const DrawSelector = (props: DrawSelectorProps) => {
   return (
     <div className={classNames('flex gap-2 items-center text-xl text-pt-purple-500', className)}>
       <DrawId
-        id={allDrawIds[0]}
+        id={drawIds[0]}
         content={<>&lt;&lt;</>}
-        className={classNames({ 'opacity-0': drawIdSelected === allDrawIds[0] })}
+        className={classNames({ 'opacity-0': drawIdSelected === drawIds[0] })}
       />
       {drawIdArray.map((id) => (
         <DrawId key={`drawIdSelector-${id}`} id={id} />

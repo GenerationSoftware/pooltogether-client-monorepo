@@ -102,23 +102,12 @@ export const PRIZE_POOLS: {
 ]
 
 /**
- * Prize Pool Graph API URLs
+ * Subgraph API URLs
  */
-export const PRIZE_POOL_GRAPH_API_URLS = Object.freeze({
-  [NETWORK.optimism]:
-    'https://api.studio.thegraph.com/query/41211/pt-v5-optimism-prize-pool/v0.0.1',
+export const SUBGRAPH_API_URLS = Object.freeze({
+  // [NETWORK.optimism]: '',
   [NETWORK['optimism-goerli']]:
-    'https://api.studio.thegraph.com/query/50959/pt-v5-op-goerli-prize-pool/v0.0.1'
-})
-
-/**
- * TWAB Graph API URLs
- */
-export const TWAB_GRAPH_API_URLS = Object.freeze({
-  [NETWORK.optimism]:
-    'https://api.studio.thegraph.com/query/41211/pt-v5-optimism-twab-controller/v0.0.1',
-  [NETWORK['optimism-goerli']]:
-    'https://api.studio.thegraph.com/query/50959/pt-v5-op-goerli-twab-control/v0.0.1'
+    'https://api.studio.thegraph.com/query/50959/pt-v5-op-goerli/version/latest'
 })
 
 /**

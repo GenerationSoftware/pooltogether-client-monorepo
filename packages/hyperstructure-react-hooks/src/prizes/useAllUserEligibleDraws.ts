@@ -1,8 +1,13 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { SubgraphDrawTimestamps, SubgraphObservation } from '@shared/types'
+import { DrawWithTimestamps, SubgraphObservation } from '@shared/types'
 import { useMemo } from 'react'
 import { Address } from 'viem'
-import { useAllPrizeDrawTimestamps, useAllUserBalanceUpdates } from '..'
+import {
+  useAllDrawIds,
+  useAllDrawPeriods,
+  useAllFirstDrawOpenedAt,
+  useAllUserBalanceUpdates
+} from '..'
 
 /**
  * Returns all draws a user was eligible for
@@ -11,32 +16,52 @@ import { useAllPrizeDrawTimestamps, useAllUserBalanceUpdates } from '..'
  * @returns
  */
 export const useAllUserEligibleDraws = (prizePools: PrizePool[], userAddress: string) => {
-  const { data: allDrawTimestamps, isFetched: isFetchedAllDrawTimestamps } =
-    useAllPrizeDrawTimestamps(prizePools)
+  const { data: allDrawIds, isFetched: isFetchedAllDrawIds } = useAllDrawIds(prizePools)
+
+  const { data: allFirstDrawOpenedAt, isFetched: isFetchedAllFirstDrawOpenedAt } =
+    useAllFirstDrawOpenedAt(prizePools)
+
+  const { data: allDrawPeriods, isFetched: isFetchedAllDrawPeriods } = useAllDrawPeriods(prizePools)
 
   const { data: allBalanceUpdates, isFetched: isFetchedAllBalanceUpdates } =
     useAllUserBalanceUpdates(prizePools, userAddress)
 
-  const isFetched = isFetchedAllDrawTimestamps && isFetchedAllBalanceUpdates
+  const isFetched =
+    isFetchedAllDrawIds &&
+    isFetchedAllFirstDrawOpenedAt &&
+    isFetchedAllDrawPeriods &&
+    isFetchedAllBalanceUpdates
 
   const data = useMemo(() => {
-    if (!!allDrawTimestamps && !!allBalanceUpdates) {
-      const eligibleDraws: { [chainId: number]: SubgraphDrawTimestamps[] } = {}
+    if (isFetched) {
+      const eligibleDraws: { [chainId: number]: DrawWithTimestamps[] } = {}
       const eligibleDrawsByVault: {
-        [chainId: number]: { [vaultAddress: Address]: SubgraphDrawTimestamps[] }
+        [chainId: number]: { [vaultAddress: Address]: DrawWithTimestamps[] }
       } = {}
       let totalNumEligibleDraws = 0
 
       // Looping through every chain with balance updates
       for (const key in allBalanceUpdates) {
         const chainId = parseInt(key)
-        const drawTimestamps = allDrawTimestamps[chainId]
+        const prizePoolId = Object.keys(allDrawIds).find(
+          (id) => parseInt(id.split('-')[1]) === chainId
+        )
 
-        const chainDraws: SubgraphDrawTimestamps[] = []
-        const chainDrawsByVault: { [vaultAddress: Address]: SubgraphDrawTimestamps[] } = {}
+        if (
+          !!prizePoolId &&
+          !!allFirstDrawOpenedAt[prizePoolId] &&
+          !!allDrawPeriods[prizePoolId] &&
+          !!allBalanceUpdates[chainId]
+        ) {
+          const drawIds = allDrawIds[prizePoolId]
+          const firstDrawOpenedAt = allFirstDrawOpenedAt[prizePoolId]
+          const drawPeriod = allDrawPeriods[prizePoolId]
+          const drawCloseTimestamps = drawIds.map((id) => firstDrawOpenedAt + drawPeriod * id)
 
-        // Looping through every vault with balance updates
-        if (!!allDrawTimestamps[chainId] && !!allBalanceUpdates[chainId]) {
+          const chainDraws: DrawWithTimestamps[] = []
+          const chainDrawsByVault: { [vaultAddress: Address]: DrawWithTimestamps[] } = {}
+
+          // Looping through every vault with balance updates
           for (const strVaultAddress in allBalanceUpdates[chainId]) {
             const vaultAddress = strVaultAddress as Address
 
@@ -47,7 +72,11 @@ export const useAllUserEligibleDraws = (prizePools: PrizePool[], userAddress: st
                 ? balanceUpdates.slice(0, newObservationIndex + 1)
                 : balanceUpdates
 
-            const vaultDraws = getVaultEligibleDraws(drawTimestamps, slicedBalanceUpdates)
+            const vaultDraws = getVaultEligibleDraws(
+              drawCloseTimestamps,
+              slicedBalanceUpdates,
+              drawPeriod
+            )
 
             vaultDraws.forEach((draw) => {
               const existingDraw = chainDraws.findIndex((d) => d.id === draw.id)
@@ -58,43 +87,48 @@ export const useAllUserEligibleDraws = (prizePools: PrizePool[], userAddress: st
 
             chainDrawsByVault[vaultAddress] = vaultDraws
           }
-        }
 
-        eligibleDraws[chainId] = chainDraws.sort((a, b) => a.firstClaim - b.firstClaim)
-        eligibleDrawsByVault[chainId] = chainDrawsByVault
-        totalNumEligibleDraws += chainDraws.length
+          eligibleDraws[chainId] = chainDraws.sort((a, b) => a.id - b.id)
+          eligibleDrawsByVault[chainId] = chainDrawsByVault
+          totalNumEligibleDraws += chainDraws.length
+        }
       }
 
       return { eligibleDraws, eligibleDrawsByVault, totalNumEligibleDraws }
     }
-  }, [allDrawTimestamps, allBalanceUpdates])
+  }, [allDrawIds, allBalanceUpdates, isFetched])
 
   return { data, isFetched }
 }
 
 // TODO: this should take into account twab decay - users are still eligible a while after full withdrawal
 const getVaultEligibleDraws = (
-  draws: SubgraphDrawTimestamps[],
-  balanceUpdates: SubgraphObservation[]
-): SubgraphDrawTimestamps[] => {
-  const drawsToCheck: SubgraphDrawTimestamps[] = [...draws]
-  const eligibleDraws: SubgraphDrawTimestamps[] = []
+  drawCloseTimestamps: number[],
+  balanceUpdates: SubgraphObservation[],
+  drawPeriod: number
+) => {
+  const drawTimestampsToCheck: number[] = [...drawCloseTimestamps]
+  const eligibleDraws: DrawWithTimestamps[] = []
 
   for (let balanceIndex = balanceUpdates.length - 1; balanceIndex >= 0; balanceIndex--) {
     const balanceUpdate = balanceUpdates[balanceIndex]
-    for (let drawIndex = drawsToCheck.length - 1; drawIndex >= 0; drawIndex--) {
-      const draw = drawsToCheck[drawIndex]
-      // TODO: balance update timestamps are now relative, need to add first draw starts at timestamp before comparison
-      if (draw.firstClaim >= balanceUpdate.timestamp) {
+    for (let drawIndex = drawTimestampsToCheck.length - 1; drawIndex >= 0; drawIndex--) {
+      const drawClosedAt = drawTimestampsToCheck[drawIndex]
+      if (drawClosedAt >= balanceUpdate.timestamp) {
         if (balanceUpdate.delegateBalance > 0) {
-          eligibleDraws.push(draw)
+          eligibleDraws.push({
+            id: drawIndex + 1,
+            openedAt: drawClosedAt - drawPeriod,
+            closedAt: drawClosedAt,
+            finalizedAt: drawClosedAt + drawPeriod
+          })
         }
-        drawsToCheck.pop()
+        drawTimestampsToCheck.pop()
       } else {
         break
       }
     }
   }
 
-  return eligibleDraws.sort((a, b) => a.firstClaim - b.firstClaim)
+  return eligibleDraws.sort((a, b) => a.id - b.id)
 }
