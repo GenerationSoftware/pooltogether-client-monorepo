@@ -32,7 +32,7 @@ export const DrawRngFee = (props: DrawRngFeeProps) => {
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
       <DrawCardItemTitle>
-        {status === 'closed' && !isSkipped ? 'Current ' : ''}RNG Fee
+        {status === 'closed' && !!currentFeePercentage && !isSkipped ? 'Current ' : ''}RNG Fee
       </DrawCardItemTitle>
       <div className='flex flex-col gap-1 text-sm text-pt-purple-700 whitespace-nowrap'>
         {isFetchedAllRngTxs && !!prizeToken ? (

@@ -37,7 +37,10 @@ export const DrawRelayFee = (props: DrawRelayFeeProps) => {
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
       <DrawCardItemTitle>
-        {status === 'closed' && !isSkipped ? 'Current ' : ''}Relay Fee
+        {status === 'closed' && !!currentFeePercentage && !!rngTxFeeFraction && !isSkipped
+          ? 'Current '
+          : ''}
+        Relay Fee
       </DrawCardItemTitle>
       <div className='flex flex-col gap-1 text-sm text-pt-purple-700 whitespace-nowrap'>
         {isFetchedAllRngTxs && !!prizeToken ? (
