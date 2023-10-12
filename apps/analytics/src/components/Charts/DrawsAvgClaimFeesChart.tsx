@@ -21,7 +21,7 @@ export const DrawsAvgClaimFeesChart = (props: DrawsAvgClaimFeesChartProps) => {
 
   const chartData = useMemo(() => {
     if (!!allDraws && !!drawAwardedEvents) {
-      const data: { name: string; percentage: number; rollingAvg: number }[] = []
+      const data: { name: string; percentage: number; cumAvg: number }[] = []
 
       let numValues = 0
       let sumValues = 0
@@ -40,9 +40,9 @@ export const DrawsAvgClaimFeesChart = (props: DrawsAvgClaimFeesChartProps) => {
 
           numValues++
           sumValues += percentage
-          const rollingAvg = sumValues / numValues
+          const cumAvg = sumValues / numValues
 
-          data.push({ name: `#${draw.id}`, percentage, rollingAvg })
+          data.push({ name: `#${draw.id}`, percentage, cumAvg })
         }
       })
 
@@ -56,7 +56,7 @@ export const DrawsAvgClaimFeesChart = (props: DrawsAvgClaimFeesChartProps) => {
         <span className='ml-2 md:ml-6'>Average Claim Fee Percentages</span>
         <LineChart
           data={chartData}
-          lines={[{ id: 'percentage' }, { id: 'rollingAvg', strokeDashArray: 4 }]}
+          lines={[{ id: 'percentage' }, { id: 'cumAvg', strokeDashArray: 5 }]}
           tooltip={{
             show: true,
             formatter: (value, name) => [
