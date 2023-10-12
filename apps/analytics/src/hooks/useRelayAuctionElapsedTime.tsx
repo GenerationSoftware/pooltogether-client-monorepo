@@ -1,6 +1,11 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
-import { chainlinkVrfABI, RNG_AUCTION, rngAuctionABI } from '@shared/utilities'
+import {
+  chainlinkVrfABI,
+  getSecondsSinceEpoch,
+  RNG_AUCTION,
+  rngAuctionABI
+} from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { usePublicClient } from 'wagmi'
 import { RELAY_ORIGINS } from '@constants/config'
@@ -28,7 +33,7 @@ export const useRelayAuctionElapsedTime = (
         args: [lastAuction.rngRequestId]
       })
 
-      return BigInt(Math.floor(Date.now() / 1_000)) - completedAt
+      return BigInt(getSecondsSinceEpoch()) - completedAt
     },
     {
       enabled: !!originChainId && !!publicClient,
