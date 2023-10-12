@@ -49,7 +49,9 @@ export const DrawRngFee = (props: DrawRngFeeProps) => {
                         })}
                       </span>{' '}
                       {prizeToken.symbol} (
-                      {formatBigIntForDisplay(rngTx.feeFraction, 16, { maximumFractionDigits: 0 })}
+                      {formatBigIntForDisplay(rngTx.feeFraction, 16, {
+                        maximumSignificantDigits: 2
+                      })}
                       %)
                     </>
                   ) : (

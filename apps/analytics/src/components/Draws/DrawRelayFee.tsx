@@ -59,7 +59,7 @@ export const DrawRelayFee = (props: DrawRelayFeeProps) => {
                     <>
                       (
                       {formatBigIntForDisplay(relayTx.feeFraction, 16, {
-                        maximumFractionDigits: 0
+                        maximumSignificantDigits: 2
                       })}
                       %)
                     </>
