@@ -55,7 +55,7 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
     if (!!draw && !!numTiers) {
       const data: { name: number; [tier: number]: number }[] = []
 
-      const rollingTierValues: {
+      const cumTierValues: {
         [tier: number]: { sumClaimFeeAmount: bigint; sumPrizeAmount: bigint }
       } = {}
 
@@ -65,7 +65,7 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
 
       const tiers = new Set(wins.map((win) => win.tier))
       tiers.forEach(
-        (tier) => (rollingTierValues[tier] = { sumClaimFeeAmount: 0n, sumPrizeAmount: 0n })
+        (tier) => (cumTierValues[tier] = { sumClaimFeeAmount: 0n, sumPrizeAmount: 0n })
       )
 
       for (let i = 0; i < chartTimestamps.length - 1; i++) {
@@ -74,13 +74,13 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
         )
 
         checkpointWins.forEach((win) => {
-          rollingTierValues[win.tier].sumClaimFeeAmount += win.fee
-          rollingTierValues[win.tier].sumPrizeAmount += win.payout
+          cumTierValues[win.tier].sumClaimFeeAmount += win.fee
+          cumTierValues[win.tier].sumPrizeAmount += win.payout
         })
 
         const checkpointData = Object.assign(
           {},
-          ...Object.entries(rollingTierValues).map(([tier, values]) => ({
+          ...Object.entries(cumTierValues).map(([tier, values]) => ({
             [parseInt(tier)]:
               divideBigInts(
                 values.sumClaimFeeAmount,
@@ -103,7 +103,7 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
 
     return (
       <div className={classNames('w-full flex flex-col gap-2', className)}>
-        <span className='ml-2 md:ml-6'>Average Claim Fee Percentages (Rolling Average)</span>
+        <span className='ml-2 md:ml-6'>Average Claim Fee Percentages (Cumulative Avgs)</span>
         <LineChart
           data={chartData}
           lines={lines}
