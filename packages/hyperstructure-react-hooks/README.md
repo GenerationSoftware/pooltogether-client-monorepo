@@ -56,12 +56,30 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 
 ### Blockchain Hooks
 
+- `useBlock`
+- `useBlockAtTimestamp`
+- `useBlocks`
+- `useBlocksAtTimestamps`
 - `useClientChainId`
 - `useClientChainIds`
 - `useClients`
 - `useGasAmountEstimate`
 - `useGasCostEstimates`
 - `useGasPrice`
+- `useTxReceipt`
+- `useTxReceipts`
+
+### Event Hooks
+
+- `useDrawAwardedEvents`
+- `useLiquidationEvents`
+- `useManualContributionEvents`
+- `usePrizeBackstopEvents`
+- `useRelayAuctionEvents`
+- `useRngAuctionEvents`
+- `useRngL1RelayMsgEvents`
+- `useRngL2RelayMsgEvents`
+- `useTransferEvents`
 
 ### Prize Pool Hooks
 

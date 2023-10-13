@@ -1,9 +1,12 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { usePrizeDrawWinners } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useDrawAwardedEvents,
+  usePrizeDrawWinners
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { divideBigInts, formatNumberForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
-import { useDrawAwardedEvents } from '@hooks/useDrawAwardedEvents'
+import { QUERY_START_BLOCK } from '@constants/config'
 import { LineChart } from './LineChart'
 
 interface DrawsAvgClaimFeesChartProps {
@@ -17,7 +20,9 @@ export const DrawsAvgClaimFeesChart = (props: DrawsAvgClaimFeesChartProps) => {
 
   const { data: allDraws } = usePrizeDrawWinners(prizePool)
 
-  const { data: drawAwardedEvents } = useDrawAwardedEvents(prizePool)
+  const { data: drawAwardedEvents } = useDrawAwardedEvents(prizePool, {
+    fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
+  })
 
   const chartData = useMemo(() => {
     if (!!allDraws && !!drawAwardedEvents) {

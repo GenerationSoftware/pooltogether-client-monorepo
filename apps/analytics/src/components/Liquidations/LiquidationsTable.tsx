@@ -1,5 +1,8 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { usePrizeTokenPrice } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useLiquidationEvents,
+  usePrizeTokenPrice
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import { MAX_UINT_256, SECONDS_PER_HOUR } from '@shared/utilities'
 import classNames from 'classnames'
@@ -8,7 +11,7 @@ import Image from 'next/image'
 import { useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
 import { Address, Block } from 'viem'
-import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
+import { QUERY_START_BLOCK } from '@constants/config'
 import { LiquidationsTableRow } from './LiquidationsTableRow'
 
 export const liquidationHeaders = {
@@ -31,8 +34,10 @@ export const LiquidationsTable = (props: LiquidationsTableProps) => {
 
   const currentTimestamp = useAtomValue(currentTimestampAtom)
 
-  const { data: liquidationEvents, isFetched: isFetchedLiquidationEvents } =
-    useLiquidationEvents(prizePool)
+  const { data: liquidationEvents, isFetched: isFetchedLiquidationEvents } = useLiquidationEvents(
+    prizePool?.chainId,
+    { fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined }
+  )
 
   const { data: prizeToken } = usePrizeTokenPrice(prizePool)
 

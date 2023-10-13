@@ -1,14 +1,16 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import {
+  useBlocks,
+  useDrawAwardedEvents,
+  useRelayAuctionEvents,
+  useRngAuctionEvents,
+  useRngL1RelayMsgEvents,
+  useRngL2RelayMsgEvents
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { RNG_AUCTION } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address } from 'viem'
-import { RELAY_ORIGINS } from '@constants/config'
-import { useBlocks } from './useBlocks'
-import { useDrawAwardedEvents } from './useDrawAwardedEvents'
-import { useRelayAuctionEvents } from './useRelayAuctionEvents'
-import { useRngAuctionEvents } from './useRngAuctionEvents'
-import { useRngL1RelayMsgEvents } from './useRngL1RelayMsgEvents'
-import { useRngL2RelayMsgEvents } from './useRngL2RelayMsgEvents'
+import { QUERY_START_BLOCK, RELAY_ORIGINS } from '@constants/config'
 
 export interface RngTx {
   drawId: number
@@ -39,13 +41,21 @@ export interface RelayMsgTx {
 }
 
 export const useRngTxs = (prizePool: PrizePool) => {
-  const { data: rngAuctionEvents, isFetched: isFetchedRngAuctionEvents } =
-    useRngAuctionEvents(prizePool)
-  const { data: relayAuctionEvents, isFetched: isFetchedRelayAuctionEvents } =
-    useRelayAuctionEvents(prizePool)
+  const originChainId = !!prizePool ? RELAY_ORIGINS[prizePool.chainId] : undefined
+  const fromBlock = !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
+  const originFromBlock = !!originChainId ? QUERY_START_BLOCK[originChainId] : undefined
 
-  const { data: drawAwardedEvents, isFetched: isFetchedDrawAwardedEvents } =
-    useDrawAwardedEvents(prizePool)
+  const { data: rngAuctionEvents, isFetched: isFetchedRngAuctionEvents } = useRngAuctionEvents(
+    originChainId as number,
+    { fromBlock: originFromBlock }
+  )
+  const { data: relayAuctionEvents, isFetched: isFetchedRelayAuctionEvents } =
+    useRelayAuctionEvents(prizePool?.chainId, { fromBlock })
+
+  const { data: drawAwardedEvents, isFetched: isFetchedDrawAwardedEvents } = useDrawAwardedEvents(
+    prizePool,
+    { fromBlock }
+  )
   const drawAwardedBlockNumbers = new Set<bigint>(
     drawAwardedEvents?.map((e) => e.blockNumber) ?? []
   )
@@ -56,11 +66,9 @@ export const useRngTxs = (prizePool: PrizePool) => {
   )
 
   const { data: rngL1RelayMsgEvents, isFetched: isFetchedRngL1RelayMsgEvents } =
-    useRngL1RelayMsgEvents(prizePool)
+    useRngL1RelayMsgEvents(originChainId as number, { fromBlock: originFromBlock })
   const { data: rngL2RelayMsgEvents, isFetched: isFetchedRngL2RelayMsgEvents } =
-    useRngL2RelayMsgEvents(prizePool)
-
-  const originChainId = !!prizePool ? RELAY_ORIGINS[prizePool.chainId] : undefined
+    useRngL2RelayMsgEvents(prizePool?.chainId, { fromBlock })
 
   const data = useMemo(() => {
     if (

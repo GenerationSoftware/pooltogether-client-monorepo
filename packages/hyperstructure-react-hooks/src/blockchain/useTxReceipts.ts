@@ -3,14 +3,21 @@ import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { GetTransactionReceiptReturnType } from 'viem'
 import { usePublicClient } from 'wagmi'
+import { QUERY_KEYS } from '../constants'
 
+/**
+ * Returns many transactions' receipts
+ * @param chainId the chain ID the transactions were made in
+ * @param hashes an array of transaction hashes
+ * @returns
+ */
 export const useTxReceipts = (
   chainId: number,
   hashes: `0x${string}`[]
 ): { data: GetTransactionReceiptReturnType[]; isFetched: boolean } => {
   const publicClient = usePublicClient({ chainId })
 
-  const getQueryKey = (hash: `0x${string}`) => ['txReceipt', chainId, hash]
+  const getQueryKey = (hash: `0x${string}`) => [QUERY_KEYS.txReceipt, chainId, hash]
 
   const results = useQueries({
     queries: hashes.map((hash) => {

@@ -1,5 +1,6 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
+  useDrawAwardedEvents,
   usePrizeDrawWinners,
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
@@ -8,7 +9,7 @@ import { Spinner } from '@shared/ui'
 import { divideBigInts, formatBigIntForDisplay, MAX_UINT_256 } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
-import { useDrawAwardedEvents } from '@hooks/useDrawAwardedEvents'
+import { QUERY_START_BLOCK } from '@constants/config'
 
 interface ClaimFeesProps {
   prizePool: PrizePool
@@ -24,8 +25,10 @@ export const ClaimFees = (props: ClaimFeesProps) => {
   const { data: allDraws, isFetched: isFetchedAllDraws } = usePrizeDrawWinners(prizePool)
   const draw = allDraws?.find((d) => d.id === drawId)
 
-  const { data: drawAwardedEvents, isFetched: isFetchedDrawAwardedEvents } =
-    useDrawAwardedEvents(prizePool)
+  const { data: drawAwardedEvents, isFetched: isFetchedDrawAwardedEvents } = useDrawAwardedEvents(
+    prizePool,
+    { fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined }
+  )
   const drawAwardedEvent = drawAwardedEvents?.find((e) => e.args.drawId === drawId)
   const numTiers = drawAwardedEvent?.args.numTiers
 

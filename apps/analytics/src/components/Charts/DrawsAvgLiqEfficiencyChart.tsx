@@ -1,6 +1,8 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
+  useBlocksAtTimestamps,
   useHistoricalTokenPrices,
+  useLiquidationEvents,
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { formatNumberForDisplay, NETWORK, POOL_TOKEN_ADDRESSES } from '@shared/utilities'
@@ -9,10 +11,9 @@ import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
 import { Address, formatUnits } from 'viem'
+import { QUERY_START_BLOCK } from '@constants/config'
 import { useAllDrawsStatus } from '@hooks/useAllDrawsStatus'
-import { useBlocksAtTimestamps } from '@hooks/useBlocksAtTimestamps'
 import { useHistoricalLiquidationPairTokenOutPrices } from '@hooks/useHistoricalLiquidationPairTokenOutPrices'
-import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
 import { useRngTxs } from '@hooks/useRngTxs'
 import { LineChart } from './LineChart'
 
@@ -24,7 +25,9 @@ interface DrawsAvgLiqEfficiencyChartProps {
 export const DrawsAvgLiqEfficiencyChart = (props: DrawsAvgLiqEfficiencyChartProps) => {
   const { prizePool, className } = props
 
-  const { data: liquidationEvents } = useLiquidationEvents(prizePool)
+  const { data: liquidationEvents } = useLiquidationEvents(prizePool?.chainId, {
+    fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
+  })
 
   const { data: rngTxs } = useRngTxs(prizePool)
   const drawIds = rngTxs?.map((txs) => txs.rng.drawId) ?? []

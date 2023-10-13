@@ -1,6 +1,8 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
+  useBlockAtTimestamp,
   useHistoricalTokenPrices,
+  useLiquidationEvents,
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { ExternalLink, Spinner } from '@shared/ui'
@@ -10,10 +12,9 @@ import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
 import { Address, formatUnits } from 'viem'
-import { useBlockAtTimestamp } from '@hooks/useBlockAtTimestamp'
+import { QUERY_START_BLOCK } from '@constants/config'
 import { useDrawStatus } from '@hooks/useDrawStatus'
 import { useHistoricalLiquidationPairTokenOutPrices } from '@hooks/useHistoricalLiquidationPairTokenOutPrices'
-import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
 import { DrawCardItemTitle } from './DrawCardItemTitle'
 
 interface DrawLiqEfficiencyProps {
@@ -25,8 +26,10 @@ interface DrawLiqEfficiencyProps {
 export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
   const { prizePool, drawId, className } = props
 
-  const { data: liquidationEvents, isFetched: isFetchedLiquidationEvents } =
-    useLiquidationEvents(prizePool)
+  const { data: liquidationEvents, isFetched: isFetchedLiquidationEvents } = useLiquidationEvents(
+    prizePool?.chainId,
+    { fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined }
+  )
 
   const { openedAt, closedAt, isFetched: isFetchedDrawStatus } = useDrawStatus(prizePool, drawId)
 

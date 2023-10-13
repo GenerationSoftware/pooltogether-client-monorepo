@@ -1,5 +1,8 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { usePrizeDrawWinners } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useDrawAwardedEvents,
+  usePrizeDrawWinners
+} from '@generationsoftware/hyperstructure-react-hooks'
 import {
   divideBigInts,
   formatNumberForDisplay,
@@ -10,7 +13,7 @@ import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
-import { useDrawAwardedEvents } from '@hooks/useDrawAwardedEvents'
+import { QUERY_START_BLOCK } from '@constants/config'
 import { useDrawStatus } from '@hooks/useDrawStatus'
 import { LineChart, LineChartProps } from './LineChart'
 
@@ -29,7 +32,9 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
 
   const { closedAt, awardedAt, finalizedAt } = useDrawStatus(prizePool, drawId)
 
-  const { data: drawAwardedEvents } = useDrawAwardedEvents(prizePool)
+  const { data: drawAwardedEvents } = useDrawAwardedEvents(prizePool, {
+    fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
+  })
   const numTiers = drawAwardedEvents?.find((e) => e.args.drawId === drawId)?.args.numTiers
 
   const currentTimestamp = useAtomValue(currentTimestampAtom)
@@ -64,9 +69,7 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
       )
 
       const tiers = new Set(wins.map((win) => win.tier))
-      tiers.forEach(
-        (tier) => (cumTierValues[tier] = { sumClaimFeeAmount: 0n, sumPrizeAmount: 0n })
-      )
+      tiers.forEach((tier) => (cumTierValues[tier] = { sumClaimFeeAmount: 0n, sumPrizeAmount: 0n }))
 
       for (let i = 0; i < chartTimestamps.length - 1; i++) {
         const checkpointWins = wins.filter(

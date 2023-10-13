@@ -1,5 +1,8 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { useFirstDrawOpenedAt } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useFirstDrawOpenedAt,
+  useTransferEvents
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { Token } from '@shared/types'
 import { DEAD_ADDRESS, getSimpleDate, MAX_UINT_256 } from '@shared/utilities'
 import classNames from 'classnames'
@@ -10,7 +13,6 @@ import { Address, formatUnits, Log } from 'viem'
 import { BurnCard } from '@components/Burn/BurnCard'
 import { BURN_ADDRESSES, QUERY_START_BLOCK, VAULT_LPS } from '@constants/config'
 import { RelayMsgTx, RelayTx, RngTx, useRngTxs } from '@hooks/useRngTxs'
-import { useTransferEvents } from '@hooks/useTransferEvents'
 import { AreaChart } from './AreaChart'
 
 interface DataPoint {

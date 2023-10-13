@@ -11,12 +11,31 @@ export * from './app/useVaultList'
 /**
  * Blockchain Hooks
  */
+export * from './blockchain/useBlock'
+export * from './blockchain/useBlockAtTimestamp'
+export * from './blockchain/useBlocks'
+export * from './blockchain/useBlocksAtTimestamps'
 export * from './blockchain/useClientChainId'
 export * from './blockchain/useClientChainIds'
 export * from './blockchain/useClients'
 export * from './blockchain/useGasAmountEstimate'
 export * from './blockchain/useGasCostEstimates'
 export * from './blockchain/useGasPrice'
+export * from './blockchain/useTxReceipt'
+export * from './blockchain/useTxReceipts'
+
+/**
+ * Event Hooks
+ */
+export * from './events/useDrawAwardedEvents'
+export * from './events/useLiquidationEvents'
+export * from './events/useManualContributionEvents'
+export * from './events/usePrizeBackstopEvents'
+export * from './events/useRelayAuctionEvents'
+export * from './events/useRngAuctionEvents'
+export * from './events/useRngL1RelayMsgEvents'
+export * from './events/useRngL2RelayMsgEvents'
+export * from './events/useTransferEvents'
 
 /**
  * Prize Pool Hooks

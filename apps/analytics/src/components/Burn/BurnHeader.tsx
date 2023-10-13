@@ -1,10 +1,10 @@
+import { useTransferEvents } from '@generationsoftware/hyperstructure-react-hooks'
 import { Token } from '@shared/types'
 import { Spinner } from '@shared/ui'
 import { DEAD_ADDRESS, formatBigIntForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import { BURN_ADDRESSES, QUERY_START_BLOCK, VAULT_LPS } from '@constants/config'
-import { useTransferEvents } from '@hooks/useTransferEvents'
 
 interface BurnHeaderProps {
   prizeToken: Token
@@ -28,9 +28,9 @@ export const BurnHeader = (props: BurnHeaderProps) => {
 
   return (
     <div className={classNames('flex flex-col items-center', className)}>
-      <span>Total {prizeToken?.symbol} Burned:</span>
+      <span>Total {prizeToken.symbol} Burned:</span>
       <span className='flex gap-1 items-center text-pt-purple-500'>
-        {totalBurned !== undefined && !!prizeToken ? (
+        {totalBurned !== undefined ? (
           <>
             <span className='text-2xl'>🔥</span>
             <span className='text-4xl font-semibold'>
@@ -38,7 +38,7 @@ export const BurnHeader = (props: BurnHeaderProps) => {
                 hideZeroes: true
               })}
             </span>
-            <span>{prizeToken?.symbol}</span>
+            <span>{prizeToken.symbol}</span>
             <span className='text-2xl'>🔥</span>
           </>
         ) : (

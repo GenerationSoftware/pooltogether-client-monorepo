@@ -4,11 +4,22 @@ import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { Chain, GetBlockReturnType } from 'viem'
 import { usePublicClient } from 'wagmi'
+import { QUERY_KEYS } from '../constants'
 
+/**
+ * Returns many blocks close to each provided timestamp
+ * @param chainId chain ID to query for blocks in
+ * @param timestamps an array of timestamps to query blocks for
+ * @returns
+ */
 export const useBlocksAtTimestamps = (chainId: number, timestamps: number[]) => {
   const publicClient = usePublicClient({ chainId })
 
-  const getQueryKey = (timestamp: number) => ['blockAtTimestamp', chainId, Math.floor(timestamp)]
+  const getQueryKey = (timestamp: number) => [
+    QUERY_KEYS.blockAtTimestamp,
+    chainId,
+    Math.floor(timestamp)
+  ]
 
   const results = useQueries({
     queries: timestamps.map((timestamp) => {
