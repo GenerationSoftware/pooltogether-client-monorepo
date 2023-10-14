@@ -71,7 +71,8 @@ export const LiquidationsTable = (props: LiquidationsTableProps) => {
   if (validLiquidationEvents.length === 0) {
     return (
       <span className='flex gap-2 items-center'>
-        No claims so far... <Image src='/thinkies.png' width={24} height={24} alt='thinkies' />
+        No recent liquidations...{' '}
+        <Image src='/thinkies.png' width={24} height={24} alt='thinkies' />
       </span>
     )
   }
