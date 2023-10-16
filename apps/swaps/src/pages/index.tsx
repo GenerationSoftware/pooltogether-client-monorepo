@@ -12,7 +12,7 @@ export default function HomePage() {
 
   return (
     <Layout>
-      <Header />
+      <Header className='max-w-2xl' />
       <PrizePoolBadge chainId={chainId} className='mt-8' />
       <GrandPrize chainId={chainId} className='mt-6' />
       <VaultCards chainId={chainId} className='mt-8' />

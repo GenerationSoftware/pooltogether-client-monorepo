@@ -123,6 +123,7 @@ const VaultCardLink = (props: VaultCardLinkProps) => {
       className={classNames(
         'gap-2 justify-center px-3 py-2 font-medium text-sm rounded-lg',
         'bg-pt-purple-300 text-pt-purple-800',
+        'hover:bg-pt-purple-400',
         className
       )}
       iconClassName='text-pt-purple-500'
