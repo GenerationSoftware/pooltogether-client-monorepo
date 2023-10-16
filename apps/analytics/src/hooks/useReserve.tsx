@@ -16,13 +16,13 @@ export const useReserve = (prizePool: PrizePool, options?: { refetchInterval?: n
         publicClient,
         prizePool.address,
         prizePoolABI,
-        [{ functionName: 'reserve' }, { functionName: 'reserveForOpenDraw' }]
+        [{ functionName: 'reserve' }, { functionName: 'pendingReserveContributions' }]
       )
 
       const current = typeof multicallResults[0] === 'bigint' ? multicallResults[0] : 0n
-      const forOpenDraw = typeof multicallResults[1] === 'bigint' ? multicallResults[1] : 0n
+      const pending = typeof multicallResults[1] === 'bigint' ? multicallResults[1] : 0n
 
-      return { current, forOpenDraw }
+      return { current, pending }
     },
     {
       enabled: !!prizePool && !!publicClient,
