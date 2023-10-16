@@ -1,5 +1,4 @@
 import { Intl } from '@shared/types'
-import '@shared/ui'
 import { Button, ButtonProps } from '@shared/ui'
 
 interface LensterShareButtonProps extends Omit<ButtonProps, 'onClick' | 'href' | 'target'> {
