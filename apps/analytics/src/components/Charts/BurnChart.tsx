@@ -80,7 +80,6 @@ export const BurnChart = (props: BurnChartProps) => {
         const drawId = txs.rng.drawId
         const closedAt = txs.relay.l2.timestamp
 
-        // TODO: avoid an O^2 time complexity
         burnEvents.forEach((burnEvent) => {
           if (isValidEvent(burnEvent)) {
             const toAddress = burnEvent.args.to.toLowerCase() as Lowercase<Address>

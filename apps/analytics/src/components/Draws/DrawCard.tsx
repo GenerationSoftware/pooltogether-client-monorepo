@@ -23,7 +23,7 @@ export const DrawCard = (props: DrawCardProps) => {
   const shouldDisplayTimer = !!status && status !== 'finalized' && !isSkipped
 
   const gridColsClassName =
-    'md:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_minmax(0,0.8fr)_minmax(0,1.8fr)_minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1.3fr)]'
+    'md:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_minmax(0,0.8fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1.3fr)]'
 
   return (
     <div
