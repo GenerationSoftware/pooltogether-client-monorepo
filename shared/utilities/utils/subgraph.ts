@@ -185,18 +185,16 @@ export const getUserSubgraphPrizes = async (
 
     const body = JSON.stringify({
       query: `query($id: Bytes, $numPrizes: Int, $offsetPrizes: Int, $orderDirection: OrderDirection, $orderBy: PrizeClaim_orderBy) {
-        account(id: $id) {
-          prizesReceived(first: $numPrizes, skip: $offsetPrizes, orderDirection: $orderDirection, orderBy: $orderBy) {
-            id
-            draw { drawId }
-            tier
-            prizeIndex
-            payout
-            fee
-            feeRecipient
-            timestamp
-            txHash
-          }
+        prizeClaims(where: { recipient: $id }, first: $numPrizes, skip: $offsetPrizes, orderDirection: $orderDirection, orderBy: $orderBy) {
+          id
+          draw { drawId }
+          tier
+          prizeIndex
+          payout
+          fee
+          feeRecipient
+          timestamp
+          txHash
         }
       }`,
       variables: {
@@ -220,7 +218,7 @@ export const getUserSubgraphPrizes = async (
       feeRecipient: string
       timestamp: string
       txHash: string
-    }[] = jsonData?.data?.account?.prizesReceived ?? []
+    }[] = jsonData?.data?.prizeClaims ?? []
 
     const formattedWins = wins.map((win) => ({
       id: win.id,

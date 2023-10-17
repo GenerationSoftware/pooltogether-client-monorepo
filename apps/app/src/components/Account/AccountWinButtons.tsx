@@ -15,12 +15,10 @@ export const AccountWinButtons = (props: AccountWinButtonsProps) => {
 
   return (
     <div className='flex justify-end gap-2'>
-      {/* TODO: current subgraph doesn't have tx hashes, cannot enable this button yet */}
       <Button
-        href={getBlockExplorerUrl(win.chainId, '', 'tx')}
+        href={getBlockExplorerUrl(win.chainId, win.txHash, 'tx')}
         target='_blank'
         color='transparent'
-        disabled
       >
         <span className='inline-flex items-center gap-1 text-pt-purple-100'>
           {t('viewOn', { name: getBlockExplorerName(win.chainId) })}
