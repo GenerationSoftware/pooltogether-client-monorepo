@@ -1,5 +1,6 @@
-import { Vault } from '@generationsoftware/hyperstructure-client-js'
+import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
+  usePrizeTokenData,
   useSelectedVaultLists,
   useUserVaultDelegationBalance,
   useUserVaultShareBalance,
@@ -7,7 +8,12 @@ import {
   useVaultShareData,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { PrizePowerTooltip, VaultFeeTooltip, WinChanceTooltip } from '@shared/react-components'
+import {
+  PrizePowerTooltip,
+  VaultContributionsTooltip,
+  VaultFeeTooltip,
+  WinChanceTooltip
+} from '@shared/react-components'
 import { ExternalLink, Spinner } from '@shared/ui'
 import { getBlockExplorerUrl, getVaultId, shorten } from '@shared/utilities'
 import classNames from 'classnames'
@@ -18,6 +24,7 @@ import { useAccount } from 'wagmi'
 import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
 import { AccountVaultDelegationAmount } from '@components/Account/AccountVaultDelegationAmount'
 import { AccountVaultOdds } from '@components/Account/AccountVaultOdds'
+import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { VaultContributions } from './VaultContributions'
 import { VaultFeePercentage } from './VaultFeePercentage'
 import { VaultPrizePower } from './VaultPrizePower'
@@ -46,6 +53,11 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
   const { data: vaultFee } = useVaultFeeInfo(vault)
 
   const { localVaultLists, importedVaultLists } = useSelectedVaultLists()
+
+  const prizePools = useSupportedPrizePools()
+  const prizePool =
+    !!vault && Object.values(prizePools).find((prizePool) => prizePool.chainId === vault.chainId)
+  const { data: prizeToken } = usePrizeTokenData(prizePool as PrizePool)
 
   const foundInVaultLists = useMemo(() => {
     return Object.values({ ...localVaultLists, ...importedVaultLists }).some((list) => {
@@ -105,11 +117,24 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
         data={<VaultPrizePower vault={vault} />}
       />
       <VaultInfoRow name={t_vault('headers.tvl')} data={<VaultTotalDeposits vault={vault} />} />
-      {/* TODO: need tooltip explaining what this contribution means */}
-      <VaultInfoRow
-        name={t_vault('headers.contributions', { number: 7 })}
-        data={<VaultContributions vault={vault} />}
-      />
+      {!!prizeToken && (
+        <VaultInfoRow
+          name={
+            <span className='flex gap-2 items-center'>
+              {t_vault('headers.contributions', { number: 7 })}
+              <VaultContributionsTooltip
+                tokenSymbol={prizeToken.symbol}
+                numberOfDays={7}
+                iconSize='sm'
+                intl={t_tooltips}
+                className='text-sm md:text-base'
+                iconClassName='text-pt-purple-200'
+              />
+            </span>
+          }
+          data={<VaultContributions vault={vault} />}
+        />
+      )}
       <VaultInfoRow
         name={t_vault('headers.depositToken')}
         data={
