@@ -264,10 +264,8 @@ const VaultInfoURI = (props: VaultInfoURIProps) => {
   const cleanURI = useMemo(() => {
     if (URI.startsWith('http')) {
       return /^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/?\n]+)/i.exec(URI)?.[1] ?? ''
-    } else if (URI.startsWith('ipfs')) {
-      return URI // TODO: prettify this output
-    } else if (URI.endsWith('.eth')) {
-      return URI // TODO: prettify this output
+    } else if (URI.startsWith('ipfs://') || URI.startsWith('ipns://')) {
+      return `${URI.slice(0, 15)}...`
     } else {
       return URI
     }
