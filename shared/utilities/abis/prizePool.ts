@@ -24,16 +24,6 @@ export const prizePoolABI = [
     type: 'function'
   },
   {
-    inputs: [{ internalType: 'uint8', name: '_tier', type: 'uint8' }],
-    name: 'calculateTierTwabTimestamps',
-    outputs: [
-      { internalType: 'uint48', name: 'startTimestamp', type: 'uint48' },
-      { internalType: 'uint48', name: 'endTimestamp', type: 'uint48' }
-    ],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
     inputs: [],
     name: 'claimCount',
     outputs: [{ internalType: 'uint32', name: '', type: 'uint32' }],
@@ -102,7 +92,7 @@ export const prizePoolABI = [
   {
     inputs: [],
     name: 'drawPeriodSeconds',
-    outputs: [{ internalType: 'uint32', name: '', type: 'uint32' }],
+    outputs: [{ internalType: 'uint48', name: '', type: 'uint48' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -585,11 +575,6 @@ export const prizePoolABI = [
       { internalType: 'uint256', name: 'available', type: 'uint256' }
     ],
     name: 'InsufficientRewardsError',
-    type: 'error'
-  },
-  {
-    inputs: [{ internalType: 'uint24', name: 'endDrawId', type: 'uint24' }],
-    name: 'InvalidDisbursedEndDrawId',
     type: 'error'
   },
   {

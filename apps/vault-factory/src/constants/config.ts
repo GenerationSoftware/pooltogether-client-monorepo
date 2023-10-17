@@ -86,7 +86,7 @@ export const CONTRACTS: Record<
   //   claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism]
   // },
   [NETWORK['optimism-goerli']]: {
-    prizePool: '0xb91194FB89561c2Bd7fC26bE68e5EAe5b00f5320',
+    prizePool: '0x8FaF98698e4fF29149a8A9D06Db20E3509F3754b',
     claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK['optimism-goerli']]
   }
 } as const

@@ -26,50 +26,7 @@ export const getRngL1RelayMsgEvents = async (
   if (!rngRelayContractAddress)
     throw new Error(`No relay auction contract set for chain ID ${chainId}`)
 
-  // Querying events on Goerli after switching contracts in October 2023:
-  const oldEvents =
-    chainId === NETWORK.goerli
-      ? await publicClient.getLogs({
-          address: '0x926bb4699808f611B2c7cd57193A9b11f757B411',
-          event: {
-            inputs: [
-              {
-                indexed: false,
-                internalType: 'contract IMessageDispatcher',
-                name: 'messageDispatcher',
-                type: 'address'
-              },
-              {
-                indexed: true,
-                internalType: 'uint256',
-                name: 'remoteOwnerChainId',
-                type: 'uint256'
-              },
-              {
-                indexed: false,
-                internalType: 'contract RemoteOwner',
-                name: 'remoteOwner',
-                type: 'address'
-              },
-              {
-                indexed: false,
-                internalType: 'contract IRngAuctionRelayListener',
-                name: 'remoteRngAuctionRelayListener',
-                type: 'address'
-              },
-              { indexed: true, internalType: 'address', name: 'rewardRecipient', type: 'address' },
-              { indexed: true, internalType: 'bytes32', name: 'messageId', type: 'bytes32' }
-            ],
-            name: 'RelayedToDispatcher',
-            type: 'event'
-          },
-          fromBlock: 9829000n,
-          toBlock: 9846000n,
-          strict: true
-        })
-      : []
-
-  const events = await publicClient.getLogs({
+  return await publicClient.getLogs({
     address: rngRelayContractAddress,
     event: {
       inputs: [
@@ -102,8 +59,6 @@ export const getRngL1RelayMsgEvents = async (
     toBlock: options?.toBlock ?? 'latest',
     strict: true
   })
-
-  return oldEvents.concat(events)
 }
 
 /**
@@ -123,26 +78,7 @@ export const getRngL2RelayMsgEvents = async (
   if (!msgExecutorContractAddress)
     throw new Error(`No message executor contract set for chain ID ${chainId}`)
 
-  // Querying events on Optimism Goerli after switching contracts in October 2023:
-  const oldEvents =
-    chainId === NETWORK['optimism-goerli']
-      ? await publicClient.getLogs({
-          address: '0xc5165406dB791549f0D2423D1483c1EA10A3A206',
-          event: {
-            inputs: [
-              { indexed: true, internalType: 'uint256', name: 'fromChainId', type: 'uint256' },
-              { indexed: true, internalType: 'bytes32', name: 'messageId', type: 'bytes32' }
-            ],
-            name: 'MessageIdExecuted',
-            type: 'event'
-          },
-          fromBlock: 15600000n,
-          toBlock: 15779000n,
-          strict: true
-        })
-      : []
-
-  const events = await publicClient.getLogs({
+  return await publicClient.getLogs({
     address: msgExecutorContractAddress,
     event: {
       inputs: [
@@ -156,8 +92,6 @@ export const getRngL2RelayMsgEvents = async (
     toBlock: options?.toBlock ?? 'latest',
     strict: true
   })
-
-  return oldEvents.concat(events)
 }
 
 /**
@@ -316,28 +250,7 @@ export const getRelayAuctionEvents = async (
   if (!rngRelayContractAddress)
     throw new Error(`No relay auction contract set for chain ID ${chainId}`)
 
-  // Querying events on Optimism Goerli after switching contracts in October 2023:
-  const oldEvents =
-    chainId === NETWORK['optimism-goerli']
-      ? await publicClient.getLogs({
-          address: '0xABDf9A2fc7a26a62c37b3F446454F2B0EF4ADD68',
-          event: {
-            inputs: [
-              { indexed: true, internalType: 'uint32', name: 'sequenceId', type: 'uint32' },
-              { indexed: true, internalType: 'address', name: 'recipient', type: 'address' },
-              { indexed: true, internalType: 'uint32', name: 'index', type: 'uint32' },
-              { indexed: false, internalType: 'uint256', name: 'reward', type: 'uint256' }
-            ],
-            name: 'AuctionRewardAllocated',
-            type: 'event'
-          },
-          fromBlock: 15600000n,
-          toBlock: 15779000n,
-          strict: true
-        })
-      : []
-
-  const events = await publicClient.getLogs({
+  return await publicClient.getLogs({
     address: rngRelayContractAddress,
     event: {
       inputs: [
@@ -353,8 +266,6 @@ export const getRelayAuctionEvents = async (
     toBlock: options?.toBlock ?? 'latest',
     strict: true
   })
-
-  return oldEvents.concat(events)
 }
 
 /**

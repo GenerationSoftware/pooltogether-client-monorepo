@@ -125,7 +125,6 @@ const VaultClaimerItem = (props: ItemProps) => {
   )
 }
 
-// TODO: add checkmark / warning icons
 const VaultStatusItem = (props: ItemProps) => {
   const { vault } = props
 

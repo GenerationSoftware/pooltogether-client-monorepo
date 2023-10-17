@@ -37,7 +37,7 @@ export const QUERY_START_BLOCK: { [chainId: number]: bigint } = {
   [NETWORK.mainnet]: 18052000n,
   [NETWORK.optimism]: 108927000n,
   [NETWORK.goerli]: 9820000n,
-  [NETWORK['optimism-goerli']]: 15600000n
+  [NETWORK['optimism-goerli']]: 16076000n
 }
 
 /**

@@ -82,7 +82,7 @@ export const vaultABI = [
     type: 'function'
   },
   {
-    inputs: [{ internalType: 'uint256', name: 'shares', type: 'uint256' }],
+    inputs: [{ internalType: 'uint256', name: '_shares', type: 'uint256' }],
     name: 'convertToAssets',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
@@ -225,7 +225,7 @@ export const vaultABI = [
     type: 'function'
   },
   {
-    inputs: [{ internalType: 'address', name: 'owner', type: 'address' }],
+    inputs: [{ internalType: 'address', name: '_owner', type: 'address' }],
     name: 'maxRedeem',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
