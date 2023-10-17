@@ -31,13 +31,13 @@ export const getSubgraphDraws = async (
           drawId
           prizeClaims(first: $numPrizes, skip: $offsetPrizes, orderDirection: $prizeOrderDirection, orderBy: $prizeOrderBy) {
             id
-            winner { user { address } }
+            winner
             recipient
             tier
             prizeIndex
             payout
             fee
-            feeRecipient { user { address } }
+            feeRecipient
             timestamp
             txHash
           }
@@ -61,13 +61,13 @@ export const getSubgraphDraws = async (
       drawId: number
       prizeClaims: {
         id: string
-        winner: { user: { address: string } }
+        winner: string
         recipient: string
         tier: number
         prizeIndex: string
         payout: string
         fee: string
-        feeRecipient: { user: { address: string } }
+        feeRecipient: string
         timestamp: string
         txHash: string
       }[]
@@ -77,13 +77,13 @@ export const getSubgraphDraws = async (
       id: draw.drawId,
       prizeClaims: draw.prizeClaims.map((claim) => ({
         id: claim.id,
-        winner: claim.winner.user.address as Address,
+        winner: claim.winner as Address,
         recipient: claim.recipient as Address,
         tier: claim.tier,
         prizeIndex: parseInt(claim.prizeIndex),
         payout: BigInt(claim.payout),
         fee: BigInt(claim.fee),
-        feeRecipient: claim.feeRecipient.user.address as Address,
+        feeRecipient: claim.feeRecipient as Address,
         timestamp: parseInt(claim.timestamp),
         txHash: claim.txHash as `0x${string}`
       }))
@@ -193,7 +193,7 @@ export const getUserSubgraphPrizes = async (
             prizeIndex
             payout
             fee
-            feeRecipient { user { address } }
+            feeRecipient
             timestamp
             txHash
           }
@@ -217,7 +217,7 @@ export const getUserSubgraphPrizes = async (
       prizeIndex: string
       payout: string
       fee: string
-      feeRecipient: { user: { address: string } }
+      feeRecipient: string
       timestamp: string
       txHash: string
     }[] = jsonData?.data?.account?.prizesReceived ?? []
@@ -229,7 +229,7 @@ export const getUserSubgraphPrizes = async (
       prizeIndex: parseInt(win.prizeIndex),
       payout: BigInt(win.payout),
       fee: BigInt(win.fee),
-      feeRecipient: win.feeRecipient.user.address as Address,
+      feeRecipient: win.feeRecipient as Address,
       timestamp: parseInt(win.timestamp),
       txHash: win.txHash as `0x${string}`
     }))
