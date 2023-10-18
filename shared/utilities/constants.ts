@@ -229,8 +229,8 @@ export const RNG_AUCTION: {
 export const RNG_RELAY_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.mainnet]: '0xF4c47dacFda99bE38793181af9Fd1A2Ec7576bBF',
   [NETWORK.optimism]: '0xF4c47dacFda99bE38793181af9Fd1A2Ec7576bBF',
-  [NETWORK.goerli]: '0x1977822061d8a394726803e2c2F6524a4E3e7Aff',
-  [NETWORK['optimism-goerli']]: '0xe34deF1114d7Bb0298636A2026D9Cf3D67F19FBd'
+  [NETWORK.goerli]: '0xe34deF1114d7Bb0298636A2026D9Cf3D67F19FBd',
+  [NETWORK['optimism-goerli']]: '0x5C9c04FC5D6431A2101b8395E13B565762980F97'
 }
 
 /**
@@ -246,7 +246,7 @@ export const MSG_EXECUTOR_ADDRESSES: { [chainId: number]: Address } = {
  */
 export const TWAB_CONTROLLER_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.optimism]: '0x0D51a33975024E8aFc55fde9F6b070c10AA71Dd9',
-  [NETWORK['optimism-goerli']]: '0xE7dc3F91D2682a99e40c98aC5a8791461418234F'
+  [NETWORK['optimism-goerli']]: '0x0B09590E2dE22A629B45258812C0B25904689B5a'
 }
 
 /**
