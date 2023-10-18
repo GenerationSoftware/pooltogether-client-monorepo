@@ -20,8 +20,8 @@ export const useDrawResults = (
     queryKey,
     async () => {
       try {
-        const url = `${DRAW_RESULTS_URL}/${
-          prizePool.chainId
+        const url = `${
+          DRAW_RESULTS_URL[prizePool.chainId]
         }/${prizePool.address.toLowerCase()}/draw/${drawId}/prizes.json`
         const result = await fetch(url)
         const drawResults: {
