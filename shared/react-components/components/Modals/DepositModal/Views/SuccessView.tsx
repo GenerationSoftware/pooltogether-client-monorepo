@@ -13,6 +13,7 @@ import { useMemo } from 'react'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 import { HeyShareButton } from '../../../Buttons/HeyShareButton'
 import { TwitterShareButton } from '../../../Buttons/TwitterShareButton'
+import { WarpcastShareButton } from '../../../Buttons/WarpcastShareButton'
 import { depositFormTokenAmountAtom } from '../../../Form/DepositForm'
 import { SuccessPooly } from '../../../Graphics/SuccessPooly'
 
@@ -23,7 +24,13 @@ interface SuccessViewProps {
   goToAccount?: () => void
   intl?: {
     base?: Intl<
-      'success' | 'deposited' | 'nowEligible' | 'shareTwitter' | 'shareHey' | 'viewAccount'
+      | 'success'
+      | 'deposited'
+      | 'nowEligible'
+      | 'shareTwitter'
+      | 'shareWarpcast'
+      | 'shareHey'
+      | 'viewAccount'
     >
     common?: Intl<'prizePool' | 'viewOn'>
   }
@@ -85,7 +92,7 @@ export const SuccessView = (props: SuccessViewProps) => {
 
 interface ShareButtonsProps {
   vault: Vault
-  intl?: Intl<'shareTwitter' | 'shareHey'>
+  intl?: Intl<'shareTwitter' | 'shareWarpcast' | 'shareHey'>
 }
 
 const ShareButtons = (props: ShareButtonsProps) => {
@@ -100,6 +107,7 @@ const ShareButtons = (props: ShareButtonsProps) => {
     if (!!tokenData) {
       return {
         twitter: getShareText(tokenData.symbol, 'twitter'),
+        warpcast: getShareText(tokenData.symbol, 'warpcast'),
         hey: getShareText(tokenData.symbol, 'hey')
       }
     } else {
@@ -116,6 +124,7 @@ const ShareButtons = (props: ShareButtonsProps) => {
         fullSized={true}
         intl={intl}
       />
+      <WarpcastShareButton text={text.warpcast} url={LINKS.app} fullSized={true} intl={intl} />
       <HeyShareButton
         text={text.hey}
         hashTags={hashTags}
@@ -127,11 +136,12 @@ const ShareButtons = (props: ShareButtonsProps) => {
   )
 }
 
-type SharePlatform = 'twitter' | 'hey'
+type SharePlatform = 'twitter' | 'warpcast' | 'hey'
 
 const getShareText = (tokenSymbol: string, platform: SharePlatform) => {
   const protocolAccounts: Record<SharePlatform, string> = {
     twitter: '@PoolTogether_',
+    warpcast: 'PoolTogether',
     hey: '@pooltogether'
   }
 

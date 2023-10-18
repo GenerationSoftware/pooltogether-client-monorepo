@@ -25,7 +25,7 @@ export const TwitterShareButton = (props: TwitterShareButtonProps) => {
       disabled={text === undefined || disabled}
       {...rest}
     >
-      {children ?? intl?.('shareTwitter') ?? 'Share Tweet'}
+      {children ?? intl?.('shareTwitter') ?? 'Share on Twitter'}
     </Button>
   )
 }
