@@ -48,8 +48,9 @@ export const LINKS = Object.freeze({
   dune_v4: `https://dune.com/sarfang/PoolTogetherV4`,
   prizeCalc: `https://prizecalc.com`,
   grants: `https://poolgrants.org`,
-  lens: `https://lenster.xyz/u/pooltogether`,
+  hey: `https://hey.xyz/u/pooltogether`,
   mirror: `https://pooltogether.mirror.xyz/`,
+  warpcast: `https://warpcast.com/~/channel/pool-together`,
   clientJs: `https://www.npmjs.com/package/@generationsoftware/hyperstructure-client-js`,
   clientJs_v4: `https://www.npmjs.com/package/@pooltogether/v4-client-js`,
   reactHooks: `https://www.npmjs.com/package/@generationsoftware/hyperstructure-react-hooks`

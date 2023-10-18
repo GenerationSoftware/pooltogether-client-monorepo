@@ -11,7 +11,7 @@ import {
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
-import { LensterShareButton } from '../../../Buttons/LensterShareButton'
+import { HeyShareButton } from '../../../Buttons/HeyShareButton'
 import { TwitterShareButton } from '../../../Buttons/TwitterShareButton'
 import { depositFormTokenAmountAtom } from '../../../Form/DepositForm'
 import { SuccessPooly } from '../../../Graphics/SuccessPooly'
@@ -23,7 +23,7 @@ interface SuccessViewProps {
   goToAccount?: () => void
   intl?: {
     base?: Intl<
-      'success' | 'deposited' | 'nowEligible' | 'shareTwitter' | 'shareLenster' | 'viewAccount'
+      'success' | 'deposited' | 'nowEligible' | 'shareTwitter' | 'shareHey' | 'viewAccount'
     >
     common?: Intl<'prizePool' | 'viewOn'>
   }
@@ -85,7 +85,7 @@ export const SuccessView = (props: SuccessViewProps) => {
 
 interface ShareButtonsProps {
   vault: Vault
-  intl?: Intl<'shareTwitter' | 'shareLenster'>
+  intl?: Intl<'shareTwitter' | 'shareHey'>
 }
 
 const ShareButtons = (props: ShareButtonsProps) => {
@@ -100,7 +100,7 @@ const ShareButtons = (props: ShareButtonsProps) => {
     if (!!tokenData) {
       return {
         twitter: getShareText(tokenData.symbol, 'twitter'),
-        lenster: getShareText(tokenData.symbol, 'lenster')
+        hey: getShareText(tokenData.symbol, 'hey')
       }
     } else {
       return {}
@@ -116,8 +116,8 @@ const ShareButtons = (props: ShareButtonsProps) => {
         fullSized={true}
         intl={intl}
       />
-      <LensterShareButton
-        text={text.lenster}
+      <HeyShareButton
+        text={text.hey}
         hashTags={hashTags}
         url={LINKS.app}
         fullSized={true}
@@ -127,12 +127,12 @@ const ShareButtons = (props: ShareButtonsProps) => {
   )
 }
 
-type SharePlatform = 'twitter' | 'lenster'
+type SharePlatform = 'twitter' | 'hey'
 
 const getShareText = (tokenSymbol: string, platform: SharePlatform) => {
   const protocolAccounts: Record<SharePlatform, string> = {
     twitter: '@PoolTogether_',
-    lenster: '@pooltogether.lens'
+    hey: '@pooltogether'
   }
 
   const pooltogether = protocolAccounts[platform]

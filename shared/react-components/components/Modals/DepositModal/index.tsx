@@ -53,7 +53,7 @@ export interface DepositModalProps {
       | 'deposited'
       | 'nowEligible'
       | 'shareTwitter'
-      | 'shareLenster'
+      | 'shareHey'
       | 'viewAccount'
       | 'uhOh'
       | 'failedTx'
