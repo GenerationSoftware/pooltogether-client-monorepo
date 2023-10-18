@@ -107,7 +107,7 @@ export const PRIZE_POOLS: {
 export const SUBGRAPH_API_URLS = Object.freeze({
   // [NETWORK.optimism]: '',
   [NETWORK['optimism-goerli']]:
-    'https://api.studio.thegraph.com/query/50959/pt-v5-op-goerli/version/latest'
+    'https://api.studio.thegraph.com/query/50959/pt-v5-op-goerli/v0.0.23'
 })
 
 /**
