@@ -43,7 +43,7 @@ export const useLiquidationPairInfo = (
   const periodLength = prizePoolInfo.options.drawPeriodInSeconds
   const targetFirstSaleTime = LP_CONFIG[chainId].targetFirstSaleTimeFraction * periodLength
 
-  const decayConstant = parseEther('134') / BigInt(periodLength * 50)
+  const decayConstant = parseEther('130') / BigInt(periodLength * 50)
 
   const initialAmountOut = !!shareToken ? parseUnits('1', shareToken.decimals) : undefined
 
