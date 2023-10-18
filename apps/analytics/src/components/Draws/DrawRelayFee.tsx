@@ -34,12 +34,13 @@ export const DrawRelayFee = (props: DrawRelayFeeProps) => {
 
   const { data: currentFeePercentage } = useDrawRelayFeePercentage(prizePool)
 
+  const canBeRelayed =
+    status === 'closed' && !!currentFeePercentage && !!rngTxFeeFraction && !isSkipped
+
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
       <DrawCardItemTitle>
-        {status === 'closed' && !!currentFeePercentage && !!rngTxFeeFraction && !isSkipped
-          ? 'Current '
-          : ''}
+        {canBeRelayed ? 'Current ' : ''}
         Relay Fee
       </DrawCardItemTitle>
       <div className='flex flex-col gap-1 text-sm text-pt-purple-700 whitespace-nowrap'>
@@ -65,7 +66,7 @@ export const DrawRelayFee = (props: DrawRelayFeeProps) => {
                     </>
                   )}
                 </>
-              ) : !!currentFeePercentage && !!rngTxFeeFraction && !isSkipped ? (
+              ) : canBeRelayed ? (
                 <>
                   <span className='text-xl font-semibold'>
                     {((1 - rngTxFeeFraction) * currentFeePercentage).toLocaleString(undefined, {
@@ -97,7 +98,7 @@ export const DrawRelayFee = (props: DrawRelayFeeProps) => {
                 </ExternalLink>
               </>
             ) : (
-              !!currentFeePercentage && !!rngTxs && !isSkipped && <span>Not Yet Awarded</span>
+              canBeRelayed && <span>Not Yet Awarded</span>
             )}
           </>
         ) : (

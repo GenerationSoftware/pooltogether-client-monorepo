@@ -29,11 +29,11 @@ export const DrawRngFee = (props: DrawRngFeeProps) => {
     refetchInterval: sToMs(60)
   })
 
+  const canBeAwarded = status === 'closed' && !!currentFeePercentage && !isSkipped
+
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
-      <DrawCardItemTitle>
-        {status === 'closed' && !!currentFeePercentage && !isSkipped ? 'Current ' : ''}RNG Fee
-      </DrawCardItemTitle>
+      <DrawCardItemTitle>{canBeAwarded ? 'Current ' : ''}RNG Fee</DrawCardItemTitle>
       <div className='flex flex-col gap-1 text-sm text-pt-purple-700 whitespace-nowrap'>
         {isFetchedAllRngTxs && !!prizeToken ? (
           <>
@@ -66,7 +66,7 @@ export const DrawRngFee = (props: DrawRngFeeProps) => {
                     </>
                   )}
                 </>
-              ) : !!currentFeePercentage && !isSkipped ? (
+              ) : canBeAwarded ? (
                 <>
                   <span className='text-xl font-semibold'>
                     {currentFeePercentage.toLocaleString(undefined, {
@@ -87,7 +87,7 @@ export const DrawRngFee = (props: DrawRngFeeProps) => {
                 {shorten(rngTx.hash, { short: true })}
               </ExternalLink>
             ) : (
-              !!currentFeePercentage && <span>Not Yet Awarded</span>
+              canBeAwarded && <span>Not Yet Awarded</span>
             )}
           </>
         ) : (
