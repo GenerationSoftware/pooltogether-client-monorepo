@@ -8,7 +8,7 @@ import {
 import { TokenValueAndAmount } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import { getAssetsFromShares } from '@shared/utilities'
-import { Address } from 'viem'
+import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
 interface AccountVaultDelegationAmountProps {
@@ -49,16 +49,17 @@ export const AccountVaultDelegationAmount = (props: AccountVaultDelegationAmount
   }
 
   if (delegationBalance > 0n) {
+    const amount = getAssetsFromShares(delegationBalance, exchangeRate, tokenData.decimals)
+    const shiftedAmount = parseFloat(formatUnits(amount, tokenData.decimals))
+
     return (
       <TokenValueAndAmount
-        token={{
-          ...tokenData,
-          amount: getAssetsFromShares(delegationBalance, exchangeRate, tokenData.decimals)
-        }}
+        token={{ ...tokenData, amount }}
         className={className}
         valueClassName='text-sm md:text-base'
         amountClassName='text-xs md:text-sm'
         valueOptions={{ hideZeroes: true }}
+        amountOptions={shiftedAmount > 1e3 ? { hideZeroes: true } : { maximumFractionDigits: 2 }}
       />
     )
   }

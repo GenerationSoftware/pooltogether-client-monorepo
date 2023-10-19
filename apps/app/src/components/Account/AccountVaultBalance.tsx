@@ -2,7 +2,7 @@ import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useUserVaultTokenBalance } from '@generationsoftware/hyperstructure-react-hooks'
 import { TokenValueAndAmount } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
-import { Address } from 'viem'
+import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
 interface AccountVaultBalanceProps {
@@ -35,6 +35,8 @@ export const AccountVaultBalance = (props: AccountVaultBalanceProps) => {
   }
 
   if (tokenBalance.amount > 0n) {
+    const shiftedAmount = parseFloat(formatUnits(tokenBalance.amount, tokenBalance.decimals))
+
     return (
       <TokenValueAndAmount
         token={tokenBalance}
@@ -42,6 +44,7 @@ export const AccountVaultBalance = (props: AccountVaultBalanceProps) => {
         valueClassName='text-sm md:text-base'
         amountClassName='text-xs md:text-sm'
         valueOptions={{ hideZeroes: true }}
+        amountOptions={shiftedAmount > 1e3 ? { hideZeroes: true } : { maximumFractionDigits: 2 }}
       />
     )
   }
