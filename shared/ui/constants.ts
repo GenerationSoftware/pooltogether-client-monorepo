@@ -35,7 +35,7 @@ export const LINKS = Object.freeze({
   faq: `${DOMAINS.docs}/`, // TODO: update to faq section once available
   tutorials: `${DOMAINS.docs}/cabana-factory/guides`, // TODO: update to tutorials section on docs once available
   audits: `${DOMAINS.protocolDocs}/security/audits`,
-  devDocs_v5: `${DOMAINS.protocolDevDocs}/protocol/next/introduction`,
+  devDocs_v4: `${DOMAINS.protocolDevDocs}/protocol/V4/introduction`,
   depositDelegator: `${DOMAINS.tools_v4}/delegate`,
   prizeTierController: `${DOMAINS.tools_v4}/prize-tier-controller`,
   communityCalendar: `${DOMAINS.notion}/Community-Calendar-4ce3024241dd464db96215e6729a78e0`,

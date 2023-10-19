@@ -27,7 +27,7 @@ export const allVaultStepInfo: { title: string; info: ReactNode }[] = [
         By default, all vaults use the same claimer contract to make it easy for bots to claim
         prizes. If you'd like to set up prize claims differently, or claim them yourself, set
         another contract address here.{' '}
-        <a href={LINKS.devDocs_v5} target='_blank' className='text-pt-teal-dark'>
+        <a href={LINKS.protocolDevDocs} target='_blank' className='text-pt-teal-dark'>
           Read our docs for more info.
         </a>
       </>
