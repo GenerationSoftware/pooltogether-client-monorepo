@@ -35,7 +35,7 @@ export const PrizePoolWinners = () => {
   const isLastDrawOngoing = useMemo(() => {
     if (
       !!lastDrawId &&
-      !!lastDrawTimestamps &&
+      !!lastDrawTimestamps?.openedAt &&
       !!draws?.length &&
       draws[draws.length - 1].id === lastDrawId
     ) {

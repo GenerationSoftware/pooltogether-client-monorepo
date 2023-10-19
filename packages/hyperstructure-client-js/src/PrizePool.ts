@@ -291,6 +291,10 @@ export class PrizePool {
 
     const lastDrawId = await this.getLastAwardedDrawId()
 
+    if (lastDrawId === 0) {
+      return 0
+    }
+
     const openedAt = Number(
       await this.publicClient.readContract({
         address: this.address,
