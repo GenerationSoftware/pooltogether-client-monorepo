@@ -10,7 +10,7 @@ export * from './components/Badges/VaultBadge'
  * Buttons
  */
 export * from './components/Buttons/DepositButton'
-export * from './components/Buttons/LensterShareButton'
+export * from './components/Buttons/HeyShareButton'
 export * from './components/Buttons/TwitterShareButton'
 export * from './components/Buttons/WithdrawButton'
 
@@ -62,12 +62,6 @@ export * from './components/PrizePool/PrizePoolCard'
 export * from './components/PrizePool/PrizePoolDropdown'
 
 /**
- * Time
- */
-export * from './components/Time/NextDrawCountdown'
-export * from './components/Time/TimeDigits'
-
-/**
  * Toasts
  */
 export * from './components/Toasts/DeployLiquidationPairTxToast'
@@ -84,6 +78,7 @@ export * from './components/Tooltips/ExactApprovalTooltip'
 export * from './components/Tooltips/ImportedVaultTooltip'
 export * from './components/Tooltips/InfiniteApprovalTooltip'
 export * from './components/Tooltips/PrizePowerTooltip'
+export * from './components/Tooltips/VaultContributionsTooltip'
 export * from './components/Tooltips/VaultFeeTooltip'
 export * from './components/Tooltips/WinChanceTooltip'
 export * from './components/Tooltips/YieldSourceURITooltip'

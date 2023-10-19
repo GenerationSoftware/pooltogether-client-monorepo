@@ -4,14 +4,14 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import { QUERY_KEYS } from '../constants'
 
 /**
- * Returns a prize pool's last awarded (closed) draw ID
+ * Returns a prize pool's last awarded draw ID
  * @param prizePool instance of the `PrizePool` class
  * @returns
  */
-export const useLastDrawId = (prizePool: PrizePool): UseQueryResult<number, unknown> => {
-  const queryKey = [QUERY_KEYS.lastDrawId, prizePool?.id]
+export const useLastAwardedDrawId = (prizePool: PrizePool): UseQueryResult<number, unknown> => {
+  const queryKey = [QUERY_KEYS.lastAwardedDrawId, prizePool?.id]
 
-  return useQuery(queryKey, async () => await prizePool.getLastDrawId(), {
+  return useQuery(queryKey, async () => await prizePool.getLastAwardedDrawId(), {
     enabled: !!prizePool,
     ...NO_REFETCH
   })

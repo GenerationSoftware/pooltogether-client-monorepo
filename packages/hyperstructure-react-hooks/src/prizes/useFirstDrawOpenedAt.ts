@@ -4,20 +4,18 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import { QUERY_KEYS } from '../constants'
 
 /**
- * Returns the start timestamps of a prize pool's first ever draw (in seconds)
+ * Returns the opened at timestamp of a prize pool's first ever draw (in seconds)
  * @param prizePool instance of the `PrizePool` class
  * @returns
  */
-export const useFirstDrawStartTimestamp = (
-  prizePool: PrizePool
-): UseQueryResult<number, unknown> => {
-  const queryKey = [QUERY_KEYS.firstDrawStartTimestamp, prizePool?.id]
+export const useFirstDrawOpenedAt = (prizePool: PrizePool): UseQueryResult<number, unknown> => {
+  const queryKey = [QUERY_KEYS.firstDrawOpenedAt, prizePool?.id]
 
   return useQuery(
     queryKey,
     async () => {
-      const timestamp = await prizePool.getFirstDrawStartTimestamp()
-      return timestamp
+      const openedAt = await prizePool.getFirstDrawOpenedAt()
+      return openedAt
     },
     {
       enabled: !!prizePool,

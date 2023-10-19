@@ -40,6 +40,7 @@ export interface LineChartProps {
     type?: CurveType
     stroke?: string
     strokeWidth?: number
+    strokeDashArray?: string | number
     dot?: LineDot
     animate?: boolean
   }[]
@@ -89,6 +90,7 @@ export const LineChart = (props: LineChartProps) => {
             dataKey={line.id}
             stroke={line.stroke ?? DEFAULT.line.strokes[i]}
             strokeWidth={line.strokeWidth ?? DEFAULT.line.strokeWidth}
+            strokeDasharray={line.strokeDashArray}
             dot={line.dot ?? DEFAULT.line.dot}
             isAnimationActive={line.animate ?? DEFAULT.line.animate}
           />

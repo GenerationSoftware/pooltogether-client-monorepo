@@ -1,4 +1,11 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import {
+  useDrawAwardedEvents,
+  useRelayAuctionEvents,
+  useRngAuctionEvents,
+  useRngL1RelayMsgEvents,
+  useRngL2RelayMsgEvents
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { PRIZE_POOLS, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import { useEffect, useMemo } from 'react'
@@ -7,13 +14,9 @@ import { usePublicClient } from 'wagmi'
 import { DrawsAvgClaimFeesChart } from '@components/Charts/DrawsAvgClaimFeesChart'
 import { DrawsAvgLiqEfficiencyChart } from '@components/Charts/DrawsAvgLiqEfficiencyChart'
 import { DrawCards } from '@components/Draws/DrawCards'
-import { useDrawClosedEvents } from '@hooks/useDrawClosedEvents'
+import { QUERY_START_BLOCK, RELAY_ORIGINS } from '@constants/config'
 import { useDrawRngFeePercentage } from '@hooks/useDrawRngFeePercentage'
 import { useRelayAuctionElapsedTime } from '@hooks/useRelayAuctionElapsedTime'
-import { useRelayAuctionEvents } from '@hooks/useRelayAuctionEvents'
-import { useRngAuctionEvents } from '@hooks/useRngAuctionEvents'
-import { useRngL1RelayMsgEvents } from '@hooks/useRngL1RelayMsgEvents'
-import { useRngL2RelayMsgEvents } from '@hooks/useRngL2RelayMsgEvents'
 
 interface DrawsViewProps {
   chainId: number
@@ -40,13 +43,25 @@ export const DrawsView = (props: DrawsViewProps) => {
     )
   }, [chainId])
 
-  const { refetch: refetchDrawRngFeePercentage } = useDrawRngFeePercentage()
-  const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents()
-  const { refetch: refetchRngL1RelayMsgEvents } = useRngL1RelayMsgEvents()
-  const { refetch: refetchRelayAuctionElapsedTime } = useRelayAuctionElapsedTime()
-  const { refetch: refetchRelayAuctionEvents } = useRelayAuctionEvents(prizePool)
-  const { refetch: refetchDrawClosedEvents } = useDrawClosedEvents(prizePool)
-  const { refetch: refetchRngL2RelayMsgEvents } = useRngL2RelayMsgEvents(prizePool)
+  const originChainId = !!prizePool ? RELAY_ORIGINS[prizePool.chainId] : undefined
+  const fromBlock = !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
+  const originFromBlock = !!originChainId ? QUERY_START_BLOCK[originChainId] : undefined
+
+  const { refetch: refetchDrawRngFeePercentage } = useDrawRngFeePercentage(prizePool)
+  const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents(originChainId as number, {
+    fromBlock: originFromBlock
+  })
+  const { refetch: refetchRngL1RelayMsgEvents } = useRngL1RelayMsgEvents(originChainId as number, {
+    fromBlock: originFromBlock
+  })
+  const { refetch: refetchRelayAuctionElapsedTime } = useRelayAuctionElapsedTime(prizePool)
+  const { refetch: refetchRelayAuctionEvents } = useRelayAuctionEvents(prizePool?.chainId, {
+    fromBlock
+  })
+  const { refetch: refetchDrawAwardedEvents } = useDrawAwardedEvents(prizePool, { fromBlock })
+  const { refetch: refetchRngL2RelayMsgEvents } = useRngL2RelayMsgEvents(prizePool?.chainId, {
+    fromBlock
+  })
 
   // Automatic data refetching
   useEffect(() => {
@@ -56,7 +71,7 @@ export const DrawsView = (props: DrawsViewProps) => {
       refetchRngL1RelayMsgEvents()
       refetchRelayAuctionElapsedTime()
       refetchRelayAuctionEvents()
-      refetchDrawClosedEvents()
+      refetchDrawAwardedEvents()
       refetchRngL2RelayMsgEvents()
     }, sToMs(300))
 

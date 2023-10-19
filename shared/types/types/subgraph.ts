@@ -10,13 +10,8 @@ export interface SubgraphDraw {
     fee: bigint
     feeRecipient: `0x${string}`
     timestamp: number
+    txHash: `0x${string}`
   }[]
-}
-
-export interface SubgraphDrawTimestamps {
-  id: number
-  firstClaim: number
-  lastClaim: number
 }
 
 export interface SubgraphPrize {
@@ -28,6 +23,7 @@ export interface SubgraphPrize {
   fee: bigint
   feeRecipient: `0x${string}`
   timestamp: number
+  txHash: `0x${string}`
 }
 
 export interface SubgraphObservation {

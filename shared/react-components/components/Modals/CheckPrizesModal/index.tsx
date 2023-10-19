@@ -7,7 +7,7 @@ import {
 import { MODAL_KEYS, useIsModalOpen, useScreenSize } from '@shared/generic-react-hooks'
 import { Intl } from '@shared/types'
 import { Modal } from '@shared/ui'
-import { sToMs } from '@shared/utilities'
+import { getSecondsSinceEpoch, sToMs } from '@shared/utilities'
 import { ReactNode, useEffect, useState } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
@@ -46,11 +46,7 @@ export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
     if (!!drawsToCheck && !!userAddress) {
       for (const key in drawsToCheck.draws) {
         const chainId = parseInt(key)
-        const draws = drawsToCheck.draws[chainId]
-        if (draws.length > 0) {
-          const lastTimestamp = draws[draws.length - 1].lastClaim
-          set(chainId, lastTimestamp)
-        }
+        set(chainId, getSecondsSinceEpoch())
       }
     }
   }

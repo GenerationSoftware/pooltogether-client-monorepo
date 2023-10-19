@@ -77,7 +77,7 @@ export const DeployVaultButton = (props: DeployVaultButtonProps) => {
       addRecentTransaction={addRecentTransaction}
       color='purple'
       className={classNames(
-        'w-36 !bg-pt-purple-600 !border-pt-purple-600 hover:!bg-pt-purple-700 focus:outline-transparent',
+        'min-w-[9rem] !bg-pt-purple-600 !border-pt-purple-600 hover:!bg-pt-purple-700 focus:outline-transparent',
         className
       )}
       innerClassName={classNames('flex gap-2 items-center text-pt-purple-50', innerClassName)}

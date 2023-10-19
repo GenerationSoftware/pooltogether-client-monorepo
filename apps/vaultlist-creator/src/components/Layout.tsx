@@ -80,13 +80,12 @@ const SimpleFooter = (props: { className?: string }) => {
             Generation Software
           </a>
         </span>
-        <Link
-          href={LINKS.termsOfService}
-          target='_blank'
-          className='text-xs text-pt-purple-100 hover:underline'
-        >
-          Terms and Conditions
-        </Link>
+        <span className='text-xs font-medium text-pt-pink'>
+          By using this app you are agreeing to our{' '}
+          <Link href={LINKS.termsOfService} target='_blank' className='hover:underline'>
+            Terms and Conditions
+          </Link>
+        </span>
       </div>
     </footer>
   )

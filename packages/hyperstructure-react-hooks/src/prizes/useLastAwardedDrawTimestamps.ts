@@ -5,27 +5,27 @@ import { useDrawPeriod } from '..'
 import { QUERY_KEYS } from '../constants'
 
 /**
- * Returns the start and end timestamps of a prize pool's last draw (in seconds)
+ * Returns the open and close timestamps of a prize pool's last awarded draw (in seconds)
  * @param prizePool instance of the `PrizePool` class
  * @param refetchInterval optional refetch interval in ms
  * @returns
  */
-export const useLastDrawTimestamps = (
+export const useLastAwardedDrawTimestamps = (
   prizePool: PrizePool,
   refetchInterval?: number
-): UseQueryResult<{ start: number; end: number }, unknown> => {
+): UseQueryResult<{ openedAt: number; closedAt: number }, unknown> => {
   const { data: drawPeriod, isFetched: isFetchedDrawPeriod } = useDrawPeriod(prizePool)
 
   const enabled = !!prizePool && isFetchedDrawPeriod && drawPeriod !== undefined
 
-  const queryKey = [QUERY_KEYS.lastDrawTimestamp, prizePool?.id]
+  const queryKey = [QUERY_KEYS.lastAwardedDrawTimestamps, prizePool?.id]
 
   return useQuery(
     queryKey,
     async () => {
-      const start = await prizePool.getLastDrawStartTimestamp()
-      const end = start + (drawPeriod ?? 0)
-      return { start, end }
+      const openedAt = await prizePool.getLastAwardedDrawOpenedAt()
+      const closedAt = openedAt + (drawPeriod as number)
+      return { openedAt, closedAt }
     },
     {
       enabled,

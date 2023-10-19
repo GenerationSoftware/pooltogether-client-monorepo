@@ -8,13 +8,15 @@ import { RecentWinners } from '@components/RecentWinners'
 import { VaultCards } from '@components/VaultCards'
 
 export default function HomePage() {
+  const chainId = NETWORK.optimism
+
   return (
     <Layout>
-      <Header />
-      <PrizePoolBadge chainId={NETWORK.optimism} className='mt-8' />
-      <GrandPrize chainId={NETWORK.optimism} className='mt-6' />
-      <VaultCards chainId={NETWORK.optimism} className='mt-8' />
-      <RecentWinners chainId={NETWORK.optimism} className='mt-12' />
+      <Header className='max-w-2xl' />
+      <PrizePoolBadge chainId={chainId} className='mt-8' />
+      <GrandPrize chainId={chainId} className='mt-6' />
+      <VaultCards chainId={chainId} className='mt-8' />
+      <RecentWinners chainId={chainId} className='mt-12' />
       <Faq className='mt-12' />
     </Layout>
   )

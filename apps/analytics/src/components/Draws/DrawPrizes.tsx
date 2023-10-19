@@ -1,10 +1,13 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { usePrizeDrawWinners } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useDrawAwardedEvents,
+  usePrizeDrawWinners
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import { formatNumberForDisplay, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import { ReactNode } from 'react'
-import { useDrawClosedEvents } from '@hooks/useDrawClosedEvents'
+import { QUERY_START_BLOCK } from '@constants/config'
 import { useDrawResults } from '@hooks/useDrawResults'
 import { DrawCardItemTitle } from './DrawCardItemTitle'
 
@@ -17,10 +20,12 @@ interface DrawPrizesProps {
 export const DrawPrizes = (props: DrawPrizesProps) => {
   const { prizePool, drawId, className } = props
 
-  const { data: drawClosedEvents, isFetched: isFetchedDrawClosedEvents } =
-    useDrawClosedEvents(prizePool)
-  const drawClosedEvent = drawClosedEvents?.find((e) => e.args.drawId === drawId)
-  const numTiers = drawClosedEvent?.args.nextNumTiers // TODO: switch to `args.numTiers` once event is fixed
+  const { data: drawAwardedEvents, isFetched: isFetchedDrawAwardedEvents } = useDrawAwardedEvents(
+    prizePool,
+    { fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined }
+  )
+  const drawAwardedEvent = drawAwardedEvents?.find((e) => e.args.drawId === drawId)
+  const numTiers = drawAwardedEvent?.args.numTiers
 
   const { data: prizesAvailable } = useDrawResults(prizePool, drawId, {
     refetchInterval: sToMs(300)
@@ -52,7 +57,7 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
     <div className={classNames('flex flex-col gap-3', className)}>
       <DrawCardItemTitle>Prizes</DrawCardItemTitle>
       <div className='flex flex-col gap-1 text-sm text-pt-purple-700 whitespace-nowrap'>
-        {isFetchedDrawClosedEvents ? (
+        {isFetchedDrawAwardedEvents ? (
           !!numTiers ? (
             <span>
               <BigText>{numTiers}</BigText> tiers

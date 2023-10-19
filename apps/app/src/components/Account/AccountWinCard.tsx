@@ -21,10 +21,8 @@ export const AccountWinCard = (props: AccountWinCardProps) => {
     <div className='flex items-center gap-3 bg-pt-transparent rounded-lg p-3'>
       <NetworkIcon chainId={win.chainId} className='h-6 w-6' />
       <span className='text-sm'>{getSimpleDate(win.timestamp)}</span>
-      {/* TODO: add txHash once subgraph has it */}
       <ExternalLink
-        // href={getBlockExplorerUrl(win.chainId, win.txHash, 'tx')}
-        href={getBlockExplorerUrl(win.chainId, '', 'tx')}
+        href={getBlockExplorerUrl(win.chainId, win.txHash, 'tx')}
         size='xs'
         className='grow text-pt-purple-200'
       >

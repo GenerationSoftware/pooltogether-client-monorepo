@@ -61,33 +61,13 @@ export class Vault {
   ) {
     this.id = getVaultId({ address, chainId })
 
-    if (!!options?.walletClient) {
-      this.walletClient = options.walletClient
-    }
-
-    if (!!options?.decimals) {
-      this.decimals = options.decimals
-    }
-
-    if (!!options?.tokenAddress) {
-      this.tokenAddress = options.tokenAddress
-    }
-
-    if (!!options?.name) {
-      this.name = options.name
-    }
-
-    if (!!options?.logoURI) {
-      this.logoURI = options.logoURI
-    }
-
-    if (!!options?.tokenLogoURI) {
-      this.tokenLogoURI = options.tokenLogoURI
-    }
-
-    if (!!options?.yieldSourceURI) {
-      this.yieldSourceURI = options.yieldSourceURI
-    }
+    this.walletClient = options?.walletClient
+    this.decimals = options?.decimals
+    this.tokenAddress = options?.tokenAddress
+    this.name = options?.name
+    this.logoURI = options?.logoURI
+    this.tokenLogoURI = options?.tokenLogoURI
+    this.yieldSourceURI = options?.yieldSourceURI
   }
 
   /* ============================== Read Functions ============================== */

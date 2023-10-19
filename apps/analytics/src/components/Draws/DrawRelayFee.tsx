@@ -1,10 +1,12 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
 import { ExternalLink, Spinner } from '@shared/ui'
-import { formatBigIntForDisplay, getBlockExplorerUrl, NETWORK, shorten } from '@shared/utilities'
+import { formatBigIntForDisplay, getBlockExplorerUrl, shorten } from '@shared/utilities'
 import classNames from 'classnames'
 import { formatUnits } from 'viem'
+import { RELAY_ORIGINS } from '@constants/config'
 import { useDrawRelayFeePercentage } from '@hooks/useDrawRelayFeePercentage'
+import { useDrawStatus } from '@hooks/useDrawStatus'
 import { useRngTxs } from '@hooks/useRngTxs'
 import { DrawCardItemTitle } from './DrawCardItemTitle'
 
@@ -16,6 +18,8 @@ interface DrawRelayFeeProps {
 
 export const DrawRelayFee = (props: DrawRelayFeeProps) => {
   const { prizePool, drawId, className } = props
+
+  const { status, isSkipped } = useDrawStatus(prizePool, drawId)
 
   const { data: allRngTxs, isFetched: isFetchedAllRngTxs } = useRngTxs(prizePool)
   const rngTxs = allRngTxs?.find((txs) => txs.rng.drawId === drawId)
@@ -30,10 +34,14 @@ export const DrawRelayFee = (props: DrawRelayFeeProps) => {
 
   const { data: currentFeePercentage } = useDrawRelayFeePercentage(prizePool)
 
+  const canBeRelayed =
+    status === 'closed' && !!currentFeePercentage && !!rngTxFeeFraction && !isSkipped
+
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
       <DrawCardItemTitle>
-        {isFetchedAllRngTxs && !relayTx ? 'Current ' : ''}Relay Fee
+        {canBeRelayed ? 'Current ' : ''}
+        Relay Fee
       </DrawCardItemTitle>
       <div className='flex flex-col gap-1 text-sm text-pt-purple-700 whitespace-nowrap'>
         {isFetchedAllRngTxs && !!prizeToken ? (
@@ -52,13 +60,13 @@ export const DrawRelayFee = (props: DrawRelayFeeProps) => {
                     <>
                       (
                       {formatBigIntForDisplay(relayTx.feeFraction, 16, {
-                        maximumFractionDigits: 0
+                        maximumSignificantDigits: 2
                       })}
                       %)
                     </>
                   )}
                 </>
-              ) : !!currentFeePercentage && !!rngTxFeeFraction ? (
+              ) : canBeRelayed ? (
                 <>
                   <span className='text-xl font-semibold'>
                     {((1 - rngTxFeeFraction) * currentFeePercentage).toLocaleString(undefined, {
@@ -75,7 +83,13 @@ export const DrawRelayFee = (props: DrawRelayFeeProps) => {
             {!!relayTx ? (
               <>
                 {!!relayMsgTx && (
-                  <ExternalLink href={getBlockExplorerUrl(NETWORK.mainnet, relayMsgTx.hash, 'tx')}>
+                  <ExternalLink
+                    href={getBlockExplorerUrl(
+                      RELAY_ORIGINS[prizePool.chainId],
+                      relayMsgTx.hash,
+                      'tx'
+                    )}
+                  >
                     {shorten(relayMsgTx.hash, { short: true })}
                   </ExternalLink>
                 )}
@@ -84,7 +98,7 @@ export const DrawRelayFee = (props: DrawRelayFeeProps) => {
                 </ExternalLink>
               </>
             ) : (
-              !!currentFeePercentage && !!rngTxs && <span>Not Yet Awarded</span>
+              canBeRelayed && <span>Not Yet Awarded</span>
             )}
           </>
         ) : (

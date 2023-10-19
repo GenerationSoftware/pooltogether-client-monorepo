@@ -49,11 +49,11 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': tokenLogoUrls.ageur
   },
   [NETWORK['optimism-goerli']]: {
-    '0x2c75541abd0e0025ca13d0dd5ee5c9a697dd3802': tokenLogoUrls.usdc,
-    '0x219b8d677ef97a1843ffd76e458dc1c6ec5d13d0': tokenLogoUrls.dai,
-    '0xb654cd9f5289873ba3c732e020df5209575e98a8': tokenLogoUrls.gusd,
-    '0xdb00b687687fddf95b15f17b5f1773b8337ed6f5': tokenLogoUrls.weth,
-    '0x5bccf4258204c5f18af7d50827a7a0a8ac65ea6a': tokenLogoUrls.wbtc
+    '0xb7930c829cc1de1b37a3bb9b477e33251da15a50': tokenLogoUrls.usdc,
+    '0x4d07ba104ff254c19b443ade6224f744db84fb8a': tokenLogoUrls.dai,
+    '0x041a898bc37129d2d2232163c3374f4077255f74': tokenLogoUrls.gusd,
+    '0xb8e70b16b8d99753ce55f0e4c2a7eceeece30b64': tokenLogoUrls.weth,
+    '0x331cdb619147a20c32e7b9391a4797ed9656b104': tokenLogoUrls.wbtc
   },
   [NETWORK.avalanche]: {
     '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f': tokenLogoUrls.wbtc

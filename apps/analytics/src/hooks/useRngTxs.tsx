@@ -1,13 +1,16 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import {
+  useBlocks,
+  useDrawAwardedEvents,
+  useRelayAuctionEvents,
+  useRngAuctionEvents,
+  useRngL1RelayMsgEvents,
+  useRngL2RelayMsgEvents
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { RNG_AUCTION } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address } from 'viem'
-import { useBlocks } from './useBlocks'
-import { useDrawClosedEvents } from './useDrawClosedEvents'
-import { useRelayAuctionEvents } from './useRelayAuctionEvents'
-import { useRngAuctionEvents } from './useRngAuctionEvents'
-import { useRngL1RelayMsgEvents } from './useRngL1RelayMsgEvents'
-import { useRngL2RelayMsgEvents } from './useRngL2RelayMsgEvents'
+import { QUERY_START_BLOCK, RELAY_ORIGINS } from '@constants/config'
 
 export interface RngTx {
   drawId: number
@@ -25,7 +28,7 @@ export interface RelayTx {
   feeRecipient: Address
   reserve: bigint
   hash: `0x${string}`
-  endedAt: number
+  closedAt: number
   blockNumber: bigint
   timestamp: number
 }
@@ -38,49 +41,61 @@ export interface RelayMsgTx {
 }
 
 export const useRngTxs = (prizePool: PrizePool) => {
-  const { data: rngAuctionEvents, isFetched: isFetchedRngAuctionEvents } = useRngAuctionEvents()
+  const originChainId = !!prizePool ? RELAY_ORIGINS[prizePool.chainId] : undefined
+  const fromBlock = !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
+  const originFromBlock = !!originChainId ? QUERY_START_BLOCK[originChainId] : undefined
+
+  const { data: rngAuctionEvents, isFetched: isFetchedRngAuctionEvents } = useRngAuctionEvents(
+    originChainId as number,
+    { fromBlock: originFromBlock }
+  )
   const { data: relayAuctionEvents, isFetched: isFetchedRelayAuctionEvents } =
-    useRelayAuctionEvents(prizePool)
+    useRelayAuctionEvents(prizePool?.chainId, { fromBlock })
 
-  const { data: drawClosedEvents, isFetched: isFetchedDrawClosedEvents } =
-    useDrawClosedEvents(prizePool)
-  const drawClosedBlockNumbers = new Set<bigint>(drawClosedEvents?.map((e) => e.blockNumber) ?? [])
+  const { data: drawAwardedEvents, isFetched: isFetchedDrawAwardedEvents } = useDrawAwardedEvents(
+    prizePool,
+    { fromBlock }
+  )
+  const drawAwardedBlockNumbers = new Set<bigint>(
+    drawAwardedEvents?.map((e) => e.blockNumber) ?? []
+  )
 
-  const { data: drawClosedBlocks, isFetched: isFetchedDrawClosedBlocks } = useBlocks(
+  const { data: drawAwardedBlocks, isFetched: isFetchedDrawAwardedBlocks } = useBlocks(
     prizePool?.chainId,
-    [...drawClosedBlockNumbers]
+    [...drawAwardedBlockNumbers]
   )
 
   const { data: rngL1RelayMsgEvents, isFetched: isFetchedRngL1RelayMsgEvents } =
-    useRngL1RelayMsgEvents()
+    useRngL1RelayMsgEvents(originChainId as number, { fromBlock: originFromBlock })
   const { data: rngL2RelayMsgEvents, isFetched: isFetchedRngL2RelayMsgEvents } =
-    useRngL2RelayMsgEvents(prizePool)
+    useRngL2RelayMsgEvents(prizePool?.chainId, { fromBlock })
 
   const data = useMemo(() => {
     if (
       !!rngAuctionEvents &&
       !!relayAuctionEvents &&
-      !!drawClosedEvents &&
-      !!drawClosedBlocks &&
+      !!drawAwardedEvents &&
+      !!drawAwardedBlocks &&
       !!rngL1RelayMsgEvents &&
-      !!rngL2RelayMsgEvents
+      !!rngL2RelayMsgEvents &&
+      !!originChainId
     ) {
       const rngTxs = rngAuctionEvents
         .map((rngAuctionEvent, i) => {
           const periodStart =
-            RNG_AUCTION.sequenceOffset +
-            RNG_AUCTION.sequencePeriod * rngAuctionEvent.args.sequenceId
-          const periodEnd = periodStart + RNG_AUCTION.sequencePeriod
+            RNG_AUCTION[originChainId].sequenceOffset +
+            RNG_AUCTION[originChainId].sequencePeriod * rngAuctionEvent.args.sequenceId
+          const periodEnd = periodStart + RNG_AUCTION[originChainId].sequencePeriod
 
-          const drawClosedBlock = drawClosedBlocks.find(
+          const drawAwardedBlock = drawAwardedBlocks.find(
             (block) => block.timestamp > periodStart && block.timestamp < periodEnd
           )
 
-          const lastDrawId = drawClosedEvents[drawClosedEvents.length - 1].args.drawId
-          const drawClosedEvent = drawClosedEvents.find(
-            (e) => e.blockNumber === drawClosedBlock?.number
+          const lastDrawId = drawAwardedEvents[drawAwardedEvents.length - 1].args.drawId
+          const drawAwardedEvent = drawAwardedEvents.find(
+            (e) => e.blockNumber === drawAwardedBlock?.number
           )
-          let drawId = drawClosedEvent?.args.drawId
+          let drawId = drawAwardedEvent?.args.drawId
           if (!drawId && i === rngAuctionEvents.length - 1) {
             drawId = lastDrawId + 1
           }
@@ -129,7 +144,7 @@ export const useRngTxs = (prizePool: PrizePool) => {
                   }
                 : undefined,
               l2:
-                !!secondRelayEvent && !!drawClosedEvent && !!drawClosedBlock
+                !!secondRelayEvent && !!drawAwardedEvent && !!drawAwardedBlock
                   ? {
                       drawId: drawId,
                       fee: secondRelayEvent.args.reward,
@@ -137,11 +152,11 @@ export const useRngTxs = (prizePool: PrizePool) => {
                         ? secondRelayEvent.args.reward / (rng.fee / rng.feeFraction)
                         : undefined,
                       feeRecipient: secondRelayEvent.args.recipient,
-                      reserve: drawClosedEvent.args.reserve,
+                      reserve: drawAwardedEvent.args.reserve,
                       hash: secondRelayEvent.transactionHash,
-                      endedAt: periodStart,
+                      closedAt: periodStart,
                       blockNumber: secondRelayEvent.blockNumber,
-                      timestamp: Number(drawClosedBlock.timestamp)
+                      timestamp: Number(drawAwardedBlock.timestamp)
                     }
                   : undefined
             }
@@ -156,8 +171,8 @@ export const useRngTxs = (prizePool: PrizePool) => {
   }, [
     rngAuctionEvents,
     relayAuctionEvents,
-    drawClosedEvents,
-    drawClosedBlocks,
+    drawAwardedEvents,
+    drawAwardedBlocks,
     rngL1RelayMsgEvents,
     rngL2RelayMsgEvents
   ])
@@ -165,8 +180,8 @@ export const useRngTxs = (prizePool: PrizePool) => {
   const isFetched =
     isFetchedRngAuctionEvents &&
     isFetchedRelayAuctionEvents &&
-    isFetchedDrawClosedEvents &&
-    isFetchedDrawClosedBlocks &&
+    isFetchedDrawAwardedEvents &&
+    isFetchedDrawAwardedBlocks &&
     isFetchedRngL1RelayMsgEvents &&
     isFetchedRngL2RelayMsgEvents
 

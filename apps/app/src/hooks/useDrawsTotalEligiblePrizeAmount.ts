@@ -37,18 +37,20 @@ export const useDrawsTotalEligiblePrizeAmount = (
         const lastCheckedPrizesTimestamp = lastCheckedPrizesTimestamps[chainId] ?? 0
 
         allDrawWinners[chainId]?.forEach((draw) => {
-          const lastClaimTimestamp = draw.prizeClaims[draw.prizeClaims.length - 1].timestamp
-          if (
-            lastClaimTimestamp > lastCheckedPrizesTimestamp &&
-            eligibleDrawIds.includes(draw.id)
-          ) {
-            if (options?.hideAlreadyCheckedPrizes) {
-              total += draw.prizeClaims.reduce(
-                (a, b) => a + (b.timestamp > lastCheckedPrizesTimestamp ? b.payout : 0n),
-                0n
-              )
-            } else {
-              total += draw.prizeClaims.reduce((a, b) => a + b.payout, 0n)
+          if (!!draw.prizeClaims.length) {
+            const lastClaimTimestamp = draw.prizeClaims[draw.prizeClaims.length - 1].timestamp
+            if (
+              lastClaimTimestamp > lastCheckedPrizesTimestamp &&
+              eligibleDrawIds.includes(draw.id)
+            ) {
+              if (options?.hideAlreadyCheckedPrizes) {
+                total += draw.prizeClaims.reduce(
+                  (a, b) => a + (b.timestamp > lastCheckedPrizesTimestamp ? b.payout : 0n),
+                  0n
+                )
+              } else {
+                total += draw.prizeClaims.reduce((a, b) => a + b.payout, 0n)
+              }
             }
           }
         })

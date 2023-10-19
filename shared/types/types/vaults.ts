@@ -57,7 +57,6 @@ export interface VaultDeployInfo {
   token: `0x${string}`
   name: string
   symbol: string
-  twabController: `0x${string}`
   yieldSourceName: string
   yieldSourceAddress: `0x${string}`
   prizePool: `0x${string}`

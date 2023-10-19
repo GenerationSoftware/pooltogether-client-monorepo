@@ -235,7 +235,7 @@ export const rngAuctionABI = [
       { internalType: 'uint64', name: 'auctionDuration', type: 'uint64' },
       { internalType: 'uint64', name: 'sequencePeriod', type: 'uint64' }
     ],
-    name: 'AuctionDurationGtSequencePeriod',
+    name: 'AuctionDurationGTSequencePeriod',
     type: 'error'
   },
   { inputs: [], name: 'AuctionExpired', type: 'error' },
@@ -278,5 +278,6 @@ export const rngAuctionABI = [
   },
   { inputs: [], name: 'RewardRecipientIsZero', type: 'error' },
   { inputs: [], name: 'RngZeroAddress', type: 'error' },
-  { inputs: [], name: 'SequencePeriodZero', type: 'error' }
+  { inputs: [], name: 'SequencePeriodZero', type: 'error' },
+  { inputs: [], name: 'TargetRewardFractionGTOne', type: 'error' }
 ] as const

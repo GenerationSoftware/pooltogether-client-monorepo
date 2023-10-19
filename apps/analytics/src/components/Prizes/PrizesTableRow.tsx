@@ -12,7 +12,7 @@ interface PrizesTableRowProps {
   wins: SubgraphDraw['prizeClaims']
   tier: number
   numTiers: number
-  closedAt: number
+  awardedAt: number
   prizes?: {
     vault: `0x${string}`
     winner: `0x${string}`
@@ -25,7 +25,8 @@ interface PrizesTableRowProps {
 }
 
 export const PrizesTableRow = (props: PrizesTableRowProps) => {
-  const { prizePool, drawId, wins, tier, numTiers, closedAt, prizes, prizeToken, className } = props
+  const { prizePool, drawId, wins, tier, numTiers, awardedAt, prizes, prizeToken, className } =
+    props
 
   return (
     <div
@@ -38,7 +39,7 @@ export const PrizesTableRow = (props: PrizesTableRowProps) => {
       <PrizeSize tier={tier} prizes={prizes} prizeToken={prizeToken} className='w-1/2 md:w-auto' />
       <PrizesClaimed wins={wins} tier={tier} prizes={prizes} className='w-1/2 md:w-auto' />
       <PrizeFees prizePool={prizePool} drawId={drawId} tier={tier} className='w-full md:w-auto' />
-      <PrizeClaimTime wins={wins} tier={tier} closedAt={closedAt} className='w-full md:w-auto' />
+      <PrizeClaimTime wins={wins} tier={tier} awardedAt={awardedAt} className='w-full md:w-auto' />
     </div>
   )
 }
@@ -171,12 +172,12 @@ const PrizeFees = (props: PrizeFeesProps) => {
 interface PrizeClaimTimeProps {
   wins: SubgraphDraw['prizeClaims']
   tier: number
-  closedAt: number
+  awardedAt: number
   className?: string
 }
 
 const PrizeClaimTime = (props: PrizeClaimTimeProps) => {
-  const { wins, tier, closedAt, className } = props
+  const { wins, tier, awardedAt, className } = props
 
   const claimTimeStats = useMemo(() => {
     const tierWins = wins.filter((win) => win.tier === tier)
@@ -187,7 +188,7 @@ const PrizeClaimTime = (props: PrizeClaimTimeProps) => {
       let low = Number.MAX_SAFE_INTEGER
 
       tierWins.forEach((win) => {
-        const seconds = win.timestamp - closedAt
+        const seconds = win.timestamp - awardedAt
 
         if (seconds > high) high = seconds
         if (seconds < low) low = seconds
@@ -199,7 +200,7 @@ const PrizeClaimTime = (props: PrizeClaimTimeProps) => {
 
       return { avg, high, low }
     }
-  }, [wins, tier, closedAt])
+  }, [wins, tier, awardedAt])
 
   return (
     <div className={classNames('flex flex-col gap-2 items-center md:items-start', className)}>

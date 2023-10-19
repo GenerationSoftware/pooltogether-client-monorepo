@@ -2,6 +2,7 @@ import { ExternalLink, LINKS } from '@shared/ui'
 import { SECONDS_PER_DAY } from '@shared/utilities'
 import { GetStaticProps } from 'next'
 import { useTranslations } from 'next-intl'
+import Image from 'next/image'
 import { getMessages } from 'src/utils'
 import { CheckPrizesBanner } from '@components/Account/CheckPrizesBanner'
 import { Layout } from '@components/Layout'
@@ -27,7 +28,14 @@ export default function PrizesPage() {
   return (
     <Layout className='gap-8'>
       <CheckPrizesBanner />
-      <span className='hidden text-6xl py-2 md:block'>🏆</span>
+      <Image
+        src='/partyEmoji.svg'
+        alt='Cabana Party Emoji'
+        width={180}
+        height={180}
+        priority={true}
+        className='hidden w-auto h-24 md:block'
+      />
       <PrizePoolDisplay />
       {/* TODO: add more specific docs link once available */}
       <ExternalLink

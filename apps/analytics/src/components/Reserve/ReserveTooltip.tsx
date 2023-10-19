@@ -5,7 +5,7 @@ import { formatBigIntForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 
 export interface ReserveTooltipProps {
-  reserve: { current: bigint; forOpenDraw: bigint }
+  reserve: { current: bigint; pending: bigint }
   token: Token
   iconSize?: 'sm' | 'md' | 'lg'
   className?: string
@@ -28,7 +28,7 @@ export const ReserveTooltip = (props: ReserveTooltipProps) => {
           </span>
           <span>
             Open Draw:{' '}
-            {formatBigIntForDisplay(reserve.forOpenDraw, token.decimals, {
+            {formatBigIntForDisplay(reserve.pending, token.decimals, {
               maximumFractionDigits: 1
             })}{' '}
             {token.symbol}

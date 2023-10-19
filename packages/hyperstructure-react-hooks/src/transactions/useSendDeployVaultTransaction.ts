@@ -33,7 +33,6 @@ export const useSendDeployVaultTransaction = (
     token,
     name,
     symbol,
-    twabController,
     yieldSourceAddress,
     prizePool,
     claimer,
@@ -54,7 +53,6 @@ export const useSendDeployVaultTransaction = (
     !!token &&
     !!name &&
     !!symbol &&
-    !!twabController &&
     !!yieldSourceAddress &&
     !!prizePool &&
     !!claimer &&
@@ -73,12 +71,11 @@ export const useSendDeployVaultTransaction = (
       token,
       name,
       symbol,
-      twabController,
       yieldSourceAddress,
       prizePool,
       claimer,
       feeRecipient,
-      BigInt(feePercentage),
+      feePercentage,
       owner
     ],
     enabled

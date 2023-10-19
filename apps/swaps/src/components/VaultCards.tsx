@@ -18,7 +18,7 @@ export const VaultCards = (props: VaultCardsProps) => {
   const { chainId, className } = props
 
   const vaultInfoArray = VAULT_ADDRESSES[chainId].map((address) => ({ chainId, address }))
-  const vaults = useVaults(vaultInfoArray)
+  const vaults = useVaults(vaultInfoArray, { useAllChains: true })
 
   const prizePoolInfo = PRIZE_POOLS.find((pool) => pool.chainId === chainId) as {
     chainId: NETWORK

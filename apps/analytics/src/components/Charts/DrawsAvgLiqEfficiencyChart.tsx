@@ -1,16 +1,19 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
+  useBlocksAtTimestamps,
   useHistoricalTokenPrices,
+  useLiquidationEvents,
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { formatNumberForDisplay, NETWORK, POOL_TOKEN_ADDRESSES } from '@shared/utilities'
 import classNames from 'classnames'
+import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
+import { currentTimestampAtom } from 'src/atoms'
 import { Address, formatUnits } from 'viem'
+import { QUERY_START_BLOCK } from '@constants/config'
 import { useAllDrawsStatus } from '@hooks/useAllDrawsStatus'
-import { useBlocksAtTimestamps } from '@hooks/useBlocksAtTimestamps'
 import { useHistoricalLiquidationPairTokenOutPrices } from '@hooks/useHistoricalLiquidationPairTokenOutPrices'
-import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
 import { useRngTxs } from '@hooks/useRngTxs'
 import { LineChart } from './LineChart'
 
@@ -22,22 +25,26 @@ interface DrawsAvgLiqEfficiencyChartProps {
 export const DrawsAvgLiqEfficiencyChart = (props: DrawsAvgLiqEfficiencyChartProps) => {
   const { prizePool, className } = props
 
-  const { data: liquidationEvents } = useLiquidationEvents(prizePool)
+  const { data: liquidationEvents } = useLiquidationEvents(prizePool?.chainId, {
+    fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
+  })
 
   const { data: rngTxs } = useRngTxs(prizePool)
   const drawIds = rngTxs?.map((txs) => txs.rng.drawId) ?? []
 
   const { data: allDrawsStatus } = useAllDrawsStatus(prizePool, drawIds)
 
+  const currentTimestamp = useAtomValue(currentTimestampAtom)
+
   const uniqueOpenedAtTimestamps = new Set(allDrawsStatus?.map((draw) => draw.openedAt))
   const { data: openedAtBlocksByTimestamp } = useBlocksAtTimestamps(prizePool?.chainId, [
     ...uniqueOpenedAtTimestamps
   ])
 
-  const uniqueEndedAtTimestamps = new Set(allDrawsStatus?.map((draw) => draw.endedAt))
-  const { data: endedAtBlocksByTimestamp } = useBlocksAtTimestamps(
+  const uniqueClosedAtTimestamps = new Set(allDrawsStatus?.map((draw) => draw.closedAt))
+  const { data: closedAtBlocksByTimestamp } = useBlocksAtTimestamps(
     prizePool?.chainId,
-    [...uniqueEndedAtTimestamps].filter((t) => !!t) as number[]
+    [...uniqueClosedAtTimestamps].filter((t) => !!t) as number[]
   )
 
   // TODO: this assumes the tokenIn is always POOL (and uses mainnet pricing) - not ideal
@@ -64,32 +71,33 @@ export const DrawsAvgLiqEfficiencyChart = (props: DrawsAvgLiqEfficiencyChartProp
       !!liquidationEvents &&
       !!allDrawsStatus &&
       !!openedAtBlocksByTimestamp &&
-      !!endedAtBlocksByTimestamp &&
+      !!closedAtBlocksByTimestamp &&
       !!prizeToken &&
       !!prizeTokenPrices &&
       !!Object.keys(tokenOutPrices).length
     ) {
-      const data: { name: string; percentage: number }[] = []
+      const data: { name: string; percentage: number; cumAvg: number }[] = []
+
+      let numValues = 0
+      let sumValues = 0
 
       allDrawsStatus.forEach((draw) => {
-        const targetTimestamp = !!draw.endedAt
-          ? draw.endedAt - (draw.endedAt - draw.openedAt) / 2
-          : draw.openedAt
+        const targetTimestamp =
+          draw.closedAt < currentTimestamp
+            ? draw.closedAt - (draw.closedAt - draw.openedAt) / 2
+            : draw.openedAt
         const targetDate = new Date(targetTimestamp * 1_000).toISOString().split('T')[0]
         const prizeTokenPrice = prizeTokenPrices.find((entry) => entry.date === targetDate)?.price
 
         const openedAtBlock = openedAtBlocksByTimestamp[draw.openedAt]
-        const endedAtBlock = !!draw.endedAt ? endedAtBlocksByTimestamp[draw.endedAt] : undefined
+        const closedAtBlock = !!draw.closedAt ? closedAtBlocksByTimestamp[draw.closedAt] : undefined
 
-        if (!!prizeTokenPrice && !!openedAtBlock) {
+        if (!!prizeTokenPrice && !!openedAtBlock && !!closedAtBlock) {
           let totalValueIn = 0
           let totalValueOut = 0
 
           const drawLiquidationEvents = liquidationEvents.filter(
-            (e) =>
-              e.blockNumber > openedAtBlock.number &&
-              (draw.endedAt === undefined ||
-                (!!endedAtBlock && e.blockNumber <= endedAtBlock.number))
+            (e) => e.blockNumber > openedAtBlock.number && e.blockNumber <= closedAtBlock.number
           )
 
           drawLiquidationEvents.forEach((event) => {
@@ -111,7 +119,11 @@ export const DrawsAvgLiqEfficiencyChart = (props: DrawsAvgLiqEfficiencyChartProp
           })
 
           if (!!totalValueIn && !!totalValueOut) {
-            data.push({ name: `#${draw.id}`, percentage: (totalValueIn / totalValueOut) * 100 })
+            const percentage = (totalValueIn / totalValueOut) * 100
+            numValues++
+            sumValues += percentage
+            const cumAvg = sumValues / numValues
+            data.push({ name: `#${draw.id}`, percentage, cumAvg })
           }
         }
       })
@@ -122,7 +134,7 @@ export const DrawsAvgLiqEfficiencyChart = (props: DrawsAvgLiqEfficiencyChartProp
     liquidationEvents,
     allDrawsStatus,
     openedAtBlocksByTimestamp,
-    endedAtBlocksByTimestamp,
+    closedAtBlocksByTimestamp,
     prizeToken,
     prizeTokenPrices,
     tokenOutPrices
@@ -134,12 +146,12 @@ export const DrawsAvgLiqEfficiencyChart = (props: DrawsAvgLiqEfficiencyChartProp
         <span className='ml-2 md:ml-6'>Average Liquidation Efficiency</span>
         <LineChart
           data={chartData}
-          lines={[{ id: 'percentage' }]}
+          lines={[{ id: 'percentage' }, { id: 'cumAvg', strokeDashArray: 5 }]}
           tooltip={{
             show: true,
-            formatter: (value) => [
+            formatter: (value, name) => [
               `${formatNumberForDisplay(value, { maximumFractionDigits: 2 })}%`,
-              'Avg Liq. Efficiency'
+              name === 'percentage' ? 'Avg Liq. Efficiency' : 'Cumulative Avg'
             ],
             labelFormatter: (label) => `Draw ${label}`
           }}

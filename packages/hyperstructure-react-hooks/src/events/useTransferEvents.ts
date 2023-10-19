@@ -1,8 +1,17 @@
 import { NO_REFETCH } from '@shared/generic-react-hooks'
+import { getTokenTransferEvents } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
+import { QUERY_KEYS } from '../constants'
 
+/**
+ * Returns `Transfer` events for a given token
+ * @param chainId chain ID the token is in
+ * @param tokenAddress the token's address
+ * @param options optional settings
+ * @returns
+ */
 export const useTransferEvents = (
   chainId: number,
   tokenAddress: Address,
@@ -11,7 +20,7 @@ export const useTransferEvents = (
   const publicClient = usePublicClient({ chainId })
 
   const queryKey = [
-    'tokenTransfers',
+    QUERY_KEYS.tokenTransferEvents,
     chainId,
     tokenAddress,
     options?.from,
@@ -22,27 +31,7 @@ export const useTransferEvents = (
 
   return useQuery(
     queryKey,
-    async () => {
-      return await publicClient.getLogs({
-        address: tokenAddress,
-        event: {
-          inputs: [
-            { indexed: true, internalType: 'address', name: 'from', type: 'address' },
-            { indexed: true, internalType: 'address', name: 'to', type: 'address' },
-            { indexed: false, internalType: 'uint256', name: 'value', type: 'uint256' }
-          ],
-          name: 'Transfer',
-          type: 'event'
-        },
-        args: {
-          from: options?.from,
-          to: options?.to
-        },
-        fromBlock: options?.fromBlock,
-        toBlock: options?.toBlock ?? 'latest',
-        strict: true
-      })
-    },
+    async () => await getTokenTransferEvents(publicClient, tokenAddress, options),
     {
       enabled: !!chainId && !!publicClient && !!tokenAddress,
       ...NO_REFETCH

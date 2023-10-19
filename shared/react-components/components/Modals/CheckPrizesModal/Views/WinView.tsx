@@ -3,7 +3,7 @@ import {
   useLastCheckedPrizesTimestamps,
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { SubgraphPrize, TokenWithAmount } from '@shared/types'
+import { DrawWithTimestamps, SubgraphPrize, TokenWithAmount } from '@shared/types'
 import { Intl } from '@shared/types'
 import { Button } from '@shared/ui'
 import { getSimpleDate } from '@shared/utilities'
@@ -19,7 +19,7 @@ import { winAnimation } from '../animations'
 
 interface WinViewProps {
   prizePools: PrizePool[]
-  draws: { [chainId: number]: { id: number; firstClaim: number; lastClaim: number }[] }
+  draws: { [chainId: number]: DrawWithTimestamps[] }
   wins: { [chainId: number]: SubgraphPrize[] }
   onGoToAccount: () => void
   intl?: Intl<'viewAccount' | 'youWonX' | 'xWon'>

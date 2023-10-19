@@ -14,7 +14,6 @@ export const usePublicClients = (options?: { useAll?: boolean }): PublicClient[]
   const publicClients: { mainnets: PublicClient[]; testnets: PublicClient[] } = {
     mainnets: [
       usePublicClient({ chainId: NETWORK.mainnet }),
-      usePublicClient({ chainId: NETWORK.polygon }),
       usePublicClient({ chainId: NETWORK.optimism }),
       usePublicClient({ chainId: NETWORK.arbitrum })
     ],
@@ -48,7 +47,6 @@ export const usePublicClientsByChain = (options?: {
   } = {
     mainnets: {
       [NETWORK.mainnet]: usePublicClient({ chainId: NETWORK.mainnet }),
-      [NETWORK.polygon]: usePublicClient({ chainId: NETWORK.polygon }),
       [NETWORK.optimism]: usePublicClient({ chainId: NETWORK.optimism }),
       [NETWORK.arbitrum]: usePublicClient({ chainId: NETWORK.arbitrum })
     },

@@ -20,7 +20,7 @@ export const useVaultContributionAmount = (
   return useQuery(
     queryKey,
     async () => {
-      const lastDrawId = (await prizePool.getLastDrawId()) || 1
+      const lastDrawId = (await prizePool.getLastAwardedDrawId()) || 1
       const startDrawId = numDraws > lastDrawId ? 1 : lastDrawId - Math.floor(numDraws) + 1
 
       const contributionAmounts = await prizePool.getVaultContributedAmounts(

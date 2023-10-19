@@ -1,8 +1,8 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
   useAllUserEligibleDraws,
-  useLastDrawId,
-  useLastDrawTimestamps,
+  useLastAwardedDrawId,
+  useLastAwardedDrawTimestamps,
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl, SubgraphDraw } from '@shared/types'
@@ -123,14 +123,14 @@ const DrawTotals = (props: DrawTotalsProps) => {
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
-  const { data: lastDrawId } = useLastDrawId(prizePool)
-  const { data: lastDrawTimestamps } = useLastDrawTimestamps(prizePool)
+  const { data: lastDrawId } = useLastAwardedDrawId(prizePool)
+  const { data: lastDrawTimestamps } = useLastAwardedDrawTimestamps(prizePool)
 
   const isOngoing = useMemo(() => {
     if (!!lastDrawId && draw.id === lastDrawId && !!lastDrawTimestamps) {
       const currentTime = Date.now() / 1_000
-      const drawPeriod = lastDrawTimestamps.end - lastDrawTimestamps.start
-      const drawFinalizedTimestamp = lastDrawTimestamps.end + drawPeriod
+      const drawPeriod = lastDrawTimestamps.closedAt - lastDrawTimestamps.openedAt
+      const drawFinalizedTimestamp = lastDrawTimestamps.closedAt + drawPeriod
       return drawFinalizedTimestamp > currentTime
     }
   }, [lastDrawId, lastDrawTimestamps])

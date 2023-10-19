@@ -1,4 +1,8 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import {
+  useBlockAtTimestamp,
+  useLiquidationEvents
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { PRIZE_POOLS, SECONDS_PER_DAY, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtom } from 'jotai'
@@ -7,8 +11,7 @@ import { currentTimestampAtom } from 'src/atoms'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { LiquidationsTable } from '@components/Liquidations/LiquidationsTable'
-import { useBlockAtTimestamp } from '@hooks/useBlockAtTimestamp'
-import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
+import { QUERY_START_BLOCK } from '@constants/config'
 
 interface LiquidationsViewProps {
   chainId: number
@@ -42,7 +45,11 @@ export const LiquidationsView = (props: LiquidationsViewProps) => {
     currentTimestamp - SECONDS_PER_DAY
   )
 
-  const { refetch: refetchLiquidationEvents } = useLiquidationEvents(prizePool)
+  const fromBlock = !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
+
+  const { refetch: refetchLiquidationEvents } = useLiquidationEvents(prizePool?.chainId, {
+    fromBlock
+  })
 
   // Automatic data refetching
   useEffect(() => {

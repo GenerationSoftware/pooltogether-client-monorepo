@@ -1,15 +1,11 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
 import { ExternalLink, Spinner } from '@shared/ui'
-import {
-  formatBigIntForDisplay,
-  getBlockExplorerUrl,
-  NETWORK,
-  shorten,
-  sToMs
-} from '@shared/utilities'
+import { formatBigIntForDisplay, getBlockExplorerUrl, shorten, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
+import { RELAY_ORIGINS } from '@constants/config'
 import { useDrawRngFeePercentage } from '@hooks/useDrawRngFeePercentage'
+import { useDrawStatus } from '@hooks/useDrawStatus'
 import { useRngTxs } from '@hooks/useRngTxs'
 import { DrawCardItemTitle } from './DrawCardItemTitle'
 
@@ -22,23 +18,29 @@ interface DrawRngFeeProps {
 export const DrawRngFee = (props: DrawRngFeeProps) => {
   const { prizePool, drawId, className } = props
 
+  const { status, isSkipped } = useDrawStatus(prizePool, drawId)
+
   const { data: allRngTxs, isFetched: isFetchedAllRngTxs } = useRngTxs(prizePool)
   const rngTx = allRngTxs?.find((txs) => txs.rng.drawId === drawId)?.rng
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
-  const { data: currentFeePercentage } = useDrawRngFeePercentage({ refetchInterval: sToMs(60) })
+  const { data: currentFeePercentage } = useDrawRngFeePercentage(prizePool, {
+    refetchInterval: sToMs(60)
+  })
+
+  const canBeAwarded = status === 'closed' && !!currentFeePercentage && !isSkipped
 
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
-      <DrawCardItemTitle>{isFetchedAllRngTxs && !rngTx ? 'Current ' : ''}RNG Fee</DrawCardItemTitle>
+      <DrawCardItemTitle>{canBeAwarded ? 'Current ' : ''}RNG Fee</DrawCardItemTitle>
       <div className='flex flex-col gap-1 text-sm text-pt-purple-700 whitespace-nowrap'>
-        {isFetchedAllRngTxs ? (
+        {isFetchedAllRngTxs && !!prizeToken ? (
           <>
             <span>
               {!!rngTx ? (
                 <>
-                  {!!rngTx.fee && !!prizeToken ? (
+                  {!!rngTx.fee ? (
                     <>
                       <span className='text-xl font-semibold'>
                         {formatBigIntForDisplay(rngTx.fee, prizeToken.decimals, {
@@ -47,7 +49,9 @@ export const DrawRngFee = (props: DrawRngFeeProps) => {
                         })}
                       </span>{' '}
                       {prizeToken.symbol} (
-                      {formatBigIntForDisplay(rngTx.feeFraction, 16, { maximumFractionDigits: 0 })}
+                      {formatBigIntForDisplay(rngTx.feeFraction, 16, {
+                        maximumSignificantDigits: 2
+                      })}
                       %)
                     </>
                   ) : (
@@ -62,7 +66,7 @@ export const DrawRngFee = (props: DrawRngFeeProps) => {
                     </>
                   )}
                 </>
-              ) : !!currentFeePercentage ? (
+              ) : canBeAwarded ? (
                 <>
                   <span className='text-xl font-semibold'>
                     {currentFeePercentage.toLocaleString(undefined, {
@@ -77,11 +81,13 @@ export const DrawRngFee = (props: DrawRngFeeProps) => {
               )}
             </span>
             {!!rngTx ? (
-              <ExternalLink href={getBlockExplorerUrl(NETWORK.mainnet, rngTx.hash, 'tx')}>
+              <ExternalLink
+                href={getBlockExplorerUrl(RELAY_ORIGINS[prizePool.chainId], rngTx.hash, 'tx')}
+              >
                 {shorten(rngTx.hash, { short: true })}
               </ExternalLink>
             ) : (
-              !!currentFeePercentage && <span>Not Yet Awarded</span>
+              canBeAwarded && <span>Not Yet Awarded</span>
             )}
           </>
         ) : (

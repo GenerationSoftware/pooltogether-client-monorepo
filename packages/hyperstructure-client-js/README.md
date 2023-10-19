@@ -159,7 +159,7 @@ const tokenData = await prizePool.getPrizeTokenData()
 ### Getting a prize pool's last awarded draw ID
 
 ```ts
-const lastDrawId = await prizePool.getLastDrawId()
+const lastDrawId = await prizePool.getLastAwardedDrawId()
 ```
 
 ### Getting current and estimated prize amounts and frequency for all tiers of a prize pool

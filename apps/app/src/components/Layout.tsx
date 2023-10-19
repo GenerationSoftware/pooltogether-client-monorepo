@@ -35,7 +35,6 @@ import { DEFAULT_VAULT_LISTS } from '@constants/config'
 import { useSelectedPrizePool } from '@hooks/useSelectedPrizePool'
 import { useSettingsModalView } from '@hooks/useSettingsModalView'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
-import { BetaBanner } from './BetaBanner'
 import { drawIdAtom } from './Prizes/PrizePoolWinners'
 import { VaultListHandler } from './VaultListHandler'
 
@@ -281,7 +280,6 @@ export const Layout = (props: LayoutProps) => {
           className
         )}
       >
-        <BetaBanner />
         {isBrowser && router.isReady && <>{children}</>}
       </main>
 

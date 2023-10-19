@@ -11,8 +11,9 @@ import {
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
-import { LensterShareButton } from '../../../Buttons/LensterShareButton'
+import { HeyShareButton } from '../../../Buttons/HeyShareButton'
 import { TwitterShareButton } from '../../../Buttons/TwitterShareButton'
+import { WarpcastShareButton } from '../../../Buttons/WarpcastShareButton'
 import { depositFormTokenAmountAtom } from '../../../Form/DepositForm'
 import { SuccessPooly } from '../../../Graphics/SuccessPooly'
 
@@ -23,7 +24,13 @@ interface SuccessViewProps {
   goToAccount?: () => void
   intl?: {
     base?: Intl<
-      'success' | 'deposited' | 'nowEligible' | 'shareTwitter' | 'shareLenster' | 'viewAccount'
+      | 'success'
+      | 'deposited'
+      | 'nowEligible'
+      | 'shareTwitter'
+      | 'shareWarpcast'
+      | 'shareHey'
+      | 'viewAccount'
     >
     common?: Intl<'prizePool' | 'viewOn'>
   }
@@ -85,7 +92,7 @@ export const SuccessView = (props: SuccessViewProps) => {
 
 interface ShareButtonsProps {
   vault: Vault
-  intl?: Intl<'shareTwitter' | 'shareLenster'>
+  intl?: Intl<'shareTwitter' | 'shareWarpcast' | 'shareHey'>
 }
 
 const ShareButtons = (props: ShareButtonsProps) => {
@@ -100,7 +107,8 @@ const ShareButtons = (props: ShareButtonsProps) => {
     if (!!tokenData) {
       return {
         twitter: getShareText(tokenData.symbol, 'twitter'),
-        lenster: getShareText(tokenData.symbol, 'lenster')
+        warpcast: getShareText(tokenData.symbol, 'warpcast'),
+        hey: getShareText(tokenData.symbol, 'hey')
       }
     } else {
       return {}
@@ -116,8 +124,9 @@ const ShareButtons = (props: ShareButtonsProps) => {
         fullSized={true}
         intl={intl}
       />
-      <LensterShareButton
-        text={text.lenster}
+      <WarpcastShareButton text={text.warpcast} url={LINKS.app} fullSized={true} intl={intl} />
+      <HeyShareButton
+        text={text.hey}
         hashTags={hashTags}
         url={LINKS.app}
         fullSized={true}
@@ -127,36 +136,26 @@ const ShareButtons = (props: ShareButtonsProps) => {
   )
 }
 
-type SharePlatform = 'twitter' | 'lenster'
+type SharePlatform = 'twitter' | 'warpcast' | 'hey'
 
 const getShareText = (tokenSymbol: string, platform: SharePlatform) => {
   const protocolAccounts: Record<SharePlatform, string> = {
     twitter: '@PoolTogether_',
-    lenster: '@pooltogether.lens'
+    warpcast: 'PoolTogether',
+    hey: '@pooltogether'
   }
 
   const pooltogether = protocolAccounts[platform]
   const token = `$${tokenSymbol}`
 
-  // const textOptions: string[] = [
-  //   `⚡️ Injecting some excitement into my savings strategy with ${pooltogether}! Just made my deposit - watch out for my victory dance when I scoop up that grand prize. 🏆`,
-  //   `🎉 Just joined the thrill ride of decentralized savings! I've deposited into ${pooltogether}, crossing my fingers for that sweet grand prize win. 🤞🏆💰`,
-  //   `Just added some ${token} to the ${pooltogether} mix! Excited to be part of a no-loss savings game. Who knows, maybe I'll be the next lucky winner! 🤞💸`,
-  //   `🎉 Joined the ${pooltogether} community by depositing ${token} today! Let's see if my luck will land me that grand prize. 🏆🚀`,
-  //   `Tossed my ${token} into the ${pooltogether} mix! Who else is crossing their fingers for a no-loss win?`,
-  //   `Just added some ${token} to the ${pooltogether} party! 🎉 Let's ride this wave together! 🌊💸`,
-  //   `🚂 Deposited ${token} into ${pooltogether} and I'm excited to see where this ride takes me. Could a cool win be in my future? 🎆💰`
-  // ]
-
-  // TODO: update these for the full launch, with no beta references
   const textOptions: string[] = [
-    `⚡️ Injecting some excitement into my savings strategy with the ${pooltogether} Private Beta! Just made my deposit - watch out for my victory dance when I scoop up that grand prize. 🏆`,
-    `🎉 Just joined the thrill ride of decentralized savings! I've deposited into the ${pooltogether} Private Beta, crossing my fingers for that sweet grand prize win. 🤞🏆💰`,
-    `Just added some ${token} to the ${pooltogether} mix! Excited to be part of a no-loss savings game during its Private Beta. Who knows, maybe I'll be the next lucky winner! 🤞💸`,
-    `🎉 Joined the ${pooltogether} community by depositing ${token} into the Private Beta today! Let's see if my luck will land me that grand prize. 🏆🚀`,
-    `Tossed my ${token} into the ${pooltogether} mix! Who else is crossing their fingers for a no-loss win during this Private Beta?`,
-    `Just added some ${token} to the ${pooltogether} Private Beta party! 🎉 Let's ride this wave together! 🌊💸`,
-    `🚂 Deposited ${token} into the ${pooltogether} Private Beta and I'm excited to see where this ride takes me. Could a cool win be in my future? 🎆💰`
+    `⚡️ Injecting some excitement into my savings strategy with ${pooltogether}! Just made my deposit - watch out for my victory dance when I scoop up that grand prize. 🏆`,
+    `🎉 Just joined the thrill ride of decentralized savings! I've deposited into ${pooltogether}, crossing my fingers for that sweet grand prize win. 🤞🏆💰`,
+    `Just added some ${token} to the ${pooltogether} mix! Excited to be part of a no-loss savings game. Who knows, maybe I'll be the next lucky winner! 🤞💸`,
+    `🎉 Joined the ${pooltogether} community by depositing ${token} today! Let's see if my luck will land me that grand prize. 🏆🚀`,
+    `Tossed my ${token} into the ${pooltogether} mix! Who else is crossing their fingers for a no-loss win?`,
+    `Just added some ${token} to the ${pooltogether} party! 🎉 Let's ride this wave together! 🌊💸`,
+    `🚂 Deposited ${token} into ${pooltogether} and I'm excited to see where this ride takes me. Could a cool win be in my future? 🎆💰`
   ]
 
   const pseudoRandomIndex = Math.floor(Math.random() * textOptions.length)

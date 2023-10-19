@@ -16,10 +16,10 @@ export const HomeHeader = (props: HomeHeaderProps) => {
     <div className={classNames('w-full isolate', className)}>
       <div className='w-full flex flex-col items-center'>
         <Image
-          src='/flamingo.png'
-          alt='Cabana Flamingo'
-          width={176}
-          height={176}
+          src='/partyEmoji.svg'
+          alt='Cabana Party Emoji'
+          width={180}
+          height={180}
           priority={true}
           className='w-auto h-24 z-10 md:h-44'
         />

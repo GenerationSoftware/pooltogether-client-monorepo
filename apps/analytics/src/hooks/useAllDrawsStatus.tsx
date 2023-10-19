@@ -1,5 +1,5 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { useFirstDrawStartTimestamp } from '@generationsoftware/hyperstructure-react-hooks'
+import { useDrawPeriod, useFirstDrawOpenedAt } from '@generationsoftware/hyperstructure-react-hooks'
 import { getSecondsSinceEpoch } from '@shared/utilities'
 import { useMemo } from 'react'
 import { DrawStatus } from './useDrawStatus'
@@ -7,44 +7,64 @@ import { useRngTxs } from './useRngTxs'
 
 export const useAllDrawsStatus = (prizePool: PrizePool, drawIds: number[]) => {
   const { data: firstDrawOpenedAt, isFetched: isFetchedFirstDrawOpenedAt } =
-    useFirstDrawStartTimestamp(prizePool)
+    useFirstDrawOpenedAt(prizePool)
+
+  const { data: drawPeriod, isFetched: isFetchedDrawPeriod } = useDrawPeriod(prizePool)
 
   const { data: allRngTxs, isFetched: isFetchedAllRngTxs } = useRngTxs(prizePool)
 
   const data = useMemo(() => {
-    if (!!firstDrawOpenedAt && !!allRngTxs) {
+    if (!!firstDrawOpenedAt && !!drawPeriod && !!allRngTxs) {
       const allDrawsStatus: {
         id: number
         status: DrawStatus
         openedAt: number
-        endedAt?: number
-        closedAt?: number
-        periodsSkipped: number
+        closedAt: number
+        awardedAt?: number
+        finalizedAt: number
+        isSkipped: boolean
       }[] = []
+
+      const currentTime = getSecondsSinceEpoch()
 
       drawIds.forEach((drawId) => {
         const rngTxs = allRngTxs.find((txs) => txs.rng.drawId === drawId)
-        const prevRngTxs = allRngTxs.find((txs) => txs.rng.drawId === drawId - 1)
 
-        const openedAt = prevRngTxs?.relay.l2?.endedAt ?? firstDrawOpenedAt
-        const endedAt = rngTxs?.relay.l2?.endedAt
-        const closedAt = rngTxs?.relay.l2?.timestamp
+        const openedAt = firstDrawOpenedAt + drawPeriod * (drawId - 1)
+        const closedAt = openedAt + drawPeriod
+        const awardedAt = rngTxs?.relay.l2?.timestamp
+        const finalizedAt = closedAt + drawPeriod
 
-        const timeSinceEnded = !!endedAt ? getSecondsSinceEpoch() - endedAt : -1
-        const drawPeriod = prizePool.drawPeriodInSeconds as number
-        const isFinalized = timeSinceEnded > drawPeriod
+        const isClosed = currentTime >= closedAt
+        const isAwarded = !!awardedAt
+        const isFinalized = isAwarded && currentTime >= finalizedAt
 
-        const status: DrawStatus = isFinalized ? 'finalized' : !!closedAt ? 'closed' : 'open'
-        const periodsSkipped = !!endedAt ? Math.floor((endedAt - openedAt - 1) / drawPeriod) : 0
+        const status: DrawStatus = isFinalized
+          ? 'finalized'
+          : isAwarded
+          ? 'awarded'
+          : isClosed
+          ? 'closed'
+          : 'open'
 
-        allDrawsStatus.push({ id: drawId, status, openedAt, endedAt, closedAt, periodsSkipped })
+        const isSkipped = status === 'closed' && currentTime - closedAt > closedAt - openedAt
+
+        allDrawsStatus.push({
+          id: drawId,
+          status,
+          openedAt,
+          closedAt,
+          awardedAt,
+          finalizedAt,
+          isSkipped
+        })
       })
 
       return allDrawsStatus
     }
   }, [drawIds, firstDrawOpenedAt, allRngTxs])
 
-  const isFetched = isFetchedFirstDrawOpenedAt && isFetchedAllRngTxs
+  const isFetched = isFetchedFirstDrawOpenedAt && isFetchedDrawPeriod && isFetchedAllRngTxs
 
   return { data, isFetched }
 }

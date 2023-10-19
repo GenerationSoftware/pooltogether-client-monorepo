@@ -15,6 +15,7 @@ import { useRouter } from 'next/router'
 import { VaultState } from 'src/types'
 import { zeroAddress } from 'viem'
 import { useAccount } from 'wagmi'
+import { SUPPORTED_NETWORKS } from '@constants/config'
 import { useDeployedVaults } from '@hooks/useDeployedVaults'
 import { useDeployedVaultState } from '@hooks/useDeployedVaultState'
 import { useLiquidationPairSteps } from '@hooks/useLiquidationPairSteps'
@@ -30,7 +31,9 @@ export const DeployedVaultsTable = (props: DeployedVaultsTableProps) => {
 
   const { vaultInfoArray } = useDeployedVaults()
   const vaults = useVaults(vaultInfoArray, { useAllChains: true })
-  const vaultsArray = Object.values(vaults.vaults)
+  const vaultsArray = Object.values(vaults.vaults).filter((vault) =>
+    SUPPORTED_NETWORKS.includes(vault.chainId)
+  )
 
   const { width: screenWidth } = useScreenSize()
   const isMobile = !!screenWidth && screenWidth < 1024
@@ -178,7 +181,6 @@ const VaultClaimerItem = (props: ItemProps) => {
   )
 }
 
-// TODO: add checkmark / warning icons
 const VaultStatusItem = (props: ItemProps) => {
   const { vault } = props
 

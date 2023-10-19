@@ -175,8 +175,9 @@
     "deposited": "You deposited {tokens}",
     "withdrew": "You withdrew {tokens}",
     "nowEligible": "You are now eligible for all future draws in this pool.",
-    "shareTwitter": "Share Tweet",
-    "shareLenster": "Share on Lenster",
+    "shareTwitter": "Share on Twitter",
+    "shareWarpcast": "Share on Warpcast",
+    "shareHey": "Share on Hey",
     "viewAccount": "View Account",
     "uhOh": "Uh oh!",
     "failedTx": "Something went wrong....",
@@ -241,7 +242,8 @@
     "exactApproval": "You'll give your approval to deposit a specific amount of {symbol}",
     "infiniteApproval": "You won't need to approve {symbol} the next time you want to deposit",
     "vaultFee": "This a percentage of yield that does not go towards prizes, and is determined by the vault deployer",
-    "importedVault": "This vault is from the following imported list(s):"
+    "importedVault": "This vault is from the following imported list(s):",
+    "vaultContribution": "This is the amount of {symbol} liquidated from vault yield and contributed to the prize pool over the last {days} days"
   },
   "Toasts": {
     "transactions": {
@@ -284,9 +286,5 @@
       "negativeNumber": "Enter a positive number",
       "tooManyDecimals": "Too many decimals"
     }
-  },
-  "Beta": {
-    "beta": "Beta",
-    "learnMore": "Learn more on the gov forum"
   }
 }

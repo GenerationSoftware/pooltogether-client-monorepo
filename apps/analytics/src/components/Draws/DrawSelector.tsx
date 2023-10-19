@@ -1,10 +1,10 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import { useDrawIds, useLastAwardedDrawId } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
 import { useAtom } from 'jotai'
 import { ReactNode, useEffect, useMemo } from 'react'
 import { selectedDrawIdAtom } from 'src/atoms'
-import { useRngTxs } from '@hooks/useRngTxs'
 
 interface DrawSelectorProps {
   prizePool: PrizePool
@@ -14,39 +14,34 @@ interface DrawSelectorProps {
 export const DrawSelector = (props: DrawSelectorProps) => {
   const { prizePool, className } = props
 
+  const { data: drawIds } = useDrawIds(prizePool)
+
   const [drawIdSelected, setDrawIdSelected] = useAtom(selectedDrawIdAtom)
 
-  const { data: rngTxs, isFetched: isFetchedRngTxs } = useRngTxs(prizePool)
-  const drawIds =
-    isFetchedRngTxs && !!rngTxs
-      ? rngTxs.filter((txs) => !!txs.relay.l2).map((txs) => txs.rng.drawId)
-      : []
+  const { data: lastDrawId } = useLastAwardedDrawId(prizePool)
 
   useEffect(() => {
-    if (drawIds.length > 0 && !drawIdSelected) {
-      setDrawIdSelected(drawIds[drawIds.length - 1])
+    if (!!lastDrawId && !drawIdSelected) {
+      setDrawIdSelected(lastDrawId)
     }
-  }, [drawIds])
-
-  const firstDrawId = drawIds[0]
-  const lastDrawId = drawIds[drawIds.length - 1]
+  }, [lastDrawId])
 
   const drawIdArray = useMemo(() => {
-    return !!drawIdSelected
-      ? getDrawIdsArray(drawIdSelected, firstDrawId, lastDrawId)
+    return !!drawIdSelected && !!lastDrawId
+      ? getDrawIdsArray(drawIdSelected, drawIds[0], lastDrawId)
       : Array(7).fill(0)
-  }, [firstDrawId, lastDrawId, drawIdSelected])
+  }, [drawIds, lastDrawId, drawIdSelected])
 
-  if (!drawIdSelected) {
+  if (!drawIdSelected || !lastDrawId) {
     return <Spinner className='after:border-y-pt-purple-800' />
   }
 
   return (
     <div className={classNames('flex gap-2 items-center text-xl text-pt-purple-500', className)}>
       <DrawId
-        id={firstDrawId}
+        id={drawIds[0]}
         content={<>&lt;&lt;</>}
-        className={classNames({ 'opacity-0': drawIdSelected === firstDrawId })}
+        className={classNames({ 'opacity-0': drawIdSelected === drawIds[0] })}
       />
       {drawIdArray.map((id) => (
         <DrawId key={`drawIdSelector-${id}`} id={id} />
@@ -101,7 +96,7 @@ const getDrawIdsArray = (currId: number, firstId: number, lastId: number) => {
         : currId < lastId
         ? 5
         : 6
-      : currId - 1
+      : currId - firstId
 
   const padRight =
     currId < lastId - 2

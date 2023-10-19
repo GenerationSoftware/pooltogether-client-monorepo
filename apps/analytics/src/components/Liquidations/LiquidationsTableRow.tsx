@@ -1,5 +1,9 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { useTokenPrices } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useLiquidationEvents,
+  useTokenPrices,
+  useTxReceipts
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { Token, TokenWithPrice } from '@shared/types'
 import { ExternalLink, Spinner } from '@shared/ui'
@@ -13,11 +17,9 @@ import classNames from 'classnames'
 import { ReactNode, useMemo } from 'react'
 import { getTxGasSpent } from 'src/utils'
 import { Address, formatEther, formatUnits } from 'viem'
-import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
 import { useLiquidationPairLiquidatableBalance } from '@hooks/useLiquidationPairLiquidatableBalance'
 import { useLiquidationPairTokenOutData } from '@hooks/useLiquidationPairTokenOutData'
 import { useLiquidationPairTokenOutPrice } from '@hooks/useLiquidationPairTokenOutPrice'
-import { useTxReceipts } from '@hooks/useTxReceipts'
 import { liquidationHeaders } from './LiquidationsTable'
 import { LiquidationTxsDropdown } from './LiquidationTxsDropdown'
 

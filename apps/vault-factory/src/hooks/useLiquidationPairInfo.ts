@@ -1,5 +1,5 @@
 import {
-  useFirstDrawStartTimestamp,
+  useFirstDrawOpenedAt,
   usePrizePool,
   useVault,
   useVaultShareData
@@ -12,7 +12,7 @@ import {
   liquidationPairMinimumAuctionAmountAtom
 } from 'src/atoms'
 import { SupportedNetwork } from 'src/types'
-import { Address, parseUnits } from 'viem'
+import { Address, parseEther, parseUnits } from 'viem'
 import { LP_CONFIG } from '@constants/config'
 
 /**
@@ -38,10 +38,12 @@ export const useLiquidationPairInfo = (
   }
 
   const prizePool = usePrizePool(chainId, prizePoolInfo.address)
-  const { data: periodOffset } = useFirstDrawStartTimestamp(prizePool)
+  const { data: periodOffset } = useFirstDrawOpenedAt(prizePool)
 
   const periodLength = prizePoolInfo.options.drawPeriodInSeconds
-  const targetFirstSaleTime = LP_CONFIG.targetFirstSaleTimeFraction * periodLength
+  const targetFirstSaleTime = LP_CONFIG[chainId].targetFirstSaleTimeFraction * periodLength
+
+  const decayConstant = parseEther('130') / BigInt(periodLength * 50)
 
   const initialAmountOut = !!shareToken ? parseUnits('1', shareToken.decimals) : undefined
 
@@ -53,7 +55,7 @@ export const useLiquidationPairInfo = (
     periodLength,
     periodOffset,
     targetFirstSaleTime,
-    decayConstant: LP_CONFIG.decayConstant,
+    decayConstant,
     initialAmountIn,
     initialAmountOut,
     minimumAuctionAmount

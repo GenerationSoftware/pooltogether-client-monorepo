@@ -1,5 +1,4 @@
 import { Intl } from '@shared/types'
-import '@shared/ui'
 import { Button, ButtonProps } from '@shared/ui'
 
 interface TwitterShareButtonProps extends Omit<ButtonProps, 'onClick' | 'href' | 'target'> {
@@ -26,7 +25,7 @@ export const TwitterShareButton = (props: TwitterShareButtonProps) => {
       disabled={text === undefined || disabled}
       {...rest}
     >
-      {children ?? intl?.('shareTwitter') ?? 'Share Tweet'}
+      {children ?? intl?.('shareTwitter') ?? 'Share on Twitter'}
     </Button>
   )
 }

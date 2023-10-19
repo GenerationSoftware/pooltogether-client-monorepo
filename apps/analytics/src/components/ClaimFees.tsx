@@ -1,14 +1,16 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
-  usePrizeDrawWinners,
-  usePrizeTokenData
+  useDrawAwardedEvents,
+  usePrizeDrawWinners
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { SubgraphDraw, Token } from '@shared/types'
-import { Spinner } from '@shared/ui'
-import { divideBigInts, formatBigIntForDisplay, MAX_UINT_256 } from '@shared/utilities'
+import { SubgraphDraw } from '@shared/types'
+import { ExternalLink, Spinner } from '@shared/ui'
+import { divideBigInts, getBlockExplorerUrl, MAX_UINT_256 } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
-import { useDrawClosedEvents } from '@hooks/useDrawClosedEvents'
+import { QUERY_START_BLOCK } from '@constants/config'
+
+type Stat = { amount: bigint; percentage: number; txHash?: `0x${string}` }
 
 interface ClaimFeesProps {
   prizePool: PrizePool
@@ -24,12 +26,12 @@ export const ClaimFees = (props: ClaimFeesProps) => {
   const { data: allDraws, isFetched: isFetchedAllDraws } = usePrizeDrawWinners(prizePool)
   const draw = allDraws?.find((d) => d.id === drawId)
 
-  const { data: drawClosedEvents, isFetched: isFetchedDrawClosedEvents } =
-    useDrawClosedEvents(prizePool)
-  const drawClosedEvent = drawClosedEvents?.find((e) => e.args.drawId === drawId)
-  const numTiers = drawClosedEvent?.args.nextNumTiers // TODO: switch to `args.numTiers` once event is fixed
-
-  const { data: prizeToken, isFetched: isFetchedPrizeToken } = usePrizeTokenData(prizePool)
+  const { data: drawAwardedEvents, isFetched: isFetchedDrawAwardedEvents } = useDrawAwardedEvents(
+    prizePool,
+    { fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined }
+  )
+  const drawAwardedEvent = drawAwardedEvents?.find((e) => e.args.drawId === drawId)
+  const numTiers = drawAwardedEvent?.args.numTiers
 
   const wins = useMemo(() => {
     const filteredWins: SubgraphDraw['prizeClaims'] = []
@@ -45,24 +47,23 @@ export const ClaimFees = (props: ClaimFeesProps) => {
     return filteredWins
   }, [tier, draw, numTiers])
 
-  // TODO: include tx hashes on high and low to display link once available on subgraph
   const claimFeeStats = useMemo(() => {
     if (wins.length > 0) {
       const sumClaimFeeAmount = wins.reduce((a, b) => a + b.fee, 0n)
       const sumPrizeAmount = wins.reduce((a, b) => a + b.payout, 0n)
 
-      const maxClaimFee = wins.reduce(
+      const high: Stat = wins.reduce(
         (a, b) => {
           const percentage = divideBigInts(b.fee, b.payout + b.fee) * 100
-          return a.percentage < percentage ? { amount: b.fee, percentage } : a
+          return a.percentage < percentage ? { amount: b.fee, percentage, txHash: b.txHash } : a
         },
         { amount: 0n, percentage: 0 }
       )
 
-      const minClaimFee = wins.reduce(
+      const low: Stat = wins.reduce(
         (a, b) => {
           const percentage = divideBigInts(b.fee, b.payout + b.fee) * 100
-          return a.percentage > percentage ? { amount: b.fee, percentage } : a
+          return a.percentage > percentage ? { amount: b.fee, percentage, txHash: b.txHash } : a
         },
         { amount: MAX_UINT_256, percentage: 100 }
       )
@@ -71,14 +72,6 @@ export const ClaimFees = (props: ClaimFeesProps) => {
         amount: BigInt(Math.floor(divideBigInts(sumClaimFeeAmount, BigInt(wins.length)))),
         percentage: divideBigInts(sumClaimFeeAmount, sumPrizeAmount + sumClaimFeeAmount) * 100
       }
-      const high = {
-        amount: maxClaimFee.amount,
-        percentage: maxClaimFee.percentage
-      }
-      const low = {
-        amount: minClaimFee.amount,
-        percentage: minClaimFee.percentage
-      }
 
       return { avg, high, low }
     }
@@ -86,13 +79,13 @@ export const ClaimFees = (props: ClaimFeesProps) => {
 
   return (
     <div className={classNames('flex flex-col gap-1 text-sm text-pt-purple-700', className)}>
-      {!!claimFeeStats && !!prizeToken ? (
+      {!!prizePool && !!claimFeeStats ? (
         <>
-          <ClaimFeeStat type='avg' data={claimFeeStats.avg} prizeToken={prizeToken} />
-          <ClaimFeeStat type='high' data={claimFeeStats.high} prizeToken={prizeToken} />
-          <ClaimFeeStat type='low' data={claimFeeStats.low} prizeToken={prizeToken} />
+          <ClaimFeeStat type='avg' data={claimFeeStats.avg} />
+          <ClaimFeeStat type='high' data={claimFeeStats.high} chainId={prizePool.chainId} />
+          <ClaimFeeStat type='low' data={claimFeeStats.low} chainId={prizePool.chainId} />
         </>
-      ) : isFetchedAllDraws && isFetchedPrizeToken && isFetchedDrawClosedEvents ? (
+      ) : isFetchedAllDraws && isFetchedDrawAwardedEvents ? (
         <span>-</span>
       ) : (
         <Spinner className='after:border-y-pt-purple-800' />
@@ -103,13 +96,22 @@ export const ClaimFees = (props: ClaimFeesProps) => {
 
 interface ClaimFeeStatProps {
   type: 'avg' | 'high' | 'low'
-  data: { amount: bigint; percentage: number }
-  prizeToken: Token
+  data: Stat
+  chainId?: number
   className?: string
 }
 
 export const ClaimFeeStat = (props: ClaimFeeStatProps) => {
-  const { type, data, prizeToken, className } = props
+  const { type, data, chainId, className } = props
+
+  const formattedPercentage = (
+    <span className='pl-2'>
+      <span className='text-xl'>
+        {data.percentage.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+      </span>
+      %
+    </span>
+  )
 
   return (
     <div
@@ -123,20 +125,14 @@ export const ClaimFeeStat = (props: ClaimFeeStatProps) => {
         className
       )}
     >
-      <span className='w-10'>{type.toUpperCase()}</span>
-      <span className='w-14 px-2 text-right border-l border-x-pt-purple-100 md:border-r'>
-        <span className='text-xl'>
-          {data.percentage.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-        </span>
-        %
-      </span>
-      <span className='hidden pl-2 text-pt-purple-700 md:block'>
-        {formatBigIntForDisplay(data.amount, prizeToken.decimals, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        })}{' '}
-        <span>{prizeToken.symbol}</span>
-      </span>
+      <span className='w-10 border-r border-r-pt-purple-100'>{type.toUpperCase()}</span>
+      {!!chainId && !!data.txHash ? (
+        <ExternalLink href={getBlockExplorerUrl(chainId, data.txHash, 'tx')} size='sm'>
+          {formattedPercentage}
+        </ExternalLink>
+      ) : (
+        formattedPercentage
+      )}
     </div>
   )
 }

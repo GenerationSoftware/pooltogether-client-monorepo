@@ -1,18 +1,17 @@
 import { Intl } from '@shared/types'
-import '@shared/ui'
 import { Button, ButtonProps } from '@shared/ui'
 
-interface LensterShareButtonProps extends Omit<ButtonProps, 'onClick' | 'href' | 'target'> {
+interface HeyShareButtonProps extends Omit<ButtonProps, 'onClick' | 'href' | 'target'> {
   text?: string
   url: string
   hashTags?: string[]
-  intl?: Intl<'shareLenster'>
+  intl?: Intl<'shareHey'>
 }
 
-export const LensterShareButton = (props: LensterShareButtonProps) => {
+export const HeyShareButton = (props: HeyShareButtonProps) => {
   const { text, url, hashTags, intl, children, disabled, ...rest } = props
 
-  const href = new URL('http://lenster.xyz')
+  const href = new URL('https://hey.xyz')
   !!text && href.searchParams.set('text', text)
   !!url && href.searchParams.set('url', encodeURI(url))
   !!hashTags &&
@@ -26,7 +25,7 @@ export const LensterShareButton = (props: LensterShareButtonProps) => {
       disabled={text === undefined || disabled}
       {...rest}
     >
-      {children ?? intl?.('shareLenster') ?? 'Share on Lenster'}
+      {children ?? intl?.('shareHey') ?? 'Share on Hey'}
     </Button>
   )
 }

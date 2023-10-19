@@ -1,4 +1,14 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import {
+  useDrawAwardedEvents,
+  useLiquidationEvents,
+  useManualContributionEvents,
+  usePrizeBackstopEvents,
+  useRelayAuctionEvents,
+  useRngAuctionEvents,
+  useRngL1RelayMsgEvents,
+  useRngL2RelayMsgEvents
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { getSecondsSinceEpoch, PRIZE_POOLS, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import { useSetAtom } from 'jotai'
@@ -8,15 +18,8 @@ import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { ReserveChart } from '@components/Charts/ReserveChart'
 import { ReserveHeader } from '@components/Reserve/ReserveHeader'
-import { useDrawClosedEvents } from '@hooks/useDrawClosedEvents'
-import { useLiquidationEvents } from '@hooks/useLiquidationEvents'
-import { useManualContributionEvents } from '@hooks/useManualContributionEvents'
-import { usePrizeBackstopEvents } from '@hooks/usePrizeBackstopEvents'
-import { useRelayAuctionEvents } from '@hooks/useRelayAuctionEvents'
+import { QUERY_START_BLOCK, RELAY_ORIGINS } from '@constants/config'
 import { useReserve } from '@hooks/useReserve'
-import { useRngAuctionEvents } from '@hooks/useRngAuctionEvents'
-import { useRngL1RelayMsgEvents } from '@hooks/useRngL1RelayMsgEvents'
-import { useRngL2RelayMsgEvents } from '@hooks/useRngL2RelayMsgEvents'
 
 interface ReserveViewProps {
   chainId: number
@@ -45,15 +48,31 @@ export const ReserveView = (props: ReserveViewProps) => {
     )
   }, [chainId])
 
+  const originChainId = !!prizePool ? RELAY_ORIGINS[prizePool.chainId] : undefined
+  const fromBlock = !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
+  const originFromBlock = !!originChainId ? QUERY_START_BLOCK[originChainId] : undefined
+
   const { refetch: refetchReserve } = useReserve(prizePool)
-  const { refetch: refetchLiquidationEvents } = useLiquidationEvents(prizePool)
-  const { refetch: refetchManualContributionEvents } = useManualContributionEvents(prizePool)
-  const { refetch: refetchPrizeBackstopEvents } = usePrizeBackstopEvents(prizePool)
-  const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents()
-  const { refetch: refetchRngL1RelayMsgEvents } = useRngL1RelayMsgEvents()
-  const { refetch: refetchRelayAuctionEvents } = useRelayAuctionEvents(prizePool)
-  const { refetch: refetchDrawClosedEvents } = useDrawClosedEvents(prizePool)
-  const { refetch: refetchRngL2RelayMsgEvents } = useRngL2RelayMsgEvents(prizePool)
+  const { refetch: refetchLiquidationEvents } = useLiquidationEvents(prizePool?.chainId, {
+    fromBlock
+  })
+  const { refetch: refetchManualContributionEvents } = useManualContributionEvents(prizePool, {
+    fromBlock
+  })
+  const { refetch: refetchPrizeBackstopEvents } = usePrizeBackstopEvents(prizePool, { fromBlock })
+  const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents(originChainId as number, {
+    fromBlock: originFromBlock
+  })
+  const { refetch: refetchRngL1RelayMsgEvents } = useRngL1RelayMsgEvents(originChainId as number, {
+    fromBlock: originFromBlock
+  })
+  const { refetch: refetchRelayAuctionEvents } = useRelayAuctionEvents(prizePool?.chainId, {
+    fromBlock
+  })
+  const { refetch: refetchDrawAwardedEvents } = useDrawAwardedEvents(prizePool, { fromBlock })
+  const { refetch: refetchRngL2RelayMsgEvents } = useRngL2RelayMsgEvents(prizePool?.chainId, {
+    fromBlock
+  })
 
   // Automatic data refetching
   useEffect(() => {
@@ -65,7 +84,7 @@ export const ReserveView = (props: ReserveViewProps) => {
       refetchRngAuctionEvents()
       refetchRngL1RelayMsgEvents()
       refetchRelayAuctionEvents()
-      refetchDrawClosedEvents()
+      refetchDrawAwardedEvents()
       refetchRngL2RelayMsgEvents()
       setCurrentTimestamp(getSecondsSinceEpoch())
     }, sToMs(300))

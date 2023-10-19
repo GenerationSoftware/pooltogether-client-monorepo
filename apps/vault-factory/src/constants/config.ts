@@ -16,10 +16,10 @@ import {
   xdefiWallet,
   zerionWallet
 } from '@rainbow-me/rainbowkit/wallets'
-import { DEFAULT_CLAIMER_ADDRESSES, NETWORK, TWAB_CONTROLLER_ADDRESSES } from '@shared/utilities'
+import { DEFAULT_CLAIMER_ADDRESSES, NETWORK } from '@shared/utilities'
 import { SupportedNetwork } from 'src/types'
-import { Address, parseUnits } from 'viem'
-import { arbitrum, Chain, mainnet, optimism, optimismGoerli, polygon } from 'wagmi/chains'
+import { Address } from 'viem'
+import { arbitrum, Chain, mainnet, optimism, optimismGoerli } from 'wagmi/chains'
 
 /**
  * Supported networks
@@ -31,7 +31,6 @@ export const SUPPORTED_NETWORKS = [NETWORK.optimism, NETWORK['optimism-goerli']]
  */
 export const WAGMI_CHAINS = {
   [NETWORK.mainnet]: mainnet,
-  [NETWORK.polygon]: polygon,
   [NETWORK.optimism]: optimism,
   [NETWORK.arbitrum]: arbitrum,
   [NETWORK['optimism-goerli']]: optimismGoerli
@@ -65,7 +64,6 @@ export const WALLETS: {
  */
 export const RPC_URLS = {
   [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_RPC_URL,
-  [NETWORK.polygon]: process.env.NEXT_PUBLIC_POLYGON_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
   [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
   [NETWORK['optimism-goerli']]: process.env.NEXT_PUBLIC_OPTIMISM_GOERLI_RPC_URL
@@ -78,18 +76,15 @@ export const CONTRACTS: Record<
   SupportedNetwork,
   {
     prizePool: Address
-    twabController: Address
     claimer: Address
   }
 > = {
   [NETWORK.optimism]: {
-    prizePool: '0x8CFFFfFa42407DB9DCB974C2C744425c3e58d832',
-    twabController: TWAB_CONTROLLER_ADDRESSES[NETWORK.optimism],
+    prizePool: '0xe32e5E1c5f0c80bD26Def2d0EA5008C107000d6A',
     claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism]
   },
   [NETWORK['optimism-goerli']]: {
-    prizePool: '0xC64bb8Fe4f023B650940D05E79c35454e12A111F',
-    twabController: TWAB_CONTROLLER_ADDRESSES[NETWORK['optimism-goerli']],
+    prizePool: '0x8FaF98698e4fF29149a8A9D06Db20E3509F3754b',
     claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK['optimism-goerli']]
   }
 } as const
@@ -104,8 +99,16 @@ export const LOCAL_STORAGE_KEYS = {
 /**
  * Default liquidation pair config
  */
-export const LP_CONFIG = {
-  targetFirstSaleTimeFraction: 0.5,
-  decayConstant: parseUnits('0.000030092592592592', 18),
-  liquidationGasAmount: 300_000n
+export const LP_CONFIG: Record<
+  SupportedNetwork,
+  { targetFirstSaleTimeFraction: number; liquidationGasAmount: bigint }
+> = {
+  [NETWORK.optimism]: {
+    targetFirstSaleTimeFraction: 0.5,
+    liquidationGasAmount: 300_000n
+  },
+  [NETWORK['optimism-goerli']]: {
+    targetFirstSaleTimeFraction: 0.5,
+    liquidationGasAmount: 300_000n
+  }
 }

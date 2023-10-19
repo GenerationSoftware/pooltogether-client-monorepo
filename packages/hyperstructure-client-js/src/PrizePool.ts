@@ -44,21 +44,10 @@ export class PrizePool {
   ) {
     this.id = getPrizePoolId(chainId, address)
 
-    if (!!options?.walletClient) {
-      this.walletClient = options.walletClient
-    }
-
-    if (!!options?.prizeTokenAddress) {
-      this.prizeTokenAddress = options.prizeTokenAddress
-    }
-
-    if (!!options?.drawPeriodInSeconds) {
-      this.drawPeriodInSeconds = options.drawPeriodInSeconds
-    }
-
-    if (!!options?.tierShares) {
-      this.tierShares = options.tierShares
-    }
+    this.walletClient = options?.walletClient
+    this.prizeTokenAddress = options?.prizeTokenAddress
+    this.drawPeriodInSeconds = options?.drawPeriodInSeconds
+    this.tierShares = options?.tierShares
   }
 
   /* ============================== Read Functions ============================== */
@@ -158,18 +147,18 @@ export class PrizePool {
   }
 
   /**
-   * Returns the prize pool's last awarded (closed) draw ID
+   * Returns the prize pool's last awarded draw ID
    * @returns
    */
-  async getLastDrawId(): Promise<number> {
-    const source = 'Prize Pool [getLastDrawId]'
+  async getLastAwardedDrawId(): Promise<number> {
+    const source = 'Prize Pool [getLastAwardedDrawId]'
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
     const lastDrawId = Number(
       await this.publicClient.readContract({
         address: this.address,
         abi: prizePoolABI,
-        functionName: 'getLastClosedDrawId'
+        functionName: 'getLastAwardedDrawId'
       })
     )
 
@@ -274,60 +263,48 @@ export class PrizePool {
   }
 
   /**
-   * Returns the start timestamp of the first ever draw (in seconds)
+   * Returns the opened at timestamp of the first ever draw (in seconds)
    * @returns
    */
-  async getFirstDrawStartTimestamp(): Promise<number> {
-    const source = 'Prize Pool [getFirstDrawStartTimestamp]'
+  async getFirstDrawOpenedAt(): Promise<number> {
+    const source = 'Prize Pool [getFirstDrawOpenedAt]'
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
-    const startTimestamp = Number(
+    const openedAt = Number(
       await this.publicClient.readContract({
         address: this.address,
         abi: prizePoolABI,
-        functionName: 'firstDrawStartsAt'
+        functionName: 'firstDrawOpensAt'
       })
     )
 
-    return startTimestamp
+    return openedAt
   }
 
   /**
-   * Returns the start timestamp of the last awarded draw (in seconds)
+   * Returns the opened at timestamp of the last awarded draw (in seconds)
    * @returns
    */
-  async getLastDrawStartTimestamp(): Promise<number> {
-    const source = 'Prize Pool [getLastDrawStartTimestamp]'
+  async getLastAwardedDrawOpenedAt(): Promise<number> {
+    const source = 'Prize Pool [getLastAwardedDrawOpenedAt]'
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
-    const startTimestamp = Number(
+    const lastDrawId = await this.getLastAwardedDrawId()
+
+    if (lastDrawId === 0) {
+      return 0
+    }
+
+    const openedAt = Number(
       await this.publicClient.readContract({
         address: this.address,
         abi: prizePoolABI,
-        functionName: 'lastClosedDrawStartedAt'
+        functionName: 'drawOpensAt',
+        args: [lastDrawId]
       })
     )
 
-    return startTimestamp
-  }
-
-  /**
-   * Returns the start timestamp of the next draw (in seconds)
-   * @returns
-   */
-  async getNextDrawStartTimestamp(): Promise<number> {
-    const source = 'Prize Pool [getNextDrawStartTimestamp]'
-    await validateClientNetwork(this.chainId, this.publicClient, source)
-
-    const startTimestamp = Number(
-      await this.publicClient.readContract({
-        address: this.address,
-        abi: prizePoolABI,
-        functionName: 'openDrawEndsAt'
-      })
-    )
-
-    return startTimestamp
+    return openedAt
   }
 
   /**
@@ -508,7 +485,7 @@ export class PrizePool {
       account: this.walletClient.account,
       address: this.address,
       abi: prizePoolABI,
-      functionName: 'closeDraw',
+      functionName: 'awardDraw',
       args: [winningRandomNumber],
       chain: this.walletClient.chain,
       ...overrides

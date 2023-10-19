@@ -28,7 +28,7 @@ A React componponent library utilizing some simpler components from the internal
 ### Button Components
 
 - `DepositButton`
-- `LensterShareButton`
+- `HeyShareButton`
 - `TwitterShareButton`
 - `WithdrawButton`
 
@@ -72,11 +72,6 @@ A React componponent library utilizing some simpler components from the internal
 - `PrizePoolCard`
 - `PrizePoolDropdown`
 
-### Time Components
-
-- `NextDrawCountdown`
-- `TimeDigits`
-
 ### Toast Components
 
 - `DeployLiquidationPairTxToast`
@@ -92,6 +87,7 @@ A React componponent library utilizing some simpler components from the internal
 - `ImportedVaultTooltip`
 - `InfiniteApprovalTooltip`
 - `PrizePowerTooltip`
+- `VaultContributionsTooltip`
 - `VaultFeeTooltip`
 - `WinChanceTooltip`
 - `YieldSourceURITooltip`

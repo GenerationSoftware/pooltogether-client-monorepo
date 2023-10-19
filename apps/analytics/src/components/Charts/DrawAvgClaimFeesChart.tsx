@@ -1,5 +1,8 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { useDrawPeriod, usePrizeDrawWinners } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useDrawAwardedEvents,
+  usePrizeDrawWinners
+} from '@generationsoftware/hyperstructure-react-hooks'
 import {
   divideBigInts,
   formatNumberForDisplay,
@@ -10,7 +13,7 @@ import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
-import { useDrawClosedEvents } from '@hooks/useDrawClosedEvents'
+import { QUERY_START_BLOCK } from '@constants/config'
 import { useDrawStatus } from '@hooks/useDrawStatus'
 import { LineChart, LineChartProps } from './LineChart'
 
@@ -27,21 +30,21 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
   const { data: allDraws } = usePrizeDrawWinners(prizePool)
   const draw = allDraws?.find((d) => d.id === drawId)
 
-  const { endedAt, closedAt } = useDrawStatus(prizePool, drawId)
+  const { closedAt, awardedAt, finalizedAt } = useDrawStatus(prizePool, drawId)
 
-  const { data: drawPeriod } = useDrawPeriod(prizePool)
-
-  const { data: drawClosedEvents } = useDrawClosedEvents(prizePool)
-  const numTiers = drawClosedEvents?.find((e) => e.args.drawId === drawId)?.args.nextNumTiers // TODO: switch to `args.numTiers` once event is fixed
+  const { data: drawAwardedEvents } = useDrawAwardedEvents(prizePool, {
+    fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
+  })
+  const numTiers = drawAwardedEvents?.find((e) => e.args.drawId === drawId)?.args.numTiers
 
   const currentTimestamp = useAtomValue(currentTimestampAtom)
 
   const chartTimestamps = useMemo(() => {
     const timestamps: number[] = []
 
-    if (!!endedAt && !!closedAt && !!drawPeriod) {
-      const startTimestamp = closedAt
-      const endTimestamp = Math.min(endedAt + drawPeriod, currentTimestamp)
+    if (!!closedAt && !!awardedAt && !!finalizedAt) {
+      const startTimestamp = awardedAt
+      const endTimestamp = Math.min(finalizedAt, currentTimestamp)
       const checkpointSize = SECONDS_PER_HOUR
 
       for (let i = startTimestamp; i <= endTimestamp; i += checkpointSize) {
@@ -51,13 +54,13 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
     }
 
     return timestamps
-  }, [endedAt, closedAt, drawPeriod, currentTimestamp])
+  }, [closedAt, awardedAt, currentTimestamp])
 
   const chartData = useMemo(() => {
     if (!!draw && !!numTiers) {
       const data: { name: number; [tier: number]: number }[] = []
 
-      const rollingTierValues: {
+      const cumTierValues: {
         [tier: number]: { sumClaimFeeAmount: bigint; sumPrizeAmount: bigint }
       } = {}
 
@@ -66,9 +69,7 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
       )
 
       const tiers = new Set(wins.map((win) => win.tier))
-      tiers.forEach(
-        (tier) => (rollingTierValues[tier] = { sumClaimFeeAmount: 0n, sumPrizeAmount: 0n })
-      )
+      tiers.forEach((tier) => (cumTierValues[tier] = { sumClaimFeeAmount: 0n, sumPrizeAmount: 0n }))
 
       for (let i = 0; i < chartTimestamps.length - 1; i++) {
         const checkpointWins = wins.filter(
@@ -76,13 +77,13 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
         )
 
         checkpointWins.forEach((win) => {
-          rollingTierValues[win.tier].sumClaimFeeAmount += win.fee
-          rollingTierValues[win.tier].sumPrizeAmount += win.payout
+          cumTierValues[win.tier].sumClaimFeeAmount += win.fee
+          cumTierValues[win.tier].sumPrizeAmount += win.payout
         })
 
         const checkpointData = Object.assign(
           {},
-          ...Object.entries(rollingTierValues).map(([tier, values]) => ({
+          ...Object.entries(cumTierValues).map(([tier, values]) => ({
             [parseInt(tier)]:
               divideBigInts(
                 values.sumClaimFeeAmount,
@@ -105,7 +106,7 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
 
     return (
       <div className={classNames('w-full flex flex-col gap-2', className)}>
-        <span className='ml-2 md:ml-6'>Average Claim Fee Percentages (Rolling Average)</span>
+        <span className='ml-2 md:ml-6'>Average Claim Fee Percentages (Cumulative Avgs)</span>
         <LineChart
           data={chartData}
           lines={lines}

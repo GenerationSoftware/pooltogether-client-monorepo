@@ -13,9 +13,18 @@ export interface ExternalLinkProps {
 export const ExternalLink = (props: ExternalLinkProps) => {
   const { href, children, size, className, iconClassName } = props
 
+  const ensPaddedHref =
+    !!href &&
+    href.endsWith('.eth') &&
+    !href.startsWith('http') &&
+    !href.startsWith('www.') &&
+    !href.startsWith('//')
+      ? `//${href}`
+      : undefined
+
   return (
     <a
-      href={href}
+      href={ensPaddedHref ?? href}
       target='_blank'
       rel='noreferrer'
       className={classNames(

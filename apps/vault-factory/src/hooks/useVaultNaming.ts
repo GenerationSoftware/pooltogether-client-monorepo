@@ -21,8 +21,8 @@ export const useVaultNaming = () => {
 
   const { data: tokenData } = useToken(vaultChainId as SupportedNetwork, tokenAddress as Address)
 
-  const name = `Prize ${vaultYieldSourceName} ${tokenData?.symbol ?? '???'}`
-  const symbol = `p${vaultYieldSourceName.charAt(0).toLowerCase()}${tokenData?.symbol ?? '???'}`
+  const name = `Prize ${tokenData?.symbol ?? '???'} - ${vaultYieldSourceName}`
+  const symbol = `P${tokenData?.symbol ?? '???'}`
 
   return { name, symbol }
 }

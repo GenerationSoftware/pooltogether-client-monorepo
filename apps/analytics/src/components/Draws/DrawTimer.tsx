@@ -13,14 +13,26 @@ interface DrawTimerProps {
 export const DrawTimer = (props: DrawTimerProps) => {
   const { prizePool, drawId, className } = props
 
-  const { status, openedAt, closedAt } = useDrawStatus(prizePool, drawId)
+  const { status, openedAt, closedAt, awardedAt, finalizedAt, isSkipped } = useDrawStatus(
+    prizePool,
+    drawId
+  )
 
-  const { days, hours, minutes } = useCountup(closedAt ?? openedAt ?? 0)
+  const timestamp =
+    status === 'finalized'
+      ? finalizedAt
+      : status === 'awarded'
+      ? awardedAt
+      : status === 'closed'
+      ? closedAt
+      : openedAt
+
+  const { days, hours, minutes } = useCountup(timestamp ?? 0)
   const _hours = days * 24 + hours
 
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
-      {!!status && status !== 'finalized' && (
+      {!!status && status !== 'finalized' && !isSkipped && (
         <>
           <DrawCardItemTitle>Time since {status}</DrawCardItemTitle>
           <div className='flex gap-1 items-center text-sm text-pt-purple-700'>

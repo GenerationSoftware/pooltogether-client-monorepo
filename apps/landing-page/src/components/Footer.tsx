@@ -71,11 +71,9 @@ const AuditsBy = () => {
     <div className='flex flex-col gap-3'>
       <span className='text-center text-pt-purple-300 md:text-start'>PoolTogether audits by</span>
       <div className='flex flex-col gap-6 items-center opacity-50 md:flex-row'>
-        {/* TODO: add link to c4 audit(s) */}
         <Link href={LINKS.audits} target='_blank'>
           <Image src='/c4Logo.svg' alt='Code Arena' width={257} height={46} />
         </Link>
-        {/* TODO: add link to macro audit(s) */}
         <Link href={LINKS.audits} target='_blank'>
           <Image src='/macroLogo.svg' alt='Macro' width={191} height={40} />
         </Link>
