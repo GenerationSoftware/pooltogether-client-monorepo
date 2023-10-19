@@ -284,9 +284,5 @@
       "negativeNumber": "Enter a positive number",
       "tooManyDecimals": "Too many decimals"
     }
-  },
-  "Beta": {
-    "beta": "Beta",
-    "learnMore": "Learn more on the gov forum"
   }
 }
