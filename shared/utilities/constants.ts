@@ -81,15 +81,15 @@ export const PRIZE_POOLS: {
   address: Address
   options: { prizeTokenAddress: Address; drawPeriodInSeconds: number; tierShares: number }
 }[] = [
-  // {
-  //   chainId: NETWORK.optimism,
-  //   address: '0x8CFFFfFa42407DB9DCB974C2C744425c3e58d832',
-  //   options: {
-  //     prizeTokenAddress: '0x395ae52bb17aef68c2888d941736a71dc6d4e125',
-  //     drawPeriodInSeconds: 86_400,
-  //     tierShares: 100
-  //   }
-  // },
+  {
+    chainId: NETWORK.optimism,
+    address: '0xe32e5E1c5f0c80bD26Def2d0EA5008C107000d6A',
+    options: {
+      prizeTokenAddress: '0x395ae52bb17aef68c2888d941736a71dc6d4e125',
+      drawPeriodInSeconds: 86_400,
+      tierShares: 100
+    }
+  },
   {
     chainId: NETWORK['optimism-goerli'],
     address: '0x8FaF98698e4fF29149a8A9D06Db20E3509F3754b',
@@ -105,7 +105,7 @@ export const PRIZE_POOLS: {
  * Subgraph API URLs
  */
 export const SUBGRAPH_API_URLS = Object.freeze({
-  // [NETWORK.optimism]: '',
+  [NETWORK.optimism]: 'https://api.studio.thegraph.com/query/50959/pt-v5-op/version/latest',
   [NETWORK['optimism-goerli']]:
     'https://api.studio.thegraph.com/query/50959/pt-v5-op-goerli/v0.0.23'
 })
@@ -212,8 +212,8 @@ export const RNG_AUCTION: {
   [chainId: number]: { address: Address; sequenceOffset: number; sequencePeriod: number }
 } = {
   [NETWORK.mainnet]: {
-    address: '0x8CFFFfFa42407DB9DCB974C2C744425c3e58d832',
-    sequenceOffset: 1_693_335_600,
+    address: '0x539A76507F18505cA696d618F8A684814c867F41',
+    sequenceOffset: 1_697_508_000,
     sequencePeriod: 86_400
   },
   [NETWORK.goerli]: {
@@ -227,8 +227,8 @@ export const RNG_AUCTION: {
  * RNG relay addresses
  */
 export const RNG_RELAY_ADDRESSES: { [chainId: number]: Address } = {
-  [NETWORK.mainnet]: '0xF4c47dacFda99bE38793181af9Fd1A2Ec7576bBF',
-  [NETWORK.optimism]: '0xF4c47dacFda99bE38793181af9Fd1A2Ec7576bBF',
+  [NETWORK.mainnet]: '0xEC9460c59cCA1299b0242D6AF426c21223ccCD24',
+  [NETWORK.optimism]: '0x87d3D9afeD1702728B7F280ba5c4b4c55DEfa557',
   [NETWORK.goerli]: '0xe34deF1114d7Bb0298636A2026D9Cf3D67F19FBd',
   [NETWORK['optimism-goerli']]: '0x5C9c04FC5D6431A2101b8395E13B565762980F97'
 }
@@ -237,7 +237,7 @@ export const RNG_RELAY_ADDRESSES: { [chainId: number]: Address } = {
  * Message executor addresses
  */
 export const MSG_EXECUTOR_ADDRESSES: { [chainId: number]: Address } = {
-  [NETWORK.optimism]: '0x890a87E71E731342a6d10e7628bd1F0733ce3296',
+  [NETWORK.optimism]: '0x139f6dD114a9C45Ba43eE22C5e03c53de0c13225',
   [NETWORK['optimism-goerli']]: '0x59Ba766ff229c21b97184647292706039aF63dA1'
 }
 
@@ -245,7 +245,7 @@ export const MSG_EXECUTOR_ADDRESSES: { [chainId: number]: Address } = {
  * TWAB controller addresses
  */
 export const TWAB_CONTROLLER_ADDRESSES: { [chainId: number]: Address } = {
-  [NETWORK.optimism]: '0x0D51a33975024E8aFc55fde9F6b070c10AA71Dd9',
+  [NETWORK.optimism]: '0x499a9F249ec4c8Ea190bebbFD96f9A83bf4F6E52',
   [NETWORK['optimism-goerli']]: '0x0B09590E2dE22A629B45258812C0B25904689B5a'
 }
 
@@ -253,7 +253,7 @@ export const TWAB_CONTROLLER_ADDRESSES: { [chainId: number]: Address } = {
  * Vault factory addresses
  */
 export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
-  [NETWORK.optimism]: '0xA469deff6D52C9571d13513e3cd7d94496082d81',
+  [NETWORK.optimism]: '0xF65FA202907D6046D1eF33C521889B54BdE08081',
   [NETWORK['optimism-goerli']]: '0x53B7922eeCe8afE5bdaA170E20dc32c6deDA5277'
 }
 
@@ -261,7 +261,7 @@ export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
  * Liquidation pair factory addresses
  */
 export const LIQUIDATION_PAIR_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
-  [NETWORK.optimism]: '0xa1697E8F6b11D0E2F00d9dC8a5AEae2b2665650a',
+  [NETWORK.optimism]: '0x555BD8Fc65E57139C9F405980C7A9526A7De8093',
   [NETWORK['optimism-goerli']]: '0x21b8f4c7E92a37B893BE39b4Ec447459fa5031C6'
 }
 
@@ -269,7 +269,7 @@ export const LIQUIDATION_PAIR_FACTORY_ADDRESSES: { [chainId: number]: Address } 
  * Default claimer addresses
  */
 export const DEFAULT_CLAIMER_ADDRESSES: { [chainId: number]: Address } = {
-  [NETWORK.optimism]: '0x2589ff8614f74704741EE3B51851b4Ae812F1A21',
+  [NETWORK.optimism]: '0xdc6aB38f9590cB8e4357e0a391689a7C5Ef7681E',
   [NETWORK['optimism-goerli']]: '0x0294997B1100d6e35fd3868c6544c881096a23E1'
 }
 
@@ -277,7 +277,7 @@ export const DEFAULT_CLAIMER_ADDRESSES: { [chainId: number]: Address } = {
  * Liquidation router addresses
  */
 export const LIQUIDATION_ROUTER_ADDRESSES: { [chainId: number]: Address } = {
-  [NETWORK.optimism]: '0xf4cFa53dF258d78AAd153AC11C644703651983f5',
+  [NETWORK.optimism]: '0xB9Fba7B2216167DCdd1A7AE0a564dD43E1b68b95',
   [NETWORK['optimism-goerli']]: '0x6de2B30BE94F9Da2516CD30093fB11e0c4bFf422'
 }
 

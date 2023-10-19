@@ -26,6 +26,10 @@ export const useRelayAuctionElapsedTime = (
         functionName: 'getLastAuction'
       })
 
+      if (!lastAuction.rngRequestId) {
+        return 0n
+      }
+
       const completedAt = await publicClient.readContract({
         address: lastAuction.rng,
         abi: chainlinkVrfABI,

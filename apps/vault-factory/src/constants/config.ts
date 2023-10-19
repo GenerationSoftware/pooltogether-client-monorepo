@@ -19,19 +19,18 @@ import {
 import { DEFAULT_CLAIMER_ADDRESSES, NETWORK } from '@shared/utilities'
 import { SupportedNetwork } from 'src/types'
 import { Address } from 'viem'
-import { arbitrum, Chain, mainnet, optimism, optimismGoerli, polygon } from 'wagmi/chains'
+import { arbitrum, Chain, mainnet, optimism, optimismGoerli } from 'wagmi/chains'
 
 /**
  * Supported networks
  */
-export const SUPPORTED_NETWORKS = [NETWORK['optimism-goerli']] as const
+export const SUPPORTED_NETWORKS = [NETWORK.optimism, NETWORK['optimism-goerli']] as const
 
 /**
  * Wagmi networks
  */
 export const WAGMI_CHAINS = {
   [NETWORK.mainnet]: mainnet,
-  [NETWORK.polygon]: polygon,
   [NETWORK.optimism]: optimism,
   [NETWORK.arbitrum]: arbitrum,
   [NETWORK['optimism-goerli']]: optimismGoerli
@@ -65,7 +64,6 @@ export const WALLETS: {
  */
 export const RPC_URLS = {
   [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_RPC_URL,
-  [NETWORK.polygon]: process.env.NEXT_PUBLIC_POLYGON_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
   [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
   [NETWORK['optimism-goerli']]: process.env.NEXT_PUBLIC_OPTIMISM_GOERLI_RPC_URL
@@ -81,10 +79,10 @@ export const CONTRACTS: Record<
     claimer: Address
   }
 > = {
-  // [NETWORK.optimism]: {
-  //   prizePool: '0x8CFFFfFa42407DB9DCB974C2C744425c3e58d832',
-  //   claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism]
-  // },
+  [NETWORK.optimism]: {
+    prizePool: '0xe32e5E1c5f0c80bD26Def2d0EA5008C107000d6A',
+    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism]
+  },
   [NETWORK['optimism-goerli']]: {
     prizePool: '0x8FaF98698e4fF29149a8A9D06Db20E3509F3754b',
     claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK['optimism-goerli']]
@@ -105,10 +103,10 @@ export const LP_CONFIG: Record<
   SupportedNetwork,
   { targetFirstSaleTimeFraction: number; liquidationGasAmount: bigint }
 > = {
-  // [NETWORK.optimism]: {
-  //   targetFirstSaleTimeFraction: 0.5,
-  //   liquidationGasAmount: 300_000n
-  // },
+  [NETWORK.optimism]: {
+    targetFirstSaleTimeFraction: 0.5,
+    liquidationGasAmount: 300_000n
+  },
   [NETWORK['optimism-goerli']]: {
     targetFirstSaleTimeFraction: 0.5,
     liquidationGasAmount: 300_000n

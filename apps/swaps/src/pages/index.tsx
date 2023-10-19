@@ -8,7 +8,7 @@ import { RecentWinners } from '@components/RecentWinners'
 import { VaultCards } from '@components/VaultCards'
 
 export default function HomePage() {
-  const chainId = NETWORK['optimism-goerli']
+  const chainId = NETWORK.optimism
 
   return (
     <Layout>

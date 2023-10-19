@@ -1,49 +1,50 @@
 import { VaultList } from '@shared/types'
 import { LINKS } from '@shared/ui'
+import { NETWORK } from '@shared/utilities'
 
 const defaultVaultList: VaultList = {
-  name: 'PoolTogether Vault List',
+  name: 'Cabana Vault List',
   keywords: ['pooltogether', 'cabana', 'g9', 'optimism'],
-  version: { major: 1, minor: 13, patch: 1 },
-  timestamp: '2023-10-17T22:18:35.041Z',
+  version: { major: 1, minor: 0, patch: 0 },
+  timestamp: '2023-10-18T23:53:23.588Z',
   logoURI: `${LINKS.app}/pooltogether-token-logo.svg`,
   tokens: [
-    // {
-    //   chainId: 10,
-    //   address: '',
-    //   name: 'Prize USDC - Aave',
-    //   decimals: 6,
-    //   symbol: 'pUSDC',
-    //   logoURI: 'https://etherscan.io/token/images/centre-usdc_28.png',
-    //   yieldSourceURI:
-    //     'https://app.aave.com/reserve-overview/?underlyingAsset=0x7f5c764cbc14f9669b88837ca1490cca17c31607&marketName=proto_optimism_v3',
-    //   extensions: {
-    //     underlyingAsset: {
-    //       address: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
-    //       symbol: 'USDC',
-    //       name: 'USD Coin'
-    //     }
-    //   }
-    // },
-    // {
-    //   chainId: 10,
-    //   address: '',
-    //   name: 'Prize WETH - Aave',
-    //   decimals: 18,
-    //   symbol: 'pWETH',
-    //   logoURI: 'https://etherscan.io/token/images/weth_28.png',
-    //   yieldSourceURI:
-    //     'https://app.aave.com/reserve-overview/?underlyingAsset=0x4200000000000000000000000000000000000006&marketName=proto_optimism_v3',
-    //   extensions: {
-    //     underlyingAsset: {
-    //       address: '0x4200000000000000000000000000000000000006',
-    //       symbol: 'WETH',
-    //       name: 'Wrapped Ether'
-    //     }
-    //   }
-    // },
     {
-      chainId: 420,
+      chainId: NETWORK.optimism,
+      address: '0xE3B3a464ee575E8E25D2508918383b89c832f275',
+      name: 'Prize USDC.e - Aave',
+      decimals: 6,
+      symbol: 'pUSDC.e',
+      logoURI: 'https://etherscan.io/token/images/centre-usdc_28.png', // TODO: add custom vault logo
+      yieldSourceURI:
+        'https://app.aave.com/reserve-overview/?underlyingAsset=0x7f5c764cbc14f9669b88837ca1490cca17c31607&marketName=proto_optimism_v3',
+      extensions: {
+        underlyingAsset: {
+          address: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+          symbol: 'USDC.e',
+          name: 'USDC (Bridged from Ethereum)'
+        }
+      }
+    },
+    {
+      chainId: NETWORK.optimism,
+      address: '0x29Cb69D4780B53c1e5CD4D2B817142D2e9890715',
+      name: 'Prize WETH - Aave',
+      decimals: 18,
+      symbol: 'pWETH',
+      logoURI: 'https://etherscan.io/token/images/weth_28.png', // TODO: add custom vault logo
+      yieldSourceURI:
+        'https://app.aave.com/reserve-overview/?underlyingAsset=0x4200000000000000000000000000000000000006&marketName=proto_optimism_v3',
+      extensions: {
+        underlyingAsset: {
+          address: '0x4200000000000000000000000000000000000006',
+          symbol: 'WETH',
+          name: 'Wrapped Ether'
+        }
+      }
+    },
+    {
+      chainId: NETWORK['optimism-goerli'],
       address: '0x9e025155f7BD3b17E26bCE811F7B6F075973570A',
       name: 'Prize DAI - LY',
       decimals: 18,
@@ -58,7 +59,7 @@ const defaultVaultList: VaultList = {
       }
     },
     {
-      chainId: 420,
+      chainId: NETWORK['optimism-goerli'],
       address: '0xbC6d40984ddB1482BBBF1433c1C1f0380f74caCD',
       name: 'Prize DAI - HY',
       decimals: 18,
@@ -73,7 +74,7 @@ const defaultVaultList: VaultList = {
       }
     },
     {
-      chainId: 420,
+      chainId: NETWORK['optimism-goerli'],
       address: '0x1eAdB947b1e66ff3575F9Fd0FD4fB4Cc8fcAD8Fd',
       name: 'Prize USDC - LY',
       decimals: 6,
@@ -88,7 +89,7 @@ const defaultVaultList: VaultList = {
       }
     },
     {
-      chainId: 420,
+      chainId: NETWORK['optimism-goerli'],
       address: '0xc3d6a8d76B304E0716b3227C00a83187340DC846',
       name: 'Prize USDC - HY',
       decimals: 6,
@@ -103,7 +104,7 @@ const defaultVaultList: VaultList = {
       }
     },
     {
-      chainId: 420,
+      chainId: NETWORK['optimism-goerli'],
       address: '0xb1AF8E57033a0f5B5Db37C2B2E8C4a357514d2B5',
       name: 'Prize GUSD',
       decimals: 2,
@@ -119,7 +120,7 @@ const defaultVaultList: VaultList = {
       }
     },
     {
-      chainId: 420,
+      chainId: NETWORK['optimism-goerli'],
       address: '0xa2574ee88D049Df4CdC8DEc746842C7615FBF5A5',
       name: 'Prize WBTC',
       decimals: 8,
@@ -134,7 +135,7 @@ const defaultVaultList: VaultList = {
       }
     },
     {
-      chainId: 420,
+      chainId: NETWORK['optimism-goerli'],
       address: '0xEF9aFd8b3701198cCac6bf55458C38F61C4b55c4',
       name: 'Prize WETH',
       decimals: 18,

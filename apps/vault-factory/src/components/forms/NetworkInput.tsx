@@ -47,7 +47,7 @@ interface NetworkCardProps {
 }
 
 const networkDescriptions: Record<SupportedNetwork, ReactNode> = {
-  // [NETWORK.optimism]: 'The OG optimistic rollup on Ethereum!',
+  [NETWORK.optimism]: 'The OG optimistic rollup on Ethereum!',
   [NETWORK['optimism-goerli']]:
     'This is the main testnet used to try out the PoolTogether Hyperstructure.'
 }

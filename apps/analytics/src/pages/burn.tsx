@@ -5,7 +5,7 @@ import { Layout } from '@components/Layout'
 export default function BurnPage() {
   return (
     <Layout>
-      <BurnView chainId={NETWORK['optimism-goerli']} />
+      <BurnView chainId={NETWORK.optimism} />
     </Layout>
   )
 }

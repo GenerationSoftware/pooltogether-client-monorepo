@@ -2,12 +2,9 @@ import { Address, PublicClient } from 'viem'
 import {
   LIQUIDATION_ROUTER_ADDRESSES,
   MSG_EXECUTOR_ADDRESSES,
-  NETWORK,
   RNG_AUCTION,
   RNG_RELAY_ADDRESSES
 } from '../constants'
-
-// TODO: remove old hardcoded contract queries when no longer relevant
 
 /**
  * Returns `RelayedToDispatcher` events

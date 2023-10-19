@@ -5,7 +5,7 @@ import { Layout } from '@components/Layout'
 export default function LiquidationsPage() {
   return (
     <Layout>
-      <LiquidationsView chainId={NETWORK['optimism-goerli']} />
+      <LiquidationsView chainId={NETWORK.optimism} />
     </Layout>
   )
 }

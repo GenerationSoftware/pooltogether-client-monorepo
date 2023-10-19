@@ -5,7 +5,7 @@ import { Layout } from '@components/Layout'
 export default function ReservePage() {
   return (
     <Layout>
-      <ReserveView chainId={NETWORK['optimism-goerli']} />
+      <ReserveView chainId={NETWORK.optimism} />
     </Layout>
   )
 }
