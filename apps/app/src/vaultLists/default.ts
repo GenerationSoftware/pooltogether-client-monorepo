@@ -5,7 +5,7 @@ import { NETWORK } from '@shared/utilities'
 const defaultVaultList: VaultList = {
   name: 'Cabana Vault List',
   keywords: ['pooltogether', 'cabana', 'g9', 'optimism'],
-  version: { major: 1, minor: 14, patch: 0 },
+  version: { major: 1, minor: 15, patch: 0 },
   timestamp: '2023-10-18T23:53:23.588Z',
   logoURI: `${LINKS.app}/pooltogether-token-logo.svg`,
   tokens: [
@@ -40,6 +40,23 @@ const defaultVaultList: VaultList = {
           address: '0x4200000000000000000000000000000000000006',
           symbol: 'WETH',
           name: 'Wrapped Ether'
+        }
+      }
+    },
+    {
+      chainId: NETWORK.optimism,
+      address: '0xCe8293f586091d48A0cE761bBf85D5bCAa1B8d2b',
+      name: 'Prize DAI - Aave',
+      decimals: 18,
+      symbol: 'pDAI',
+      logoURI: `${LINKS.app}/icons/pDAI.svg`,
+      yieldSourceURI:
+        'https://app.aave.com/reserve-overview/?underlyingAsset=0xda10009cbd5d07dd0cecc66161fc93d7c9000da1&marketName=proto_optimism_v3',
+      extensions: {
+        underlyingAsset: {
+          address: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
+          symbol: 'DAI',
+          name: 'Dai Stablecoin'
         }
       }
     },
