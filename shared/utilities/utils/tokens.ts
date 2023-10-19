@@ -2,6 +2,7 @@ import { TokenWithAmount, TokenWithSupply } from '@shared/types'
 import { Address, ContractFunctionExecutionError, pad, PublicClient, zeroAddress } from 'viem'
 import { erc20ABI } from '../abis/erc20'
 import { erc20OldPermitABI } from '../abis/erc20-oldPermit'
+import { TOKEN_DATA_REDIRECTS } from '../constants'
 import { getMulticallResults } from './multicall'
 
 /**
@@ -27,8 +28,9 @@ export const getTokenInfo = async (
     const chainId = await publicClient.getChainId()
 
     tokenAddresses.forEach((address) => {
-      const symbol: string = multicallResults[address]?.['symbol']
-      const name: string = multicallResults[address]?.['name']
+      const redirect = TOKEN_DATA_REDIRECTS[chainId]?.[address.toLowerCase()]
+      const symbol: string = redirect?.symbol ?? multicallResults[address]?.['symbol']
+      const name: string = redirect?.name ?? multicallResults[address]?.['name']
       const decimals = Number(multicallResults[address]?.['decimals'])
       const totalSupply: bigint = multicallResults[address]?.['totalSupply'] ?? 0n
 

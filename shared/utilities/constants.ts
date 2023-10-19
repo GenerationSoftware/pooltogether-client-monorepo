@@ -336,6 +336,22 @@ export const TOKEN_PRICE_REDIRECTS: {
 }
 
 /**
+ * Redirects for offchain token rebrandings
+ *
+ * NOTE: All addresses are lowercase
+ */
+export const TOKEN_DATA_REDIRECTS: {
+  [chainId: number]: { [address: string]: { name?: string; symbol?: string } }
+} = {
+  [NETWORK.optimism]: {
+    '0x7f5c764cbc14f9669b88837ca1490cca17c31607': {
+      name: 'USDC (Bridged from Ethereum)',
+      symbol: 'USDC.e'
+    }
+  }
+}
+
+/**
  * Vault list schema
  */
 export const VAULT_LIST_SCHEMA: JSONSchemaType<VaultList> = {
