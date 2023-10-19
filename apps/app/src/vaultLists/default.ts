@@ -5,7 +5,7 @@ import { NETWORK } from '@shared/utilities'
 const defaultVaultList: VaultList = {
   name: 'Cabana Vault List',
   keywords: ['pooltogether', 'cabana', 'g9', 'optimism'],
-  version: { major: 1, minor: 0, patch: 0 },
+  version: { major: 1, minor: 14, patch: 0 },
   timestamp: '2023-10-18T23:53:23.588Z',
   logoURI: `${LINKS.app}/pooltogether-token-logo.svg`,
   tokens: [
@@ -15,7 +15,7 @@ const defaultVaultList: VaultList = {
       name: 'Prize USDC.e - Aave',
       decimals: 6,
       symbol: 'pUSDC.e',
-      logoURI: 'https://etherscan.io/token/images/centre-usdc_28.png', // TODO: add custom vault logo
+      logoURI: `${LINKS.app}/icons/pUSDC.e.svg`,
       yieldSourceURI:
         'https://app.aave.com/reserve-overview/?underlyingAsset=0x7f5c764cbc14f9669b88837ca1490cca17c31607&marketName=proto_optimism_v3',
       extensions: {
@@ -32,7 +32,7 @@ const defaultVaultList: VaultList = {
       name: 'Prize WETH - Aave',
       decimals: 18,
       symbol: 'pWETH',
-      logoURI: 'https://etherscan.io/token/images/weth_28.png', // TODO: add custom vault logo
+      logoURI: `${LINKS.app}/icons/pWETH.svg`,
       yieldSourceURI:
         'https://app.aave.com/reserve-overview/?underlyingAsset=0x4200000000000000000000000000000000000006&marketName=proto_optimism_v3',
       extensions: {
