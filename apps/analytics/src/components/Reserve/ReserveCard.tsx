@@ -26,7 +26,7 @@ export const ReserveCard = (props: ReserveCardProps) => {
     >
       <span className='font-bold'>{name}</span>
       <ReserveCardItem
-        name='Liquidations'
+        name='Vault Contributions'
         amount={liquidations > 0 ? liquidations : 0}
         token={prizeToken}
       />
