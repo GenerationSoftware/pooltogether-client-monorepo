@@ -91,7 +91,7 @@ export const useRngTxs = (prizePool: PrizePool) => {
             (block) => block.timestamp > periodStart && block.timestamp < periodEnd
           )
 
-          const lastDrawId = drawAwardedEvents[drawAwardedEvents.length - 1].args.drawId
+          const lastDrawId = drawAwardedEvents[drawAwardedEvents.length - 1]?.args.drawId ?? 1
           const drawAwardedEvent = drawAwardedEvents.find(
             (e) => e.blockNumber === drawAwardedBlock?.number
           )
