@@ -55,8 +55,11 @@ export const getBlockAtTimestamp = async (
     // Method 2: Estimate from avg block rate in new range:
     const timeDiff = ub.timestamp - lb.timestamp
     const avgSecBlock = divideBigInts(timeDiff, blockDiff)
-    const estBlockNumber =
+    let estBlockNumber =
       BigInt(Math.floor(Number(timestamp - lb.timestamp) / avgSecBlock)) + lb.number
+    if (estBlockNumber > ub.number) {
+      estBlockNumber = ub.number
+    }
     estBlock = await publicClient.getBlock({ blockNumber: estBlockNumber })
     if (estBlock.timestamp > timestamp) {
       ub = estBlock
