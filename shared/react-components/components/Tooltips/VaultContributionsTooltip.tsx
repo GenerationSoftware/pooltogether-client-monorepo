@@ -21,7 +21,7 @@ export const VaultContributionsTooltip = (props: VaultContributionsTooltipProps)
         <div className={classNames('max-w-[16ch] text-center', className)}>
           <span>
             {intl?.('vaultContribution', { symbol: tokenSymbol, days: numberOfDays }) ??
-              `This is the amount of ${tokenSymbol} liquidated from vault yield and contributed to the prize pool over the last ${numberOfDays} days`}
+              `The amount of ${tokenSymbol} contributed to the prize pool over the last ${numberOfDays} days`}
           </span>
         </div>
       }

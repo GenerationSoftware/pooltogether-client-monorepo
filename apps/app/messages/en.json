@@ -238,12 +238,12 @@
   },
   "Tooltips": {
     "prizePower": "Vaults with greater prize power give you better chances to win",
-    "winChance": "This is your chance to win a prize in any given draw",
+    "winChance": "Your chance to win a prize in any given draw",
     "exactApproval": "You'll give your approval to deposit a specific amount of {symbol}",
     "infiniteApproval": "You won't need to approve {symbol} the next time you want to deposit",
-    "vaultFee": "This a percentage of yield that does not go towards prizes, and is determined by the vault deployer",
+    "vaultFee": "A percentage of yield that does not go towards prizes, and is determined by the vault deployer",
     "importedVault": "This vault is from the following imported list(s):",
-    "vaultContribution": "This is the amount of {symbol} liquidated from vault yield and contributed to the prize pool over the last {days} days"
+    "vaultContribution": "The amount of {symbol} contributed to the prize pool over the last {days} days"
   },
   "Toasts": {
     "transactions": {

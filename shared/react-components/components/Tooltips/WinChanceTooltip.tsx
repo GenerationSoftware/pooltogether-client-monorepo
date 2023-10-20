@@ -16,7 +16,7 @@ export const WinChanceTooltip = (props: WinChanceTooltipProps) => {
     <Tooltip
       content={
         <div className={classNames('max-w-[16ch] text-center', className)}>
-          <span>{intl?.text ?? 'This is your chance to win a prize in any given draw'}</span>
+          <span>{intl?.text ?? 'Your chance to win a prize in any given draw'}</span>
         </div>
       }
     >
