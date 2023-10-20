@@ -54,14 +54,21 @@ export const DRAW_RESULTS_URL: { [chainId: number]: string } = {
  * Vault LPs
  */
 export const VAULT_LPS: { [chainId: number]: Lowercase<Address>[] } = {
-  [NETWORK.optimism]: ['0xb1b9dcb9f3a25e390fb37f597c2bf90b16889e41']
+  [NETWORK.optimism]: [
+    '0xb1b9dcb9f3a25e390fb37f597c2bf90b16889e41',
+    '0xfbf4f89c7a9ecee48f65033097fecea257eb4049',
+    '0xf9baa3cd7b8c1f205fd3a6861dca693fed683684'
+  ]
 }
 
 /**
  * Misc. POOL burn addresses
  */
 export const BURN_ADDRESSES: { [chainId: number]: Lowercase<Address>[] } = {
-  [NETWORK.optimism]: ['0xf93329e78feff1145fce03a79d5b356588dea215']
+  [NETWORK.optimism]: [
+    '0xf93329e78feff1145fce03a79d5b356588dea215',
+    '0x3989cbc1fb0eb278601c018ed7627b07be9de4cb'
+  ]
 }
 
 /**
