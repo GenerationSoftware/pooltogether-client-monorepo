@@ -54,7 +54,7 @@ export const LiquidationsTable = (props: LiquidationsTableProps) => {
   const lpAddresses = useMemo(() => {
     const addresses = new Set<Address>()
     validLiquidationEvents.forEach((event) => {
-      addresses.add(event.args.liquidationPair)
+      addresses.add(event.args.liquidationPair.toLowerCase() as Address)
     })
     return [...addresses]
   }, [validLiquidationEvents])

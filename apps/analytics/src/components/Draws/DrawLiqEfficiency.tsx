@@ -59,7 +59,9 @@ export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
 
   const lpAddresses = useMemo(() => {
     const addresses = new Set<Address>()
-    drawLiquidationEvents.forEach((event) => addresses.add(event.args.liquidationPair))
+    drawLiquidationEvents.forEach((event) =>
+      addresses.add(event.args.liquidationPair.toLowerCase() as Address)
+    )
     return [...addresses]
   }, [drawLiquidationEvents])
 
@@ -90,7 +92,7 @@ export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
         let totalValueOut = 0
 
         drawLiquidationEvents.forEach((event) => {
-          const tokenOut = tokenOutPrices[event.args.liquidationPair]
+          const tokenOut = tokenOutPrices[event.args.liquidationPair.toLowerCase() as Address]
           const tokenOutPrice = tokenOut?.priceHistory.find(
             (entry) => entry.date === targetDate
           )?.price

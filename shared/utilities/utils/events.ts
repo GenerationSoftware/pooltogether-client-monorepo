@@ -5,6 +5,7 @@ import {
   RNG_AUCTION,
   RNG_RELAY_ADDRESSES
 } from '../constants'
+import { getLiquidationPairAddresses } from './liquidations'
 
 /**
  * Returns `RelayedToDispatcher` events
@@ -143,7 +144,22 @@ export const getDrawAwardedEvents = async (
 export const getLiquidationEvents = async (
   publicClient: PublicClient,
   options?: { fromBlock?: bigint; toBlock?: bigint }
-) => {
+): Promise<
+  {
+    address: Address
+    args: {
+      amountIn: bigint
+      amountInMax: bigint
+      amountOut: bigint
+      sender: Address
+      receiver: Address
+      liquidationPair: Address
+    }
+    blockNumber: bigint
+    logIndex: number
+    transactionHash: `0x${string}`
+  }[]
+> => {
   const chainId = await publicClient.getChainId()
 
   const liqRouterContractAddress = LIQUIDATION_ROUTER_ADDRESSES[chainId]
@@ -151,7 +167,38 @@ export const getLiquidationEvents = async (
   if (!liqRouterContractAddress)
     throw new Error(`No liquidation router contract set for chain ID ${chainId}`)
 
-  return await publicClient.getLogs({
+  const lpAddresses = await getLiquidationPairAddresses(publicClient)
+
+  const lpEvents = !!lpAddresses.length
+    ? await publicClient.getLogs({
+        address: lpAddresses,
+        event: {
+          inputs: [
+            { indexed: true, internalType: 'address', name: 'sender', type: 'address' },
+            { indexed: true, internalType: 'address', name: 'receiver', type: 'address' },
+            { indexed: false, internalType: 'uint256', name: 'amountOut', type: 'uint256' },
+            { indexed: false, internalType: 'uint256', name: 'amountInMax', type: 'uint256' },
+            { indexed: false, internalType: 'uint256', name: 'amountIn', type: 'uint256' },
+            { indexed: false, internalType: 'bytes', name: 'flashSwapData', type: 'bytes' }
+          ],
+          name: 'SwappedExactAmountOut',
+          type: 'event'
+        },
+        fromBlock: options?.fromBlock,
+        toBlock: options?.toBlock ?? 'latest',
+        strict: true
+      })
+    : []
+
+  const filteredLpEvents = lpEvents.filter(
+    (lpEvent) => lpEvent.args.sender.toLowerCase() !== liqRouterContractAddress.toLowerCase()
+  )
+  const formattedLpEvents = filteredLpEvents.map((lpEvent) => ({
+    ...lpEvent,
+    args: { ...lpEvent.args, liquidationPair: lpEvent.address }
+  }))
+
+  const routerEvents = await publicClient.getLogs({
     address: liqRouterContractAddress,
     event: {
       inputs: [
@@ -175,6 +222,10 @@ export const getLiquidationEvents = async (
     toBlock: options?.toBlock ?? 'latest',
     strict: true
   })
+
+  return [...routerEvents, ...formattedLpEvents].sort((a, b) =>
+    Number(a.blockNumber - b.blockNumber)
+  )
 }
 
 /**

@@ -57,7 +57,9 @@ export const DrawsAvgLiqEfficiencyChart = (props: DrawsAvgLiqEfficiencyChartProp
 
   const lpAddresses = useMemo(() => {
     const addresses = new Set<Address>()
-    liquidationEvents?.forEach((e) => addresses.add(e.args.liquidationPair))
+    liquidationEvents?.forEach((e) =>
+      addresses.add(e.args.liquidationPair.toLowerCase() as Address)
+    )
     return [...addresses]
   }, [liquidationEvents])
 
@@ -101,7 +103,7 @@ export const DrawsAvgLiqEfficiencyChart = (props: DrawsAvgLiqEfficiencyChartProp
           )
 
           drawLiquidationEvents.forEach((event) => {
-            const tokenOut = tokenOutPrices[event.args.liquidationPair]
+            const tokenOut = tokenOutPrices[event.args.liquidationPair.toLowerCase() as Address]
             const tokenOutPrice = tokenOut?.priceHistory.find(
               (entry) => entry.date === targetDate
             )?.price
