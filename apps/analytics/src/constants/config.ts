@@ -44,7 +44,7 @@ export const QUERY_START_BLOCK: { [chainId: number]: bigint } = {
  * Draw results URL
  */
 export const DRAW_RESULTS_URL: { [chainId: number]: string } = {
-  [NETWORK.optimism]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results/main/prizes/${NETWORK.optimism}`,
+  [NETWORK.optimism]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results-mainnet/main/prizes/${NETWORK.optimism}`,
   [NETWORK[
     'optimism-goerli'
   ]]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results-testnet/main/prizes/${NETWORK['optimism-goerli']}`
