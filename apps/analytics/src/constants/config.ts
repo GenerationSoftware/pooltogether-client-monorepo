@@ -41,7 +41,7 @@ export const QUERY_START_BLOCK: { [chainId: number]: bigint } = {
  * Draw results URL
  */
 export const DRAW_RESULTS_URL =
-  'https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results/main/prizes'
+  'https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results-beta/main/prizes'
 
 /**
  * Vault LPs
