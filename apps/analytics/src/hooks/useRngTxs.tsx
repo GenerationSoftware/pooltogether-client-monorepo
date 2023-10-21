@@ -2,6 +2,7 @@ import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
   useBlocks,
   useDrawAwardedEvents,
+  useFirstDrawOpenedAt,
   useRelayAuctionEvents,
   useRngAuctionEvents,
   useRngL1RelayMsgEvents,
@@ -70,6 +71,10 @@ export const useRngTxs = (prizePool: PrizePool) => {
   const { data: rngL2RelayMsgEvents, isFetched: isFetchedRngL2RelayMsgEvents } =
     useRngL2RelayMsgEvents(prizePool?.chainId, { fromBlock })
 
+  const { data: firstDrawOpenedAt, isFetched: isFetchedFirstDrawOpenedAt } =
+    useFirstDrawOpenedAt(prizePool)
+
+  // TODO: this is assuming the drawPeriod is always the same as the sequencePeriod - not ideal
   const data = useMemo(() => {
     if (
       !!rngAuctionEvents &&
@@ -78,29 +83,27 @@ export const useRngTxs = (prizePool: PrizePool) => {
       !!drawAwardedBlocks &&
       !!rngL1RelayMsgEvents &&
       !!rngL2RelayMsgEvents &&
+      !!firstDrawOpenedAt &&
       !!originChainId
     ) {
       const rngTxs = rngAuctionEvents
-        .map((rngAuctionEvent, i) => {
-          const periodStart =
-            RNG_AUCTION[originChainId].sequenceOffset +
-            RNG_AUCTION[originChainId].sequencePeriod * rngAuctionEvent.args.sequenceId
-          const periodEnd = periodStart + RNG_AUCTION[originChainId].sequencePeriod
+        .map((rngAuctionEvent) => {
+          const sequenceOffset = RNG_AUCTION[originChainId].sequenceOffset
+          const sequencePeriod = RNG_AUCTION[originChainId].sequencePeriod
+          const idDiff = (firstDrawOpenedAt - sequenceOffset) / sequencePeriod
 
-          const drawAwardedBlock = drawAwardedBlocks.find(
-            (block) => block.timestamp > periodStart && block.timestamp < periodEnd
-          )
+          const sequenceId = rngAuctionEvent.args.sequenceId
+          const drawId = sequenceId - idDiff
 
-          const lastDrawId = drawAwardedEvents[drawAwardedEvents.length - 1]?.args.drawId ?? 1
-          const drawAwardedEvent = drawAwardedEvents.find(
-            (e) => e.blockNumber === drawAwardedBlock?.number
-          )
-          let drawId = drawAwardedEvent?.args.drawId
-          if (!drawId && i === rngAuctionEvents.length - 1) {
-            drawId = lastDrawId + 1
-          }
+          if (drawId > 0) {
+            const drawAwardedEvent = drawAwardedEvents.find((e) => e.args.drawId === drawId)
 
-          if (!!drawId) {
+            const periodStart = sequenceOffset + sequencePeriod * rngAuctionEvent.args.sequenceId
+            const periodEnd = periodStart + sequencePeriod
+            const drawAwardedBlock = drawAwardedBlocks.find(
+              (block) => block.timestamp > periodStart && block.timestamp < periodEnd
+            )
+
             const relevantRelayAuctionEvents = relayAuctionEvents.filter(
               (event) => event.args.sequenceId === rngAuctionEvent.args.sequenceId
             )
@@ -174,7 +177,8 @@ export const useRngTxs = (prizePool: PrizePool) => {
     drawAwardedEvents,
     drawAwardedBlocks,
     rngL1RelayMsgEvents,
-    rngL2RelayMsgEvents
+    rngL2RelayMsgEvents,
+    firstDrawOpenedAt
   ])
 
   const isFetched =
@@ -183,7 +187,8 @@ export const useRngTxs = (prizePool: PrizePool) => {
     isFetchedDrawAwardedEvents &&
     isFetchedDrawAwardedBlocks &&
     isFetchedRngL1RelayMsgEvents &&
-    isFetchedRngL2RelayMsgEvents
+    isFetchedRngL2RelayMsgEvents &&
+    isFetchedFirstDrawOpenedAt
 
   return { data, isFetched }
 }
