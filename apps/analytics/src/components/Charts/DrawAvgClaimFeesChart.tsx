@@ -27,8 +27,8 @@ interface DrawAvgClaimFeesChartProps {
 export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
   const { prizePool, drawId, hideCanary, className } = props
 
-  const { data: allDraws } = usePrizeDrawWinners(prizePool)
-  const draw = allDraws?.find((d) => d.id === drawId)
+  const { data: wins } = usePrizeDrawWinners(prizePool)
+  const drawWins = wins?.find((draw) => draw.id === drawId)?.prizeClaims
 
   const { closedAt, awardedAt, finalizedAt } = useDrawStatus(prizePool, drawId)
 
@@ -57,22 +57,22 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
   }, [closedAt, awardedAt, currentTimestamp])
 
   const chartData = useMemo(() => {
-    if (!!draw && !!numTiers) {
+    if (!!drawWins?.length && !!numTiers) {
       const data: { name: number; [tier: number]: number }[] = []
 
       const cumTierValues: {
         [tier: number]: { sumClaimFeeAmount: bigint; sumPrizeAmount: bigint }
       } = {}
 
-      const wins = draw.prizeClaims.filter(
+      const filteredWins = drawWins.filter(
         (win) => win.fee > 0n && (!hideCanary || win.tier !== numTiers - 1)
       )
 
-      const tiers = new Set(wins.map((win) => win.tier))
+      const tiers = new Set(filteredWins.map((win) => win.tier))
       tiers.forEach((tier) => (cumTierValues[tier] = { sumClaimFeeAmount: 0n, sumPrizeAmount: 0n }))
 
       for (let i = 0; i < chartTimestamps.length - 1; i++) {
-        const checkpointWins = wins.filter(
+        const checkpointWins = filteredWins.filter(
           (win) => win.timestamp >= chartTimestamps[i] && win.timestamp < chartTimestamps[i + 1]
         )
 
@@ -97,7 +97,7 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
 
       return data
     }
-  }, [draw, numTiers, chartTimestamps])
+  }, [drawWins, numTiers, chartTimestamps])
 
   if (!!chartData?.length && !!numTiers) {
     const lines: LineChartProps['lines'] = Object.keys(chartData[0])

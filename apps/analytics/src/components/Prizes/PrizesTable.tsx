@@ -58,7 +58,7 @@ export const PrizesTable = (props: PrizesTableProps) => {
     return <Spinner className='after:border-y-pt-purple-800' />
   }
 
-  if (!drawWins || !awardedAt) {
+  if (!drawWins?.length || !awardedAt) {
     return (
       <span className='flex gap-2 items-center'>
         No claims{status === 'awarded' ? ' so far' : ''}...{' '}
