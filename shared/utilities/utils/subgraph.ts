@@ -300,7 +300,7 @@ export const getUserSubgraphObservations = async (
 
     const body = JSON.stringify({
       query: `query($address: Bytes, $numVaults: Int, $numObservations: Int, $offsetVaults: Int, $offsetObservations: Int, $orderDirection: OrderDirection, $orderBy: AccountObservation_orderBy) {
-        user(id: $id) {
+        user(id: $address) {
           accounts(first: $numVaults, skip: $offsetVaults) {
             vault { address }
             observations(first: $numObservations, skip: $offsetObservations, orderDirection: $orderDirection, orderBy: $orderBy) {
@@ -313,7 +313,7 @@ export const getUserSubgraphObservations = async (
         }
       }`,
       variables: {
-        id: userAddress,
+        address: userAddress,
         numVaults: options?.numVaults ?? 1_000,
         numObservations: options?.numObservations ?? 1_000,
         offsetVaults: options?.offsetVaults ?? 0,

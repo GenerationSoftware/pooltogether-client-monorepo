@@ -18,11 +18,8 @@ export const useAllUserBalanceUpdates = (prizePools: PrizePool[], userAddress: s
     queries: prizePools.map((prizePool) => {
       return {
         queryKey: [QUERY_KEYS.userBalanceUpdates, prizePool?.chainId, userAddress],
-        queryFn: async () => {
-          const chainId = prizePool.chainId
-          const balanceUpdates = await getPaginatedUserSubgraphObservations(chainId, userAddress)
-          return balanceUpdates
-        },
+        queryFn: async () =>
+          await getPaginatedUserSubgraphObservations(prizePool.chainId, userAddress),
         staleTime: Infinity,
         enabled: !!prizePool && !!userAddress,
         ...NO_REFETCH
