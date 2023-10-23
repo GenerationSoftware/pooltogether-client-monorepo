@@ -12,7 +12,6 @@ importers:
       '@types/node': ^17.0.45
       '@types/react': ^18.2.0
       '@types/react-dom': ^18.2.0
-      ajv: ^8.12.0
       axios: ^1.4.0
       classnames: ^2.3.2
       fathom-client: ^3.5.0
@@ -43,7 +42,6 @@ importers:
       '@types/node': 17.0.45
       '@types/react': 18.2.8
       '@types/react-dom': 18.2.4
-      ajv: 8.12.0
       axios: 1.4.0
       classnames: 2.3.2
       fathom-client: 3.5.0
@@ -60,7 +58,7 @@ importers:
       sonner: 0.4.0_biqbaboplfbrettd7655fr4n2y
       tailwindcss: 3.3.1_postcss@8.4.23
       tslib: 2.5.0
-      turbo: 1.10.14
+      turbo: 1.10.16
       typescript: 5.0.4
       viem: 1.10.9_typescript@5.0.4
       wagmi: 1.3.9_4cnk5mqy3ziltp57y6fboxfl5e
@@ -424,7 +422,6 @@ importers:
   packages/hyperstructure-client-js:
     specifiers:
       '@types/node': ^17.0.45
-      ajv: ^8.12.0
       axios: ^1.4.0
       fathom-client: ^3.5.0
       tslib: ^2.5.0
@@ -432,7 +429,6 @@ importers:
       typescript: ^5.0.4
       viem: ^1.10.9
     dependencies:
-      ajv: 8.12.0
       axios: 1.4.0
     devDependencies:
       '@types/node': 17.0.45
@@ -2631,17 +2627,6 @@ packages:
       }
     dev: false
 
-  /ajv/8.12.0:
-    resolution:
-      {
-        integrity: sha512-sRu1kpcO9yLtYxBKvqfTeh9KzZEwO3STyX1HT+4CaDzC6HpTGYhIhPIzj9XuKU7KYDwnaeh5hcOwjy1QuJzBPA==
-      }
-    dependencies:
-      fast-deep-equal: 3.1.3
-      json-schema-traverse: 1.0.0
-      require-from-string: 2.0.2
-      uri-js: 4.4.1
-
   /ansi-regex/5.0.1:
     resolution:
       {
@@ -3568,12 +3553,6 @@ packages:
       }
     engines: { node: '> 0.1.90' }
 
-  /fast-deep-equal/3.1.3:
-    resolution:
-      {
-        integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
-      }
-
   /fast-equals/5.0.1:
     resolution:
       {
@@ -4241,12 +4220,6 @@ packages:
     resolution:
       {
         integrity: sha512-RJ9YYNCkhVDBuP4zN5BBtYAzEl03yq/jIIsyif0JY9qyJuQQZNeDK7anAPKKlyEtLSj2s8h6hNh2F8zO5q7ScA==
-      }
-
-  /json-schema-traverse/1.0.0:
-    resolution:
-      {
-        integrity: sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==
       }
 
   /json-stringify-safe/5.0.1:
@@ -5091,6 +5064,7 @@ packages:
         integrity: sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA==
       }
     engines: { node: '>=6' }
+    dev: true
 
   /qrcode/1.5.0:
     resolution:
@@ -5449,13 +5423,6 @@ packages:
     resolution:
       {
         integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==
-      }
-    engines: { node: '>=0.10.0' }
-
-  /require-from-string/2.0.2:
-    resolution:
-      {
-        integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==
       }
     engines: { node: '>=0.10.0' }
 
@@ -6013,10 +5980,10 @@ packages:
       - ts-node
     dev: true
 
-  /turbo-darwin-64/1.10.14:
+  /turbo-darwin-64/1.10.16:
     resolution:
       {
-        integrity: sha512-I8RtFk1b9UILAExPdG/XRgGQz95nmXPE7OiGb6ytjtNIR5/UZBS/xVX/7HYpCdmfriKdVwBKhalCoV4oDvAGEg==
+        integrity: sha512-+Jk91FNcp9e9NCLYlvDDlp2HwEDp14F9N42IoW3dmHI5ZkGSXzalbhVcrx3DOox3QfiNUHxzWg4d7CnVNCuuMg==
       }
     cpu: [x64]
     os: [darwin]
@@ -6024,10 +5991,10 @@ packages:
     dev: true
     optional: true
 
-  /turbo-darwin-arm64/1.10.14:
+  /turbo-darwin-arm64/1.10.16:
     resolution:
       {
-        integrity: sha512-KAdUWryJi/XX7OD0alOuOa0aJ5TLyd4DNIYkHPHYcM6/d7YAovYvxRNwmx9iv6Vx6IkzTnLeTiUB8zy69QkG9Q==
+        integrity: sha512-jqGpFZipIivkRp/i+jnL8npX0VssE6IAVNKtu573LXtssZdV/S+fRGYA16tI46xJGxSAivrZ/IcgZrV6Jk80bw==
       }
     cpu: [arm64]
     os: [darwin]
@@ -6035,10 +6002,10 @@ packages:
     dev: true
     optional: true
 
-  /turbo-linux-64/1.10.14:
+  /turbo-linux-64/1.10.16:
     resolution:
       {
-        integrity: sha512-BOBzoREC2u4Vgpap/WDxM6wETVqVMRcM8OZw4hWzqCj2bqbQ6L0wxs1LCLWVrghQf93JBQtIGAdFFLyCSBXjWQ==
+        integrity: sha512-PpqEZHwLoizQ6sTUvmImcRmACyRk9EWLXGlqceogPZsJ1jTRK3sfcF9fC2W56zkSIzuLEP07k5kl+ZxJd8JMcg==
       }
     cpu: [x64]
     os: [linux]
@@ -6046,10 +6013,10 @@ packages:
     dev: true
     optional: true
 
-  /turbo-linux-arm64/1.10.14:
+  /turbo-linux-arm64/1.10.16:
     resolution:
       {
-        integrity: sha512-D8T6XxoTdN5D4V5qE2VZG+/lbZX/89BkAEHzXcsSUTRjrwfMepT3d2z8aT6hxv4yu8EDdooZq/2Bn/vjMI32xw==
+        integrity: sha512-TMjFYz8to1QE0fKVXCIvG/4giyfnmqcQIwjdNfJvKjBxn22PpbjeuFuQ5kNXshUTRaTJihFbuuCcb5OYFNx4uw==
       }
     cpu: [arm64]
     os: [linux]
@@ -6057,10 +6024,10 @@ packages:
     dev: true
     optional: true
 
-  /turbo-windows-64/1.10.14:
+  /turbo-windows-64/1.10.16:
     resolution:
       {
-        integrity: sha512-zKNS3c1w4i6432N0cexZ20r/aIhV62g69opUn82FLVs/zk3Ie0GVkSB6h0rqIvMalCp7enIR87LkPSDGz9K4UA==
+        integrity: sha512-+jsf68krs0N66FfC4/zZvioUap/Tq3sPFumnMV+EBo8jFdqs4yehd6+MxIwYTjSQLIcpH8KoNMB0gQYhJRLZzw==
       }
     cpu: [x64]
     os: [win32]
@@ -6068,10 +6035,10 @@ packages:
     dev: true
     optional: true
 
-  /turbo-windows-arm64/1.10.14:
+  /turbo-windows-arm64/1.10.16:
     resolution:
       {
-        integrity: sha512-rkBwrTPTxNSOUF7of8eVvvM+BkfkhA2OvpHM94if8tVsU+khrjglilp8MTVPHlyS9byfemPAmFN90oRIPB05BA==
+        integrity: sha512-sKm3hcMM1bl0B3PLG4ifidicOGfoJmOEacM5JtgBkYM48ncMHjkHfFY7HrJHZHUnXM4l05RQTpLFoOl/uIo2HQ==
       }
     cpu: [arm64]
     os: [win32]
@@ -6079,19 +6046,19 @@ packages:
     dev: true
     optional: true
 
-  /turbo/1.10.14:
+  /turbo/1.10.16:
     resolution:
       {
-        integrity: sha512-hr9wDNYcsee+vLkCDIm8qTtwhJ6+UAMJc3nIY6+PNgUTtXcQgHxCq8BGoL7gbABvNWv76CNbK5qL4Lp9G3ZYRA==
+        integrity: sha512-2CEaK4FIuSZiP83iFa9GqMTQhroW2QryckVqUydmg4tx78baftTOS0O+oDAhvo9r9Nit4xUEtC1RAHoqs6ZEtg==
       }
     hasBin: true
     optionalDependencies:
-      turbo-darwin-64: 1.10.14
-      turbo-darwin-arm64: 1.10.14
-      turbo-linux-64: 1.10.14
-      turbo-linux-arm64: 1.10.14
-      turbo-windows-64: 1.10.14
-      turbo-windows-arm64: 1.10.14
+      turbo-darwin-64: 1.10.16
+      turbo-darwin-arm64: 1.10.16
+      turbo-linux-64: 1.10.16
+      turbo-linux-arm64: 1.10.16
+      turbo-windows-64: 1.10.16
+      turbo-windows-arm64: 1.10.16
     dev: true
 
   /typedarray-to-buffer/3.1.5:
@@ -6131,14 +6098,6 @@ packages:
       escalade: 3.1.1
       picocolors: 1.0.0
     dev: true
-
-  /uri-js/4.4.1:
-    resolution:
-      {
-        integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==
-      }
-    dependencies:
-      punycode: 2.3.0
 
   /use-callback-ref/1.3.0_i2bxsyfskhzbpjanbovidbfj7u:
     resolution:

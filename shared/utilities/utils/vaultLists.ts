@@ -1,12 +1,7 @@
 import { VaultList, Version } from '@shared/types'
-import Ajv from 'ajv'
 import { createPublicClient, http, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
 import { normalize } from 'viem/ens'
-import { VAULT_LIST_SCHEMA } from '../constants'
-
-const ajv = new Ajv()
-const isValidVaultList = ajv.compile(VAULT_LIST_SCHEMA)
 
 /**
  * Returns a vault list object from an HTTP URL, IPFS/IPNS hash or ENS domain
@@ -40,6 +35,44 @@ export const getVaultList = async (src: string, publicClient?: PublicClient) => 
   }
 
   return isValidVaultList(vaultList) ? vaultList : undefined
+}
+
+// TODO: check optional params as well
+/**
+ * Returns true if the given vault list object is valid
+ * @param vaultList a vault list to check for validity
+ * @returns
+ */
+export const isValidVaultList = (vaultList?: VaultList) => {
+  const isObject = !!vaultList && typeof vaultList === 'object'
+
+  if (isObject) {
+    const isValidName = !!vaultList.name && typeof vaultList.name === 'string'
+    const isValidVersion =
+      !!vaultList.version &&
+      typeof vaultList.version === 'object' &&
+      vaultList.version.major !== undefined &&
+      typeof vaultList.version.major === 'number' &&
+      vaultList.version.minor !== undefined &&
+      typeof vaultList.version.minor === 'number' &&
+      vaultList.version.patch !== undefined &&
+      typeof vaultList.version.patch === 'number'
+    const isValidTimestamp = !!vaultList.timestamp && typeof vaultList.timestamp === 'string'
+    const isValidTokens =
+      !!vaultList.tokens &&
+      typeof vaultList.tokens === 'object' &&
+      vaultList.tokens.every(
+        (vault) =>
+          !!vault.chainId &&
+          typeof vault.chainId === 'number' &&
+          !!vault.address &&
+          typeof vault.address === 'string'
+      )
+
+    return isValidName && isValidVersion && isValidTimestamp && isValidTokens
+  } else {
+    return false
+  }
 }
 
 /**
