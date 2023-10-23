@@ -1,5 +1,5 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { EIP2612_PERMIT_TYPES, OLD_DAI_PERMIT_TYPES } from '@shared/utilities'
+import { EIP2612_PERMIT_TYPES, getSecondsSinceEpoch, OLD_DAI_PERMIT_TYPES } from '@shared/utilities'
 import { useEffect, useMemo, useState } from 'react'
 import { Address, TypedDataDomain, verifyTypedData, zeroAddress } from 'viem'
 import { useAccount, useSignTypedData } from 'wagmi'
@@ -16,13 +16,14 @@ export const useApproveSignature = (
   amount: bigint,
   vault: Vault,
   options?: {
+    deadline?: bigint
     onSuccess?: (signature: `0x${string}`) => void
     onError?: () => void
   }
 ): {
   signature?: `0x${string}`
   deadline?: bigint
-  isLoading: boolean
+  isWaiting: boolean
   isSuccess: boolean
   isError: boolean
   signApprove?: () => void
@@ -69,14 +70,14 @@ export const useApproveSignature = (
         spender: vault.address,
         value: amount,
         nonce: nonces ?? 0n,
-        deadline: BigInt(Math.floor(Date.now() / 1_000) + 300)
+        deadline: options?.deadline ?? BigInt(getSecondsSinceEpoch() + 600)
       }
     } else if (tokenPermitSupport === 'daiPermit') {
       return {
         holder: userAddress ?? zeroAddress,
         spender: vault.address,
         nonce: nonces ?? 0n,
-        expiry: BigInt(Math.floor(Date.now() / 1_000) + 300),
+        expiry: options?.deadline ?? BigInt(getSecondsSinceEpoch() + 600),
         allowed: true
       }
     } else {
@@ -96,7 +97,7 @@ export const useApproveSignature = (
 
   const {
     data: signature,
-    isLoading,
+    isLoading: isWaiting,
     isSuccess,
     isError: isSigningError,
     signTypedData
@@ -168,5 +169,5 @@ export const useApproveSignature = (
 
   const isError = isSigningError || isInvalidSignature
 
-  return { signature, deadline, isLoading, isSuccess, isError, signApprove }
+  return { signature, deadline, isWaiting, isSuccess, isError, signApprove }
 }
