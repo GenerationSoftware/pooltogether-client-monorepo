@@ -26,6 +26,9 @@ export const useAllUserEligibleDraws = (prizePools: PrizePool[], userAddress: st
   const { data: allBalanceUpdates, isFetched: isFetchedAllBalanceUpdates } =
     useAllUserBalanceUpdates(prizePools, userAddress)
 
+  // TODO: this assumes `grandPrizePeriodDraws` is always 365 - not ideal
+  const grandPrizePeriodDraws = 365
+
   const isFetched =
     isFetchedAllDrawIds &&
     isFetchedAllFirstDrawOpenedAt &&
@@ -64,18 +67,13 @@ export const useAllUserEligibleDraws = (prizePools: PrizePool[], userAddress: st
           // Looping through every vault with balance updates
           for (const strVaultAddress in allBalanceUpdates[chainId]) {
             const vaultAddress = strVaultAddress as Address
-
             const balanceUpdates = [...allBalanceUpdates[chainId][vaultAddress]].reverse()
-            const newObservationIndex = balanceUpdates.findIndex((obs) => obs.isNew)
-            const slicedBalanceUpdates =
-              newObservationIndex !== -1
-                ? balanceUpdates.slice(0, newObservationIndex + 1)
-                : balanceUpdates
 
             const vaultDraws = getVaultEligibleDraws(
               drawCloseTimestamps,
-              slicedBalanceUpdates,
-              drawPeriod
+              balanceUpdates,
+              drawPeriod,
+              grandPrizePeriodDraws
             )
 
             vaultDraws.forEach((draw) => {
@@ -101,34 +99,48 @@ export const useAllUserEligibleDraws = (prizePools: PrizePool[], userAddress: st
   return { data, isFetched }
 }
 
-// TODO: this should take into account twab decay - users are still eligible a while after full withdrawal
 const getVaultEligibleDraws = (
   drawCloseTimestamps: number[],
   balanceUpdates: SubgraphObservation[],
-  drawPeriod: number
+  drawPeriod: number,
+  grandPrizePeriodDraws: number
 ) => {
-  const drawTimestampsToCheck: number[] = [...drawCloseTimestamps]
+  const eligibleDrawIds = new Set<number>()
   const eligibleDraws: DrawWithTimestamps[] = []
 
-  for (let balanceIndex = balanceUpdates.length - 1; balanceIndex >= 0; balanceIndex--) {
-    const balanceUpdate = balanceUpdates[balanceIndex]
-    for (let drawIndex = drawTimestampsToCheck.length - 1; drawIndex >= 0; drawIndex--) {
-      const drawClosedAt = drawTimestampsToCheck[drawIndex]
-      if (drawClosedAt >= balanceUpdate.timestamp) {
-        if (balanceUpdate.delegateBalance > 0) {
-          eligibleDraws.push({
-            id: drawIndex + 1,
-            openedAt: drawClosedAt - drawPeriod,
-            closedAt: drawClosedAt,
-            finalizedAt: drawClosedAt + drawPeriod
-          })
-        }
-        drawTimestampsToCheck.pop()
-      } else {
-        break
-      }
-    }
+  const addDraw = (drawId: number) => {
+    const drawClosedAt = drawCloseTimestamps[drawId - 1]
+
+    eligibleDrawIds.add(drawId)
+
+    eligibleDraws.push({
+      id: drawId,
+      openedAt: drawClosedAt - drawPeriod,
+      closedAt: drawClosedAt,
+      finalizedAt: drawClosedAt + drawPeriod
+    })
   }
 
-  return eligibleDraws.sort((a, b) => a.id - b.id)
+  balanceUpdates.forEach((balanceUpdate, balanceUpdateIndex) => {
+    const eligibleUntil = balanceUpdate.timestamp + grandPrizePeriodDraws * drawPeriod
+
+    drawCloseTimestamps.forEach((drawClosedAt, drawIndex) => {
+      const drawId = drawIndex + 1
+
+      if (!eligibleDrawIds.has(drawId)) {
+        const drawOpenedAt = drawClosedAt - drawPeriod
+
+        if (drawClosedAt > balanceUpdate.timestamp && drawOpenedAt < eligibleUntil) {
+          addDraw(drawId)
+        } else if (drawOpenedAt >= eligibleUntil && balanceUpdate.delegateBalance > 0n) {
+          const nextBalanceUpdate = balanceUpdates[balanceUpdateIndex + 1]
+          if (!nextBalanceUpdate || nextBalanceUpdate.timestamp > drawOpenedAt) {
+            addDraw(drawId)
+          }
+        }
+      }
+    })
+  })
+
+  return eligibleDraws
 }
