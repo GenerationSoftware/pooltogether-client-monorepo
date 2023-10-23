@@ -69,7 +69,8 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
  * TX Gas Amount Estimates
  */
 export const TX_GAS_ESTIMATES = Object.freeze({
-  approve: 50_000,
-  deposit: 450_000,
-  withdraw: 300_000
+  approve: 50_000n,
+  deposit: 350_000n,
+  depositWithPermit: 400_000n,
+  withdraw: 300_000n
 })

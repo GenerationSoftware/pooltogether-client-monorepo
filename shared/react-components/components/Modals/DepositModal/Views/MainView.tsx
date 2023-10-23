@@ -1,9 +1,14 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
-import { useVaultShareData } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useTokenPermitSupport,
+  useVaultShareData,
+  useVaultTokenData
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
 import { Spinner } from '@shared/ui'
 import { getNiceNetworkNameByChainId } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
+import { Address } from 'viem'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 import { DepositForm, depositFormShareAmountAtom } from '../../../Form/DepositForm'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
@@ -26,11 +31,22 @@ export const MainView = (props: MainViewProps) => {
   const { vault, prizePool, intl } = props
 
   const { data: shareData } = useVaultShareData(vault)
+  const { data: tokenData } = useVaultTokenData(vault)
+
+  const { data: tokenPermitSupport } = useTokenPermitSupport(
+    tokenData?.chainId as number,
+    tokenData?.address as Address
+  )
 
   const formShareAmount = useAtomValue(depositFormShareAmountAtom)
 
   const vaultName = vault.name ?? `"${shareData?.name}"`
   const networkName = getNiceNetworkNameByChainId(vault.chainId)
+
+  const feesToShow: NetworkFeesProps['show'] =
+    tokenPermitSupport === 'eip2612'
+      ? ['depositWithPermit', 'withdraw']
+      : ['approve', 'deposit', 'withdraw']
 
   return (
     <div className='flex flex-col gap-6'>
@@ -58,7 +74,7 @@ export const MainView = (props: MainViewProps) => {
       {!!formShareAmount && (
         <div className='flex flex-col gap-4 mx-auto md:flex-row md:gap-9'>
           <Odds vault={vault} prizePool={prizePool} intl={intl?.base} />
-          <NetworkFees vault={vault} show={['approve', 'deposit', 'withdraw']} intl={intl?.fees} />
+          <NetworkFees vault={vault} show={feesToShow} intl={intl?.fees} />
         </div>
       )}
     </div>
