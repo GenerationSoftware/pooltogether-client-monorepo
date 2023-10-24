@@ -157,7 +157,7 @@ export const DrawsAvgLiqEfficiencyChart = (props: DrawsAvgLiqEfficiencyChartProp
             ],
             labelFormatter: (label) => `Draw ${label}`
           }}
-          xAxis={{ interval: 2 }}
+          xAxis={{ interval: Math.floor(chartData.length / 4) }}
           yAxis={{
             domain: ([dataMin]) => [Math.floor(dataMin), 100],
             tickFormatter: (tick) => `${tick}%`

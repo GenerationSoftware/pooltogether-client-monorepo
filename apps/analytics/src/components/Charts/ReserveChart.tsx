@@ -165,7 +165,7 @@ export const ReserveChart = (props: ReserveChartProps) => {
             }
           }}
           xAxis={{
-            interval: 5,
+            interval: Math.floor(chartData.length / 4),
             tickFormatter: (tick) => formatXAxisDateTick(tick)
           }}
         />

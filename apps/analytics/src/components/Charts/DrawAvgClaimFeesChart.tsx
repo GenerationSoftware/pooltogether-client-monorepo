@@ -119,7 +119,7 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
             labelFormatter: (label) => getSimpleTime(Number(label))
           }}
           xAxis={{
-            interval: 3,
+            interval: Math.floor(chartData.length / 4),
             tickFormatter: (tick) => getSimpleTime(Number(tick))
           }}
           yAxis={{ tickFormatter: (tick) => `${tick}%` }}

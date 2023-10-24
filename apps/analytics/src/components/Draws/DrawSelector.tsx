@@ -1,5 +1,5 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { useDrawIds, useLastAwardedDrawId } from '@generationsoftware/hyperstructure-react-hooks'
+import { useDrawIds } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
 import { useAtom } from 'jotai'
@@ -15,10 +15,10 @@ export const DrawSelector = (props: DrawSelectorProps) => {
   const { prizePool, className } = props
 
   const { data: drawIds } = useDrawIds(prizePool)
+  const firstDrawId = drawIds[0]
+  const lastDrawId = !!drawIds.length ? drawIds[drawIds.length - 1] : undefined
 
   const [drawIdSelected, setDrawIdSelected] = useAtom(selectedDrawIdAtom)
-
-  const { data: lastDrawId } = useLastAwardedDrawId(prizePool)
 
   useEffect(() => {
     if (!!lastDrawId && !drawIdSelected) {
@@ -27,21 +27,19 @@ export const DrawSelector = (props: DrawSelectorProps) => {
   }, [lastDrawId])
 
   const drawIdArray = useMemo(() => {
-    return !!drawIdSelected && !!lastDrawId
-      ? getDrawIdsArray(drawIdSelected, drawIds[0], lastDrawId)
-      : Array(7).fill(0)
-  }, [drawIds, lastDrawId, drawIdSelected])
+    return !!drawIdSelected ? getDrawIdsArray(drawIdSelected, drawIds) : Array(7).fill(0)
+  }, [drawIdSelected, drawIds])
 
-  if (!drawIdSelected || !lastDrawId) {
+  if (!drawIdSelected || !firstDrawId || !lastDrawId) {
     return <Spinner className='after:border-y-pt-purple-800' />
   }
 
   return (
     <div className={classNames('flex gap-2 items-center text-xl text-pt-purple-500', className)}>
       <DrawId
-        id={drawIds[0]}
+        id={firstDrawId}
         content={<>&lt;&lt;</>}
-        className={classNames({ 'opacity-0': drawIdSelected === drawIds[0] })}
+        className={classNames({ 'opacity-0': drawIdSelected === firstDrawId })}
       />
       {drawIdArray.map((id) => (
         <DrawId key={`drawIdSelector-${id}`} id={id} />
@@ -84,33 +82,27 @@ const DrawId = (props: DrawIdProps) => {
   )
 }
 
-const getDrawIdsArray = (currId: number, firstId: number, lastId: number) => {
-  const array: number[] = []
+const getDrawIdsArray = (currId: number, drawIds: number[]) => {
+  if (drawIds.length <= 7) return drawIds
 
-  const padLeft =
-    currId > firstId + 2
-      ? currId < lastId - 2
-        ? 3
-        : currId < lastId - 1
-        ? 4
-        : currId < lastId
-        ? 5
-        : 6
-      : currId - firstId
+  const array: number[] = [
+    currId - 3,
+    currId - 2,
+    currId - 1,
+    currId,
+    currId + 1,
+    currId + 2,
+    currId + 3
+  ]
 
-  const padRight =
-    currId < lastId - 2
-      ? currId > firstId + 2
-        ? 3
-        : currId > firstId + 1
-        ? 4
-        : currId > firstId
-        ? 5
-        : 6
-      : lastId - currId
+  while (array[0] < drawIds[0]) {
+    array.shift()
+    array.push(array[array.length - 1] + 1)
+  }
 
-  for (let i = currId - padLeft; i <= currId + padRight; i++) {
-    array.push(i)
+  while (array[array.length - 1] > drawIds[drawIds.length - 1]) {
+    array.unshift(array[0] - 1)
+    array.pop()
   }
 
   return array
