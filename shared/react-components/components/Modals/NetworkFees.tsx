@@ -8,7 +8,7 @@ import { CurrencyValue } from '../Currency/CurrencyValue'
 
 export interface NetworkFeesProps {
   vault: Vault
-  show?: ('approve' | 'deposit' | 'withdraw')[]
+  show?: ('approve' | 'deposit' | 'depositWithPermit' | 'withdraw')[]
   intl?: Intl<'title' | 'approval' | 'deposit' | 'withdrawal'>
 }
 
@@ -25,21 +25,28 @@ export const NetworkFees = (props: NetworkFeesProps) => {
           <TXFeeEstimate
             name={intl?.('approval') ?? 'Approval'}
             chainId={vault?.chainId}
-            gasAmount={BigInt(TX_GAS_ESTIMATES.approve)}
+            gasAmount={TX_GAS_ESTIMATES.approve}
           />
         )}
         {(!show || show.includes('deposit')) && (
           <TXFeeEstimate
             name={intl?.('deposit') ?? 'Deposit'}
             chainId={vault?.chainId}
-            gasAmount={BigInt(TX_GAS_ESTIMATES.deposit)}
+            gasAmount={TX_GAS_ESTIMATES.deposit}
+          />
+        )}
+        {show?.includes('depositWithPermit') && (
+          <TXFeeEstimate
+            name={intl?.('deposit') ?? 'Deposit'}
+            chainId={vault?.chainId}
+            gasAmount={TX_GAS_ESTIMATES.depositWithPermit}
           />
         )}
         {(!show || show.includes('withdraw')) && (
           <TXFeeEstimate
             name={intl?.('withdrawal') ?? 'Withdrawal'}
             chainId={vault?.chainId}
-            gasAmount={BigInt(TX_GAS_ESTIMATES.withdraw)}
+            gasAmount={TX_GAS_ESTIMATES.withdraw}
           />
         )}
       </div>

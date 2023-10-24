@@ -1,5 +1,9 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
-import { useSelectedVault } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useSelectedVault,
+  useTokenPermitSupport,
+  useVaultTokenData
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Intl, RichIntl } from '@shared/types'
 import { LINKS, Modal } from '@shared/ui'
@@ -7,11 +11,13 @@ import { formatNumberForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { ReactNode, useMemo, useState } from 'react'
+import { Address } from 'viem'
 import { depositFormShareAmountAtom, depositFormTokenAmountAtom } from '../../Form/DepositForm'
 import { AlertIcon } from '../../Icons/AlertIcon'
 import { createDepositTxToast, DepositTxToastProps } from '../../Toasts/DepositTxToast'
 import { NetworkFeesProps } from '../NetworkFees'
 import { DepositTxButton } from './DepositTxButton'
+import { DepositWithPermitTxButton } from './DepositWithPermitTxButton'
 import { ConfirmingView } from './Views/ConfirmingView'
 import { ErrorView } from './Views/ErrorView'
 import { MainView } from './Views/MainView'
@@ -92,6 +98,13 @@ export const DepositModal = (props: DepositModalProps) => {
   const formShareAmount = useAtomValue(depositFormShareAmountAtom)
   const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
 
+  const { data: tokenData } = useVaultTokenData(vault as Vault)
+
+  const { data: tokenPermitSupport } = useTokenPermitSupport(
+    tokenData?.chainId as number,
+    tokenData?.address as Address
+  )
+
   const prizePool = useMemo(() => {
     if (!!vault) {
       return prizePools.find((prizePool) => prizePool.chainId === vault.chainId)
@@ -147,17 +160,31 @@ export const DepositModal = (props: DepositModalProps) => {
             })}
           >
             {view === 'main' && !formShareAmount && <RisksDisclaimer vault={vault} intl={intl} />}
-            <DepositTxButton
-              vault={vault}
-              modalView={view}
-              setModalView={setView}
-              setDepositTxHash={setDepositTxHash}
-              openConnectModal={openConnectModal}
-              openChainModal={openChainModal}
-              addRecentTransaction={addRecentTransaction}
-              refetchUserBalances={refetchUserBalances}
-              intl={intl}
-            />
+            {tokenPermitSupport === 'eip2612' ? (
+              <DepositWithPermitTxButton
+                vault={vault}
+                modalView={view}
+                setModalView={setView}
+                setDepositTxHash={setDepositTxHash}
+                openConnectModal={openConnectModal}
+                openChainModal={openChainModal}
+                addRecentTransaction={addRecentTransaction}
+                refetchUserBalances={refetchUserBalances}
+                intl={intl}
+              />
+            ) : (
+              <DepositTxButton
+                vault={vault}
+                modalView={view}
+                setModalView={setView}
+                setDepositTxHash={setDepositTxHash}
+                openConnectModal={openConnectModal}
+                openChainModal={openChainModal}
+                addRecentTransaction={addRecentTransaction}
+                refetchUserBalances={refetchUserBalances}
+                intl={intl}
+              />
+            )}
             {view === 'review' && <DepositDisclaimer vault={vault} intl={intl?.base} />}
           </div>
         }
