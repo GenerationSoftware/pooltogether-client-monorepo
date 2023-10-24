@@ -1,6 +1,6 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { EIP2612_PERMIT_TYPES, getSecondsSinceEpoch, OLD_DAI_PERMIT_TYPES } from '@shared/utilities'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Address, TypedDataDomain, verifyTypedData, zeroAddress } from 'viem'
 import { useAccount, useSignTypedData } from 'wagmi'
 import { useTokenNonces, useTokenPermitSupport, useTokenVersion, useVaultTokenData } from '..'
@@ -95,32 +95,7 @@ export const useApproveSignature = (
     }
   }, [tokenPermitSupport])
 
-  const {
-    data: signature,
-    isLoading: isWaiting,
-    isSuccess,
-    isError: isSigningError,
-    signTypedData
-  } = useSignTypedData({
-    domain,
-    message,
-    types,
-    primaryType: 'Permit'
-  })
-
-  const _signTypedData = () => {
-    if (tokenPermitSupport === 'eip2612') {
-      setDeadline(message.deadline as bigint)
-    } else if (tokenPermitSupport === 'daiPermit') {
-      setDeadline(message.expiry as bigint)
-    }
-    signTypedData()
-  }
-
-  const verifySignature = async (
-    sigToVerify: `0x${string}`,
-    callbacks?: { onSuccess?: (sig: `0x${string}`) => void; onError?: () => void }
-  ) => {
+  const verifySignature = async (sigToVerify: `0x${string}`) => {
     setIsInvalidSignature(false)
 
     const isValid = await verifyTypedData({
@@ -133,26 +108,38 @@ export const useApproveSignature = (
     })
 
     if (isValid) {
-      callbacks?.onSuccess?.(sigToVerify)
+      options?.onSuccess?.(sigToVerify)
       return true
     } else {
       setIsInvalidSignature(true)
-      callbacks?.onError?.()
+      options?.onError?.()
       return false
     }
   }
 
-  useEffect(() => {
-    if (!!signature && isSuccess) {
-      verifySignature(signature)
-    }
-  }, [isSuccess])
+  const {
+    data: signature,
+    isLoading: isWaiting,
+    isSuccess: isSigningSuccess,
+    isError: isSigningError,
+    signTypedData
+  } = useSignTypedData({
+    domain,
+    message,
+    types,
+    primaryType: 'Permit',
+    onSuccess: verifySignature,
+    onError: options?.onError
+  })
 
-  useEffect(() => {
-    if (isSigningError) {
-      options?.onError?.()
+  const _signTypedData = () => {
+    if (tokenPermitSupport === 'eip2612') {
+      setDeadline(message.deadline as bigint)
+    } else if (tokenPermitSupport === 'daiPermit') {
+      setDeadline(message.expiry as bigint)
     }
-  }, [isSigningError])
+    signTypedData()
+  }
 
   const enabled =
     !!userAddress &&
@@ -168,6 +155,7 @@ export const useApproveSignature = (
   const signApprove = enabled ? _signTypedData : undefined
 
   const isError = isSigningError || isInvalidSignature
+  const isSuccess = isSigningSuccess && !isError
 
   return { signature, deadline, isWaiting, isSuccess, isError, signApprove }
 }

@@ -1,4 +1,4 @@
-import { getSecondsSinceEpoch, Vault } from '@generationsoftware/hyperstructure-client-js'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useApproveSignature,
   useSendDepositTransaction,
@@ -12,7 +12,7 @@ import {
 import { Intl } from '@shared/types'
 import { Button } from '@shared/ui'
 import { useAtomValue } from 'jotai'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Address, parseUnits } from 'viem'
 import { useAccount, useNetwork } from 'wagmi'
 import { DepositModalView } from '.'
@@ -95,13 +95,21 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
     ? parseUnits(formTokenAmount, decimals as number)
     : 0n
 
+  const [isApproved, setIsApproved] = useState<boolean>(false)
+  const [isReadyToSendTxAfterSigning, setIsReadyToSendTxAfterSigning] = useState<boolean>(false)
+
   const {
     signature,
     deadline,
     isWaiting: isWaitingApproval,
-    isSuccess: isSuccessfulApproval,
     signApprove
-  } = useApproveSignature(depositAmount, vault, { onError: () => setModalView('error') })
+  } = useApproveSignature(depositAmount, vault, {
+    onSuccess: () => {
+      setIsApproved(true)
+      setIsReadyToSendTxAfterSigning(true)
+    },
+    onError: () => setModalView('error')
+  })
 
   const {
     isWaiting: isWaitingDepositWithPermit,
@@ -119,6 +127,7 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
         setModalView('waiting')
       },
       onSuccess: () => {
+        setIsApproved(false)
         refetchTokenBalance()
         refetchVaultBalance()
         refetchUserVaultTokenBalance()
@@ -156,16 +165,11 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
   })
 
   useEffect(() => {
-    if (
-      !!signature &&
-      !!deadline &&
-      Number(deadline) > getSecondsSinceEpoch() &&
-      isSuccessfulApproval &&
-      !!sendDepositWithPermitTransaction
-    ) {
+    if (isReadyToSendTxAfterSigning && isApproved && !!sendDepositWithPermitTransaction) {
       sendDepositWithPermitTransaction()
+      setIsReadyToSendTxAfterSigning(false)
     }
-  }, [signature, deadline, isSuccessfulApproval, sendDepositWithPermitTransaction])
+  }, [isReadyToSendTxAfterSigning, isApproved, sendDepositWithPermitTransaction])
 
   useEffect(() => {
     if (
@@ -199,15 +203,7 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
     decimals !== undefined &&
     chain?.id === vault.chainId
 
-  const isApproved =
-    isDataFetched &&
-    (allowance >= depositAmount ||
-      (!!signature && !!deadline && Number(deadline) > getSecondsSinceEpoch()))
-
   const depositEnabled =
-    isDataFetched && userBalance.amount >= depositAmount && isValidFormTokenAmount && isApproved
-
-  const depositWithPermitEnabled =
     isDataFetched && userBalance.amount >= depositAmount && isValidFormTokenAmount
 
   if (depositAmount === 0n) {
@@ -218,11 +214,7 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
     )
   } else if (isDataFetched && modalView === 'main') {
     return (
-      <Button
-        onClick={() => setModalView('review')}
-        fullSized={true}
-        disabled={!depositWithPermitEnabled}
-      >
+      <Button onClick={() => setModalView('review')} fullSized={true} disabled={!depositEnabled}>
         {intl?.base?.('reviewDeposit') ?? 'Review Deposit'}
       </Button>
     )
@@ -263,7 +255,7 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
           `${tokenData?.symbol} Deposit`
         }
         fullSized={true}
-        disabled={!depositWithPermitEnabled}
+        disabled={!depositEnabled}
         openConnectModal={openConnectModal}
         openChainModal={openChainModal}
         addRecentTransaction={addRecentTransaction}
