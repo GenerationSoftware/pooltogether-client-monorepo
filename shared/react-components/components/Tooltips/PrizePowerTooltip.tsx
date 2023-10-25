@@ -19,7 +19,7 @@ export const PrizePowerTooltip = (props: PrizePowerTooltipProps) => {
           <span>
             {intl?.text ?? 'Vaults with greater prize power give you better chances to win'}
           </span>
-          <a href={LINKS.prizePowerDocs} className='text-pt-purple-500 underline'>
+          <a href={LINKS.prizePowerDocs} target='_blank' className='text-pt-purple-500 underline'>
             {intl?.learnMore ?? 'Learn More'}
           </a>
         </div>
