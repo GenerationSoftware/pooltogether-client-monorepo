@@ -5,6 +5,7 @@ import {
   getVaultAddresses,
   getVaultBalances,
   getVaultDelegateBalances,
+  getVaultDelegates,
   getVaultExchangeRates,
   getVaultId,
   getVaultsByChainId,
@@ -310,6 +311,48 @@ export class Vaults {
     )
 
     return delegateBalances
+  }
+
+  /**
+   * Returns a user's delegates for each vault
+   * @param userAddress the user's address to get delegates for
+   * @param chainIds optional chain IDs to query (by default queries all)
+   * @returns
+   */
+  async getUserDelegates(
+    userAddress: string,
+    chainIds?: number[]
+  ): Promise<{ [vaultId: string]: Address }> {
+    const source = `Vaults [getUserDelegates]`
+    const delegates: { [vaultId: string]: Address } = {}
+    const networksToQuery = chainIds ?? this.chainIds
+    validateAddress(userAddress, source)
+
+    await Promise.allSettled(
+      networksToQuery.map((chainId) =>
+        (async () => {
+          const vaultAddresses = this.vaultAddresses[chainId]
+          const twabControllerAddress = TWAB_CONTROLLER_ADDRESSES[chainId]
+          if (!!vaultAddresses && !!twabControllerAddress) {
+            const client = this.publicClients[chainId]
+            if (!!client) {
+              await validateClientNetwork(chainId, client, source + ` [${chainId}]`)
+              const chainDelegates = await getVaultDelegates(
+                client,
+                userAddress as Address,
+                vaultAddresses,
+                twabControllerAddress
+              )
+              for (const vaultId in chainDelegates) {
+                delegates[vaultId] = chainDelegates[vaultId]
+              }
+            }
+          }
+        })()
+      )
+    )
+
+    return delegates
   }
 
   /**

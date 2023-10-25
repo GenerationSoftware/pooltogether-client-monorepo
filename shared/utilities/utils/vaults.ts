@@ -1,5 +1,5 @@
 import { VaultInfo } from '@shared/types'
-import { Address, formatUnits, parseUnits, PublicClient } from 'viem'
+import { Address, formatUnits, isAddress, parseUnits, PublicClient } from 'viem'
 import { twabControllerABI } from '../abis/twabController'
 import { vaultABI } from '../abis/vault'
 import { formatStringWithPrecision } from './formatting'
@@ -69,6 +69,47 @@ export const getVaultDelegateBalances = async (
   }
 
   return delegateBalances
+}
+
+/**
+ * Returns an address's delegates for the provided vault addresses
+ * @param publicClient a public Viem client for the chain that should be queried
+ * @param userAddress the user's address to get delegates for
+ * @param vaultAddresses the vault addresses to check delegates for
+ * @param twabController the address of the TWAB controller to query through
+ * @returns
+ */
+export const getVaultDelegates = async (
+  publicClient: PublicClient,
+  userAddress: Address,
+  vaultAddresses: Address[],
+  twabController: Address
+): Promise<{ [vaultId: string]: Address }> => {
+  const delegates: { [vaultId: string]: Address } = {}
+  const chainId = await publicClient.getChainId()
+
+  if (vaultAddresses.length > 0) {
+    const calls = vaultAddresses.map((vaultAddress) => ({
+      functionName: 'delegateOf',
+      args: [vaultAddress, userAddress]
+    }))
+
+    const multicallResults = await getSimpleMulticallResults(
+      publicClient,
+      twabController,
+      twabControllerABI,
+      calls
+    )
+
+    vaultAddresses.forEach((vaultAddress, i) => {
+      const result = multicallResults[i]
+      const delegate = typeof result === 'string' && isAddress(result) ? result : userAddress
+      const vaultId = getVaultId({ chainId, address: vaultAddress })
+      delegates[vaultId] = delegate
+    })
+  }
+
+  return delegates
 }
 
 /**

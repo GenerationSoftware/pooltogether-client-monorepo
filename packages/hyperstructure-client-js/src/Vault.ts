@@ -198,6 +198,27 @@ export class Vault {
   }
 
   /**
+   * Returns a user's delegate for the vault
+   * @param userAddress the user's address to get delegate for
+   * @returns
+   */
+  async getUserDelegate(userAddress: string): Promise<Address> {
+    const source = 'Vault [getUserDelegate]'
+    await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    const twabController = await this.getTWABController()
+
+    const delegate = await this.publicClient.readContract({
+      address: twabController,
+      abi: twabControllerABI,
+      functionName: 'delegateOf',
+      args: [this.address, userAddress as Address]
+    })
+
+    return delegate
+  }
+
+  /**
    * Returns a user's allowance for the vault's underlying asset
    * @param userAddress the user's address to get an allowance for
    * @returns
