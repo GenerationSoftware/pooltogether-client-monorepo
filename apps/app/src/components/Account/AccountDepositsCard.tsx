@@ -52,9 +52,7 @@ export const AccountDepositsCard = (props: AccountDepositsCardProps) => {
             {isExternalUser ? t_vault('headers.winChance') : t_vault('headers.yourWinChance')}
             <WinChanceTooltip intl={{ text: t_tooltips('winChance') }} className='text-xs' />
           </span>
-          <span className='text-sm'>
-            <AccountVaultOdds vault={vault} address={userAddress} />
-          </span>
+          <AccountVaultOdds vault={vault} address={userAddress} className='text-sm' />
         </div>
       </div>
       {!isExternalUser && (
