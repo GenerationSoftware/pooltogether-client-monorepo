@@ -9,6 +9,7 @@ import {
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import {
+  NetworkIcon,
   PrizePowerTooltip,
   VaultContributionsTooltip,
   VaultFeeTooltip,
@@ -18,12 +19,14 @@ import { ExternalLink, Spinner } from '@shared/ui'
 import { getBlockExplorerUrl, getVaultId, shorten } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { ReactNode, useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
 import { AccountVaultDelegationAmount } from '@components/Account/AccountVaultDelegationAmount'
 import { AccountVaultOdds } from '@components/Account/AccountVaultOdds'
+import { CopyButton } from '@components/CopyButton'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { VaultContributions } from './VaultContributions'
 import { VaultFeePercentage } from './VaultFeePercentage'
@@ -220,15 +223,19 @@ const VaultInfoToken = (props: VaultInfoTokenProps) => {
   const { token } = props
 
   return (
-    <span>
-      {token.symbol ?? '?'} |{' '}
-      <ExternalLink
-        href={getBlockExplorerUrl(token.chainId, token.address, 'token')}
-        size='sm'
-        className='text-pt-purple-200'
+    <span className='flex gap-1 items-center whitespace-nowrap'>
+      <span>{token.symbol ?? '?'}</span>
+      <span>|</span>
+      <CopyButton
+        data={token.address}
+        buttonClassName='text-pt-purple-200 hover:text-pt-purple-300'
       >
-        {shorten(token.address, { short: true }) ?? ''}
-      </ExternalLink>
+        {shorten(token.address, { short: true })}
+      </CopyButton>
+      <span>|</span>
+      <Link href={getBlockExplorerUrl(token.chainId, token.address, 'token')} target='_blank'>
+        <NetworkIcon chainId={token.chainId} className='w-3 h-3 md:w-4 md:h-4' />
+      </Link>
     </span>
   )
 }
@@ -242,14 +249,14 @@ const VaultInfoAddress = (props: VaultInfoAddressProps) => {
   const { chainId, address } = props
 
   return (
-    <span>
-      <ExternalLink
-        href={getBlockExplorerUrl(chainId, address)}
-        size='sm'
-        className='text-pt-purple-200'
-      >
-        {shorten(address) ?? ''}
-      </ExternalLink>
+    <span className='flex gap-1 items-center whitespace-nowrap'>
+      <CopyButton data={address} buttonClassName='text-pt-purple-200 hover:text-pt-purple-300'>
+        {shorten(address)}
+      </CopyButton>
+      <span>|</span>
+      <Link href={getBlockExplorerUrl(chainId, address)} target='_blank'>
+        <NetworkIcon chainId={chainId} className='w-3 h-3 md:w-4 md:h-4' />
+      </Link>
     </span>
   )
 }
