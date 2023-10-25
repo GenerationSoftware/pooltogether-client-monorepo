@@ -8,10 +8,10 @@ import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { Token, TokenWithPrice } from '@shared/types'
 import { ExternalLink, Spinner } from '@shared/ui'
 import {
+  DOLPHIN_ADDRESS,
   formatBigIntForDisplay,
   formatNumberForDisplay,
-  getBlockExplorerUrl,
-  NULL_ADDRESS
+  getBlockExplorerUrl
 } from '@shared/utilities'
 import classNames from 'classnames'
 import { ReactNode, useMemo } from 'react'
@@ -250,8 +250,8 @@ const AvgEfficiency = (props: AvgEfficiencyProps) => {
   const uniqueTxHashes = new Set(liquidations.map((liq) => liq.transactionHash))
   const { data: liquidationTxReceipts } = useTxReceipts(chainId, [...uniqueTxHashes])
 
-  const { data: nativeTokenPrices } = useTokenPrices(chainId, [NULL_ADDRESS])
-  const nativeTokenPrice = nativeTokenPrices?.[NULL_ADDRESS]
+  const { data: nativeTokenPrices } = useTokenPrices(chainId, [DOLPHIN_ADDRESS])
+  const nativeTokenPrice = nativeTokenPrices?.[DOLPHIN_ADDRESS]
 
   const efficiency = useMemo(() => {
     if (!!prizeToken?.price && !!lpToken?.price && !!liquidationTxReceipts && !!nativeTokenPrice) {

@@ -7,9 +7,9 @@ import {
 import { TokenWithPrice } from '@shared/types'
 import { Button, ExternalLink, Spinner } from '@shared/ui'
 import {
+  DOLPHIN_ADDRESS,
   formatNumberForDisplay,
   getBlockExplorerUrl,
-  NULL_ADDRESS,
   shorten
 } from '@shared/utilities'
 import classNames from 'classnames'
@@ -72,7 +72,7 @@ const LiquidationTx = (props: LiquidationTxProps) => {
 
   const { data: txReceipt } = useTxReceipt(chainId, liquidation.transactionHash)
 
-  const { data: tokenPrices } = useTokenPrices(chainId, [NULL_ADDRESS])
+  const { data: tokenPrices } = useTokenPrices(chainId, [DOLPHIN_ADDRESS])
 
   if (!lpToken || !txReceipt || !tokenPrices) {
     return <Spinner className='after:border-y-pt-purple-800' />
@@ -83,7 +83,7 @@ const LiquidationTx = (props: LiquidationTxProps) => {
 
   const tokenInValue = !!prizeToken.price ? tokenInAmount * prizeToken.price : undefined
   const tokenOutValue = !!lpToken.price ? tokenOutAmount * lpToken.price : undefined
-  const gasValue = parseFloat(formatEther(getTxGasSpent(txReceipt))) * tokenPrices[NULL_ADDRESS]
+  const gasValue = parseFloat(formatEther(getTxGasSpent(txReceipt))) * tokenPrices[DOLPHIN_ADDRESS]
   const profit =
     !!tokenInValue && !!tokenOutValue
       ? (tokenOutValue / (tokenInValue + gasValue) - 1) * 100

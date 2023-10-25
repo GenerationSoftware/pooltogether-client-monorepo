@@ -7,7 +7,7 @@ import { TokenIcon } from '@shared/react-components'
 import { Token } from '@shared/types'
 import { LINKS } from '@shared/ui'
 import { ExternalLink } from '@shared/ui'
-import { getNetworkNameByChainId, NULL_ADDRESS } from '@shared/utilities'
+import { DOLPHIN_ADDRESS, getNetworkNameByChainId } from '@shared/utilities'
 import classNames from 'classnames'
 import { ReactNode } from 'react'
 import { Address } from 'viem'
@@ -89,12 +89,12 @@ const VaultCardActions = (props: VaultCardActionsProps) => {
         Swap on Llamaswap
       </VaultCardLink>
       <VaultCardLink
-        href={`https://app.paraswap.io/#/${NULL_ADDRESS}-${shareToken.address}?network=${network}`}
+        href={`https://app.paraswap.io/#/${DOLPHIN_ADDRESS}-${shareToken.address}?network=${network}`}
       >
         Swap on Paraswap
       </VaultCardLink>
       <VaultCardLink
-        href={`https://app.1inch.io/#/${shareToken.chainId}/simple/swap/${NULL_ADDRESS}/${shareToken.address}`}
+        href={`https://app.1inch.io/#/${shareToken.chainId}/simple/swap/${DOLPHIN_ADDRESS}/${shareToken.address}`}
       >
         Swap on 1inch
       </VaultCardLink>

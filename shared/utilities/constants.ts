@@ -355,9 +355,9 @@ export const TOKEN_DATA_REDIRECTS: {
 export const MAX_UINT_256 = 2n ** 256n - 1n
 
 /**
- * Null Address
+ * Dolphin Address Address
  */
-export const NULL_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+export const DOLPHIN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
 /**
  * Dead Address

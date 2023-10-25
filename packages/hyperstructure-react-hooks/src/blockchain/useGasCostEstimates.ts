@@ -1,5 +1,5 @@
 import { GasCostEstimates } from '@shared/types'
-import { calculatePercentageOfBigInt, NETWORK, NULL_ADDRESS } from '@shared/utilities'
+import { calculatePercentageOfBigInt, DOLPHIN_ADDRESS, NETWORK } from '@shared/utilities'
 import { useMemo } from 'react'
 import { formatUnits } from 'viem'
 import { useGasPrice, useTokenPrices } from '..'
@@ -17,11 +17,11 @@ export const useGasCostEstimates = (
   refetchInterval?: number
 ): { data?: GasCostEstimates; isFetched: boolean } => {
   const { data: tokenPrices, isFetched: isFetchedTokenPrices } = useTokenPrices(chainId, [
-    NULL_ADDRESS
+    DOLPHIN_ADDRESS
   ])
 
   const tokenPrice = useMemo(() => {
-    return tokenPrices?.[NULL_ADDRESS]
+    return tokenPrices?.[DOLPHIN_ADDRESS]
   }, [tokenPrices])
 
   const { data: gasPrice, isFetched: isFetchedGasPrice } = useGasPrice(chainId, refetchInterval)
