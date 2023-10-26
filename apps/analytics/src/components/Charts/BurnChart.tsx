@@ -156,7 +156,8 @@ export const BurnChart = (props: BurnChartProps) => {
             }
           }}
           xAxis={{
-            interval: Math.floor(chartData.length / 4),
+            interval: 'preserveStart',
+            minTickGap: 50,
             tickFormatter: (tick) => formatXAxisDateTick(tick)
           }}
         />

@@ -70,7 +70,7 @@ export const DrawsAvgClaimFeesChart = (props: DrawsAvgClaimFeesChartProps) => {
             ],
             labelFormatter: (label) => `Draw ${label}`
           }}
-          xAxis={{ interval: Math.floor(chartData.length / 4) }}
+          xAxis={{ interval: 'preserveStart', minTickGap: 50 }}
           yAxis={{
             domain: ([dataMin, dataMax]) => [
               Math.floor(dataMin / 2) * 2,
