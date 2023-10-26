@@ -159,7 +159,10 @@ export const DrawsAvgLiqEfficiencyChart = (props: DrawsAvgLiqEfficiencyChartProp
           }}
           xAxis={{ interval: Math.floor(chartData.length / 4) }}
           yAxis={{
-            domain: ([dataMin]) => [Math.floor(dataMin), 100],
+            domain: ([dataMin, dataMax]) => [
+              Math.floor(dataMin / 5) * 5,
+              Math.ceil(dataMax / 5) * 5
+            ],
             tickFormatter: (tick) => `${tick}%`
           }}
         />
