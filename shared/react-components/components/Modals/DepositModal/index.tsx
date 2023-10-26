@@ -43,6 +43,7 @@ export interface DepositModalProps {
       | 'max'
       | 'balance'
       | 'enterAnAmount'
+      | 'approvalButton'
       | 'exactApprovalButton'
       | 'exactApprovalTx'
       | 'infiniteApprovalButton'

@@ -9,10 +9,10 @@ import {
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
-import { Button, Spinner } from '@shared/ui'
-import { MAX_UINT_256 } from '@shared/utilities'
+import { Button } from '@shared/ui'
+import { MAX_UINT_256, NETWORK, WRAPPED_NATIVE_ASSETS } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
-import { useEffect } from 'react'
+import { ReactNode, useEffect } from 'react'
 import { Address, parseUnits } from 'viem'
 import { useAccount, useNetwork } from 'wagmi'
 import { DepositModalView } from '.'
@@ -34,6 +34,7 @@ interface DepositTxButtonProps {
   intl?: {
     base?: Intl<
       | 'enterAnAmount'
+      | 'approvalButton'
       | 'exactApprovalButton'
       | 'exactApprovalTx'
       | 'infiniteApprovalButton'
@@ -173,89 +174,123 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
     allowance >= depositAmount &&
     isValidFormTokenAmount
 
+  // No deposit amount set
   if (depositAmount === 0n) {
     return (
       <Button color='transparent' fullSized={true} disabled={true}>
         {intl?.base?.('enterAnAmount') ?? 'Enter an amount'}
       </Button>
     )
-  } else if (isDataFetched && allowance < depositAmount) {
+  }
+
+  const ExactApprovalButton = (props: { children: ReactNode }) => (
+    <TransactionButton
+      chainId={vault.chainId}
+      isTxLoading={isWaitingExactApproval || isConfirmingExactApproval}
+      isTxSuccess={isSuccessfulExactApproval}
+      write={sendExactApproveTransaction}
+      txHash={exactApprovalTxHash}
+      txDescription={
+        intl?.base?.('exactApprovalTx', { symbol: tokenData?.symbol ?? '?' }) ??
+        `Exact ${tokenData?.symbol ?? '?'} Approval`
+      }
+      fullSized={true}
+      disabled={!approvalEnabled}
+      openConnectModal={openConnectModal}
+      openChainModal={openChainModal}
+      addRecentTransaction={addRecentTransaction}
+      innerClassName='flex gap-2 items-center'
+      intl={intl}
+    >
+      {props.children}
+    </TransactionButton>
+  )
+
+  const InfiniteApprovalButton = (props: { children: ReactNode }) => (
+    <TransactionButton
+      chainId={vault.chainId}
+      isTxLoading={isWaitingInfiniteApproval || isConfirmingInfiniteApproval}
+      isTxSuccess={isSuccessfulInfiniteApproval}
+      write={sendInfiniteApproveTransaction}
+      txHash={infiniteApprovalTxHash}
+      txDescription={
+        intl?.base?.('infiniteApprovalTx', { symbol: tokenData?.symbol ?? '?' }) ??
+        `Infinite ${tokenData?.symbol ?? '?'} Approval`
+      }
+      fullSized={true}
+      disabled={!approvalEnabled}
+      openConnectModal={openConnectModal}
+      openChainModal={openChainModal}
+      addRecentTransaction={addRecentTransaction}
+      color='transparent'
+      innerClassName='flex gap-2 items-center'
+      intl={intl}
+    >
+      {props.children}
+    </TransactionButton>
+  )
+
+  // Needs approval for wrapped native asset
+  if (
+    isDataFetched &&
+    tokenData.address.toLowerCase() === WRAPPED_NATIVE_ASSETS[tokenData.chainId as NETWORK] &&
+    (allowance < depositAmount || allowance > MAX_UINT_256 / 2n)
+  ) {
+    return (
+      <ExactApprovalButton>
+        {intl?.base?.('approvalButton', { symbol: tokenData.symbol }) ??
+          `Approve ${tokenData.symbol}`}
+      </ExactApprovalButton>
+    )
+  }
+
+  // Needs approval
+  if (isDataFetched && allowance < depositAmount) {
     return (
       <div className='flex flex-col w-full gap-4 md:gap-6'>
-        <TransactionButton
-          chainId={vault.chainId}
-          isTxLoading={isWaitingExactApproval || isConfirmingExactApproval}
-          isTxSuccess={isSuccessfulExactApproval}
-          write={sendExactApproveTransaction}
-          txHash={exactApprovalTxHash}
-          txDescription={
-            intl?.base?.('exactApprovalTx', { symbol: tokenData?.symbol ?? '?' }) ??
-            `Exact ${tokenData?.symbol} Approval`
-          }
-          fullSized={true}
-          disabled={!approvalEnabled}
-          openConnectModal={openConnectModal}
-          openChainModal={openChainModal}
-          addRecentTransaction={addRecentTransaction}
-          innerClassName='flex gap-2 items-center'
-          intl={intl}
-        >
-          {intl?.base?.('exactApprovalButton', { symbol: tokenData?.symbol ?? '?' }) ??
-            `Approve exact amount of ${tokenData?.symbol ?? <Spinner />}`}
-          <ExactApprovalTooltip tokenSymbol={tokenData?.symbol ?? '?'} intl={intl?.tooltips} />
-        </TransactionButton>
-        <TransactionButton
-          chainId={vault.chainId}
-          isTxLoading={isWaitingInfiniteApproval || isConfirmingInfiniteApproval}
-          isTxSuccess={isSuccessfulInfiniteApproval}
-          write={sendInfiniteApproveTransaction}
-          txHash={infiniteApprovalTxHash}
-          txDescription={
-            intl?.base?.('infiniteApprovalTx', { symbol: tokenData?.symbol ?? '?' }) ??
-            `Infinite ${tokenData?.symbol} Approval`
-          }
-          fullSized={true}
-          disabled={!approvalEnabled}
-          openConnectModal={openConnectModal}
-          openChainModal={openChainModal}
-          addRecentTransaction={addRecentTransaction}
-          color='transparent'
-          innerClassName='flex gap-2 items-center'
-          intl={intl}
-        >
-          {intl?.base?.('infiniteApprovalButton', { symbol: tokenData?.symbol ?? '?' }) ??
-            `Approve unlimited amount of ${tokenData?.symbol ?? <Spinner />}`}
-          <InfiniteApprovalTooltip tokenSymbol={tokenData?.symbol ?? '?'} intl={intl?.tooltips} />
-        </TransactionButton>
+        <ExactApprovalButton>
+          {intl?.base?.('exactApprovalButton', { symbol: tokenData.symbol }) ??
+            `Approve exact amount of ${tokenData.symbol}`}
+          <ExactApprovalTooltip tokenSymbol={tokenData.symbol} intl={intl?.tooltips} />
+        </ExactApprovalButton>
+        <InfiniteApprovalButton>
+          {intl?.base?.('infiniteApprovalButton', { symbol: tokenData.symbol }) ??
+            `Approve unlimited amount of ${tokenData.symbol}`}
+          <InfiniteApprovalTooltip tokenSymbol={tokenData.symbol} intl={intl?.tooltips} />
+        </InfiniteApprovalButton>
       </div>
     )
-  } else if (isDataFetched && modalView === 'main') {
+  }
+
+  // Prompt to review deposit
+  if (isDataFetched && modalView === 'main') {
     return (
       <Button onClick={() => setModalView('review')} fullSized={true} disabled={!depositEnabled}>
         {intl?.base?.('reviewDeposit') ?? 'Review Deposit'}
       </Button>
     )
-  } else {
-    return (
-      <TransactionButton
-        chainId={vault.chainId}
-        isTxLoading={isWaitingDeposit || isConfirmingDeposit}
-        isTxSuccess={isSuccessfulDeposit}
-        write={sendDepositTransaction}
-        txHash={depositTxHash}
-        txDescription={
-          intl?.base?.('depositTx', { symbol: tokenData?.symbol ?? '?' }) ??
-          `${tokenData?.symbol} Deposit`
-        }
-        fullSized={true}
-        disabled={!depositEnabled}
-        openConnectModal={openConnectModal}
-        openChainModal={openChainModal}
-        addRecentTransaction={addRecentTransaction}
-        intl={intl}
-      >
-        {intl?.base?.('confirmDeposit') ?? 'Confirm Deposit'}
-      </TransactionButton>
-    )
   }
+
+  // Deposit button
+  return (
+    <TransactionButton
+      chainId={vault.chainId}
+      isTxLoading={isWaitingDeposit || isConfirmingDeposit}
+      isTxSuccess={isSuccessfulDeposit}
+      write={sendDepositTransaction}
+      txHash={depositTxHash}
+      txDescription={
+        intl?.base?.('depositTx', { symbol: tokenData?.symbol ?? '?' }) ??
+        `${tokenData?.symbol} Deposit`
+      }
+      fullSized={true}
+      disabled={!depositEnabled}
+      openConnectModal={openConnectModal}
+      openChainModal={openChainModal}
+      addRecentTransaction={addRecentTransaction}
+      intl={intl}
+    >
+      {intl?.base?.('confirmDeposit') ?? 'Confirm Deposit'}
+    </TransactionButton>
+  )
 }

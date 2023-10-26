@@ -156,6 +156,7 @@
     "max": "Max",
     "balance": "Balance:",
     "enterAnAmount": "Enter an amount",
+    "approvalButton": "Approve {symbol}",
     "exactApprovalButton": "Approve exact amount of {symbol}",
     "exactApprovalTx": "Exact {symbol} Approval",
     "infiniteApprovalButton": "Approve unlimited amount of {symbol}",

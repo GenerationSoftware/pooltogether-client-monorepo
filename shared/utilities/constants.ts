@@ -204,6 +204,30 @@ export const STABLECOINS: Record<NETWORK, { [address: Address]: string }> = {
 }
 
 /**
+ * Wrapped native asset addresses (example: WETH, WMATIC, etc.)
+ *
+ * NOTE: All addresses are lowercase
+ */
+export const WRAPPED_NATIVE_ASSETS: Record<NETWORK, Address | null> = {
+  [NETWORK.mainnet]: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+  [NETWORK.goerli]: null,
+  [NETWORK.sepolia]: null,
+  [NETWORK.bsc]: '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c',
+  [NETWORK['bsc-testnet']]: null,
+  [NETWORK.xdai]: null,
+  [NETWORK.polygon]: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+  [NETWORK.mumbai]: null,
+  [NETWORK.optimism]: '0x4200000000000000000000000000000000000006',
+  [NETWORK['optimism-goerli']]: null,
+  [NETWORK.avalanche]: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7',
+  [NETWORK.fuji]: null,
+  [NETWORK.celo]: null,
+  [NETWORK['celo-testnet']]: null,
+  [NETWORK.arbitrum]: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
+  [NETWORK['arbitrum-goerli']]: null
+}
+
+/**
  * RNG auction addresses
  */
 export const RNG_AUCTION: {

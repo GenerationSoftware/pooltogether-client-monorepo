@@ -206,19 +206,26 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
   const depositEnabled =
     isDataFetched && userBalance.amount >= depositAmount && isValidFormTokenAmount
 
+  // No deposit amount set
   if (depositAmount === 0n) {
     return (
       <Button color='transparent' fullSized={true} disabled={true}>
         {intl?.base?.('enterAnAmount') ?? 'Enter an amount'}
       </Button>
     )
-  } else if (isDataFetched && modalView === 'main') {
+  }
+
+  // Prompt to review deposit
+  if (isDataFetched && modalView === 'main') {
     return (
       <Button onClick={() => setModalView('review')} fullSized={true} disabled={!depositEnabled}>
         {intl?.base?.('reviewDeposit') ?? 'Review Deposit'}
       </Button>
     )
-  } else if (isDataFetched && allowance >= depositAmount) {
+  }
+
+  // Deposit button
+  if (isDataFetched && allowance >= depositAmount) {
     return (
       <TransactionButton
         chainId={vault.chainId}
@@ -240,29 +247,28 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
         {intl?.base?.('confirmDeposit') ?? 'Confirm Deposit'}
       </TransactionButton>
     )
-  } else {
-    return (
-      <TransactionButton
-        chainId={vault.chainId}
-        isTxLoading={
-          isWaitingApproval || isWaitingDepositWithPermit || isConfirmingDepositWithPermit
-        }
-        isTxSuccess={isSuccessfulDepositWithPermit}
-        write={isApproved ? sendDepositWithPermitTransaction : signApprove}
-        txHash={depositWithPermitTxHash}
-        txDescription={
-          intl?.base?.('depositTx', { symbol: tokenData?.symbol ?? '?' }) ??
-          `${tokenData?.symbol} Deposit`
-        }
-        fullSized={true}
-        disabled={!depositEnabled}
-        openConnectModal={openConnectModal}
-        openChainModal={openChainModal}
-        addRecentTransaction={addRecentTransaction}
-        intl={intl}
-      >
-        {intl?.base?.('confirmDeposit') ?? 'Confirm Deposit'}
-      </TransactionButton>
-    )
   }
+
+  // Sign + deposit with permit button
+  return (
+    <TransactionButton
+      chainId={vault.chainId}
+      isTxLoading={isWaitingApproval || isWaitingDepositWithPermit || isConfirmingDepositWithPermit}
+      isTxSuccess={isSuccessfulDepositWithPermit}
+      write={isApproved ? sendDepositWithPermitTransaction : signApprove}
+      txHash={depositWithPermitTxHash}
+      txDescription={
+        intl?.base?.('depositTx', { symbol: tokenData?.symbol ?? '?' }) ??
+        `${tokenData?.symbol} Deposit`
+      }
+      fullSized={true}
+      disabled={!depositEnabled}
+      openConnectModal={openConnectModal}
+      openChainModal={openChainModal}
+      addRecentTransaction={addRecentTransaction}
+      intl={intl}
+    >
+      {intl?.base?.('confirmDeposit') ?? 'Confirm Deposit'}
+    </TransactionButton>
+  )
 }
