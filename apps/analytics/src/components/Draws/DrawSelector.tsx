@@ -1,24 +1,52 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { useDrawIds } from '@generationsoftware/hyperstructure-react-hooks'
+import { DrawStatus } from '@shared/types'
 import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
 import { useAtom } from 'jotai'
 import { ReactNode, useEffect, useMemo } from 'react'
 import { selectedDrawIdAtom } from 'src/atoms'
+import { useAllDrawsStatus } from '@hooks/useAllDrawsStatus'
 
 interface DrawSelectorProps {
   prizePool: PrizePool
+  excludeDrawStatus?: DrawStatus[]
   className?: string
 }
 
 export const DrawSelector = (props: DrawSelectorProps) => {
-  const { prizePool, className } = props
+  const { prizePool, excludeDrawStatus, className } = props
 
-  const { data: drawIds } = useDrawIds(prizePool)
-  const firstDrawId = drawIds[0]
-  const lastDrawId = !!drawIds.length ? drawIds[drawIds.length - 1] : undefined
+  const { data: allDrawIds } = useDrawIds(prizePool)
+
+  const { data: draws } = useAllDrawsStatus(prizePool, allDrawIds)
+
+  const drawIds = useMemo(() => {
+    if (!!draws?.length) {
+      let firstDraw = draws[0]
+      let lastDraw = draws[draws.length - 1]
+
+      if (!!excludeDrawStatus?.length) {
+        const firstFilteredDraw = draws.find((draw) => !excludeDrawStatus.includes(draw.status))
+        const lastFilteredDraw = [...draws]
+          .reverse()
+          .find((draw) => !excludeDrawStatus.includes(draw.status))
+        if (!!firstFilteredDraw) firstDraw = firstFilteredDraw
+        if (!!lastFilteredDraw) lastDraw = lastFilteredDraw
+      }
+
+      return draws
+        .filter((draw) => draw.id >= firstDraw.id && draw.id <= lastDraw.id)
+        .map((draw) => draw.id)
+    } else {
+      return []
+    }
+  }, [draws, excludeDrawStatus])
 
   const [drawIdSelected, setDrawIdSelected] = useAtom(selectedDrawIdAtom)
+
+  const firstDrawId = drawIds[0]
+  const lastDrawId = drawIds[drawIds.length - 1]
 
   useEffect(() => {
     if (!!lastDrawId && !drawIdSelected) {
@@ -26,7 +54,7 @@ export const DrawSelector = (props: DrawSelectorProps) => {
     }
   }, [lastDrawId])
 
-  const drawIdArray = useMemo(() => {
+  const drawIdsArray = useMemo(() => {
     return !!drawIdSelected ? getDrawIdsArray(drawIdSelected, drawIds) : Array(7).fill(0)
   }, [drawIdSelected, drawIds])
 
@@ -41,7 +69,7 @@ export const DrawSelector = (props: DrawSelectorProps) => {
         content={<>&lt;&lt;</>}
         className={classNames({ 'opacity-0': drawIdSelected === firstDrawId })}
       />
-      {drawIdArray.map((id) => (
+      {drawIdsArray.map((id) => (
         <DrawId key={`drawIdSelector-${id}`} id={id} />
       ))}
       <DrawId

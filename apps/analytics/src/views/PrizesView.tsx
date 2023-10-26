@@ -90,7 +90,7 @@ export const PrizesView = (props: PrizesViewProps) => {
           <PrizesTable prizePool={prizePool} drawId={drawIdSelected} className='md:mt-6' />
         </>
       )}
-      <DrawSelector prizePool={prizePool} />
+      <DrawSelector prizePool={prizePool} excludeDrawStatus={['open', 'closed']} />
     </div>
   )
 }

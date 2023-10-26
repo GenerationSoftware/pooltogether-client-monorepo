@@ -1,8 +1,8 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { useDrawPeriod, useFirstDrawOpenedAt } from '@generationsoftware/hyperstructure-react-hooks'
+import { DrawStatus } from '@shared/types'
 import { getSecondsSinceEpoch } from '@shared/utilities'
 import { useMemo } from 'react'
-import { DrawStatus } from './useDrawStatus'
 import { useRngTxs } from './useRngTxs'
 
 export const useAllDrawsStatus = (prizePool: PrizePool, drawIds: number[]) => {

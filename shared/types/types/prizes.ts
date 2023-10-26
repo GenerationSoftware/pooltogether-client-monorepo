@@ -9,3 +9,5 @@ export interface DrawWithTimestamps {
   closedAt: number
   finalizedAt: number
 }
+
+export type DrawStatus = 'open' | 'closed' | 'awarded' | 'finalized'
