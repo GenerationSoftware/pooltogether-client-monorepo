@@ -21,7 +21,7 @@ export const Layout = (props: LayoutProps) => {
 
       <main
         className={classNames(
-          'w-full max-w-7xl relative flex flex-col flex-grow items-center mx-auto mb-20 p-4 md:p-0',
+          'w-full max-w-7xl relative flex flex-col flex-grow items-center mx-auto mb-20 px-4 py-4 md:py-0',
           className
         )}
       >
