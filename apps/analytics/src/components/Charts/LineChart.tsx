@@ -3,12 +3,14 @@ import { ReactNode } from 'react'
 import {
   Line,
   LineChart as RechartsLineChart,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis
 } from 'recharts'
 import { LineDot } from 'recharts/types/cartesian/Line'
+import { ImplicitLabelType } from 'recharts/types/component/Label'
 import { ContentType } from 'recharts/types/component/Tooltip'
 import { CurveType } from 'recharts/types/shape/Curve'
 import { AxisDomain, AxisInterval } from 'recharts/types/util/types'
@@ -16,6 +18,7 @@ import { AxisDomain, AxisInterval } from 'recharts/types/util/types'
 const DEFAULT: {
   aspect: number
   line: { type: CurveType; strokes: string[]; strokeWidth: number; dot: LineDot; animate: boolean }
+  refLine: { stroke: string; strokeWidth: number }
   xAxis: { stroke: string }
   yAxis: { stroke: string }
   margin: { left: number; mobileLeft: number }
@@ -27,6 +30,10 @@ const DEFAULT: {
     strokeWidth: 1.8,
     dot: false,
     animate: false
+  },
+  refLine: {
+    stroke: '#B18CFF',
+    strokeWidth: 1
   },
   xAxis: { stroke: '#9CA3AF' },
   yAxis: { stroke: '#9CA3AF' },
@@ -44,12 +51,23 @@ export interface LineChartProps {
     dot?: LineDot
     animate?: boolean
   }[]
+  refLines?: {
+    id: string | number
+    x?: string | number
+    y?: string | number
+    label?: ImplicitLabelType
+    stroke?: string
+    strokeWidth?: number
+    strokeDashArray?: string | number
+  }[]
   aspect?: number
   xAxis?: {
     type?: 'number' | 'category'
+    ticks?: (string | number)[]
     domain?: AxisDomain
     stroke?: string
     interval?: AxisInterval
+    minTickGap?: number
     tickFormatter?: (tick: string | number) => string
   }
   yAxis?: {
@@ -69,7 +87,7 @@ export interface LineChartProps {
 }
 
 export const LineChart = (props: LineChartProps) => {
-  const { data, lines, aspect, xAxis, yAxis, tooltip, margin, className } = props
+  const { data, lines, refLines, aspect, xAxis, yAxis, tooltip, margin, className } = props
 
   const { isMobile } = useScreenSize()
 
@@ -95,6 +113,17 @@ export const LineChart = (props: LineChartProps) => {
             isAnimationActive={line.animate ?? DEFAULT.line.animate}
           />
         ))}
+        {refLines?.map((refLine) => (
+          <ReferenceLine
+            key={`refLine-${refLine.id}`}
+            x={refLine.x}
+            y={refLine.y}
+            label={refLine.label}
+            stroke={refLine.stroke ?? DEFAULT.refLine.stroke}
+            strokeWidth={refLine.strokeWidth ?? DEFAULT.refLine.strokeWidth}
+            strokeDasharray={refLine.strokeDashArray}
+          />
+        ))}
         {tooltip?.show && (
           <Tooltip
             content={tooltip.content}
@@ -106,8 +135,10 @@ export const LineChart = (props: LineChartProps) => {
           dataKey='name'
           type={xAxis?.type}
           domain={xAxis?.domain}
+          ticks={xAxis?.ticks}
           stroke={xAxis?.stroke ?? DEFAULT.xAxis.stroke}
           interval={xAxis?.interval}
+          minTickGap={xAxis?.minTickGap}
           tickFormatter={xAxis?.tickFormatter}
         />
         <YAxis

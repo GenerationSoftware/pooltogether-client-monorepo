@@ -59,6 +59,7 @@ export interface AreaChartProps {
     domain?: AxisDomain
     stroke?: string
     interval?: AxisInterval
+    minTickGap?: number
     tickFormatter?: (tick: string | number) => string
   }
   yAxis?: {
@@ -138,6 +139,7 @@ export const AreaChart = (props: AreaChartProps) => {
           domain={xAxis?.domain}
           stroke={xAxis?.stroke ?? DEFAULT.xAxis.stroke}
           interval={xAxis?.interval}
+          minTickGap={xAxis?.minTickGap}
           tickFormatter={xAxis?.tickFormatter}
         />
         <YAxis
