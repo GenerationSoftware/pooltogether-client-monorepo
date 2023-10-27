@@ -5,7 +5,7 @@ import {
   usePrizeBackstopEvents,
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { getSimpleDate, MAX_UINT_256 } from '@shared/utilities'
+import { formatNumberForDisplay, getSimpleDate, MAX_UINT_256 } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
@@ -168,6 +168,9 @@ export const ReserveChart = (props: ReserveChartProps) => {
             interval: 'preserveStart',
             minTickGap: 50,
             tickFormatter: (tick) => formatXAxisDateTick(tick)
+          }}
+          yAxis={{
+            tickFormatter: (tick) => formatNumberForDisplay(tick, { maximumFractionDigits: 0 })
           }}
         />
       </div>

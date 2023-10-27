@@ -4,7 +4,12 @@ import {
   useTransferEvents
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Token } from '@shared/types'
-import { DEAD_ADDRESS, getSimpleDate, MAX_UINT_256 } from '@shared/utilities'
+import {
+  DEAD_ADDRESS,
+  formatNumberForDisplay,
+  getSimpleDate,
+  MAX_UINT_256
+} from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
@@ -159,6 +164,9 @@ export const BurnChart = (props: BurnChartProps) => {
             interval: 'preserveStart',
             minTickGap: 50,
             tickFormatter: (tick) => formatXAxisDateTick(tick)
+          }}
+          yAxis={{
+            tickFormatter: (tick) => formatNumberForDisplay(tick, { maximumFractionDigits: 0 })
           }}
         />
       </div>
