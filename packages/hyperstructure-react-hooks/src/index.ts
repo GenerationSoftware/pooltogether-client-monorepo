@@ -92,6 +92,7 @@ export * from './transactions/useSendDeployVaultTransaction'
 export * from './transactions/useSendDepositTransaction'
 export * from './transactions/useSendDepositWithPermitTransaction'
 export * from './transactions/useSendRedeemTransaction'
+export * from './transactions/useSendSetClaimerTransaction'
 export * from './transactions/useSendSetLiquidationPairTransaction'
 export * from './transactions/useSendWithdrawTransaction'
 

@@ -1,22 +1,22 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useVaultClaimer,
-  useVaultFeesAvailable,
-  useVaultLiquidationPair
+  useVaultLiquidationPair,
+  useVaultOwner
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { ArrowPathRoundedSquareIcon, TrashIcon, WrenchIcon } from '@heroicons/react/24/outline'
 import { VaultBadge } from '@shared/react-components'
-import { Button, LINKS, Spinner } from '@shared/ui'
+import { LINKS, Spinner } from '@shared/ui'
 import { getBlockExplorerUrl, shorten } from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
-import { VaultState } from 'src/types'
 import { zeroAddress } from 'viem'
 import { useAccount } from 'wagmi'
+import { useDeployedVaults } from '@hooks/useDeployedVaults'
 import { useDeployedVaultState } from '@hooks/useDeployedVaultState'
 import { useLiquidationPairSteps } from '@hooks/useLiquidationPairSteps'
-import { ClaimVaultFeesButton } from './buttons/ClaimVaultFeesButton'
 
 interface DeployedVaultCardProps {
   vault: Vault
@@ -145,37 +145,52 @@ const VaultStatusItem = (props: ItemProps) => {
   return <Spinner />
 }
 
+// TODO: add claim fees button if vault fees are available to claim
 const VaultActionsItem = (props: ItemProps) => {
   const { vault } = props
 
   const router = useRouter()
 
-  const { address: userAddress } = useAccount()
+  const { address } = useAccount()
 
-  const { vaultState } = useDeployedVaultState(vault)
+  const { data: vaultOwner } = useVaultOwner(vault)
 
   const { setStep: setLpStep } = useLiquidationPairSteps()
 
-  const { data: vaultFeesAvailable } = useVaultFeesAvailable(vault)
+  const { removeVault } = useDeployedVaults()
 
-  const onClickCompleteSetup = (state: VaultState) => {
-    if (state === 'missingLiquidationPair') {
-      setLpStep(0)
-      router.push(`/lp/${vault.chainId}/${vault.address}`)
-    }
+  const onClickDeployLp = () => {
+    setLpStep(0)
+    router.push(`/lp/${vault.chainId}/${vault.address}`)
   }
 
-  if (vaultState === 'missingLiquidationPair') {
-    return (
-      <Button onClick={() => onClickCompleteSetup(vaultState)} color='red'>
-        Complete Setup
-      </Button>
-    )
+  const onClickSetClaimer = () => {
+    router.push(`/claimer/${vault.chainId}/${vault.address}`)
   }
 
-  if (vaultState === 'active' && !!userAddress && !!vaultFeesAvailable) {
-    return <ClaimVaultFeesButton vault={vault} />
+  const onClickRemoveVault = () => {
+    removeVault(vault)
   }
 
-  return <></>
+  const isVaultOwner =
+    !!vaultOwner && !!address && vaultOwner.toLowerCase() === address.toLowerCase()
+
+  const iconClassName = 'h-6 w-6 text-pt-purple-300 cursor-pointer'
+  const ownerOnlyIconClassName = classNames(iconClassName, {
+    'cursor-auto opacity-50': !isVaultOwner
+  })
+
+  return (
+    <div className='flex gap-1 items-center mt-3'>
+      <ArrowPathRoundedSquareIcon
+        onClick={isVaultOwner ? onClickDeployLp : undefined}
+        className={ownerOnlyIconClassName}
+      />
+      <WrenchIcon
+        onClick={isVaultOwner ? onClickSetClaimer : undefined}
+        className={ownerOnlyIconClassName}
+      />
+      <TrashIcon onClick={onClickRemoveVault} className={classNames('ml-auto', iconClassName)} />
+    </div>
+  )
 }
