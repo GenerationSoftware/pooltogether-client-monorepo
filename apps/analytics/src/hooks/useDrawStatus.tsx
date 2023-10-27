@@ -5,6 +5,7 @@ import { getSecondsSinceEpoch } from '@shared/utilities'
 import { useMemo } from 'react'
 import { useRngTxs } from './useRngTxs'
 
+// TODO: need to be able to set refetch interval or manual refetch
 export const useDrawStatus = (prizePool: PrizePool, drawId: number) => {
   const { data: firstDrawOpenedAt, isFetched: isFetchedFirstDrawOpenedAt } =
     useFirstDrawOpenedAt(prizePool)

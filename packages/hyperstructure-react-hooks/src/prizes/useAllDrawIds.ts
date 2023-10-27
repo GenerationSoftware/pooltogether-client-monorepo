@@ -2,6 +2,7 @@ import { getSecondsSinceEpoch, PrizePool } from '@generationsoftware/hyperstruct
 import { useMemo } from 'react'
 import { useAllDrawPeriods, useAllFirstDrawOpenedAt } from '..'
 
+// TODO: need to be able to set refetch interval or manual refetch
 /**
  * Returns any prize pools' draw IDs
  * @param prizePool array of instances of the `PrizePool` class

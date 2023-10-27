@@ -1,6 +1,7 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
   useBlocksAtTimestamps,
+  useDrawIds,
   useHistoricalTokenPrices,
   useLiquidationEvents,
   usePrizeTokenData
@@ -14,7 +15,6 @@ import { Address, formatUnits } from 'viem'
 import { QUERY_START_BLOCK } from '@constants/config'
 import { useAllDrawsStatus } from '@hooks/useAllDrawsStatus'
 import { useHistoricalLiquidationPairTokenOutPrices } from '@hooks/useHistoricalLiquidationPairTokenOutPrices'
-import { useRngTxs } from '@hooks/useRngTxs'
 import { LineChart } from './LineChart'
 
 interface DrawsAvgLiqEfficiencyChartProps {
@@ -29,22 +29,20 @@ export const DrawsAvgLiqEfficiencyChart = (props: DrawsAvgLiqEfficiencyChartProp
     fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
   })
 
-  const { data: rngTxs } = useRngTxs(prizePool)
-  const drawIds = rngTxs?.map((txs) => txs.rng.drawId) ?? []
+  const { data: drawIds } = useDrawIds(prizePool)
 
   const { data: allDrawsStatus } = useAllDrawsStatus(prizePool, drawIds)
 
   const currentTimestamp = useAtomValue(currentTimestampAtom)
 
-  const uniqueOpenedAtTimestamps = new Set(allDrawsStatus?.map((draw) => draw.openedAt))
-  const { data: openedAtBlocksByTimestamp } = useBlocksAtTimestamps(prizePool?.chainId, [
-    ...uniqueOpenedAtTimestamps
-  ])
+  const { data: openedAtBlocksByTimestamp } = useBlocksAtTimestamps(
+    prizePool?.chainId,
+    allDrawsStatus?.map((draw) => draw.openedAt) ?? []
+  )
 
-  const uniqueClosedAtTimestamps = new Set(allDrawsStatus?.map((draw) => draw.closedAt))
   const { data: closedAtBlocksByTimestamp } = useBlocksAtTimestamps(
     prizePool?.chainId,
-    [...uniqueClosedAtTimestamps].filter((t) => !!t) as number[]
+    allDrawsStatus?.map((draw) => draw.closedAt) ?? []
   )
 
   // TODO: this assumes the tokenIn is always POOL (and uses mainnet pricing) - not ideal
