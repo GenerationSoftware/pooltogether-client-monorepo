@@ -19,10 +19,7 @@ export const useTokenPricesAcrossChains = (tokenAddresses: { [chainId: number]: 
 
       return {
         queryKey: [QUERY_KEYS.tokenPrices, chainId, tokenAddresses[chainId]],
-        queryFn: async () => {
-          const tokenPrices = await getTokenPrices(chainId, tokenAddresses[chainId])
-          return { chainId, tokenPrices }
-        },
+        queryFn: async () => await getTokenPrices(chainId, tokenAddresses[chainId]),
         staleTime: Infinity,
         enabled,
         ...NO_REFETCH
@@ -35,9 +32,10 @@ export const useTokenPricesAcrossChains = (tokenAddresses: { [chainId: number]: 
     const refetch = () => results?.forEach((result) => result.refetch())
 
     const formattedData: { [chainId: number]: { [address: Address]: number } } = {}
-    results.forEach((result) => {
+    results.forEach((result, i) => {
+      const chainId = chainIds[i]
       if (result.data) {
-        formattedData[result.data.chainId] = result.data.tokenPrices
+        formattedData[chainId] = result.data
       }
     })
 
