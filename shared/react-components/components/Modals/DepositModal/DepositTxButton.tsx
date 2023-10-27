@@ -251,12 +251,20 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
         <ExactApprovalButton>
           {intl?.base?.('exactApprovalButton', { symbol: tokenData.symbol }) ??
             `Approve exact amount of ${tokenData.symbol}`}
-          <ExactApprovalTooltip tokenSymbol={tokenData.symbol} intl={intl?.tooltips} />
+          <ExactApprovalTooltip
+            tokenSymbol={tokenData.symbol}
+            intl={intl?.tooltips}
+            className='whitespace-normal'
+          />
         </ExactApprovalButton>
         <InfiniteApprovalButton>
           {intl?.base?.('infiniteApprovalButton', { symbol: tokenData.symbol }) ??
             `Approve unlimited amount of ${tokenData.symbol}`}
-          <InfiniteApprovalTooltip tokenSymbol={tokenData.symbol} intl={intl?.tooltips} />
+          <InfiniteApprovalTooltip
+            tokenSymbol={tokenData.symbol}
+            intl={intl?.tooltips}
+            className='whitespace-normal'
+          />
         </InfiniteApprovalButton>
       </div>
     )
