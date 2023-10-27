@@ -11,12 +11,12 @@ import {
   NETWORK,
   PRIZE_POOLS,
   SECONDS_PER_DAY,
-  shorten
+  shorten,
+  sortByBigIntDesc
 } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import { formatUnits } from 'viem'
-import { MIN_PRIZE_AMOUNT } from '@constants/config'
 
 interface RecentWinnersProps {
   chainId: number
@@ -42,9 +42,12 @@ export const RecentWinners = (props: RecentWinnersProps) => {
   const highlightedWins = useMemo(() => {
     const flattenedWins: SubgraphDraw['prizeClaims'] = []
     winners?.forEach((draw) => flattenedWins.push(...draw.prizeClaims))
-    flattenedWins.sort((a, b) => b.timestamp - a.timestamp)
 
-    const filteredWins = flattenedWins.filter((win) => win.payout >= MIN_PRIZE_AMOUNT)
+    const winsByTimestamp = [...flattenedWins].sort((a, b) => b.timestamp - a.timestamp)
+    const winsByAmount = [...flattenedWins].sort((a, b) => sortByBigIntDesc(a.payout, b.payout))
+
+    const minPrizeAmount = winsByAmount[Math.floor(winsByAmount.length / 10)].payout
+    const filteredWins = winsByTimestamp.filter((win) => win.payout >= minPrizeAmount)
 
     return filteredWins.slice(0, 4)
   }, [winners])
