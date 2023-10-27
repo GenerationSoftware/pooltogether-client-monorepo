@@ -10,7 +10,7 @@ import { ExternalLink } from '@shared/ui'
 import { DOLPHIN_ADDRESS, getNetworkNameByChainId } from '@shared/utilities'
 import classNames from 'classnames'
 import { ReactNode } from 'react'
-import { Address } from 'viem'
+import { Address, zeroAddress } from 'viem'
 import { CURVE_POOLS } from '@constants/config'
 
 interface VaultCardProps {
@@ -83,32 +83,47 @@ const VaultCardActions = (props: VaultCardActionsProps) => {
 
   const curvePool = CURVE_POOLS[shareToken.chainId]?.[shareToken.address.toLowerCase() as Address]
 
+  const actions: { [id: string]: { href: string; text: string } } = {
+    'portals': {
+      href: `https://app.portals.fi/?inputToken=${network}%3A${zeroAddress}&outputToken=${network}%3A${shareToken.address.toLowerCase()}`,
+      text: 'Swap on Portals'
+    },
+    'llamaswap': {
+      href: `https://swap.defillama.com/?chain=${network}&to=${shareToken.address}`,
+      text: 'Swap on Llamaswap'
+    },
+    'paraswap': {
+      href: `https://app.paraswap.io/#/${DOLPHIN_ADDRESS}-${shareToken.address}?network=${network}`,
+      text: 'Swap on Paraswap'
+    },
+    '1inch': {
+      href: `https://app.1inch.io/#/${shareToken.chainId}/simple/swap/${DOLPHIN_ADDRESS}/${shareToken.address}`,
+      text: 'Swap on 1inch'
+    },
+    'uniswap': {
+      href: `https://app.uniswap.org/tokens/${network}/${shareToken.address}`,
+      text: 'Swap on Uniswap'
+    },
+    'curve': {
+      href: !!curvePool ? `https://curve.fi/#/${network}/pools/${curvePool}/swap` : '',
+      text: 'Swap on Curve'
+    },
+    'cabana': {
+      href: `${LINKS.app}/vault/${shareToken.chainId}/${shareToken.address}`,
+      text: 'Deposit on Cabana.fi'
+    }
+  }
+
   return (
     <div className={classNames('w-full flex flex-col gap-2', className)}>
-      <VaultCardLink href={`https://swap.defillama.com/?chain=${network}&to=${shareToken.address}`}>
-        Swap on Llamaswap
-      </VaultCardLink>
-      <VaultCardLink
-        href={`https://app.paraswap.io/#/${DOLPHIN_ADDRESS}-${shareToken.address}?network=${network}`}
-      >
-        Swap on Paraswap
-      </VaultCardLink>
-      <VaultCardLink
-        href={`https://app.1inch.io/#/${shareToken.chainId}/simple/swap/${DOLPHIN_ADDRESS}/${shareToken.address}`}
-      >
-        Swap on 1inch
-      </VaultCardLink>
-      <VaultCardLink href={`https://app.uniswap.org/tokens/${network}/${shareToken.address}`}>
-        Swap on Uniswap
-      </VaultCardLink>
-      {!!curvePool && (
-        <VaultCardLink href={`https://curve.fi/#/${network}/pools/${curvePool}/swap`}>
-          Swap on Curve
-        </VaultCardLink>
+      {Object.entries(actions).map(
+        ([id, action]) =>
+          !!action.href && (
+            <VaultCardLink key={`link-${id}`} href={action.href}>
+              {action.text}
+            </VaultCardLink>
+          )
       )}
-      <VaultCardLink href={`${LINKS.app}/vault/${shareToken.chainId}/${shareToken.address}`}>
-        Deposit on Cabana.fi
-      </VaultCardLink>
     </div>
   )
 }
