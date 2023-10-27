@@ -4,6 +4,7 @@ import {
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
+import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Button } from '@shared/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -12,6 +13,7 @@ import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { PrizePoolCards } from '@components/Prizes/PrizePoolCards'
+import { useSettingsModalView } from '@hooks/useSettingsModalView'
 import { AccountDepositsCards } from './AccountDepositsCards'
 import { AccountDepositsHeader } from './AccountDepositsHeader'
 import { AccountDepositsTable } from './AccountDepositsTable'
@@ -48,6 +50,8 @@ export const AccountDeposits = (props: AccountDepositsProps) => {
     )
   }
 
+  const isEmptyVaultLists = !vaults.allVaultInfo.length
+
   return (
     <div
       className={classNames(
@@ -56,7 +60,8 @@ export const AccountDeposits = (props: AccountDepositsProps) => {
       )}
     >
       <AccountDepositsHeader address={userAddress} />
-      {isEmpty && !isExternalUser && <NoDepositsCard />}
+      {isEmpty && !isEmptyVaultLists && !isExternalUser && <NoDepositsCard />}
+      {isEmpty && isEmptyVaultLists && <NoVaultListsCard />}
       {!isEmpty && (
         <AccountDepositsTable
           address={userAddress}
@@ -69,11 +74,7 @@ export const AccountDeposits = (props: AccountDepositsProps) => {
   )
 }
 
-interface NoWalletCardProps {
-  className?: string
-}
-
-const NoWalletCard = (props: NoWalletCardProps) => {
+const NoWalletCard = (props: { className?: string }) => {
   const { className } = props
 
   const t_common = useTranslations('Common')
@@ -96,11 +97,7 @@ const NoWalletCard = (props: NoWalletCardProps) => {
   )
 }
 
-interface NoDepositsCardProps {
-  className?: string
-}
-
-const NoDepositsCard = (props: NoDepositsCardProps) => {
+const NoDepositsCard = (props: { className?: string }) => {
   const { className } = props
 
   const t = useTranslations('Account')
@@ -112,6 +109,33 @@ const NoDepositsCard = (props: NoDepositsCardProps) => {
         <Link href='/vaults' className='text-pt-teal'>
           {t('depositNow')}
         </Link>
+      </div>
+    </div>
+  )
+}
+
+const NoVaultListsCard = (props: { className?: string }) => {
+  const { className } = props
+
+  const t_account = useTranslations('Account')
+  const t_settings = useTranslations('Settings')
+
+  const { setIsModalOpen } = useIsModalOpen(MODAL_KEYS.settings)
+  const { setView } = useSettingsModalView()
+
+  return (
+    <div className={classNames('w-full rounded-lg lg:p-4 lg:bg-pt-bg-purple', className)}>
+      <div className='flex flex-col w-full gap-2 items-center justify-center p-3 text-sm bg-pt-transparent rounded-lg lg:flex-row lg:gap-3 lg:text-lg lg:font-medium'>
+        <span className='text-pt-purple-100'>{t_account('noVaultLists')}</span>
+        <button
+          onClick={() => {
+            setView('vaultLists')
+            setIsModalOpen(true)
+          }}
+          className='text-pt-teal cursor-pointer hover:text-pt-teal-dark'
+        >
+          {t_settings('manageVaultLists')}
+        </button>
       </div>
     </div>
   )

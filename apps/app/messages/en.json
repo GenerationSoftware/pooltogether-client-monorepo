@@ -105,6 +105,7 @@
   },
   "Account": {
     "connectWallet": "Connect your wallet to view account status",
+    "noVaultLists": "You don't have any vault lists selected.",
     "noPrizeTokens": "You don't have any prize tokens.",
     "depositNow": "Deposit now.",
     "yourDeposits": "Your Deposits",
