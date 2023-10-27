@@ -43,13 +43,17 @@ export const RecentWinners = (props: RecentWinnersProps) => {
     const flattenedWins: SubgraphDraw['prizeClaims'] = []
     winners?.forEach((draw) => flattenedWins.push(...draw.prizeClaims))
 
-    const winsByTimestamp = [...flattenedWins].sort((a, b) => b.timestamp - a.timestamp)
-    const winsByAmount = [...flattenedWins].sort((a, b) => sortByBigIntDesc(a.payout, b.payout))
+    if (!!flattenedWins.length) {
+      const winsByTimestamp = [...flattenedWins].sort((a, b) => b.timestamp - a.timestamp)
+      const winsByAmount = [...flattenedWins].sort((a, b) => sortByBigIntDesc(a.payout, b.payout))
 
-    const minPrizeAmount = winsByAmount[Math.floor(winsByAmount.length / 10)].payout
-    const filteredWins = winsByTimestamp.filter((win) => win.payout >= minPrizeAmount)
+      const minPrizeAmount = winsByAmount[Math.floor(winsByAmount.length / 10)].payout
+      const filteredWins = winsByTimestamp.filter((win) => win.payout >= minPrizeAmount)
 
-    return filteredWins.slice(0, 4)
+      return filteredWins.slice(0, 4)
+    } else {
+      return []
+    }
   }, [winners])
 
   return (
