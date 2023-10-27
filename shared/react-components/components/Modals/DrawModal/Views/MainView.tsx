@@ -143,19 +143,13 @@ const DrawTotals = (props: DrawTotalsProps) => {
   const totalPrizeAmount = draw.prizeClaims.reduce((a, b) => a + b.payout, 0n)
 
   return (
-    <span className='inline-flex gap-x-[0.5ch] justify-center text-center'>
-      <span>
-        {intl?.('drawTotal.beforeValue', { numWallets: uniqueWallets.size }) ??
-          `This draw had ${uniqueWallets.size} unique wallets winning a total of`}
-      </span>
-      <span>
-        <TokenValue token={{ ...prizeToken, amount: totalPrizeAmount }} />
-      </span>
-      {isOngoing ? (
-        <span>{intl?.('drawTotal.afterValueOngoing') ?? `in prizes so far.`}</span>
-      ) : (
-        <span>{intl?.('drawTotal.afterValue') ?? `in prizes.`}</span>
-      )}
+    <span className='text-center'>
+      {intl?.('drawTotal.beforeValue', { numWallets: uniqueWallets.size }) ??
+        `This draw had ${uniqueWallets.size} unique wallets winning a total of`}{' '}
+      <TokenValue token={{ ...prizeToken, amount: totalPrizeAmount }} />{' '}
+      {isOngoing
+        ? intl?.('drawTotal.afterValueOngoing') ?? `in prizes so far.`
+        : intl?.('drawTotal.afterValue') ?? `in prizes.`}
     </span>
   )
 }
