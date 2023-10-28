@@ -57,7 +57,8 @@ export const VAULT_LPS: { [chainId: number]: Lowercase<Address>[] } = {
   [NETWORK.optimism]: [
     '0xb1b9dcb9f3a25e390fb37f597c2bf90b16889e41',
     '0xfbf4f89c7a9ecee48f65033097fecea257eb4049',
-    '0xf9baa3cd7b8c1f205fd3a6861dca693fed683684'
+    '0xf9baa3cd7b8c1f205fd3a6861dca693fed683684',
+    '0x71409285d5b324a082e761e54ea0aa413da51db9'
   ]
 }
 
