@@ -1,4 +1,3 @@
-import { useUserTotalBalance } from '@generationsoftware/hyperstructure-react-hooks'
 import { CurrencyValue } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import { NETWORK, shorten } from '@shared/utilities'
@@ -7,6 +6,7 @@ import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount, useEnsName } from 'wagmi'
+import { useUserTotalBalance } from '@hooks/useUserTotalBalance'
 
 interface AccountDepositsHeaderProps {
   address?: Address

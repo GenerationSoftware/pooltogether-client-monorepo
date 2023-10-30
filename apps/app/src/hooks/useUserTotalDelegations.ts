@@ -34,7 +34,8 @@ export const useUserTotalDelegations = (userAddress: Address) => {
     !!allVaultSharePrices &&
     !!shareBalances &&
     !!delegationBalances &&
-    !!vaults.underlyingTokenAddresses
+    !!vaults.underlyingTokenAddresses &&
+    Object.values(allVaultSharePrices).some((token) => token.price !== undefined)
 
   const data = useMemo(() => {
     if (isFetched) {

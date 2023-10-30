@@ -1,6 +1,10 @@
+import {
+  useAllUserVaultBalances,
+  useAllVaultSharePrices,
+  useSelectedVaults
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
-import { useAllUserVaultBalances, useAllVaultSharePrices, useSelectedVaults } from '..'
 
 /**
  * Returns a user's total balance in ETH
@@ -24,7 +28,8 @@ export const useUserTotalBalance = (userAddress: Address) => {
     isFetchedVaultBalances &&
     !!allVaultShareTokens &&
     !!vaultBalances &&
-    !!vaults.underlyingTokenAddresses
+    !!vaults.underlyingTokenAddresses &&
+    Object.values(allVaultShareTokens).some((token) => token.price !== undefined)
 
   const data = useMemo(() => {
     if (isFetched) {

@@ -9,6 +9,8 @@ import { useSupportedPrizePools } from './useSupportedPrizePools'
 
 /**
  * Returns a user's total prize winnings in ETH
+ * @param userAddress user address to get total winnings for
+ * @param options optional settings
  * @returns
  */
 export const useUserTotalWinnings = (
@@ -54,7 +56,12 @@ export const useUserTotalWinnings = (
 
   return useMemo(() => {
     const isFetched =
-      isFetchedWins && isFetchedPrizeToken && !!wins && !!prizeToken && !!totalTokensWonByChain
+      isFetchedWins &&
+      isFetchedPrizeToken &&
+      !!wins &&
+      !!prizeToken &&
+      prizeToken.price !== undefined &&
+      !!totalTokensWonByChain
 
     let totalWinnings = 0
 
