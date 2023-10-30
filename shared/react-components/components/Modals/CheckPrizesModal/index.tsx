@@ -8,7 +8,7 @@ import { MODAL_KEYS, useIsModalOpen, useScreenSize } from '@shared/generic-react
 import { Intl } from '@shared/types'
 import { Modal } from '@shared/ui'
 import { getSecondsSinceEpoch, sToMs } from '@shared/utilities'
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useEffect, useRef, useState } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { CheckingView } from './Views/CheckingView'
@@ -42,6 +42,8 @@ export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
     userAddress as Address
   )
 
+  const timeoutRef = useRef<number | null>(null)
+
   const updateLastCheckedPrizesTimestamps = () => {
     if (!!drawsToCheck && !!userAddress) {
       for (const key in drawsToCheck.draws) {
@@ -52,16 +54,20 @@ export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
   }
 
   const handleClose = () => {
-    setIsModalOpen(false)
-    if (view !== 'checking') {
+    if (isModalOpen && view !== 'checking') {
       updateLastCheckedPrizesTimestamps()
-      setView('checking')
+    }
+    setIsModalOpen(false)
+    setView('checking')
+    if (timeoutRef.current !== null) {
+      window.clearTimeout(timeoutRef.current)
+      timeoutRef.current = null
     }
   }
 
   useEffect(() => {
-    if (isModalOpen) {
-      setTimeout(() => {
+    if (!!userAddress && isModalOpen && timeoutRef.current === null) {
+      timeoutRef.current = window.setTimeout(() => {
         for (const key in wins) {
           const chainId = parseInt(key)
           const drawIdsToCheck = drawsToCheck?.draws[chainId]?.map((d) => d.id) ?? []
@@ -76,11 +82,17 @@ export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
             setView('win')
             return
           }
+          setView('noWin')
         }
-        setView('noWin')
       }, sToMs(3.5))
     }
-  }, [isModalOpen, wins])
+  }, [userAddress, wins, isModalOpen])
+
+  useEffect(() => {
+    if (!!userAddress) {
+      handleClose()
+    }
+  }, [userAddress])
 
   if (isModalOpen) {
     const modalViews: Record<CheckPrizesModalView, ReactNode> = {
