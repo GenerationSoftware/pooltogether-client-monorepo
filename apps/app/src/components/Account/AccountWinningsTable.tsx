@@ -1,14 +1,16 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { PrizePoolBadge } from '@shared/react-components'
+import { PrizePoolBadge, SortIcon } from '@shared/react-components'
 import { Win } from '@shared/types'
 import { Table, TableProps } from '@shared/ui'
-import { getSimpleDate } from '@shared/utilities'
+import { getSimpleDate, sortByBigIntDesc } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useState } from 'react'
+import { ReactNode, useMemo, useState } from 'react'
 import { AccountWinAmount } from './AccountWinAmount'
 import { AccountWinButtons } from './AccountWinButtons'
+
+type SortId = 'date' | 'amount'
 
 interface AccountWinningsTableProps extends Omit<TableProps, 'data' | 'keyPrefix'> {
   wins: Win[]
@@ -24,14 +26,59 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
   const baseNumWins = 10
   const [numWins, setNumWins] = useState<number>(baseNumWins)
 
+  const [sortBy, setSortBy] = useState<SortId>('date')
+  const [sortDirection, setSortDirection] = useState<'desc' | 'asc'>('desc')
+
+  const handleHeaderClick = (id: SortId) => {
+    if (sortBy === id) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortDirection('desc')
+      setSortBy(id)
+    }
+  }
+
+  const getDirection = (id: SortId) => {
+    if (sortBy === id) {
+      return sortDirection
+    }
+  }
+
+  const sortedWins = useMemo(() => {
+    if (sortBy === 'amount') {
+      // TODO: this assumes the prize token is always the same - not ideal
+      const sortedByAmount = [...wins].sort((a, b) => sortByBigIntDesc(a.payout, b.payout))
+      return sortDirection === 'desc' ? sortedByAmount : sortedByAmount.reverse()
+    } else {
+      return sortDirection === 'desc' ? wins : [...wins].reverse()
+    }
+  }, [wins, sortBy, sortDirection])
+
   const tableData: TableProps['data'] = {
     headers: {
-      date: { content: t_account('winHeaders.date') },
+      date: {
+        content: (
+          <SortableHeader
+            content={t_account('winHeaders.date')}
+            onClick={() => handleHeaderClick('date')}
+            direction={getDirection('date')}
+          />
+        )
+      },
       prizePool: { content: t_account('winHeaders.prizePool'), position: 'center' },
-      winnings: { content: t_account('winHeaders.winnings'), position: 'center' },
+      winnings: {
+        content: (
+          <SortableHeader
+            content={t_account('winHeaders.winnings')}
+            onClick={() => handleHeaderClick('amount')}
+            direction={getDirection('amount')}
+          />
+        ),
+        position: 'center'
+      },
       info: { content: t_account('winHeaders.moreInfo'), position: 'center' }
     },
-    rows: wins
+    rows: sortedWins
       .slice(0, numWins)
       .map((win) => {
         const winId = `${win.chainId}-${win.txHash}`
@@ -93,6 +140,27 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
           {t_common('showMore')}
         </span>
       )}
+    </div>
+  )
+}
+
+interface SortableHeaderProps {
+  content: ReactNode
+  onClick: () => void
+  direction?: 'desc' | 'asc'
+  append?: ReactNode
+}
+
+const SortableHeader = (props: SortableHeaderProps) => {
+  const { content, onClick, direction, append } = props
+
+  return (
+    <div className='flex gap-1 items-center'>
+      <div onClick={onClick} className='flex gap-1 items-center cursor-pointer select-none'>
+        <SortIcon direction={direction} className='w-4 h-auto shrink-0' />
+        {content}
+      </div>
+      {append}
     </div>
   )
 }
