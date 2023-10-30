@@ -1,12 +1,12 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { SubgraphPrize } from '@shared/types'
+import { Win } from '@shared/types'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { AccountWinCard } from './AccountWinCard'
 
 interface AccountWinCardsProps {
-  wins: (SubgraphPrize & { chainId: number })[]
+  wins: Win[]
   prizePools: PrizePool[]
   className?: string
 }
@@ -24,7 +24,9 @@ export const AccountWinCards = (props: AccountWinCardsProps) => {
       {wins.slice(0, numWins).map((win) => {
         const prizePool = prizePools.find((prizePool) => prizePool.chainId === win.chainId)
         if (!!prizePool) {
-          return <AccountWinCard key={win.id} win={win} prizePool={prizePool} />
+          return (
+            <AccountWinCard key={`${win.chainId}-${win.txHash}`} win={win} prizePool={prizePool} />
+          )
         }
       })}
       {wins.length > numWins && (

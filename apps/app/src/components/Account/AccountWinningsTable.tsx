@@ -1,6 +1,6 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { PrizePoolBadge } from '@shared/react-components'
-import { SubgraphPrize } from '@shared/types'
+import { Win } from '@shared/types'
 import { Table, TableProps } from '@shared/ui'
 import { getSimpleDate } from '@shared/utilities'
 import classNames from 'classnames'
@@ -11,7 +11,7 @@ import { AccountWinAmount } from './AccountWinAmount'
 import { AccountWinButtons } from './AccountWinButtons'
 
 interface AccountWinningsTableProps extends Omit<TableProps, 'data' | 'keyPrefix'> {
-  wins: (SubgraphPrize & { chainId: number })[]
+  wins: Win[]
   prizePools: PrizePool[]
 }
 
@@ -34,6 +34,7 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
     rows: wins
       .slice(0, numWins)
       .map((win) => {
+        const winId = `${win.chainId}-${win.txHash}`
         const prizePool = prizePools.find((prizePool) => prizePool.chainId === win.chainId)
 
         if (!!prizePool) {
@@ -61,9 +62,9 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
             },
             info: { content: <AccountWinButtons win={win} />, position: 'center' }
           }
-          return { id: win.id, cells }
+          return { id: winId, cells }
         } else {
-          return { id: win.id, cells: {} }
+          return { id: winId, cells: {} }
         }
       })
       .filter((row) => Object.keys(row.cells).length > 0)

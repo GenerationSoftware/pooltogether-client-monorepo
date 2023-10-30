@@ -2,7 +2,7 @@ import {
   useAllUserPrizePoolWins,
   useLastCheckedPrizesTimestamps
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { SubgraphPrize } from '@shared/types'
+import { Win } from '@shared/types'
 import { ExternalLink, LINKS } from '@shared/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -38,17 +38,29 @@ export const AccountWinnings = (props: AccountWinningsProps) => {
   const isExternalUser = !!address && address.toLowerCase() !== _userAddress?.toLowerCase()
 
   const flattenedWins = useMemo(() => {
-    const flattenedWins: (SubgraphPrize & { chainId: number })[] = []
+    const flattenedWins: Win[] = []
 
     for (const key in wins) {
       const chainId = parseInt(key)
       const lastCheckedPrizesTimestamp = lastCheckedPrizesTimestamps[chainId] ?? 0
 
+      const groupedChainWins: { [txHash: `0x${string}`]: Win } = {}
+
       wins[chainId].forEach((win) => {
-        if (win.timestamp <= lastCheckedPrizesTimestamp || isExternalUser) {
-          flattenedWins.push({ ...win, chainId })
+        if (groupedChainWins[win.txHash] !== undefined) {
+          groupedChainWins[win.txHash].payout += win.payout
+        } else if (win.timestamp <= lastCheckedPrizesTimestamp || isExternalUser) {
+          groupedChainWins[win.txHash] = {
+            chainId,
+            drawId: win.drawId,
+            payout: win.payout,
+            txHash: win.txHash,
+            timestamp: win.timestamp
+          }
         }
       })
+
+      flattenedWins.push(...Object.values(groupedChainWins))
     }
 
     return flattenedWins.sort((a, b) => b.timestamp - a.timestamp)

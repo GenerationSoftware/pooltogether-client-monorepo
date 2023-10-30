@@ -11,3 +11,11 @@ export interface DrawWithTimestamps {
 }
 
 export type DrawStatus = 'open' | 'closed' | 'awarded' | 'finalized'
+
+export interface Win {
+  chainId: number
+  drawId: number
+  payout: bigint
+  txHash: `0x${string}`
+  timestamp: number
+}

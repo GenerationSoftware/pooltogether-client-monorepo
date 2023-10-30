@@ -1,11 +1,11 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
-import { SubgraphPrize } from '@shared/types'
+import { Win } from '@shared/types'
 import { Button } from '@shared/ui'
 import { getBlockExplorerName, getBlockExplorerUrl } from '@shared/utilities'
 import { useTranslations } from 'next-intl'
 
 interface AccountWinButtonsProps {
-  win: SubgraphPrize & { chainId: number }
+  win: Win
 }
 
 export const AccountWinButtons = (props: AccountWinButtonsProps) => {

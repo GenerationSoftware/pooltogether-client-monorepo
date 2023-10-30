@@ -166,41 +166,51 @@ const DrawWinnersTable = (props: DrawWinnersTableProps) => {
 
   const { data: tokenData } = usePrizeTokenData(prizePool)
 
+  const wins = useMemo(() => {
+    const groupedWins: { [winner: Address]: bigint } = {}
+
+    draw.prizeClaims.forEach((win) => {
+      if (groupedWins[win.winner] !== undefined) {
+        groupedWins[win.winner] += win.payout
+      } else {
+        groupedWins[win.winner] = win.payout
+      }
+    })
+
+    return Object.entries(groupedWins).sort((a, b) => sortByBigIntDesc(a[1], b[1]))
+  }, [draw])
+
   return (
     <div className='flex flex-col w-full gap-2 md:text-center'>
       <div className='flex w-full text-pt-purple-100 font-semibold'>
         <span className='w-1/2'>{intl?.('winner') ?? 'Winner'}</span>
         <span className='w-1/2 text-right md:text-center'>{intl?.('prize') ?? 'Prize'}</span>
       </div>
-      {!!draw && !!tokenData ? (
+      {!!tokenData ? (
         <div className='flex flex-col w-full max-h-52 gap-3 overflow-y-auto'>
-          {[...draw.prizeClaims]
-            .sort((a, b) => sortByBigIntDesc(a.payout, b.payout))
-            .map((prize) => {
-              const formattedPrize = formatBigIntForDisplay(prize.payout, tokenData.decimals, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-              })
+          {wins.map((win) => {
+            const formattedPrize = formatBigIntForDisplay(win[1], tokenData.decimals, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            })
 
-              return (
-                <div key={prize.id} className='flex w-full items-center'>
-                  <span className='w-1/2'>
-                    <ExternalLink
-                      href={getBlockExplorerUrl(prizePool.chainId, prize.winner, 'address')}
-                    >
-                      {shorten(prize.winner, { short: true }) as string}
-                    </ExternalLink>
-                  </span>
-                  <span className='w-1/2 text-right whitespace-nowrap md:text-center'>
-                    {!!tokenData ? (
-                      `${formattedPrize === '0.00' ? '< 0.01' : formattedPrize} ${tokenData.symbol}`
-                    ) : (
-                      <Spinner />
-                    )}
-                  </span>
-                </div>
-              )
-            })}
+            return (
+              <div key={`prize-${win[0]}`} className='flex w-full items-center'>
+                <span className='w-1/2'>
+                  <ExternalLink href={getBlockExplorerUrl(prizePool.chainId, win[0], 'address')}>
+                    {shorten(win[0], { short: true }) as string}
+                  </ExternalLink>
+                </span>
+                <span className='w-1/2 text-right whitespace-nowrap md:text-center'>
+                  {!!tokenData ? (
+                    `${formattedPrize === '0.00' ? '< 0.01' : formattedPrize} ${tokenData.symbol}`
+                  ) : (
+                    <Spinner />
+                  )}
+                </span>
+              </div>
+            )
+          })}
         </div>
       ) : (
         <Spinner />

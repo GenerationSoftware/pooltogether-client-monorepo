@@ -1,6 +1,6 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { NetworkIcon } from '@shared/react-components'
-import { SubgraphPrize } from '@shared/types'
+import { Win } from '@shared/types'
 import { ExternalLink } from '@shared/ui'
 import { getSimpleDate } from '@shared/utilities'
 import { getBlockExplorerUrl } from '@shared/utilities'
@@ -8,7 +8,7 @@ import { useTranslations } from 'next-intl'
 import { AccountWinAmount } from './AccountWinAmount'
 
 interface AccountWinCardProps {
-  win: SubgraphPrize & { chainId: number }
+  win: Win
   prizePool: PrizePool
 }
 
