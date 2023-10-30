@@ -38,16 +38,18 @@ export const DrawsAvgClaimFeesChart = (props: DrawsAvgClaimFeesChartProps) => {
             (win) => win.fee > 0n && (!hideCanary || win.tier !== numTiers - 1)
           )
 
-          const sumClaimFeeAmount = wins.reduce((a, b) => a + b.fee, 0n)
-          const sumPrizeAmount = wins.reduce((a, b) => a + b.payout, 0n)
-          const percentage =
-            divideBigInts(sumClaimFeeAmount, sumPrizeAmount + sumClaimFeeAmount) * 100
+          if (!!wins.length) {
+            const sumClaimFeeAmount = wins.reduce((a, b) => a + b.fee, 0n)
+            const sumPrizeAmount = wins.reduce((a, b) => a + b.payout, 0n)
+            const percentage =
+              divideBigInts(sumClaimFeeAmount, sumPrizeAmount + sumClaimFeeAmount) * 100
 
-          numValues++
-          sumValues += percentage
-          const cumAvg = sumValues / numValues
+            numValues++
+            sumValues += percentage
+            const cumAvg = sumValues / numValues
 
-          data.push({ name: `#${draw.id}`, percentage, cumAvg })
+            data.push({ name: `#${draw.id}`, percentage, cumAvg })
+          }
         }
       })
 
