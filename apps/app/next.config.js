@@ -14,7 +14,7 @@ module.exports = {
     return config
   },
   i18n: {
-    locales: ['en', 'es', 'de', 'fr', 'hi', 'it', 'ko', 'pt', 'tr', 'zh', 'ru', 'fi'],
+    locales: ['en', 'es', 'de', 'fr', 'hi', 'it', 'ko', 'pt', 'tr', 'zh', 'ru', 'fil'],
     defaultLocale: 'en'
   },
   async headers() {

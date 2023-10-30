@@ -1,7 +1,19 @@
 /**
  * Supported language IDs
  */
-export type LANGUAGE_ID = 'en' | 'es' | 'de' | 'fr' | 'hi' | 'it' | 'ko' | 'pt' | 'ru' | 'tr' | 'zh'
+export type LANGUAGE_ID =
+  | 'en'
+  | 'es'
+  | 'de'
+  | 'fr'
+  | 'hi'
+  | 'it'
+  | 'ko'
+  | 'pt'
+  | 'ru'
+  | 'tr'
+  | 'zh'
+  | 'fil'
 
 /**
  * Supported languages' data
@@ -50,5 +62,9 @@ export const SUPPORTED_LANGUAGES: Record<LANGUAGE_ID, { name: string; nativeName
   zh: {
     name: 'Zhōngwén',
     nativeName: '中文'
+  },
+  fil: {
+    name: 'Filipino',
+    nativeName: 'Filipino'
   }
 }
