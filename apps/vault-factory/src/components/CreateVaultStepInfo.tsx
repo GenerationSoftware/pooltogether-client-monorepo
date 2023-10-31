@@ -6,7 +6,7 @@ import { StepInfo } from './StepInfo'
 export const allVaultStepInfo: { title: string; info: ReactNode }[] = [
   {
     title: 'Choose a network',
-    info: `This is network your prize vault will be deployed on!`
+    info: `This is the network your prize vault will be deployed on!`
   },
   {
     title: 'Choose a yield source',
