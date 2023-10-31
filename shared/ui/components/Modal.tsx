@@ -134,7 +134,8 @@ export const Modal = (props: ModalProps) => {
                 'h-screen md:h-auto md:max-h-[90vh]',
                 'w-screen md:w-full md:max-w-lg',
                 {
-                  '!h-auto max-h-[90vh] rounded-t-lg': mobileStyle === 'tab' || !mobileStyle
+                  '!h-auto max-h-[90vh] rounded-t-lg': mobileStyle === 'tab' || !mobileStyle,
+                  'justify-center': mobileStyle === 'cover'
                 },
                 className
               )}
