@@ -1,9 +1,9 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { EIP2612_PERMIT_TYPES, getSecondsSinceEpoch, OLD_DAI_PERMIT_TYPES } from '@shared/utilities'
 import { useMemo, useState } from 'react'
-import { Address, TypedDataDomain, verifyTypedData, zeroAddress } from 'viem'
+import { Address, verifyTypedData, zeroAddress } from 'viem'
 import { useAccount, useSignTypedData } from 'wagmi'
-import { useTokenNonces, useTokenPermitSupport, useTokenVersion, useVaultTokenData } from '..'
+import { useTokenDomain, useTokenNonces, useTokenPermitSupport, useVaultTokenData } from '..'
 
 /**
  * Requests an EIP-2612 signature for a vault to spend tokens
@@ -37,10 +37,7 @@ export const useApproveSignature = (
     token?.address as Address
   )
 
-  const { data: tokenVersion } = useTokenVersion(
-    token?.chainId as number,
-    token?.address as Address
-  )
+  const { data: tokenDomain } = useTokenDomain(token?.chainId as number, token?.address as Address)
 
   const { data: nonces } = useTokenNonces(
     token?.chainId as number,
@@ -51,17 +48,6 @@ export const useApproveSignature = (
 
   const [isInvalidSignature, setIsInvalidSignature] = useState<boolean>(false)
   const [deadline, setDeadline] = useState<bigint>(0n)
-
-  const domain: TypedDataDomain | undefined = useMemo(() => {
-    if (!!token && !!tokenVersion && Number(tokenVersion) >= 1) {
-      return {
-        chainId: token.chainId,
-        name: token.name,
-        verifyingContract: token.address,
-        version: tokenVersion
-      }
-    }
-  }, [token, tokenVersion])
 
   const message = useMemo(() => {
     if (tokenPermitSupport === 'eip2612') {
@@ -100,7 +86,7 @@ export const useApproveSignature = (
 
     const isValid = await verifyTypedData({
       address: userAddress as Address,
-      domain,
+      domain: tokenDomain,
       message,
       types,
       primaryType: 'Permit',
@@ -124,7 +110,7 @@ export const useApproveSignature = (
     isError: isSigningError,
     signTypedData
   } = useSignTypedData({
-    domain,
+    domain: tokenDomain,
     message,
     types,
     primaryType: 'Permit',
@@ -146,10 +132,9 @@ export const useApproveSignature = (
     !!token &&
     tokenPermitSupport !== undefined &&
     tokenPermitSupport !== 'none' &&
-    !!tokenVersion &&
+    !!tokenDomain &&
     nonces !== undefined &&
     nonces !== -1n &&
-    !!domain &&
     !!message.value
 
   const signApprove = enabled ? _signTypedData : undefined

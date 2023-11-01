@@ -1,27 +1,27 @@
 import { NO_REFETCH } from '@shared/generic-react-hooks'
-import { getTokenVersion } from '@shared/utilities'
+import { getTokenDomain } from '@shared/utilities'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
-import { Address } from 'viem'
+import { Address, TypedDataDomain } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { QUERY_KEYS } from '../constants'
 
 /**
- * Returns a token's version (usually for signature purposes)
+ * Returns a token's EIP-712 domain
  * @param chainId chain ID
- * @param tokenAddress token address to check version for
+ * @param tokenAddress token to get domain for
  * @returns
  */
-export const useTokenVersion = (
+export const useTokenDomain = (
   chainId: number,
   tokenAddress: Address
-): UseQueryResult<string, unknown> => {
+): UseQueryResult<TypedDataDomain, unknown> => {
   const publicClient = usePublicClient({ chainId })
 
   const enabled = !!chainId && !!tokenAddress && !!publicClient
 
-  const queryKey = [QUERY_KEYS.tokenVersions, chainId, tokenAddress]
+  const queryKey = [QUERY_KEYS.tokenDomain, chainId, tokenAddress]
 
-  return useQuery(queryKey, async () => await getTokenVersion(publicClient, tokenAddress), {
+  return useQuery(queryKey, async () => await getTokenDomain(publicClient, tokenAddress), {
     enabled,
     ...NO_REFETCH
   })

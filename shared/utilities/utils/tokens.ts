@@ -1,5 +1,12 @@
 import { TokenWithAmount, TokenWithSupply } from '@shared/types'
-import { Address, ContractFunctionExecutionError, pad, PublicClient, zeroAddress } from 'viem'
+import {
+  Address,
+  ContractFunctionExecutionError,
+  pad,
+  PublicClient,
+  TypedDataDomain,
+  zeroAddress
+} from 'viem'
 import { erc20ABI } from '../abis/erc20'
 import { erc20OldPermitABI } from '../abis/erc20-oldPermit'
 import { TOKEN_DATA_REDIRECTS } from '../constants'
@@ -148,21 +155,55 @@ export const getTokenNonces = async (
 }
 
 /**
- * Returns a token's version
- *
- * NOTE: Returns "-1" if the token does not support the EIP-2612 interface
+ * Returns a token's EIP-712 domain
  * @param publicClient a public Viem client to query through
- * @param tokenAddress token address to check version for
+ * @param tokenAddress token address to get domain for
+ * @returns
  */
-export const getTokenVersion = async (publicClient: PublicClient, tokenAddress: Address) => {
+export const getTokenDomain = async (publicClient: PublicClient, tokenAddress: Address) => {
+  const chainId = await publicClient.getChainId()
+
+  const domain: TypedDataDomain = {
+    chainId,
+    name: '',
+    verifyingContract: tokenAddress,
+    version: '1'
+  }
+
   try {
-    return await publicClient.readContract({
+    const eip712Domain = await publicClient.readContract({
       address: tokenAddress,
       abi: erc20ABI,
-      functionName: 'version'
+      functionName: 'eip712Domain'
     })
+
+    domain.name = eip712Domain[1]
+    domain.version = eip712Domain[2]
+    domain.verifyingContract = eip712Domain[4]
+    domain.salt = eip712Domain[5]
+
+    return domain
   } catch {
-    return '-1'
+    try {
+      const version = await publicClient.readContract({
+        address: tokenAddress,
+        abi: erc20ABI,
+        functionName: 'version'
+      })
+
+      const name = await publicClient.readContract({
+        address: tokenAddress,
+        abi: erc20ABI,
+        functionName: 'name'
+      })
+
+      domain.version = version
+      domain.name = name
+
+      return domain
+    } catch {
+      return undefined
+    }
   }
 }
 

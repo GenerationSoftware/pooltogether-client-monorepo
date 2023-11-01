@@ -75,12 +75,12 @@ export * from './signatures/useApproveSignature'
 export * from './tokens/useHistoricalTokenPrices'
 export * from './tokens/useTokenAllowances'
 export * from './tokens/useTokenBalances'
+export * from './tokens/useTokenDomain'
 export * from './tokens/useTokenNonces'
 export * from './tokens/useTokenPermitSupport'
 export * from './tokens/useTokenPrices'
 export * from './tokens/useTokenPricesAcrossChains'
 export * from './tokens/useTokens'
-export * from './tokens/useTokenVersion'
 
 /**
  * Transaction Hooks
