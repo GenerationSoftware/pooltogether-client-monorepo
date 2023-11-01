@@ -205,7 +205,7 @@ const ModalContent = (props: ModalContentProps) => {
     <>
       {mobileStyle === 'tab' && <ModalTabHandle />}
       {!hideHeader && (
-        <ModalHeader className={headerClassName} onClose={onClose}>
+        <ModalHeader className={headerClassName} onClose={onClose} mobileStyle={mobileStyle}>
           {headerContent}
         </ModalHeader>
       )}
@@ -219,13 +219,20 @@ interface ModalHeaderProps {
   children?: ReactNode
   className?: string
   onClose?: () => void
+  mobileStyle?: MobileStyle
 }
 
 const ModalHeader = (props: ModalHeaderProps) => {
-  const { children, className, onClose } = props
+  const { children, className, onClose, mobileStyle } = props
 
   return (
-    <div className={classNames('w-full flex pb-4 text-pt-purple-50', className)}>
+    <div
+      className={classNames(
+        'w-full flex pb-4 text-pt-purple-50',
+        { 'pt-24 md:pt-0': mobileStyle === 'cover' },
+        className
+      )}
+    >
       {children}
       <XMarkIcon className='h-6 w-6 ml-auto cursor-pointer' onClick={onClose} />
     </div>
