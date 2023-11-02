@@ -37,9 +37,8 @@ export default function PrizesPage() {
         className='hidden w-auto h-24 md:block'
       />
       <PrizePoolDisplay />
-      {/* TODO: add more specific docs link once available */}
       <ExternalLink
-        href={`${LINKS.docs}/protocol/what-makes-pooltogether-v5-different`}
+        href={LINKS.protocolBasicsDocs}
         size='xs'
         className='text-pt-purple-300 md:text-base'
         iconClassName='md:h-5 md:w-5'

@@ -37,11 +37,10 @@ export const VaultsDisclaimer = (props: VaultsDisclaimerProps) => {
         />
       </div>
       <span className='inline-block grow text-xs lg:text-base'>
-        {/* TODO: better links to risks section of docs */}
         {t_vaults.rich('disclaimer', {
           link: (chunks) => (
             <ExternalLink
-              href={LINKS.docs}
+              href={LINKS.risks}
               className='text-xs text-pt-purple-300 lg:text-base'
               iconClassName='!h-4 !w-4'
             >

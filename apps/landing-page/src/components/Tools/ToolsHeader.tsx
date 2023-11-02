@@ -30,7 +30,7 @@ export const ToolsHeader = (props: ToolsHeaderProps) => {
         </div>
         <div className='flex flex-col gap-4 items-center md:flex-row'>
           <Button
-            href={LINKS.tutorials}
+            href={LINKS.toolGuides}
             color='purple'
             size={isMobile ? 'md' : 'lg'}
             fullSized={isMobile}
