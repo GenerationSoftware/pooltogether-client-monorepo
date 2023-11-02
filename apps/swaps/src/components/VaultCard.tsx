@@ -88,6 +88,10 @@ const VaultCardActions = (props: VaultCardActionsProps) => {
       href: `https://app.portals.fi/?inputToken=${network}%3A${zeroAddress}&outputToken=${network}%3A${shareToken.address.toLowerCase()}`,
       text: 'Swap on Portals'
     },
+    'metamask': {
+      href: `https://portfolio.metamask.io/swap?chainId=${shareToken.chainId}&toAddress=${shareToken.address}`,
+      text: 'Swap on MetaMask'
+    },
     'llamaswap': {
       href: `https://swap.defillama.com/?chain=${network}&to=${shareToken.address}`,
       text: 'Swap on Llamaswap'
