@@ -18,7 +18,8 @@ interface AccountWinningsTableProps extends Omit<TableProps, 'data' | 'keyPrefix
 }
 
 export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
-  const { wins, prizePools, className, rounded, ...rest } = props
+  const { wins, prizePools, className, innerClassName, headerClassName, rowClassName, ...rest } =
+    props
 
   const t_common = useTranslations('Common')
   const t_account = useTranslations('Account')
@@ -76,7 +77,11 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
         ),
         position: 'center'
       },
-      info: { content: t_account('winHeaders.moreInfo'), position: 'center' }
+      info: {
+        // TODO: this might not center properly with differently named block explorer buttons
+        content: <span className='w-[186px] text-center'>{t_account('winHeaders.moreInfo')}</span>,
+        position: 'right'
+      }
     },
     rows: sortedWins
       .slice(0, numWins)
@@ -107,7 +112,7 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
               ),
               position: 'center'
             },
-            info: { content: <AccountWinButtons win={win} />, position: 'center' }
+            info: { content: <AccountWinButtons win={win} />, position: 'right' }
           }
           return { id: winId, cells }
         } else {
@@ -120,8 +125,7 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
   return (
     <div
       className={classNames(
-        'w-full flex flex-col bg-pt-bg-purple-dark',
-        { 'rounded-lg': rounded },
+        'w-full flex flex-col bg-pt-bg-purple-dark rounded-t-2xl rounded-b-[2.5rem]',
         className
       )}
     >
@@ -129,7 +133,9 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
         data={tableData}
         keyPrefix='accountWinningsTable'
         className='w-full bg-transparent'
-        rounded={rounded}
+        innerClassName={classNames('!gap-3', innerClassName)}
+        headerClassName={classNames('pl-8 pr-4', headerClassName)}
+        rowClassName={classNames('pl-8 pr-4 py-4 rounded-3xl', rowClassName)}
         {...rest}
       />
       {wins.length > numWins && (

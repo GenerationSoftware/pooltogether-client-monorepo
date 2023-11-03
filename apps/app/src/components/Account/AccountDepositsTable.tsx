@@ -23,7 +23,7 @@ interface AccountDepositsTableProps extends Omit<TableProps, 'data' | 'keyPrefix
 }
 
 export const AccountDepositsTable = (props: AccountDepositsTableProps) => {
-  const { address, className, ...rest } = props
+  const { address, className, innerClassName, headerClassName, rowClassName, ...rest } = props
 
   const t_vaults = useTranslations('Vaults')
   const t_vault = useTranslations('Vault')
@@ -145,7 +145,10 @@ export const AccountDepositsTable = (props: AccountDepositsTableProps) => {
     <Table
       data={{ headers: tableHeaders, rows: tableRows }}
       keyPrefix='accountVaultsTable'
-      className={classNames('w-full', className)}
+      className={classNames('w-full rounded-t-2xl rounded-b-[2.5rem]', className)}
+      innerClassName={classNames('!gap-3', innerClassName)}
+      headerClassName={classNames('px-4', headerClassName)}
+      rowClassName={classNames('!px-4 py-4 rounded-3xl', rowClassName)}
       {...rest}
     />
   )

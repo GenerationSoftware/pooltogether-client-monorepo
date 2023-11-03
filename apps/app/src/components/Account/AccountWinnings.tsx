@@ -82,7 +82,6 @@ export const AccountWinnings = (props: AccountWinningsProps) => {
           <AccountWinningsTable
             wins={flattenedWins}
             prizePools={prizePoolsArray}
-            rounded={true}
             className='hidden mt-8 lg:block'
           />
         )}

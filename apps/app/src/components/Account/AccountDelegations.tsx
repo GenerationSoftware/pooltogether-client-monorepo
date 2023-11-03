@@ -50,11 +50,7 @@ export const AccountDelegations = (props: AccountDelegationsProps) => {
         )}
       >
         <AccountDelegationsHeader address={userAddress} />
-        <AccountDelegationsTable
-          address={userAddress}
-          rounded={true}
-          className='hidden mt-4 lg:block'
-        />
+        <AccountDelegationsTable address={userAddress} className='hidden mt-4 lg:block' />
         <AccountDelegationsCards address={userAddress} className='lg:hidden' />
       </div>
     )

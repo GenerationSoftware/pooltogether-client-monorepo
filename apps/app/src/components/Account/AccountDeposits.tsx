@@ -62,13 +62,7 @@ export const AccountDeposits = (props: AccountDepositsProps) => {
       <AccountDepositsHeader address={userAddress} />
       {isEmpty && !isEmptyVaultLists && !isExternalUser && <NoDepositsCard />}
       {isEmpty && isEmptyVaultLists && <NoVaultListsCard />}
-      {!isEmpty && (
-        <AccountDepositsTable
-          address={userAddress}
-          rounded={true}
-          className='hidden mt-4 lg:block'
-        />
-      )}
+      {!isEmpty && <AccountDepositsTable address={userAddress} className='hidden mt-4 lg:block' />}
       {!isEmpty && <AccountDepositsCards address={userAddress} className='lg:hidden' />}
     </div>
   )

@@ -27,7 +27,7 @@ export default function AccountPage() {
       <CheckPrizesBanner />
       <AccountDeposits />
       <AccountDelegations />
-      <AccountOdds className='-mt-3 lg:-mt-4' />
+      <AccountOdds className='-mt-3 lg:-mt-5' />
       <AccountWinnings />
     </Layout>
   )

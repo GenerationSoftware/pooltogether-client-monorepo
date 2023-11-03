@@ -61,8 +61,8 @@ export const AccountOdds = (props: AccountOddsProps) => {
     return (
       <div
         className={classNames(
-          'w-full max-w-xl flex items-center justify-between px-4 py-1 text-pt-purple-100 rounded-lg',
-          'lg:max-w-none lg:py-6 lg:bg-pt-bg-purple',
+          'w-full max-w-xl flex items-center justify-between px-4 py-1 text-pt-purple-100 rounded-3xl',
+          'lg:max-w-none lg:px-8 lg:py-6 lg:bg-pt-bg-purple',
           className
         )}
       >

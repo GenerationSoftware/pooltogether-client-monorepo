@@ -51,7 +51,7 @@ export const ExternalAccountPageContent = (props: ExternalAccountPageContentProp
       <>
         <AccountDeposits address={userAddress} />
         <AccountDelegations address={userAddress} />
-        <AccountOdds address={userAddress} className='-mt-3 lg:-mt-4' />
+        <AccountOdds address={userAddress} className='-mt-3 lg:-mt-5' />
         <AccountWinnings address={userAddress} />
       </>
     )

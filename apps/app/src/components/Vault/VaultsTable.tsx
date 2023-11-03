@@ -185,8 +185,10 @@ export const VaultsTable = (props: VaultsTableProps) => {
     <Table
       data={tableData}
       keyPrefix='vaultsTable'
-      rounded={true}
-      className={classNames('w-full', className)}
+      className={classNames('w-full rounded-t-2xl rounded-b-[2.5rem]', className)}
+      innerClassName='!gap-3'
+      headerClassName='px-4'
+      rowClassName='!px-4 py-4 rounded-3xl'
       gridColsClassName='grid-cols-[minmax(0,6fr)_repeat(3,minmax(0,4fr))_minmax(0,5fr)]'
     />
   )
