@@ -20,7 +20,7 @@ import {
   SettingsModal,
   WithdrawModal
 } from '@shared/react-components'
-import { Footer, FooterItem, LINKS, Navbar, SocialIcon, Toaster } from '@shared/ui'
+import { ExternalLink, Footer, FooterItem, LINKS, Navbar, SocialIcon, toast } from '@shared/ui'
 import { getDiscordInvite } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
@@ -101,6 +101,31 @@ export const Layout = (props: LayoutProps) => {
 
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
+
+  const temporaryAlerts: { id: string; content: ReactNode }[] = [
+    {
+      id: 'aave-issues-04-11-2023',
+      content: (
+        <span className='flex flex-col gap-1 items-center text-center text-sm'>
+          Aave is currently evaluating a security issue. Deposits will be paused for Prize USDC.e
+          and Prize DAI until further updates. No funds are at risk.{' '}
+          <ExternalLink
+            href='https://fxtwitter.com/aave/status/1720868368331219100'
+            size='sm'
+            className='text-pt-teal'
+          >
+            Read their announcement
+          </ExternalLink>
+        </span>
+      )
+    }
+  ]
+
+  useEffect(() => {
+    temporaryAlerts.forEach((alert) => {
+      toast(alert.content, { id: alert.id })
+    })
+  })
 
   const footerItems: FooterItem[] = [
     {
@@ -269,8 +294,6 @@ export const Layout = (props: LayoutProps) => {
         header={t_common('joinDiscord')}
         onVerify={getDiscordInvite}
       />
-
-      <Toaster />
 
       <VaultListHandler />
 
