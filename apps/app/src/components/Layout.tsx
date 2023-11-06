@@ -106,16 +106,17 @@ export const Layout = (props: LayoutProps) => {
     {
       id: 'aave-issues-04-11-2023',
       content: (
-        <span className='flex flex-col gap-1 items-center text-center text-sm'>
-          Aave is currently evaluating a security issue. Deposits will be paused for Prize USDC.e
-          and Prize DAI until further updates. No funds are at risk.{' '}
+        <span className='text-center text-sm'>
+          Aave has temporarily paused deposits and withdrawals on some assets until{' '}
           <ExternalLink
-            href='https://fxtwitter.com/aave/status/1720868368331219100'
+            href='https://app.aave.com/governance/proposal/?proposalId=358'
             size='sm'
             className='text-pt-teal'
           >
-            Read their announcement
-          </ExternalLink>
+            proposal 358
+          </ExternalLink>{' '}
+          passes, due to a security issue. While no funds are at risk, the Prize USDC.e and Prize
+          DAI vaults will be unavailable in the meantime.
         </span>
       )
     }
