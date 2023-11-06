@@ -5,7 +5,7 @@ import {
   useVaultExchangeRate,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { TokenValueAndAmount } from '@shared/react-components'
+import { TokenAmount, TokenValueAndAmount } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import { getAssetsFromShares } from '@shared/utilities'
 import { Address, formatUnits } from 'viem'
@@ -45,7 +45,15 @@ export const AccountVaultDelegationAmount = (props: AccountVaultDelegationAmount
   }
 
   if (!isFetchedShareBalance || !exchangeRate || !tokenData) {
-    return <>?</>
+    if (!!shareBalance && shareBalance.amount > 0n) {
+      return (
+        <span className='text-xs text-pt-purple-200 md:text-sm'>
+          <TokenAmount token={shareBalance} hideZeroes={true} />
+        </span>
+      )
+    } else {
+      return <>?</>
+    }
   }
 
   if (delegationBalance > 0n) {

@@ -1,6 +1,9 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { useUserVaultTokenBalance } from '@generationsoftware/hyperstructure-react-hooks'
-import { TokenValueAndAmount } from '@shared/react-components'
+import {
+  useUserVaultShareBalance,
+  useUserVaultTokenBalance
+} from '@generationsoftware/hyperstructure-react-hooks'
+import { TokenAmount, TokenValueAndAmount } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
@@ -22,6 +25,8 @@ export const AccountVaultBalance = (props: AccountVaultBalanceProps) => {
     userAddress as Address
   )
 
+  const { data: shareBalance } = useUserVaultShareBalance(vault, userAddress as Address)
+
   if (!userAddress) {
     return <>-</>
   }
@@ -31,7 +36,15 @@ export const AccountVaultBalance = (props: AccountVaultBalanceProps) => {
   }
 
   if (tokenBalance === undefined) {
-    return <>?</>
+    if (!!shareBalance && shareBalance.amount > 0n) {
+      return (
+        <span className='text-xs text-pt-purple-200 md:text-sm'>
+          <TokenAmount token={shareBalance} hideZeroes={true} />
+        </span>
+      )
+    } else {
+      return <>?</>
+    }
   }
 
   if (tokenBalance.amount > 0n) {
