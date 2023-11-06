@@ -8,6 +8,67 @@ import {
 import { getLiquidationPairAddresses } from './liquidations'
 
 /**
+ * Returns `Deposit` events on a given vault
+ * @param publicClient a public Viem client to query through
+ * @param vaultAddress a vault address to get events for
+ * @param options optional settings
+ * @returns
+ */
+export const getDepositEvents = async (
+  publicClient: PublicClient,
+  vaultAddress: Address,
+  options?: { fromBlock?: bigint; toBlock?: bigint }
+) => {
+  return await publicClient.getLogs({
+    address: vaultAddress,
+    event: {
+      inputs: [
+        { indexed: true, internalType: 'address', name: 'sender', type: 'address' },
+        { indexed: true, internalType: 'address', name: 'owner', type: 'address' },
+        { indexed: false, internalType: 'uint256', name: 'assets', type: 'uint256' },
+        { indexed: false, internalType: 'uint256', name: 'shares', type: 'uint256' }
+      ],
+      name: 'Deposit',
+      type: 'event'
+    },
+    fromBlock: options?.fromBlock,
+    toBlock: options?.toBlock ?? 'latest',
+    strict: true
+  })
+}
+
+/**
+ * Returns `Withdraw` events on a given vault
+ * @param publicClient a public Viem client to query through
+ * @param vaultAddress a vault address to get events for
+ * @param options optional settings
+ * @returns
+ */
+export const getWithdrawEvents = async (
+  publicClient: PublicClient,
+  vaultAddress: Address,
+  options?: { fromBlock?: bigint; toBlock?: bigint }
+) => {
+  return await publicClient.getLogs({
+    address: vaultAddress,
+    event: {
+      inputs: [
+        { indexed: true, internalType: 'address', name: 'sender', type: 'address' },
+        { indexed: true, internalType: 'address', name: 'receiver', type: 'address' },
+        { indexed: true, internalType: 'address', name: 'owner', type: 'address' },
+        { indexed: false, internalType: 'uint256', name: 'assets', type: 'uint256' },
+        { indexed: false, internalType: 'uint256', name: 'shares', type: 'uint256' }
+      ],
+      name: 'Withdraw',
+      type: 'event'
+    },
+    fromBlock: options?.fromBlock,
+    toBlock: options?.toBlock ?? 'latest',
+    strict: true
+  })
+}
+
+/**
  * Returns `RelayedToDispatcher` events
  * @param publicClient a public Viem client to query through
  * @param options optional settings
