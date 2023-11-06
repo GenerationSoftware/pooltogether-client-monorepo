@@ -1,5 +1,5 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { useVaultBalance } from '@generationsoftware/hyperstructure-react-hooks'
+import { useVaultBalance, useVaultShareData } from '@generationsoftware/hyperstructure-react-hooks'
 import { TokenAmount, TokenValue } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 
@@ -10,6 +10,8 @@ interface VaultTotalDepositsProps {
 export const VaultTotalDeposits = (props: VaultTotalDepositsProps) => {
   const { vault } = props
 
+  const { data: shareData } = useVaultShareData(vault)
+
   const { data: totalDeposits, isFetched: isFetchedTotalDeposits } = useVaultBalance(vault)
 
   if (!isFetchedTotalDeposits) {
@@ -18,6 +20,10 @@ export const VaultTotalDeposits = (props: VaultTotalDepositsProps) => {
 
   if (totalDeposits === undefined) {
     return <>?</>
+  }
+
+  if (totalDeposits.amount === 0n && !!shareData && shareData.totalSupply > 0n) {
+    return <TokenAmount token={{ ...shareData, amount: shareData.totalSupply }} hideZeroes={true} />
   }
 
   return (

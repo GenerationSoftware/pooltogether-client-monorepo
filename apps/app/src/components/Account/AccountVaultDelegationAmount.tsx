@@ -45,10 +45,10 @@ export const AccountVaultDelegationAmount = (props: AccountVaultDelegationAmount
   }
 
   if (!isFetchedShareBalance || !exchangeRate || !tokenData) {
-    if (!!shareBalance && shareBalance.amount > 0n) {
+    if (!!shareBalance && delegationBalance > 0n) {
       return (
         <span className='text-xs text-pt-purple-200 md:text-sm'>
-          <TokenAmount token={shareBalance} hideZeroes={true} />
+          <TokenAmount token={{ ...shareBalance, amount: delegationBalance }} hideZeroes={true} />
         </span>
       )
     } else {
