@@ -1,1 +1,293 @@
-{}
+{
+  "Common": {
+    "depositToWin": "Депозит для победы",
+    "prizePool": "Призовой фонд {network}",
+    "grandPrize": "Гран-при",
+    "joinDiscord": "Присоединяйтесь к нашему сообществу Discord",
+    "showMore": "Показать еще",
+    "drawId": "Нарисовать #{id}",
+    "manage": "Управление",
+    "deposit": "Депозит",
+    "withdraw": "Вывести",
+    "learnMore": "Подробнее",
+    "back": "Назад",
+    "connectWallet": "Подключить кошелек",
+    "viewTx": "Посмотреть TX",
+    "viewOn": "Посмотреть {name}",
+    "close": "Закрыть",
+    "learnAboutRisks": "Узнайте о рисках",
+    "readDocs": "Читайте документы",
+    "termsOfService": "Условия предоставления услуг"
+  },
+  "Navigation": {
+    "home": "Главная",
+    "prizes": "Призы",
+    "vaults": "Своды",
+    "vault": "Свод",
+    "account": "Счет"
+  },
+  "Home": {
+    "winUpTo": {
+      "beforeValue": "Вносите депозит, чтобы получить ежедневный шанс выиграть до",
+      "afterValue": ""
+    },
+    "withdrawAnyTime": "Вы можете снять весь депозит в любое время"
+  },
+  "Prizes": {
+    "learnMore": "Узнайте больше о том, как работают призы",
+    "switchPrizePool": "Переключение призового фонда",
+    "estPrizeValue": "Оценочная стоимость приза",
+    "estPrizeFreq": "Расчетная частота",
+    "recentWinners": "Последние победители призового фонда",
+    "drawWinners": {
+      "beforeValue": "{numWallets, plural, one {# кошелек} other {# кошельки}} выиграл",
+      "afterValue": {
+        "today": "сегодня",
+        "yesterday": "вчера",
+        "onXDate": "на {date}"
+      },
+      "drawIsOngoing": "Розыгрыш продолжается"
+    },
+    "drawModal": {
+      "drawTotal": {
+        "beforeValue": "В этом розыгрыше на {numWallets} уникальных кошельков было выиграно в общей сложности",
+        "afterValue": "в призы.",
+        "afterValueOngoing": "в призах на сегодняшний день."
+      },
+      "winner": "Победитель",
+      "prize": "Приз",
+      "youWereEligible": "Вы имели право на участие в этом розыгрыше."
+    }
+  },
+  "Vaults": {
+    "filter": "Фильтр",
+    "filters": {
+      "showAll": "Показать все",
+      "inWallet": "В вашем кошельке",
+      "stablecoins": "Стабильные монеты",
+      "allVaultLists": "Все списки хранилищ"
+    },
+    "manageVaultLists": "Управление списками хранилищ",
+    "clearFilters": "Очистить фильтры",
+    "disclaimer": "Призовые хранилища PoolTogether могут быть развернуты любым человеком. <link>Знайте, во что вы вкладываете деньги</link>",
+    "headers": {
+      "token": "Токен",
+      "prizePower": "Призовая сила",
+      "totalDeposits": "Итого депозиты",
+      "yourBalance": "Ваш баланс"
+    }
+  },
+  "Vault": {
+    "headers": {
+      "yourBalance": "Ваш баланс",
+      "yourWinChance": "Ваш шанс на победу",
+      "balance": "Баланс",
+      "winChance": "Шанс на победу",
+      "prizePower": "Призовая сила",
+      "tvl": "TVL",
+      "contributions": "{number}D Взнос в призовой фонд",
+      "depositToken": "Токен депозита",
+      "prizeToken": "Призовой жетон",
+      "delegatedToYou": "Делегирование полномочий",
+      "delegatedAmount": "Делегированная сумма",
+      "vaultFee": "Плата за хранилище",
+      "feeRecipient": "Получатель вознаграждения",
+      "yieldSource": "Источник урожайности"
+    },
+    "returnToVaults": "Вернуться в хранилища",
+    "learnAboutVault": "Узнайте о {vaultName}",
+    "smartContractRisk": "PoolTogether - это протокол без права доступа, который каждый может использовать для развертывания призовых хранилищ. Это призовое хранилище подвергает вас риску смарт-контрактов следующих контрактов:",
+    "vaultContract": "Договор хранения",
+    "yieldSourceContract": "Контракт с источником дохода",
+    "inVaultLists": "Данное хранилище призов находится в следующих выбранных Вами списках хранилищ:",
+    "notInVaultLists": "Данного призового хранилища нет ни в одном из выбранных вами списков хранилищ.",
+    "shortWarningNotInVaultLists": "Внимание! Данного хранилища нет ни в одном из ваших активных списков."
+  },
+  "Account": {
+    "connectWallet": "Подключите свой кошелек для просмотра состояния счета",
+    "noVaultLists": "У вас не выбрано ни одного списка хранилищ.",
+    "noPrizeTokens": "У вас нет призовых жетонов.",
+    "depositNow": "Депозит сейчас.",
+    "yourDeposits": "Ваши депозиты",
+    "yourDelegations": "Делегирование полномочий",
+    "yourWinnings": "Ваши выигрыши",
+    "delegatedTo": "Делегировано <link>{account}</link>",
+    "externalAccountDeposits": "Депозиты {account}",
+    "externalAccountDelegations": "Делегирование полномочий на {account}",
+    "externalAccountWinnings": "Выигрыши {account}",
+    "dailyPrizeOdds": "Ежедневные призовые коэффициенты",
+    "weeklyPrizeOdds": "Еженедельные призовые коэффициенты",
+    "oneInXChance": "1 в {number}",
+    "noPrizesRecently": "В последнее время Вы не выигрывали никаких призов.",
+    "learnHowItWorks": "Узнайте, как работает PoolTogether",
+    "winHeaders": {
+      "date": "Дата",
+      "prizePool": "Призовой фонд",
+      "winnings": "Выигрыши",
+      "moreInfo": "Дополнительная информация"
+    },
+    "prizeChecking": {
+      "eligibleDraws": "Вы имели право на {number, plural, one {# draw} other {# draws}}",
+      "totalPrizes": {
+        "beforeValue": "Итоговый",
+        "afterValue": "в разделе Премии"
+      },
+      "checkPrizes": "Проверка наличия призов",
+      "checking": "Проверка блокчейна...",
+      "noPrizes": "К сожалению, на этот раз призов нет.",
+      "viewAccount": "Просмотр счета",
+      "youWonX": "Вы выиграли",
+      "xWon": "Победа!"
+    }
+  },
+  "TxModals": {
+    "depositTo": "Депозит на {name} в {network}",
+    "depositToShort": "Депозит на имя {name}",
+    "withdrawFrom": "Выйти из{name} в {network}",
+    "withdrawFromShort": "Выйти из{name}",
+    "fees": {
+      "title": "Расчетные сетевые тарифы",
+      "approval": "Утверждение",
+      "deposit": "Депозит",
+      "withdrawal": "Вывод средств"
+    },
+    "dailyChances": "Ежедневные шансы на выигрыш",
+    "weeklyChances": "Еженедельные шансы на выигрыш",
+    "oneInXChance": "1 в{number}",
+    "max": "Макс",
+    "balance": "Баланс:",
+    "enterAnAmount": "Введите сумму",
+    "approvalButton": "Утвердить{symbol}",
+    "exactApprovalButton": "Утвердить точную сумму{symbol}",
+    "exactApprovalTx": "Точное {symbol} Утверждение",
+    "infiniteApprovalButton": "Утвердить неограниченное количество{symbol}",
+    "infiniteApprovalTx": "Бесконечное {symbol} утверждение",
+    "reviewDeposit": "Обзорный депозит",
+    "reviewWithdrawal": "Отзыв отзыва",
+    "confirmDeposit": "Подтвердить депозит",
+    "confirmWithdrawal": "Подтвердить снятие с учета",
+    "depositTx": "{symbol} Депозит",
+    "withdrawTx": "{symbol} Вывод средств",
+    "switchNetwork": "Переключиться на {network}",
+    "switchingNetwork": "Переход на{network}...",
+    "confirmNotice": "Подтверждение транзакции в кошельке",
+    "submissionNotice": "Представленная сделка",
+    "depositing": "Внесение {tokens}...",
+    "withdrawing": "Вывод {tokens}...",
+    "success": "Успехов!",
+    "deposited": "Вы депонировали{tokens}",
+    "withdrew": "Вы отказались от участия{tokens}",
+    "nowEligible": "Теперь вы имеете право участвовать во всех последующих розыгрышах этого пула.",
+    "shareTwitter": "Поделиться в Twitter",
+    "shareWarpcast": "Поделиться на Warpcast",
+    "shareHey": "Поделиться на Эй",
+    "viewAccount": "Просмотр счета",
+    "uhOh": "Ой!",
+    "failedTx": "Что-то пошло не так....",
+    "tryAgain": "Попробуйте еще раз",
+    "risksDisclaimer": "PoolTogether - это протокол без права доступа. Призовые хранилища могут быть развернуты кем угодно. Убедитесь в том, что вы знаете, во что вкладываете деньги. <vaultLink>Узнайте больше об этом призовом хранилище.</vaultLink>",
+    "depositDisclaimer": "Нажимая кнопку \"Подтвердить депозит\", вы соглашаетесь с <tosLink>Условиями обслуживания</tosLink> компании Cabana. Щелкните <vaultLink>здесь</vaultLink>, чтобы узнать больше о хранилище, в которое вы вносите депозит."
+  },
+  "Footer": {
+    "titles": {
+      "getHelp": "Получить помощь",
+      "ecosystem": "Экосистема",
+      "community": "Сообщество",
+      "settings": "Настройки"
+    },
+    "userDocs": "Документы пользователя",
+    "faq": "FAQ",
+    "devDocs": "Документы для разработчиков",
+    "extensions": "Расширения",
+    "governance": "Управление",
+    "security": "Безопасность",
+    "enableTestnets": "Включить тестовые сети",
+    "disableTestnets": "Отключить Testnets"
+  },
+  "Settings": {
+    "customizeExperience": "Настройте свой опыт",
+    "customizeCurrency": "Настройка валюты",
+    "customizeLanguage": "Настройка языка",
+    "changeCurrency": "Изменение валюты",
+    "changeLanguage": "Изменить язык",
+    "viewEcosystem": "Просмотр экосистемы",
+    "manageVaultLists": "Управление списками хранилищ",
+    "getHelp": "Получить помощь",
+    "getHelpWithCabana": "Получить помощь в использовании Cabana",
+    "vaultListsDescription": "Списки хранилищ определяют, какие хранилища призов отображаются в приложении. Будьте осторожны при работе с импортированными списками.",
+    "learnMoreVaultLists": "Подробнее о списках хранилищ",
+    "urlInput": "https:// или ipfs:// или имя ENS",
+    "addVaultList": "Добавить список хранилищ",
+    "clearImportedVaultLists": "Очистить все импортированные списки хранилищ",
+    "numTokens": "{number, plural, one {# Токен} other {# Токен}}",
+    "imported": "Импорт"
+  },
+  "Abbreviations": {
+    "days": "дней",
+    "hours": "часы",
+    "minutes": "мин",
+    "seconds": "сек"
+  },
+  "Frequency": {
+    "daily": "Ежедневно",
+    "everyXdays": "Каждые {number} дней",
+    "everyXweeks": "Каждые {number} недель",
+    "everyXmonths": "Каждые {number} месяцев",
+    "everyXyears": "Каждые {number} лет",
+    "xPrizesDaily": "{number, plural, one {# приз} other {# призы}} ежедневно",
+    "xPrizesWeekly": "{number, plural, one {# приз} other {# призы}} еженедельник",
+    "xPrizesMonthly": "{number, plural, one {# приз} other {# призы}} ежемесячно",
+    "xPrizesYearly": "{number, plural, one {# приз} other {# призы}} ежегодно"
+  },
+  "Tooltips": {
+    "prizePower": "Хранилища с большей призовой силой дают больше шансов на выигрыш",
+    "winChance": "Ваш шанс выиграть приз в любом розыгрыше",
+    "exactApproval": "Вы даете согласие на внесение определенной суммы {symbol}",
+    "infiniteApproval": "При следующем пополнении счета вам не потребуется подтверждать {symbol}",
+    "vaultFee": "Процент доходности, который не идет на выплату призов и определяется развертывателем хранилища",
+    "importedVault": "Данное хранилище относится к следующему импортируемому списку (s):",
+    "vaultContribution": "Сумма {symbol}, внесенная в призовой фонд за последние {days} дней"
+  },
+  "Toasts": {
+    "transactions": {
+      "deposit": "Депозит",
+      "withdrawal": "Вывод средств",
+      "depositing": "Внесение {tokens}...",
+      "withdrawing": "Вывод {tokens}...",
+      "viewOn": "Посмотреть{name}",
+      "success": "Успехов!",
+      "deposited": "Вы внесли {tokens} в {network}",
+      "withdrew": "Вы вывели {tokens} в {network}",
+      "uhOh": "Ой!",
+      "failedTx": "Что-то пошло не так....",
+      "tryAgain": "Попробуйте еще раз"
+    },
+    "vaultListImports": {
+      "importingFrom": "Импорт списка хранилищ из {src}...",
+      "successfulImport": "Успешно импортирован список хранилищ.",
+      "selectedVaultList": "\"{name}\" было добавлено в выбранные вами списки хранилищ.",
+      "failedImport": "При импорте списка хранилищ из {src} что-то пошло не так."
+    }
+  },
+  "Error": {
+    "oops": "Упс!",
+    "noVaultListsEnabled": "Похоже, что у вас не включены действительные списки хранилищ.",
+    "noVaultsMatchingFilters": "Хранилища, соответствующие вашим фильтрам, отсутствуют.",
+    "vaultInvalidNetwork": "Сеть этого хранилища не поддерживается.",
+    "vaultEnableTestnets": "Если вы хотите просмотреть хранилище testnet, убедитесь, что в приведенных ниже настройках включена опция \"Enable Testnets\".",
+    "vaultDisableTestnets": "Если вы хотите просмотреть хранилище основной сети, убедитесь, что в настройках ниже стоит \"Отключить тестовые сети\".",
+    "vaultInvalidInterface": "Это не похоже на действительный адрес хранилища.",
+    "vaultQueryError": "При запросе информации об этом хранилище что-то пошло не так.",
+    "hmmm": "Хммм...",
+    "pageNotFound": "Мы не смогли найти страницу, которую Вы ищете.",
+    "return": "Возвращение в бассейн",
+    "formErrors": {
+      "invalidSrc": "Не является действительным URL или доменом ENS",
+      "invalidVaultList": "Действительный список хранилищ не найден",
+      "notEnoughTokens": "Недостаточно {symbol} в кошельке",
+      "invalidNumber": "Введите действительный номер",
+      "negativeNumber": "Введите положительное число",
+      "tooManyDecimals": "Слишком много десятичных дробей"
+    }
+  }
+}

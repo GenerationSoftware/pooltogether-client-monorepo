@@ -1,1 +1,293 @@
-{}
+{
+  "Common": {
+    "depositToWin": "Einzahlung für Gewinn",
+    "prizePool": "{network} Preis Pool",
+    "grandPrize": "Großer Preis",
+    "joinDiscord": "Tritt unserer Discord Community bei",
+    "showMore": "Mehr anzeigen",
+    "drawId": "Auslosung #{id}",
+    "manage": "Bearbeiten",
+    "deposit": "Einzahlen",
+    "withdraw": "Abheben",
+    "learnMore": "Weitere Informationen",
+    "back": "Zurück",
+    "connectWallet": "Wallet verbinden",
+    "viewTx": "TX anzeigen",
+    "viewOn": "Auf {name} ansehen",
+    "close": "Schließen",
+    "learnAboutRisks": "Erfahre mehr über die Risiken",
+    "readDocs": "Dokumentation lesen",
+    "termsOfService": "Nutzungsbedingungen"
+  },
+  "Navigation": {
+    "home": "Startseite",
+    "prizes": "Preise",
+    "vaults": "Vaults",
+    "vault": "Vault",
+    "account": "Konto"
+  },
+  "Home": {
+    "winUpTo": {
+      "beforeValue": "Einzahlung für eine tägliche Chance auf einen Gewinn von bis zu",
+      "afterValue": ""
+    },
+    "withdrawAnyTime": "Du kannst Deine gesamte Einzahlung jederzeit abheben"
+  },
+  "Prizes": {
+    "learnMore": "Erfahre mehr über die Funktionsweise von Preisen",
+    "switchPrizePool": "Preis Pool wechseln",
+    "estPrizeValue": "Geschätzter Preiswert",
+    "estPrizeFreq": "Geschätzte Häufigkeit",
+    "recentWinners": "Neueste Preis Pool Gewinner",
+    "drawWinners": {
+      "beforeValue": "{numWallets, plural, one {# Wallet} other {# Wallets}} gewonnen",
+      "afterValue": {
+        "today": "heute",
+        "yesterday": "gestern",
+        "onXDate": "am {date}"
+      },
+      "drawIsOngoing": "Auslosung findet gerade statt"
+    },
+    "drawModal": {
+      "drawTotal": {
+        "beforeValue": "In dieser Auslosung betrug der Gesamtgewinn von {numWallets} einzigartige Wallets",
+        "afterValue": "an Preisen.",
+        "afterValueOngoing": "bislang an Preisen."
+      },
+      "winner": "Gewinner",
+      "prize": "Preis",
+      "youWereEligible": "Du warst für diese Auslosung berechtigt."
+    }
+  },
+  "Vaults": {
+    "filter": "Filtern",
+    "filters": {
+      "showAll": "Alle anzeigen",
+      "inWallet": "In Deiner Wallet",
+      "stablecoins": "Stablecoins",
+      "allVaultLists": "Alle Vault Listen"
+    },
+    "manageVaultLists": "Vault Listen bearbeiten",
+    "clearFilters": "Filter löschen",
+    "disclaimer": "PoolTogether Preis Vaults können von jedem erstellt werden. <link>Zahle nur in Dir bekannte Vaults ein</link>",
+    "headers": {
+      "token": "Token",
+      "prizePower": "Preisstärke",
+      "totalDeposits": "Gesamteinzahlungen",
+      "yourBalance": "Dein Kontostand"
+    }
+  },
+  "Vault": {
+    "headers": {
+      "yourBalance": "Dein Kontostand",
+      "yourWinChance": "Deine Gewinnchance",
+      "balance": "Kontostand",
+      "winChance": "Gewinnchance",
+      "prizePower": "Preisstärke",
+      "tvl": "TVL",
+      "contributions": "{number}T Beitrag zum Preis Pool",
+      "depositToken": "Einzahlungstoken",
+      "prizeToken": "Preistoken",
+      "delegatedToYou": "An Dich delegiert",
+      "delegatedAmount": "Delegierter Betrag",
+      "vaultFee": "Vault Gebühr",
+      "feeRecipient": "Gebührenempfänger",
+      "yieldSource": "Yield Quelle"
+    },
+    "returnToVaults": "Zurück zu Vaults",
+    "learnAboutVault": "Erfahre mehr über {vaultName}",
+    "smartContractRisk": "PoolTogether ist ein Protokoll, das jeder ohne Genehmigung verwenden kann, um Preis Vaults bereitzustellen. Dieses Vault setzt Dich dem Smart Contract Risiko der folgenden Verträge aus:",
+    "vaultContract": "Vault Vertrag",
+    "yieldSourceContract": "Vertrag der Yield Quelle",
+    "inVaultLists": "Dieses Preis Vault ist in den folgenden von Dir ausgewählten Listen enthalten:",
+    "notInVaultLists": "Dieses Preis Vault ist in keinen von Dir ausgewählten Listen enthalten.",
+    "shortWarningNotInVaultLists": "Achtung! Dieses Vault ist in keiner Deiner aktiven Listen."
+  },
+  "Account": {
+    "connectWallet": "Verbinde Deine Wallet, um den Status des Kontos anzusehen",
+    "noVaultLists": "Du hast keine Vault Liste ausgewählt.",
+    "noPrizeTokens": "Du besitzt keine Preistoken.",
+    "depositNow": "Zahle jetzt ein.",
+    "yourDeposits": "Deine Einzahlungen",
+    "yourDelegations": "An dich delegiert",
+    "yourWinnings": "Deine Gewinne",
+    "delegatedTo": "Delegiert an <link>{account}</link>",
+    "externalAccountDeposits": "{account}s Einzahlungen",
+    "externalAccountDelegations": "Delegationen an {account}",
+    "externalAccountWinnings": "{account}s Gewinne",
+    "dailyPrizeOdds": "Tägliche Gewinnchancen",
+    "weeklyPrizeOdds": "Wöchentliche Gewinnchancen",
+    "oneInXChance": "1 zu {number}",
+    "noPrizesRecently": "Du hast in letzter Zeit keine Preise gewonnen.",
+    "learnHowItWorks": "Erfahre, wie PoolTogether funktioniert",
+    "winHeaders": {
+      "date": "Datum",
+      "prizePool": "Preis Pool",
+      "winnings": "Gewinne",
+      "moreInfo": "Weitere Informationen"
+    },
+    "prizeChecking": {
+      "eligibleDraws": "Du warst für {number, plural, one {# Auslosung} other {# Auslosungen}} berechtigt",
+      "totalPrizes": {
+        "beforeValue": "Gesamtsumme",
+        "afterValue": "an Preisen"
+      },
+      "checkPrizes": "Auf Preise prüfen",
+      "checking": "Die Blockchain wird überprüft...",
+      "noPrizes": "Es tut uns leid, diesmal keine Preise.",
+      "viewAccount": "Dein Konto anzeigen",
+      "youWonX": "Du hast gewonnen",
+      "xWon": "Gewonnen!"
+    }
+  },
+  "TxModals": {
+    "depositTo": "{name} auf {network} einzahlen",
+    "depositToShort": "Auf {name} einzahlen",
+    "withdrawFrom": "Von {name} auf {network} abheben",
+    "withdrawFromShort": "Von {name} abheben",
+    "fees": {
+      "title": "Geschätzte Netzwerkgebühren",
+      "approval": "Genehmigung",
+      "deposit": "Einzahlung",
+      "withdrawal": "Abhebung"
+    },
+    "dailyChances": "Tägliche Gewinnchance",
+    "weeklyChances": "Wöchentliche Gewinnchance",
+    "oneInXChance": "1 zu {number}",
+    "max": "Max",
+    "balance": "Guthaben:",
+    "enterAnAmount": "Gib eine Anzahl ein",
+    "approvalButton": "{symbol} genehmigen",
+    "exactApprovalButton": "Die genaue Anzahl von {symbol} genehmigen",
+    "exactApprovalTx": "Genaue {symbol} Genehmigung",
+    "infiniteApprovalButton": "Unbegrenzte Anzahl von {symbol} genehmigen",
+    "infiniteApprovalTx": "Unbegrenzte Genehmigung von {symbol}",
+    "reviewDeposit": "Einzahlung überprüfen",
+    "reviewWithdrawal": "Abhebung überprüfen",
+    "confirmDeposit": "Einzahlung bestätigen",
+    "confirmWithdrawal": "Abhebung bestätigen",
+    "depositTx": "{symbol} Einzahlung",
+    "withdrawTx": "{symbol} Abhebung",
+    "switchNetwork": "Zu {network} wechseln",
+    "switchingNetwork": "Wechseln zu {network}...",
+    "confirmNotice": "Transaktion in Wallet bestätigen",
+    "submissionNotice": "Transaktion übermittelt",
+    "depositing": "{tokens} einzahlen...",
+    "withdrawing": "{tokens} abheben...",
+    "success": "Erfolgreich!",
+    "deposited": "Du hast {tokens} eingezahlt",
+    "withdrew": "Du hast {tokens} abgehoben",
+    "nowEligible": "Du bist nun für alle zukünftigen Auslosungen in diesem Pool berechtigt.",
+    "shareTwitter": "Auf Twitter teilen",
+    "shareWarpcast": "Auf Warpcast teilen",
+    "shareHey": "Auf Hey teilen",
+    "viewAccount": "Konto anzeigen",
+    "uhOh": "Oh, oh!",
+    "failedTx": "Etwas ist schiefgelaufen....",
+    "tryAgain": "Versuche es erneut",
+    "risksDisclaimer": "PoolTogether ist ein Protokoll, das jeder ohne Genehmigung verwenden kann, um Preis Vaults bereitzustellen. Vergewissere Dich, dass Du das Vault kennst. <vaultLink>Erfahre mehr über dieses Vault.</vaultLink>",
+    "depositDisclaimer": "Wenn Du auf \"Einzahlung bestätigen\" klickst, stimmst Du den <tosLink>Nutzungsbedingungen</tosLink> von Cabana zu. Klicke <vaultLink>hier</vaultLink>, um mehr über das Vault zu erfahren, in das Du einzahlst."
+  },
+  "Footer": {
+    "titles": {
+      "getHelp": "Hilfe erhalten",
+      "ecosystem": "Ökosystem",
+      "community": "Community",
+      "settings": "Einstellungen"
+    },
+    "userDocs": "Nutzerdokumentation",
+    "faq": "FAQ",
+    "devDocs": "Entwicklerdokumentation",
+    "extensions": "Erweiterungen",
+    "governance": "Governance",
+    "security": "Sicherheit",
+    "enableTestnets": "Testnetze aktivieren",
+    "disableTestnets": "Testnetze deaktivieren"
+  },
+  "Settings": {
+    "customizeExperience": "Passe Deine Umgebung an",
+    "customizeCurrency": "Währung anpassen",
+    "customizeLanguage": "Sprache anpassen",
+    "changeCurrency": "Währung ändern",
+    "changeLanguage": "Sprache ändern",
+    "viewEcosystem": "Ökosystem anzeigen",
+    "manageVaultLists": "Vault Listen bearbeiten",
+    "getHelp": "Hilfe erhalten",
+    "getHelpWithCabana": "Erhalte Hilfe für die Nutzung von Cabana",
+    "vaultListsDescription": "Vault Listen bestimmen, welche Preis Vaults in der App angezeigt werden. Bei Interaktion mit importierten Listen ist Vorsicht geboten.",
+    "learnMoreVaultLists": "Erfahre mehr über Vault Listen",
+    "urlInput": "https:// oder ipfs:// oder ENS Name",
+    "addVaultList": "Vault Liste hinzufügen",
+    "clearImportedVaultLists": "Alle importierten Vault Listen löschen",
+    "numTokens": "{number, plural, one {# Token} other {# Token}}",
+    "imported": "Importiert"
+  },
+  "Abbreviations": {
+    "days": "Tg",
+    "hours": "Std",
+    "minutes": "Min",
+    "seconds": "Sek"
+  },
+  "Frequency": {
+    "daily": "Täglich",
+    "everyXdays": "Alle {number} Tage",
+    "everyXweeks": "Alle {number} Wochen",
+    "everyXmonths": "Alle {number} Monate",
+    "everyXyears": "Alle {number} Jahre",
+    "xPrizesDaily": "{number, plural, one {# Preis} other {# Preise}} täglich",
+    "xPrizesWeekly": "{number, plural, one {# Preis} other {# Preise}} wöchentlich",
+    "xPrizesMonthly": "{number, plural, one {# Preis} other {# Preise}} monatlich",
+    "xPrizesYearly": "{number, plural, one {# Preis} other {# Preise}} jährlich"
+  },
+  "Tooltips": {
+    "prizePower": "Vaults mit größerer Preiskraft geben Dir bessere Gewinnchancen",
+    "winChance": "Deine Chance, einen Preis bei einer beliebigen Auslosung zu gewinnen",
+    "exactApproval": "Du gibst Deine Zustimmung, eine bestimmte Anzahl von {symbol} einzuzahlen",
+    "infiniteApproval": "Du brauchst {symbol} nicht zu genehmigen, wenn Du das nächste Mal einzahlen möchtest",
+    "vaultFee": "Ein Prozentsatz des Yield, der nicht in Preise fließt und vom Vault Ersteller bestimmt wird",
+    "importedVault": "Dieses Vault stammt von der(n) folgenden importierten Liste(n):",
+    "vaultContribution": "Die Gesamtzahl von {symbol} hat in den letzten {days} Tagen zum Preispool beigetragen"
+  },
+  "Toasts": {
+    "transactions": {
+      "deposit": "Einzahlung",
+      "withdrawal": "Abhebung",
+      "depositing": "{tokens} einzahlen...",
+      "withdrawing": "{tokens} abheben...",
+      "viewOn": "Auf {name} ansehen",
+      "success": "Erfolgreich!",
+      "deposited": "Du hast {tokens} auf {network} eingezahlt",
+      "withdrew": "Du hast {tokens} auf {network} abgehoben",
+      "uhOh": "Oh, oh!",
+      "failedTx": "Etwas ist schiefgelaufen....",
+      "tryAgain": "Versuche es erneut"
+    },
+    "vaultListImports": {
+      "importingFrom": "Importiere Vault Liste von {src}...",
+      "successfulImport": "Vault Liste erfolgreich importiert.",
+      "selectedVaultList": "\"{name}\" wurde zu Deinen derzeit ausgewählten Vault Listen hinzugefügt.",
+      "failedImport": "Beim Importieren einer Vault Liste von {src} ist etwas schiefgelaufen."
+    }
+  },
+  "Error": {
+    "oops": "Hoppla!",
+    "noVaultListsEnabled": "Es sieht so aus, als hättest Du keine gültigen Vault Listen aktiviert.",
+    "noVaultsMatchingFilters": "Es gibt keine Vaults, die zu Deinen Filtern passen.",
+    "vaultInvalidNetwork": "Das Netzwerk dieses Vaults wird nicht unterstützt.",
+    "vaultEnableTestnets": "Wenn Du ein Testnetz Vault ansehen möchtest, stelle sicher, dass \"Testnetze aktivieren\" in den nachfolgenden Einstellungen gesetzt ist.",
+    "vaultDisableTestnets": "Wenn Du ein Mainnet Vault ansehen möchtest, stelle sicher, dass \"Testnetze deaktivieren\" in den nachfolgenden Einstellungen gesetzt ist.",
+    "vaultInvalidInterface": "Das sieht nicht wie eine gültige Vault Adresse aus.",
+    "vaultQueryError": "Etwas ist bei der Abfrage der Vault Informationen schiefgelaufen.",
+    "hmmm": "Hmmm...",
+    "pageNotFound": "Die gesuchte Seite konnte nicht gefunden werden.",
+    "return": "Zurück zum Pool",
+    "formErrors": {
+      "invalidSrc": "Keine gültige URL oder ENS Domain",
+      "invalidVaultList": "Keine gültige Vault Liste gefunden",
+      "notEnoughTokens": "Nicht genügend {symbol} in der Wallet",
+      "invalidNumber": "Gib eine gültige Zahl ein",
+      "negativeNumber": "Gib eine positive Zahl ein",
+      "tooManyDecimals": "Zu viele Dezimalstellen"
+    }
+  }
+}
