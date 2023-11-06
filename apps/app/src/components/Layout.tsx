@@ -107,7 +107,8 @@ export const Layout = (props: LayoutProps) => {
       id: 'aave-issues-04-11-2023',
       content: (
         <span className='text-center text-sm'>
-          Aave has temporarily paused deposits and withdrawals on some assets until{' '}
+          Due to a security issue, Aave has temporarily paused deposits and withdrawals on some
+          assets until{' '}
           <ExternalLink
             href='https://app.aave.com/governance/proposal/?proposalId=358'
             size='sm'
@@ -115,8 +116,8 @@ export const Layout = (props: LayoutProps) => {
           >
             proposal 358
           </ExternalLink>{' '}
-          passes, due to a security issue. While no funds are at risk, the Prize USDC.e and Prize
-          DAI vaults will be unavailable in the meantime.
+          passes and is executed (estimated November 10). While no funds are at risk, the Prize
+          USDC.e and Prize DAI vaults will be unavailable in the meantime.
         </span>
       )
     }
