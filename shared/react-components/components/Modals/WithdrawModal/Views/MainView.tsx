@@ -1,10 +1,14 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { useVaultShareData } from '@generationsoftware/hyperstructure-react-hooks'
-import { Intl } from '@shared/types'
+import {
+  useVaultExchangeRate,
+  useVaultShareData
+} from '@generationsoftware/hyperstructure-react-hooks'
+import { Intl, RichIntl } from '@shared/types'
 import { Spinner } from '@shared/ui'
 import { getNiceNetworkNameByChainId } from '@shared/utilities'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 import { WithdrawForm } from '../../../Form/WithdrawForm'
+import { ExchangeRateError } from '../../ExchangeRateError'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 
 interface MainViewProps {
@@ -13,7 +17,13 @@ interface MainViewProps {
     base?: Intl<'withdrawFrom' | 'withdrawFromShort' | 'balance' | 'max'>
     common?: Intl<'prizePool'>
     fees?: NetworkFeesProps['intl']
-    formErrors?: Intl<'notEnoughTokens' | 'invalidNumber' | 'negativeNumber' | 'tooManyDecimals'>
+    errors?: RichIntl<
+      | 'exchangeRateError'
+      | 'formErrors.notEnoughTokens'
+      | 'formErrors.invalidNumber'
+      | 'formErrors.negativeNumber'
+      | 'formErrors.tooManyDecimals'
+    >
   }
 }
 
@@ -21,6 +31,8 @@ export const MainView = (props: MainViewProps) => {
   const { vault, intl } = props
 
   const { data: shareData } = useVaultShareData(vault)
+
+  const { data: vaultExchangeRate } = useVaultExchangeRate(vault)
 
   const vaultName = vault.name ?? `"${shareData?.name}"`
   const networkName = getNiceNetworkNameByChainId(vault.chainId)
@@ -47,8 +59,14 @@ export const MainView = (props: MainViewProps) => {
         intl={intl?.common}
         className='!py-1 mx-auto'
       />
-      <WithdrawForm vault={vault} showInputInfoRows={true} intl={intl} />
-      <NetworkFees vault={vault} show={['withdraw']} intl={intl?.fees} />
+      {!!vaultExchangeRate ? (
+        <>
+          <WithdrawForm vault={vault} showInputInfoRows={true} intl={intl} />
+          <NetworkFees vault={vault} show={['withdraw']} intl={intl?.fees} />
+        </>
+      ) : (
+        <ExchangeRateError vault={vault} intl={intl?.errors} />
+      )}
     </div>
   )
 }

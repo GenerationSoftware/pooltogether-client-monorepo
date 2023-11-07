@@ -23,7 +23,12 @@ export interface DepositFormProps {
   showInputInfoRows?: boolean
   intl?: {
     base?: Intl<'balance' | 'max'>
-    formErrors?: Intl<'notEnoughTokens' | 'invalidNumber' | 'negativeNumber' | 'tooManyDecimals'>
+    errors?: Intl<
+      | 'formErrors.notEnoughTokens'
+      | 'formErrors.invalidNumber'
+      | 'formErrors.negativeNumber'
+      | 'formErrors.tooManyDecimals'
+    >
   }
 }
 
@@ -151,7 +156,9 @@ export const DepositForm = (props: DepositFormProps) => {
                   parseFloat(formatUnits(tokenBalance, decimals)) >= parseFloat(v) ||
                   !isFetchedTokenBalance ||
                   !tokenWithAmount ||
-                  (intl?.formErrors?.('notEnoughTokens', { symbol: vaultToken?.symbol ?? '?' }) ??
+                  (intl?.errors?.('formErrors.notEnoughTokens', {
+                    symbol: vaultToken?.symbol ?? '?'
+                  }) ??
                     `Not enough ${vaultToken?.symbol ?? '?'} in wallet`)
               }}
               onChange={handleTokenAmountChange}

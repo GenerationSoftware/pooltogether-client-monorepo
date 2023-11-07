@@ -19,7 +19,7 @@ export interface TxFormInputProps {
   onChange?: (v: string) => void
   showInfoRow?: boolean
   showMaxButton?: boolean
-  intl?: { base?: Intl<'balance' | 'max'>; formErrors?: InputProps['intl'] }
+  intl?: { base?: Intl<'balance' | 'max'>; errors?: InputProps['intl'] }
   className?: string
 }
 
@@ -84,7 +84,7 @@ export const TxFormInput = (props: TxFormInputProps) => {
           validate={validate}
           disabled={disabled}
           onChange={onChange}
-          intl={intl?.formErrors}
+          intl={intl?.errors}
         />
         <div className='flex shrink-0 items-center gap-1'>
           <TokenIcon token={token} />
@@ -120,7 +120,9 @@ interface InputProps {
   validate?: { [rule: string]: (v: any) => true | string }
   disabled?: boolean
   onChange?: (v: string) => void
-  intl?: Intl<'invalidNumber' | 'negativeNumber' | 'tooManyDecimals'>
+  intl?: Intl<
+    'formErrors.invalidNumber' | 'formErrors.negativeNumber' | 'formErrors.tooManyDecimals'
+  >
 }
 
 const Input = (props: InputProps) => {
@@ -130,13 +132,13 @@ const Input = (props: InputProps) => {
 
   const basicValidation: { [rule: string]: (v: any) => true | string } = {
     isValidNumber: (v) =>
-      !Number.isNaN(Number(v)) || (intl?.('invalidNumber') ?? 'Enter a valid number'),
+      !Number.isNaN(Number(v)) || (intl?.('formErrors.invalidNumber') ?? 'Enter a valid number'),
     isGreaterThanOrEqualToZero: (v) =>
-      parseFloat(v) >= 0 || (intl?.('negativeNumber') ?? 'Enter a positive number'),
+      parseFloat(v) >= 0 || (intl?.('formErrors.negativeNumber') ?? 'Enter a positive number'),
     isNotTooPrecise: (v) =>
       v.split('.').length < 2 ||
       v.split('.')[1].length <= decimals ||
-      (intl?.('tooManyDecimals') ?? 'Too many decimals')
+      (intl?.('formErrors.tooManyDecimals') ?? 'Too many decimals')
   }
 
   return (

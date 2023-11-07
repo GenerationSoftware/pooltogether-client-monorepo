@@ -1,16 +1,18 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useTokenPermitSupport,
+  useVaultExchangeRate,
   useVaultShareData,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { Intl } from '@shared/types'
+import { Intl, RichIntl } from '@shared/types'
 import { Spinner } from '@shared/ui'
 import { getNiceNetworkNameByChainId } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { Address } from 'viem'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 import { DepositForm, depositFormShareAmountAtom } from '../../../Form/DepositForm'
+import { ExchangeRateError } from '../../ExchangeRateError'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
 
@@ -23,7 +25,13 @@ interface MainViewProps {
     >
     common?: Intl<'prizePool'>
     fees?: NetworkFeesProps['intl']
-    formErrors?: Intl<'notEnoughTokens' | 'invalidNumber' | 'negativeNumber' | 'tooManyDecimals'>
+    errors?: RichIntl<
+      | 'exchangeRateError'
+      | 'formErrors.notEnoughTokens'
+      | 'formErrors.invalidNumber'
+      | 'formErrors.negativeNumber'
+      | 'formErrors.tooManyDecimals'
+    >
   }
 }
 
@@ -37,6 +45,8 @@ export const MainView = (props: MainViewProps) => {
     tokenData?.chainId as number,
     tokenData?.address as Address
   )
+
+  const { data: vaultExchangeRate } = useVaultExchangeRate(vault)
 
   const formShareAmount = useAtomValue(depositFormShareAmountAtom)
 
@@ -70,12 +80,18 @@ export const MainView = (props: MainViewProps) => {
         intl={intl?.common}
         className='!py-1 mx-auto'
       />
-      <DepositForm vault={vault} showInputInfoRows={true} intl={intl} />
-      {!!formShareAmount && (
-        <div className='flex flex-col gap-4 mx-auto md:flex-row md:gap-9'>
-          <Odds vault={vault} prizePool={prizePool} intl={intl?.base} />
-          <NetworkFees vault={vault} show={feesToShow} intl={intl?.fees} />
-        </div>
+      {!!vaultExchangeRate ? (
+        <>
+          <DepositForm vault={vault} showInputInfoRows={true} intl={intl} />
+          {!!formShareAmount && (
+            <div className='flex flex-col gap-4 mx-auto md:flex-row md:gap-9'>
+              <Odds vault={vault} prizePool={prizePool} intl={intl?.base} />
+              <NetworkFees vault={vault} show={feesToShow} intl={intl?.fees} />
+            </div>
+          )}
+        </>
+      ) : (
+        <ExchangeRateError vault={vault} intl={intl?.errors} />
       )}
     </div>
   )

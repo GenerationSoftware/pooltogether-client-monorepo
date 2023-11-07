@@ -57,7 +57,7 @@ export const Layout = (props: LayoutProps) => {
   const t_txToasts = useTranslations('Toasts.transactions')
   const t_tooltips = useTranslations('Tooltips')
   const t_drawModal = useTranslations('Prizes.drawModal')
-  const t_formErrors = useTranslations('Error.formErrors')
+  const t_errors = useTranslations('Error')
   const t_prizeChecking = useTranslations('Account.prizeChecking')
 
   const { setIsModalOpen: setIsSettingsModalOpen } = useIsModalOpen(MODAL_KEYS.settings)
@@ -243,7 +243,7 @@ export const Layout = (props: LayoutProps) => {
         setView={setSettingsModalView}
         locales={['en', 'de', 'ru']}
         localVaultLists={DEFAULT_VAULT_LISTS}
-        intl={{ base: t_settings, forms: t_formErrors }}
+        intl={{ base: t_settings, errors: t_errors }}
       />
 
       <DepositModal
@@ -259,7 +259,7 @@ export const Layout = (props: LayoutProps) => {
           fees: t_txFees,
           tooltips: t_tooltips,
           txToast: t_txToasts,
-          formErrors: t_formErrors
+          errors: t_errors
         }}
       />
 
@@ -275,7 +275,7 @@ export const Layout = (props: LayoutProps) => {
           fees: t_txFees,
           tooltips: t_tooltips,
           txToast: t_txToasts,
-          formErrors: t_formErrors
+          errors: t_errors
         }}
       />
 

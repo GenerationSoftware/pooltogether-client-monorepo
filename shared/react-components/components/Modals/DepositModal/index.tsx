@@ -2,6 +2,7 @@ import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useSelectedVault,
   useTokenPermitSupport,
+  useVaultExchangeRate,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
@@ -73,7 +74,13 @@ export interface DepositModalProps {
     fees?: NetworkFeesProps['intl']
     tooltips?: Intl<'exactApproval' | 'infiniteApproval'>
     txToast?: DepositTxToastProps['intl']
-    formErrors?: Intl<'notEnoughTokens' | 'invalidNumber' | 'negativeNumber' | 'tooManyDecimals'>
+    errors?: RichIntl<
+      | 'exchangeRateError'
+      | 'formErrors.notEnoughTokens'
+      | 'formErrors.invalidNumber'
+      | 'formErrors.negativeNumber'
+      | 'formErrors.tooManyDecimals'
+    >
   }
 }
 
@@ -105,6 +112,8 @@ export const DepositModal = (props: DepositModalProps) => {
     tokenData?.chainId as number,
     tokenData?.address as Address
   )
+
+  const { data: vaultExchangeRate } = useVaultExchangeRate(vault as Vault)
 
   const prizePool = useMemo(() => {
     if (!!vault) {
@@ -151,44 +160,46 @@ export const DepositModal = (props: DepositModalProps) => {
       error: <ErrorView setModalView={setView} intl={intl?.base} />
     }
 
+    const modalFooterContent = !!vaultExchangeRate ? (
+      <div
+        className={classNames('flex flex-col items-center gap-6', {
+          hidden: view !== 'main' && view !== 'review'
+        })}
+      >
+        {view === 'main' && !formShareAmount && <RisksDisclaimer vault={vault} intl={intl} />}
+        {tokenPermitSupport === 'eip2612' ? (
+          <DepositWithPermitTxButton
+            vault={vault}
+            modalView={view}
+            setModalView={setView}
+            setDepositTxHash={setDepositTxHash}
+            openConnectModal={openConnectModal}
+            openChainModal={openChainModal}
+            addRecentTransaction={addRecentTransaction}
+            refetchUserBalances={refetchUserBalances}
+            intl={intl}
+          />
+        ) : (
+          <DepositTxButton
+            vault={vault}
+            modalView={view}
+            setModalView={setView}
+            setDepositTxHash={setDepositTxHash}
+            openConnectModal={openConnectModal}
+            openChainModal={openChainModal}
+            addRecentTransaction={addRecentTransaction}
+            refetchUserBalances={refetchUserBalances}
+            intl={intl}
+          />
+        )}
+        {view === 'review' && <DepositDisclaimer vault={vault} intl={intl?.base} />}
+      </div>
+    ) : undefined
+
     return (
       <Modal
         bodyContent={modalViews[view]}
-        footerContent={
-          <div
-            className={classNames('flex flex-col items-center gap-6', {
-              hidden: view !== 'main' && view !== 'review'
-            })}
-          >
-            {view === 'main' && !formShareAmount && <RisksDisclaimer vault={vault} intl={intl} />}
-            {tokenPermitSupport === 'eip2612' ? (
-              <DepositWithPermitTxButton
-                vault={vault}
-                modalView={view}
-                setModalView={setView}
-                setDepositTxHash={setDepositTxHash}
-                openConnectModal={openConnectModal}
-                openChainModal={openChainModal}
-                addRecentTransaction={addRecentTransaction}
-                refetchUserBalances={refetchUserBalances}
-                intl={intl}
-              />
-            ) : (
-              <DepositTxButton
-                vault={vault}
-                modalView={view}
-                setModalView={setView}
-                setDepositTxHash={setDepositTxHash}
-                openConnectModal={openConnectModal}
-                openChainModal={openChainModal}
-                addRecentTransaction={addRecentTransaction}
-                refetchUserBalances={refetchUserBalances}
-                intl={intl}
-              />
-            )}
-            {view === 'review' && <DepositDisclaimer vault={vault} intl={intl?.base} />}
-          </div>
-        }
+        footerContent={modalFooterContent}
         onClose={handleClose}
         label='deposit-flow'
         hideHeader={true}

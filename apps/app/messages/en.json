@@ -281,6 +281,7 @@
     "hmmm": "Hmmm...",
     "pageNotFound": "We couldn't find the page you're looking for.",
     "return": "Return to the Pool",
+    "exchangeRateError": "Something went wrong while calculating exchange rates for this vault. You can still swap in or out of this vault through an exchange or exchange aggregator (<link>Uniswap</link> for example).",
     "formErrors": {
       "invalidSrc": "Not a valid URL or ENS domain",
       "invalidVaultList": "No valid vault list found",

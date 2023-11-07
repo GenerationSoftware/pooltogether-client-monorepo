@@ -23,7 +23,12 @@ export interface WithdrawFormProps {
   showInputInfoRows?: boolean
   intl?: {
     base?: Intl<'balance' | 'max'>
-    formErrors?: Intl<'notEnoughTokens' | 'invalidNumber' | 'negativeNumber' | 'tooManyDecimals'>
+    errors?: Intl<
+      | 'formErrors.notEnoughTokens'
+      | 'formErrors.invalidNumber'
+      | 'formErrors.negativeNumber'
+      | 'formErrors.tooManyDecimals'
+    >
   }
 }
 
@@ -151,7 +156,9 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
                   parseFloat(formatUnits(shareBalance, decimals)) >= parseFloat(v) ||
                   !isFetchedVaultBalance ||
                   !vaultBalance ||
-                  (intl?.formErrors?.('notEnoughTokens', { symbol: shareToken?.symbol ?? '?' }) ??
+                  (intl?.errors?.('formErrors.notEnoughTokens', {
+                    symbol: shareToken?.symbol ?? '?'
+                  }) ??
                     `Not enough ${shareToken?.symbol ?? '?'} in wallet`)
               }}
               onChange={handleShareAmountChange}

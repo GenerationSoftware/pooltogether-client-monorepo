@@ -26,7 +26,7 @@ interface VaultListViewProps {
       | 'numTokens'
       | 'imported'
     >
-    forms?: Intl<'invalidSrc' | 'invalidVaultList'>
+    errors?: Intl<'formErrors.invalidSrc' | 'formErrors.invalidVaultList'>
   }
 }
 
@@ -116,7 +116,7 @@ const Header = (props: HeaderProps) => {
 interface ImportVaultListFormProps {
   intl?: {
     base?: Intl<'urlInput' | 'addVaultList'>
-    forms?: Intl<'invalidSrc' | 'invalidVaultList'>
+    errors?: Intl<'formErrors.invalidSrc' | 'formErrors.invalidVaultList'>
   }
 }
 
@@ -159,12 +159,12 @@ const ImportVaultListForm = (props: ImportVaultListFormProps) => {
         reset()
       } else {
         setError('src', {
-          message: intl?.forms?.('invalidVaultList') ?? 'No valid vault list found'
+          message: intl?.errors?.('formErrors.invalidVaultList') ?? 'No valid vault list found'
         })
       }
     } catch (err) {
       setError('src', {
-        message: intl?.forms?.('invalidVaultList') ?? 'No valid vault list found'
+        message: intl?.errors?.('formErrors.invalidVaultList') ?? 'No valid vault list found'
       })
     } finally {
       setIsImporting(false)
@@ -183,7 +183,7 @@ const ImportVaultListForm = (props: ImportVaultListFormProps) => {
                 v.startsWith('ipfs://') ||
                 v.startsWith('ipns://') ||
                 v.endsWith('.eth') ||
-                (intl?.forms?.('invalidSrc') ?? 'Not a valid URL or ENS domain')
+                (intl?.errors?.('formErrors.invalidSrc') ?? 'Not a valid URL or ENS domain')
             }
           })}
           id='vaultListInput'

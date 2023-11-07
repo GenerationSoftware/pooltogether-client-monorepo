@@ -1,4 +1,8 @@
-import { useSelectedVault } from '@generationsoftware/hyperstructure-react-hooks'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
+import {
+  useSelectedVault,
+  useVaultExchangeRate
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Intl, RichIntl } from '@shared/types'
 import { Modal } from '@shared/ui'
@@ -51,7 +55,13 @@ export interface WithdrawModalProps {
     fees?: NetworkFeesProps['intl']
     tooltips?: Intl<'exactApproval' | 'infiniteApproval'>
     txToast?: WithdrawTxToastProps['intl']
-    formErrors?: Intl<'notEnoughTokens' | 'invalidNumber' | 'negativeNumber' | 'tooManyDecimals'>
+    errors?: RichIntl<
+      | 'exchangeRateError'
+      | 'formErrors.notEnoughTokens'
+      | 'formErrors.invalidNumber'
+      | 'formErrors.negativeNumber'
+      | 'formErrors.tooManyDecimals'
+    >
   }
 }
 
@@ -74,6 +84,8 @@ export const WithdrawModal = (props: WithdrawModalProps) => {
   const [withdrawTxHash, setWithdrawTxHash] = useState<string>()
 
   const formTokenAmount = useAtomValue(withdrawFormTokenAmountAtom)
+
+  const { data: vaultExchangeRate } = useVaultExchangeRate(vault as Vault)
 
   const createToast = () => {
     if (!!vault && !!withdrawTxHash && view === 'confirming') {
@@ -119,28 +131,30 @@ export const WithdrawModal = (props: WithdrawModalProps) => {
       error: <ErrorView setModalView={setView} intl={intl?.base} />
     }
 
+    const modalFooterContent = !!vaultExchangeRate ? (
+      <div
+        className={classNames('flex flex-col items-center gap-6', {
+          hidden: view !== 'main' && view !== 'review'
+        })}
+      >
+        <WithdrawTxButton
+          vault={vault}
+          modalView={view}
+          setModalView={setView}
+          setWithdrawTxHash={setWithdrawTxHash}
+          openConnectModal={openConnectModal}
+          openChainModal={openChainModal}
+          addRecentTransaction={addRecentTransaction}
+          refetchUserBalances={refetchUserBalances}
+          intl={intl}
+        />
+      </div>
+    ) : undefined
+
     return (
       <Modal
         bodyContent={modalViews[view]}
-        footerContent={
-          <div
-            className={classNames('flex flex-col items-center gap-6', {
-              hidden: view !== 'main' && view !== 'review'
-            })}
-          >
-            <WithdrawTxButton
-              vault={vault}
-              modalView={view}
-              setModalView={setView}
-              setWithdrawTxHash={setWithdrawTxHash}
-              openConnectModal={openConnectModal}
-              openChainModal={openChainModal}
-              addRecentTransaction={addRecentTransaction}
-              refetchUserBalances={refetchUserBalances}
-              intl={intl}
-            />
-          </div>
-        }
+        footerContent={modalFooterContent}
         onClose={handleClose}
         label='withdraw-flow'
         hideHeader={true}
