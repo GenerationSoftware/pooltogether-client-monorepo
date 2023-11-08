@@ -161,9 +161,12 @@ export const VaultsTable = (props: VaultsTableProps) => {
           },
           prizeYield: {
             content: (
-              <span className='text-xl font-semibold text-pt-purple-400'>
-                <VaultPrizeYield vault={vault} />
-              </span>
+              <VaultPrizeYield
+                vault={vault}
+                label='APR'
+                valueClassName='text-xl font-semibold text-pt-purple-100'
+                labelClassName='text-sm text-pt-purple-400'
+              />
             ),
             position: 'center'
           },

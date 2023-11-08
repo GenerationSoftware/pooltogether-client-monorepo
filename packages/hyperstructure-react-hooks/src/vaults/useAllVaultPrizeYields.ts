@@ -1,10 +1,13 @@
 import { PrizePool, Vaults } from '@generationsoftware/hyperstructure-client-js'
+import { SECONDS_PER_YEAR } from '@shared/utilities'
 import { useMemo } from 'react'
 import { formatUnits } from 'viem'
 import {
-  useAllVaultPercentageContributions,
+  useAllVaultContributionAmounts,
   useAllVaultSharePrices,
-  useAllVaultTotalSupplyTwabs
+  useAllVaultTotalSupplyTwabs,
+  useDrawPeriod,
+  usePrizeTokenPrice
 } from '..'
 
 /**
@@ -22,10 +25,10 @@ export const useAllVaultPrizeYields = (
   }
 ) => {
   const {
-    data: percentageContributions,
-    isFetched: isFetchedPercentageContributions,
-    refetch: refetchPercentageContributions
-  } = useAllVaultPercentageContributions([prizePool], vaults, options?.numDraws)
+    data: vaultContributions,
+    isFetched: isFetchedVaultContributions,
+    refetch: refetchVaultContributions
+  } = useAllVaultContributionAmounts([prizePool], vaults, options?.numDraws)
 
   const {
     data: totalSupplyTwabs,
@@ -36,35 +39,62 @@ export const useAllVaultPrizeYields = (
   const { data: allShareTokens, isFetched: isFetchedAllShareTokens } =
     useAllVaultSharePrices(vaults)
 
+  const { data: prizeToken, isFetched: isFetchedPrizeToken } = usePrizeTokenPrice(prizePool)
+
+  const { data: drawPeriod, isFetched: isFetchedDrawPeriod } = useDrawPeriod(prizePool)
+
   const data = useMemo(() => {
     const prizeYields: { [vaultId: string]: number } = {}
 
-    if (!!percentageContributions && !!totalSupplyTwabs && !!allShareTokens) {
-      Object.entries(percentageContributions).forEach(([vaultId, percentageContribution]) => {
+    if (
+      !!vaultContributions &&
+      !!totalSupplyTwabs &&
+      !!allShareTokens &&
+      !!prizeToken &&
+      !!drawPeriod
+    ) {
+      Object.entries(vaultContributions).forEach(([vaultId, vaultContribution]) => {
         const totalSupplyTwab = totalSupplyTwabs[vaultId]
         const shareToken = allShareTokens[vaultId]
+        const yearlyDraws = SECONDS_PER_YEAR / drawPeriod
 
-        if (percentageContribution === 0 || totalSupplyTwab === 0n || shareToken?.price === 0) {
+        if (
+          vaultContribution === 0n ||
+          totalSupplyTwab === 0n ||
+          shareToken?.price === 0 ||
+          prizeToken.price === 0
+        ) {
           prizeYields[vaultId] = 0
-        } else if (!!percentageContribution && !!totalSupplyTwab && !!shareToken?.price) {
-          const supply = parseFloat(formatUnits(totalSupplyTwab, shareToken.decimals))
-          const tvl = supply * shareToken.price
+        } else if (
+          !!vaultContribution &&
+          !!totalSupplyTwab &&
+          !!shareToken?.price &&
+          !!prizeToken.price
+        ) {
+          const yearlyContribution =
+            parseFloat(formatUnits(vaultContribution, prizeToken.decimals)) *
+            (yearlyDraws / (options?.numDraws ?? 7))
+          const yearlyContributionValue = yearlyContribution * prizeToken.price
+          const tvl =
+            parseFloat(formatUnits(totalSupplyTwab, shareToken.decimals)) * shareToken.price
 
-          if (tvl >= 1) {
-            prizeYields[vaultId] = percentageContribution / tvl
-          }
+          prizeYields[vaultId] = (yearlyContributionValue / tvl) * 100
         }
       })
     }
 
     return prizeYields
-  }, [percentageContributions, totalSupplyTwabs, allShareTokens])
+  }, [vaultContributions, totalSupplyTwabs, allShareTokens, prizeToken, drawPeriod])
 
   const isFetched =
-    isFetchedPercentageContributions && isFetchedTotalSupplyTwabs && isFetchedAllShareTokens
+    isFetchedVaultContributions &&
+    isFetchedTotalSupplyTwabs &&
+    isFetchedAllShareTokens &&
+    isFetchedPrizeToken &&
+    isFetchedDrawPeriod
 
   const refetch = () => {
-    refetchPercentageContributions()
+    refetchVaultContributions()
     refetchTotalSupplyTwabs()
   }
 

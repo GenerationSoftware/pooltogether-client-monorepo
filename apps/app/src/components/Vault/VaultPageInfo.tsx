@@ -117,7 +117,9 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
             />
           </span>
         }
-        data={<VaultPrizeYield vault={vault} />}
+        data={
+          <VaultPrizeYield vault={vault} label='APR' labelClassName='text-sm text-pt-purple-200' />
+        }
       />
       <VaultInfoRow name={t_vault('headers.tvl')} data={<VaultTotalDeposits vault={vault} />} />
       {!!prizeToken && (

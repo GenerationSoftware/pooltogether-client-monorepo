@@ -2,14 +2,19 @@ import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useVaultPrizeYield } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import { formatNumberForDisplay } from '@shared/utilities'
+import classNames from 'classnames'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 
 interface VaultPrizeYieldProps {
   vault: Vault
+  label?: string
+  className?: string
+  valueClassName?: string
+  labelClassName?: string
 }
 
 export const VaultPrizeYield = (props: VaultPrizeYieldProps) => {
-  const { vault } = props
+  const { vault, label, className, valueClassName, labelClassName } = props
 
   const prizePools = useSupportedPrizePools()
 
@@ -29,10 +34,13 @@ export const VaultPrizeYield = (props: VaultPrizeYieldProps) => {
     return <>?</>
   }
 
-  const formattedPrizeYield = formatNumberForDisplay(
-    prizeYield * 10_000_000 - ((prizeYield * 10_000_000) % 100),
-    { maximumFractionDigits: 0 }
+  return (
+    <div className={classNames('inline-flex gap-1 items-center', className)}>
+      <span className={valueClassName}>
+        {formatNumberForDisplay(prizeYield, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
+        %
+      </span>
+      <span className={labelClassName}>{label}</span>
+    </div>
   )
-
-  return <>{formattedPrizeYield}</>
 }

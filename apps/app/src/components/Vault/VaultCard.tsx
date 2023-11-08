@@ -55,9 +55,12 @@ export const VaultCard = (props: VaultCardProps) => {
               className='text-xs'
             />
           </span>
-          <span className='text-sm'>
-            <VaultPrizeYield vault={vault} />
-          </span>
+          <VaultPrizeYield
+            vault={vault}
+            label='APR'
+            valueClassName='text-sm'
+            labelClassName='text-xs text-pt-purple-200'
+          />
         </div>
         <div className='flex items-center justify-between'>
           <span className='text-xs text-pt-purple-200'>{t_vaults('headers.totalDeposits')}</span>
