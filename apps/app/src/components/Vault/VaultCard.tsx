@@ -1,6 +1,6 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useUserVaultTokenBalance } from '@generationsoftware/hyperstructure-react-hooks'
-import { ImportedVaultTooltip, PrizePowerTooltip, VaultBadge } from '@shared/react-components'
+import { ImportedVaultTooltip, PrizeYieldTooltip, VaultBadge } from '@shared/react-components'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { Address } from 'viem'
@@ -8,7 +8,7 @@ import { useAccount } from 'wagmi'
 import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
 import { useVaultImportedListSrcs } from '@hooks/useVaultImportedListSrcs'
 import { VaultButtons } from './VaultButtons'
-import { VaultPrizePower } from './VaultPrizePower'
+import { VaultPrizeYield } from './VaultPrizeYield'
 import { VaultTotalDeposits } from './VaultTotalDeposits'
 
 interface VaultCardProps {
@@ -49,14 +49,14 @@ export const VaultCard = (props: VaultCardProps) => {
         )}
         <div className='flex items-center justify-between'>
           <span className='flex gap-1 items-center text-xs text-pt-purple-200'>
-            {t_vaults('headers.prizePower')}
-            <PrizePowerTooltip
-              intl={{ text: t_tooltips('prizePower'), learnMore: t_common('learnMore') }}
+            {t_vaults('headers.prizeYield')}
+            <PrizeYieldTooltip
+              intl={{ text: t_tooltips('prizeYield'), learnMore: t_common('learnMore') }}
               className='text-xs'
             />
           </span>
           <span className='text-sm'>
-            <VaultPrizePower vault={vault} />
+            <VaultPrizeYield vault={vault} />
           </span>
         </div>
         <div className='flex items-center justify-between'>

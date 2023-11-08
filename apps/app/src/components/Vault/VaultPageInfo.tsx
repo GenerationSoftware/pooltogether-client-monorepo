@@ -10,7 +10,7 @@ import {
 } from '@generationsoftware/hyperstructure-react-hooks'
 import {
   NetworkIcon,
-  PrizePowerTooltip,
+  PrizeYieldTooltip,
   VaultContributionsTooltip,
   VaultFeeTooltip,
   WinChanceTooltip
@@ -30,7 +30,7 @@ import { CopyButton } from '@components/CopyButton'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { VaultContributions } from './VaultContributions'
 import { VaultFeePercentage } from './VaultFeePercentage'
-import { VaultPrizePower } from './VaultPrizePower'
+import { VaultPrizeYield } from './VaultPrizeYield'
 import { VaultTotalDeposits } from './VaultTotalDeposits'
 
 interface VaultPageInfoProps {
@@ -108,16 +108,16 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
       <VaultInfoRow
         name={
           <span className='flex gap-2 items-center'>
-            {t_vault('headers.prizePower')}
-            <PrizePowerTooltip
+            {t_vault('headers.prizeYield')}
+            <PrizeYieldTooltip
               iconSize='sm'
-              intl={{ text: t_tooltips('prizePower'), learnMore: t_common('learnMore') }}
+              intl={{ text: t_tooltips('prizeYield'), learnMore: t_common('learnMore') }}
               className='text-sm md:text-base'
               iconClassName='text-pt-purple-200'
             />
           </span>
         }
-        data={<VaultPrizePower vault={vault} />}
+        data={<VaultPrizeYield vault={vault} />}
       />
       <VaultInfoRow name={t_vault('headers.tvl')} data={<VaultTotalDeposits vault={vault} />} />
       {!!prizeToken && (

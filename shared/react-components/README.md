@@ -86,7 +86,7 @@ A React componponent library utilizing some simpler components from the internal
 - `ExactApprovalTooltip`
 - `ImportedVaultTooltip`
 - `InfiniteApprovalTooltip`
-- `PrizePowerTooltip`
+- `PrizeYieldTooltip`
 - `VaultContributionsTooltip`
 - `VaultFeeTooltip`
 - `WinChanceTooltip`

@@ -1,14 +1,14 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
-import { useVaultPrizePower } from '@generationsoftware/hyperstructure-react-hooks'
+import { useVaultPrizeYield } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import { formatNumberForDisplay } from '@shared/utilities'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 
-interface VaultPrizePowerProps {
+interface VaultPrizeYieldProps {
   vault: Vault
 }
 
-export const VaultPrizePower = (props: VaultPrizePowerProps) => {
+export const VaultPrizeYield = (props: VaultPrizeYieldProps) => {
   const { vault } = props
 
   const prizePools = useSupportedPrizePools()
@@ -16,23 +16,23 @@ export const VaultPrizePower = (props: VaultPrizePowerProps) => {
   const prizePool =
     !!vault && Object.values(prizePools).find((prizePool) => prizePool.chainId === vault.chainId)
 
-  const { data: prizePower, isFetched: isFetchedPrizePower } = useVaultPrizePower(
+  const { data: prizeYield, isFetched: isFetchedPrizeYield } = useVaultPrizeYield(
     vault,
     prizePool as PrizePool
   )
 
-  if (!isFetchedPrizePower) {
+  if (!isFetchedPrizeYield) {
     return <Spinner />
   }
 
-  if (prizePower === undefined) {
+  if (prizeYield === undefined) {
     return <>?</>
   }
 
-  const formattedPrizePower = formatNumberForDisplay(
-    prizePower * 10_000_000 - ((prizePower * 10_000_000) % 100),
+  const formattedPrizeYield = formatNumberForDisplay(
+    prizeYield * 10_000_000 - ((prizeYield * 10_000_000) % 100),
     { maximumFractionDigits: 0 }
   )
 
-  return <>{formattedPrizePower}</>
+  return <>{formattedPrizeYield}</>
 }

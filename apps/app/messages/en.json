@@ -72,7 +72,7 @@
     "disclaimer": "PoolTogether prize vaults can be deployed by anyone. <link>Know what you are depositing into</link>",
     "headers": {
       "token": "Token",
-      "prizePower": "Prize Power",
+      "prizeYield": "Prize Yield",
       "totalDeposits": "Total Deposits",
       "yourBalance": "Your Balance"
     }
@@ -83,7 +83,7 @@
       "yourWinChance": "Your Win Chance",
       "balance": "Balance",
       "winChance": "Win Chance",
-      "prizePower": "Prize Power",
+      "prizeYield": "Prize Yield",
       "tvl": "TVL",
       "contributions": "{number}D Prize Pool Contribution",
       "depositToken": "Deposit Token",
@@ -240,7 +240,7 @@
     "xPrizesYearly": "{number, plural, one {# prize} other {# prizes}} yearly"
   },
   "Tooltips": {
-    "prizePower": "Vaults with greater prize power give you better chances to win",
+    "prizeYield": "A recent average of a vault's yield contributions to the prize pool",
     "winChance": "Your chance to win a prize in any given draw",
     "exactApproval": "You'll give your approval to deposit a specific amount of {symbol}",
     "infiniteApproval": "You won't need to approve {symbol} the next time you want to deposit",

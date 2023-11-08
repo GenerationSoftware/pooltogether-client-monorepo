@@ -146,7 +146,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useAllVaultHistoricalSharePrices`
 - `useAllVaultHistoricalTokenPrices`
 - `useAllVaultPercentageContributions`
-- `useAllVaultPrizePowers`
+- `useAllVaultPrizeYields`
 - `useAllVaultShareData`
 - `useAllVaultSharePrices`
 - `useAllVaultTokenAddresses`
@@ -168,7 +168,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useVaultLiquidationPair`
 - `useVaultOwner`
 - `useVaultPercentageContribution`
-- `useVaultPrizePower`
+- `useVaultPrizeYield`
 - `useVaults`
 - `useVaultShareData`
 - `useVaultSharePrice`

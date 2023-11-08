@@ -4,13 +4,13 @@ import { formatUnits } from 'viem'
 import { useVaultPercentageContribution, useVaultSharePrice, useVaultTotalSupplyTwab } from '..'
 
 /**
- * Returns a vault's prize power
+ * Returns a vault's prize yield percentage
  * @param vault instance of the `Vault` class
  * @param prizePool instance of the `PrizePool` class
  * @param options optional settings
  * @returns
  */
-export const useVaultPrizePower = (
+export const useVaultPrizeYield = (
   vault: Vault,
   prizePool: PrizePool,
   options?: {

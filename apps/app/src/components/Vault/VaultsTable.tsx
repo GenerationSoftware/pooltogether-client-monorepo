@@ -7,7 +7,7 @@ import {
 } from '@generationsoftware/hyperstructure-react-hooks'
 import {
   ImportedVaultTooltip,
-  PrizePowerTooltip,
+  PrizeYieldTooltip,
   SortIcon,
   VaultBadge
 } from '@shared/react-components'
@@ -20,7 +20,7 @@ import { ReactNode } from 'react'
 import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { VaultButtons } from './VaultButtons'
-import { VaultPrizePower } from './VaultPrizePower'
+import { VaultPrizeYield } from './VaultPrizeYield'
 import { VaultTotalDeposits } from './VaultTotalDeposits'
 
 interface VaultsTableProps {
@@ -99,16 +99,16 @@ export const VaultsTable = (props: VaultsTableProps) => {
   const tableData: TableProps['data'] = {
     headers: {
       token: { content: t_vaults('headers.token') },
-      prizePower: {
+      prizeYield: {
         content: (
           <SortableHeader
-            id='prizePower'
+            id='prizeYield'
             onClick={handleHeaderClick}
-            direction={getDirection('prizePower')}
+            direction={getDirection('prizeYield')}
             append={
-              <PrizePowerTooltip
+              <PrizeYieldTooltip
                 iconSize='lg'
-                intl={{ text: t_tooltips('prizePower'), learnMore: t_common('learnMore') }}
+                intl={{ text: t_tooltips('prizeYield'), learnMore: t_common('learnMore') }}
               />
             }
           />
@@ -159,10 +159,10 @@ export const VaultsTable = (props: VaultsTableProps) => {
             ),
             className: 'gap-2 pr-0'
           },
-          prizePower: {
+          prizeYield: {
             content: (
               <span className='text-xl font-semibold text-pt-purple-400'>
-                <VaultPrizePower vault={vault} />
+                <VaultPrizeYield vault={vault} />
               </span>
             ),
             position: 'center'
@@ -207,7 +207,7 @@ const SortableHeader = (props: SortableHeaderProps) => {
   const t = useTranslations('Vaults')
 
   const names: Record<SortId, string> = {
-    prizePower: t('headers.prizePower'),
+    prizeYield: t('headers.prizeYield'),
     totalBalance: t('headers.totalDeposits'),
     userBalance: t('headers.yourBalance')
   }

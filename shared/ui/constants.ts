@@ -30,7 +30,7 @@ export const LINKS = Object.freeze({
   appDocs: `${DOMAINS.docs}/#the-cabana-app`,
   toolDocs: `${DOMAINS.docs}/#cabana-tools`,
   protocolBasicsDocs: `${DOMAINS.docs}/protocol/the-basics`,
-  prizePowerDocs: `${DOMAINS.docs}/cabana-app/prize-power`,
+  prizeYieldDocs: `${DOMAINS.docs}/cabana-app/prize-power`, // TODO: update to prize yield docs when available
   factoryDocs: `${DOMAINS.docs}/cabana-tools/cabana-factory`,
   listDocs: `${DOMAINS.docs}/cabana-tools/cabana-lists`,
   analyticsDocs: `${DOMAINS.docs}/cabana-tools/cabanalytics`,

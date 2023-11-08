@@ -5,18 +5,18 @@ import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import {
   useAllUserVaultBalances,
-  useAllVaultPrizePowers,
+  useAllVaultPrizeYields,
   useAllVaultSharePrices,
   useVaults
 } from '..'
 
-export type SortId = 'prizePower' | 'totalBalance' | 'userBalance'
+export type SortId = 'prizeYield' | 'totalBalance' | 'userBalance'
 export type SortDirection = 'asc' | 'desc'
 
 /**
  * Returns a sorted array of vaults
  *
- * NOTE: In order to sort by prize power, provide a prize pool in `options`.
+ * NOTE: In order to sort by prize yield, provide a prize pool in `options`.
  * @param vaultsArray an unsorted array of vaults
  * @param options optional settings
  * @returns
@@ -40,7 +40,7 @@ export const useSortedVaults = (
   const { data: allUserVaultBalances, isFetched: isFetchedAllUserVaultBalances } =
     useAllUserVaultBalances(vaults, userAddress as Address)
 
-  const { data: allPrizePowers, isFetched: isFetchedAllPrizePowers } = useAllVaultPrizePowers(
+  const { data: allPrizeYields, isFetched: isFetchedAllPrizeYields } = useAllVaultPrizeYields(
     vaults,
     options?.prizePool as PrizePool
   )
@@ -49,13 +49,13 @@ export const useSortedVaults = (
     !!vaults &&
     isFetchedAllVaultShareTokens &&
     (isFetchedAllUserVaultBalances || !userAddress) &&
-    (isFetchedAllPrizePowers || !options?.prizePool)
+    (isFetchedAllPrizeYields || !options?.prizePool)
 
   const sortedVaults = useMemo(() => {
     if (isFetched && !!allVaultShareTokens) {
       let sortedVaults = sortVaultsByTotalDeposits(vaultsArray, allVaultShareTokens)
-      if (sortVaultsBy === 'prizePower') {
-        sortedVaults = sortVaultsByPrizePower(sortedVaults, allPrizePowers)
+      if (sortVaultsBy === 'prizeYield') {
+        sortedVaults = sortVaultsByPrizeYield(sortedVaults, allPrizeYields)
       } else if (sortVaultsBy === 'userBalance' && !!allUserVaultBalances && allVaultShareTokens) {
         sortedVaults = sortVaultsByUserBalances(
           sortedVaults,
@@ -89,10 +89,10 @@ export const useSortedVaults = (
   }
 }
 
-const sortVaultsByPrizePower = (vaults: Vault[], prizePowers?: { [vaultId: string]: number }) => {
-  if (!!prizePowers) {
-    const prizePower = (v: Vault) => prizePowers[v.id] ?? 0
-    return [...vaults].sort((a, b) => prizePower(b) - prizePower(a))
+const sortVaultsByPrizeYield = (vaults: Vault[], prizeYields?: { [vaultId: string]: number }) => {
+  if (!!prizeYields) {
+    const prizeYield = (v: Vault) => prizeYields[v.id] ?? 0
+    return [...vaults].sort((a, b) => prizeYield(b) - prizeYield(a))
   } else {
     return vaults
   }

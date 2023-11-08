@@ -8,13 +8,13 @@ import {
 } from '..'
 
 /**
- * Returns each vault's prize power on a given prize pool
+ * Returns each vault's prize yield percentage on a given prize pool
  * @param vaults instance of the `Vaults` class
  * @param prizePool instance of the `PrizePool` class
  * @param options optional settings
  * @returns
  */
-export const useAllVaultPrizePowers = (
+export const useAllVaultPrizeYields = (
   vaults: Vaults,
   prizePool: PrizePool,
   options?: {
@@ -37,7 +37,7 @@ export const useAllVaultPrizePowers = (
     useAllVaultSharePrices(vaults)
 
   const data = useMemo(() => {
-    const prizePowers: { [vaultId: string]: number } = {}
+    const prizeYields: { [vaultId: string]: number } = {}
 
     if (!!percentageContributions && !!totalSupplyTwabs && !!allShareTokens) {
       Object.entries(percentageContributions).forEach(([vaultId, percentageContribution]) => {
@@ -45,19 +45,19 @@ export const useAllVaultPrizePowers = (
         const shareToken = allShareTokens[vaultId]
 
         if (percentageContribution === 0 || totalSupplyTwab === 0n || shareToken?.price === 0) {
-          prizePowers[vaultId] = 0
+          prizeYields[vaultId] = 0
         } else if (!!percentageContribution && !!totalSupplyTwab && !!shareToken?.price) {
           const supply = parseFloat(formatUnits(totalSupplyTwab, shareToken.decimals))
           const tvl = supply * shareToken.price
 
           if (tvl >= 1) {
-            prizePowers[vaultId] = percentageContribution / tvl
+            prizeYields[vaultId] = percentageContribution / tvl
           }
         }
       })
     }
 
-    return prizePowers
+    return prizeYields
   }, [percentageContributions, totalSupplyTwabs, allShareTokens])
 
   const isFetched =

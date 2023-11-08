@@ -2,14 +2,14 @@ import { InformationCircleIcon } from '@heroicons/react/24/outline'
 import { LINKS, Tooltip } from '@shared/ui'
 import classNames from 'classnames'
 
-export interface PrizePowerTooltipProps {
+export interface PrizeYieldTooltipProps {
   iconSize?: 'sm' | 'md' | 'lg'
   intl?: { text?: string; learnMore?: string }
   className?: string
   iconClassName?: string
 }
 
-export const PrizePowerTooltip = (props: PrizePowerTooltipProps) => {
+export const PrizeYieldTooltip = (props: PrizeYieldTooltipProps) => {
   const { iconSize, intl, className, iconClassName } = props
 
   return (
@@ -17,9 +17,9 @@ export const PrizePowerTooltip = (props: PrizePowerTooltipProps) => {
       content={
         <div className={classNames('flex flex-col max-w-[17ch] text-center', className)}>
           <span>
-            {intl?.text ?? 'Vaults with greater prize power give you better chances to win'}
+            {intl?.text ?? "A recent average of a vault's yield contributions to the prize pool"}
           </span>
-          <a href={LINKS.prizePowerDocs} target='_blank' className='text-pt-purple-500 underline'>
+          <a href={LINKS.prizeYieldDocs} target='_blank' className='text-pt-purple-500 underline'>
             {intl?.learnMore ?? 'Learn More'}
           </a>
         </div>
