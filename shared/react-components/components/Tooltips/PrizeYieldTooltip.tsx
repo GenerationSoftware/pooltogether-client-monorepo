@@ -17,7 +17,7 @@ export const PrizeYieldTooltip = (props: PrizeYieldTooltipProps) => {
       content={
         <div className={classNames('flex flex-col max-w-[17ch] text-center', className)}>
           <span>
-            {intl?.text ?? "A recent average of a vault's yield contributions to the prize pool"}
+            {intl?.text ?? "A recent average of a vault's contributions to the prize pool"}
           </span>
           <a href={LINKS.prizeYieldDocs} target='_blank' className='text-pt-purple-500 underline'>
             {intl?.learnMore ?? 'Learn More'}
