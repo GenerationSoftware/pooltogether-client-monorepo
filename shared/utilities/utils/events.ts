@@ -3,7 +3,8 @@ import {
   LIQUIDATION_ROUTER_ADDRESSES,
   MSG_EXECUTOR_ADDRESSES,
   RNG_AUCTION,
-  RNG_RELAY_ADDRESSES
+  RNG_RELAY_ADDRESSES,
+  TWAB_REWARDS_ADDRESSES
 } from '../constants'
 import { getLiquidationPairAddresses } from './liquidations'
 
@@ -440,6 +441,91 @@ export const getTokenTransferEvents = async (
     args: {
       from: options?.from,
       to: options?.to
+    },
+    fromBlock: options?.fromBlock,
+    toBlock: options?.toBlock ?? 'latest',
+    strict: true
+  })
+}
+
+/**
+ * Returns `PromotionCreated` events
+ * @param publicClient a public Viem client to query through
+ * @param options optional settings
+ * @returns
+ */
+export const getPromotionCreatedEvents = async (
+  publicClient: PublicClient,
+  options?: {
+    vaultAddresses?: Address[]
+    tokenAddresses?: Address[]
+    fromBlock?: bigint
+    toBlock?: bigint
+  }
+) => {
+  const chainId = await publicClient.getChainId()
+
+  const twabRewardsAddress = TWAB_REWARDS_ADDRESSES[chainId]
+
+  if (!twabRewardsAddress) throw new Error(`No TWAB rewards contract set for chain ID ${chainId}`)
+
+  return await publicClient.getLogs({
+    address: twabRewardsAddress,
+    event: {
+      inputs: [
+        { indexed: true, internalType: 'uint256', name: 'promotionId', type: 'uint256' },
+        { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
+        { indexed: true, internalType: 'contract IERC20', name: 'token', type: 'address' }
+      ],
+      name: 'PromotionCreated',
+      type: 'event'
+    },
+    args: {
+      vault: options?.vaultAddresses,
+      token: options?.tokenAddresses
+    },
+    fromBlock: options?.fromBlock,
+    toBlock: options?.toBlock ?? 'latest',
+    strict: true
+  })
+}
+
+/**
+ * Returns `RewardsClaimed` events
+ * @param publicClient a public Viem client to query through
+ * @param options optional settings
+ * @returns
+ */
+export const getPromotionRewardsClaimedEvents = async (
+  publicClient: PublicClient,
+  options?: {
+    promotionIds?: bigint[]
+    userAddresses?: Address[]
+    fromBlock?: bigint
+    toBlock?: bigint
+  }
+) => {
+  const chainId = await publicClient.getChainId()
+
+  const twabRewardsAddress = TWAB_REWARDS_ADDRESSES[chainId]
+
+  if (!twabRewardsAddress) throw new Error(`No TWAB rewards contract set for chain ID ${chainId}`)
+
+  return await publicClient.getLogs({
+    address: twabRewardsAddress,
+    event: {
+      inputs: [
+        { indexed: true, internalType: 'uint256', name: 'promotionId', type: 'uint256' },
+        { indexed: false, internalType: 'uint8[]', name: 'epochIds', type: 'uint8[]' },
+        { indexed: true, internalType: 'address', name: 'user', type: 'address' },
+        { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }
+      ],
+      name: 'RewardsClaimed',
+      type: 'event'
+    },
+    args: {
+      promotionId: options?.promotionIds,
+      user: options?.userAddresses
     },
     fromBlock: options?.fromBlock,
     toBlock: options?.toBlock ?? 'latest',

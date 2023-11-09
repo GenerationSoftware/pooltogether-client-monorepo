@@ -55,6 +55,7 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0xb8e70b16b8d99753ce55f0e4c2a7eceeece30b64': tokenLogoUrls.weth,
     '0x331cdb619147a20c32e7b9391a4797ed9656b104': tokenLogoUrls.wbtc
   },
+  [NETWORK['optimism-sepolia']]: {},
   [NETWORK.avalanche]: {
     '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f': tokenLogoUrls.wbtc
   },
@@ -62,7 +63,11 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   [NETWORK.celo]: {},
   [NETWORK['celo-testnet']]: {},
   [NETWORK.arbitrum]: {},
-  [NETWORK['arbitrum-goerli']]: {}
+  [NETWORK['arbitrum-goerli']]: {},
+  [NETWORK['arbitrum-sepolia']]: {},
+  [NETWORK.base]: {},
+  [NETWORK['base-goerli']]: {},
+  [NETWORK['base-sepolia']]: {}
 }
 
 /**

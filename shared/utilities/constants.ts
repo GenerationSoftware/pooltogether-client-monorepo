@@ -14,12 +14,17 @@ export enum NETWORK {
   'mumbai' = 80001,
   'optimism' = 10,
   'optimism-goerli' = 420,
+  'optimism-sepolia' = 11155420,
   'avalanche' = 43114,
   'fuji' = 43113,
   'celo' = 42220,
   'celo-testnet' = 44787,
   'arbitrum' = 42161,
-  'arbitrum-goerli' = 421613
+  'arbitrum-goerli' = 421613,
+  'arbitrum-sepolia' = 421614,
+  'base' = 8453,
+  'base-goerli' = 84531,
+  'base-sepolia' = 84532
 }
 export type NETWORK_NAME = keyof typeof NETWORK
 
@@ -137,12 +142,17 @@ export const COINGECKO_NATIVE_TOKEN_IDS: Record<NETWORK, string> = Object.freeze
   [NETWORK.mumbai]: 'matic-network',
   [NETWORK.optimism]: 'ethereum',
   [NETWORK['optimism-goerli']]: 'ethereum',
+  [NETWORK['optimism-sepolia']]: 'ethereum',
   [NETWORK.avalanche]: 'avalanche-2',
   [NETWORK.fuji]: 'avalanche-2',
   [NETWORK.celo]: 'celo',
   [NETWORK['celo-testnet']]: 'celo',
   [NETWORK.arbitrum]: 'ethereum',
-  [NETWORK['arbitrum-goerli']]: 'ethereum'
+  [NETWORK['arbitrum-goerli']]: 'ethereum',
+  [NETWORK['arbitrum-sepolia']]: 'ethereum',
+  [NETWORK.base]: 'ethereum',
+  [NETWORK['base-goerli']]: 'ethereum',
+  [NETWORK['base-sepolia']]: 'ethereum'
 })
 
 /**
@@ -152,19 +162,27 @@ export const BLOCK_EXPLORERS: Record<NETWORK, { name: string; url: string }> = O
   [NETWORK.mainnet]: { name: 'Etherscan', url: 'https://etherscan.io/' },
   [NETWORK.goerli]: { name: 'Etherscan', url: 'https://goerli.etherscan.io/' },
   [NETWORK.sepolia]: { name: 'Etherscan', url: 'https://sepolia.etherscan.io/' },
-  [NETWORK.bsc]: { name: 'BscScan', url: 'https://bscscan.com/' },
-  [NETWORK['bsc-testnet']]: { name: 'BscScan', url: 'https://testnet.bscscan.com/' },
-  [NETWORK.xdai]: { name: 'GnosisScan', url: 'https://gnosisscan.io/' },
-  [NETWORK.polygon]: { name: 'PolygonScan', url: 'https://polygonscan.com/' },
-  [NETWORK.mumbai]: { name: 'PolygonScan', url: 'https://mumbai.polygonscan.com/' },
+  [NETWORK.bsc]: { name: 'Bscscan', url: 'https://bscscan.com/' },
+  [NETWORK['bsc-testnet']]: { name: 'Bscscan', url: 'https://testnet.bscscan.com/' },
+  [NETWORK.xdai]: { name: 'Gnosisscan', url: 'https://gnosisscan.io/' },
+  [NETWORK.polygon]: { name: 'Polygonscan', url: 'https://polygonscan.com/' },
+  [NETWORK.mumbai]: { name: 'Polygonscan', url: 'https://mumbai.polygonscan.com/' },
   [NETWORK.optimism]: { name: 'Etherscan', url: 'https://optimistic.etherscan.io/' },
   [NETWORK['optimism-goerli']]: { name: 'Etherscan', url: 'https://goerli-optimism.etherscan.io/' },
+  [NETWORK['optimism-sepolia']]: {
+    name: 'Etherscan',
+    url: 'https://sepolia-optimism.etherscan.io/'
+  },
   [NETWORK.avalanche]: { name: 'Snowtrace', url: 'https://snowtrace.io/' },
   [NETWORK.fuji]: { name: 'Snowtrace', url: 'https://testnet.snowtrace.io/' },
-  [NETWORK.celo]: { name: 'CeloScan', url: 'https://celoscan.io/' },
-  [NETWORK['celo-testnet']]: { name: 'CeloScan', url: 'https://alfajores.celoscan.io/' },
-  [NETWORK.arbitrum]: { name: 'ArbiScan', url: 'https://arbiscan.io/' },
-  [NETWORK['arbitrum-goerli']]: { name: 'ArbiScan', url: 'https://goerli.arbiscan.io/' }
+  [NETWORK.celo]: { name: 'Celoscan', url: 'https://celoscan.io/' },
+  [NETWORK['celo-testnet']]: { name: 'Celoscan', url: 'https://alfajores.celoscan.io/' },
+  [NETWORK.arbitrum]: { name: 'Arbiscan', url: 'https://arbiscan.io/' },
+  [NETWORK['arbitrum-goerli']]: { name: 'Arbiscan', url: 'https://goerli.arbiscan.io/' },
+  [NETWORK['arbitrum-sepolia']]: { name: 'Arbiscan', url: 'https://sepolia.arbiscan.io/' },
+  [NETWORK.base]: { name: 'Basescan', url: 'https://basescan.org/' },
+  [NETWORK['base-goerli']]: { name: 'Basescan', url: 'https://goerli.basescan.org/' },
+  [NETWORK['base-sepolia']]: { name: 'Blockscout', url: 'https://base-sepolia.blockscout.com/' } // TODO: update to basescan when available
 })
 
 /**
@@ -195,12 +213,17 @@ export const STABLECOINS: Record<NETWORK, { [address: Address]: string }> = {
     '0x4d07ba104ff254c19b443ade6224f744db84fb8a': 'usd', // DAI
     '0x041a898bc37129d2d2232163c3374f4077255f74': 'usd' // GUSD
   },
+  [NETWORK['optimism-sepolia']]: {},
   [NETWORK.avalanche]: {},
   [NETWORK.fuji]: {},
   [NETWORK.celo]: {},
   [NETWORK['celo-testnet']]: {},
   [NETWORK.arbitrum]: {},
-  [NETWORK['arbitrum-goerli']]: {}
+  [NETWORK['arbitrum-goerli']]: {},
+  [NETWORK['arbitrum-sepolia']]: {},
+  [NETWORK.base]: {},
+  [NETWORK['base-goerli']]: {},
+  [NETWORK['base-sepolia']]: {}
 }
 
 /**
@@ -219,12 +242,17 @@ export const WRAPPED_NATIVE_ASSETS: Record<NETWORK, Address | null> = {
   [NETWORK.mumbai]: null,
   [NETWORK.optimism]: '0x4200000000000000000000000000000000000006',
   [NETWORK['optimism-goerli']]: null,
+  [NETWORK['optimism-sepolia']]: null,
   [NETWORK.avalanche]: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7',
   [NETWORK.fuji]: null,
   [NETWORK.celo]: null,
   [NETWORK['celo-testnet']]: null,
   [NETWORK.arbitrum]: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
-  [NETWORK['arbitrum-goerli']]: null
+  [NETWORK['arbitrum-goerli']]: null,
+  [NETWORK['arbitrum-sepolia']]: null,
+  [NETWORK.base]: '0x4200000000000000000000000000000000000006',
+  [NETWORK['base-goerli']]: null,
+  [NETWORK['base-sepolia']]: null
 }
 
 /**
@@ -269,6 +297,13 @@ export const MSG_EXECUTOR_ADDRESSES: { [chainId: number]: Address } = {
 export const TWAB_CONTROLLER_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.optimism]: '0x499a9F249ec4c8Ea190bebbFD96f9A83bf4F6E52',
   [NETWORK['optimism-goerli']]: '0x0B09590E2dE22A629B45258812C0B25904689B5a'
+}
+
+/**
+ * TWAB rewards addresses
+ */
+export const TWAB_REWARDS_ADDRESSES: { [chainId: number]: Address } = {
+  [NETWORK['optimism-sepolia']]: '0x1966c89865a5298cC6B98957F9a8c68da23C2a35'
 }
 
 /**

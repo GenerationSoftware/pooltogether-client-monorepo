@@ -75,6 +75,8 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useLiquidationEvents`
 - `useManualContributionEvents`
 - `usePrizeBackstopEvents`
+- `usePromotionCreatedEvents`
+- `usePromotionRewardsClaimedEvents`
 - `useRelayAuctionEvents`
 - `useRngAuctionEvents`
 - `useRngL1RelayMsgEvents`
@@ -148,6 +150,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useAllVaultHistoricalTokenPrices`
 - `useAllVaultPercentageContributions`
 - `useAllVaultPrizeYields`
+- `useAllVaultPromotions`
 - `useAllVaultShareData`
 - `useAllVaultSharePrices`
 - `useAllVaultTokenAddresses`
@@ -170,6 +173,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useVaultOwner`
 - `useVaultPercentageContribution`
 - `useVaultPrizeYield`
+- `useVaultPromotions`
 - `useVaults`
 - `useVaultShareData`
 - `useVaultSharePrice`
