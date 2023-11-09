@@ -110,13 +110,13 @@ export const Layout = (props: LayoutProps) => {
           Due to a security issue, Aave has temporarily paused deposits and withdrawals on some
           assets until{' '}
           <ExternalLink
-            href='https://app.aave.com/governance/proposal/?proposalId=358'
+            href='https://app.aave.com/governance/proposal/?proposalId=359'
             size='sm'
             className='text-pt-teal'
           >
-            proposal 358
+            proposal 359
           </ExternalLink>{' '}
-          passes and is executed (estimated November 10). While no funds are at risk, the Prize
+          passes and is executed (estimated November 12). While no funds are at risk, the Prize
           USDC.e and Prize DAI vaults will be unavailable in the meantime.
         </span>
       )
