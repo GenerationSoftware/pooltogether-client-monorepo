@@ -18,6 +18,7 @@ import {
 } from '@rainbow-me/rainbowkit/wallets'
 import { NETWORK } from '@shared/utilities'
 import defaultVaultList from '@vaultLists/default'
+import { Address } from 'viem'
 import { arbitrum, Chain, mainnet, optimism, optimismGoerli } from 'wagmi/chains'
 
 /**
@@ -72,8 +73,20 @@ export const RPC_URLS = {
 }
 
 /**
- * Default Vault Lists
+ * Default vault lists
  */
 export const DEFAULT_VAULT_LISTS = Object.freeze({
   default: defaultVaultList
 })
+
+/**
+ * TWAB rewards settings
+ */
+export const TWAB_REWARDS_SETTINGS: {
+  [chainId: number]: { tokenAddresses: Address[]; fromBlock: bigint }
+} = {
+  [NETWORK.mainnet]: { tokenAddresses: [], fromBlock: 1n },
+  [NETWORK.optimism]: { tokenAddresses: [], fromBlock: 1n },
+  [NETWORK.arbitrum]: { tokenAddresses: [], fromBlock: 1n },
+  [NETWORK['optimism-goerli']]: { tokenAddresses: [], fromBlock: 1n }
+}
