@@ -1,9 +1,9 @@
 import { getPromotions, Vault } from '@generationsoftware/hyperstructure-client-js'
+import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { useQuery } from '@tanstack/react-query'
 import { Address } from 'viem'
 import { QUERY_KEYS } from '../constants'
 import { usePromotionCreatedEvents } from '../events/usePromotionCreatedEvents'
-import { NO_REFETCH } from '../generic-react-hooks'
 
 /**
  * Returns TWAB rewards promotions for a vault
