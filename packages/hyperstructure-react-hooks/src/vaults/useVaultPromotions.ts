@@ -1,5 +1,6 @@
 import { getPromotions, Vault } from '@generationsoftware/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
+import { PartialPromotionInfo } from '@shared/types'
 import { useQuery } from '@tanstack/react-query'
 import { Address } from 'viem'
 import { QUERY_KEYS } from '../constants'
@@ -36,8 +37,26 @@ export const useVaultPromotions = (
     options?.toBlock?.toString() ?? 'latest'
   ]
 
-  return useQuery(queryKey, async () => await getPromotions(vault.publicClient, promotionIds), {
-    enabled: !!vault && isFetchedPromotionCreatedEvents,
-    ...NO_REFETCH
-  })
+  return useQuery(
+    queryKey,
+    async () => {
+      const promotions: { [id: string]: PartialPromotionInfo } = {}
+
+      const allPromotionInfo = await getPromotions(vault.publicClient, promotionIds)
+
+      promotionCreatedEvents?.forEach((promotionCreatedEvent) => {
+        const id = promotionCreatedEvent.args.promotionId.toString()
+        const vault = promotionCreatedEvent.args.vault
+        const token = promotionCreatedEvent.args.token
+        const createdAtBlockNumber = promotionCreatedEvent.blockNumber
+        promotions[id] = { vault, token, createdAtBlockNumber, ...allPromotionInfo[id] }
+      })
+
+      return promotions
+    },
+    {
+      enabled: !!vault && isFetchedPromotionCreatedEvents,
+      ...NO_REFETCH
+    }
+  )
 }

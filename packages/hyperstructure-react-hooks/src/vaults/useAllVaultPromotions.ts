@@ -1,5 +1,6 @@
 import { Vaults } from '@generationsoftware/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
+import { PartialPromotionInfo } from '@shared/types'
 import { getPromotions } from '@shared/utilities'
 import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'
@@ -69,8 +70,22 @@ export const useAllVaultPromotions = (
 
       return {
         queryKey,
-        queryFn: async () => await getPromotions(publicClient, promotionIds),
-        enabled: !!chainId && !!publicClient,
+        queryFn: async () => {
+          const promotions: { [id: string]: PartialPromotionInfo } = {}
+
+          const allPromotionInfo = await getPromotions(publicClient, promotionIds)
+
+          promotionCreatedEvents?.[chainId]?.forEach((promotionCreatedEvent) => {
+            const id = promotionCreatedEvent.args.promotionId.toString()
+            const vault = promotionCreatedEvent.args.vault
+            const token = promotionCreatedEvent.args.token
+            const createdAtBlockNumber = promotionCreatedEvent.blockNumber
+            promotions[id] = { vault, token, createdAtBlockNumber, ...allPromotionInfo[id] }
+          })
+
+          return promotions
+        },
+        enabled: !!chainId && !!publicClient && isFetchedPromotionCreatedEvents,
         ...NO_REFETCH
       }
     })
@@ -80,7 +95,7 @@ export const useAllVaultPromotions = (
     const isFetched = results?.every((result) => result.isFetched)
     const refetch = () => results?.forEach((result) => result.refetch())
 
-    const data: { [chainId: number]: Awaited<ReturnType<typeof getPromotions>> } = Object.assign(
+    const data: { [chainId: number]: { [id: string]: PartialPromotionInfo } } = Object.assign(
       {},
       ...results.map((result) => result.data)
     )
