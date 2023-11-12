@@ -102,26 +102,7 @@ export const Layout = (props: LayoutProps) => {
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
 
-  const temporaryAlerts: { id: string; content: ReactNode }[] = [
-    {
-      id: 'aave-issues-04-11-2023',
-      content: (
-        <span className='text-center text-sm'>
-          Due to a security issue, Aave has temporarily paused deposits and withdrawals on some
-          assets until{' '}
-          <ExternalLink
-            href='https://app.aave.com/governance/proposal/?proposalId=359'
-            size='sm'
-            className='text-pt-teal'
-          >
-            proposal 359
-          </ExternalLink>{' '}
-          passes and is executed (estimated November 12). While no funds are at risk, the Prize
-          USDC.e and Prize DAI vaults will be unavailable in the meantime.
-        </span>
-      )
-    }
-  ]
+  const temporaryAlerts: { id: string; content: ReactNode }[] = []
 
   useEffect(() => {
     temporaryAlerts.forEach((alert) => {
