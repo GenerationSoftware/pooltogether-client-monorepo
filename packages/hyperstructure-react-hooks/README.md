@@ -140,6 +140,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 
 ### Vault Hooks
 
+- `useAllUserClaimableRewards`
 - `useAllUserVaultBalances`
 - `useAllUserVaultDelegates`
 - `useAllUserVaultDelegationBalances`
@@ -158,6 +159,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useAllVaultTokenPrices`
 - `useAllVaultTotalSupplyTwabs`
 - `useSortedVaults`
+- `useUserClaimableRewards`
 - `useUserVaultDelegate`
 - `useUserVaultDelegationBalance`
 - `useUserVaultShareBalance`

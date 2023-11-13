@@ -63,9 +63,7 @@ export const useAllVaultPromotions = (
       const queryKey = [
         QUERY_KEYS.promotionInfo,
         Object.keys(vaults.vaults),
-        options?.[chainId]?.tokenAddresses,
-        options?.[chainId]?.fromBlock?.toString(),
-        options?.[chainId]?.toBlock?.toString() ?? 'latest'
+        promotionIds.map(String)
       ]
 
       return {

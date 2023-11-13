@@ -101,6 +101,7 @@ export * from './transactions/useSendWithdrawTransaction'
 /**
  * Vault Hooks
  */
+export * from './vaults/useAllUserClaimableRewards'
 export * from './vaults/useAllUserVaultBalances'
 export * from './vaults/useAllUserVaultDelegates'
 export * from './vaults/useAllUserVaultDelegationBalances'
@@ -119,6 +120,7 @@ export * from './vaults/useAllVaultTokenData'
 export * from './vaults/useAllVaultTokenPrices'
 export * from './vaults/useAllVaultTotalSupplyTwabs'
 export * from './vaults/useSortedVaults'
+export * from './vaults/useUserClaimableRewards'
 export * from './vaults/useUserVaultDelegate'
 export * from './vaults/useUserVaultDelegationBalance'
 export * from './vaults/useUserVaultShareBalance'

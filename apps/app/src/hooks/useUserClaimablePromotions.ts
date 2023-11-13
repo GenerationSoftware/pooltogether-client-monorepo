@@ -1,4 +1,5 @@
 import {
+  useAllUserClaimableRewards,
   useAllVaultPromotions,
   useSelectedVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
@@ -20,11 +21,10 @@ export const useUserClaimablePromotions = (userAddress: Address) => {
     TWAB_REWARDS_SETTINGS
   )
 
-  // TODO: query `getRewardsAmount` on twab rewards contract to find claimable rewards
-  // ^ need function, hook and hook across chains
-  // ^ should be able to calculate current epoch of each promotion based on info from `allPromotions` above
+  const { data: allClaimableRewards, isFetched: isFetchedAllClaimableRewards } =
+    useAllUserClaimableRewards(userAddress, allPromotions)
 
-  const isFetched = isFetchedAllPromotions
+  const isFetched = isFetchedAllPromotions && isFetchedAllClaimableRewards
 
   const data = useMemo(() => {
     const claimablePromotions: ({
@@ -33,10 +33,20 @@ export const useUserClaimablePromotions = (userAddress: Address) => {
       epochRewards: { [epochId: number]: bigint }
     } & PartialPromotionInfo)[] = []
 
-    // TODO: format data into type above
+    Object.keys(allClaimableRewards).forEach((key) => {
+      const chainId = parseInt(key)
+      const chainInfo = allPromotions[chainId]
+
+      Object.entries(allClaimableRewards[chainId]).forEach(([id, epochRewards]) => {
+        const promotionInfo = chainInfo?.[id]
+        const promotionId = BigInt(id)
+
+        claimablePromotions.push({ chainId, promotionId, epochRewards, ...promotionInfo })
+      })
+    })
 
     return claimablePromotions
-  }, [isFetched, allPromotions])
+  }, [isFetched, allPromotions, allClaimableRewards])
 
   return { data, isFetched }
 }

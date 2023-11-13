@@ -43,11 +43,9 @@ export const useUserTotalDelegations = (userAddress: Address) => {
 
       for (const vaultId in shareBalances) {
         const shareToken = shareBalances[vaultId]
-        const chainId = shareToken.chainId
         const decimals = shareToken.decimals
 
         if (decimals !== undefined) {
-          const tokenAddress = vaults.underlyingTokenAddresses?.byVault[vaultId] as Address
           const delegationBalance = delegationBalances[vaultId] - shareToken.amount
 
           if (delegationBalance > 0n) {
