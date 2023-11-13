@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useUserClaimablePromotions } from '@hooks/useUserClaimablePromotions'
+import { useUserClaimedPromotions } from '@hooks/useUserClaimedPromotions'
 
 interface AccountPromotionsProps {
   address?: Address
@@ -16,10 +17,11 @@ export const AccountPromotions = (props: AccountPromotionsProps) => {
 
   const { data: claimable } = useUserClaimablePromotions(userAddress as Address)
 
-  // TODO: implement this hook (needs `usePromotionRewardsClaimedEventsAcrossChains`)
-  // const { data: claimed } = useUserClaimedPromotions(userAddress as Address)
+  const { data: claimed } = useUserClaimedPromotions(userAddress as Address)
 
-  if (typeof window !== 'undefined' && !!userAddress && !!claimable.length) {
+  const isNotEmpty = !!claimable.length || !!claimed.length
+
+  if (typeof window !== 'undefined' && !!userAddress && isNotEmpty) {
     return (
       <div
         className={classNames(
