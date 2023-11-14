@@ -88,6 +88,7 @@ export * from './tokens/useTokens'
  * Transaction Hooks
  */
 export * from './transactions/useSendApproveTransaction'
+export * from './transactions/useSendClaimRewardsTransaction'
 export * from './transactions/useSendClaimVaultFeesTransaction'
 export * from './transactions/useSendDeployLiquidationPairTransaction'
 export * from './transactions/useSendDeployVaultTransaction'

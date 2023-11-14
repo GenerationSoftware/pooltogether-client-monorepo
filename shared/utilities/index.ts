@@ -11,6 +11,7 @@ export * from './abis/prizePool'
 export * from './abis/rngAuction'
 export * from './abis/rngRelay'
 export * from './abis/twabController'
+export * from './abis/twabRewards'
 export * from './abis/vault'
 export * from './abis/vaultFactory'
 
