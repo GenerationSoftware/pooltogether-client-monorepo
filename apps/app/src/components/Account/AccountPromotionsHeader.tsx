@@ -2,6 +2,7 @@ import { CurrencyValue } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useUserTotalPromotionRewards } from '@hooks/useUserTotalPromotionRewards'
@@ -11,7 +12,6 @@ interface AccountPromotionsHeaderProps {
   className?: string
 }
 
-// TODO: add "Claim All" button
 export const AccountPromotionsHeader = (props: AccountPromotionsHeaderProps) => {
   const { address, className } = props
 
@@ -19,6 +19,10 @@ export const AccountPromotionsHeader = (props: AccountPromotionsHeaderProps) => 
 
   const { address: _userAddress } = useAccount()
   const userAddress = address ?? _userAddress
+
+  const isExternalUser = useMemo(() => {
+    return !!address && address.toLowerCase() !== _userAddress?.toLowerCase()
+  }, [address, _userAddress])
 
   const { data: totalRewards } = useUserTotalPromotionRewards(userAddress as Address, {
     includeUnclaimed: true
@@ -34,6 +38,7 @@ export const AccountPromotionsHeader = (props: AccountPromotionsHeaderProps) => 
           <Spinner />
         )}
       </span>
+      {/* TODO: add "claim all" button if not external user (handle claim availability logic in button) */}
     </div>
   )
 }

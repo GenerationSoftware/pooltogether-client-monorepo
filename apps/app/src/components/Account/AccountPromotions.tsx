@@ -3,7 +3,9 @@ import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useUserClaimablePromotions } from '@hooks/useUserClaimablePromotions'
 import { useUserClaimedPromotions } from '@hooks/useUserClaimedPromotions'
+import { AccountPromotionsCards } from './AccountPromotionsCards'
 import { AccountPromotionsHeader } from './AccountPromotionsHeader'
+import { AccountPromotionsTable } from './AccountPromotionsTable'
 
 interface AccountPromotionsProps {
   address?: Address
@@ -30,9 +32,8 @@ export const AccountPromotions = (props: AccountPromotionsProps) => {
         )}
       >
         <AccountPromotionsHeader address={userAddress} />
-        {/* TODO: implement these components */}
-        {/* <AccountPromotionsTable claimable={claimable} claimed={claimed} className='hidden mt-8 lg:block' /> */}
-        {/* <AccountPromotionsCards claimable={claimable} claimed={claimed} className='mt-2 md:mt-4 lg:hidden' /> */}
+        <AccountPromotionsTable address={userAddress} className='hidden mt-8 lg:block' />
+        <AccountPromotionsCards address={userAddress} className='mt-2 md:mt-4 lg:hidden' />
       </div>
     )
   }

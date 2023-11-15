@@ -18,7 +18,8 @@
     "learnAboutRisks": "Learn about the risks",
     "readDocs": "Read the Docs",
     "termsOfService": "Terms of Service",
-    "bonusRewards": "Bonus Rewards"
+    "bonusRewards": "Bonus Rewards",
+    "claim": "Claim"
   },
   "Navigation": {
     "home": "Home",
@@ -126,6 +127,12 @@
       "prizePool": "Prize Pool",
       "winnings": "Winnings",
       "moreInfo": "More Info"
+    },
+    "bonusRewardHeaders": {
+      "token": "Token",
+      "rewardToken": "Reward Token",
+      "rewardsEarned": "Rewards Earned",
+      "claims": "Claims"
     },
     "prizeChecking": {
       "eligibleDraws": "You were eligible for {number, plural, one {# draw} other {# draws}}",
