@@ -370,6 +370,21 @@ export const LIQUIDATION_ROUTER_ADDRESSES: { [chainId: number]: Address } = {
 }
 
 /**
+ * Dolphin Address Address
+ */
+export const DOLPHIN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+
+/**
+ * Dead Address
+ */
+export const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead'
+
+/**
+ * Networks supported by the price caching API
+ */
+export const TOKEN_PRICE_API_SUPPORTED_NETWORKS: NETWORK[] = [NETWORK.mainnet, NETWORK.arbitrum]
+
+/**
  * Redirects for tokens without pricing data on the caching API
  *
  * NOTE: All addresses are lowercase
@@ -390,6 +405,11 @@ export const TOKEN_PRICE_REDIRECTS: {
     }
   },
   [NETWORK['optimism-goerli']]: {
+    /* ETH */
+    [DOLPHIN_ADDRESS]: {
+      chainId: NETWORK.mainnet,
+      address: DOLPHIN_ADDRESS
+    },
     /* DAI */
     '0x4d07ba104ff254c19b443ade6224f744db84fb8a': {
       chainId: NETWORK.optimism,
@@ -422,6 +442,11 @@ export const TOKEN_PRICE_REDIRECTS: {
     }
   },
   [NETWORK['arbitrum-sepolia']]: {
+    /* ETH */
+    [DOLPHIN_ADDRESS]: {
+      chainId: NETWORK.mainnet,
+      address: DOLPHIN_ADDRESS
+    },
     /* DAI */
     '0x08c19fe57af150a1af975cb9a38769848c7df98e': {
       chainId: NETWORK.arbitrum,
@@ -481,16 +506,6 @@ export const TOKEN_DATA_REDIRECTS: {
  * Max uint256 value
  */
 export const MAX_UINT_256 = 2n ** 256n - 1n
-
-/**
- * Dolphin Address Address
- */
-export const DOLPHIN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-
-/**
- * Dead Address
- */
-export const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead'
 
 /**
  * EIP2612 Permit Types

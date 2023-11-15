@@ -1,5 +1,9 @@
 import { Address, isAddress } from 'viem'
-import { TOKEN_PRICE_REDIRECTS, TOKEN_PRICES_API_URL } from '../constants'
+import {
+  TOKEN_PRICE_API_SUPPORTED_NETWORKS,
+  TOKEN_PRICE_REDIRECTS,
+  TOKEN_PRICES_API_URL
+} from '../constants'
 
 /**
  * Returns token prices in ETH from the CloudFlare API
@@ -12,36 +16,42 @@ export const getTokenPrices = async (
   tokenAddresses?: string[]
 ): Promise<{ [address: Address]: number }> => {
   try {
-    const url = new URL(`${TOKEN_PRICES_API_URL}/${chainId}`)
-    const tokenPrices: { [address: Address]: number } = {}
+    if (chainId in TOKEN_PRICE_API_SUPPORTED_NETWORKS) {
+      const url = new URL(`${TOKEN_PRICES_API_URL}/${chainId}`)
+      const tokenPrices: { [address: Address]: number } = {}
 
-    if (!!tokenAddresses && tokenAddresses.length > 0) {
-      url.searchParams.set('tokens', tokenAddresses.join(','))
-    }
-
-    const response = await fetch(url.toString())
-    const rawTokenPrices: { [address: Address]: { date: string; price: number }[] } =
-      await response.json()
-    Object.keys(rawTokenPrices).forEach((key) => {
-      const address = key as Address
-      const tokenPrice = rawTokenPrices[address][0]?.price
-      if (tokenPrice !== undefined) {
-        tokenPrices[address] = tokenPrice
+      if (!!tokenAddresses && tokenAddresses.length > 0) {
+        url.searchParams.set('tokens', tokenAddresses.join(','))
       }
-    })
 
-    if (
-      !!tokenAddresses &&
-      tokenAddresses.length > 0 &&
-      Object.keys(tokenPrices).length < tokenAddresses.length
-    ) {
-      const redirectedTokenPrices = await getRedirectedTokenPrices(chainId, tokenAddresses)
-      Object.entries(redirectedTokenPrices).forEach(([address, price]) => {
-        tokenPrices[address as Address] = price
+      const response = await fetch(url.toString())
+      const rawTokenPrices: { [address: Address]: { date: string; price: number }[] } =
+        await response.json()
+      Object.keys(rawTokenPrices).forEach((key) => {
+        const address = key as Address
+        const tokenPrice = rawTokenPrices[address][0]?.price
+        if (tokenPrice !== undefined) {
+          tokenPrices[address] = tokenPrice
+        }
       })
-    }
 
-    return tokenPrices
+      if (
+        !!tokenAddresses &&
+        tokenAddresses.length > 0 &&
+        Object.keys(tokenPrices).length < tokenAddresses.length
+      ) {
+        const redirectedTokenPrices = await getRedirectedTokenPrices(chainId, tokenAddresses)
+        Object.entries(redirectedTokenPrices).forEach(([address, price]) => {
+          tokenPrices[address as Address] = price
+        })
+      }
+
+      return tokenPrices
+    } else if (!!tokenAddresses && tokenAddresses.length > 0) {
+      return await getRedirectedTokenPrices(chainId, tokenAddresses)
+    } else {
+      return {}
+    }
   } catch (e) {
     console.error(e)
     return {}
