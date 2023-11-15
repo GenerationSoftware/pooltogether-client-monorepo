@@ -1,10 +1,11 @@
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { TokenWithSupply } from '@shared/types'
 import { getTokenInfo } from '@shared/utilities'
-import { useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query'
+import { useQueries, useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query'
+import { useMemo } from 'react'
 import { Address, isAddress, zeroAddress } from 'viem'
 import { usePublicClient } from 'wagmi'
-import { populateCachePerId } from '..'
+import { populateCachePerId, usePublicClientsByChain } from '..'
 import { QUERY_KEYS } from '../constants'
 
 /**
@@ -62,4 +63,48 @@ export const useToken = (
 > => {
   const result = useTokens(chainId, [tokenAddress])
   return { ...result, data: result.data?.[tokenAddress] }
+}
+
+/**
+ * Returns basic token data for for many tokens across many chains
+ * @param tokenAddresses token addresses to query data for, keyed by chain ID
+ * @returns
+ */
+export const useTokensAcrossChains = (tokenAddresses: { [chainId: number]: Address[] }) => {
+  const publicClients = usePublicClientsByChain()
+
+  const chainIds = Object.keys(tokenAddresses).map((chainId) => parseInt(chainId))
+
+  const results = useQueries({
+    queries: chainIds.map((chainId) => {
+      const enabled =
+        !!publicClients[chainId] &&
+        tokenAddresses[chainId].every(
+          (tokenAddress) => !!tokenAddress && isAddress(tokenAddress)
+        ) &&
+        Array.isArray(tokenAddresses[chainId]) &&
+        tokenAddresses[chainId].length > 0
+
+      return {
+        queryKey: [QUERY_KEYS.tokens, chainId, tokenAddresses[chainId]],
+        queryFn: async () => await getTokenInfo(publicClients[chainId], tokenAddresses[chainId]),
+        enabled,
+        ...NO_REFETCH
+      }
+    })
+  })
+
+  return useMemo(() => {
+    const isFetched = results?.every((result) => result.isFetched)
+    const refetch = () => results?.forEach((result) => result.refetch())
+
+    const formattedData: { [chainId: number]: { [tokenAddress: Address]: TokenWithSupply } } = {}
+    results.forEach((result, i) => {
+      if (!!result.data) {
+        const chainId = chainIds[i]
+        formattedData[chainId] = result.data
+      }
+    })
+    return { isFetched, refetch, data: formattedData }
+  }, [results])
 }
