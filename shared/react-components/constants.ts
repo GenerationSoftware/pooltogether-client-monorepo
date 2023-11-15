@@ -64,7 +64,13 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   [NETWORK['celo-testnet']]: {},
   [NETWORK.arbitrum]: {},
   [NETWORK['arbitrum-goerli']]: {},
-  [NETWORK['arbitrum-sepolia']]: {},
+  [NETWORK['arbitrum-sepolia']]: {
+    '0x7a6dbc7ff4f1a2d864291db3aec105a8eee4a3d2': tokenLogoUrls.usdc,
+    '0x08c19fe57af150a1af975cb9a38769848c7df98e': tokenLogoUrls.dai,
+    '0xb84460d777133a4b86540d557db35952e4adfee7': tokenLogoUrls.gusd,
+    '0x779275fc1b987db24463801f3708f42f3c6f6ceb': tokenLogoUrls.weth,
+    '0x1bc266e1f397517ece9e384c55c7a5414b683639': tokenLogoUrls.wbtc
+  },
   [NETWORK.base]: {},
   [NETWORK['base-goerli']]: {},
   [NETWORK['base-sepolia']]: {}
