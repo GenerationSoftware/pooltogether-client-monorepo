@@ -22,9 +22,10 @@ export const useAllUserClaimableRewards = (
 ) => {
   const publicClients = usePublicClientsByChain({ useAll: true })
 
+  const chainIds = Object.keys(promotions).map((k) => parseInt(k))
+
   const results = useQueries({
-    queries: Object.keys(promotions).map((key) => {
-      const chainId = parseInt(key)
+    queries: chainIds.map((chainId) => {
       const publicClient = publicClients[chainId]
 
       const promotionIds = !!promotions?.[chainId] ? Object.keys(promotions[chainId]) : []
@@ -44,8 +45,12 @@ export const useAllUserClaimableRewards = (
     const isFetched = results?.every((result) => result.isFetched)
     const refetch = () => results?.forEach((result) => result.refetch())
 
-    const data: { [chainId: number]: { [id: string]: { [epochId: number]: bigint } } } =
-      Object.assign({}, ...results.map((result) => result.data))
+    const data: { [chainId: number]: { [id: string]: { [epochId: number]: bigint } } } = {}
+    results.forEach((result, i) => {
+      if (!!result.data) {
+        data[chainIds[i]] = result.data
+      }
+    })
 
     return { isFetched, refetch, data }
   }, [results])

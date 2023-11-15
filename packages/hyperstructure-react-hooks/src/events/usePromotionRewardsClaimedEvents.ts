@@ -91,7 +91,12 @@ export const usePromotionRewardsClaimedEventsAcrossChains = (
 
     const data: {
       [chainId: number]: Awaited<ReturnType<typeof getPromotionRewardsClaimedEvents>>
-    } = Object.assign({}, ...results.map((result) => result.data))
+    } = {}
+    results.forEach((result, i) => {
+      if (!!result.data) {
+        data[chainIds[i]] = result.data
+      }
+    })
 
     return { isFetched, refetch, data }
   }, [results])

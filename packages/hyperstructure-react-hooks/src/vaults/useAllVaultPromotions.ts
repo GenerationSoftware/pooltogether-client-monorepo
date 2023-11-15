@@ -56,9 +56,7 @@ export const useAllVaultPromotions = (
     queries: vaults.chainIds.map((chainId) => {
       const publicClient = publicClients[chainId]
 
-      const promotionIds = !!promotionCreatedEvents?.[chainId]
-        ? promotionCreatedEvents[chainId].map((e) => e.args.promotionId)
-        : []
+      const promotionIds = promotionCreatedEvents[chainId]?.map((e) => e.args.promotionId) ?? []
 
       const queryKey = [
         QUERY_KEYS.promotionInfo,
@@ -93,10 +91,12 @@ export const useAllVaultPromotions = (
     const isFetched = results?.every((result) => result.isFetched)
     const refetch = () => results?.forEach((result) => result.refetch())
 
-    const data: { [chainId: number]: { [id: string]: PartialPromotionInfo } } = Object.assign(
-      {},
-      ...results.map((result) => result.data)
-    )
+    const data: { [chainId: number]: { [id: string]: PartialPromotionInfo } } = {}
+    results.forEach((result, i) => {
+      if (!!result.data) {
+        data[vaults.chainIds[i]] = result.data
+      }
+    })
 
     return { isFetched, refetch, data }
   }, [results])
