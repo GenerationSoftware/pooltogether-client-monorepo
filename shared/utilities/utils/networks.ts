@@ -44,6 +44,12 @@ export const getNiceNetworkNameByChainId = (chainId: number): string => {
     case NETWORK['arbitrum-goerli']: {
       return 'Arbitrum Goerli'
     }
+    case NETWORK['optimism-sepolia']: {
+      return 'Optimism Sepolia'
+    }
+    case NETWORK['arbitrum-sepolia']: {
+      return 'Arbitrum Sepolia'
+    }
     case NETWORK['bsc-testnet']: {
       return 'BSC Testnet'
     }
