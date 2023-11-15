@@ -83,8 +83,10 @@ export const getRngL1RelayMsgEvents = async (
 
   const rngRelayContractAddress = RNG_RELAY_ADDRESSES[chainId]
 
-  if (!rngRelayContractAddress)
-    throw new Error(`No relay auction contract set for chain ID ${chainId}`)
+  if (!rngRelayContractAddress) {
+    console.warn(`No relay auction contract set for chain ID ${chainId}`)
+    return []
+  }
 
   return await publicClient.getLogs({
     address: rngRelayContractAddress,
@@ -135,8 +137,10 @@ export const getRngL2RelayMsgEvents = async (
 
   const msgExecutorContractAddress = MSG_EXECUTOR_ADDRESSES[chainId]
 
-  if (!msgExecutorContractAddress)
-    throw new Error(`No message executor contract set for chain ID ${chainId}`)
+  if (!msgExecutorContractAddress) {
+    console.warn(`No message executor contract set for chain ID ${chainId}`)
+    return []
+  }
 
   return await publicClient.getLogs({
     address: msgExecutorContractAddress,
@@ -226,8 +230,10 @@ export const getLiquidationEvents = async (
 
   const liqRouterContractAddress = LIQUIDATION_ROUTER_ADDRESSES[chainId]
 
-  if (!liqRouterContractAddress)
-    throw new Error(`No liquidation router contract set for chain ID ${chainId}`)
+  if (!liqRouterContractAddress) {
+    console.warn(`No liquidation router contract set for chain ID ${chainId}`)
+    return []
+  }
 
   const lpAddresses = await getLiquidationPairAddresses(publicClient)
 
@@ -357,8 +363,10 @@ export const getRelayAuctionEvents = async (
 
   const rngRelayContractAddress = RNG_RELAY_ADDRESSES[chainId]
 
-  if (!rngRelayContractAddress)
-    throw new Error(`No relay auction contract set for chain ID ${chainId}`)
+  if (!rngRelayContractAddress) {
+    console.warn(`No relay auction contract set for chain ID ${chainId}`)
+    return []
+  }
 
   return await publicClient.getLogs({
     address: rngRelayContractAddress,
@@ -392,7 +400,10 @@ export const getRngAuctionEvents = async (
 
   const rngAuctionContract = RNG_AUCTION[chainId]
 
-  if (!rngAuctionContract) throw new Error(`No RNG auction contract set for chain ID ${chainId}`)
+  if (!rngAuctionContract) {
+    console.warn(`No RNG auction contract set for chain ID ${chainId}`)
+    return []
+  }
 
   return await publicClient.getLogs({
     address: rngAuctionContract.address,
@@ -467,7 +478,10 @@ export const getPromotionCreatedEvents = async (
 
   const twabRewardsAddress = TWAB_REWARDS_ADDRESSES[chainId]
 
-  if (!twabRewardsAddress) throw new Error(`No TWAB rewards contract set for chain ID ${chainId}`)
+  if (!twabRewardsAddress) {
+    console.warn(`No TWAB rewards contract set for chain ID ${chainId}`)
+    return []
+  }
 
   return await publicClient.getLogs({
     address: twabRewardsAddress,
@@ -509,7 +523,10 @@ export const getPromotionRewardsClaimedEvents = async (
 
   const twabRewardsAddress = TWAB_REWARDS_ADDRESSES[chainId]
 
-  if (!twabRewardsAddress) throw new Error(`No TWAB rewards contract set for chain ID ${chainId}`)
+  if (!twabRewardsAddress) {
+    console.warn(`No TWAB rewards contract set for chain ID ${chainId}`)
+    return []
+  }
 
   return await publicClient.getLogs({
     address: twabRewardsAddress,

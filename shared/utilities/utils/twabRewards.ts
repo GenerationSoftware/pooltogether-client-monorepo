@@ -18,27 +18,29 @@ export const getPromotions = async (publicClient: PublicClient, promotionIds: bi
 
   const twabRewardsAddress = TWAB_REWARDS_ADDRESSES[chainId]
 
-  if (!twabRewardsAddress) throw new Error(`No TWAB rewards contract set for chain ID ${chainId}`)
+  if (!!twabRewardsAddress) {
+    if (promotionIds.length > 0) {
+      const calls = promotionIds.map((promotionId) => ({
+        functionName: 'getPromotion',
+        args: [promotionId]
+      }))
 
-  if (promotionIds.length > 0) {
-    const calls = promotionIds.map((promotionId) => ({
-      functionName: 'getPromotion',
-      args: [promotionId]
-    }))
+      const multicallResults = await getSimpleMulticallResults(
+        publicClient,
+        twabRewardsAddress,
+        twabRewardsABI,
+        calls
+      )
 
-    const multicallResults = await getSimpleMulticallResults(
-      publicClient,
-      twabRewardsAddress,
-      twabRewardsABI,
-      calls
-    )
-
-    promotionIds.forEach((promotionId, i) => {
-      // TODO: need to check for reverts/failures in case of destroyed promotions (maybe doesnt return undefined?)
-      const result: PromotionInfo | undefined = multicallResults[i]
-      const promotionInfo = typeof result === 'object' ? result : undefined
-      promotions[promotionId.toString()] = promotionInfo
-    })
+      promotionIds.forEach((promotionId, i) => {
+        // TODO: need to check for reverts/failures in case of destroyed promotions (maybe doesnt return undefined?)
+        const result: PromotionInfo | undefined = multicallResults[i]
+        const promotionInfo = typeof result === 'object' ? result : undefined
+        promotions[promotionId.toString()] = promotionInfo
+      })
+    }
+  } else {
+    console.warn(`No TWAB rewards contract set for chain ID ${chainId}`)
   }
 
   return promotions
@@ -65,36 +67,38 @@ export const getClaimableRewards = async (
 
   const twabRewardsAddress = TWAB_REWARDS_ADDRESSES[chainId]
 
-  if (!twabRewardsAddress) throw new Error(`No TWAB rewards contract set for chain ID ${chainId}`)
-
-  Object.entries(promotions).forEach(([id, info]) => {
-    const epochs = getPromotionEpochs(info)
-    if (epochs.length > 0) {
-      promotionEpochs[id] = epochs
-    }
-  })
-
-  const promotionIds = Object.keys(promotionEpochs)
-  if (promotionIds.length > 0) {
-    const calls = promotionIds.map((id) => ({
-      functionName: 'getRewardsAmount',
-      args: [userAddress, BigInt(id), promotionEpochs[id]]
-    }))
-
-    const multicallResults = await getSimpleMulticallResults(
-      publicClient,
-      twabRewardsAddress,
-      twabRewardsABI,
-      calls
-    )
-
-    promotionIds.forEach((id, i) => {
-      const result: bigint[] | undefined = multicallResults[i]
-      const epochRewards = typeof result === 'object' ? result : undefined
-      if (!!epochRewards) {
-        claimableRewards[id] = epochRewards
+  if (!!twabRewardsAddress) {
+    Object.entries(promotions).forEach(([id, info]) => {
+      const epochs = getPromotionEpochs(info)
+      if (epochs.length > 0) {
+        promotionEpochs[id] = epochs
       }
     })
+
+    const promotionIds = Object.keys(promotionEpochs)
+    if (promotionIds.length > 0) {
+      const calls = promotionIds.map((id) => ({
+        functionName: 'getRewardsAmount',
+        args: [userAddress, BigInt(id), promotionEpochs[id]]
+      }))
+
+      const multicallResults = await getSimpleMulticallResults(
+        publicClient,
+        twabRewardsAddress,
+        twabRewardsABI,
+        calls
+      )
+
+      promotionIds.forEach((id, i) => {
+        const result: bigint[] | undefined = multicallResults[i]
+        const epochRewards = typeof result === 'object' ? result : undefined
+        if (!!epochRewards) {
+          claimableRewards[id] = epochRewards
+        }
+      })
+    }
+  } else {
+    console.warn(`No TWAB rewards contract set for chain ID ${chainId}`)
   }
 
   return claimableRewards
