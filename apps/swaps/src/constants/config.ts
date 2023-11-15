@@ -1,6 +1,6 @@
 import { NETWORK } from '@shared/utilities'
-import { Address, parseEther } from 'viem'
-import { mainnet, optimism, optimismGoerli } from 'wagmi/chains'
+import { Address } from 'viem'
+import { mainnet, optimism, optimismGoerli } from 'viem/chains'
 
 /**
  * Supported networks

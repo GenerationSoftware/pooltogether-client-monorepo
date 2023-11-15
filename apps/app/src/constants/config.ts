@@ -19,14 +19,14 @@ import {
 import { NETWORK } from '@shared/utilities'
 import defaultVaultList from '@vaultLists/default'
 import { Address } from 'viem'
-import { arbitrum, Chain, mainnet, optimism, optimismGoerli } from 'wagmi/chains'
+import { arbitrum, arbitrumSepolia, Chain, mainnet, optimism, optimismGoerli } from 'viem/chains'
 
 /**
  * Supported networks
  */
 export const SUPPORTED_NETWORKS = Object.freeze({
   mainnets: [NETWORK.mainnet, NETWORK.optimism, NETWORK.arbitrum],
-  testnets: [NETWORK['optimism-goerli']]
+  testnets: [NETWORK['optimism-goerli'], NETWORK['arbitrum-sepolia']]
 })
 
 /**
@@ -36,7 +36,8 @@ export const WAGMI_CHAINS = Object.freeze({
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism,
   [NETWORK.arbitrum]: arbitrum,
-  [NETWORK['optimism-goerli']]: optimismGoerli
+  [NETWORK['optimism-goerli']]: optimismGoerli,
+  [NETWORK['arbitrum-sepolia']]: arbitrumSepolia
 })
 
 /**
@@ -69,7 +70,8 @@ export const RPC_URLS = {
   [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
   [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
-  [NETWORK['optimism-goerli']]: process.env.NEXT_PUBLIC_OPTIMISM_GOERLI_RPC_URL
+  [NETWORK['optimism-goerli']]: process.env.NEXT_PUBLIC_OPTIMISM_GOERLI_RPC_URL,
+  [NETWORK['arbitrum-sepolia']]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL
 }
 
 /**
@@ -88,5 +90,6 @@ export const TWAB_REWARDS_SETTINGS: {
   [NETWORK.mainnet]: { tokenAddresses: [], fromBlock: 1n },
   [NETWORK.optimism]: { tokenAddresses: [], fromBlock: 1n },
   [NETWORK.arbitrum]: { tokenAddresses: [], fromBlock: 1n },
-  [NETWORK['optimism-goerli']]: { tokenAddresses: [], fromBlock: 1n }
+  [NETWORK['optimism-goerli']]: { tokenAddresses: [], fromBlock: 1n },
+  [NETWORK['arbitrum-sepolia']]: { tokenAddresses: [], fromBlock: 1n }
 }

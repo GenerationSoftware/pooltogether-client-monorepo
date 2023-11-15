@@ -1,5 +1,5 @@
 import { NETWORK } from '@shared/utilities'
-import { arbitrum, mainnet, optimism, optimismGoerli } from 'wagmi/chains'
+import { arbitrum, mainnet, optimism, optimismGoerli } from 'viem/chains'
 
 /**
  * Supported networks

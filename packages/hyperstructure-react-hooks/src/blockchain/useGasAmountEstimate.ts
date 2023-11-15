@@ -1,7 +1,6 @@
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
-import { Abi } from 'viem'
-import { EstimateContractGasParameters } from 'viem/dist/types/actions/public/estimateContractGas'
+import { Abi, EstimateContractGasParameters } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { QUERY_KEYS } from '../constants'
 
