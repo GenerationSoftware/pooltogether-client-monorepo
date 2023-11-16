@@ -5,7 +5,7 @@ import { Table, TableProps } from '@shared/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useUserClaimablePromotions } from '@hooks/useUserClaimablePromotions'
@@ -21,7 +21,11 @@ interface AccountPromotionsTableProps extends Omit<TableProps, 'data' | 'keyPref
 export const AccountPromotionsTable = (props: AccountPromotionsTableProps) => {
   const { address, className, innerClassName, headerClassName, rowClassName, ...rest } = props
 
-  const t = useTranslations('Account.bonusRewardHeaders')
+  const t_common = useTranslations('Common')
+  const t_headers = useTranslations('Account.bonusRewardHeaders')
+
+  const baseNumTableRows = 10
+  const [numTableRows, setNumTableRows] = useState<number>(baseNumTableRows)
 
   const publicClients = usePublicClientsByChain()
 
@@ -37,13 +41,13 @@ export const AccountPromotionsTable = (props: AccountPromotionsTableProps) => {
 
   const tableHeaders = useMemo(() => {
     const headers: TableProps['data']['headers'] = {
-      token: { content: t('token') },
+      token: { content: t_headers('token') },
       rewardToken: {
-        content: t('rewardToken'),
+        content: t_headers('rewardToken'),
         position: 'center'
       },
       earned: {
-        content: t('rewardsEarned'),
+        content: t_headers('rewardsEarned'),
         position: 'center'
       }
     }
@@ -127,15 +131,30 @@ export const AccountPromotionsTable = (props: AccountPromotionsTableProps) => {
   }, [claimed, claimable])
 
   return (
-    <Table
-      data={{ headers: tableHeaders, rows: tableRows }}
-      keyPrefix='accountPromotionsTable'
-      className={classNames('w-full rounded-t-2xl rounded-b-[2.5rem]', className)}
-      innerClassName={classNames('!gap-3', innerClassName)}
-      headerClassName={classNames('px-4', headerClassName)}
-      rowClassName={classNames('!px-4 py-4 rounded-3xl', rowClassName)}
-      {...rest}
-    />
+    <div
+      className={classNames(
+        'w-full flex flex-col bg-pt-bg-purple-dark rounded-t-2xl rounded-b-[2.5rem]',
+        className
+      )}
+    >
+      <Table
+        data={{ headers: tableHeaders, rows: tableRows.slice(0, numTableRows) }}
+        keyPrefix='accountPromotionsTable'
+        className='w-full bg-transparent'
+        innerClassName={classNames('!gap-3', innerClassName)}
+        headerClassName={classNames('px-4', headerClassName)}
+        rowClassName={classNames('!px-4 py-4 rounded-3xl', rowClassName)}
+        {...rest}
+      />
+      {tableRows.length > numTableRows && (
+        <span
+          className='w-full flex pb-4 justify-center text-pt-purple-300 cursor-pointer'
+          onClick={() => setNumTableRows(numTableRows + baseNumTableRows)}
+        >
+          {t_common('showMore')}
+        </span>
+      )}
+    </div>
   )
 }
 

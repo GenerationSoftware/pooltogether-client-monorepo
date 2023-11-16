@@ -1,5 +1,6 @@
 import classNames from 'classnames'
-import { useMemo } from 'react'
+import { useTranslations } from 'next-intl'
+import { useMemo, useState } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useUserClaimablePromotions } from '@hooks/useUserClaimablePromotions'
@@ -13,6 +14,11 @@ interface AccountPromotionsCardsProps {
 
 export const AccountPromotionsCards = (props: AccountPromotionsCardsProps) => {
   const { address, className } = props
+
+  const t = useTranslations('Common')
+
+  const baseNumCards = 10
+  const [numCards, setNumCards] = useState<number>(baseNumCards)
 
   const { address: _userAddress } = useAccount()
   const userAddress = address ?? _userAddress
@@ -35,7 +41,7 @@ export const AccountPromotionsCards = (props: AccountPromotionsCardsProps) => {
 
   return (
     <div className={classNames('w-full flex flex-col gap-4', className)}>
-      {promotions.map((promotion) => {
+      {promotions.slice(0, numCards).map((promotion) => {
         const chainId = parseInt(promotion.split('-')[0])
         const promotionId = BigInt(promotion.split('-')[1])
 
@@ -48,6 +54,14 @@ export const AccountPromotionsCards = (props: AccountPromotionsCardsProps) => {
           />
         )
       })}
+      {promotions.length > numCards && (
+        <span
+          className='w-full flex justify-center text-pt-purple-300 cursor-pointer'
+          onClick={() => setNumCards(numCards + baseNumCards)}
+        >
+          {t('showMore')}
+        </span>
+      )}
     </div>
   )
 }
