@@ -16,7 +16,7 @@ import {
   xdefiWallet,
   zerionWallet
 } from '@rainbow-me/rainbowkit/wallets'
-import { NETWORK } from '@shared/utilities'
+import { NETWORK, USDC_TOKEN_ADDRESSES } from '@shared/utilities'
 import defaultVaultList from '@vaultLists/default'
 import { Address } from 'viem'
 import { arbitrum, arbitrumSepolia, Chain, mainnet, optimism, optimismGoerli } from 'viem/chains'
@@ -91,5 +91,8 @@ export const TWAB_REWARDS_SETTINGS: {
   [NETWORK.optimism]: { tokenAddresses: [], fromBlock: 1n },
   [NETWORK.arbitrum]: { tokenAddresses: [], fromBlock: 1n },
   [NETWORK['optimism-goerli']]: { tokenAddresses: [], fromBlock: 1n },
-  [NETWORK['arbitrum-sepolia']]: { tokenAddresses: [], fromBlock: 1n }
+  [NETWORK['arbitrum-sepolia']]: {
+    tokenAddresses: [USDC_TOKEN_ADDRESSES[NETWORK['arbitrum-sepolia']]],
+    fromBlock: 1_130_000n
+  }
 }

@@ -33,7 +33,6 @@ export const getPromotions = async (publicClient: PublicClient, promotionIds: bi
       )
 
       promotionIds.forEach((promotionId, i) => {
-        // TODO: need to check for reverts/failures in case of destroyed promotions (maybe doesnt return undefined?)
         const result: PromotionInfo | undefined = multicallResults[i]
         const promotionInfo = typeof result === 'object' ? result : undefined
         promotions[promotionId.toString()] = promotionInfo
@@ -93,7 +92,9 @@ export const getClaimableRewards = async (
         const result: bigint[] | undefined = multicallResults[i]
         const epochRewards = typeof result === 'object' ? result : undefined
         if (!!epochRewards) {
-          claimableRewards[id] = epochRewards
+          promotionEpochs[id].forEach((epochId, j) => {
+            claimableRewards[id][epochId] = epochRewards[j]
+          })
         }
       })
     }

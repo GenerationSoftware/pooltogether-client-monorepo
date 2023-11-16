@@ -9,11 +9,12 @@ export const DEFAULT_HEADERS = {
   }
 }
 
-export const SUPPORTED_NETWORKS = [1, 10] as const
+export const SUPPORTED_NETWORKS = [1, 10, 42161] as const
 
 export const NETWORK_KEYS = {
   1: 'mainnet',
-  10: 'optimism'
+  10: 'optimism',
+  42161: 'arbitrum'
 } as const
 
 export const COVALENT_API_URL = 'https://api.covalenthq.com/v1'

@@ -382,7 +382,11 @@ export const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead'
 /**
  * Networks supported by the price caching API
  */
-export const TOKEN_PRICE_API_SUPPORTED_NETWORKS: NETWORK[] = [NETWORK.mainnet, NETWORK.arbitrum]
+export const TOKEN_PRICE_API_SUPPORTED_NETWORKS: NETWORK[] = [
+  NETWORK.mainnet,
+  NETWORK.optimism,
+  NETWORK.arbitrum
+]
 
 /**
  * Redirects for tokens without pricing data on the caching API

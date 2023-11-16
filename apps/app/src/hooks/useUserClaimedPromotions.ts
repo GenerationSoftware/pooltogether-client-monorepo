@@ -22,7 +22,9 @@ export const useUserClaimedPromotions = (userAddress: Address) => {
   )
 
   const eventQueryOptions = useMemo(() => {
-    if (!!userAddress && Object.keys(allPromotions).length > 0) {
+    const chainIds = Object.keys(allPromotions).map((k) => parseInt(k))
+
+    if (!!userAddress && chainIds.length > 0) {
       const options: {
         [chainId: number]: {
           promotionIds?: bigint[]
@@ -32,9 +34,7 @@ export const useUserClaimedPromotions = (userAddress: Address) => {
         }
       } = {}
 
-      Object.keys(allPromotions).forEach((key) => {
-        const chainId = parseInt(key)
-
+      chainIds.forEach((chainId) => {
         options[chainId] = {
           promotionIds: !!allPromotions[chainId]
             ? Object.keys(allPromotions[chainId]).map(BigInt)

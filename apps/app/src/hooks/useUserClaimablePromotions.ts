@@ -33,15 +33,16 @@ export const useUserClaimablePromotions = (userAddress: Address) => {
       epochRewards: { [epochId: number]: bigint }
     } & PartialPromotionInfo)[] = []
 
-    Object.keys(allClaimableRewards).forEach((key) => {
-      const chainId = parseInt(key)
-      const chainInfo = allPromotions[chainId]
+    const chainIds = Object.keys(allClaimableRewards).map((k) => parseInt(k))
 
+    chainIds.forEach((chainId) => {
       Object.entries(allClaimableRewards[chainId]).forEach(([id, epochRewards]) => {
-        const promotionInfo = chainInfo?.[id]
-        const promotionId = BigInt(id)
+        const promotionInfo = allPromotions[chainId]?.[id]
 
-        claimablePromotions.push({ chainId, promotionId, epochRewards, ...promotionInfo })
+        if (!!promotionInfo) {
+          const promotionId = BigInt(id)
+          claimablePromotions.push({ chainId, promotionId, epochRewards, ...promotionInfo })
+        }
       })
     })
 
