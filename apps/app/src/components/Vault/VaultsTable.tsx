@@ -19,6 +19,7 @@ import Link from 'next/link'
 import { ReactNode } from 'react'
 import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
+import { VaultBonusRewards } from './VaultBonusRewards'
 import { VaultButtons } from './VaultButtons'
 import { VaultPrizeYield } from './VaultPrizeYield'
 import { VaultTotalDeposits } from './VaultTotalDeposits'
@@ -115,6 +116,12 @@ export const VaultsTable = (props: VaultsTableProps) => {
         ),
         position: 'center'
       },
+      // TODO: this header should be sortable
+      // TODO: this header should include a tooltip
+      bonusRewards: {
+        content: t_common('bonusRewards'),
+        position: 'center'
+      },
       totalDeposits: {
         content: (
           <SortableHeader
@@ -163,7 +170,18 @@ export const VaultsTable = (props: VaultsTableProps) => {
             content: (
               <VaultPrizeYield
                 vault={vault}
-                label='APR'
+                label={t_common('apr')}
+                valueClassName='text-xl font-semibold text-pt-purple-100'
+                labelClassName='text-sm text-pt-purple-400'
+              />
+            ),
+            position: 'center'
+          },
+          bonusRewards: {
+            content: (
+              <VaultBonusRewards
+                vault={vault}
+                label={t_common('apr')}
                 valueClassName='text-xl font-semibold text-pt-purple-100'
                 labelClassName='text-sm text-pt-purple-400'
               />
@@ -192,7 +210,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
       innerClassName='!gap-3'
       headerClassName='px-4'
       rowClassName='!px-4 py-4 rounded-3xl'
-      gridColsClassName='grid-cols-[minmax(0,6fr)_repeat(3,minmax(0,4fr))_minmax(0,5fr)]'
+      gridColsClassName='grid-cols-[minmax(0,6fr)_repeat(4,minmax(0,4fr))_minmax(0,5fr)]'
     />
   )
 }
@@ -232,5 +250,5 @@ const SortableHeader = (props: SortableHeaderProps) => {
 const ManageHeader = () => {
   const t = useTranslations('Common')
 
-  return <span className='mr-[18px]'>{t('manage')}</span>
+  return <span className='w-24 text-center'>{t('manage')}</span>
 }

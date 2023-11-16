@@ -177,6 +177,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useVaultPercentageContribution`
 - `useVaultPrizeYield`
 - `useVaultPromotions`
+- `useVaultPromotionsApr`
 - `useVaults`
 - `useVaultShareData`
 - `useVaultSharePrice`

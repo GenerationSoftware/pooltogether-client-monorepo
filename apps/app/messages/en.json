@@ -19,7 +19,8 @@
     "readDocs": "Read the Docs",
     "termsOfService": "Terms of Service",
     "bonusRewards": "Bonus Rewards",
-    "claim": "Claim"
+    "claim": "Claim",
+    "apr": "APR"
   },
   "Navigation": {
     "home": "Home",
