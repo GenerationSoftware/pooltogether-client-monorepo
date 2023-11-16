@@ -142,5 +142,5 @@ export const AccountPromotionsTable = (props: AccountPromotionsTableProps) => {
 const ClaimsHeader = () => {
   const t = useTranslations('Account.bonusRewardHeaders')
 
-  return <span className='w-[200px] text-center'>{t('claims')}</span>
+  return <span className='w-24 text-center'>{t('claims')}</span>
 }

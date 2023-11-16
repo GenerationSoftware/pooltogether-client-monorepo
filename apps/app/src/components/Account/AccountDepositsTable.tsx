@@ -157,5 +157,5 @@ export const AccountDepositsTable = (props: AccountDepositsTableProps) => {
 const ManageHeader = () => {
   const t = useTranslations('Common')
 
-  return <span className='w-[200px] text-center'>{t('manage')}</span>
+  return <span className='w-24 text-center'>{t('manage')}</span>
 }

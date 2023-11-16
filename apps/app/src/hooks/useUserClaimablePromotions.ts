@@ -44,8 +44,21 @@ export const useUserClaimablePromotions = (userAddress: Address) => {
         const promotionInfo = allPromotions[chainId]?.[id]
 
         if (!!promotionInfo) {
-          const promotionId = BigInt(id)
-          claimablePromotions.push({ chainId, promotionId, epochRewards, ...promotionInfo })
+          const filteredEpochRewards: { [epochId: number]: bigint } = {}
+
+          const epochIds = Object.keys(epochRewards).map((k) => parseInt(k))
+          epochIds.forEach((epochId) => {
+            if (epochRewards[epochId] > 0n) {
+              filteredEpochRewards[epochId] = epochRewards[epochId]
+            }
+          })
+
+          claimablePromotions.push({
+            chainId,
+            promotionId: BigInt(id),
+            epochRewards: filteredEpochRewards,
+            ...promotionInfo
+          })
         }
       })
     })

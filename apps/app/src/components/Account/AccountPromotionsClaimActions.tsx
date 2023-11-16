@@ -4,6 +4,7 @@ import {
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { TokenAmount, TransactionButton } from '@shared/react-components'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { Address } from 'viem'
@@ -60,7 +61,11 @@ const ClaimRewardsButton = (props: ClaimRewardsButtonProps) => {
   const addRecentTransaction = useAddRecentTransaction()
 
   const { refetch: refetchClaimed } = useUserClaimedPromotions(userAddress)
-  const { data: allClaimable, refetch: refetchClaimable } = useUserClaimablePromotions(userAddress)
+  const {
+    data: allClaimable,
+    isFetched: isFetchedAllClaimable,
+    refetch: refetchClaimable
+  } = useUserClaimablePromotions(userAddress)
 
   const claimable = useMemo(() => {
     return allClaimable.find(
@@ -70,9 +75,10 @@ const ClaimRewardsButton = (props: ClaimRewardsButtonProps) => {
 
   const { data: tokenData } = useToken(chainId, claimable?.token as Address)
 
-  const epochsToClaim = !!claimable
-    ? Object.keys(claimable.epochRewards).map((k) => parseInt(k))
-    : []
+  const epochsToClaim =
+    !!claimable && isFetchedAllClaimable
+      ? Object.keys(claimable.epochRewards).map((k) => parseInt(k))
+      : []
   const { isWaiting, isConfirming, isSuccess, txHash, sendClaimRewardsTransaction } =
     useSendClaimRewardsTransaction(
       chainId,
@@ -89,25 +95,32 @@ const ClaimRewardsButton = (props: ClaimRewardsButtonProps) => {
   if (!!claimable && !!tokenData) {
     const claimableAmount = Object.values(claimable.epochRewards).reduce((a, b) => a + b, 0n)
 
-    // TODO: display warning to claim soon if promotion has ended
-    return (
-      <TransactionButton
-        chainId={chainId}
-        isTxLoading={isWaiting || isConfirming}
-        isTxSuccess={isSuccess}
-        write={sendClaimRewardsTransaction}
-        txHash={txHash}
-        txDescription={t_account('claimRewardsTx', { symbol: tokenData.symbol })}
-        openConnectModal={openConnectModal}
-        openChainModal={openChainModal}
-        addRecentTransaction={addRecentTransaction}
-        intl={{ base: t_txs, common: t_common }}
-        fullSized={fullSized}
-        className={className}
-      >
-        {t_common('claim')}{' '}
-        <TokenAmount token={{ chainId, address: claimable.token, amount: claimableAmount }} />
-      </TransactionButton>
-    )
+    if (claimableAmount > 0n) {
+      // TODO: display warning to claim soon if promotion has ended
+      return (
+        <TransactionButton
+          chainId={chainId}
+          isTxLoading={isWaiting || isConfirming}
+          isTxSuccess={isSuccess}
+          write={sendClaimRewardsTransaction}
+          txHash={txHash}
+          txDescription={t_account('claimRewardsTx', { symbol: tokenData.symbol })}
+          openConnectModal={openConnectModal}
+          openChainModal={openChainModal}
+          addRecentTransaction={addRecentTransaction}
+          intl={{ base: t_txs, common: t_common }}
+          fullSized={fullSized}
+          className={classNames('min-w-[6rem]', className)}
+        >
+          {t_common('claim')}{' '}
+          <TokenAmount token={{ chainId, address: claimable.token, amount: claimableAmount }} />
+        </TransactionButton>
+      )
+    } else {
+      // TODO: return some sort of "all claimed!" or "rewards over" message?
+      return <></>
+    }
   }
+
+  return <></>
 }
