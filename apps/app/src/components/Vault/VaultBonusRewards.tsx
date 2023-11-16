@@ -1,7 +1,7 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useVaultPromotionsApr } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
-import { formatNumberForDisplay } from '@shared/utilities'
+import { formatNumberForDisplay, TWAB_REWARDS_ADDRESSES } from '@shared/utilities'
 import classNames from 'classnames'
 import { TWAB_REWARDS_SETTINGS } from '@constants/config'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
@@ -26,6 +26,10 @@ export const VaultBonusRewards = (props: VaultBonusRewardsProps) => {
   const fromBlock = !!vault ? TWAB_REWARDS_SETTINGS[vault.chainId].fromBlock : undefined
   const { data: vaultPromotionsApr, isFetched: isFetchedVaultPromotionsApr } =
     useVaultPromotionsApr(vault, prizePool as PrizePool, tokenAddresses, { fromBlock })
+
+  if (!!vault && TWAB_REWARDS_ADDRESSES[vault.chainId] === undefined) {
+    return <>-</>
+  }
 
   if (!isFetchedVaultPromotionsApr) {
     return <Spinner />
