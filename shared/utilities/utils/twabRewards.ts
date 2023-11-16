@@ -93,6 +93,9 @@ export const getClaimableRewards = async (
         const epochRewards = typeof result === 'object' ? result : undefined
         if (!!epochRewards) {
           promotionEpochs[id].forEach((epochId, j) => {
+            if (claimableRewards[id] === undefined) {
+              claimableRewards[id] = {}
+            }
             claimableRewards[id][epochId] = epochRewards[j]
           })
         }
@@ -120,8 +123,8 @@ export const getPromotionEpochs = (info: {
   if (!!info.startTimestamp && !!info.epochDuration && !!info.numberOfEpochs) {
     const currentTimestamp = getSecondsSinceEpoch()
 
-    for (let i = 1; i <= info.numberOfEpochs; i++) {
-      const epochEndsAt = Number(info.startTimestamp) + info.epochDuration * i
+    for (let i = 0; i < info.numberOfEpochs; i++) {
+      const epochEndsAt = Number(info.startTimestamp) + info.epochDuration * (i + 1)
       if (epochEndsAt > currentTimestamp) {
         break
       } else {
