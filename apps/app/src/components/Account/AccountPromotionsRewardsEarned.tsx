@@ -1,7 +1,8 @@
+import { useToken } from '@generationsoftware/hyperstructure-react-hooks'
 import { TokenValueAndAmount } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import { useMemo } from 'react'
-import { Address } from 'viem'
+import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { useUserClaimablePromotions } from '@hooks/useUserClaimablePromotions'
 import { useUserClaimedPromotions } from '@hooks/useUserClaimedPromotions'
@@ -11,12 +12,10 @@ interface AccountPromotionsRewardsEarnedProps {
   promotionId: bigint
   address?: Address
   className?: string
-  valueClassName?: string
-  amountClassName?: string
 }
 
 export const AccountPromotionsRewardsEarned = (props: AccountPromotionsRewardsEarnedProps) => {
-  const { chainId, promotionId, address, className, valueClassName, amountClassName } = props
+  const { chainId, promotionId, address, className } = props
 
   const { address: _userAddress } = useAccount()
   const userAddress = address ?? _userAddress
@@ -36,22 +35,30 @@ export const AccountPromotionsRewardsEarned = (props: AccountPromotionsRewardsEa
     )
   }, [allClaimable])
 
-  if (!claimed && !claimable) {
+  const tokenAddress = claimed?.token ?? claimable?.token
+
+  const { data: tokenData } = useToken(chainId, tokenAddress as Address)
+
+  if ((!claimed && !claimable) || !tokenAddress || !tokenData) {
     return <Spinner />
   }
 
-  const tokenAddress = (claimed?.token ?? claimable?.token) as Address
   const claimedRewards = claimed?.totalClaimed ?? 0n
   const claimableRewards = !!claimable
     ? Object.values(claimable.epochRewards).reduce((a, b) => a + b, 0n)
     : 0n
 
+  const amount = claimedRewards + claimableRewards
+  const shiftedAmount = parseFloat(formatUnits(amount, tokenData.decimals))
+
   return (
     <TokenValueAndAmount
-      token={{ chainId, address: tokenAddress, amount: claimedRewards + claimableRewards }}
+      token={{ chainId, address: tokenAddress, amount }}
       className={className}
-      valueClassName={valueClassName}
-      amountClassName={amountClassName}
+      valueClassName='text-sm md:text-base'
+      amountClassName='text-xs md:text-sm'
+      valueOptions={{ hideZeroes: true }}
+      amountOptions={shiftedAmount > 1e3 ? { hideZeroes: true } : { maximumFractionDigits: 2 }}
     />
   )
 }

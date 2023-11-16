@@ -67,6 +67,7 @@ export const AccountPromotionsCard = (props: AccountPromotionsCardProps) => {
               chainId={chainId}
               promotionId={promotionId}
               address={userAddress}
+              className='!flex-row gap-1'
             />
           </div>
         </div>

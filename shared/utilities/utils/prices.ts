@@ -16,7 +16,7 @@ export const getTokenPrices = async (
   tokenAddresses?: string[]
 ): Promise<{ [address: Address]: number }> => {
   try {
-    if (chainId in TOKEN_PRICE_API_SUPPORTED_NETWORKS) {
+    if (TOKEN_PRICE_API_SUPPORTED_NETWORKS.includes(chainId)) {
       const url = new URL(`${TOKEN_PRICES_API_URL}/${chainId}`)
       const tokenPrices: { [address: Address]: number } = {}
 
