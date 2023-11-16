@@ -51,15 +51,16 @@ const getWalletConnectors = (chains: Chain[]): (() => Connector[]) => {
   const defaultWallets = ['metamask', 'walletconnect', 'rainbow', 'injected', 'coinbase']
   const otherWallets = [
     'argent',
+    'brave',
+    'coin98',
+    'imtoken',
     'ledger',
+    'safe',
     'taho',
     'trust',
-    'zerion',
-    'brave',
-    'safe',
+    'uniswap',
     'xdefi',
-    'coin98',
-    'uniswap'
+    'zerion'
   ]
 
   const highlightedWallet = parseQueryParam('wallet', { validValues: Object.keys(WALLETS) })

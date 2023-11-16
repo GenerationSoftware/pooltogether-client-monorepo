@@ -4,6 +4,7 @@ import {
   braveWallet,
   coin98Wallet,
   coinbaseWallet,
+  imTokenWallet,
   injectedWallet,
   ledgerWallet,
   metaMaskWallet,
@@ -56,7 +57,8 @@ export const WALLETS: {
   safe: safeWallet,
   xdefi: xdefiWallet,
   uniswap: uniswapWallet,
-  coin98: coin98Wallet
+  coin98: coin98Wallet,
+  imtoken: imTokenWallet
 } as const
 
 /**
