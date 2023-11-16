@@ -21,10 +21,14 @@ export const useUserClaimablePromotions = (userAddress: Address) => {
     TWAB_REWARDS_SETTINGS
   )
 
-  const { data: allClaimableRewards, isFetched: isFetchedAllClaimableRewards } =
-    useAllUserClaimableRewards(userAddress, allPromotions)
+  const {
+    data: allClaimableRewards,
+    isFetched: isFetchedAllClaimableRewards,
+    refetch: refetchAllClaimableRewards
+  } = useAllUserClaimableRewards(userAddress, allPromotions)
 
   const isFetched = isFetchedAllPromotions && isFetchedAllClaimableRewards
+  const refetch = refetchAllClaimableRewards
 
   const data = useMemo(() => {
     const claimablePromotions: ({
@@ -49,5 +53,5 @@ export const useUserClaimablePromotions = (userAddress: Address) => {
     return claimablePromotions
   }, [isFetched, allPromotions, allClaimableRewards])
 
-  return { data, isFetched }
+  return { data, isFetched, refetch }
 }

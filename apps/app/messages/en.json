@@ -122,6 +122,7 @@
     "oneInXChance": "1 in {number}",
     "noPrizesRecently": "You haven't won any prizes recently.",
     "learnHowItWorks": "Learn how PoolTogether works",
+    "claimRewardsTx": "{symbol} Rewards Claim",
     "winHeaders": {
       "date": "Date",
       "prizePool": "Prize Pool",

@@ -5,12 +5,14 @@ import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransa
 
 /**
  * Prepares and submits a `claimRewards` or `multicall` transaction to a TWAB rewards contract
+ * @param chainId the chain ID these rewards are to be claimed on
  * @param userAddress the user address to claim rewards for
  * @param epochsToClaim the epochs to claim for each promotion ID
  * @param options optional callbacks
  * @returns
  */
 export const useSendClaimRewardsTransaction = (
+  chainId: number,
   userAddress: Address,
   epochsToClaim: { [id: string]: number[] },
   options?: {
@@ -29,9 +31,11 @@ export const useSendClaimRewardsTransaction = (
 } => {
   const { chain } = useNetwork()
 
-  const twabRewardsAddress = !!chain ? TWAB_REWARDS_ADDRESSES[chain.id] : undefined
+  const twabRewardsAddress = !!chainId ? TWAB_REWARDS_ADDRESSES[chainId] : undefined
 
   const enabled =
+    !!chainId &&
+    chainId === chain?.id &&
     !!userAddress &&
     isAddress(userAddress) &&
     !!epochsToClaim &&
@@ -49,7 +53,7 @@ export const useSendClaimRewardsTransaction = (
   }, [userAddress, epochsToClaim])
 
   const { config } = usePrepareContractWrite({
-    chainId: chain?.id,
+    chainId,
     address: twabRewardsAddress,
     abi: twabRewardsABI,
     functionName: 'claimRewards',
@@ -90,7 +94,7 @@ export const useSendClaimRewardsTransaction = (
   }, [userAddress, epochsToClaim])
 
   const { config: multicallConfig } = usePrepareContractWrite({
-    chainId: chain?.id,
+    chainId,
     address: twabRewardsAddress,
     abi: twabRewardsABI,
     functionName: 'multicall',
@@ -124,7 +128,7 @@ export const useSendClaimRewardsTransaction = (
     isLoading: isConfirming,
     isSuccess,
     isError: isConfirmingError
-  } = useWaitForTransaction({ chainId: chain?.id, hash: txHash })
+  } = useWaitForTransaction({ chainId, hash: txHash })
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {

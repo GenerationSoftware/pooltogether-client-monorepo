@@ -48,10 +48,14 @@ export const useUserClaimedPromotions = (userAddress: Address) => {
     }
   }, [userAddress, allPromotions])
 
-  const { data: allClaimEvents, isFetched: isFetchedAllClaimEvents } =
-    usePromotionRewardsClaimedEventsAcrossChains(vaults.chainIds, eventQueryOptions)
+  const {
+    data: allClaimEvents,
+    isFetched: isFetchedAllClaimEvents,
+    refetch: refetchAllClaimEvents
+  } = usePromotionRewardsClaimedEventsAcrossChains(vaults.chainIds, eventQueryOptions)
 
   const isFetched = isFetchedAllPromotions && isFetchedAllClaimEvents
+  const refetch = refetchAllClaimEvents
 
   const data = useMemo(() => {
     const claimedPromotions: ({
@@ -95,5 +99,5 @@ export const useUserClaimedPromotions = (userAddress: Address) => {
     return claimedPromotions
   }, [isFetched, allPromotions, allClaimEvents])
 
-  return { data, isFetched }
+  return { data, isFetched, refetch }
 }
