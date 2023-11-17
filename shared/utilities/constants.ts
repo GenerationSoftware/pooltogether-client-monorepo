@@ -304,7 +304,7 @@ export const RNG_RELAY_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.sepolia]: '0x149e3B3Bd69f1Cfc1B42b6A6a152a42E38cEeBf1', // to arb-sepolia
   [NETWORK.optimism]: '0x87d3D9afeD1702728B7F280ba5c4b4c55DEfa557',
   [NETWORK['optimism-goerli']]: '0x5C9c04FC5D6431A2101b8395E13B565762980F97',
-  [NETWORK['arbitrum-sepolia']]: '0xDF548822A89B37ED4B182716DECfE86895eFFA25'
+  [NETWORK['arbitrum-sepolia']]: '0x0aeDA5579Ac1ee498353ac14907B0e5a99d20B8F'
 }
 
 /**
@@ -313,7 +313,7 @@ export const RNG_RELAY_ADDRESSES: { [chainId: number]: Address } = {
 export const MSG_EXECUTOR_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.optimism]: '0x139f6dD114a9C45Ba43eE22C5e03c53de0c13225',
   [NETWORK['optimism-goerli']]: '0x59Ba766ff229c21b97184647292706039aF63dA1',
-  [NETWORK['arbitrum-sepolia']]: '0x02aCC9594161812E3004C174CF1735EdB10e20A4'
+  [NETWORK['arbitrum-sepolia']]: '0x2B3E6b5c9a6Bdb0e595896C9093fce013490abbD'
 }
 
 /**
