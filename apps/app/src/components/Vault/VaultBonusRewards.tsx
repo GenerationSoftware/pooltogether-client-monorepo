@@ -27,7 +27,10 @@ export const VaultBonusRewards = (props: VaultBonusRewardsProps) => {
   const { data: vaultPromotionsApr, isFetched: isFetchedVaultPromotionsApr } =
     useVaultPromotionsApr(vault, prizePool as PrizePool, tokenAddresses, { fromBlock })
 
-  if (!!vault && TWAB_REWARDS_ADDRESSES[vault.chainId] === undefined) {
+  if (
+    (!!vault && TWAB_REWARDS_ADDRESSES[vault.chainId] === undefined) ||
+    vaultPromotionsApr === 0
+  ) {
     return <>-</>
   }
 
