@@ -5,10 +5,12 @@ import {
   useUserVaultDelegationBalance,
   useUserVaultShareBalance,
   useVaultFeeInfo,
+  useVaultPromotionsApr,
   useVaultShareData,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import {
+  BonusRewardsTooltip,
   NetworkIcon,
   PrizeYieldTooltip,
   VaultContributionsTooltip,
@@ -27,7 +29,9 @@ import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
 import { AccountVaultDelegationAmount } from '@components/Account/AccountVaultDelegationAmount'
 import { AccountVaultOdds } from '@components/Account/AccountVaultOdds'
 import { CopyButton } from '@components/CopyButton'
+import { TWAB_REWARDS_SETTINGS } from '@constants/config'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
+import { VaultBonusRewards } from './VaultBonusRewards'
 import { VaultContributions } from './VaultContributions'
 import { VaultFeePercentage } from './VaultFeePercentage'
 import { VaultPrizeYield } from './VaultPrizeYield'
@@ -60,7 +64,17 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
   const prizePools = useSupportedPrizePools()
   const prizePool =
     !!vault && Object.values(prizePools).find((prizePool) => prizePool.chainId === vault.chainId)
+
   const { data: prizeToken } = usePrizeTokenData(prizePool as PrizePool)
+
+  const tokenAddresses = !!vault ? TWAB_REWARDS_SETTINGS[vault.chainId].tokenAddresses : []
+  const fromBlock = !!vault ? TWAB_REWARDS_SETTINGS[vault.chainId].fromBlock : undefined
+  const { data: vaultPromotionsApr } = useVaultPromotionsApr(
+    vault,
+    prizePool as PrizePool,
+    tokenAddresses,
+    { fromBlock }
+  )
 
   const foundInVaultLists = useMemo(() => {
     return Object.values({ ...localVaultLists, ...importedVaultLists }).some((list) => {
@@ -125,6 +139,28 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
           />
         }
       />
+      {!!vaultPromotionsApr && (
+        <VaultInfoRow
+          name={
+            <span className='flex gap-2 items-center'>
+              {t_vault('headers.bonusRewards')}
+              <BonusRewardsTooltip
+                iconSize='sm'
+                intl={t_tooltips('bonusRewards')}
+                className='text-sm md:text-base'
+                iconClassName='text-pt-purple-200'
+              />
+            </span>
+          }
+          data={
+            <VaultBonusRewards
+              vault={vault}
+              label={t_common('apr')}
+              labelClassName='text-sm text-pt-purple-200'
+            />
+          }
+        />
+      )}
       <VaultInfoRow name={t_vault('headers.tvl')} data={<VaultTotalDeposits vault={vault} />} />
       {!!prizeToken && (
         <VaultInfoRow
