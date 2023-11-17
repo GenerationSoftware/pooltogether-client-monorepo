@@ -75,6 +75,8 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useLiquidationEvents`
 - `useManualContributionEvents`
 - `usePrizeBackstopEvents`
+- `usePromotionCreatedEvents`
+- `usePromotionRewardsClaimedEvents`
 - `useRelayAuctionEvents`
 - `useRngAuctionEvents`
 - `useRngL1RelayMsgEvents`
@@ -126,6 +128,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 ### Transaction Hooks
 
 - `useSendApproveTransaction`
+- `useSendClaimRewardsTransaction`
 - `useSendClaimVaultFeesTransaction`
 - `useSendDeployLiquidationPairTransaction`
 - `useSendDeployVaultTransaction`
@@ -138,6 +141,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 
 ### Vault Hooks
 
+- `useAllUserClaimableRewards`
 - `useAllUserVaultBalances`
 - `useAllUserVaultDelegates`
 - `useAllUserVaultDelegationBalances`
@@ -148,6 +152,8 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useAllVaultHistoricalTokenPrices`
 - `useAllVaultPercentageContributions`
 - `useAllVaultPrizeYields`
+- `useAllVaultPromotions`
+- `useAllVaultPromotionsApr`
 - `useAllVaultShareData`
 - `useAllVaultSharePrices`
 - `useAllVaultTokenAddresses`
@@ -155,6 +161,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useAllVaultTokenPrices`
 - `useAllVaultTotalSupplyTwabs`
 - `useSortedVaults`
+- `useUserClaimableRewards`
 - `useUserVaultDelegate`
 - `useUserVaultDelegationBalance`
 - `useUserVaultShareBalance`
@@ -170,6 +177,8 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useVaultOwner`
 - `useVaultPercentageContribution`
 - `useVaultPrizeYield`
+- `useVaultPromotions`
+- `useVaultPromotionsApr`
 - `useVaults`
 - `useVaultShareData`
 - `useVaultSharePrice`

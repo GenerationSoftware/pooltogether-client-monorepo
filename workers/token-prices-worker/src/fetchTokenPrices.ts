@@ -1,4 +1,4 @@
-import { KV_ADDRESS_KEYS, KV_PRICE_KEYS, SUPPORTED_NETWORKS } from './constants'
+import { NETWORK_KEYS, SUPPORTED_NETWORKS } from './constants'
 import { ChainTokenPrices } from './types'
 import { updateHandler } from './updateHandler'
 import { getCovalentTokenPrices } from './utils'
@@ -13,7 +13,7 @@ export const fetchTokenPrices = async (
 ) => {
   try {
     const { value: allCachedChainTokenPrices } = await TOKEN_PRICES.getWithMetadata(
-      KV_PRICE_KEYS[chainId]
+      NETWORK_KEYS[chainId]
     )
     const parsedAllCachedChainTokenPrices = !!allCachedChainTokenPrices
       ? (JSON.parse(allCachedChainTokenPrices) as ChainTokenPrices)
@@ -39,7 +39,7 @@ export const fetchTokenPrices = async (
       }
 
       // Querying missing tokens' prices
-      if (tokenSet.size > 0 && chainId in KV_ADDRESS_KEYS) {
+      if (tokenSet.size > 0) {
         const missingTokenPrices = await getCovalentTokenPrices(chainId, Array.from(tokenSet))
         for (const strAddress in missingTokenPrices) {
           const address = strAddress as `0x${string}`

@@ -17,7 +17,10 @@
     "close": "Close",
     "learnAboutRisks": "Learn about the risks",
     "readDocs": "Read the Docs",
-    "termsOfService": "Terms of Service"
+    "termsOfService": "Terms of Service",
+    "bonusRewards": "Bonus Rewards",
+    "claim": "Claim",
+    "apr": "APR"
   },
   "Navigation": {
     "home": "Home",
@@ -73,6 +76,7 @@
     "headers": {
       "token": "Token",
       "prizeYield": "Prize Yield",
+      "bonusRewards": "Bonus Rewards",
       "totalDeposits": "Total Deposits",
       "yourBalance": "Your Balance"
     }
@@ -84,6 +88,7 @@
       "balance": "Balance",
       "winChance": "Win Chance",
       "prizeYield": "Prize Yield",
+      "bonusRewards": "Bonus Rewards",
       "tvl": "TVL",
       "contributions": "{number}D Prize Pool Contribution",
       "depositToken": "Deposit Token",
@@ -120,11 +125,18 @@
     "oneInXChance": "1 in {number}",
     "noPrizesRecently": "You haven't won any prizes recently.",
     "learnHowItWorks": "Learn how PoolTogether works",
+    "claimRewardsTx": "{symbol} Rewards Claim",
     "winHeaders": {
       "date": "Date",
       "prizePool": "Prize Pool",
       "winnings": "Winnings",
       "moreInfo": "More Info"
+    },
+    "bonusRewardHeaders": {
+      "token": "Token",
+      "rewardToken": "Reward Token",
+      "rewardsEarned": "Rewards Earned",
+      "claims": "Claims"
     },
     "prizeChecking": {
       "eligibleDraws": "You were eligible for {number, plural, one {# draw} other {# draws}}",
@@ -241,6 +253,7 @@
   },
   "Tooltips": {
     "prizeYield": "A recent average of a vault's contributions to the prize pool",
+    "bonusRewards": "An estimate of current extra incentives for depositors",
     "winChance": "Your chance to win a prize in any given draw",
     "exactApproval": "You'll give your approval to deposit a specific amount of {symbol}",
     "infiniteApproval": "You won't need to approve {symbol} the next time you want to deposit",

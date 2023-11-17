@@ -23,6 +23,7 @@ export const AccountWinCards = (props: AccountWinCardsProps) => {
     <div className={classNames('w-full flex flex-col gap-4', className)}>
       {wins.slice(0, numWins).map((win) => {
         const prizePool = prizePools.find((prizePool) => prizePool.chainId === win.chainId)
+
         if (!!prizePool) {
           return (
             <AccountWinCard key={`${win.chainId}-${win.txHash}`} win={win} prizePool={prizePool} />

@@ -171,6 +171,8 @@ const icons = Object.freeze({
   [NETWORK.mumbai]: { svgIcon: PolygonIcon, iconBgColor: '#9f71ec' },
   [NETWORK.optimism]: { svgIcon: OptimismIcon, iconBgColor: '#ff5a57' },
   [NETWORK['optimism-goerli']]: { svgIcon: OptimismIcon, iconBgColor: '#ff5a57' },
+  [NETWORK['optimism-sepolia']]: { svgIcon: OptimismIcon, iconBgColor: '#ff5a57' },
   [NETWORK.arbitrum]: { svgIcon: ArbitrumIcon, iconBgColor: '#96bedc' },
-  [NETWORK['arbitrum-goerli']]: { svgIcon: ArbitrumIcon, iconBgColor: '#96bedc' }
+  [NETWORK['arbitrum-goerli']]: { svgIcon: ArbitrumIcon, iconBgColor: '#96bedc' },
+  [NETWORK['arbitrum-sepolia']]: { svgIcon: ArbitrumIcon, iconBgColor: '#96bedc' }
 })

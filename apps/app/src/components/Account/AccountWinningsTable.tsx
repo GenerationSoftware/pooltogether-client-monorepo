@@ -78,8 +78,7 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
         position: 'center'
       },
       info: {
-        // TODO: this might not center properly with differently named block explorer buttons
-        content: <span className='w-[186px] text-center'>{t_account('winHeaders.moreInfo')}</span>,
+        content: <span className='w-24 text-center'>{t_account('winHeaders.moreInfo')}</span>,
         position: 'right'
       }
     },

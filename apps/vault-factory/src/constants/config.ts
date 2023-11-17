@@ -20,7 +20,7 @@ import {
 import { DEFAULT_CLAIMER_ADDRESSES, NETWORK } from '@shared/utilities'
 import { SupportedNetwork } from 'src/types'
 import { Address } from 'viem'
-import { arbitrum, Chain, mainnet, optimism, optimismGoerli } from 'wagmi/chains'
+import { arbitrum, Chain, mainnet, optimism, optimismGoerli } from 'viem/chains'
 
 /**
  * Supported networks

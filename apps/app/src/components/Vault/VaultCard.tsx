@@ -7,6 +7,7 @@ import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
 import { useVaultImportedListSrcs } from '@hooks/useVaultImportedListSrcs'
+import { VaultBonusRewards } from './VaultBonusRewards'
 import { VaultButtons } from './VaultButtons'
 import { VaultPrizeYield } from './VaultPrizeYield'
 import { VaultTotalDeposits } from './VaultTotalDeposits'
@@ -57,7 +58,13 @@ export const VaultCard = (props: VaultCardProps) => {
           </span>
           <VaultPrizeYield
             vault={vault}
-            label='APR'
+            label={t_common('apr')}
+            valueClassName='text-sm'
+            labelClassName='text-xs text-pt-purple-200'
+          />
+          <VaultBonusRewards
+            vault={vault}
+            label={t_common('apr')}
             valueClassName='text-sm'
             labelClassName='text-xs text-pt-purple-200'
           />

@@ -1,4 +1,4 @@
-import { KV_PRICE_KEYS, SUPPORTED_NETWORKS } from './constants'
+import { NETWORK_KEYS, SUPPORTED_NETWORKS } from './constants'
 import { ChainTokenPrices, TokenPrices } from './types'
 
 export const fetchAllTokenPrices = async () => {
@@ -9,7 +9,7 @@ export const fetchAllTokenPrices = async () => {
       SUPPORTED_NETWORKS.map((chainId) =>
         (async () => {
           const { value: chainTokenPrices } = await TOKEN_PRICES.getWithMetadata(
-            KV_PRICE_KEYS[chainId]
+            NETWORK_KEYS[chainId]
           )
           if (!!chainTokenPrices) {
             const parsedChainTokenPrices = JSON.parse(chainTokenPrices) as ChainTokenPrices

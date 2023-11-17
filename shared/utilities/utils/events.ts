@@ -3,7 +3,8 @@ import {
   LIQUIDATION_ROUTER_ADDRESSES,
   MSG_EXECUTOR_ADDRESSES,
   RNG_AUCTION,
-  RNG_RELAY_ADDRESSES
+  RNG_RELAY_ADDRESSES,
+  TWAB_REWARDS_ADDRESSES
 } from '../constants'
 import { getLiquidationPairAddresses } from './liquidations'
 
@@ -82,8 +83,10 @@ export const getRngL1RelayMsgEvents = async (
 
   const rngRelayContractAddress = RNG_RELAY_ADDRESSES[chainId]
 
-  if (!rngRelayContractAddress)
-    throw new Error(`No relay auction contract set for chain ID ${chainId}`)
+  if (!rngRelayContractAddress) {
+    console.warn(`No relay auction contract set for chain ID ${chainId}`)
+    return []
+  }
 
   return await publicClient.getLogs({
     address: rngRelayContractAddress,
@@ -134,8 +137,10 @@ export const getRngL2RelayMsgEvents = async (
 
   const msgExecutorContractAddress = MSG_EXECUTOR_ADDRESSES[chainId]
 
-  if (!msgExecutorContractAddress)
-    throw new Error(`No message executor contract set for chain ID ${chainId}`)
+  if (!msgExecutorContractAddress) {
+    console.warn(`No message executor contract set for chain ID ${chainId}`)
+    return []
+  }
 
   return await publicClient.getLogs({
     address: msgExecutorContractAddress,
@@ -225,8 +230,10 @@ export const getLiquidationEvents = async (
 
   const liqRouterContractAddress = LIQUIDATION_ROUTER_ADDRESSES[chainId]
 
-  if (!liqRouterContractAddress)
-    throw new Error(`No liquidation router contract set for chain ID ${chainId}`)
+  if (!liqRouterContractAddress) {
+    console.warn(`No liquidation router contract set for chain ID ${chainId}`)
+    return []
+  }
 
   const lpAddresses = await getLiquidationPairAddresses(publicClient)
 
@@ -356,8 +363,10 @@ export const getRelayAuctionEvents = async (
 
   const rngRelayContractAddress = RNG_RELAY_ADDRESSES[chainId]
 
-  if (!rngRelayContractAddress)
-    throw new Error(`No relay auction contract set for chain ID ${chainId}`)
+  if (!rngRelayContractAddress) {
+    console.warn(`No relay auction contract set for chain ID ${chainId}`)
+    return []
+  }
 
   return await publicClient.getLogs({
     address: rngRelayContractAddress,
@@ -391,7 +400,10 @@ export const getRngAuctionEvents = async (
 
   const rngAuctionContract = RNG_AUCTION[chainId]
 
-  if (!rngAuctionContract) throw new Error(`No RNG auction contract set for chain ID ${chainId}`)
+  if (!rngAuctionContract) {
+    console.warn(`No RNG auction contract set for chain ID ${chainId}`)
+    return []
+  }
 
   return await publicClient.getLogs({
     address: rngAuctionContract.address,
@@ -440,6 +452,97 @@ export const getTokenTransferEvents = async (
     args: {
       from: options?.from,
       to: options?.to
+    },
+    fromBlock: options?.fromBlock,
+    toBlock: options?.toBlock ?? 'latest',
+    strict: true
+  })
+}
+
+/**
+ * Returns `PromotionCreated` events
+ * @param publicClient a public Viem client to query through
+ * @param options optional settings
+ * @returns
+ */
+export const getPromotionCreatedEvents = async (
+  publicClient: PublicClient,
+  options?: {
+    vaultAddresses?: Address[]
+    tokenAddresses?: Address[]
+    fromBlock?: bigint
+    toBlock?: bigint
+  }
+) => {
+  const chainId = await publicClient.getChainId()
+
+  const twabRewardsAddress = TWAB_REWARDS_ADDRESSES[chainId]
+
+  if (!twabRewardsAddress) {
+    console.warn(`No TWAB rewards contract set for chain ID ${chainId}`)
+    return []
+  }
+
+  return await publicClient.getLogs({
+    address: twabRewardsAddress,
+    event: {
+      inputs: [
+        { indexed: true, internalType: 'uint256', name: 'promotionId', type: 'uint256' },
+        { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
+        { indexed: true, internalType: 'contract IERC20', name: 'token', type: 'address' }
+      ],
+      name: 'PromotionCreated',
+      type: 'event'
+    },
+    args: {
+      vault: options?.vaultAddresses,
+      token: options?.tokenAddresses
+    },
+    fromBlock: options?.fromBlock,
+    toBlock: options?.toBlock ?? 'latest',
+    strict: true
+  })
+}
+
+/**
+ * Returns `RewardsClaimed` events
+ * @param publicClient a public Viem client to query through
+ * @param options optional settings
+ * @returns
+ */
+export const getPromotionRewardsClaimedEvents = async (
+  publicClient: PublicClient,
+  options?: {
+    promotionIds?: bigint[]
+    userAddresses?: Address[]
+    fromBlock?: bigint
+    toBlock?: bigint
+  }
+) => {
+  const chainId = await publicClient.getChainId()
+
+  const twabRewardsAddress = TWAB_REWARDS_ADDRESSES[chainId]
+
+  if (!twabRewardsAddress) {
+    console.warn(`No TWAB rewards contract set for chain ID ${chainId}`)
+    return []
+  }
+
+  return await publicClient.getLogs({
+    address: twabRewardsAddress,
+    event: {
+      inputs: [
+        { indexed: true, internalType: 'uint256', name: 'promotionId', type: 'uint256' },
+        { indexed: false, internalType: 'uint8[]', name: 'epochIds', type: 'uint8[]' },
+        { indexed: true, internalType: 'address', name: 'user', type: 'address' },
+        { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }
+      ],
+      name: 'RewardsClaimed',
+      type: 'event'
+    },
+    args: {
+      promotionId: options?.promotionIds,
+      user: options?.userAddresses
     },
     fromBlock: options?.fromBlock,
     toBlock: options?.toBlock ?? 'latest',

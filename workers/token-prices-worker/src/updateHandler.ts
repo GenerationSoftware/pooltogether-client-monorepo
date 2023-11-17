@@ -1,4 +1,4 @@
-import { KV_ADDRESS_KEYS, KV_PRICE_KEYS, SUPPORTED_NETWORKS } from './constants'
+import { NETWORK_KEYS, SUPPORTED_NETWORKS } from './constants'
 import { ChainTokenPrices, SUPPORTED_NETWORK, TokenPrices } from './types'
 import { sortTokenPricesByDate } from './utils'
 
@@ -14,7 +14,7 @@ export const updateHandler = async (
     const chainTokenPrices = tokenPrices[chainId]
     if (!!chainTokenPrices) {
       event.waitUntil(
-        TOKEN_PRICES.getWithMetadata(KV_PRICE_KEYS[chainId]).then((data) => {
+        TOKEN_PRICES.getWithMetadata(NETWORK_KEYS[chainId]).then((data) => {
           const cachedChainTokenPrices: ChainTokenPrices = !!data.value
             ? JSON.parse(data.value)
             : {}
@@ -40,7 +40,7 @@ export const updateHandler = async (
           })
 
           event.waitUntil(
-            TOKEN_PRICES.put(KV_PRICE_KEYS[chainId], JSON.stringify(newChainTokenPrices), {
+            TOKEN_PRICES.put(NETWORK_KEYS[chainId], JSON.stringify(newChainTokenPrices), {
               metadata: { lastUpdated: new Date(Date.now()).toUTCString() }
             })
           )
@@ -59,33 +59,25 @@ const updateCachedAddresses = async (
   chainId: SUPPORTED_NETWORK,
   chainTokenPrices: ChainTokenPrices
 ) => {
-  if (chainId in KV_ADDRESS_KEYS) {
-    event.waitUntil(
-      TOKEN_ADDRESSES.getWithMetadata(
-        KV_ADDRESS_KEYS[chainId as keyof typeof KV_ADDRESS_KEYS]
-      ).then((data) => {
-        const tokenAddresses = new Set(data.value?.split(',') ?? [])
-        let needsUpdate = false
+  event.waitUntil(
+    TOKEN_ADDRESSES.getWithMetadata(NETWORK_KEYS[chainId]).then((data) => {
+      const tokenAddresses = new Set(data.value?.split(',') ?? [])
+      let needsUpdate = false
 
-        for (const address in chainTokenPrices) {
-          if (!tokenAddresses.has(address)) {
-            tokenAddresses.add(address)
-            needsUpdate = true
-          }
+      for (const address in chainTokenPrices) {
+        if (!tokenAddresses.has(address)) {
+          tokenAddresses.add(address)
+          needsUpdate = true
         }
+      }
 
-        if (needsUpdate) {
-          event.waitUntil(
-            TOKEN_ADDRESSES.put(
-              KV_ADDRESS_KEYS[chainId as keyof typeof KV_ADDRESS_KEYS],
-              Array.from(tokenAddresses).join(','),
-              {
-                metadata: { lastUpdated: new Date(Date.now()).toUTCString() }
-              }
-            )
-          )
-        }
-      })
-    )
-  }
+      if (needsUpdate) {
+        event.waitUntil(
+          TOKEN_ADDRESSES.put(NETWORK_KEYS[chainId], Array.from(tokenAddresses).join(','), {
+            metadata: { lastUpdated: new Date(Date.now()).toUTCString() }
+          })
+        )
+      }
+    })
+  )
 }
