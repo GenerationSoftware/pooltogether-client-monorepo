@@ -18,6 +18,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
+import { TWAB_REWARDS_SETTINGS } from '@constants/config'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { VaultBonusRewards } from './VaultBonusRewards'
 import { VaultButtons } from './VaultButtons'
@@ -40,6 +41,12 @@ export const VaultsTable = (props: VaultsTableProps) => {
   const prizePools = useSupportedPrizePools()
   const prizePool = Object.values(prizePools).find((prizePool) => prizePool.chainId === chainId)
 
+  const twabRewards = TWAB_REWARDS_SETTINGS[chainId]
+    ? {
+        rewardTokenAddresses: TWAB_REWARDS_SETTINGS[chainId].tokenAddresses,
+        fromBlock: TWAB_REWARDS_SETTINGS[chainId].fromBlock
+      }
+    : undefined
   const {
     sortedVaults,
     sortVaultsBy,
@@ -48,7 +55,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
     setSortDirection,
     toggleSortDirection,
     isFetched
-  } = useSortedVaults(vaults, { prizePool })
+  } = useSortedVaults(vaults, { prizePool, twabRewards })
 
   const { localVaultLists, importedVaultLists } = useSelectedVaultLists()
 
@@ -116,10 +123,15 @@ export const VaultsTable = (props: VaultsTableProps) => {
         ),
         position: 'center'
       },
-      // TODO: this header should be sortable
       // TODO: this header should include a tooltip
       bonusRewards: {
-        content: t_common('bonusRewards'),
+        content: (
+          <SortableHeader
+            id='twabRewards'
+            onClick={handleHeaderClick}
+            direction={getDirection('twabRewards')}
+          />
+        ),
         position: 'center'
       },
       totalDeposits: {
@@ -229,6 +241,7 @@ const SortableHeader = (props: SortableHeaderProps) => {
 
   const names: Record<SortId, string> = {
     prizeYield: t('headers.prizeYield'),
+    twabRewards: t('headers.bonusRewards'),
     totalBalance: t('headers.totalDeposits'),
     userBalance: t('headers.yourBalance')
   }

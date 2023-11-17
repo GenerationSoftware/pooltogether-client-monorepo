@@ -76,6 +76,7 @@
     "headers": {
       "token": "Token",
       "prizeYield": "Prize Yield",
+      "bonusRewards": "Bonus Rewards",
       "totalDeposits": "Total Deposits",
       "yourBalance": "Your Balance"
     }
