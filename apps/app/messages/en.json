@@ -252,6 +252,7 @@
   },
   "Tooltips": {
     "prizeYield": "A recent average of a vault's contributions to the prize pool",
+    "bonusRewards": "An estimate of current extra incentives for depositors",
     "winChance": "Your chance to win a prize in any given draw",
     "exactApproval": "You'll give your approval to deposit a specific amount of {symbol}",
     "infiniteApproval": "You won't need to approve {symbol} the next time you want to deposit",

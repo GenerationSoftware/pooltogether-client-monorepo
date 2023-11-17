@@ -6,6 +6,7 @@ import {
   useSortedVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
 import {
+  BonusRewardsTooltip,
   ImportedVaultTooltip,
   PrizeYieldTooltip,
   SortIcon,
@@ -123,13 +124,13 @@ export const VaultsTable = (props: VaultsTableProps) => {
         ),
         position: 'center'
       },
-      // TODO: this header should include a tooltip
       bonusRewards: {
         content: (
           <SortableHeader
             id='twabRewards'
             onClick={handleHeaderClick}
             direction={getDirection('twabRewards')}
+            append={<BonusRewardsTooltip iconSize='lg' intl={t_tooltips('bonusRewards')} />}
           />
         ),
         position: 'center'
