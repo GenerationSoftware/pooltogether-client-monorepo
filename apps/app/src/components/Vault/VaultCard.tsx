@@ -1,6 +1,11 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useUserVaultTokenBalance } from '@generationsoftware/hyperstructure-react-hooks'
-import { ImportedVaultTooltip, PrizeYieldTooltip, VaultBadge } from '@shared/react-components'
+import {
+  BonusRewardsTooltip,
+  ImportedVaultTooltip,
+  PrizeYieldTooltip,
+  VaultBadge
+} from '@shared/react-components'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { Address } from 'viem'
@@ -62,6 +67,12 @@ export const VaultCard = (props: VaultCardProps) => {
             valueClassName='text-sm'
             labelClassName='text-xs text-pt-purple-200'
           />
+        </div>
+        <div className='flex items-center justify-between'>
+          <span className='flex gap-1 items-center text-xs text-pt-purple-200'>
+            {t_vaults('headers.bonusRewards')}
+            <BonusRewardsTooltip intl={t_tooltips('bonusRewards')} className='text-xs' />
+          </span>
           <VaultBonusRewards
             vault={vault}
             label={t_common('apr')}
