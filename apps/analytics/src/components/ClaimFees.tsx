@@ -39,7 +39,12 @@ export const ClaimFees = (props: ClaimFeesProps) => {
       draw.prizeClaims.forEach((prize) => {
         const isValidTier = tier === undefined || prize.tier === tier
         const isCanaryTier = !!numTiers ? prize.tier === numTiers - 1 : false
-        if (prize.fee > 0n && isValidTier && (!hideCanary || !isCanaryTier)) {
+        if (
+          prize.fee > 0n &&
+          prize.feeRecipient !== prize.recipient &&
+          isValidTier &&
+          (!hideCanary || !isCanaryTier)
+        ) {
           filteredWins.push(prize)
         }
       })

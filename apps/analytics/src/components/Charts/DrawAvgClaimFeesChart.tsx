@@ -64,7 +64,10 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
       } = {}
 
       const filteredWins = drawWins.filter(
-        (win) => win.fee > 0n && (!hideCanary || win.tier !== numTiers - 1)
+        (win) =>
+          win.fee > 0n &&
+          win.feeRecipient !== win.recipient &&
+          (!hideCanary || win.tier !== numTiers - 1)
       )
 
       const tiers = new Set(filteredWins.map((win) => win.tier))

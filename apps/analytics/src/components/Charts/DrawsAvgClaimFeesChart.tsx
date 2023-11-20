@@ -35,7 +35,10 @@ export const DrawsAvgClaimFeesChart = (props: DrawsAvgClaimFeesChartProps) => {
         const numTiers = drawAwardedEvents?.find((e) => e.args.drawId === draw.id)?.args.numTiers
         if (!!numTiers) {
           const wins = draw.prizeClaims.filter(
-            (win) => win.fee > 0n && (!hideCanary || win.tier !== numTiers - 1)
+            (win) =>
+              win.fee > 0n &&
+              win.feeRecipient !== win.recipient &&
+              (!hideCanary || win.tier !== numTiers - 1)
           )
 
           if (!!wins.length) {
