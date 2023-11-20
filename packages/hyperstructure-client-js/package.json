@@ -1,6 +1,6 @@
 {
   "name": "@generationsoftware/hyperstructure-client-js",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "license": "MIT",
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -27,14 +27,12 @@
   },
   "devDependencies": {
     "@types/node": "^17.0.45",
-    "fathom-client": "^3.5.0",
     "tslib": "^2.5.0",
     "tsup": "^6.6.3",
     "typescript": "^5.0.4",
     "viem": "^1.19.1"
   },
   "peerDependencies": {
-    "fathom-client": "^3.5.0",
     "viem": "^1.19.1"
   }
 }

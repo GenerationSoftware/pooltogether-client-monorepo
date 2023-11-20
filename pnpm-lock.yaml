@@ -14,7 +14,6 @@ importers:
       '@types/react-dom': ^18.2.0
       axios: ^1.4.0
       classnames: ^2.3.2
-      fathom-client: ^3.5.0
       flowbite: 1.6.5
       flowbite-react: 0.4.7
       framer-motion: ^10.12.16
@@ -44,7 +43,6 @@ importers:
       '@types/react-dom': 18.2.4
       axios: 1.4.0
       classnames: 2.3.2
-      fathom-client: 3.5.0
       flowbite: 1.6.5
       flowbite-react: 0.4.7_pob4ffeafvx74vtuaxxqyesgwy
       framer-motion: 10.12.16_biqbaboplfbrettd7655fr4n2y
@@ -75,7 +73,6 @@ importers:
       autoprefixer: ^10.4.13
       axios: ^1.4.0
       classnames: ^2.3.2
-      fathom-client: ^3.5.0
       flowbite: 1.6.5
       flowbite-react: 0.4.7
       framer-motion: ^10.12.16
@@ -100,7 +97,6 @@ importers:
       '@tanstack/react-query': 4.29.5_biqbaboplfbrettd7655fr4n2y
       axios: 1.4.0
       classnames: 2.3.2
-      fathom-client: 3.5.0
       flowbite: 1.6.5
       flowbite-react: 0.4.7_pob4ffeafvx74vtuaxxqyesgwy
       framer-motion: 10.12.16_biqbaboplfbrettd7655fr4n2y
@@ -138,7 +134,6 @@ importers:
       axios: ^1.4.0
       classnames: ^2.3.2
       deepmerge: ^4.3.1
-      fathom-client: ^3.5.0
       flowbite: 1.6.5
       flowbite-react: 0.4.7
       framer-motion: ^10.12.16
@@ -165,7 +160,6 @@ importers:
       axios: 1.4.0
       classnames: 2.3.2
       deepmerge: 4.3.1
-      fathom-client: 3.5.0
       flowbite: 1.6.5
       flowbite-react: 0.4.7_pob4ffeafvx74vtuaxxqyesgwy
       framer-motion: 10.12.16_biqbaboplfbrettd7655fr4n2y
@@ -199,7 +193,6 @@ importers:
       autoprefixer: ^10.4.13
       axios: ^1.4.0
       classnames: ^2.3.2
-      fathom-client: ^3.5.0
       flowbite: 1.6.5
       flowbite-react: 0.4.7
       framer-motion: ^10.12.16
@@ -219,7 +212,6 @@ importers:
       '@tanstack/react-query': 4.29.5_biqbaboplfbrettd7655fr4n2y
       axios: 1.4.0
       classnames: 2.3.2
-      fathom-client: 3.5.0
       flowbite: 1.6.5
       flowbite-react: 0.4.7_pob4ffeafvx74vtuaxxqyesgwy
       framer-motion: 10.12.16_biqbaboplfbrettd7655fr4n2y
@@ -252,7 +244,6 @@ importers:
       autoprefixer: ^10.4.13
       axios: ^1.4.0
       classnames: ^2.3.2
-      fathom-client: ^3.5.0
       flowbite: 1.6.5
       flowbite-react: 0.4.7
       framer-motion: ^10.12.16
@@ -276,7 +267,6 @@ importers:
       '@tanstack/react-query': 4.29.5_biqbaboplfbrettd7655fr4n2y
       axios: 1.4.0
       classnames: 2.3.2
-      fathom-client: 3.5.0
       flowbite: 1.6.5
       flowbite-react: 0.4.7_pob4ffeafvx74vtuaxxqyesgwy
       framer-motion: 10.12.16_biqbaboplfbrettd7655fr4n2y
@@ -312,7 +302,6 @@ importers:
       autoprefixer: ^10.4.13
       axios: ^1.4.0
       classnames: ^2.3.2
-      fathom-client: ^3.5.0
       flowbite: 1.6.5
       flowbite-react: 0.4.7
       framer-motion: ^10.12.16
@@ -337,7 +326,6 @@ importers:
       '@tanstack/react-query': 4.29.5_biqbaboplfbrettd7655fr4n2y
       axios: 1.4.0
       classnames: 2.3.2
-      fathom-client: 3.5.0
       flowbite: 1.6.5
       flowbite-react: 0.4.7_pob4ffeafvx74vtuaxxqyesgwy
       framer-motion: 10.12.16_biqbaboplfbrettd7655fr4n2y
@@ -372,7 +360,6 @@ importers:
       autoprefixer: ^10.4.13
       axios: ^1.4.0
       classnames: ^2.3.2
-      fathom-client: ^3.5.0
       flowbite: 1.6.5
       flowbite-react: 0.4.7
       framer-motion: ^10.12.16
@@ -396,7 +383,6 @@ importers:
       '@tanstack/react-query': 4.29.5_biqbaboplfbrettd7655fr4n2y
       axios: 1.4.0
       classnames: 2.3.2
-      fathom-client: 3.5.0
       flowbite: 1.6.5
       flowbite-react: 0.4.7_pob4ffeafvx74vtuaxxqyesgwy
       framer-motion: 10.12.16_biqbaboplfbrettd7655fr4n2y
@@ -423,7 +409,6 @@ importers:
     specifiers:
       '@types/node': ^17.0.45
       axios: ^1.4.0
-      fathom-client: ^3.5.0
       tslib: ^2.5.0
       tsup: ^6.6.3
       typescript: ^5.0.4
@@ -432,7 +417,6 @@ importers:
       axios: 1.4.0
     devDependencies:
       '@types/node': 17.0.45
-      fathom-client: 3.5.0
       tslib: 2.5.0
       tsup: 6.7.0_typescript@5.0.4
       typescript: 5.0.4
@@ -3578,12 +3562,6 @@ packages:
       }
     dependencies:
       reusify: 1.0.4
-
-  /fathom-client/3.5.0:
-    resolution:
-      {
-        integrity: sha512-BiRDS9Q9a8Zma0H717FWC5cvf545K/CsxBpxKT22TcSl1EbRhhlHWIJgrdeiQUfdorBK2ppy09TwMOhRsbos/A==
-      }
 
   /file-uri-to-path/1.0.0:
     resolution:

@@ -12,7 +12,6 @@
     "@tanstack/react-query": "^4.24.10",
     "axios": "^1.4.0",
     "classnames": "^2.3.2",
-    "fathom-client": "^3.5.0",
     "flowbite": "1.6.5",
     "flowbite-react": "0.4.7",
     "framer-motion": "^10.12.16",
