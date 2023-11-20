@@ -6,7 +6,7 @@ import {
   useRngL1RelayMsgEvents,
   useRngL2RelayMsgEvents
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { PRIZE_POOLS, sToMs } from '@shared/utilities'
+import { PRIZE_POOLS, RNG_RELAY_ADDRESSES, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useEffect, useMemo } from 'react'
@@ -17,7 +17,7 @@ import { DrawAvgClaimFeesChart } from '@components/Charts/DrawAvgClaimFeesChart'
 import { DrawSelector } from '@components/Draws/DrawSelector'
 import { DrawStatusBadge } from '@components/Draws/DrawStatusBadge'
 import { PrizesTable } from '@components/Prizes/PrizesTable'
-import { QUERY_START_BLOCK, RELAY_ORIGINS } from '@constants/config'
+import { QUERY_START_BLOCK } from '@constants/config'
 
 interface PrizesViewProps {
   chainId: number
@@ -44,16 +44,20 @@ export const PrizesView = (props: PrizesViewProps) => {
     )
   }, [chainId])
 
-  const originChainId = !!prizePool ? RELAY_ORIGINS[prizePool.chainId] : undefined
+  const originChainId = !!prizePool
+    ? RNG_RELAY_ADDRESSES[prizePool.chainId].from.chainId
+    : undefined
   const fromBlock = !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
   const originFromBlock = !!originChainId ? QUERY_START_BLOCK[originChainId] : undefined
 
   const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents(originChainId as number, {
     fromBlock: originFromBlock
   })
-  const { refetch: refetchRngL1RelayMsgEvents } = useRngL1RelayMsgEvents(originChainId as number, {
-    fromBlock: originFromBlock
-  })
+  const { refetch: refetchRngL1RelayMsgEvents } = useRngL1RelayMsgEvents(
+    originChainId as number,
+    prizePool?.chainId,
+    { fromBlock: originFromBlock }
+  )
   const { refetch: refetchRelayAuctionEvents } = useRelayAuctionEvents(prizePool?.chainId, {
     fromBlock
   })

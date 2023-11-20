@@ -8,10 +8,10 @@ import {
   useRngL1RelayMsgEvents,
   useRngL2RelayMsgEvents
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { RNG_AUCTION } from '@shared/utilities'
+import { RNG_AUCTION, RNG_RELAY_ADDRESSES } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address } from 'viem'
-import { QUERY_START_BLOCK, RELAY_ORIGINS } from '@constants/config'
+import { QUERY_START_BLOCK } from '@constants/config'
 
 export interface RngTx {
   drawId: number
@@ -42,7 +42,9 @@ export interface RelayMsgTx {
 }
 
 export const useRngTxs = (prizePool: PrizePool) => {
-  const originChainId = !!prizePool ? RELAY_ORIGINS[prizePool.chainId] : undefined
+  const originChainId = !!prizePool
+    ? RNG_RELAY_ADDRESSES[prizePool.chainId].from.chainId
+    : undefined
   const fromBlock = !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
   const originFromBlock = !!originChainId ? QUERY_START_BLOCK[originChainId] : undefined
 
@@ -67,7 +69,9 @@ export const useRngTxs = (prizePool: PrizePool) => {
   )
 
   const { data: rngL1RelayMsgEvents, isFetched: isFetchedRngL1RelayMsgEvents } =
-    useRngL1RelayMsgEvents(originChainId as number, { fromBlock: originFromBlock })
+    useRngL1RelayMsgEvents(originChainId as number, prizePool?.chainId, {
+      fromBlock: originFromBlock
+    })
   const { data: rngL2RelayMsgEvents, isFetched: isFetchedRngL2RelayMsgEvents } =
     useRngL2RelayMsgEvents(prizePool?.chainId, { fromBlock })
 

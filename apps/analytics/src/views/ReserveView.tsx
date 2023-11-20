@@ -9,7 +9,7 @@ import {
   useRngL1RelayMsgEvents,
   useRngL2RelayMsgEvents
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { getSecondsSinceEpoch, PRIZE_POOLS, sToMs } from '@shared/utilities'
+import { getSecondsSinceEpoch, PRIZE_POOLS, RNG_RELAY_ADDRESSES, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import { useSetAtom } from 'jotai'
 import { useEffect, useMemo } from 'react'
@@ -18,7 +18,7 @@ import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { ReserveChart } from '@components/Charts/ReserveChart'
 import { ReserveHeader } from '@components/Reserve/ReserveHeader'
-import { QUERY_START_BLOCK, RELAY_ORIGINS } from '@constants/config'
+import { QUERY_START_BLOCK } from '@constants/config'
 import { useReserve } from '@hooks/useReserve'
 
 interface ReserveViewProps {
@@ -48,7 +48,9 @@ export const ReserveView = (props: ReserveViewProps) => {
     )
   }, [chainId])
 
-  const originChainId = !!prizePool ? RELAY_ORIGINS[prizePool.chainId] : undefined
+  const originChainId = !!prizePool
+    ? RNG_RELAY_ADDRESSES[prizePool.chainId].from.chainId
+    : undefined
   const fromBlock = !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
   const originFromBlock = !!originChainId ? QUERY_START_BLOCK[originChainId] : undefined
 
@@ -63,9 +65,11 @@ export const ReserveView = (props: ReserveViewProps) => {
   const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents(originChainId as number, {
     fromBlock: originFromBlock
   })
-  const { refetch: refetchRngL1RelayMsgEvents } = useRngL1RelayMsgEvents(originChainId as number, {
-    fromBlock: originFromBlock
-  })
+  const { refetch: refetchRngL1RelayMsgEvents } = useRngL1RelayMsgEvents(
+    originChainId as number,
+    prizePool?.chainId,
+    { fromBlock: originFromBlock }
+  )
   const { refetch: refetchRelayAuctionEvents } = useRelayAuctionEvents(prizePool?.chainId, {
     fromBlock
   })

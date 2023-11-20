@@ -1,9 +1,14 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
 import { ExternalLink, Spinner } from '@shared/ui'
-import { formatBigIntForDisplay, getBlockExplorerUrl, shorten, sToMs } from '@shared/utilities'
+import {
+  formatBigIntForDisplay,
+  getBlockExplorerUrl,
+  RNG_RELAY_ADDRESSES,
+  shorten,
+  sToMs
+} from '@shared/utilities'
 import classNames from 'classnames'
-import { RELAY_ORIGINS } from '@constants/config'
 import { useDrawRngFeePercentage } from '@hooks/useDrawRngFeePercentage'
 import { useDrawStatus } from '@hooks/useDrawStatus'
 import { useRngTxs } from '@hooks/useRngTxs'
@@ -82,7 +87,11 @@ export const DrawRngFee = (props: DrawRngFeeProps) => {
             </span>
             {!!rngTx ? (
               <ExternalLink
-                href={getBlockExplorerUrl(RELAY_ORIGINS[prizePool.chainId], rngTx.hash, 'tx')}
+                href={getBlockExplorerUrl(
+                  RNG_RELAY_ADDRESSES[prizePool.chainId].from.chainId,
+                  rngTx.hash,
+                  'tx'
+                )}
               >
                 {shorten(rngTx.hash, { short: true })}
               </ExternalLink>

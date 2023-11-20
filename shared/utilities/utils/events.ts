@@ -72,19 +72,26 @@ export const getWithdrawEvents = async (
 /**
  * Returns `RelayedToDispatcher` events
  * @param publicClient a public Viem client to query through
+ * @param destinationChainId the chain ID that the messages are to be relayed to
  * @param options optional settings
  * @returns
  */
 export const getRngL1RelayMsgEvents = async (
   publicClient: PublicClient,
+  destinationChainId: number,
   options?: { fromBlock?: bigint; toBlock?: bigint }
 ) => {
   const chainId = await publicClient.getChainId()
 
-  const rngRelayContractAddress = RNG_RELAY_ADDRESSES[chainId]
+  const rngRelayContractAddress = RNG_RELAY_ADDRESSES[destinationChainId]?.from.address
 
-  if (!rngRelayContractAddress) {
-    console.warn(`No relay auction contract set for chain ID ${chainId}`)
+  if (
+    !rngRelayContractAddress ||
+    RNG_RELAY_ADDRESSES[destinationChainId].from.chainId !== chainId
+  ) {
+    console.warn(
+      `No relay auction addresses set from chain ID ${chainId} to chain ID ${destinationChainId}`
+    )
     return []
   }
 
@@ -361,7 +368,7 @@ export const getRelayAuctionEvents = async (
 ) => {
   const chainId = await publicClient.getChainId()
 
-  const rngRelayContractAddress = RNG_RELAY_ADDRESSES[chainId]
+  const rngRelayContractAddress = RNG_RELAY_ADDRESSES[chainId]?.address
 
   if (!rngRelayContractAddress) {
     console.warn(`No relay auction contract set for chain ID ${chainId}`)

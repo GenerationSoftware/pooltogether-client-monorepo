@@ -4,17 +4,19 @@ import {
   chainlinkVrfABI,
   getSecondsSinceEpoch,
   RNG_AUCTION,
+  RNG_RELAY_ADDRESSES,
   rngAuctionABI
 } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { usePublicClient } from 'wagmi'
-import { RELAY_ORIGINS } from '@constants/config'
 
 export const useRelayAuctionElapsedTime = (
   prizePool: PrizePool,
   options?: { refetchInterval?: number }
 ) => {
-  const originChainId = !!prizePool ? RELAY_ORIGINS[prizePool.chainId] : undefined
+  const originChainId = !!prizePool
+    ? RNG_RELAY_ADDRESSES[prizePool.chainId].from.chainId
+    : undefined
   const publicClient = usePublicClient({ chainId: originChainId })
 
   return useQuery(

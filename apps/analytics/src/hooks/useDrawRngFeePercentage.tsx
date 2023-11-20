@@ -1,16 +1,17 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
-import { RNG_AUCTION, rngAuctionABI } from '@shared/utilities'
+import { RNG_AUCTION, RNG_RELAY_ADDRESSES, rngAuctionABI } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { formatUnits } from 'viem'
 import { usePublicClient } from 'wagmi'
-import { RELAY_ORIGINS } from '@constants/config'
 
 export const useDrawRngFeePercentage = (
   prizePool: PrizePool,
   options?: { refetchInterval?: number }
 ) => {
-  const originChainId = !!prizePool ? RELAY_ORIGINS[prizePool.chainId] : undefined
+  const originChainId = !!prizePool
+    ? RNG_RELAY_ADDRESSES[prizePool.chainId].from.chainId
+    : undefined
   const publicClient = usePublicClient({ chainId: originChainId })
 
   return useQuery(

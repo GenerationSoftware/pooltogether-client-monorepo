@@ -17,7 +17,7 @@ export const useDrawRelayFeePercentage = (prizePool: PrizePool) => {
     queryKey,
     async () => {
       const rewardFraction = await publicClient.readContract({
-        address: RNG_RELAY_ADDRESSES[prizePool.chainId],
+        address: RNG_RELAY_ADDRESSES[prizePool.chainId].address,
         abi: rngRelayABI,
         functionName: 'computeRewardFraction',
         args: [elapsedTime as bigint]
@@ -26,7 +26,8 @@ export const useDrawRelayFeePercentage = (prizePool: PrizePool) => {
       return parseFloat(formatUnits(rewardFraction, 18)) * 100
     },
     {
-      enabled: !!prizePool && !!publicClient && !!elapsedTime,
+      enabled:
+        !!prizePool && !!publicClient && !!elapsedTime && !!RNG_RELAY_ADDRESSES[prizePool.chainId],
       ...NO_REFETCH
     }
   )

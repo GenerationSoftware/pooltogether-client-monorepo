@@ -294,17 +294,24 @@ export const RNG_AUCTION: {
   }
 }
 
-// TODO: there will be one remoteowner for each chain, not just 1 on mainnet/goerli/sepolia. Need to fix this mapping before going multichain
 /**
  * RNG relay addresses
  */
-export const RNG_RELAY_ADDRESSES: { [chainId: number]: Address } = {
-  [NETWORK.mainnet]: '0xEC9460c59cCA1299b0242D6AF426c21223ccCD24', // to op
-  [NETWORK.goerli]: '0xe34deF1114d7Bb0298636A2026D9Cf3D67F19FBd', // to op-goerli
-  [NETWORK.sepolia]: '0x149e3B3Bd69f1Cfc1B42b6A6a152a42E38cEeBf1', // to arb-sepolia
-  [NETWORK.optimism]: '0x87d3D9afeD1702728B7F280ba5c4b4c55DEfa557',
-  [NETWORK['optimism-goerli']]: '0x5C9c04FC5D6431A2101b8395E13B565762980F97',
-  [NETWORK['arbitrum-sepolia']]: '0x0aeDA5579Ac1ee498353ac14907B0e5a99d20B8F'
+export const RNG_RELAY_ADDRESSES: {
+  [chainId: number]: { address: Address; from: { chainId: number; address: Address } }
+} = {
+  [NETWORK.optimism]: {
+    address: '0x87d3D9afeD1702728B7F280ba5c4b4c55DEfa557',
+    from: { chainId: NETWORK.mainnet, address: '0xEC9460c59cCA1299b0242D6AF426c21223ccCD24' }
+  },
+  [NETWORK['optimism-goerli']]: {
+    address: '0x5C9c04FC5D6431A2101b8395E13B565762980F97',
+    from: { chainId: NETWORK.goerli, address: '0xe34deF1114d7Bb0298636A2026D9Cf3D67F19FBd' }
+  },
+  [NETWORK['arbitrum-sepolia']]: {
+    address: '0x0aeDA5579Ac1ee498353ac14907B0e5a99d20B8F',
+    from: { chainId: NETWORK.sepolia, address: '0x149e3B3Bd69f1Cfc1B42b6A6a152a42E38cEeBf1' }
+  }
 }
 
 /**

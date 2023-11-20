@@ -71,11 +71,3 @@ export const BURN_ADDRESSES: { [chainId: number]: Lowercase<Address>[] } = {
     '0x3989cbc1fb0eb278601c018ed7627b07be9de4cb'
   ]
 }
-
-/**
- * Relay TX origins
- */
-export const RELAY_ORIGINS: { [chainId: number]: number } = {
-  [NETWORK.optimism]: NETWORK.mainnet,
-  [NETWORK['optimism-goerli']]: NETWORK.goerli
-}

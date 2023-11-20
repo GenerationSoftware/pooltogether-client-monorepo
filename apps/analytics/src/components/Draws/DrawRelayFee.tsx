@@ -1,10 +1,14 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
 import { ExternalLink, Spinner } from '@shared/ui'
-import { formatBigIntForDisplay, getBlockExplorerUrl, shorten } from '@shared/utilities'
+import {
+  formatBigIntForDisplay,
+  getBlockExplorerUrl,
+  RNG_RELAY_ADDRESSES,
+  shorten
+} from '@shared/utilities'
 import classNames from 'classnames'
 import { formatUnits } from 'viem'
-import { RELAY_ORIGINS } from '@constants/config'
 import { useDrawRelayFeePercentage } from '@hooks/useDrawRelayFeePercentage'
 import { useDrawStatus } from '@hooks/useDrawStatus'
 import { useRngTxs } from '@hooks/useRngTxs'
@@ -85,7 +89,7 @@ export const DrawRelayFee = (props: DrawRelayFeeProps) => {
                 {!!relayMsgTx && (
                   <ExternalLink
                     href={getBlockExplorerUrl(
-                      RELAY_ORIGINS[prizePool.chainId],
+                      RNG_RELAY_ADDRESSES[prizePool.chainId].from.chainId,
                       relayMsgTx.hash,
                       'tx'
                     )}
