@@ -130,6 +130,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useSendApproveTransaction`
 - `useSendClaimRewardsTransaction`
 - `useSendClaimVaultFeesTransaction`
+- `useSendCreatePromotionTransaction`
 - `useSendDeployLiquidationPairTransaction`
 - `useSendDeployVaultTransaction`
 - `useSendDepositTransaction`

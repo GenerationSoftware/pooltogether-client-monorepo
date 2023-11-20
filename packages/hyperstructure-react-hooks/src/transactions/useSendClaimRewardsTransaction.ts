@@ -58,7 +58,7 @@ export const useSendClaimRewardsTransaction = (
     abi: twabRewardsABI,
     functionName: 'claimRewards',
     args: claimRewardsArgs,
-    enabled: enabled
+    enabled
   })
 
   const {
