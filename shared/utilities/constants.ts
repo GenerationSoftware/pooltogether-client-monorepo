@@ -309,8 +309,8 @@ export const RNG_RELAY_ADDRESSES: {
     from: { chainId: NETWORK.goerli, address: '0xe34deF1114d7Bb0298636A2026D9Cf3D67F19FBd' }
   },
   [NETWORK['arbitrum-sepolia']]: {
-    address: '0x0aeDA5579Ac1ee498353ac14907B0e5a99d20B8F',
-    from: { chainId: NETWORK.sepolia, address: '0x149e3B3Bd69f1Cfc1B42b6A6a152a42E38cEeBf1' }
+    address: '0x4A101c4703e8fa447859EF380048052b0cDB9893',
+    from: { chainId: NETWORK.sepolia, address: '0xAFD0a893845cb2c278D6629c78fFA7ad403077Bf' }
   }
 }
 
