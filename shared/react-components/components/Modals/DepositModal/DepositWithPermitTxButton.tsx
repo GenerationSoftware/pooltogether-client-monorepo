@@ -5,6 +5,7 @@ import {
   useSendDepositWithPermitTransaction,
   useTokenAllowance,
   useTokenBalance,
+  useUserVaultDelegationBalance,
   useUserVaultTokenBalance,
   useVaultBalance,
   useVaultTokenData
@@ -59,7 +60,6 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
   const { chain } = useNetwork()
 
   const { data: tokenData } = useVaultTokenData(vault)
-
   const decimals = vault.decimals ?? tokenData?.decimals
 
   const {
@@ -74,17 +74,23 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
   )
 
   const {
-    data: userBalance,
-    isFetched: isFetchedUserBalance,
-    refetch: refetchTokenBalance
-  } = useTokenBalance(vault.chainId, userAddress as Address, tokenData?.address as Address)
+    data: userVaultTokenBalance,
+    isFetched: isFetchedUserVaultTokenBalance,
+    refetch: refetchUserVaultTokenBalance
+  } = useUserVaultTokenBalance(vault, userAddress as Address)
 
-  const { refetch: refetchVaultBalance } = useVaultBalance(vault)
+  const { refetch: refetchTokenBalance } = useTokenBalance(
+    vault.chainId,
+    userAddress as Address,
+    tokenData?.address as Address
+  )
 
-  const { refetch: refetchUserVaultTokenBalance } = useUserVaultTokenBalance(
+  const { refetch: refetchUserVaultDelegationBalance } = useUserVaultDelegationBalance(
     vault,
     userAddress as Address
   )
+
+  const { refetch: refetchVaultBalance } = useVaultBalance(vault)
 
   const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
 
@@ -128,11 +134,12 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
       },
       onSuccess: () => {
         setIsApproved(false)
-        refetchTokenBalance()
-        refetchVaultBalance()
         refetchUserVaultTokenBalance()
-        refetchUserBalances?.()
+        refetchTokenBalance()
+        refetchUserVaultDelegationBalance()
+        refetchVaultBalance()
         refetchTokenAllowance()
+        refetchUserBalances?.()
         setModalView('success')
       },
       onError: () => {
@@ -152,11 +159,12 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
       setModalView('waiting')
     },
     onSuccess: () => {
-      refetchTokenBalance()
-      refetchVaultBalance()
       refetchUserVaultTokenBalance()
-      refetchUserBalances?.()
+      refetchTokenBalance()
+      refetchUserVaultDelegationBalance()
+      refetchVaultBalance()
       refetchTokenAllowance()
+      refetchUserBalances?.()
       setModalView('success')
     },
     onError: () => {
@@ -195,8 +203,8 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
     !isDisconnected &&
     !!userAddress &&
     !!tokenData &&
-    isFetchedUserBalance &&
-    !!userBalance &&
+    isFetchedUserVaultTokenBalance &&
+    !!userVaultTokenBalance &&
     isFetchedAllowance &&
     allowance !== undefined &&
     !!depositAmount &&
@@ -204,7 +212,7 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
     chain?.id === vault.chainId
 
   const depositEnabled =
-    isDataFetched && userBalance.amount >= depositAmount && isValidFormTokenAmount
+    isDataFetched && userVaultTokenBalance.amount >= depositAmount && isValidFormTokenAmount
 
   // No deposit amount set
   if (depositAmount === 0n) {

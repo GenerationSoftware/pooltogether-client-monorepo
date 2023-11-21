@@ -2,7 +2,9 @@ import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useSendRedeemTransaction,
   useTokenBalance,
+  useUserVaultDelegationBalance,
   useUserVaultShareBalance,
+  useUserVaultTokenBalance,
   useVaultBalance,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
@@ -56,19 +58,25 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
   const { chain } = useNetwork()
 
   const { data: tokenData } = useVaultTokenData(vault)
-
   const decimals = vault.decimals ?? tokenData?.decimals
 
-  const {
-    data: vaultShareBalance,
-    isFetched: isFetchedVaultShareBalance,
-    refetch: refetchVaultShareBalance
-  } = useUserVaultShareBalance(vault, userAddress as Address)
+  const { data: userVaultShareBalance, isFetched: isFetchedUserVaultShareBalance } =
+    useUserVaultShareBalance(vault, userAddress as Address)
+
+  const { refetch: refetchUserVaultTokenBalance } = useUserVaultTokenBalance(
+    vault,
+    userAddress as Address
+  )
 
   const { refetch: refetchTokenBalance } = useTokenBalance(
     vault.chainId,
     userAddress as Address,
     tokenData?.address as Address
+  )
+
+  const { refetch: refetchUserVaultDelegationBalance } = useUserVaultDelegationBalance(
+    vault,
+    userAddress as Address
   )
 
   const { refetch: refetchVaultBalance } = useVaultBalance(vault)
@@ -93,9 +101,10 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
       setModalView('waiting')
     },
     onSuccess: () => {
+      refetchUserVaultTokenBalance()
       refetchTokenBalance()
+      refetchUserVaultDelegationBalance()
       refetchVaultBalance()
-      refetchVaultShareBalance()
       refetchUserBalances?.()
       setModalView('success')
     },
@@ -120,11 +129,11 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
     !isDisconnected &&
     !!userAddress &&
     !!tokenData &&
-    isFetchedVaultShareBalance &&
-    !!vaultShareBalance &&
+    isFetchedUserVaultShareBalance &&
+    !!userVaultShareBalance &&
     isValidFormShareAmount &&
     !!withdrawAmount &&
-    vaultShareBalance.amount >= withdrawAmount &&
+    userVaultShareBalance.amount >= withdrawAmount &&
     !!sendRedeemTransaction
 
   if (withdrawAmount === 0n) {
