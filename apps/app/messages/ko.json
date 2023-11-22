@@ -1,1 +1,297 @@
-{}
+{
+  "Common": {
+    "depositToWin": "당첨을 위해 입금하기",
+    "prizePool": "{network} 상금 풀",
+    "grandPrize": "대상",
+    "joinDiscord": "우리 디스코드 커뮤니티에 가입하기",
+    "showMore": "더 보기",
+    "drawId": "추첨 #{id}",
+    "manage": "관리하기",
+    "deposit": "입금",
+    "withdraw": "출금",
+    "learnMore": "더 알아보기",
+    "back": "뒤로",
+    "connectWallet": "지갑 연결",
+    "viewTx": "TX 보기",
+    "viewOn": "{name} 에서 보기",
+    "close": "닫기",
+    "learnAboutRisks": "위험에 대해 알아보기",
+    "readDocs": "문서 읽기",
+    "termsOfService": "서비스 약관"
+  },
+  "Navigation": {
+    "home": "홈",
+    "prizes": "상품들",
+    "vaults": "금고들",
+    "vault": "금고",
+    "account": "계정"
+  },
+  "Home": {
+    "winUpTo": {
+      "beforeValue": "매일 최대 당첨될 수 있는 기회를 위해 입금하기",
+      "afterValue": ""
+    },
+    "withdrawAnyTime": "언제든지 전액을 출금할 수 있습니다"
+  },
+  "Prizes": {
+    "learnMore": "상품이 어떻게 작동하는지 더 알아보기",
+    "switchPrizePool": "상금 풀 전환",
+    "estPrizeValue": "예상 상품 가치",
+    "estPrizeFreq": "예상 빈도",
+    "recentWinners": "최근 상금 풀 당첨자들",
+    "drawWinners": {
+      "beforeValue": "{numWallets, plural, one {# 지갑} other {# 지갑들}} 오늘 당첨",
+      "afterValue": {
+        "today": "오늘",
+        "yesterday": "어제",
+        "onXDate": "{date} 에"
+      },
+      "drawIsOngoing": "추첨이 진행 중입니다"
+    },
+    "drawModal": {
+      "drawTotal": {
+        "beforeValue": "이 추첨에서 {numWallets} 개의 독특한 지갑들이 총",
+        "afterValue": "의 상품을 당첨되었습니다.",
+        "afterValueOngoing": "의 상품을 지금까지 당첨되었습니다."
+      },
+      "winner": "당첨자",
+      "prize": "상품",
+      "youWereEligible": "당신은 이 추첨에 참여할 자격이 있었습니다."
+    }
+  },
+  "Vaults": {
+    "filter": "필터",
+    "filters": {
+      "showAll": "모두 보기",
+      "inWallet": "지갑 안에 있는",
+      "stablecoins": "스테이블코인",
+      "allVaultLists": "모든 금고 목록"
+    },
+    "manageVaultLists": "금고 목록 관리",
+    "clearFilters": "필터 지우기",
+    "disclaimer": "PoolTogether 상금 금고는 누구나 배포할 수 있습니다. <link>당신이 입금하는 것이 무엇인지 알아보세요</link>",
+    "headers": {
+      "token": "토큰",
+      "prizeYield": "상금 수익",
+      "totalDeposits": "총 입금",
+      "yourBalance": "당신의 잔액"
+    }
+  },
+  "Vault": {
+    "headers": {
+      "yourBalance": "당신의 잔액",
+      "yourWinChance": "당신의 당첨 확률",
+      "balance": "잔액",
+      "winChance": "당첨 확률",
+      "prizeYield": "상금 수익",
+      "tvl": "TVL",
+      "contributions": "{number}D 상금 풀 기여",
+      "depositToken": "입금 토큰",
+      "prizeToken": "상금 토큰",
+      "delegatedToYou": "당신에게 위임된",
+      "delegatedAmount": "위임된 금액",
+      "vaultFee": "금고 수수료",
+      "feeRecipient": "수수료 수령인",
+      "yieldSource": "수익 소스"
+    },
+    "returnToVaults": "금고로 돌아가기",
+    "learnAboutVault": "{vaultName} 에 대해 알아보기",
+    "smartContractRisk": "PoolTogether 는 누구나 사용할 수 있는 허가 없는 프로토콜입니다. 이 상금 금고는 다음 계약들로부터 스마트 계약 위험에 노출됩니다:",
+    "vaultContract": "금고 계약",
+    "yieldSourceContract": "수익 소스 계약",
+    "inVaultLists": "이 상금 금고는 당신이 선택한 다음 금고 목록에 있습니다:",
+    "notInVaultLists": "이 상금 금고는 당신이 선택한 어떤 금고 목록에도 없습니다.",
+    "shortWarningNotInVaultLists": "경고! 이 금고는 당신의 활성 목록에 없습니다."
+  },
+  "Account": {
+    "connectWallet": "계정 상태를 보려면 지갑을 연결하세요",
+    "noVaultLists": "당신은 선택한 금고 목록이 없습니다.",
+    "noPrizeTokens": "당신은 상금 토큰이 없습니다.",
+    "depositNow": "지금 입금하세요.",
+    "yourDeposits": "당신의 입금",
+    "yourDelegations": "당신에게 위임된",
+    "yourWinnings": "당신의 당첨금",
+    "delegatedTo": "<link>{account}</link>에 위임된",
+    "externalAccountDeposits": "{account} 의 입금",
+    "externalAccountDelegations": "{account} 에 대한 위임",
+    "externalAccountWinnings": "{account} 의 당첨금",
+    "dailyPrizeOdds": "일일 상금 확률",
+    "weeklyPrizeOdds": "주간 상금 확률",
+    "oneInXChance": "{number} 중 1의 확률",
+    "noPrizesRecently": "최근에 당첨된 상품이 없습니다.",
+    "learnHowItWorks": "PoolTogether 가 어떻게 작동하는지 알아보기",
+    "winHeaders": {
+      "date": "날짜",
+      "prizePool": "상금 풀",
+      "winnings": "당첨금",
+      "moreInfo": "더 많은 정보"
+    },
+    "bonusRewardHeaders": {
+      "token": "토큰"
+    },
+    "prizeChecking": {
+      "eligibleDraws": "{number, plural, one {# 추첨} other {# 추첨들}} 에 참여할 자격이 있었습니다",
+      "totalPrizes": {
+        "beforeValue": "총",
+        "afterValue": "의 상금"
+      },
+      "checkPrizes": "상품 확인하기",
+      "checking": "블록체인 확인 중...",
+      "noPrizes": "죄송합니다, 이번에는 상품이 없습니다.",
+      "viewAccount": "당신의 계정 보기",
+      "youWonX": "당신은",
+      "xWon": "당첨되었습니다!"
+    }
+  },
+  "TxModals": {
+    "depositTo": "{name} 에 {network} 로 입금하기",
+    "depositToShort": "{name} 에 입금하기",
+    "withdrawFrom": "{name} 에서 {network} 로 출금하기",
+    "withdrawFromShort": "{name} 에서 출금",
+    "fees": {
+      "title": "예상 네트워크 수수료",
+      "approval": "승인",
+      "deposit": "입금",
+      "withdrawal": "출금"
+    },
+    "dailyChances": "일일 당첨 확률",
+    "weeklyChances": "주간 당첨 확률",
+    "oneInXChance": "{number} 중 1",
+    "max": "최대",
+    "balance": "잔액:",
+    "enterAnAmount": "금액 입력",
+    "approvalButton": "{symbol} 승인",
+    "exactApprovalButton": "{symbol} 정확한 금액 승인",
+    "exactApprovalTx": "{symbol} 정확한 승인",
+    "infiniteApprovalButton": "{symbol} 무제한 금액 승인",
+    "infiniteApprovalTx": "{symbol} 무제한 승인",
+    "reviewDeposit": "입금 검토",
+    "reviewWithdrawal": "출금 검토",
+    "confirmDeposit": "입금 확인",
+    "confirmWithdrawal": "출금 확인",
+    "depositTx": "{symbol} 입금",
+    "withdrawTx": "{symbol} 출금",
+    "switchNetwork": "{network} 로 전환",
+    "switchingNetwork": "{network} 로 전환 중...",
+    "confirmNotice": "지갑에서 거래 확인",
+    "submissionNotice": "거래 제출됨",
+    "depositing": "{tokens} 입금 중...",
+    "withdrawing": "{tokens} 출금 중...",
+    "success": "성공!",
+    "deposited": "{tokens} 를 입금했습니다",
+    "withdrew": "{tokens} 를 출금했습니다",
+    "nowEligible": "이제 이 풀의 모든 미래 추첨에 참여할 수 있습니다.",
+    "shareTwitter": "트위터에 공유하기",
+    "shareWarpcast": "Warpcast에 공유하기",
+    "shareHey": "Hey에 공유하기",
+    "viewAccount": "계정 보기",
+    "uhOh": "이런!",
+    "failedTx": "문제가 발생했습니다....",
+    "tryAgain": "다시 시도",
+    "risksDisclaimer": "PoolTogether 는 허가 없는 프로토콜입니다. 상금 금고는 누구나 배포할 수 있습니다. 입금하는 것이 무엇인지 확인하세요. <vaultLink>이 상금 금고에 대해 자세히 알아보기.</vaultLink>",
+    "depositDisclaimer": "\"입금 확인\"을 클릭함으로써 Cabana의 <tosLink>이용 약관</tosLink>에 동의합니다. 입금하는 금고에 대해 <vaultLink>여기</vaultLink>에서 자세히 알아보세요."
+  },
+  "Footer": {
+    "titles": {
+      "getHelp": "도움 받기",
+      "ecosystem": "생태계",
+      "community": "커뮤니티",
+      "settings": "설정"
+    },
+    "userDocs": "사용자 문서",
+    "faq": "자주 묻는 질문",
+    "devDocs": "개발자 문서",
+    "extensions": "확장 기능",
+    "governance": "거버넌스",
+    "security": "보안",
+    "enableTestnets": "테스트넷 활성화",
+    "disableTestnets": "테스트넷 비활성화"
+  },
+  "Settings": {
+    "customizeExperience": "경험 사용자 정의",
+    "customizeCurrency": "화폐 사용자 정의",
+    "customizeLanguage": "언어 사용자 정의",
+    "changeCurrency": "화폐 변경",
+    "changeLanguage": "언어 변경",
+    "viewEcosystem": "생태계 보기",
+    "manageVaultLists": "금고 목록 관리",
+    "getHelp": "도움 받기",
+    "getHelpWithCabana": "Cabana 사용 도움 받기",
+    "vaultListsDescription": "금고 목록은 앱 전체에 표시되는 상금 금고를 결정합니다. 가져온 목록과 상호 작용할 때 주의하세요.",
+    "learnMoreVaultLists": "금고 목록에 대해 더 알아보기",
+    "urlInput": "https:// 또는 ipfs:// 또는 ENS 이름",
+    "addVaultList": "금고 목록 추가",
+    "clearImportedVaultLists": "가져온 모든 금고 목록 지우기",
+    "numTokens": "{number, plural, one {# 토큰} other {# 토큰}}",
+    "imported": "가져온 것"
+  },
+  "Abbreviations": {
+    "days": "일",
+    "hours": "시간",
+    "minutes": "분",
+    "seconds": "초"
+  },
+  "Frequency": {
+    "daily": "매일",
+    "everyXdays": "{number} 일마다",
+    "everyXweeks": "{number} 주마다",
+    "everyXmonths": "{number} 개월마다",
+    "everyXyears": "{number} 년마다",
+    "xPrizesDaily": "매일 {number, plural, one {# 상} other {# 상}}",
+    "xPrizesWeekly": "매주 {number, plural, one {# 상} other {# 상}}",
+    "xPrizesMonthly": "매월 {number, plural, one {# 상} other {# 상}}",
+    "xPrizesYearly": "매년 {number, plural, one {# 상} other {# 상}}"
+  },
+  "Tooltips": {
+    "prizeYield": "금고가 상금 풀에 기여한 최근 평균",
+    "winChance": "어떤 추첨에서 상을 받을 확률",
+    "exactApproval": "{symbol} 의 특정 금액 입금에 대한 승인을 줄 것입니다",
+    "infiniteApproval": "다음에 {symbol} 를 입금할 때 승인할 필요가 없습니다",
+    "vaultFee": "상금으로 가지 않는 수익의 비율로, 금고 배포자가 결정합니다",
+    "importedVault": "이 금고는 다음과 같은 가져온 목록에서 왔습니다:",
+    "vaultContribution": "지난 {days} 일 동안 상금 풀에 기여한 {symbol} 의 금액"
+  },
+  "Toasts": {
+    "transactions": {
+      "deposit": "입금",
+      "withdrawal": "출금",
+      "depositing": "{tokens} 입금 중...",
+      "withdrawing": "{tokens} 출금 중...",
+      "viewOn": "{name} 에서 보기",
+      "success": "성공!",
+      "deposited": "{tokens} 를 {network} 에 입금했습니다",
+      "withdrew": "{tokens} 를 {network} 에서 출금했습니다",
+      "uhOh": "이런!",
+      "failedTx": "문제가 발생했습니다....",
+      "tryAgain": "다시 시도하기"
+    },
+    "vaultListImports": {
+      "importingFrom": "{src} 에서 금고 목록 가져오는 중...",
+      "successfulImport": "금고 목록을 성공적으로 가져왔습니다.",
+      "selectedVaultList": "\"{name}\" 이(가) 현재 선택된 금고 목록에 추가되었습니다.",
+      "failedImport": "{src} 에서 금고 목록을 가져오는 동안 문제가 발생했습니다."
+    }
+  },
+  "Error": {
+    "oops": "이런!",
+    "noVaultListsEnabled": "유효한 금고 목록이 활성화되어 있지 않은 것 같습니다.",
+    "noVaultsMatchingFilters": "필터와 일치하는 금고가 없습니다.",
+    "vaultInvalidNetwork": "이 금고의 네트워크는 지원되지 않습니다.",
+    "vaultEnableTestnets": "테스트넷 금고를 보려면 아래 설정에서 \"테스트넷 활성화\"를 확인하세요.",
+    "vaultDisableTestnets": "메인넷 금고를 보려면 아래 설정에서 \"테스트넷 비활성화\"를 확인하세요.",
+    "vaultInvalidInterface": "유효한 금고 주소 같지 않습니다.",
+    "vaultQueryError": "이 금고의 정보를 조회하는 동안 문제가 발생했습니다.",
+    "hmmm": "음...",
+    "pageNotFound": "찾고 있는 페이지를 찾을 수 없습니다.",
+    "return": "풀로 돌아가기",
+    "exchangeRateError": "이 금고의 환율 계산 중 문제가 발생했습니다. 여전히 거래소 또는 거래소 집계기 (<link>Uniswap</link> 예시) 를 통해 이 금고로 스왑할 수 있습니다.",
+    "formErrors": {
+      "invalidSrc": "유효한 URL 또는 ENS 도메인이 아닙니다",
+      "invalidVaultList": "유효한 금고 목록을 찾을 수 없습니다",
+      "notEnoughTokens": "지갑에 충분한 {symbol} 이 없습니다",
+      "invalidNumber": "유효한 숫자를 입력하세요",
+      "negativeNumber": "양수를 입력하세요",
+      "tooManyDecimals": "소수점이 너무 많습니다"
+    }
+  }
+}

@@ -72,7 +72,6 @@
     "disclaimer": "Призовые хранилища PoolTogether могут быть развернуты любым человеком. <link>Знайте, во что вы вкладываете деньги</link>",
     "headers": {
       "token": "Токен",
-      "prizePower": "Призовая сила",
       "totalDeposits": "Итого депозиты",
       "yourBalance": "Ваш баланс"
     }
@@ -83,7 +82,6 @@
       "yourWinChance": "Ваш шанс на победу",
       "balance": "Баланс",
       "winChance": "Шанс на победу",
-      "prizePower": "Призовая сила",
       "tvl": "TVL",
       "contributions": "{number}D Взнос в призовой фонд",
       "depositToken": "Токен депозита",
@@ -125,6 +123,9 @@
       "prizePool": "Призовой фонд",
       "winnings": "Выигрыши",
       "moreInfo": "Дополнительная информация"
+    },
+    "bonusRewardHeaders": {
+      "token": "Токен"
     },
     "prizeChecking": {
       "eligibleDraws": "Вы имели право на {number, plural, one {# draw} other {# draws}}",
@@ -240,7 +241,7 @@
     "xPrizesYearly": "{number, plural, one {# приз} other {# призы}} ежегодно"
   },
   "Tooltips": {
-    "prizePower": "Хранилища с большей призовой силой дают больше шансов на выигрыш",
+    "prizeYield": "Недавнее среднее значение взносов хранилища в призовой фонд",
     "winChance": "Ваш шанс выиграть приз в любом розыгрыше",
     "exactApproval": "Вы даете согласие на внесение определенной суммы {symbol}",
     "infiniteApproval": "При следующем пополнении счета вам не потребуется подтверждать {symbol}",

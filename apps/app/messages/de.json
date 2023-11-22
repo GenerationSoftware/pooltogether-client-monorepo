@@ -72,7 +72,6 @@
     "disclaimer": "PoolTogether Preis Vaults können von jedem erstellt werden. <link>Zahle nur in Dir bekannte Vaults ein</link>",
     "headers": {
       "token": "Token",
-      "prizePower": "Preisstärke",
       "totalDeposits": "Gesamteinzahlungen",
       "yourBalance": "Dein Kontostand"
     }
@@ -83,7 +82,6 @@
       "yourWinChance": "Deine Gewinnchance",
       "balance": "Kontostand",
       "winChance": "Gewinnchance",
-      "prizePower": "Preisstärke",
       "tvl": "TVL",
       "contributions": "{number}T Beitrag zum Preis Pool",
       "depositToken": "Einzahlungstoken",
@@ -125,6 +123,9 @@
       "prizePool": "Preis Pool",
       "winnings": "Gewinne",
       "moreInfo": "Weitere Informationen"
+    },
+    "bonusRewardHeaders": {
+      "token": "Token"
     },
     "prizeChecking": {
       "eligibleDraws": "Du warst für {number, plural, one {# Auslosung} other {# Auslosungen}} berechtigt",
@@ -240,7 +241,6 @@
     "xPrizesYearly": "{number, plural, one {# Preis} other {# Preise}} jährlich"
   },
   "Tooltips": {
-    "prizePower": "Vaults mit größerer Preiskraft geben Dir bessere Gewinnchancen",
     "winChance": "Deine Chance, einen Preis bei einer beliebigen Auslosung zu gewinnen",
     "exactApproval": "Du gibst Deine Zustimmung, eine bestimmte Anzahl von {symbol} einzuzahlen",
     "infiniteApproval": "Du brauchst {symbol} nicht zu genehmigen, wenn Du das nächste Mal einzahlen möchtest",

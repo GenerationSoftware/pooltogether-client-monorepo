@@ -222,7 +222,7 @@ export const Layout = (props: LayoutProps) => {
       <SettingsModal
         view={settingsModalView}
         setView={setSettingsModalView}
-        locales={['en', 'de', 'ru']}
+        locales={['en', 'de', 'ru', 'ko', 'uk']}
         localVaultLists={DEFAULT_VAULT_LISTS}
         intl={{ base: t_settings, errors: t_errors }}
       />

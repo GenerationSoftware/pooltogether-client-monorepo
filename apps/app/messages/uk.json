@@ -1,0 +1,297 @@
+{
+  "Common": {
+    "depositToWin": "Поповніть щоб Виграти",
+    "prizePool": "Призовий фонд {network}",
+    "grandPrize": "Головний Приз",
+    "joinDiscord": "Долучитись до нашої Discord спільноти",
+    "showMore": "Показати Більше",
+    "drawId": "Розіграш #{id}",
+    "manage": "Керувати",
+    "deposit": "Депозит",
+    "withdraw": "Зняття",
+    "learnMore": "Дізнатись Більше",
+    "back": "Назад",
+    "connectWallet": "Під'єднати Гаманець",
+    "viewTx": "Переглянути Транзакцію",
+    "viewOn": "Переглянути {name}",
+    "close": "Закрити",
+    "learnAboutRisks": "Дізнатися про ризики",
+    "readDocs": "Прочитати Документи",
+    "termsOfService": "Умови Використання"
+  },
+  "Navigation": {
+    "home": "Головна",
+    "prizes": "Призи",
+    "vaults": "Сховища",
+    "vault": "Сховище",
+    "account": "Рахунок"
+  },
+  "Home": {
+    "winUpTo": {
+      "beforeValue": "Поповніть для щоденного шансу виграти до",
+      "afterValue": ""
+    },
+    "withdrawAnyTime": "Ви можете зняти ваш депозит в повному обсязі у будь-який час"
+  },
+  "Prizes": {
+    "learnMore": "Дізнатися більше про те, як працюють призи",
+    "switchPrizePool": "Змінити призовий фонд",
+    "estPrizeValue": "Орієнтовна Вартість Призу",
+    "estPrizeFreq": "Орієнтовна Частота",
+    "recentWinners": "Нещодавні Переможці Призового Фонду",
+    "drawWinners": {
+      "beforeValue": "{numWallets, plural, one {# гаманець} few {# гаманців} many {# гаманців} other {# гаманці}} виграли",
+      "afterValue": {
+        "today": "сьогодні",
+        "yesterday": "вчора",
+        "onXDate": "{date}"
+      },
+      "drawIsOngoing": "Триває розіграш"
+    },
+    "drawModal": {
+      "drawTotal": {
+        "beforeValue": "В цьому розіграші {numWallets} унікальних гаманців загалом виграли",
+        "afterValue": "в призах.",
+        "afterValueOngoing": "в призах наразі."
+      },
+      "winner": "Переможець",
+      "prize": "Приз",
+      "youWereEligible": "Ви мали право на участь в цьому розіграші."
+    }
+  },
+  "Vaults": {
+    "filter": "Фільтр",
+    "filters": {
+      "showAll": "Показати Все",
+      "inWallet": "У вашому гаманці",
+      "stablecoins": "Стейблкоїни",
+      "allVaultLists": "Всі Списки Сховищ"
+    },
+    "manageVaultLists": "Керувати списками сховищ",
+    "clearFilters": "Очистити фільтри",
+    "disclaimer": "Призові сховища PoolTogether можуть бути розгорнуті будь-ким. <link>Знайте куди ви вкладаєте</link>",
+    "headers": {
+      "token": "Токен",
+      "prizeYield": "Дохід від Призів",
+      "totalDeposits": "Всього депозитів",
+      "yourBalance": "Ваш Баланс"
+    }
+  },
+  "Vault": {
+    "headers": {
+      "yourBalance": "Ваш Баланс",
+      "yourWinChance": "Ваш Шанс Виграшу",
+      "balance": "Баланс",
+      "winChance": "Шанс Виграшу",
+      "prizeYield": "Дохід від Призів",
+      "tvl": "TVL",
+      "contributions": "{number}д Внесок в Призовий Фонд",
+      "depositToken": "Токен Депозиту",
+      "prizeToken": "Токен Призу",
+      "delegatedToYou": "Делеговані Вам",
+      "delegatedAmount": "Делегована Кількість",
+      "vaultFee": "Комісія Сховища",
+      "feeRecipient": "Одержувач Комісії",
+      "yieldSource": "Джерело Доходу"
+    },
+    "returnToVaults": "Повернутися до Сховищ",
+    "learnAboutVault": "Дізнатися про {vaultName}",
+    "smartContractRisk": "PoolTogether - це інклюзивний протокол, який може бути використаний будь-ким для розгортання призових сховищ. Це призове сховище наражає вас на ризик пов'язаний зі смарт-контрактами у зв'язку зі наступними контрактами:",
+    "vaultContract": "Контракт Сховища",
+    "yieldSourceContract": "Контракт Джерела Доходу",
+    "inVaultLists": "Це призове сховище знаходиться у наступних вибраних вами списках:",
+    "notInVaultLists": "Це призове сховище не знаходиться в жодному з вибраних вами списків.",
+    "shortWarningNotInVaultLists": "Увага! Це сховище не знаходиться в жодному з ваших активних списків."
+  },
+  "Account": {
+    "connectWallet": "Під'єднайте свій гаманець, щоб переглянути статус облікового запису",
+    "noVaultLists": "У вас не вибрано жодного списку сховищ.",
+    "noPrizeTokens": "У вас немає призових токенів.",
+    "depositNow": "Поповніть зараз.",
+    "yourDeposits": "Ваші Депозити",
+    "yourDelegations": "Делеговані Вам",
+    "yourWinnings": "Ваші Виграші",
+    "delegatedTo": "Делеговано <link>{account}</link>",
+    "externalAccountDeposits": "Депозити {account}",
+    "externalAccountDelegations": "Делеговано до {account}",
+    "externalAccountWinnings": "Виграші {account}",
+    "dailyPrizeOdds": "Шанс Виграшу Щоденного Призу",
+    "weeklyPrizeOdds": "Шанс Виграшу Щотижневого Призу",
+    "oneInXChance": "1 на {number}",
+    "noPrizesRecently": "Останнім часом ви не виграли жодних призів.",
+    "learnHowItWorks": "Дізнайтеся, як працює PoolTogether",
+    "winHeaders": {
+      "date": "Дата",
+      "prizePool": "Призовий Фонд",
+      "winnings": "Виграші",
+      "moreInfo": "Детальніше"
+    },
+    "bonusRewardHeaders": {
+      "token": "Токен"
+    },
+    "prizeChecking": {
+      "eligibleDraws": "Ви мали право на участь в {number, plural, one {# розіграші} other {# розіграшах}}",
+      "totalPrizes": {
+        "beforeValue": "У підсумку",
+        "afterValue": "в Призах"
+      },
+      "checkPrizes": "Перевірити наявність Призів",
+      "checking": "Перевірка блокчейну...",
+      "noPrizes": "На жаль жодних призів цього разу.",
+      "viewAccount": "Переглянути Обліковий Запис",
+      "youWonX": "Ви виграли",
+      "xWon": "Перемога!"
+    }
+  },
+  "TxModals": {
+    "depositTo": "Поповнити {name} використовуючи {network}",
+    "depositToShort": "Поповнити {name}",
+    "withdrawFrom": "Вийти з {name} використовуючи {network}",
+    "withdrawFromShort": "Вийти з {name}",
+    "fees": {
+      "title": "Орієнтовна Комісія Мережі",
+      "approval": "Підтвердження",
+      "deposit": "Депозит",
+      "withdrawal": "Зняття"
+    },
+    "dailyChances": "Щоденний Шанс Перемоги",
+    "weeklyChances": "Щотижневий Шанс Перемоги",
+    "oneInXChance": "1 на {number}",
+    "max": "Максимум",
+    "balance": "Баланс:",
+    "enterAnAmount": "Введіть суму",
+    "approvalButton": "Схвалити {symbol}",
+    "exactApprovalButton": "Схвалити точну кількість {symbol}",
+    "exactApprovalTx": "Точне Підтвердження {symbol}",
+    "infiniteApprovalButton": "Схвалити необмежену кількість {symbol}",
+    "infiniteApprovalTx": "Схвалення Необмеженого {symbol}",
+    "reviewDeposit": "Перегляд Депозиту",
+    "reviewWithdrawal": "Перегляд Зняття",
+    "confirmDeposit": "Підтвердити Депозит",
+    "confirmWithdrawal": "Підтвердити Зняття",
+    "depositTx": "Депозит {symbol}",
+    "withdrawTx": "Зняття {symbol}",
+    "switchNetwork": "Перемикнути на {network}",
+    "switchingNetwork": "Перемикання на {network}...",
+    "confirmNotice": "Підтвердьте Транзакцію в Гаманці",
+    "submissionNotice": "Транзакцію Надіслано",
+    "depositing": "Поповнення {tokens}...",
+    "withdrawing": "Зняття {tokens}...",
+    "success": "Готово!",
+    "deposited": "Ви внесли {tokens}",
+    "withdrew": "Ви зняли {tokens}",
+    "nowEligible": "Тепер ви маєте право на всі майбутні розіграші у цьому пулі.",
+    "shareTwitter": "Поділитися у Twitter",
+    "shareWarpcast": "Поділитися на Warpcast",
+    "shareHey": "Поділитися на Hey",
+    "viewAccount": "Переглянути Рахунок",
+    "uhOh": "Ой!",
+    "failedTx": "Щось пішло не так....",
+    "tryAgain": "Спробуйте ще",
+    "risksDisclaimer": "PoolTogether - це інклюзивний протокол. Призові сховища можуть бути розгорнуті будь-ким. Переконайтеся що ви знаєте куди депортуєте. <vaultLink>Дізнатися більше про це призове сховище.</vaultLink>",
+    "depositDisclaimer": "Натискаючи \"Підтвердити Депозит\", ви погоджуєтеся з <tosLink>Умовами Надання Послуг</tosLink> компанії Cabana. Натисніть <vaultLink>тут</vaultLink>, щоб дізнатися більше про сховище в яке вкладаєте."
+  },
+  "Footer": {
+    "titles": {
+      "getHelp": "Отримати допомогу",
+      "ecosystem": "Екосистема",
+      "community": "Спільнота",
+      "settings": "Параметри"
+    },
+    "userDocs": "Документація Користувача",
+    "faq": "FAQ",
+    "devDocs": "Документація Розробника",
+    "extensions": "Додатки",
+    "governance": "Управління",
+    "security": "Безпека",
+    "enableTestnets": "Увімкнути Testnets",
+    "disableTestnets": "Вимкнути Testnets"
+  },
+  "Settings": {
+    "customizeExperience": "Налаштуйте Свій Досвід",
+    "customizeCurrency": "Налаштування Валюти",
+    "customizeLanguage": "Налаштування Мови",
+    "changeCurrency": "Змінити Валюту",
+    "changeLanguage": "Змінити Мову",
+    "viewEcosystem": "Перегляд Екосистеми",
+    "manageVaultLists": "Керувати Списками Сховищ",
+    "getHelp": "Отримати Допомогу",
+    "getHelpWithCabana": "Отримати Допомогу з Cabana",
+    "vaultListsDescription": "Списки сховищ визначають, які призові сховища відображаються у додатку. Будьте уважні під час взаємодії з імпортованими списками.",
+    "learnMoreVaultLists": "Докладніше про списки сховищ",
+    "urlInput": "https:// або ipfs:// або ENS ім'я",
+    "addVaultList": "Додати Список Сховищ",
+    "clearImportedVaultLists": "Очистити всі імпортовані списки сховищ",
+    "numTokens": "{number, plural, one {# Токен} few {# Токени} many {# Токенів} other {# Токени}}",
+    "imported": "Імпортовані"
+  },
+  "Abbreviations": {
+    "days": "днів",
+    "hours": "годин",
+    "minutes": "хвилин",
+    "seconds": "секунд"
+  },
+  "Frequency": {
+    "daily": "Щоденно",
+    "everyXdays": "Кожні {number} днів",
+    "everyXweeks": "Кожні {number} тижнів",
+    "everyXmonths": "Кожні {number} місяців",
+    "everyXyears": "Кожні {number} років",
+    "xPrizesDaily": "{number, plural, one {# приз} few {# призи} many {# призів} other {# prizes}} щоденно",
+    "xPrizesWeekly": "{number, plural, one {# приз} few {# призи} many {# призів} other {# prizes}} щотижня",
+    "xPrizesMonthly": "{number, plural, one {# приз} few {# призи} many {# призів} other {# prizes}} щомісяця",
+    "xPrizesYearly": "{number, plural, one {# приз} few {# призи} many {# призів} other {# prizes}} щороку"
+  },
+  "Tooltips": {
+    "prizeYield": "Нещодавній середній показник внесків сховища до призового фонду",
+    "winChance": "Ваш шанс виграти приз в будь-яку розіграші",
+    "exactApproval": "Ви підтверджуєте внесення депозиту на певну кількість {symbol}",
+    "infiniteApproval": "Вам не буде потрібно схвалювати {symbol} наступного разу, коли ви захочете внести депозит",
+    "vaultFee": "Відсоток прибутковості, який йде не на призи, та визначається особою що розгорнула сховище",
+    "importedVault": "Це сховище походить з наступних імпортованих списків:",
+    "vaultContribution": "Кількість {symbol}, що внесено в призовий фонд за останні {days} днів"
+  },
+  "Toasts": {
+    "transactions": {
+      "deposit": "Депозит",
+      "withdrawal": "Зняття",
+      "depositing": "Зарахування {tokens}...",
+      "withdrawing": "Зняття {tokens}...",
+      "viewOn": "Переглянути {name}",
+      "success": "Готово!",
+      "deposited": "Ви внесли {tokens} на {network}",
+      "withdrew": "Ви зняли {tokens} на {network}",
+      "uhOh": "Ой!",
+      "failedTx": "Щось пішло не так....",
+      "tryAgain": "Спробуйте ще"
+    },
+    "vaultListImports": {
+      "importingFrom": "Імпорт списку сховищ із {src}...",
+      "successfulImport": "Успішно імпортовано список сховищ.",
+      "selectedVaultList": "\"{name}\" було додано до обраного вами списку сховищ.",
+      "failedImport": "Щось пішло не так під час імпорту списку сховищ з {src}."
+    }
+  },
+  "Error": {
+    "oops": "Йой!",
+    "noVaultListsEnabled": "Схоже, у вас не ввімкнено жодного дійсного списку сховищ.",
+    "noVaultsMatchingFilters": "Немає сховищ, які б відповідали вашим фільтрам.",
+    "vaultInvalidNetwork": "Мережа цього сховища не підтримується.",
+    "vaultEnableTestnets": "Якщо ви хочете переглянути testnet сховище, переконайтеся, що активували \"Увімкнути testnets\" в налаштуваннях нижче.",
+    "vaultDisableTestnets": "Якщо ви хочете переглянути mainnet сховище, переконайтеся, що \"Вимкнути Testnets\" в налаштуваннях нижче увімкнена.",
+    "vaultInvalidInterface": "Здається, це недійсна адреса сховища.",
+    "vaultQueryError": "Під час запиту інформації про це сховище щось пішло не так.",
+    "hmmm": "Гмм...",
+    "pageNotFound": "Нам не вдалося знайти сторінку, яку ви шукаєте.",
+    "return": "Повернутися до Пулу",
+    "exchangeRateError": "Помилка при розрахунку обмінних курсів для цього сховища. Ви все ще можете долучитись, або вийти з цього сховища за допомогою обміну чи агрегатора обміну (наприклад, <link>Uniswap</link>).",
+    "formErrors": {
+      "invalidSrc": "Недійсні URL-адреса або домен ENS",
+      "invalidVaultList": "Дійсного списку сховищ не знайдено",
+      "notEnoughTokens": "Недостатньо {symbol} у гаманці",
+      "invalidNumber": "Введіть коректну кількість",
+      "negativeNumber": "Введіть додатне число",
+      "tooManyDecimals": "Забагато десяткових"
+    }
+  }
+}

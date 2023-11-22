@@ -14,6 +14,7 @@ export type LANGUAGE_ID =
   | 'tr'
   | 'zh'
   | 'fil'
+  | 'uk'
 
 /**
  * Supported languages' data
@@ -66,5 +67,9 @@ export const SUPPORTED_LANGUAGES: Record<LANGUAGE_ID, { name: string; nativeName
   fil: {
     name: 'Filipino',
     nativeName: 'Filipino'
+  },
+  uk: {
+    name: 'Ukranian',
+    nativeName: 'українську'
   }
 }
