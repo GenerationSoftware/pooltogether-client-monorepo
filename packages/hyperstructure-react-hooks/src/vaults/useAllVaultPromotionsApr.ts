@@ -95,11 +95,11 @@ export const useAllVaultPromotionsApr = (
                 )
 
                 promotions.forEach((promotion) => {
-                  const startsAt = Number(promotion.startTimestamp ?? 0)
+                  const startsAt = Number(promotion.startTimestamp)
                   const numberOfEpochs = promotion.numberOfEpochs ?? 0
-                  const epochDuration = promotion.epochDuration ?? 0
+                  const epochDuration = promotion.epochDuration
                   const endsAt = startsAt + numberOfEpochs * epochDuration
-                  const tokensPerEpoch = promotion.tokensPerEpoch ?? 0n
+                  const tokensPerEpoch = promotion.tokensPerEpoch
 
                   if (
                     !!startsAt &&

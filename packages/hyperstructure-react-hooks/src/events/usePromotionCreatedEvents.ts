@@ -16,6 +16,7 @@ import { QUERY_KEYS } from '../constants'
 export const usePromotionCreatedEvents = (
   chainId: number,
   options?: {
+    promotionIds?: bigint[]
     vaultAddresses?: Address[]
     tokenAddresses?: Address[]
     fromBlock?: bigint
@@ -27,6 +28,7 @@ export const usePromotionCreatedEvents = (
   const queryKey = [
     QUERY_KEYS.promotionCreatedEvents,
     chainId,
+    options?.promotionIds?.map((id) => id.toString()),
     options?.vaultAddresses,
     options?.tokenAddresses,
     options?.fromBlock?.toString(),
@@ -49,6 +51,7 @@ export const usePromotionCreatedEventsAcrossChains = (
   chainIds: number[],
   options?: {
     [chainId: number]: {
+      promotionIds?: bigint[]
       vaultAddresses?: Address[]
       tokenAddresses?: Address[]
       fromBlock?: bigint
@@ -65,6 +68,7 @@ export const usePromotionCreatedEventsAcrossChains = (
       const queryKey = [
         QUERY_KEYS.promotionCreatedEvents,
         chainId,
+        options?.[chainId]?.promotionIds?.map((id) => id.toString()),
         options?.[chainId]?.vaultAddresses,
         options?.[chainId]?.tokenAddresses,
         options?.[chainId]?.fromBlock?.toString(),

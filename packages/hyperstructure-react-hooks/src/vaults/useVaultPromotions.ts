@@ -40,10 +40,15 @@ export const useVaultPromotions = (
 
       promotionCreatedEvents?.forEach((promotionCreatedEvent) => {
         const id = promotionCreatedEvent.args.promotionId.toString()
-        const vault = promotionCreatedEvent.args.vault
-        const token = promotionCreatedEvent.args.token
-        const createdAtBlockNumber = promotionCreatedEvent.blockNumber
-        promotions[id] = { vault, token, createdAtBlockNumber, ...allPromotionInfo[id] }
+        promotions[id] = {
+          startTimestamp: promotionCreatedEvent.args.startTimestamp,
+          vault: promotionCreatedEvent.args.vault,
+          epochDuration: promotionCreatedEvent.args.epochDuration,
+          createdAtBlockNumber: promotionCreatedEvent.blockNumber,
+          token: promotionCreatedEvent.args.token,
+          tokensPerEpoch: promotionCreatedEvent.args.tokensPerEpoch,
+          ...allPromotionInfo[id]
+        }
       })
 
       return promotions

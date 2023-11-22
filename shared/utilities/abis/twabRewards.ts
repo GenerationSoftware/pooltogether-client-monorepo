@@ -129,7 +129,11 @@ export const twabRewardsABI = [
     inputs: [
       { indexed: true, internalType: 'uint256', name: 'promotionId', type: 'uint256' },
       { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
-      { indexed: true, internalType: 'contract IERC20', name: 'token', type: 'address' }
+      { indexed: true, internalType: 'contract IERC20', name: 'token', type: 'address' },
+      { indexed: false, internalType: 'uint64', name: 'startTimestamp', type: 'uint64' },
+      { indexed: false, internalType: 'uint256', name: 'tokensPerEpoch', type: 'uint256' },
+      { indexed: false, internalType: 'uint48', name: 'epochDuration', type: 'uint48' },
+      { indexed: false, internalType: 'uint8', name: 'initialNumberOfEpochs', type: 'uint8' }
     ],
     name: 'PromotionCreated',
     type: 'event'
