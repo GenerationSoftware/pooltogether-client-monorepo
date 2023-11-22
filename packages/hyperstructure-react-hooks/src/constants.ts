@@ -14,6 +14,7 @@ export const QUERY_KEYS = Object.freeze({
   estimatedPrizeCount: 'estimatedPrizeCount',
   firstDrawOpenedAt: 'firstDrawOpenedAt',
   gasAmountEstimates: 'gasAmountEstimates',
+  gasAmountEstimatesRollup: 'gasAmountEstimatesRollup',
   gasPrices: 'gasPrices',
   historicalTokenPrices: 'historicalTokenPrices',
   lastAwardedDrawId: 'lastAwardedDrawId',

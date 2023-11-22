@@ -1,5 +1,5 @@
 import { NETWORK } from '@shared/utilities'
-import { useQuery, UseQueryResult } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { usePublicClient } from 'wagmi'
 import { QUERY_KEYS } from '../constants'
 
@@ -9,10 +9,7 @@ import { QUERY_KEYS } from '../constants'
  * @param refetchInterval optional refetch interval in ms
  * @returns
  */
-export const useGasPrice = (
-  chainId: number,
-  refetchInterval?: number
-): UseQueryResult<bigint, unknown> => {
+export const useGasPrice = (chainId: number, refetchInterval?: number) => {
   const redirects: { [chainId: number]: number } = {
     [NETWORK.goerli]: NETWORK.mainnet,
     [NETWORK.sepolia]: NETWORK.mainnet,
@@ -28,8 +25,22 @@ export const useGasPrice = (
 
   const publicClient = usePublicClient({ chainId: _chainId })
 
-  return useQuery([QUERY_KEYS.gasPrices, _chainId], async () => await publicClient.getGasPrice(), {
-    refetchInterval: refetchInterval ?? false,
-    enabled: !!chainId && !!publicClient
-  })
+  return useQuery(
+    [QUERY_KEYS.gasPrices, _chainId],
+    async () => {
+      const gasPrices = await publicClient.estimateFeesPerGas()
+
+      if (!!gasPrices.maxFeePerGas) {
+        return gasPrices.maxFeePerGas + gasPrices.maxPriorityFeePerGas
+      } else if (!!gasPrices.gasPrice) {
+        return gasPrices.gasPrice
+      } else {
+        return 0n
+      }
+    },
+    {
+      refetchInterval: refetchInterval ?? false,
+      enabled: !!chainId && !!publicClient
+    }
+  )
 }

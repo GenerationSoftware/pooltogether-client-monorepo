@@ -377,14 +377,19 @@ export const LIQUIDATION_ROUTER_ADDRESSES: { [chainId: number]: Address } = {
 }
 
 /**
- * Dolphin Address Address
+ * Dolphin address
  */
 export const DOLPHIN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
 /**
- * Dead Address
+ * Dead address
  */
 export const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead'
+
+/**
+ * Optimism gas oracle address
+ */
+export const OP_GAS_ORACLE_ADDRESS = '0x420000000000000000000000000000000000000f'
 
 /**
  * Networks supported by the price caching API

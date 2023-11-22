@@ -65,8 +65,8 @@ const TXFeeEstimate = (props: TXFeeEstimateProps) => {
 
   const { data: gasEstimates, isFetched: isFetchedGasEstimates } = useGasCostEstimates(
     chainId,
-    gasAmount,
-    sToMs(10)
+    { gasAmount },
+    { refetchInterval: sToMs(10) }
   )
 
   const txCost = gasEstimates?.totalGasEth
