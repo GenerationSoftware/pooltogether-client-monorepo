@@ -82,15 +82,14 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
   )
 
   const {
-    data: userVaultTokenBalance,
-    isFetched: isFetchedUserVaultTokenBalance,
-    refetch: refetchUserVaultTokenBalance
-  } = useUserVaultTokenBalance(vault, userAddress as Address)
+    data: userTokenBalance,
+    isFetched: isFetchedUserTokenBalance,
+    refetch: refetchUserTokenBalance
+  } = useTokenBalance(vault.chainId, userAddress as Address, tokenData?.address as Address)
 
-  const { refetch: refetchTokenBalance } = useTokenBalance(
-    vault.chainId,
-    userAddress as Address,
-    tokenData?.address as Address
+  const { refetch: refetchUserVaultTokenBalance } = useUserVaultTokenBalance(
+    vault,
+    userAddress as Address
   )
 
   const { refetch: refetchUserVaultDelegationBalance } = useUserVaultDelegationBalance(
@@ -140,8 +139,8 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
       setModalView('waiting')
     },
     onSuccess: () => {
+      refetchUserTokenBalance()
       refetchUserVaultTokenBalance()
-      refetchTokenBalance()
       refetchUserVaultDelegationBalance()
       refetchVaultBalance()
       refetchTokenAllowance()
@@ -164,8 +163,8 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
     !isDisconnected &&
     !!userAddress &&
     !!tokenData &&
-    isFetchedUserVaultTokenBalance &&
-    !!userVaultTokenBalance &&
+    isFetchedUserTokenBalance &&
+    !!userTokenBalance &&
     isFetchedAllowance &&
     allowance !== undefined &&
     !!depositAmount &&
@@ -173,11 +172,11 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
     chain?.id === vault.chainId
 
   const approvalEnabled =
-    isDataFetched && userVaultTokenBalance.amount >= depositAmount && isValidFormTokenAmount
+    isDataFetched && userTokenBalance.amount >= depositAmount && isValidFormTokenAmount
 
   const depositEnabled =
     isDataFetched &&
-    userVaultTokenBalance.amount >= depositAmount &&
+    userTokenBalance.amount >= depositAmount &&
     allowance >= depositAmount &&
     isValidFormTokenAmount
 

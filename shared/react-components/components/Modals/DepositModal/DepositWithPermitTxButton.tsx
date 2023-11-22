@@ -74,15 +74,14 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
   )
 
   const {
-    data: userVaultTokenBalance,
-    isFetched: isFetchedUserVaultTokenBalance,
-    refetch: refetchUserVaultTokenBalance
-  } = useUserVaultTokenBalance(vault, userAddress as Address)
+    data: userTokenBalance,
+    isFetched: isFetchedUserTokenBalance,
+    refetch: refetchUserTokenBalance
+  } = useTokenBalance(vault.chainId, userAddress as Address, tokenData?.address as Address)
 
-  const { refetch: refetchTokenBalance } = useTokenBalance(
-    vault.chainId,
-    userAddress as Address,
-    tokenData?.address as Address
+  const { refetch: refetchUserVaultTokenBalance } = useUserVaultTokenBalance(
+    vault,
+    userAddress as Address
   )
 
   const { refetch: refetchUserVaultDelegationBalance } = useUserVaultDelegationBalance(
@@ -134,8 +133,8 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
       },
       onSuccess: () => {
         setIsApproved(false)
+        refetchUserTokenBalance()
         refetchUserVaultTokenBalance()
-        refetchTokenBalance()
         refetchUserVaultDelegationBalance()
         refetchVaultBalance()
         refetchTokenAllowance()
@@ -159,8 +158,8 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
       setModalView('waiting')
     },
     onSuccess: () => {
+      refetchUserTokenBalance()
       refetchUserVaultTokenBalance()
-      refetchTokenBalance()
       refetchUserVaultDelegationBalance()
       refetchVaultBalance()
       refetchTokenAllowance()
@@ -203,8 +202,8 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
     !isDisconnected &&
     !!userAddress &&
     !!tokenData &&
-    isFetchedUserVaultTokenBalance &&
-    !!userVaultTokenBalance &&
+    isFetchedUserTokenBalance &&
+    !!userTokenBalance &&
     isFetchedAllowance &&
     allowance !== undefined &&
     !!depositAmount &&
@@ -212,7 +211,7 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
     chain?.id === vault.chainId
 
   const depositEnabled =
-    isDataFetched && userVaultTokenBalance.amount >= depositAmount && isValidFormTokenAmount
+    isDataFetched && userTokenBalance.amount >= depositAmount && isValidFormTokenAmount
 
   // No deposit amount set
   if (depositAmount === 0n) {

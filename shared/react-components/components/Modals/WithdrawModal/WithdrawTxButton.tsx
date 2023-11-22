@@ -68,7 +68,7 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
     userAddress as Address
   )
 
-  const { refetch: refetchTokenBalance } = useTokenBalance(
+  const { refetch: refetchUserTokenBalance } = useTokenBalance(
     vault.chainId,
     userAddress as Address,
     tokenData?.address as Address
@@ -101,8 +101,8 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
       setModalView('waiting')
     },
     onSuccess: () => {
+      refetchUserTokenBalance()
       refetchUserVaultTokenBalance()
-      refetchTokenBalance()
       refetchUserVaultDelegationBalance()
       refetchVaultBalance()
       refetchUserBalances?.()
