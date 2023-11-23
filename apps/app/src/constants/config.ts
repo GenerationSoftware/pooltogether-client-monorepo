@@ -17,17 +17,25 @@ import {
   xdefiWallet,
   zerionWallet
 } from '@rainbow-me/rainbowkit/wallets'
-import { NETWORK, USDC_TOKEN_ADDRESSES } from '@shared/utilities'
+import { NETWORK, POOL_TOKEN_ADDRESSES, USDC_TOKEN_ADDRESSES } from '@shared/utilities'
 import defaultVaultList from '@vaultLists/default'
 import { Address } from 'viem'
-import { arbitrum, arbitrumSepolia, Chain, mainnet, optimism, optimismGoerli } from 'viem/chains'
+import {
+  arbitrum,
+  arbitrumSepolia,
+  Chain,
+  mainnet,
+  optimism,
+  optimismGoerli,
+  optimismSepolia
+} from 'viem/chains'
 
 /**
  * Supported networks
  */
 export const SUPPORTED_NETWORKS = Object.freeze({
   mainnets: [NETWORK.mainnet, NETWORK.optimism, NETWORK.arbitrum],
-  testnets: [NETWORK['optimism-goerli'], NETWORK['arbitrum-sepolia']]
+  testnets: [NETWORK['optimism-goerli'], NETWORK['optimism-sepolia'], NETWORK['arbitrum-sepolia']]
 })
 
 /**
@@ -38,6 +46,7 @@ export const WAGMI_CHAINS = Object.freeze({
   [NETWORK.optimism]: optimism,
   [NETWORK.arbitrum]: arbitrum,
   [NETWORK['optimism-goerli']]: optimismGoerli,
+  [NETWORK['optimism-sepolia']]: optimismSepolia,
   [NETWORK['arbitrum-sepolia']]: arbitrumSepolia
 })
 
@@ -73,6 +82,7 @@ export const RPC_URLS = {
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
   [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
   [NETWORK['optimism-goerli']]: process.env.NEXT_PUBLIC_OPTIMISM_GOERLI_RPC_URL,
+  [NETWORK['optimism-sepolia']]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK['arbitrum-sepolia']]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL
 }
 
@@ -93,8 +103,18 @@ export const TWAB_REWARDS_SETTINGS: {
   [NETWORK.optimism]: { tokenAddresses: [], fromBlock: 1n },
   [NETWORK.arbitrum]: { tokenAddresses: [], fromBlock: 1n },
   [NETWORK['optimism-goerli']]: { tokenAddresses: [], fromBlock: 1n },
+  [NETWORK['optimism-sepolia']]: {
+    tokenAddresses: [
+      USDC_TOKEN_ADDRESSES[NETWORK['optimism-sepolia']],
+      POOL_TOKEN_ADDRESSES[NETWORK['optimism-sepolia']]
+    ],
+    fromBlock: 4_400_000n
+  },
   [NETWORK['arbitrum-sepolia']]: {
-    tokenAddresses: [USDC_TOKEN_ADDRESSES[NETWORK['arbitrum-sepolia']]],
+    tokenAddresses: [
+      USDC_TOKEN_ADDRESSES[NETWORK['arbitrum-sepolia']],
+      POOL_TOKEN_ADDRESSES[NETWORK['arbitrum-sepolia']]
+    ],
     fromBlock: 1_130_000n
   }
 }

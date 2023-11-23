@@ -109,6 +109,112 @@ export const testnetVaults: VaultList['tokens'] = [
     }
   },
   {
+    chainId: NETWORK['optimism-sepolia'],
+    address: '0x22c6258ea5b1E742d18C27D846E2AaBd4505EDC2',
+    name: 'Prize DAI - LY',
+    decimals: 18,
+    symbol: 'PDAI-LY',
+    logoURI: 'https://assets.coingecko.com/coins/images/9956/small/4943.png?1636636734',
+    extensions: {
+      underlyingAsset: {
+        address: '0xD590EC14364731B62265A5cc807164a17C6797D4',
+        symbol: 'DAI',
+        name: 'Dai Stablecoin'
+      }
+    }
+  },
+  {
+    chainId: NETWORK['optimism-sepolia'],
+    address: '0x15E5b4813942fa51835ceb7Aff13F771C398d062',
+    name: 'Prize DAI - HY',
+    decimals: 18,
+    symbol: 'PDAI-HY',
+    logoURI: 'https://assets.coingecko.com/coins/images/9956/small/4943.png?1636636734',
+    extensions: {
+      underlyingAsset: {
+        address: '0xD590EC14364731B62265A5cc807164a17C6797D4',
+        symbol: 'DAI',
+        name: 'Dai Stablecoin'
+      }
+    }
+  },
+  {
+    chainId: NETWORK['optimism-sepolia'],
+    address: '0x2891d69786650260B9F99A7b333058FCC5418Df0',
+    name: 'Prize USDC - LY',
+    decimals: 6,
+    symbol: 'PUSDC-LY',
+    logoURI: 'https://etherscan.io/token/images/centre-usdc_28.png',
+    extensions: {
+      underlyingAsset: {
+        address: '0x8067F3Cb6Eef936256108FF19a05574b8aD99Cf3',
+        symbol: 'USDC',
+        name: 'USD Coin'
+      }
+    }
+  },
+  {
+    chainId: NETWORK['optimism-sepolia'],
+    address: '0xa3976b09b9695DFABc39a2E042F5bD5B7399Ac60',
+    name: 'Prize USDC - HY',
+    decimals: 6,
+    symbol: 'PUSDC-HY',
+    logoURI: 'https://etherscan.io/token/images/centre-usdc_28.png',
+    extensions: {
+      underlyingAsset: {
+        address: '0x8067F3Cb6Eef936256108FF19a05574b8aD99Cf3',
+        symbol: 'USDC',
+        name: 'USD Coin'
+      }
+    }
+  },
+  {
+    chainId: NETWORK['optimism-sepolia'],
+    address: '0xD04756fe8b7A33741e1fA3A4dDD7e0075A0063aC',
+    name: 'Prize GUSD',
+    decimals: 2,
+    symbol: 'PGUSD',
+    logoURI:
+      'https://assets.coingecko.com/coins/images/5992/small/gemini-dollar-gusd.png?1536745278',
+    extensions: {
+      underlyingAsset: {
+        address: '0x1A188719711d62423abF1A4de7D8aA9014A39D73',
+        symbol: 'GUSD',
+        name: 'Gemini dollar'
+      }
+    }
+  },
+  {
+    chainId: NETWORK['optimism-sepolia'],
+    address: '0xbE4E7D33a1144e977C3A2f51798cc451E1a76B2f',
+    name: 'Prize WBTC',
+    decimals: 8,
+    symbol: 'PWBTC',
+    logoURI: 'https://etherscan.io/token/images/wbtc_28.png?v=1',
+    extensions: {
+      underlyingAsset: {
+        address: '0x149e3B3Bd69f1Cfc1B42b6A6a152a42E38cEeBf1',
+        symbol: 'WBTC',
+        name: 'Wrapped BTC'
+      }
+    }
+  },
+  {
+    chainId: NETWORK['optimism-sepolia'],
+    address: '0xaf25FfB53699AeDba3dAf97Bb2adc1B5054053EA',
+    name: 'Prize WETH',
+    decimals: 18,
+    symbol: 'PWETH',
+    logoURI: 'https://etherscan.io/token/images/weth_28.png',
+    extensions: {
+      underlyingAsset: {
+        address: '0xA416eD51158c5616b997B785FA6d18f02D0458A8',
+        symbol: 'WETH',
+        name: 'Wrapped Ether'
+      }
+    }
+  },
+  {
     chainId: NETWORK['arbitrum-sepolia'],
     address: '0x3adaa1D4F23C82130e1681c2cA9b38f5Fb9a0892',
     name: 'Prize DAI - LY',

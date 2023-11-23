@@ -6,8 +6,8 @@ import { testnetVaults } from './testnet'
 const defaultVaultList: VaultList = {
   name: 'Cabana Vault List',
   keywords: ['pooltogether', 'cabana', 'g9', 'optimism'],
-  version: { major: 1, minor: 15, patch: 1 },
-  timestamp: '2023-11-15T21:12:30Z',
+  version: { major: 1, minor: 15, patch: 2 },
+  timestamp: '2023-11-23T19:36:46Z',
   logoURI: `${LINKS.app}/pooltogether-token-logo.svg`,
   tokens: [
     {
