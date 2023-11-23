@@ -20,12 +20,25 @@ import {
 import { DEFAULT_CLAIMER_ADDRESSES, NETWORK } from '@shared/utilities'
 import { SupportedNetwork } from 'src/types'
 import { Address } from 'viem'
-import { arbitrum, Chain, mainnet, optimism, optimismGoerli } from 'viem/chains'
+import {
+  arbitrum,
+  arbitrumSepolia,
+  Chain,
+  mainnet,
+  optimism,
+  optimismGoerli,
+  optimismSepolia
+} from 'viem/chains'
 
 /**
  * Supported networks
  */
-export const SUPPORTED_NETWORKS = [NETWORK.optimism, NETWORK['optimism-goerli']] as const
+export const SUPPORTED_NETWORKS = [
+  NETWORK.optimism,
+  NETWORK['optimism-goerli'],
+  NETWORK['optimism-sepolia'],
+  NETWORK['arbitrum-sepolia']
+] as const
 
 /**
  * Wagmi networks
@@ -33,8 +46,10 @@ export const SUPPORTED_NETWORKS = [NETWORK.optimism, NETWORK['optimism-goerli']]
 export const WAGMI_CHAINS = {
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism,
+  [NETWORK['optimism-goerli']]: optimismGoerli,
+  [NETWORK['optimism-sepolia']]: optimismSepolia,
   [NETWORK.arbitrum]: arbitrum,
-  [NETWORK['optimism-goerli']]: optimismGoerli
+  [NETWORK['arbitrum-sepolia']]: arbitrumSepolia
 } as const
 
 /**
@@ -67,20 +82,16 @@ export const WALLETS: {
 export const RPC_URLS = {
   [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
+  [NETWORK['optimism-goerli']]: process.env.NEXT_PUBLIC_OPTIMISM_GOERLI_RPC_URL,
+  [NETWORK['optimism-sepolia']]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
-  [NETWORK['optimism-goerli']]: process.env.NEXT_PUBLIC_OPTIMISM_GOERLI_RPC_URL
+  [NETWORK['arbitrum-sepolia']]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL
 } as const
 
 /**
  * Contract addresses
  */
-export const CONTRACTS: Record<
-  SupportedNetwork,
-  {
-    prizePool: Address
-    claimer: Address
-  }
-> = {
+export const CONTRACTS: Record<SupportedNetwork, { prizePool: Address; claimer: Address }> = {
   [NETWORK.optimism]: {
     prizePool: '0xe32e5E1c5f0c80bD26Def2d0EA5008C107000d6A',
     claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism]
@@ -88,6 +99,14 @@ export const CONTRACTS: Record<
   [NETWORK['optimism-goerli']]: {
     prizePool: '0x8FaF98698e4fF29149a8A9D06Db20E3509F3754b',
     claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK['optimism-goerli']]
+  },
+  [NETWORK['optimism-sepolia']]: {
+    prizePool: '0x46547a849f68178208490Cdd491Df15a5bEeA4B2',
+    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK['optimism-sepolia']]
+  },
+  [NETWORK['arbitrum-sepolia']]: {
+    prizePool: '0x6Fd1dF849DFC4F76F0B15ba0c8D3e99FF84817f1',
+    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK['arbitrum-sepolia']]
   }
 } as const
 
@@ -112,5 +131,23 @@ export const LP_CONFIG: Record<
   [NETWORK['optimism-goerli']]: {
     targetFirstSaleTimeFraction: 0.5,
     liquidationGasAmount: 300_000n
+  },
+  [NETWORK['optimism-sepolia']]: {
+    targetFirstSaleTimeFraction: 0.5,
+    liquidationGasAmount: 300_000n
+  },
+  [NETWORK['arbitrum-sepolia']]: {
+    targetFirstSaleTimeFraction: 0.5,
+    liquidationGasAmount: 300_000n
   }
+}
+
+/**
+ * Network descriptions
+ */
+export const NETWORK_DESCRIPTIONS: Record<SupportedNetwork, string> = {
+  [NETWORK.optimism]: 'The OG optimistic rollup on Ethereum.',
+  [NETWORK['optimism-goerli']]: 'Goerli testnet for the Optimism network.',
+  [NETWORK['optimism-sepolia']]: 'Sepolia testnet for the Optimism network.',
+  [NETWORK['arbitrum-sepolia']]: 'Sepolia testnet for the Arbitrum network.'
 }

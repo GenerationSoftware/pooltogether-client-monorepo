@@ -1,12 +1,11 @@
 import { useGrandPrize, usePrizePool } from '@generationsoftware/hyperstructure-react-hooks'
 import { TokenAmount, TokenValue } from '@shared/react-components'
 import { Card, Spinner } from '@shared/ui'
-import { getNiceNetworkNameByChainId, NETWORK } from '@shared/utilities'
+import { getNiceNetworkNameByChainId } from '@shared/utilities'
 import classNames from 'classnames'
-import { ReactNode } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { SupportedNetwork } from 'src/types'
-import { CONTRACTS } from '@constants/config'
+import { CONTRACTS, NETWORK_DESCRIPTIONS } from '@constants/config'
 
 interface NetworkInputFormValues {
   vaultChainId: string
@@ -46,12 +45,6 @@ interface NetworkCardProps {
   chainId: SupportedNetwork
 }
 
-const networkDescriptions: Record<SupportedNetwork, ReactNode> = {
-  [NETWORK.optimism]: 'The OG optimistic rollup on Ethereum!',
-  [NETWORK['optimism-goerli']]:
-    'This is the main testnet used to try out the PoolTogether Hyperstructure.'
-}
-
 const NetworkCard = (props: NetworkCardProps) => {
   const { chainId } = props
 
@@ -89,7 +82,7 @@ const NetworkCard = (props: NetworkCardProps) => {
           <Spinner />
         )}
       </span>
-      <span className='hidden line-clamp-3 lg:block'>{networkDescriptions[chainId]}</span>
+      <span className='hidden line-clamp-3 lg:block'>{NETWORK_DESCRIPTIONS[chainId]}</span>
     </Card>
   )
 }

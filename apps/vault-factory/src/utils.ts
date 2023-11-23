@@ -1,5 +1,5 @@
 import { connectorsForWallets, Wallet } from '@rainbow-me/rainbowkit'
-import { formatNumberForDisplay, parseQueryParam } from '@shared/utilities'
+import { formatNumberForDisplay, NETWORK, parseQueryParam } from '@shared/utilities'
 import { FallbackTransport, PublicClient } from 'viem'
 import {
   Chain,
@@ -21,11 +21,13 @@ export const createCustomWagmiConfig = (): Config<
   PublicClient<FallbackTransport, Chain>,
   WebSocketPublicClient
 > => {
-  const supportedNetworks = Object.values(WAGMI_CHAINS).filter(
-    (chain) => SUPPORTED_NETWORKS.includes(chain.id as number) && !!RPC_URLS[chain.id]
+  const networks = Object.values(WAGMI_CHAINS).filter(
+    (chain) =>
+      chain.id === NETWORK.mainnet ||
+      (SUPPORTED_NETWORKS.includes(chain.id as number) && !!RPC_URLS[chain.id])
   )
 
-  const { chains, publicClient } = configureChains(supportedNetworks, [
+  const { chains, publicClient } = configureChains(networks, [
     jsonRpcProvider({
       rpc: (chain) => ({ http: RPC_URLS[chain.id as keyof typeof WAGMI_CHAINS] as string })
     }),
