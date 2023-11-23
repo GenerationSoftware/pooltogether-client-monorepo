@@ -55,7 +55,13 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0xb8e70b16b8d99753ce55f0e4c2a7eceeece30b64': tokenLogoUrls.weth,
     '0x331cdb619147a20c32e7b9391a4797ed9656b104': tokenLogoUrls.wbtc
   },
-  [NETWORK['optimism-sepolia']]: {},
+  [NETWORK['optimism-sepolia']]: {
+    '0x8067f3cb6eef936256108ff19a05574b8ad99cf3': tokenLogoUrls.usdc,
+    '0xd590ec14364731b62265a5cc807164a17c6797d4': tokenLogoUrls.dai,
+    '0x1a188719711d62423abf1a4de7d8aa9014a39d73': tokenLogoUrls.gusd,
+    '0xa416ed51158c5616b997b785fa6d18f02d0458a8': tokenLogoUrls.weth,
+    '0x149e3b3bd69f1cfc1b42b6a6a152a42e38ceebf1': tokenLogoUrls.wbtc
+  },
   [NETWORK.avalanche]: {
     '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f': tokenLogoUrls.wbtc
   },
@@ -81,7 +87,7 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
  */
 export const TX_GAS_ESTIMATES = Object.freeze({
   approve: 50_000n,
-  deposit: 350_000n,
-  depositWithPermit: 400_000n,
-  withdraw: 300_000n
+  deposit: 400_000n,
+  depositWithPermit: 450_000n,
+  withdraw: 350_000n
 })

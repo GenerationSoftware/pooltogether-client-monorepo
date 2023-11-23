@@ -36,6 +36,7 @@ export const POOL_TOKEN_ADDRESSES = {
   [NETWORK.polygon]: '0x25788a1a171ec66Da6502f9975a15B609fF54CF6',
   [NETWORK.optimism]: '0x395ae52bb17aef68c2888d941736a71dc6d4e125',
   [NETWORK['optimism-goerli']]: '0x0Ec780bE0191f8A364FAccdE91D13BE6F96632bE',
+  [NETWORK['optimism-sepolia']]: '0xD675B9c8eea7f6Bd506d5FF66A10cF7B887CD293',
   [NETWORK['arbitrum-sepolia']]: '0xF401D1482DFAa89A050F111992A222e9ad123E14'
 } as const
 
@@ -49,6 +50,7 @@ export const USDC_TOKEN_ADDRESSES: { [chainId: number]: Lowercase<Address> } = {
   [NETWORK.polygon]: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
   [NETWORK.optimism]: '0x7f5c764cbc14f9669b88837ca1490cca17c31607',
   [NETWORK['optimism-goerli']]: '0xb7930c829cc1de1b37a3bb9b477e33251da15a50',
+  [NETWORK['optimism-sepolia']]: '0x8067f3cb6eef936256108ff19a05574b8ad99cf3',
   [NETWORK.arbitrum]: '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8',
   [NETWORK['arbitrum-sepolia']]: '0x7a6dbc7ff4f1a2d864291db3aec105a8eee4a3d2'
 }
@@ -101,6 +103,15 @@ export const PRIZE_POOLS: {
     address: '0x8FaF98698e4fF29149a8A9D06Db20E3509F3754b',
     options: {
       prizeTokenAddress: '0x0Ec780bE0191f8A364FAccdE91D13BE6F96632bE',
+      drawPeriodInSeconds: 21_600,
+      tierShares: 100
+    }
+  },
+  {
+    chainId: NETWORK['optimism-sepolia'],
+    address: '0x46547a849f68178208490Cdd491Df15a5bEeA4B2',
+    options: {
+      prizeTokenAddress: '0xD675B9c8eea7f6Bd506d5FF66A10cF7B887CD293',
       drawPeriodInSeconds: 21_600,
       tierShares: 100
     }
@@ -225,7 +236,11 @@ export const STABLECOINS: Record<NETWORK, { [address: Address]: string }> = {
     '0x4d07ba104ff254c19b443ade6224f744db84fb8a': 'usd', // DAI
     '0x041a898bc37129d2d2232163c3374f4077255f74': 'usd' // GUSD
   },
-  [NETWORK['optimism-sepolia']]: {},
+  [NETWORK['optimism-sepolia']]: {
+    '0x8067f3cb6eef936256108ff19a05574b8ad99cf3': 'usd', // USDC
+    '0xd590ec14364731b62265a5cc807164a17c6797d4': 'usd', // DAI
+    '0x1a188719711d62423abf1a4de7d8aa9014a39d73': 'usd' // GUSD
+  },
   [NETWORK.avalanche]: {},
   [NETWORK.fuji]: {},
   [NETWORK.celo]: {},
@@ -308,6 +323,10 @@ export const RNG_RELAY_ADDRESSES: {
     address: '0x5C9c04FC5D6431A2101b8395E13B565762980F97',
     from: { chainId: NETWORK.goerli, address: '0xe34deF1114d7Bb0298636A2026D9Cf3D67F19FBd' }
   },
+  [NETWORK['optimism-sepolia']]: {
+    address: '0x80788dD1bCc906b25C879F6f04A108C4DCFDB78F',
+    from: { chainId: NETWORK.sepolia, address: '0x48cdb9fe4F71D9b6f17D8e4d72E4036931601BdE' }
+  },
   [NETWORK['arbitrum-sepolia']]: {
     address: '0x4A101c4703e8fa447859EF380048052b0cDB9893',
     from: { chainId: NETWORK.sepolia, address: '0xAFD0a893845cb2c278D6629c78fFA7ad403077Bf' }
@@ -320,6 +339,7 @@ export const RNG_RELAY_ADDRESSES: {
 export const MSG_EXECUTOR_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.optimism]: '0x139f6dD114a9C45Ba43eE22C5e03c53de0c13225',
   [NETWORK['optimism-goerli']]: '0x59Ba766ff229c21b97184647292706039aF63dA1',
+  [NETWORK['optimism-sepolia']]: '0x6A501383A61ebFBc143Fc4BD41A2356bA71A6964',
   [NETWORK['arbitrum-sepolia']]: '0x2B3E6b5c9a6Bdb0e595896C9093fce013490abbD'
 }
 
@@ -329,6 +349,7 @@ export const MSG_EXECUTOR_ADDRESSES: { [chainId: number]: Address } = {
 export const TWAB_CONTROLLER_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.optimism]: '0x499a9F249ec4c8Ea190bebbFD96f9A83bf4F6E52',
   [NETWORK['optimism-goerli']]: '0x0B09590E2dE22A629B45258812C0B25904689B5a',
+  [NETWORK['optimism-sepolia']]: '0x8027117dAf575dc0668EB0876dC89e622F4d2733',
   [NETWORK['arbitrum-sepolia']]: '0xd57822B8846F36f0E1FC775C8214523db199a4C5'
 }
 
@@ -346,6 +367,7 @@ export const TWAB_REWARDS_ADDRESSES: { [chainId: number]: Address } = {
 export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.optimism]: '0xF65FA202907D6046D1eF33C521889B54BdE08081',
   [NETWORK['optimism-goerli']]: '0x53B7922eeCe8afE5bdaA170E20dc32c6deDA5277',
+  [NETWORK['optimism-sepolia']]: '0xE5526e74C554d7f6E07906f3a7c315edEbb26aF4',
   [NETWORK['arbitrum-sepolia']]: '0xa4b085E5F024036125ed4D0659fE32388A03C6f8'
 }
 
@@ -355,6 +377,7 @@ export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
 export const LIQUIDATION_PAIR_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.optimism]: '0x555BD8Fc65E57139C9F405980C7A9526A7De8093',
   [NETWORK['optimism-goerli']]: '0x21b8f4c7E92a37B893BE39b4Ec447459fa5031C6',
+  [NETWORK['optimism-sepolia']]: '0xD72e8522824FCE34CCdC6E8872008465287304C1',
   [NETWORK['arbitrum-sepolia']]: '0xb87E4dC3eDC62977bD8d93554a4cbF6c52c9282a'
 }
 
@@ -364,6 +387,7 @@ export const LIQUIDATION_PAIR_FACTORY_ADDRESSES: { [chainId: number]: Address } 
 export const DEFAULT_CLAIMER_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.optimism]: '0xdc6aB38f9590cB8e4357e0a391689a7C5Ef7681E',
   [NETWORK['optimism-goerli']]: '0x0294997B1100d6e35fd3868c6544c881096a23E1',
+  [NETWORK['optimism-sepolia']]: '0xB4B4bF1C75234f307BC1A2c7eFba9329e532caB9',
   [NETWORK['arbitrum-sepolia']]: '0xcCf2b2da02C6F19b85265190F274BeE997808243'
 }
 
@@ -373,6 +397,7 @@ export const DEFAULT_CLAIMER_ADDRESSES: { [chainId: number]: Address } = {
 export const LIQUIDATION_ROUTER_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.optimism]: '0xB9Fba7B2216167DCdd1A7AE0a564dD43E1b68b95',
   [NETWORK['optimism-goerli']]: '0x6de2B30BE94F9Da2516CD30093fB11e0c4bFf422',
+  [NETWORK['optimism-sepolia']]: '0x4f03fF51019f56495422E73287B0e4A9C454d371',
   [NETWORK['arbitrum-sepolia']]: '0xeE79841CBCB6BF29989B8977952A58C4417D64A9'
 }
 
@@ -453,6 +478,43 @@ export const TOKEN_PRICE_REDIRECTS: {
     },
     /* POOL */
     '0x0ec780be0191f8a364faccde91d13be6f96632be': {
+      chainId: NETWORK.mainnet,
+      address: POOL_TOKEN_ADDRESSES[NETWORK.mainnet].toLowerCase() as Address
+    }
+  },
+  [NETWORK['optimism-sepolia']]: {
+    /* ETH */
+    [DOLPHIN_ADDRESS]: {
+      chainId: NETWORK.mainnet,
+      address: DOLPHIN_ADDRESS
+    },
+    /* DAI */
+    '0xd590ec14364731b62265a5cc807164a17c6797d4': {
+      chainId: NETWORK.optimism,
+      address: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1'
+    },
+    /* USDC */
+    '0x8067f3cb6eef936256108ff19a05574b8ad99cf3': {
+      chainId: NETWORK.optimism,
+      address: USDC_TOKEN_ADDRESSES[NETWORK.optimism]
+    },
+    /* GUSD */
+    '0x1a188719711d62423abf1a4de7d8aa9014a39d73': {
+      chainId: NETWORK.mainnet,
+      address: '0x056fd409e1d7a124bd7017459dfea2f387b6d5cd'
+    },
+    /* WBTC */
+    '0x149e3b3bd69f1cfc1b42b6a6a152a42e38ceebf1': {
+      chainId: NETWORK.optimism,
+      address: '0x68f180fcce6836688e9084f035309e29bf0a2095'
+    },
+    /* WETH */
+    '0xa416ed51158c5616b997b785fa6d18f02d0458a8': {
+      chainId: NETWORK.optimism,
+      address: WRAPPED_NATIVE_ASSETS[NETWORK.optimism] as Address
+    },
+    /* POOL */
+    '0xd675b9c8eea7f6bd506d5ff66a10cf7b887cd293': {
       chainId: NETWORK.mainnet,
       address: POOL_TOKEN_ADDRESSES[NETWORK.mainnet].toLowerCase() as Address
     }
