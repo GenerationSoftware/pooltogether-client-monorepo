@@ -18,6 +18,7 @@ import {
   zerionWallet
 } from '@rainbow-me/rainbowkit/wallets'
 import { NETWORK } from '@shared/utilities'
+import { Address } from 'viem'
 import {
   arbitrum,
   arbitrumSepolia,
@@ -85,3 +86,17 @@ export const RPC_URLS = {
   [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
   [NETWORK['arbitrum-sepolia']]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL
 } as const
+
+/**
+ * Promotion query filters
+ */
+export const PROMOTION_FILTERS: {
+  [chainId: number]: { tokenAddresses?: Address[]; fromBlock?: bigint }
+} = {
+  [NETWORK.mainnet]: {},
+  [NETWORK.optimism]: {},
+  [NETWORK.arbitrum]: {},
+  [NETWORK['optimism-goerli']]: {},
+  [NETWORK['optimism-sepolia']]: { fromBlock: 4_400_000n },
+  [NETWORK['arbitrum-sepolia']]: { fromBlock: 1_490_000n }
+}
