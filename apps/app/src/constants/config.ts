@@ -115,6 +115,6 @@ export const TWAB_REWARDS_SETTINGS: {
       USDC_TOKEN_ADDRESSES[NETWORK['arbitrum-sepolia']],
       POOL_TOKEN_ADDRESSES[NETWORK['arbitrum-sepolia']]
     ],
-    fromBlock: 1_130_000n
+    fromBlock: 1_490_000n
   }
 }
