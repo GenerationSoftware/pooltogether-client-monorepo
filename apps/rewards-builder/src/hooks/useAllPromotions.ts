@@ -14,7 +14,7 @@ import { PROMOTION_FILTERS, SUPPORTED_NETWORKS } from '@constants/config'
  * Returns all TWAB rewards promotions for the given chain IDs
  * @returns
  */
-export const useAllVaultPromotions = () => {
+export const useAllPromotions = () => {
   const publicClients = usePublicClientsByChain({ useAll: true })
 
   const chainIds = SUPPORTED_NETWORKS.map(Number)
