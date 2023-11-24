@@ -29,7 +29,7 @@ export const useVaultPromotions = (
     ? promotionCreatedEvents.map((e) => e.args.promotionId)
     : []
 
-  const queryKey = [QUERY_KEYS.promotionInfo, vault?.id, promotionIds.map(String)]
+  const queryKey = [QUERY_KEYS.promotionInfo, vault?.chainId, promotionIds.map(String)]
 
   return useQuery(
     queryKey,
