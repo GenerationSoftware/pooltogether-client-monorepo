@@ -1,8 +1,15 @@
 import { useToken } from '@generationsoftware/hyperstructure-react-hooks'
 import { ExternalLink } from '@shared/ui'
-import { getBlockExplorerUrl, getNiceNetworkNameByChainId } from '@shared/utilities'
+import {
+  calculatePercentageOfBigInt,
+  formatBigIntForDisplay,
+  getBlockExplorerUrl,
+  getNiceNetworkNameByChainId,
+  SECONDS_PER_HOUR
+} from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
+import { useMemo } from 'react'
 import {
   promotionChainIdAtom,
   promotionEpochLengthAtom,
@@ -36,6 +43,12 @@ export const PromotionPreview = (props: PromotionPreviewProps) => {
     chainId as SupportedNetwork,
     tokenAddress as Address
   )
+
+  const rewardTokensPerEpoch = useMemo(() => {
+    if (!!numEpochs && !!tokenAmount) {
+      return calculatePercentageOfBigInt(tokenAmount, 1 / numEpochs)
+    }
+  }, [numEpochs, tokenAmount])
 
   return (
     <div
@@ -76,10 +89,36 @@ export const PromotionPreview = (props: PromotionPreviewProps) => {
           valueClassName='text-pt-warning-light'
         />
       )}
-      {/* TODO: add total rewards */}
-      {/* TODO: add rewards per epoch */}
-      {/* TODO: add total # of epochs */}
-      {/* TODO: add length of epochs */}
+      {!!tokenAmount && !!tokenData && (
+        <PreviewItem
+          label='Total Rewards'
+          value={`${formatBigIntForDisplay(tokenAmount, tokenData.decimals)} ${tokenData.symbol}`}
+        />
+      )}
+      {!!rewardTokensPerEpoch && !!tokenData && (
+        <PreviewItem
+          label='Rewards per Epoch'
+          value={`${formatBigIntForDisplay(rewardTokensPerEpoch, tokenData.decimals)} ${
+            tokenData.symbol
+          }`}
+        />
+      )}
+      {!rewardTokensPerEpoch && !!numEpochs && !!tokenAmount && (
+        <PreviewItem
+          label='Rewards per Epoch'
+          value='Invalid'
+          valueClassName='text-pt-warning-light'
+        />
+      )}
+      {!!numEpochs && <PreviewItem label='# of Epochs' value={`${numEpochs}`} />}
+      {!!epochLength && (
+        <PreviewItem
+          label='Epoch Length'
+          value={`${epochLength / SECONDS_PER_HOUR} Hour${
+            epochLength > SECONDS_PER_HOUR ? 's' : ''
+          }`}
+        />
+      )}
     </div>
   )
 }
