@@ -1,13 +1,16 @@
 import classNames from 'classnames'
 import { ReactNode, useMemo } from 'react'
 import { usePromotionCreationSteps } from '@hooks/usePromotionCreationSteps'
+import { DeployPromotionView } from './DeployPromotionView'
+import { EpochsForm } from './forms/EpochsForm'
+import { TokenForm } from './forms/TokenForm'
+import { VaultForm } from './forms/VaultForm'
 
 const allPromotionStepContent: ReactNode[] = [
-  // TODO: implement these components
-  // <VaultForm />,
-  // <EpochsForm />,
-  // <TokenForm />,
-  // <DeployPromotionView />
+  <VaultForm />,
+  <EpochsForm />,
+  <TokenForm />,
+  <DeployPromotionView />
 ]
 
 interface CreatePromotionStepContentProps {
