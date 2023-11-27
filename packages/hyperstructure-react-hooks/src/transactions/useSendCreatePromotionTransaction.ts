@@ -9,6 +9,7 @@ import {
 import { useEffect, useMemo } from 'react'
 import { Address, isAddress, TransactionReceipt } from 'viem'
 import {
+  useAccount,
   useContractRead,
   useContractReads,
   useContractWrite,
@@ -16,6 +17,7 @@ import {
   usePrepareContractWrite,
   useWaitForTransaction
 } from 'wagmi'
+import { useTokenAllowance } from '..'
 
 /**
  * Prepares and submits a `createPromotion` transaction to a TWAB rewards contract
@@ -51,9 +53,19 @@ export const useSendCreatePromotionTransaction = (
   txReceipt?: TransactionReceipt
   sendCreatePromotionTransaction?: () => void
 } => {
+  const { address: userAddress } = useAccount()
   const { chain } = useNetwork()
 
   const twabRewardsAddress = !!vault ? TWAB_REWARDS_ADDRESSES[vault.chainId] : undefined
+  const totalTokens =
+    !!tokensPerEpoch && !!numberOfEpochs ? tokensPerEpoch * BigInt(numberOfEpochs) : 0n
+
+  const { data: allowance, isFetched: isFetchedAllowance } = useTokenAllowance(
+    vault?.chainId,
+    userAddress as Address,
+    twabRewardsAddress as Address,
+    tokenAddress as Address
+  )
 
   const { data: twabControllerAddress } = useContractRead({
     chainId: vault?.chainId,
@@ -112,8 +124,12 @@ export const useSendCreatePromotionTransaction = (
     !!numberOfEpochs &&
     !!tokensPerEpoch &&
     !!twabRewardsAddress &&
+    !!totalTokens &&
     !!startTimestamp &&
-    !!epochDuration
+    !!epochDuration &&
+    isFetchedAllowance &&
+    !!allowance &&
+    allowance >= totalTokens
 
   const { config } = usePrepareContractWrite({
     chainId: vault?.chainId,
