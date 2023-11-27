@@ -46,6 +46,12 @@ export const TokenForm = (props: TokenFormProps) => {
   )
 
   useEffect(() => {
+    if (!!rewardToken && Number.isNaN(rewardToken.decimals)) {
+      formMethods.setError('promotionTokenAddress', { message: 'Enter a valid token address.' })
+    }
+  }, [rewardToken])
+
+  useEffect(() => {
     !!promotionTokenAddress &&
       formMethods.setValue('promotionTokenAddress', promotionTokenAddress, {
         shouldValidate: true
@@ -97,7 +103,11 @@ export const TokenForm = (props: TokenFormProps) => {
         />
         <div className='flex gap-2 items-center'>
           <PrevButton />
-          <NextButton disabled={!formMethods.formState.isValid || !rewardToken} />
+          <NextButton
+            disabled={
+              !formMethods.formState.isValid || !rewardToken || Number.isNaN(rewardToken?.decimals)
+            }
+          />
         </div>
       </form>
     </FormProvider>

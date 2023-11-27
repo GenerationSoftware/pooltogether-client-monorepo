@@ -59,14 +59,14 @@ export const PromotionPreview = (props: PromotionPreviewProps) => {
     >
       <span className='text-xl text-pt-purple-100'>Rewards Preview</span>
       {!!chainId && <PreviewItem label='Network' value={getNiceNetworkNameByChainId(chainId)} />}
-      {!!vaultData && (
+      {!!vaultData?.symbol && (
         <PreviewItem
           label='Prize Vault'
           value={vaultData.symbol}
           href={getBlockExplorerUrl(vaultData.chainId, vaultData.address, 'token')}
         />
       )}
-      {!!chainId && !!vaultAddress && isFetchedVaultData && !vaultData && (
+      {!!chainId && !!vaultAddress && isFetchedVaultData && !vaultData?.symbol && (
         <PreviewItem
           label='Prize Vault'
           value='Invalid'
@@ -74,14 +74,14 @@ export const PromotionPreview = (props: PromotionPreviewProps) => {
           valueClassName='text-pt-warning-light'
         />
       )}
-      {!!tokenData && (
+      {!!tokenData?.symbol && (
         <PreviewItem
           label='Reward Token'
           value={tokenData.symbol}
           href={getBlockExplorerUrl(tokenData.chainId, tokenData.address, 'token')}
         />
       )}
-      {!!chainId && !!tokenAddress && isFetchedTokenData && !tokenData && (
+      {!!chainId && !!tokenAddress && isFetchedTokenData && !tokenData?.symbol && (
         <PreviewItem
           label='Reward Token'
           value='Invalid'
