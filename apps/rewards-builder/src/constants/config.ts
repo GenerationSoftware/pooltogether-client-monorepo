@@ -95,8 +95,8 @@ export const PROMOTION_FILTERS: {
 } = {
   [NETWORK.mainnet]: {},
   [NETWORK.optimism]: {},
-  [NETWORK.arbitrum]: {},
   [NETWORK['optimism-goerli']]: {},
   [NETWORK['optimism-sepolia']]: { fromBlock: 4_400_000n },
+  [NETWORK.arbitrum]: {},
   [NETWORK['arbitrum-sepolia']]: { fromBlock: 1_490_000n }
 }

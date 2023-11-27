@@ -59,15 +59,16 @@ export const EpochsForm = (props: EpochsFormProps) => {
             isValidNumEpochs: (v: string) =>
               (parseInt(v) >= 1 && parseInt(v) <= 255) || 'Enter a number between 1 and 255.'
           }}
+          placeholder='1-255'
           label='How many reward epochs?'
           className='w-full max-w-md'
         />
-        <div className='w-full flex flex-col gap-4 items-center'>
+        <div className='w-full max-w-md flex flex-col gap-4'>
           <span className='text-sm font-medium text-pt-purple-100'>Epoch Length</span>
-          <div className='w-full flex flex-wrap justify-center gap-x-6 gap-y-4'>
-            <EpochLengthInput type='hour' />
-            <EpochLengthInput type='day' />
-            <EpochLengthInput type='week' />
+          <div className='w-full flex flex-wrap gap-4'>
+            <EpochLengthInput type='hour' className='flex-grow' labelClassName='w-full' />
+            <EpochLengthInput type='day' className='flex-grow' labelClassName='w-full' />
+            <EpochLengthInput type='week' className='flex-grow' labelClassName='w-full' />
           </div>
         </div>
         {/* TODO: add custom epoch length option (multiples of 1 hour) */}

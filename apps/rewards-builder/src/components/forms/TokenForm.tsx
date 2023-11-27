@@ -77,6 +77,7 @@ export const TokenForm = (props: TokenFormProps) => {
           validate={{
             isValidAddress: (v: string) => isAddress(v?.trim()) || 'Enter a valid contract address.'
           }}
+          placeholder='0x0000...'
           label='Reward Token Address'
           className='w-full max-w-md'
         />
@@ -90,6 +91,8 @@ export const TokenForm = (props: TokenFormProps) => {
               v.split('.')[1].length <= (rewardToken?.decimals ?? 18) ||
               'Too many decimals'
           }}
+          placeholder='Enter a token amount'
+          label='Total Rewards Amount'
           className='w-full max-w-md'
         />
         <div className='flex gap-2 items-center'>

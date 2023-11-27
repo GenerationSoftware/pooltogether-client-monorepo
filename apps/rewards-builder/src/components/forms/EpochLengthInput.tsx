@@ -17,10 +17,11 @@ interface EpochLengthInputFormValues {
 interface EpochLengthInputProps {
   type: LengthType
   className?: string
+  labelClassName?: string
 }
 
 export const EpochLengthInput = (props: EpochLengthInputProps) => {
-  const { type, className } = props
+  const { type, className, labelClassName } = props
 
   const { register } = useFormContext<EpochLengthInputFormValues>()
   const { promotionEpochLength } = useWatch<EpochLengthInputFormValues>()
@@ -36,16 +37,21 @@ export const EpochLengthInput = (props: EpochLengthInputProps) => {
           validate: { isSelected: (v: string) => !!v || 'Select an epoch length!' }
         })}
         type='radio'
-        value={lengthTypes[type].toString()}
+        value={lengthTypes[type]}
         className='hidden'
       />
       <label htmlFor={id}>
-        <Button
-          color='transparent'
-          className={classNames('capitalize', { 'border-pt-teal-dark': isSelected })}
+        <span
+          className={classNames(
+            'inline-flex items-center justify-center gap-1 px-3 py-2 text-sm rounded-lg capitalize',
+            'border border-pt-transparent bg-pt-transparent',
+            'cursor-pointer select-none hover:bg-pt-purple-50/20',
+            { '!border-pt-teal-dark': isSelected },
+            labelClassName
+          )}
         >
           1 {type}
-        </Button>
+        </span>
       </label>
     </div>
   )

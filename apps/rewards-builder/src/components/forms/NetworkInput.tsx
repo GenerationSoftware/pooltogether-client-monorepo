@@ -36,7 +36,7 @@ export const NetworkInput = (props: NetworkInputProps) => {
         <NetworkBadge
           chainId={chainId}
           onClick={() => {}}
-          className={classNames({ 'border-pt-teal-dark': isSelected })}
+          className={classNames({ '!border-pt-teal-dark': isSelected })}
         />
       </label>
     </div>

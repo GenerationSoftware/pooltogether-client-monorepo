@@ -52,9 +52,9 @@ export const VaultForm = (props: VaultFormProps) => {
         onSubmit={formMethods.handleSubmit(onSubmit)}
         className={classNames('flex flex-col grow gap-12 items-center', className)}
       >
-        <div className='w-full flex flex-col gap-4 items-center'>
+        <div className='w-full max-w-md flex flex-col gap-4'>
           <span className='text-sm font-medium text-pt-purple-100'>Select Network</span>
-          <div className='w-full flex flex-wrap justify-center gap-x-6 gap-y-4'>
+          <div className='w-full flex flex-wrap gap-3'>
             {SUPPORTED_NETWORKS.map((chainId) => (
               <NetworkInput key={`chain-${chainId}`} chainId={chainId} />
             ))}
@@ -65,6 +65,7 @@ export const VaultForm = (props: VaultFormProps) => {
           validate={{
             isValidAddress: (v: string) => isAddress(v?.trim()) || 'Enter a valid contract address.'
           }}
+          placeholder='0x0000...'
           label='Prize Vault Address'
           className='w-full max-w-md'
         />
