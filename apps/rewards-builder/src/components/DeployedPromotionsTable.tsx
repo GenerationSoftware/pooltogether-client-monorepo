@@ -1,9 +1,14 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { usePublicClientsByChain } from '@generationsoftware/hyperstructure-react-hooks'
+import { usePublicClientsByChain, useToken } from '@generationsoftware/hyperstructure-react-hooks'
 import { useScreenSize } from '@shared/generic-react-hooks'
-import { VaultBadge } from '@shared/react-components'
+import { TokenIcon, VaultBadge } from '@shared/react-components'
 import { LINKS, Spinner, Table, TableData } from '@shared/ui'
-import { getBlockExplorerUrl, shorten } from '@shared/utilities'
+import {
+  getBlockExplorerUrl,
+  getSecondsSinceEpoch,
+  getSimpleDate,
+  shorten
+} from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -47,7 +52,8 @@ export const DeployedPromotionsTable = (props: DeployedPromotionsTableProps) => 
 
   const tableData: TableData = {
     headers: {
-      vault: { content: 'Vault', className: 'pl-11' },
+      vault: { content: 'Vault' },
+      token: { content: 'Token', position: 'center' },
       owner: { content: 'Owner', position: 'center' },
       status: { content: 'Status', position: 'center' },
       actions: { content: 'Actions', position: 'center' }
@@ -58,6 +64,10 @@ export const DeployedPromotionsTable = (props: DeployedPromotionsTableProps) => 
         vault: {
           content: <VaultItem vault={promotion.vault} />
         },
+        token: {
+          content: <TokenItem token={{ chainId: promotion.chainId, address: promotion.token }} />,
+          position: 'center'
+        },
         owner: {
           content: (
             <AddressItem chainId={promotion.chainId} address={promotion.creator ?? zeroAddress} />
@@ -65,7 +75,13 @@ export const DeployedPromotionsTable = (props: DeployedPromotionsTableProps) => 
           position: 'center'
         },
         status: {
-          content: <StatusItem />,
+          content: (
+            <StatusItem
+              startTimestamp={Number(promotion.startTimestamp)}
+              epochDuration={promotion.epochDuration}
+              numberOfEpochs={promotion.numberOfEpochs}
+            />
+          ),
           position: 'center'
         },
         actions: {
@@ -101,7 +117,7 @@ export const DeployedPromotionsTable = (props: DeployedPromotionsTableProps) => 
       innerClassName='overflow-y-auto'
       headerClassName='text-center font-medium text-pt-purple-300 whitespace-nowrap'
       rowClassName='text-sm font-medium rounded-lg overflow-hidden'
-      gridColsClassName={`grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)]`}
+      gridColsClassName={`grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)]`}
     />
   )
 }
@@ -113,6 +129,23 @@ const VaultItem = (props: { vault: Vault }) => {
     <Link href={`${LINKS.app}/vault/${vault.chainId}/${vault.address}`} target='_blank'>
       <VaultBadge vault={vault} onClick={() => {}} symbolClassName='hidden' />
     </Link>
+  )
+}
+
+const TokenItem = (props: { token: { chainId: number; address: Address } }) => {
+  const { token } = props
+
+  const { data: tokenData } = useToken(token.chainId, token.address)
+
+  if (!tokenData) {
+    return <WrappedSpinner />
+  }
+
+  return (
+    <span className='inline-flex gap-2 items-center'>
+      <TokenIcon token={tokenData} />
+      {tokenData.symbol}
+    </span>
   )
 }
 
@@ -130,24 +163,27 @@ const AddressItem = (props: { chainId: number; address: Address }) => {
   )
 }
 
-const StatusItem = (props: {}) => {
-  const {} = props
+const StatusItem = (props: {
+  startTimestamp: number
+  epochDuration: number
+  numberOfEpochs?: number
+}) => {
+  const { startTimestamp, epochDuration, numberOfEpochs } = props
 
-  // TODO
+  const currentTimestamp = getSecondsSinceEpoch()
+  const promotionEndsAt = !!numberOfEpochs
+    ? startTimestamp + numberOfEpochs * epochDuration
+    : undefined
 
-  // if (vaultState === 'invalid') {
-  //   return <span className='text-sm text-pt-warning-light'>invalid</span>
-  // }
-
-  // if (vaultState === 'missingLiquidationPair' || vaultState === 'missingClaimer') {
-  //   return <span className='text-sm text-pt-warning-light'>incomplete</span>
-  // }
-
-  // if (vaultState === 'active') {
-  //   return <span className='text-sm text-pt-purple-300'>active</span>
-  // }
-
-  return <WrappedSpinner />
+  if (!!promotionEndsAt && promotionEndsAt > currentTimestamp) {
+    return (
+      <span className='text-sm text-pt-purple-300'>
+        active (ends {getSimpleDate(promotionEndsAt)})
+      </span>
+    )
+  } else {
+    return <span className='text-sm text-pt-warning-light'>ended</span>
+  }
 }
 
 const ActionsItem = (props: {}) => {
@@ -157,7 +193,7 @@ const ActionsItem = (props: {}) => {
 
   const { address } = useAccount()
 
-  // TODO
+  // TODO: add extend and destroy functionality if user is promotion owner
 
   // const { data: vaultOwner } = useVaultOwner(vault)
 

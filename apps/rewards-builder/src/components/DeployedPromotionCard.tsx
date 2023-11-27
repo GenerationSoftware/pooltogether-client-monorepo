@@ -1,7 +1,13 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { VaultBadge } from '@shared/react-components'
+import { useToken } from '@generationsoftware/hyperstructure-react-hooks'
+import { TokenIcon, VaultBadge } from '@shared/react-components'
 import { LINKS, Spinner } from '@shared/ui'
-import { getBlockExplorerUrl, shorten } from '@shared/utilities'
+import {
+  getBlockExplorerUrl,
+  getSecondsSinceEpoch,
+  getSimpleDate,
+  shorten
+} from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -27,12 +33,25 @@ export const DeployedPromotionCard = (props: DeployedPromotionCardProps) => {
     >
       <VaultItem vault={promotion.vault} />
       <CardRow
+        name='Token'
+        data={<TokenItem token={{ chainId: promotion.chainId, address: promotion.token }} />}
+      />
+      <CardRow
         name='Owner'
         data={
           <AddressItem chainId={promotion.chainId} address={promotion.creator ?? zeroAddress} />
         }
       />
-      <CardRow name='Status' data={<StatusItem />} />
+      <CardRow
+        name='Status'
+        data={
+          <StatusItem
+            startTimestamp={Number(promotion.startTimestamp)}
+            epochDuration={promotion.epochDuration}
+            numberOfEpochs={promotion.numberOfEpochs}
+          />
+        }
+      />
       <ActionsItem />
     </div>
   )
@@ -65,6 +84,23 @@ const VaultItem = (props: { vault: Vault }) => {
   )
 }
 
+const TokenItem = (props: { token: { chainId: number; address: Address } }) => {
+  const { token } = props
+
+  const { data: tokenData } = useToken(token.chainId, token.address)
+
+  if (!tokenData) {
+    return <Spinner />
+  }
+
+  return (
+    <span className='inline-flex gap-2 items-center'>
+      <TokenIcon token={tokenData} />
+      {tokenData.symbol}
+    </span>
+  )
+}
+
 const AddressItem = (props: { chainId: number; address: Address }) => {
   const { chainId, address } = props
 
@@ -79,24 +115,27 @@ const AddressItem = (props: { chainId: number; address: Address }) => {
   )
 }
 
-const StatusItem = (props: {}) => {
-  const {} = props
+const StatusItem = (props: {
+  startTimestamp: number
+  epochDuration: number
+  numberOfEpochs?: number
+}) => {
+  const { startTimestamp, epochDuration, numberOfEpochs } = props
 
-  // TODO
+  const currentTimestamp = getSecondsSinceEpoch()
+  const promotionEndsAt = !!numberOfEpochs
+    ? startTimestamp + numberOfEpochs * epochDuration
+    : undefined
 
-  // if (vaultState === 'invalid') {
-  //   return <span className='text-sm text-pt-warning-light'>invalid</span>
-  // }
-
-  // if (vaultState === 'missingLiquidationPair' || vaultState === 'missingClaimer') {
-  //   return <span className='text-sm text-pt-warning-light'>incomplete</span>
-  // }
-
-  // if (vaultState === 'active') {
-  //   return <span className='text-sm text-pt-purple-300'>active</span>
-  // }
-
-  return <Spinner />
+  if (!!promotionEndsAt && promotionEndsAt > currentTimestamp) {
+    return (
+      <span className='text-sm text-pt-purple-300'>
+        active (ends {getSimpleDate(promotionEndsAt)})
+      </span>
+    )
+  } else {
+    return <span className='text-sm text-pt-warning-light'>ended</span>
+  }
 }
 
 const ActionsItem = (props: {}) => {
@@ -106,7 +145,7 @@ const ActionsItem = (props: {}) => {
 
   const { address } = useAccount()
 
-  // TODO
+  // TODO: add extend and destroy functionality if user is promotion owner
 
   // const { data: vaultOwner } = useVaultOwner(vault)
 
