@@ -1,59 +1,29 @@
-import { Vaults } from '@generationsoftware/hyperstructure-client-js'
+import {
+  QUERY_KEYS,
+  usePromotionCreatedEventsAcrossChains,
+  usePublicClientsByChain
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { PartialPromotionInfo } from '@shared/types'
 import { getPromotions } from '@shared/utilities'
 import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'
-import { Address } from 'viem'
-import { usePublicClientsByChain } from '../blockchain/useClients'
-import { QUERY_KEYS } from '../constants'
-import { usePromotionCreatedEventsAcrossChains } from '../events/usePromotionCreatedEvents'
+import { PROMOTION_FILTERS, SUPPORTED_NETWORKS } from '@constants/config'
 
 /**
- * Returns TWAB rewards promotions for each vault
- * @param vaults instance of the `Vaults` class
- * @param options optional settings
+ * Returns all TWAB rewards promotions for the given chain IDs
  * @returns
  */
-export const useAllVaultPromotions = (
-  vaults: Vaults,
-  options?: {
-    [chainId: number]: {
-      tokenAddresses?: Address[]
-      fromBlock?: bigint
-      toBlock?: bigint
-    }
-  }
-) => {
+export const useAllPromotions = () => {
   const publicClients = usePublicClientsByChain({ useAll: true })
 
-  const fullOptions = useMemo(() => {
-    if (!!vaults && !!options) {
-      const newOptions: {
-        [chainId: number]: {
-          vaultAddresses?: Address[]
-          tokenAddresses?: Address[]
-          fromBlock?: bigint
-          toBlock?: bigint
-        }
-      } = {}
-
-      vaults.chainIds.forEach((chainId) => {
-        newOptions[chainId] = {
-          vaultAddresses: vaults.vaultAddresses[chainId],
-          ...options[chainId]
-        }
-      })
-
-      return newOptions
-    }
-  }, [vaults, options])
+  const chainIds = SUPPORTED_NETWORKS.map(Number)
 
   const { data: promotionCreatedEvents, isFetched: isFetchedPromotionCreatedEvents } =
-    usePromotionCreatedEventsAcrossChains(vaults.chainIds, fullOptions)
+    usePromotionCreatedEventsAcrossChains(chainIds, PROMOTION_FILTERS)
 
   const results = useQueries({
-    queries: vaults.chainIds.map((chainId) => {
+    queries: chainIds.map((chainId) => {
       const publicClient = publicClients[chainId]
 
       const promotionIds = promotionCreatedEvents[chainId]?.map((e) => e.args.promotionId) ?? []
@@ -95,7 +65,7 @@ export const useAllVaultPromotions = (
     const data: { [chainId: number]: { [id: string]: PartialPromotionInfo } } = {}
     results.forEach((result, i) => {
       if (!!result.data) {
-        data[vaults.chainIds[i]] = result.data
+        data[chainIds[i]] = result.data
       }
     })
 
