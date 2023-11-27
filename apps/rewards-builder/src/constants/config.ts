@@ -33,8 +33,6 @@ import {
  * Supported networks
  */
 export const SUPPORTED_NETWORKS = [
-  NETWORK.optimism,
-  NETWORK['optimism-goerli'],
   NETWORK['optimism-sepolia'],
   NETWORK['arbitrum-sepolia']
 ] as const
