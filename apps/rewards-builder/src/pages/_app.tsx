@@ -18,7 +18,7 @@ export default function MyApp(props: AppProps) {
         theme={ptRainbowTheme()}
         showRecentTransactions={true}
         coolMode={true}
-        appInfo={{ appName: 'Cabana Vault Factory' }}
+        appInfo={{ appName: 'Cabana Rewards Builder' }}
       >
         <AppContainer {...props} />
       </RainbowKitProvider>

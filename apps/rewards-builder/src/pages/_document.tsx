@@ -16,9 +16,10 @@ class MyDocument extends Document {
   }
 
   render() {
-    const title = 'Cabana Factory'
-    const description = 'Create and manage your PoolTogether Hyperstructure ERC-4626 vaults.'
-    const keywords = 'prize savings win save protocol blockchain vault 4626 ethereum tool factory'
+    const title = 'Cabana Rewards Builder'
+    const description = 'Create and manage rewards for any PoolTogether prize vault.'
+    const keywords =
+      'prize savings win save protocol blockchain vault 4626 ethereum optimism arbitrum tool rewards'
 
     return (
       <Html className='bg-pt-purple-800 text-pt-purple-50 overflow-x-hidden dark'>
@@ -34,12 +35,12 @@ class MyDocument extends Document {
           <meta property='og:title' content={title} />
           <meta property='og:description' content={description} />
           <meta property='og:site_name' content={title} />
-          <meta property='og:url' content={DOMAINS.vaultFactory} />
+          <meta property='og:url' content={DOMAINS.rewardsBuilder} />
           <meta property='og:type' content='website' />
           {/* TODO: add meta image */}
           {/* <meta
             property='og:image'
-            content={`${DOMAINS.vaultFactory}/facebook-share-image-1200-630.png`}
+            content={`${DOMAINS.rewardsBuilder}/facebook-share-image-1200-630.png`}
           /> */}
           <meta property='og:rich_attachment' content='true' />
           <meta property='og:image:width' content='1200' />
@@ -52,9 +53,9 @@ class MyDocument extends Document {
           {/* TODO: add meta image */}
           {/* <meta
             property='twitter:image:src'
-            content={`${DOMAINS.vaultFactory}/twitter-share-image-1200-675.png`}
+            content={`${DOMAINS.rewardsBuilder}/twitter-share-image-1200-675.png`}
           /> */}
-          <meta property='twitter:url' content={DOMAINS.vaultFactory} />
+          <meta property='twitter:url' content={DOMAINS.rewardsBuilder} />
           <meta property='twitter:creator' content={'@g9software'} />
 
           <link rel='manifest' href='/manifest.json' />

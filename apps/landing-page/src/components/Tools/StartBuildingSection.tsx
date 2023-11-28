@@ -38,6 +38,12 @@ export const StartBuildingSection = (props: StartBuildingSectionProps) => {
           title='Cabana Swaps'
           description='Browse and swap into your favorite PoolTogether vaults.'
         />
+        <StartBuildingItem
+          href={LINKS.rewardsBuilder}
+          imgSrc='/rewardsScreenshot.png'
+          title='Cabana Rewards Builder'
+          description='Create and manage bonus rewards for any PoolTogether prize vault.'
+        />
       </div>
     </section>
   )
