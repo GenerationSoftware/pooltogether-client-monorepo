@@ -22,15 +22,17 @@ import { useAllPromotions } from '@hooks/useAllPromotions'
 import { DeployedPromotionCard } from './DeployedPromotionCard'
 
 interface DeployedPromotionsTableProps {
+  onlyUser?: Address
+  filterOutUser?: Address
   className?: string
 }
 
 export const DeployedPromotionsTable = (props: DeployedPromotionsTableProps) => {
-  const { className } = props
+  const { onlyUser, filterOutUser, className } = props
 
   const publicClients = usePublicClientsByChain({ useAll: true })
 
-  const { data: allPromotions } = useAllPromotions()
+  const { data: allPromotions, isFetched: isFetchedAllPromotions } = useAllPromotions()
 
   const promotionsArray = useMemo(() => {
     const array: Promotion[] = []
@@ -38,8 +40,18 @@ export const DeployedPromotionsTable = (props: DeployedPromotionsTableProps) => 
     SUPPORTED_NETWORKS.forEach((chainId) => {
       if (!!allPromotions[chainId]) {
         Object.entries(allPromotions[chainId]).forEach(([id, info]) => {
-          const vault = new Vault(chainId, info.vault, publicClients[chainId])
-          array.push({ chainId, id: parseInt(id), ...info, vault })
+          if (
+            (!onlyUser && !filterOutUser) ||
+            (!!onlyUser &&
+              !!info.creator &&
+              onlyUser.toLowerCase() === info.creator.toLowerCase()) ||
+            (!!filterOutUser &&
+              !!info.creator &&
+              filterOutUser.toLowerCase() !== info.creator.toLowerCase())
+          ) {
+            const vault = new Vault(chainId, info.vault, publicClients[chainId])
+            array.push({ chainId, id: parseInt(id), ...info, vault })
+          }
         })
       }
     })
@@ -93,8 +105,12 @@ export const DeployedPromotionsTable = (props: DeployedPromotionsTableProps) => 
     }))
   }
 
+  if (!isFetchedAllPromotions) {
+    return <Spinner />
+  }
+
   if (tableData.rows.length === 0) {
-    return <></>
+    return <span className={classNames('text-pt-purple-200', className)}>None.</span>
   }
 
   if (isMobile) {
