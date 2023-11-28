@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { NextIntlProvider } from 'next-intl'
 import { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
 // React Query Client:
 const queryClient = new QueryClient()
@@ -19,6 +20,12 @@ export const AppContainer = (props: AppProps) => {
       router.push({ pathname, query }, asPath, { locale })
     }
   })
+
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+    }
+  }, [])
 
   return (
     <Flowbite theme={{ dark: true }}>
