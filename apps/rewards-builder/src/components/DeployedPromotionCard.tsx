@@ -6,6 +6,7 @@ import {
   getBlockExplorerUrl,
   getSecondsSinceEpoch,
   getSimpleDate,
+  isTestnet,
   shorten
 } from '@shared/utilities'
 import classNames from 'classnames'
@@ -78,8 +79,13 @@ const VaultItem = (props: { vault: Vault }) => {
   const { vault } = props
 
   return (
-    <Link href={`${LINKS.app}/vault/${vault.chainId}/${vault.address}`} target='_blank'>
+    <Link
+      href={`${LINKS.app}/vault/${vault.chainId}/${vault.address}`}
+      target='_blank'
+      className='inline-flex items-center justify-between'
+    >
       <VaultBadge vault={vault} onClick={() => {}} symbolClassName='hidden' />
+      {isTestnet(vault.chainId) && <span className='text-xs text-pt-warning-light'>TESTNET</span>}
     </Link>
   )
 }

@@ -24,7 +24,7 @@ export const getNetworkNameByChainId = (chainId: number): string | undefined => 
 
 /**
  * Returns a formatted network name to display in the UI based on the chain ID provided
- * @param chainId
+ * @param chainId chain ID to get network name for
  * @returns
  */
 export const getNiceNetworkNameByChainId = (chainId: number): string => {
@@ -61,4 +61,37 @@ export const getNiceNetworkNameByChainId = (chainId: number): string => {
       return niceName ? niceName.charAt(0).toUpperCase() + niceName.slice(1) : '--'
     }
   }
+}
+
+/**
+ * Returns a boolean representing if a network is a testnet or not
+ * @param chainId chain ID to check
+ * @returns
+ */
+export const isTestnet = (chainId: number) => {
+  const values: Record<NETWORK, boolean> = {
+    [NETWORK.mainnet]: false,
+    [NETWORK.goerli]: true,
+    [NETWORK.sepolia]: true,
+    [NETWORK.bsc]: false,
+    [NETWORK['bsc-testnet']]: true,
+    [NETWORK.xdai]: false,
+    [NETWORK.polygon]: false,
+    [NETWORK.mumbai]: true,
+    [NETWORK.optimism]: false,
+    [NETWORK['optimism-goerli']]: true,
+    [NETWORK['optimism-sepolia']]: true,
+    [NETWORK.avalanche]: false,
+    [NETWORK.fuji]: true,
+    [NETWORK.celo]: false,
+    [NETWORK['celo-testnet']]: true,
+    [NETWORK.arbitrum]: false,
+    [NETWORK['arbitrum-goerli']]: true,
+    [NETWORK['arbitrum-sepolia']]: true,
+    [NETWORK.base]: false,
+    [NETWORK['base-goerli']]: true,
+    [NETWORK['base-sepolia']]: true
+  }
+
+  return values[chainId as NETWORK] ?? false
 }

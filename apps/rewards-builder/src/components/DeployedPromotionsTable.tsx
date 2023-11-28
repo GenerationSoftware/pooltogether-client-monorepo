@@ -7,6 +7,7 @@ import {
   getBlockExplorerUrl,
   getSecondsSinceEpoch,
   getSimpleDate,
+  isTestnet,
   shorten
 } from '@shared/utilities'
 import classNames from 'classnames'
@@ -113,7 +114,7 @@ export const DeployedPromotionsTable = (props: DeployedPromotionsTableProps) => 
     <Table
       keyPrefix='deployedPromotionsTable'
       data={tableData}
-      className={classNames('px-6 pb-6 bg-pt-transparent/20 rounded-3xl', className)}
+      className={classNames('w-full px-6 pb-6 bg-pt-transparent/20 rounded-3xl', className)}
       innerClassName='overflow-y-auto'
       headerClassName='text-center font-medium text-pt-purple-300 whitespace-nowrap'
       rowClassName='text-sm font-medium rounded-lg overflow-hidden'
@@ -126,8 +127,17 @@ const VaultItem = (props: { vault: Vault }) => {
   const { vault } = props
 
   return (
-    <Link href={`${LINKS.app}/vault/${vault.chainId}/${vault.address}`} target='_blank'>
+    <Link
+      href={`${LINKS.app}/vault/${vault.chainId}/${vault.address}`}
+      target='_blank'
+      className='relative'
+    >
       <VaultBadge vault={vault} onClick={() => {}} symbolClassName='hidden' />
+      {isTestnet(vault.chainId) && (
+        <span className='absolute right-1 bottom-0 text-[.6em] leading-4 text-pt-warning-light'>
+          TESTNET
+        </span>
+      )}
     </Link>
   )
 }

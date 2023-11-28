@@ -20,7 +20,7 @@ export const HomePageContent = () => {
           <span className='mx-auto text-3xl'>All Rewards</span>
           <DeployNewPromotionButton className='absolute hidden right-0 lg:block' />
         </div>
-        <DeployedPromotionsTable className='w-full' />
+        <DeployedPromotionsTable />
         <DeployNewPromotionButton className='lg:hidden' />
       </div>
     )
