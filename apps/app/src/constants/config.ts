@@ -100,7 +100,17 @@ export const TWAB_REWARDS_SETTINGS: {
   [chainId: number]: { tokenAddresses: Address[]; fromBlock: bigint }
 } = {
   [NETWORK.mainnet]: { tokenAddresses: [], fromBlock: 1n },
-  [NETWORK.optimism]: { tokenAddresses: [], fromBlock: 1n },
+  [NETWORK.optimism]: {
+    tokenAddresses: [
+      '0x4200000000000000000000000000000000000042', // OP
+      '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85', // USDC
+      '0x7F5c764cBc14f9669B88837ca1490cCa17c31607', // USDC.e
+      '0x4200000000000000000000000000000000000006', // WETH
+      '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1', // DAI
+      '0x395Ae52bB17aef68C2888d941736A71dC6d4e125' // POOL
+    ],
+    fromBlock: 1n
+  },
   [NETWORK.arbitrum]: { tokenAddresses: [], fromBlock: 1n },
   [NETWORK['optimism-goerli']]: { tokenAddresses: [], fromBlock: 1n },
   [NETWORK['optimism-sepolia']]: {

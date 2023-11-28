@@ -40,6 +40,7 @@ export const LINKS = Object.freeze({
   protocolFaqs: `${DOMAINS.docs}/protocol/faqs`,
   appFaqs: `${DOMAINS.docs}/cabana-app/faqs`,
   toolFaqs: `${DOMAINS.docs}/cabana-tools/faqs`,
+  rewardTokenWhitelist: `${DOMAINS.docs}/cabana-app/bonus-rewards#reward-token-whitelist`,
   risks: `${DOMAINS.protocolDocs}/security/risks`,
   audits: `${DOMAINS.protocolDocs}/security/audits`,
   devDocs_v4: `${DOMAINS.protocolDevDocs}/protocol/V4/introduction`,
