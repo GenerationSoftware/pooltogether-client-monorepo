@@ -98,7 +98,7 @@ const ErrorState = (props: ErrorStateProps) => {
   const isInvalidInterface = !tokenAddress
 
   return (
-    <div className='flex flex-col gap-6 items-center text-center'>
+    <div className='w-full max-w-md flex flex-col gap-6 items-center text-center'>
       <ErrorPooly className='w-full max-w-[50%]' />
       {isInvalidNetwork ? (
         <div className='flex flex-col gap-2'>
