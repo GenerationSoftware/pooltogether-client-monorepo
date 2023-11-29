@@ -20,6 +20,7 @@ export interface RngTx {
   feeRecipient: Address
   hash: `0x${string}`
   blockNumber: bigint
+  timestamp?: number
 }
 
 export interface RelayTx {
@@ -52,6 +53,10 @@ export const useRngTxs = (prizePool: PrizePool) => {
     originChainId as number,
     { fromBlock: originFromBlock }
   )
+  const rngCompletedBlockNumbers = new Set<bigint>(
+    rngAuctionEvents?.map((e) => e.blockNumber) ?? []
+  )
+
   const { data: relayAuctionEvents, isFetched: isFetchedRelayAuctionEvents } =
     useRelayAuctionEvents(prizePool?.chainId, { fromBlock })
 
@@ -63,6 +68,10 @@ export const useRngTxs = (prizePool: PrizePool) => {
     drawAwardedEvents?.map((e) => e.blockNumber) ?? []
   )
 
+  const { data: rngCompletedBlocks, isFetched: isFetchedRngCompletedBlocks } = useBlocks(
+    originChainId as number,
+    [...rngCompletedBlockNumbers]
+  )
   const { data: drawAwardedBlocks, isFetched: isFetchedDrawAwardedBlocks } = useBlocks(
     prizePool?.chainId,
     [...drawAwardedBlockNumbers]
@@ -84,6 +93,7 @@ export const useRngTxs = (prizePool: PrizePool) => {
       !!rngAuctionEvents &&
       !!relayAuctionEvents &&
       !!drawAwardedEvents &&
+      !!rngCompletedBlocks &&
       !!drawAwardedBlocks &&
       !!rngL1RelayMsgEvents &&
       !!rngL2RelayMsgEvents &&
@@ -98,6 +108,10 @@ export const useRngTxs = (prizePool: PrizePool) => {
 
           const sequenceId = rngAuctionEvent.args.sequenceId
           const drawId = sequenceId - idDiff
+
+          const rngCompletedBlock = rngCompletedBlocks.find(
+            (e) => e.number === rngAuctionEvent.blockNumber
+          )
 
           if (drawId > 0) {
             const drawAwardedEvent = drawAwardedEvents.find((e) => e.args.drawId === drawId)
@@ -138,7 +152,8 @@ export const useRngTxs = (prizePool: PrizePool) => {
               feeFraction: rngAuctionEvent.args.rewardFraction,
               feeRecipient: rngAuctionEvent.args.recipient,
               hash: rngAuctionEvent.transactionHash,
-              blockNumber: rngAuctionEvent.blockNumber
+              blockNumber: rngAuctionEvent.blockNumber,
+              timestamp: !!rngCompletedBlock ? Number(rngCompletedBlock.timestamp) : undefined
             }
 
             const relay: { l1?: RelayMsgTx; l2?: RelayTx } = {
@@ -189,6 +204,7 @@ export const useRngTxs = (prizePool: PrizePool) => {
     isFetchedRngAuctionEvents &&
     isFetchedRelayAuctionEvents &&
     isFetchedDrawAwardedEvents &&
+    isFetchedRngCompletedBlocks &&
     isFetchedDrawAwardedBlocks &&
     isFetchedRngL1RelayMsgEvents &&
     isFetchedRngL2RelayMsgEvents &&

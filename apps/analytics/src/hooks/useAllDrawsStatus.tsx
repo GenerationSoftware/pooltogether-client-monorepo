@@ -1,7 +1,7 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { useDrawPeriod, useFirstDrawOpenedAt } from '@generationsoftware/hyperstructure-react-hooks'
 import { DrawStatus } from '@shared/types'
-import { getSecondsSinceEpoch } from '@shared/utilities'
+import { getSecondsSinceEpoch, SECONDS_PER_HOUR } from '@shared/utilities'
 import { useMemo } from 'react'
 import { useRngTxs } from './useRngTxs'
 
@@ -33,6 +33,7 @@ export const useAllDrawsStatus = (prizePool: PrizePool, drawIds: number[]) => {
 
         const openedAt = firstDrawOpenedAt + drawPeriod * (drawId - 1)
         const closedAt = openedAt + drawPeriod
+        const rngCompletedAt = rngTxs?.rng?.timestamp
         const awardedAt = rngTxs?.relay.l2?.timestamp
         const finalizedAt = closedAt + drawPeriod
 
@@ -48,7 +49,10 @@ export const useAllDrawsStatus = (prizePool: PrizePool, drawIds: number[]) => {
           ? 'closed'
           : 'open'
 
-        const isSkipped = status === 'closed' && currentTime - closedAt > closedAt - openedAt
+        const relayAuctionClosesAt = !!rngCompletedAt
+          ? rngCompletedAt + SECONDS_PER_HOUR * 6
+          : finalizedAt
+        const isSkipped = status === 'closed' && currentTime >= relayAuctionClosesAt
 
         allDrawsStatus.push({
           id: drawId,
