@@ -33,6 +33,7 @@ import {
  * Supported networks
  */
 export const SUPPORTED_NETWORKS = [
+  NETWORK.optimism,
   NETWORK['optimism-sepolia'],
   NETWORK['arbitrum-sepolia']
 ] as const
@@ -92,7 +93,7 @@ export const PROMOTION_FILTERS: {
   [chainId: number]: { tokenAddresses?: Address[]; fromBlock?: bigint }
 } = {
   [NETWORK.mainnet]: {},
-  [NETWORK.optimism]: {},
+  [NETWORK.optimism]: { fromBlock: 112_933_000n },
   [NETWORK['optimism-goerli']]: {},
   [NETWORK['optimism-sepolia']]: { fromBlock: 4_400_000n },
   [NETWORK.arbitrum]: {},

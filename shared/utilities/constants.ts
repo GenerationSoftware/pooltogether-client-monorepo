@@ -357,6 +357,7 @@ export const TWAB_CONTROLLER_ADDRESSES: { [chainId: number]: Address } = {
  * TWAB rewards addresses
  */
 export const TWAB_REWARDS_ADDRESSES: { [chainId: number]: Address } = {
+  [NETWORK.optimism]: '0x27Ed5760Edc0128E3043F6cC0C3428E337396A66',
   [NETWORK['optimism-sepolia']]: '0x18354F158CdcB87e81299c15110A5D59293B57F8',
   [NETWORK['arbitrum-sepolia']]: '0x8cfFF0B59491835a2aCee98d9F9D9D2Ebe71a943'
 }
