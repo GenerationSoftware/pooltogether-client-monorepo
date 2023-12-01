@@ -1,8 +1,10 @@
+import { getNetworkNameByChainId, PRIZE_POOLS } from '@shared/utilities'
 import classNames from 'classnames'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
+import { useSelectedChainId } from '@hooks/useSelectedChainId'
 
 interface NavbarProps {
   className?: string
@@ -10,6 +12,9 @@ interface NavbarProps {
 
 export const Navbar = (props: NavbarProps) => {
   const { className } = props
+
+  const { chainId } = useSelectedChainId()
+  const networkName = getNetworkNameByChainId(chainId ?? PRIZE_POOLS[0].chainId)
 
   return (
     <>
@@ -20,7 +25,7 @@ export const Navbar = (props: NavbarProps) => {
           className
         )}
       >
-        <Link href='/' className='flex gap-1 items-center'>
+        <Link href={`/${networkName}`} className='flex gap-1 items-center'>
           <Image src='/cabanaLogo.svg' alt='Cabana' width={32} height={32} priority={true} />
           <span className='-mt-[.2rem] font-grotesk font-bold text-[2rem] text-pt-purple-900'>
             Cabanalytics
@@ -74,13 +79,20 @@ interface NavbarActionsProps {
 const NavbarActions = (props: NavbarActionsProps) => {
   const { linkClassName } = props
 
+  const { chainId } = useSelectedChainId()
+  const networkName = getNetworkNameByChainId(chainId ?? PRIZE_POOLS[0].chainId)
+
   return (
     <>
-      <NavbarLink href='/' name='Draws' className={linkClassName} />
-      <NavbarLink href='/liquidations' name='Liquidations' className={linkClassName} />
-      <NavbarLink href='/prizes' name='Prizes' className={linkClassName} />
-      <NavbarLink href='/reserve' name='Reserve' className={linkClassName} />
-      <NavbarLink href='/burn' name='Burn' className={linkClassName} />
+      <NavbarLink href={`/${networkName}/`} name='Draws' className={linkClassName} />
+      <NavbarLink
+        href={`/${networkName}/liquidations`}
+        name='Liquidations'
+        className={linkClassName}
+      />
+      <NavbarLink href={`/${networkName}/prizes`} name='Prizes' className={linkClassName} />
+      <NavbarLink href={`/${networkName}/reserve`} name='Reserve' className={linkClassName} />
+      <NavbarLink href={`/${networkName}/burn`} name='Burn' className={linkClassName} />
     </>
   )
 }
@@ -96,7 +108,7 @@ const NavbarLink = (props: NavbarLinkProps) => {
 
   const router = useRouter()
 
-  const isActive = href === router.pathname
+  const isActive = href.split('/')[2] === (router.pathname.split('/')[2] ?? '')
 
   return (
     <Link

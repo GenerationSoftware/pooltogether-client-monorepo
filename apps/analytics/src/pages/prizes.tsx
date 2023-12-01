@@ -1,11 +1,13 @@
-import { NETWORK } from '@shared/utilities'
-import { PrizesView } from 'src/views/PrizesView'
-import { Layout } from '@components/Layout'
+import { getNetworkNameByChainId, PRIZE_POOLS } from '@shared/utilities'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
 export default function PrizesPage() {
-  return (
-    <Layout>
-      <PrizesView chainId={NETWORK.optimism} />
-    </Layout>
-  )
+  const router = useRouter()
+
+  useEffect(() => {
+    router.replace(`/${getNetworkNameByChainId(PRIZE_POOLS[0].chainId)}/prizes`)
+  }, [])
+
+  return null
 }

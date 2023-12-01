@@ -1,11 +1,13 @@
-import { NETWORK } from '@shared/utilities'
-import { DrawsView } from 'src/views/DrawsView'
-import { Layout } from '@components/Layout'
+import { getNetworkNameByChainId, PRIZE_POOLS } from '@shared/utilities'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
 export default function DrawsPage() {
-  return (
-    <Layout>
-      <DrawsView chainId={NETWORK.optimism} />
-    </Layout>
-  )
+  const router = useRouter()
+
+  useEffect(() => {
+    router.replace(`/${getNetworkNameByChainId(PRIZE_POOLS[0].chainId)}`)
+  }, [])
+
+  return null
 }
