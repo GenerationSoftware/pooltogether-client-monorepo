@@ -41,17 +41,26 @@ export const useHistoricalLiquidationPairTokenOutPrices = (
       ? new Vaults(allValidVaultInfo, { [chainId]: publicClient })
       : undefined
   }, [chainId, publicClient, tokenOutAddresses, isFetchedIsValidVaults, isValidVaults])
+
   const { data: shareTokensWithPriceHistory, isFetched: isFetchedShareTokensWithPriceHistory } =
     useAllVaultHistoricalSharePrices(chainId, vaults as Vaults)
 
+  const nonVaultTokenAddresses = useMemo(() => {
+    const vaultAddresses =
+      vaults?.vaultAddresses?.[chainId]?.map((address) => address.toLowerCase()) ?? []
+    return Object.values(tokenOutAddresses).filter(
+      (address) => !vaultAddresses.includes(address.toLowerCase())
+    )
+  }, [tokenOutAddresses, vaults])
+
   const { data: historicalTokenPrices, isFetched: isFetchedHistoricalTokenPrices } =
-    useHistoricalTokenPrices(chainId, !!tokenOutAddresses ? Object.values(tokenOutAddresses) : [])
+    useHistoricalTokenPrices(chainId, nonVaultTokenAddresses)
 
   const isFetched =
     isFetchedTokenOutAddresses &&
     isFetchedShareTokens &&
     (vaults === undefined || isFetchedShareTokensWithPriceHistory) &&
-    isFetchedHistoricalTokenPrices
+    (nonVaultTokenAddresses.length === 0 || isFetchedHistoricalTokenPrices)
 
   const data = useMemo(() => {
     const results: {
