@@ -24,7 +24,7 @@ export const ReserveHeader = (props: ReserveHeaderProps) => {
       <span className='flex gap-1 items-center text-pt-purple-500'>
         <span className='text-4xl font-semibold'>
           {!!reserve && !!prizeToken ? (
-            formatBigIntForDisplay(reserve.current, prizeToken.decimals, {
+            formatBigIntForDisplay(reserve.current + reserve.pending, prizeToken.decimals, {
               hideZeroes: true
             })
           ) : (
