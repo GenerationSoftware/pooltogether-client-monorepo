@@ -1,3 +1,4 @@
+import { useScreenSize } from '@shared/generic-react-hooks'
 import { getNetworkNameByChainId, PRIZE_POOLS } from '@shared/utilities'
 import classNames from 'classnames'
 import Image from 'next/image'
@@ -5,6 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
 import { useSelectedChainId } from '@hooks/useSelectedChainId'
+import { NetworkDropdown } from './NetworkDropdown'
 
 interface NavbarProps {
   className?: string
@@ -16,12 +18,15 @@ export const Navbar = (props: NavbarProps) => {
   const { chainId } = useSelectedChainId()
   const networkName = getNetworkNameByChainId(chainId ?? PRIZE_POOLS[0].chainId)
 
+  const { isMobile } = useScreenSize()
+
   return (
     <>
       <div
         className={classNames(
-          'flex items-center justify-center px-6 py-3 z-30',
-          'md:justify-between md:px-12 md:py-6',
+          'flex flex-col items-center justify-between px-6 py-3 z-30',
+          'min-[500px]:flex-row',
+          'md:px-12 md:py-6',
           className
         )}
       >
@@ -31,17 +36,19 @@ export const Navbar = (props: NavbarProps) => {
             Cabanalytics
           </span>
         </Link>
-        <div className='hidden gap-6 items-center md:flex lg:gap-12'>
+        <div className='hidden gap-6 items-center md:flex'>
           <NavbarActions />
+          <NetworkDropdown />
           <Image
             src='/pooly.svg'
             alt='Pooly'
             width={93}
             height={91}
-            className='w-20 h-auto -ml-5 lg:-ml-10'
+            className='w-20 h-auto -ml-10'
             priority={true}
           />
         </div>
+        {isMobile && <NetworkDropdown />}
       </div>
       <MobileNavbar className='z-50 md:hidden'>
         <NavbarActions />
@@ -115,7 +122,7 @@ const NavbarLink = (props: NavbarLinkProps) => {
       href={href}
       target={href.startsWith('http') ? '_blank' : '_self'}
       className={classNames(
-        'font-semibold border-b-2 lg:text-xl md:border-b-4',
+        'font-semibold border-b-2 md:border-b-4',
         {
           'text-pt-purple-500 border-b-current': isActive,
           'text-gray-600 border-b-transparent hover:text-pt-purple-500': !isActive
