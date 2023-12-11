@@ -58,6 +58,7 @@ export const getTokenPrices = async (
   }
 }
 
+// TODO: also redirect prices here to get historical prices of token it is redirected to (useful for testnets)
 /**
  * Returns a token's historical prices in ETH from the CloudFlare API
  * @param chainId chain ID where the token addresses provided is from
@@ -71,13 +72,22 @@ export const getHistoricalTokenPrices = async (
   if (!isAddress(tokenAddress)) return {}
 
   try {
-    const url = new URL(`${TOKEN_PRICES_API_URL}/${chainId}/${tokenAddress}`)
+    if (TOKEN_PRICE_API_SUPPORTED_NETWORKS.includes(chainId)) {
+      const url = new URL(`${TOKEN_PRICES_API_URL}/${chainId}/${tokenAddress}`)
 
-    const response = await fetch(url.toString())
-    const tokenPrices: { [address: Address]: { date: string; price: number }[] } =
-      await response.json()
+      const response = await fetch(url.toString())
+      const tokenPrices: { [address: Address]: { date: string; price: number }[] } =
+        await response.json()
 
-    return tokenPrices
+      return tokenPrices
+    } else {
+      const lowercaseTokenAddress = tokenAddress.toLowerCase() as Lowercase<Address>
+      const mostRecentTokenPrice = (await getTokenPrices(chainId, [tokenAddress]))[
+        lowercaseTokenAddress
+      ]
+      const dateNow = new Date().toISOString().split('T')[0]
+      return { [lowercaseTokenAddress]: [{ date: dateNow, price: mostRecentTokenPrice }] }
+    }
   } catch (e) {
     console.error(e)
     return {}

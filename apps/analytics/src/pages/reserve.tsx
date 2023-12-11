@@ -1,11 +1,13 @@
-import { NETWORK } from '@shared/utilities'
-import { ReserveView } from 'src/views/ReserveView'
-import { Layout } from '@components/Layout'
+import { getNetworkNameByChainId, PRIZE_POOLS } from '@shared/utilities'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
 export default function ReservePage() {
-  return (
-    <Layout>
-      <ReserveView chainId={NETWORK.optimism} />
-    </Layout>
-  )
+  const router = useRouter()
+
+  useEffect(() => {
+    router.replace(`/${getNetworkNameByChainId(PRIZE_POOLS[0].chainId)}/reserve`)
+  }, [])
+
+  return null
 }
