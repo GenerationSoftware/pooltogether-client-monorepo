@@ -65,7 +65,7 @@ const Label = () => {
   }
 
   if (!chainId) {
-    return '?'
+    return <>?</>
   }
 
   return (
