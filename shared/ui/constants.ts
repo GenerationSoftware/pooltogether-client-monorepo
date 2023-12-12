@@ -17,7 +17,8 @@ export const DOMAINS = Object.freeze({
   vaultFactory: 'https://factory.cabana.fi',
   analytics: 'https://analytics.cabana.fi',
   swaps: 'https://swap.cabana.fi',
-  rewardsBuilder: 'https://rewards.cabana.fi'
+  rewardsBuilder: 'https://rewards.cabana.fi',
+  flashLiquidator: 'https://liquidator.cabana.fi'
 })
 
 /**
