@@ -6,18 +6,18 @@
 
 <br />
 
-# 💻 &nbsp; Cabana Rewards Builder
+# 💻 &nbsp; Cabana Flash Liquidator
 
 ![next](https://img.shields.io/static/v1?label&logo=nextdotjs&logoColor=white&message=Next.js&color=black)
 ![ts](https://img.shields.io/badge/typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white)
 ![tailwind](https://img.shields.io/static/v1?label&logo=tailwindcss&logoColor=white&message=tailwind&color=38B2AC)
-![version](https://img.shields.io/github/package-json/v/GenerationSoftware/pooltogether-client-monorepo?filename=apps%2Frewards-builder%2Fpackage.json&color=brightgreen)
+![version](https://img.shields.io/github/package-json/v/GenerationSoftware/pooltogether-client-monorepo?filename=apps%2Fflash-liquidator%2Fpackage.json&color=brightgreen)
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/c76b2252-482f-470a-b709-95ed66c70f5a/deploy-status)](https://app.netlify.com/sites/cabana-rewards-builder/deploys)
+<!-- [![Netlify Status](https://api.netlify.com/api/v1/badges/c76b2252-482f-470a-b709-95ed66c70f5a/deploy-status)](https://app.netlify.com/sites/cabana-rewards-builder/deploys) -->
 
 # 🏆 &nbsp; Overview
 
-App to easily create and manage TWAB rewards campaigns for any PoolTogether prize vault.
+App to flash liquidate yield from any PoolTogether liquidation pair linked to a prize vault.
 
 ## 🏎️ &nbsp; Quickstart
 
@@ -25,7 +25,7 @@ App to easily create and manage TWAB rewards campaigns for any PoolTogether priz
 
 Run the development server through `pnpm dev`.
 
-Open [http://localhost:3006](http://localhost:3006) on your browser to see the resulting app.
+Open [http://localhost:3007](http://localhost:3007) on your browser to see the resulting app.
 
 ### App Structure
 
