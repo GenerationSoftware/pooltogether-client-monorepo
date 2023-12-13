@@ -13,7 +13,7 @@
 ![tailwind](https://img.shields.io/static/v1?label&logo=tailwindcss&logoColor=white&message=tailwind&color=38B2AC)
 ![version](https://img.shields.io/github/package-json/v/GenerationSoftware/pooltogether-client-monorepo?filename=apps%2Fflash-liquidator%2Fpackage.json&color=brightgreen)
 
-<!-- [![Netlify Status](https://api.netlify.com/api/v1/badges/c76b2252-482f-470a-b709-95ed66c70f5a/deploy-status)](https://app.netlify.com/sites/cabana-rewards-builder/deploys) -->
+[![Netlify Status](https://api.netlify.com/api/v1/badges/a1303ff0-39a4-48df-b10e-fbeba0d922bf/deploy-status)](https://app.netlify.com/sites/cabana-flash-liquidator/deploys)
 
 # 🏆 &nbsp; Overview
 
