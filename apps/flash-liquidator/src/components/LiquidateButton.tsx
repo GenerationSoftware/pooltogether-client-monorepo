@@ -26,7 +26,8 @@ export const LiquidateButton = (props: LiquidateButtonProps) => {
   const { switchNetworkAsync } = useSwitchNetwork()
   const addRecentTransaction = useAddRecentTransaction()
 
-  const { refetch: refetchBestLiquidation } = useBestLiquidation(liquidationPair)
+  const { data: bestLiquidation, refetch: refetchBestLiquidation } =
+    useBestLiquidation(liquidationPair)
 
   const { data: liquidationProfit, isFetched } = useBestLiquidationProfit(liquidationPair)
 
@@ -78,8 +79,8 @@ export const LiquidateButton = (props: LiquidateButtonProps) => {
     !!liquidationPair &&
     !!sendFlashLiquidateTransaction &&
     isFetched &&
-    !!liquidationProfit &&
-    liquidationProfit > 0
+    !!bestLiquidation &&
+    bestLiquidation.success
 
   if (!isBrowser || isDisconnected || chain?.id !== liquidationPair.chainId) {
     return (
@@ -112,11 +113,20 @@ export const LiquidateButton = (props: LiquidateButtonProps) => {
 const ButtonContent = (props: { lp: LiquidationPair }) => {
   const { lp } = props
 
-  const { data: liquidationProfit, isFetched } = useBestLiquidationProfit(lp)
+  const { data: liquidation } = useBestLiquidation(lp)
+  const { data: liquidationProfit, isFetched: isFetchedLiquidationProfit } =
+    useBestLiquidationProfit(lp)
 
-  const isNegativeProfit = isFetched && !!liquidationProfit && liquidationProfit < 0
+  if (!liquidation || !isFetchedLiquidationProfit || liquidationProfit === undefined) {
+    return <Spinner />
+  }
 
-  return liquidationProfit !== undefined ? (
+  // TODO: give better description of why the button isn't active
+  if (!liquidation.success) {
+    return <>-</>
+  }
+
+  return (
     <>
       Flash Liq. for{' '}
       <span
@@ -125,11 +135,9 @@ const ButtonContent = (props: { lp: LiquidationPair }) => {
           'text-pt-warning-light': liquidationProfit < 0
         })}
       >
-        <CurrencyValue baseValue={isNegativeProfit ? -liquidationProfit : liquidationProfit} />
+        <CurrencyValue baseValue={liquidationProfit < 0 ? -liquidationProfit : liquidationProfit} />
       </span>{' '}
-      {isNegativeProfit ? <>Loss</> : <>Profit</>}
+      {liquidationProfit < 0 ? <>Loss</> : <>Profit</>}
     </>
-  ) : (
-    <Spinner />
   )
 }
