@@ -112,6 +112,10 @@ const VaultCardActions = (props: VaultCardActionsProps) => {
       href: !!curvePool ? `https://curve.fi/#/${network}/pools/${curvePool}/swap` : '',
       text: 'Swap on Curve'
     },
+    'jumper': {
+      href: `https://jumper.exchange/?fromChain=${shareToken.chainId}&toChain=${shareToken.chainId}&toToken=${shareToken.address}&utm_source=cabana`,
+      text: 'Swap on Jumper'
+    },
     'cabana': {
       href: `${LINKS.app}/vault/${shareToken.chainId}/${shareToken.address}`,
       text: 'Deposit on Cabana.fi'
