@@ -35,12 +35,13 @@ Each app is already setup with its own port through its `package.json` dev scrip
 - `analytics` - App to visualize analytics and general health metrics of the PoolTogether protocol.
 - `swaps` - Simple app to guide users to swap into PoolTogether vaults.
 - `rewards-builder` - App to create and manage TWAB reward promotions for any prize vault.
+- `flash-liquidator` - App to flash liquidate yield from any PoolTogether liquidation pair linked to a prize vault.
 
 All apps above are [Next.js](https://nextjs.org/) apps with [Tailwind CSS](https://tailwindcss.com/) support, written in [TypeScript](https://www.typescriptlang.org/).
 
 [![Crowdin](https://badges.crowdin.net/e/b3a9bbf1e212af6e8b9d1b215c5f84ca/localized.svg)](https://g9software.crowdin.com/cabana)
 
-**Repo Links:** [App](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/app) | [Landing Page](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/landing-page) | [Vault Factory](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/vault-factory) | [VaultList Creator](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/vaultlist-creator) | [Analytics](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/analytics) | [Swaps](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/swaps) | [Rewards Builder](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/rewards-builder)
+**Repo Links:** [App](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/app) | [Landing Page](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/landing-page) | [Vault Factory](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/vault-factory) | [VaultList Creator](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/vaultlist-creator) | [Analytics](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/analytics) | [Swaps](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/swaps) | [Rewards Builder](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/rewards-builder) | [Flash Liquidator](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/flash-liquidator)
 
 ---
 

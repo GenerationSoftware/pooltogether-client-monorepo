@@ -1,0 +1,17 @@
+{
+  "short_name": "Cabana Flash Liquidator",
+  "name": "Cabana Flash Liquidator App",
+  "description": "Flash liquidate yield from any PoolTogether prize vault.",
+  "start_url": "/",
+  "scope": "/",
+  "theme_color": "#8050E3",
+  "background_color": "#21064E",
+  "display": "fullscreen",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ]
+}
