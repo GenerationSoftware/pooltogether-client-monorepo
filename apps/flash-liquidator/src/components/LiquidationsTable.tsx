@@ -1,14 +1,20 @@
+import { useToken, useTokenPrices } from '@generationsoftware/hyperstructure-react-hooks'
 import { useScreenSize } from '@shared/generic-react-hooks'
 import { CurrencyValue, TokenValueAndAmount } from '@shared/react-components'
 import { Spinner, Table, TableData } from '@shared/ui'
-import { formatNumberForDisplay, getBlockExplorerUrl } from '@shared/utilities'
+import {
+  formatBigIntForDisplay,
+  formatNumberForDisplay,
+  getBlockExplorerUrl
+} from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { LiquidationPair } from 'src/types'
-import { Address } from 'viem'
+import { Address, formatUnits } from 'viem'
 import { LIQUIDATION_PAIRS } from '@constants/config'
 import { useBestLiquidation } from '@hooks/useBestLiquidation'
 import { useBestLiquidationGasEstimate } from '@hooks/useBestLiquidationGasEstimate'
+import { useLpTokenPrice } from '@hooks/useLpTokenPrice'
 import { LiquidateButton } from './LiquidateButton'
 import { LiquidationCard } from './LiquidationCard'
 import { LpBadge } from './LpBadge'
@@ -87,24 +93,58 @@ const LpBadgeItem = (props: ItemProps) => {
 const LpTokenOutItem = (props: ItemProps) => {
   const { liquidationPair } = props
 
-  const { data: liquidation, isFetched } = useBestLiquidation(liquidationPair)
+  const { data: liquidation, isFetched: isFetchedLiquidation } = useBestLiquidation(liquidationPair)
 
-  if (!isFetched || !liquidation) {
+  const { data: token, isFetched: isFetchedTokenPrice } = useLpTokenPrice(liquidationPair)
+
+  const outputTokenAddress = liquidationPair.swapPath[
+    liquidationPair.swapPath.length - 1
+  ] as Address
+  const { data: outputToken, isFetched: isFetchedOutputToken } = useToken(
+    liquidationPair.chainId,
+    outputTokenAddress
+  )
+  const { data: tokenPrices, isFetched: isFetchedOutPutTokenPrice } = useTokenPrices(
+    liquidationPair.chainId,
+    [outputTokenAddress]
+  )
+  const outputTokenPrice = tokenPrices?.[outputTokenAddress.toLowerCase() as Address]
+
+  if (
+    !isFetchedLiquidation ||
+    !liquidation ||
+    !isFetchedTokenPrice ||
+    !token ||
+    (liquidation.success &&
+      (!isFetchedOutputToken ||
+        !outputToken ||
+        !isFetchedOutPutTokenPrice ||
+        outputTokenPrice === undefined))
+  ) {
     return <Spinner />
   }
 
-  const chainId = liquidationPair.chainId
-  const address = liquidationPair.swapPath[0]
-  const amount = liquidation.amountOut
+  const calculatedValue =
+    liquidation.success && !!outputToken && !!outputTokenPrice
+      ? parseFloat(formatUnits(liquidation.amountIn + liquidation.profit, outputToken.decimals)) *
+        outputTokenPrice
+      : undefined
 
-  // TODO: need to handle prices for prize tokens (don't actually query it, just calculate off of other `bestLiquidation` values)
+  const queriedValue = !!token?.price
+    ? parseFloat(formatUnits(liquidation.amountOut, token.decimals)) * token.price
+    : undefined
+
+  const value = calculatedValue ?? queriedValue
+
   return (
-    <TokenValueAndAmount
-      token={{ chainId, address, amount }}
-      className='gap-1'
-      valueClassName='text-2xl font-semibold text-pt-teal-dark'
-      amountClassName='font-medium text-pt-purple-300'
-    />
+    <div className='flex flex-col gap-1 items-center'>
+      <span className={classNames('text-2xl font-semibold', { 'text-pt-teal-dark': !!value })}>
+        {value !== undefined ? <CurrencyValue baseValue={value} fallback={<></>} /> : <>?</>}
+      </span>
+      <span className='font-medium text-pt-purple-300'>
+        {formatBigIntForDisplay(liquidation.amountOut, token.decimals)} {token.symbol}
+      </span>
+    </div>
   )
 }
 
