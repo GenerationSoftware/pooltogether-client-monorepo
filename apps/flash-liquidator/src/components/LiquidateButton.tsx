@@ -1,9 +1,13 @@
-import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
-import { CurrencyValue } from '@shared/react-components'
+import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
+import { CurrencyValue, TransactionButton } from '@shared/react-components'
 import { Button, Spinner } from '@shared/ui'
+import { shorten } from '@shared/utilities'
+import { useEffect, useState } from 'react'
 import { LiquidationPair } from 'src/types'
 import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi'
+import { useBestLiquidation } from '@hooks/useBestLiquidation'
 import { useBestLiquidationProfit } from '@hooks/useBestLiquidationProfit'
+import { useSendFlashLiquidateTransaction } from '@hooks/useSendFlashLiquidateTransaction'
 
 interface LiquidateButtonProps {
   liquidationPair: LiquidationPair
@@ -13,14 +17,31 @@ interface LiquidateButtonProps {
 export const LiquidateButton = (props: LiquidateButtonProps) => {
   const { liquidationPair, className } = props
 
-  const { isDisconnected } = useAccount()
   const { chain } = useNetwork()
+  const { isDisconnected } = useAccount()
 
   const { openConnectModal } = useConnectModal()
   const { openChainModal } = useChainModal()
   const { switchNetworkAsync } = useSwitchNetwork()
+  const addRecentTransaction = useAddRecentTransaction()
+
+  const { refetch: refetchBestLiquidation } = useBestLiquidation(liquidationPair)
 
   const { data: liquidationProfit, isFetched } = useBestLiquidationProfit(liquidationPair)
+
+  const { isWaiting, isConfirming, isSuccess, txHash, sendFlashLiquidateTransaction } =
+    useSendFlashLiquidateTransaction(liquidationPair, {
+      onSuccess: () => {
+        refetchBestLiquidation()
+      },
+      onError: () => {
+        refetchBestLiquidation()
+      }
+    })
+
+  // NOTE: This is necessary due to hydration errors otherwise.
+  const [isBrowser, setIsBrowser] = useState(false)
+  useEffect(() => setIsBrowser(true), [])
 
   const validateWalletConnection = async () => {
     if (isDisconnected) {
@@ -47,28 +68,60 @@ export const LiquidateButton = (props: LiquidateButtonProps) => {
   const onClick = async () => {
     const isWalletReady = await validateWalletConnection()
 
-    if (isWalletReady) {
-      // TODO: re-simulate every step and if feasible prompt tx
+    if (isWalletReady && !!sendFlashLiquidateTransaction) {
+      sendFlashLiquidateTransaction()
     }
   }
 
-  const isNotProfitable = isFetched && !!liquidationProfit && liquidationProfit < 0
+  const isEnabled =
+    !!liquidationPair &&
+    !!sendFlashLiquidateTransaction &&
+    isFetched &&
+    !!liquidationProfit &&
+    liquidationProfit > 0
+
+  if (!isBrowser || isDisconnected || chain?.id !== liquidationPair.chainId) {
+    return (
+      <Button onClick={onClick} disabled={!isEnabled} color='transparent' className={className}>
+        <ButtonContent lp={liquidationPair} />
+      </Button>
+    )
+  }
 
   return (
-    <Button
-      onClick={onClick}
-      disabled={!liquidationProfit || isNotProfitable}
+    <TransactionButton
+      chainId={liquidationPair.chainId}
+      isTxLoading={isWaiting || isConfirming}
+      isTxSuccess={isSuccess}
+      write={sendFlashLiquidateTransaction}
+      txHash={txHash}
+      txDescription={`Liquidated ${shorten(liquidationPair.address, { short: true })}`}
+      disabled={!isEnabled}
+      openConnectModal={openConnectModal}
+      openChainModal={openChainModal}
+      addRecentTransaction={addRecentTransaction}
+      color='transparent'
       className={className}
     >
-      {liquidationProfit !== undefined ? (
-        <>
-          Flash Liq. for{' '}
-          <CurrencyValue baseValue={isNotProfitable ? -liquidationProfit : liquidationProfit} />{' '}
-          {isNotProfitable ? <>Loss</> : <>Profit</>}
-        </>
-      ) : (
-        <Spinner />
-      )}
-    </Button>
+      <ButtonContent lp={liquidationPair} />
+    </TransactionButton>
+  )
+}
+
+const ButtonContent = (props: { lp: LiquidationPair }) => {
+  const { lp } = props
+
+  const { data: liquidationProfit, isFetched } = useBestLiquidationProfit(lp)
+
+  const isNegativeProfit = isFetched && !!liquidationProfit && liquidationProfit < 0
+
+  return liquidationProfit !== undefined ? (
+    <>
+      Flash Liq. for{' '}
+      <CurrencyValue baseValue={isNegativeProfit ? -liquidationProfit : liquidationProfit} />{' '}
+      {isNegativeProfit ? <>Loss</> : <>Profit</>}
+    </>
+  ) : (
+    <Spinner />
   )
 }

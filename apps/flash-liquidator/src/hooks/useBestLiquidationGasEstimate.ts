@@ -3,14 +3,12 @@ import {
   useGasCostEstimates
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { GasCostEstimates } from '@shared/types'
-import { getSecondsSinceEpoch, SECONDS_PER_MINUTE } from '@shared/utilities'
-import { useMemo } from 'react'
 import { LiquidationPair } from 'src/types'
-import { getEncodedSwapPath } from 'src/utils'
-import { Address, zeroAddress } from 'viem'
+import { zeroAddress } from 'viem'
 import { FLASH_LIQUIDATORS } from '@constants/config'
 import { flashLiquidatorABI } from '@constants/flashLiquidatorABI'
 import { useBestLiquidation } from './useBestLiquidation'
+import { useBestLiquidationArgs } from './useBestLiquidationArgs'
 
 export const useBestLiquidationGasEstimate = (
   liquidationPair: LiquidationPair
@@ -21,20 +19,7 @@ export const useBestLiquidationGasEstimate = (
   const { data: bestLiquidation, isFetched: isFetchedBestLiquidation } =
     useBestLiquidation(liquidationPair)
 
-  const args = useMemo(():
-    | [Address, Address, bigint, bigint, bigint, bigint, `0x${string}`]
-    | undefined => {
-    if (!!liquidationPair && !!bestLiquidation) {
-      const lpAddress = liquidationPair.address
-      const amountOut = bestLiquidation.amountOut
-      const amountIn = (bestLiquidation.amountIn * 101n) / 100n
-      const profit = (bestLiquidation?.profit * 99n) / 100n
-      const deadline = BigInt(getSecondsSinceEpoch() + SECONDS_PER_MINUTE)
-      const swapPath = getEncodedSwapPath(liquidationPair.swapPath) as `0x${string}`
-
-      return [lpAddress, lpAddress, amountOut, amountIn, profit, deadline, swapPath]
-    }
-  }, [liquidationPair, bestLiquidation])
+  const args = useBestLiquidationArgs(liquidationPair)
 
   const { data: gasAmount, isFetched: isFetchedGasAmount } = useGasAmountEstimate(
     liquidationPair.chainId,
