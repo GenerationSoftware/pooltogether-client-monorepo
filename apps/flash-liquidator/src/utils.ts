@@ -1,6 +1,6 @@
 import { connectorsForWallets, Wallet } from '@rainbow-me/rainbowkit'
 import { NETWORK, parseQueryParam } from '@shared/utilities'
-import { FallbackTransport, PublicClient } from 'viem'
+import { encodePacked, FallbackTransport, PublicClient } from 'viem'
 import {
   Chain,
   Config,
@@ -12,6 +12,7 @@ import {
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import { publicProvider } from 'wagmi/providers/public'
 import { RPC_URLS, SUPPORTED_NETWORKS, WAGMI_CHAINS, WALLETS } from '@constants/config'
+import { SwapPath } from './types'
 
 /**
  * Returns a Wagmi config with supported networks and RPCs
@@ -97,4 +98,22 @@ const getWalletConnectors = (chains: Chain[]): (() => Connector[]) => {
   }
 
   return connectorsForWallets(walletGroups)
+}
+
+/**
+ * Returns an encoded swap path based on the path's length
+ * @param swapPath a swap path to encode
+ * @returns
+ */
+export const getEncodedSwapPath = (swapPath: SwapPath) => {
+  if (swapPath.length === 3) {
+    const abiParams = ['address', 'uint24', 'address']
+    return encodePacked(abiParams, swapPath)
+  } else if (swapPath.length === 5) {
+    const abiParams = ['address', 'uint24', 'address', 'uint24', 'address']
+    return encodePacked(abiParams, swapPath)
+  } else if (swapPath.length === 7) {
+    const abiParams = ['address', 'uint24', 'address', 'uint24', 'address', 'uint24', 'address']
+    return encodePacked(abiParams, swapPath)
+  }
 }
