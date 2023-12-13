@@ -1,17 +1,15 @@
-import '@generationsoftware/hyperstructure-react-hooks'
-import { useToken, useTokenPrices } from '@generationsoftware/hyperstructure-react-hooks'
 import { useScreenSize } from '@shared/generic-react-hooks'
 import { CurrencyValue, TokenValueAndAmount } from '@shared/react-components'
-import { Button, Spinner, Table, TableData } from '@shared/ui'
+import { Spinner, Table, TableData } from '@shared/ui'
 import { formatNumberForDisplay, getBlockExplorerUrl } from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
-import { useMemo } from 'react'
 import { LiquidationPair } from 'src/types'
-import { Address, formatUnits } from 'viem'
+import { Address } from 'viem'
 import { LIQUIDATION_PAIRS } from '@constants/config'
 import { useBestLiquidation } from '@hooks/useBestLiquidation'
-import { useLiquidationGasEstimate } from '@hooks/useLiquidationGasEstimate'
+import { useBestLiquidationGasEstimate } from '@hooks/useBestLiquidationGasEstimate'
+import { LiquidateButton } from './LiquidateButton'
 import { LiquidationCard } from './LiquidationCard'
 import { LpBadge } from './LpBadge'
 
@@ -90,15 +88,15 @@ const LpBadgeItem = (props: ItemProps) => {
 const LpTokenOutItem = (props: ItemProps) => {
   const { liquidationPair } = props
 
-  const { data: bestLiquidation, isFetched } = useBestLiquidation(liquidationPair)
+  const { data: liquidation, isFetched } = useBestLiquidation(liquidationPair)
 
-  if (!isFetched || !bestLiquidation) {
+  if (!isFetched || !liquidation) {
     return <Spinner />
   }
 
   const chainId = liquidationPair.chainId
   const address = liquidationPair.swapPath[0]
-  const amount = bestLiquidation.amountOut
+  const amount = liquidation.amountOut
 
   // TODO: need to handle prices for prize tokens (don't actually query it, just calculate off of other `bestLiquidation` values)
   return <TokenValueAndAmount token={{ chainId, address, amount }} />
@@ -107,15 +105,15 @@ const LpTokenOutItem = (props: ItemProps) => {
 const LpTokenInItem = (props: ItemProps) => {
   const { liquidationPair } = props
 
-  const { data: bestLiquidation, isFetched } = useBestLiquidation(liquidationPair)
+  const { data: liquidation, isFetched } = useBestLiquidation(liquidationPair)
 
-  if (!isFetched || !bestLiquidation) {
+  if (!isFetched || !liquidation) {
     return <Spinner />
   }
 
   const chainId = liquidationPair.chainId
   const address = liquidationPair.swapPath[liquidationPair.swapPath.length - 1] as Address
-  const amount = bestLiquidation.amountIn
+  const amount = liquidation.amountIn
 
   return <TokenValueAndAmount token={{ chainId, address, amount }} />
 }
@@ -123,15 +121,15 @@ const LpTokenInItem = (props: ItemProps) => {
 const LpRevenueItem = (props: ItemProps) => {
   const { liquidationPair } = props
 
-  const { data: bestLiquidation, isFetched } = useBestLiquidation(liquidationPair)
+  const { data: liquidation, isFetched } = useBestLiquidation(liquidationPair)
 
-  if (!isFetched || !bestLiquidation) {
+  if (!isFetched || !liquidation) {
     return <Spinner />
   }
 
   const chainId = liquidationPair.chainId
   const address = liquidationPair.swapPath[liquidationPair.swapPath.length - 1] as Address
-  const amount = bestLiquidation.profit
+  const amount = liquidation.profit
 
   return <TokenValueAndAmount token={{ chainId, address, amount }} />
 }
@@ -139,7 +137,7 @@ const LpRevenueItem = (props: ItemProps) => {
 const LpGasItem = (props: ItemProps) => {
   const { liquidationPair } = props
 
-  const { data: gasEstimate, isFetched } = useLiquidationGasEstimate(liquidationPair)
+  const { data: gasEstimate, isFetched } = useBestLiquidationGasEstimate(liquidationPair)
 
   if (!isFetched || !gasEstimate) {
     return <Spinner />
@@ -159,44 +157,5 @@ const LpGasItem = (props: ItemProps) => {
 const LpProfitItem = (props: ItemProps) => {
   const { liquidationPair } = props
 
-  const { data: bestLiquidation } = useBestLiquidation(liquidationPair)
-
-  const { data: gasEstimate } = useLiquidationGasEstimate(liquidationPair)
-
-  const revenueTokenAddress = (
-    liquidationPair.swapPath[liquidationPair.swapPath.length - 1] as Address
-  ).toLowerCase() as Lowercase<Address>
-
-  const { data: revenueToken } = useToken(liquidationPair.chainId, revenueTokenAddress)
-
-  const { data: tokenPrices } = useTokenPrices(liquidationPair.chainId, [revenueTokenAddress])
-  const revenueTokenPrice = tokenPrices?.[revenueTokenAddress]
-
-  const profit = useMemo(() => {
-    if (!!bestLiquidation && !!gasEstimate && !!revenueToken && revenueTokenPrice !== undefined) {
-      const revenueValue =
-        parseFloat(formatUnits(bestLiquidation.profit, revenueToken.decimals)) * revenueTokenPrice
-      return revenueValue - gasEstimate.totalGasEth
-    }
-  }, [bestLiquidation, gasEstimate])
-
-  const onClick = () => {
-    // TODO: prompt to connect wallet if not connected yet
-    // TODO: re-simulate every step and if feasible prompt tx
-  }
-
-  const isNotProfitable = !!profit && profit < 0
-
-  return (
-    <Button onClick={onClick} disabled={!profit || isNotProfitable}>
-      {profit !== undefined ? (
-        <>
-          Flash Liq. for <CurrencyValue baseValue={isNotProfitable ? -profit : profit} />{' '}
-          {isNotProfitable ? <>Loss</> : <>Profit</>}
-        </>
-      ) : (
-        <Spinner />
-      )}
-    </Button>
-  )
+  return <LiquidateButton liquidationPair={liquidationPair} />
 }

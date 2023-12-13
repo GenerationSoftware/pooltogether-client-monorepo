@@ -12,18 +12,19 @@ import { FLASH_LIQUIDATORS } from '@constants/config'
 import { flashLiquidatorABI } from '@constants/flashLiquidatorABI'
 import { useBestLiquidation } from './useBestLiquidation'
 
-export const useLiquidationGasEstimate = (
+export const useBestLiquidationGasEstimate = (
   liquidationPair: LiquidationPair
 ): {
   data: GasCostEstimates | undefined
   isFetched: boolean
 } => {
-  const { data: bestLiquidation } = useBestLiquidation(liquidationPair)
+  const { data: bestLiquidation, isFetched: isFetchedBestLiquidation } =
+    useBestLiquidation(liquidationPair)
 
   const args = useMemo(():
     | [Address, Address, bigint, bigint, bigint, bigint, `0x${string}`]
     | undefined => {
-    if (!!liquidationPair && !!bestLiquidation && bestLiquidation.success) {
+    if (!!liquidationPair && !!bestLiquidation) {
       const lpAddress = liquidationPair.address
       const amountOut = bestLiquidation.amountOut
       const amountIn = (bestLiquidation.amountIn * 101n) / 100n
@@ -44,18 +45,23 @@ export const useLiquidationGasEstimate = (
       args,
       account: zeroAddress
     },
-    { enabled: !!args }
+    { enabled: !!args && bestLiquidation?.success }
   )
 
   const tx = !!args ? { abi: flashLiquidatorABI, functionName: 'flashLiquidate', args } : undefined
+  const fallbackGasAmount = 400_000n + BigInt(((liquidationPair.swapPath.length - 1) / 2) * 100_000)
 
   const { data: gasCost, isFetched: isFetchedGasCost } = useGasCostEstimates(
     liquidationPair.chainId,
-    gasAmount ?? 0n,
+    gasAmount ?? fallbackGasAmount,
     { tx }
   )
 
-  const isFetched = isFetchedGasAmount && isFetchedGasCost && !!gasAmount && !!gasCost
+  const isFetched =
+    isFetchedBestLiquidation &&
+    (!args || !bestLiquidation?.success || (isFetchedGasAmount && !!gasAmount)) &&
+    isFetchedGasCost &&
+    !!gasCost
 
   return { data: gasCost, isFetched }
 }
