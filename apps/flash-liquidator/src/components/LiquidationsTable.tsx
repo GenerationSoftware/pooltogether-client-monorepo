@@ -61,9 +61,8 @@ export const LiquidationsTable = (props: LiquidationsTableProps) => {
       keyPrefix='liquidationPairsTable'
       data={tableData}
       className={classNames('px-6 pb-6 bg-pt-transparent/20 rounded-3xl', className)}
-      headerClassName='text-center font-medium text-pt-purple-300 whitespace-nowrap'
-      rowClassName='text-sm font-medium rounded-lg overflow-hidden'
-      gridColsClassName={`grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.5fr)]`}
+      headerClassName='text-center font-medium text-pt-purple-200 whitespace-nowrap'
+      rowClassName='py-6 text-sm font-medium rounded-lg overflow-hidden'
     />
   )
 }
@@ -99,7 +98,14 @@ const LpTokenOutItem = (props: ItemProps) => {
   const amount = liquidation.amountOut
 
   // TODO: need to handle prices for prize tokens (don't actually query it, just calculate off of other `bestLiquidation` values)
-  return <TokenValueAndAmount token={{ chainId, address, amount }} />
+  return (
+    <TokenValueAndAmount
+      token={{ chainId, address, amount }}
+      className='gap-1'
+      valueClassName='text-2xl font-semibold text-pt-teal-dark'
+      amountClassName='font-medium text-pt-purple-300'
+    />
+  )
 }
 
 const LpTokenInItem = (props: ItemProps) => {
@@ -115,7 +121,14 @@ const LpTokenInItem = (props: ItemProps) => {
   const address = liquidationPair.swapPath[liquidationPair.swapPath.length - 1] as Address
   const amount = liquidation.amountIn
 
-  return <TokenValueAndAmount token={{ chainId, address, amount }} />
+  return (
+    <TokenValueAndAmount
+      token={{ chainId, address, amount }}
+      className='gap-1'
+      valueClassName='text-2xl font-semibold text-pt-warning-light'
+      amountClassName='font-medium text-pt-purple-300'
+    />
+  )
 }
 
 const LpRevenueItem = (props: ItemProps) => {
@@ -131,7 +144,14 @@ const LpRevenueItem = (props: ItemProps) => {
   const address = liquidationPair.swapPath[liquidationPair.swapPath.length - 1] as Address
   const amount = liquidation.profit
 
-  return <TokenValueAndAmount token={{ chainId, address, amount }} />
+  return (
+    <TokenValueAndAmount
+      token={{ chainId, address, amount }}
+      className='gap-1'
+      valueClassName='text-2xl font-semibold'
+      amountClassName='font-medium text-pt-purple-300'
+    />
+  )
 }
 
 const LpGasItem = (props: ItemProps) => {
@@ -145,9 +165,11 @@ const LpGasItem = (props: ItemProps) => {
 
   // TODO: this assumes the gas token is ETH
   return (
-    <div className='flex flex-col items-center'>
-      <CurrencyValue baseValue={gasEstimate.totalGasEth} />
-      <span className='text-pt-purple-200'>
+    <div className='flex flex-col gap-1 items-center'>
+      <span className='text-2xl font-semibold'>
+        <CurrencyValue baseValue={gasEstimate.totalGasEth} fallback={<></>} />
+      </span>
+      <span className='font-medium text-pt-purple-300'>
         {formatNumberForDisplay(gasEstimate.totalGasEth)} ETH
       </span>
     </div>
@@ -157,5 +179,5 @@ const LpGasItem = (props: ItemProps) => {
 const LpProfitItem = (props: ItemProps) => {
   const { liquidationPair } = props
 
-  return <LiquidateButton liquidationPair={liquidationPair} />
+  return <LiquidateButton liquidationPair={liquidationPair} className='w-full' />
 }

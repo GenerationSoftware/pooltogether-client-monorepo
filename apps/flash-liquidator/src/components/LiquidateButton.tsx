@@ -2,6 +2,7 @@ import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbo
 import { CurrencyValue, TransactionButton } from '@shared/react-components'
 import { Button, Spinner } from '@shared/ui'
 import { shorten } from '@shared/utilities'
+import classNames from 'classnames'
 import { useEffect, useState } from 'react'
 import { LiquidationPair } from 'src/types'
 import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi'
@@ -118,7 +119,14 @@ const ButtonContent = (props: { lp: LiquidationPair }) => {
   return liquidationProfit !== undefined ? (
     <>
       Flash Liq. for{' '}
-      <CurrencyValue baseValue={isNegativeProfit ? -liquidationProfit : liquidationProfit} />{' '}
+      <span
+        className={classNames({
+          'text-pt-teal-dark': liquidationProfit > 0,
+          'text-pt-warning-light': liquidationProfit < 0
+        })}
+      >
+        <CurrencyValue baseValue={isNegativeProfit ? -liquidationProfit : liquidationProfit} />
+      </span>{' '}
       {isNegativeProfit ? <>Loss</> : <>Profit</>}
     </>
   ) : (

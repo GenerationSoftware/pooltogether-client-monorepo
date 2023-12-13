@@ -36,13 +36,9 @@ export const LpBadge = (props: LpBadgeProps) => {
         <TokenIcon token={{ chainId: liquidationPair.chainId, address: tokenOut?.address }} />
         <NetworkIcon chainId={liquidationPair.chainId} className='absolute top-3 left-3 h-4 w-4' />
       </div>
-      <span
-        className={classNames(
-          'text-sm font-medium overflow-hidden overflow-ellipsis',
-          textClassName
-        )}
-      >
-        {tokenOut?.symbol} / {tokenIn?.symbol}
+      <span className={classNames('text-sm overflow-hidden overflow-ellipsis', textClassName)}>
+        <span className='font-medium'>{tokenOut?.symbol}</span> /{' '}
+        <span className='text-pt-purple-200'>{tokenIn?.symbol}</span>
       </span>
     </div>
   )

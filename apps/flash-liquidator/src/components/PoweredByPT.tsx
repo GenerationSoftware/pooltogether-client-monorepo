@@ -16,6 +16,7 @@ export const PoweredByPT = (props: PoweredByPTProps) => {
         alt='PoolTogether Logo'
         width={183}
         height={72}
+        priority={true}
         className='w-28 h-auto'
       />
     </div>
