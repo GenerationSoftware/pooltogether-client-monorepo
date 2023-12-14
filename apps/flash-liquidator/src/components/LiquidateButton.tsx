@@ -26,10 +26,11 @@ export const LiquidateButton = (props: LiquidateButtonProps) => {
   const { switchNetworkAsync } = useSwitchNetwork()
   const addRecentTransaction = useAddRecentTransaction()
 
-  const { data: bestLiquidation, refetch: refetchBestLiquidation } =
-    useBestLiquidation(liquidationPair)
-
-  const { data: liquidationProfit, isFetched } = useBestLiquidationProfit(liquidationPair)
+  const {
+    data: bestLiquidation,
+    isFetched: isFetchedBestLiquidation,
+    refetch: refetchBestLiquidation
+  } = useBestLiquidation(liquidationPair)
 
   const { isWaiting, isConfirming, isSuccess, txHash, sendFlashLiquidateTransaction } =
     useSendFlashLiquidateTransaction(liquidationPair, {
@@ -76,16 +77,14 @@ export const LiquidateButton = (props: LiquidateButtonProps) => {
   }
 
   const isEnabled =
-    !!liquidationPair &&
-    !!sendFlashLiquidateTransaction &&
-    isFetched &&
-    !!bestLiquidation &&
-    bestLiquidation.success
+    !!liquidationPair && isFetchedBestLiquidation && !!bestLiquidation && bestLiquidation.success
 
   if (!isBrowser || isDisconnected || chain?.id !== liquidationPair.chainId) {
     return (
       <Button onClick={onClick} disabled={!isEnabled} color='transparent' className={className}>
-        <ButtonContent lp={liquidationPair} />
+        <span className='whitespace-nowrap'>
+          <ButtonContent lp={liquidationPair} />
+        </span>
       </Button>
     )
   }
