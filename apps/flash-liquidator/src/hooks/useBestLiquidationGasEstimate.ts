@@ -5,6 +5,7 @@ import {
 import { GasCostEstimates } from '@shared/types'
 import { LiquidationPair } from 'src/types'
 import { zeroAddress } from 'viem'
+import { useAccount } from 'wagmi'
 import { FLASH_LIQUIDATORS } from '@constants/config'
 import { flashLiquidatorABI } from '@constants/flashLiquidatorABI'
 import { useBestLiquidation } from './useBestLiquidation'
@@ -16,10 +17,15 @@ export const useBestLiquidationGasEstimate = (
   data: GasCostEstimates | undefined
   isFetched: boolean
 } => {
+  const { address: userAddress } = useAccount()
+
   const { data: bestLiquidation, isFetched: isFetchedBestLiquidation } =
     useBestLiquidation(liquidationPair)
 
-  const args = useBestLiquidationArgs(liquidationPair)
+  const args = useBestLiquidationArgs(liquidationPair, {
+    receiver: userAddress,
+    simulationOnly: true
+  })
 
   const { data: gasAmount, isFetched: isFetchedGasAmount } = useGasAmountEstimate(
     liquidationPair.chainId,
@@ -28,7 +34,7 @@ export const useBestLiquidationGasEstimate = (
       abi: flashLiquidatorABI,
       functionName: 'flashLiquidate',
       args,
-      account: zeroAddress
+      account: userAddress ?? zeroAddress
     },
     { enabled: !!args && bestLiquidation?.success }
   )

@@ -1,7 +1,13 @@
 import { useEffect } from 'react'
 import { LiquidationPair } from 'src/types'
 import { Address, TransactionReceipt } from 'viem'
-import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
+import {
+  useAccount,
+  useContractWrite,
+  useNetwork,
+  usePrepareContractWrite,
+  useWaitForTransaction
+} from 'wagmi'
 import { FLASH_LIQUIDATORS } from '@constants/config'
 import { flashLiquidatorABI } from '@constants/flashLiquidatorABI'
 import { useBestLiquidation } from './useBestLiquidation'
@@ -32,10 +38,12 @@ export const useSendFlashLiquidateTransaction = (
 } => {
   const { chain } = useNetwork()
 
+  const { address: userAddress } = useAccount()
+
   const { data: bestLiquidation, isFetched: isFetchedBestLiquidation } =
     useBestLiquidation(liquidationPair)
 
-  const args = useBestLiquidationArgs(liquidationPair)
+  const args = useBestLiquidationArgs(liquidationPair, { receiver: userAddress })
 
   const { config } = usePrepareContractWrite({
     chainId: liquidationPair.chainId,
