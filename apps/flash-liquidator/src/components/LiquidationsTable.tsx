@@ -66,7 +66,7 @@ export const LiquidationsTable = (props: LiquidationsTableProps) => {
     <Table
       keyPrefix='liquidationPairsTable'
       data={tableData}
-      className={classNames('px-6 pb-6 bg-pt-transparent/20 rounded-3xl', className)}
+      className={classNames('px-6 pb-6 bg-pt-bg-purple rounded-lg', className)}
       headerClassName='text-center font-medium text-pt-purple-200 whitespace-nowrap'
       rowClassName='py-6 text-sm font-medium rounded-lg overflow-hidden'
     />
