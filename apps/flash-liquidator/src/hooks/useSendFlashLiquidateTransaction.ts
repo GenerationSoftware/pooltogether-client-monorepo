@@ -6,6 +6,7 @@ import {
   useContractWrite,
   useNetwork,
   usePrepareContractWrite,
+  usePublicClient,
   useWaitForTransaction
 } from 'wagmi'
 import { FLASH_LIQUIDATORS } from '@constants/config'
@@ -13,7 +14,6 @@ import { flashLiquidatorABI } from '@constants/flashLiquidatorABI'
 import { useBestLiquidation } from './useBestLiquidation'
 import { useBestLiquidationArgs } from './useBestLiquidationArgs'
 
-// TODO: when `sendFlashLiquidateTransaction` is called, tx should be simulated again, and only if output is equal to or higher than before should the tx go through
 /**
  * Prepares and submits a `flashLiquidate` transaction
  * @param liquidationPair the liquidation pair to flash liquidate
@@ -36,24 +36,32 @@ export const useSendFlashLiquidateTransaction = (
   txReceipt?: TransactionReceipt
   sendFlashLiquidateTransaction?: () => void
 } => {
+  const chainId = liquidationPair.chainId
+  const address = FLASH_LIQUIDATORS[chainId]
+
   const { chain } = useNetwork()
+
+  const publicClient = usePublicClient({ chainId })
 
   const { address: userAddress } = useAccount()
 
-  const { data: bestLiquidation, isFetched: isFetchedBestLiquidation } =
-    useBestLiquidation(liquidationPair)
+  const {
+    data: bestLiquidation,
+    isFetched: isFetchedBestLiquidation,
+    refetch: refetchBestLiquidation
+  } = useBestLiquidation(liquidationPair)
 
   const args = useBestLiquidationArgs(liquidationPair, { receiver: userAddress })
 
   const { config } = usePrepareContractWrite({
-    chainId: liquidationPair.chainId,
-    address: FLASH_LIQUIDATORS[liquidationPair.chainId],
+    chainId,
+    address,
     abi: flashLiquidatorABI,
     functionName: 'flashLiquidate',
     args,
     enabled:
       !!liquidationPair &&
-      chain?.id === liquidationPair.chainId &&
+      chain?.id === chainId &&
       isFetchedBestLiquidation &&
       !!bestLiquidation &&
       !!bestLiquidation.success &&
@@ -65,8 +73,36 @@ export const useSendFlashLiquidateTransaction = (
     isLoading: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
-    write: sendFlashLiquidateTransaction
+    write: _sendFlashLiquidateTransaction
   } = useContractWrite(config)
+
+  const sendFlashLiquidateTransaction =
+    !!args && !!_sendFlashLiquidateTransaction
+      ? () => {
+          try {
+            publicClient
+              .simulateContract({
+                account: userAddress,
+                address,
+                abi: flashLiquidatorABI,
+                functionName: 'flashLiquidate',
+                args
+              })
+              .then(({ result }) => {
+                if (typeof result === 'bigint' && result >= config.result) {
+                  _sendFlashLiquidateTransaction()
+                } else {
+                  options?.onError?.()
+                }
+              })
+          } catch (e) {
+            console.error(e)
+            options?.onError?.()
+          } finally {
+            refetchBestLiquidation()
+          }
+        }
+      : undefined
 
   const txHash = txSendData?.hash
 
@@ -86,6 +122,7 @@ export const useSendFlashLiquidateTransaction = (
   useEffect(() => {
     if (!!txReceipt && isSuccess) {
       options?.onSuccess?.(txReceipt)
+      refetchBestLiquidation()
     }
   }, [isSuccess])
 
@@ -94,6 +131,7 @@ export const useSendFlashLiquidateTransaction = (
   useEffect(() => {
     if (isError) {
       options?.onError?.()
+      refetchBestLiquidation()
     }
   }, [isError])
 

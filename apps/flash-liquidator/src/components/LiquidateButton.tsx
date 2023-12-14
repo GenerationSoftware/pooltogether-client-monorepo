@@ -26,21 +26,12 @@ export const LiquidateButton = (props: LiquidateButtonProps) => {
   const { switchNetworkAsync } = useSwitchNetwork()
   const addRecentTransaction = useAddRecentTransaction()
 
-  const {
-    data: bestLiquidation,
-    isFetched: isFetchedBestLiquidation,
-    refetch: refetchBestLiquidation
-  } = useBestLiquidation(liquidationPair)
+  const { data: bestLiquidation, isFetched: isFetchedBestLiquidation } =
+    useBestLiquidation(liquidationPair)
 
+  // TODO: add `onError` toast
   const { isWaiting, isConfirming, isSuccess, txHash, sendFlashLiquidateTransaction } =
-    useSendFlashLiquidateTransaction(liquidationPair, {
-      onSuccess: () => {
-        refetchBestLiquidation()
-      },
-      onError: () => {
-        refetchBestLiquidation()
-      }
-    })
+    useSendFlashLiquidateTransaction(liquidationPair)
 
   // NOTE: This is necessary due to hydration errors otherwise.
   const [isBrowser, setIsBrowser] = useState(false)
