@@ -26,9 +26,14 @@ export const Footer = (props: FooterProps) => {
           </Link>
         </div>
       </div>
-      <Link href='/terms' className='mx-auto mt-20 text-sm text-pt-purple-100 hover:underline'>
-        Terms and Conditions
-      </Link>
+      <div className='flex flex-col items-center text-center mx-auto mt-20 text-sm text-pt-purple-100'>
+        <Link href='/terms' className='hover:underline'>
+          Terms and Conditions
+        </Link>
+        <Link href='/privacy' className='hover:underline'>
+          Privacy Policy
+        </Link>
+      </div>
     </footer>
   )
 }

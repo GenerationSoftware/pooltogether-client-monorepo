@@ -27,6 +27,7 @@ export const DOMAINS = Object.freeze({
 export const LINKS = Object.freeze({
   ...DOMAINS,
   termsOfService: `${DOMAINS.landingPage}/terms`,
+  privacyPolicy: `${DOMAINS.landingPage}/privacy`,
   ecosystem: `${DOMAINS.protocolLandingPage}/ecosystem`,
   discord: `${DOMAINS.protocolLandingPage}/discord`,
   appDocs: `${DOMAINS.docs}/#the-cabana-app`,
