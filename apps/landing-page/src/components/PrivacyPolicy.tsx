@@ -12,6 +12,7 @@ export const PrivacyPolicy = (props: PrivacyPolicyProps) => {
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
       <H1>Privacy Policy</H1>
+      <span>Effective Date: December 15th, 2023</span>
       <span>
         This Privacy Policy applies to cabana.fi (the “<strong>Website</strong>”) operated by G9
         Software Inc. (“<strong>G9 Software</strong>”, “<strong>we</strong>”, “<strong>our</strong>”
