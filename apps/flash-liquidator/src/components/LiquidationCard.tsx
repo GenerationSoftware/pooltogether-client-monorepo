@@ -28,45 +28,36 @@ export const LiquidationCard = (props: LiquidationCardProps) => {
   return (
     <div
       className={classNames(
-        'w-full max-w-sm flex flex-col gap-4 px-6 py-4 bg-pt-transparent/20 rounded-3xl',
+        'w-full max-w-sm flex flex-col gap-4 items-center p-6 bg-pt-bg-purple rounded-lg',
         className
       )}
     >
       <LpBadgeItem liquidationPair={liquidationPair} />
-      <LiquidationCardRow
-        name='Liquidation Amount'
-        data={<LpTokenOutItem liquidationPair={liquidationPair} />}
-      />
-      <LiquidationCardRow
-        name='Contribution Amount'
-        data={<LpTokenInItem liquidationPair={liquidationPair} />}
-      />
-      <LiquidationCardRow
-        name='POOL Received'
-        data={<LpRevenueItem liquidationPair={liquidationPair} />}
-      />
-      <LiquidationCardRow
-        name='Estimated Gas'
-        data={<LpGasItem liquidationPair={liquidationPair} />}
-      />
+      <div className='w-full flex items-center justify-between'>
+        <LpTokenOutItem liquidationPair={liquidationPair} />
+        <LpTokenInItem liquidationPair={liquidationPair} />
+      </div>
+      <div className='w-full flex items-center justify-between'>
+        <LpRevenueItem liquidationPair={liquidationPair} />
+        <LpGasItem liquidationPair={liquidationPair} />
+      </div>
       <LpProfitItem liquidationPair={liquidationPair} />
     </div>
   )
 }
 
-interface LiquidationCardRowProps {
-  name: ReactNode
-  data: ReactNode
-  className?: string
+interface BasicItemProps {
+  title: string
+  content: ReactNode
 }
 
-const LiquidationCardRow = (props: LiquidationCardRowProps) => {
-  const { name, data, className } = props
+const BasicItem = (props: BasicItemProps) => {
+  const { title, content } = props
 
   return (
-    <div className={classNames('inline-flex w-full items-center justify-between', className)}>
-      <span className='text-pt-purple-300'>{name}</span>
-      <span>{data}</span>
+    <div className='w-full flex flex-col gap-1 items-center text-center'>
+      <span className='text-sm text-pt-purple-200'>{title}</span>
+      {content}
     </div>
   )
 }
@@ -119,7 +110,7 @@ const LpTokenOutItem = (props: ItemProps) => {
         !isFetchedOutPutTokenPrice ||
         outputTokenPrice === undefined))
   ) {
-    return <Spinner />
+    return <BasicItem title='Liquidation Amount' content={<Spinner />} />
   }
 
   const calculatedValue =
@@ -135,14 +126,19 @@ const LpTokenOutItem = (props: ItemProps) => {
   const value = calculatedValue ?? queriedValue
 
   return (
-    <div className='flex gap-1 items-center'>
-      <span className={classNames('font-semibold', { 'text-pt-teal-dark': !!value })}>
-        {value !== undefined ? <CurrencyValue baseValue={value} fallback={<></>} /> : <>?</>}
-      </span>
-      <span className='text-sm font-medium text-pt-purple-300 whitespace-nowrap'>
-        {formatBigIntForDisplay(liquidation.amountOut, token.decimals)} {token.symbol}
-      </span>
-    </div>
+    <BasicItem
+      title='Liquidation Amount'
+      content={
+        <div className='flex flex-col items-center'>
+          <span className={classNames('text-2xl font-semibold', { 'text-pt-teal-dark': !!value })}>
+            {value !== undefined ? <CurrencyValue baseValue={value} fallback={<></>} /> : <>?</>}
+          </span>
+          <span className='text-xs text-pt-purple-300'>
+            {formatBigIntForDisplay(liquidation.amountOut, token.decimals)} {token.symbol}
+          </span>
+        </div>
+      }
+    />
   )
 }
 
@@ -152,7 +148,7 @@ const LpTokenInItem = (props: ItemProps) => {
   const { data: liquidation, isFetched } = useBestLiquidation(liquidationPair)
 
   if (!isFetched || !liquidation) {
-    return <Spinner />
+    return <BasicItem title='Contribution Amount' content={<Spinner />} />
   }
 
   const chainId = liquidationPair.chainId
@@ -160,11 +156,15 @@ const LpTokenInItem = (props: ItemProps) => {
   const amount = liquidation.amountIn
 
   return (
-    <TokenValueAndAmount
-      token={{ chainId, address, amount }}
-      className='!flex-row gap-1'
-      valueClassName='font-semibold text-pt-warning-light'
-      amountClassName='font-sm text-pt-purple-300 whitespace-nowrap'
+    <BasicItem
+      title='Contribution Amount'
+      content={
+        <TokenValueAndAmount
+          token={{ chainId, address, amount }}
+          valueClassName='text-2xl font-semibold text-pt-warning-light'
+          amountClassName='text-xs text-pt-purple-300'
+        />
+      }
     />
   )
 }
@@ -175,7 +175,7 @@ const LpRevenueItem = (props: ItemProps) => {
   const { data: liquidation, isFetched } = useBestLiquidation(liquidationPair)
 
   if (!isFetched || !liquidation) {
-    return <Spinner />
+    return <BasicItem title='POOL Received' content={<Spinner />} />
   }
 
   const chainId = liquidationPair.chainId
@@ -183,11 +183,15 @@ const LpRevenueItem = (props: ItemProps) => {
   const amount = liquidation.profit
 
   return (
-    <TokenValueAndAmount
-      token={{ chainId, address, amount }}
-      className='!flex-row gap-1'
-      valueClassName='font-semibold'
-      amountClassName='font-sm text-pt-purple-300 whitespace-nowrap'
+    <BasicItem
+      title='POOL Received'
+      content={
+        <TokenValueAndAmount
+          token={{ chainId, address, amount }}
+          valueClassName='text-2xl font-semibold'
+          amountClassName='text-xs text-pt-purple-300'
+        />
+      }
     />
   )
 }
@@ -198,24 +202,28 @@ const LpGasItem = (props: ItemProps) => {
   const { data: gasEstimate, isFetched } = useBestLiquidationGasEstimate(liquidationPair)
 
   if (!isFetched || !gasEstimate) {
-    return <Spinner />
+    return <BasicItem title='Estimated Gas' content={<Spinner />} />
   }
-
   // TODO: this assumes the gas token is ETH
   return (
-    <div className='flex gap-1 items-center'>
-      <span className='font-semibold'>
-        <CurrencyValue baseValue={gasEstimate.totalGasEth} fallback={<></>} />
-      </span>
-      <span className='font-sm text-pt-purple-300 whitespace-nowrap'>
-        {formatNumberForDisplay(gasEstimate.totalGasEth)} ETH
-      </span>
-    </div>
+    <BasicItem
+      title='Estimated Gas'
+      content={
+        <div className='flex flex-col items-center'>
+          <span className='text-2xl font-semibold'>
+            <CurrencyValue baseValue={gasEstimate.totalGasEth} fallback={<></>} />
+          </span>
+          <span className='text-xs text-pt-purple-300'>
+            {formatNumberForDisplay(gasEstimate.totalGasEth)} ETH
+          </span>
+        </div>
+      }
+    />
   )
 }
 
 const LpProfitItem = (props: ItemProps) => {
   const { liquidationPair } = props
 
-  return <LiquidateButton liquidationPair={liquidationPair} className='w-full' />
+  return <LiquidateButton liquidationPair={liquidationPair} className='w-full max-w-[70%]' />
 }

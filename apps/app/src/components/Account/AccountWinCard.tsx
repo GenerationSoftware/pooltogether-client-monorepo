@@ -33,7 +33,7 @@ export const AccountWinCard = (props: AccountWinCardProps) => {
         amount={win.payout}
         className='!items-end lg:!items-center'
         valueClassName='font-semibold lg:font-normal'
-        amountClassName='font-xs font-light lg:font-sm lg:font-normal'
+        amountClassName='font-xs font-light lg:text-sm lg:font-normal'
       />
     </div>
   )
