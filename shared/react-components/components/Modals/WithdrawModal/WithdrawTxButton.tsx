@@ -28,6 +28,7 @@ interface WithdrawTxButtonProps {
   openChainModal?: () => void
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
+  onSuccessfulWithdrawal?: () => void
   intl?: {
     base?: Intl<
       | 'enterAnAmount'
@@ -51,6 +52,7 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
     openChainModal,
     addRecentTransaction,
     refetchUserBalances,
+    onSuccessfulWithdrawal,
     intl
   } = props
 
@@ -106,6 +108,7 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
       refetchUserVaultDelegationBalance()
       refetchVaultBalance()
       refetchUserBalances?.()
+      onSuccessfulWithdrawal?.()
       setModalView('success')
     },
     onError: () => {

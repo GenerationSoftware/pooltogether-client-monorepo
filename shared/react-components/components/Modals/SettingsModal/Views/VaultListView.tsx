@@ -15,6 +15,7 @@ import { ImportedBadge } from '../../../Badges/ImportedBadge'
 
 interface VaultListViewProps {
   localVaultLists: { [id: string]: VaultList }
+  onSuccess?: (id: string) => void
   intl?: {
     base?: Intl<
       | 'manageVaultLists'
@@ -31,7 +32,7 @@ interface VaultListViewProps {
 }
 
 export const VaultListView = (props: VaultListViewProps) => {
-  const { localVaultLists, intl } = props
+  const { localVaultLists, onSuccess, intl } = props
 
   const { cachedVaultLists, remove } = useCachedVaultLists()
 
@@ -60,7 +61,7 @@ export const VaultListView = (props: VaultListViewProps) => {
     <div className='flex flex-col gap-4 md:gap-8'>
       <Header intl={intl?.base} />
 
-      <ImportVaultListForm intl={intl} />
+      <ImportVaultListForm onSuccess={onSuccess} intl={intl} />
 
       {Object.keys(localVaultLists).map((id) => (
         <VaultListItem
@@ -114,6 +115,7 @@ const Header = (props: HeaderProps) => {
 }
 
 interface ImportVaultListFormProps {
+  onSuccess?: (id: string) => void
   intl?: {
     base?: Intl<'urlInput' | 'addVaultList'>
     errors?: Intl<'formErrors.invalidSrc' | 'formErrors.invalidVaultList'>
@@ -121,7 +123,7 @@ interface ImportVaultListFormProps {
 }
 
 const ImportVaultListForm = (props: ImportVaultListFormProps) => {
-  const { intl } = props
+  const { onSuccess, intl } = props
 
   const mainnetPublicClient = usePublicClient({ chainId: NETWORK.mainnet })
 
@@ -156,6 +158,7 @@ const ImportVaultListForm = (props: ImportVaultListFormProps) => {
       if (!!vaultList) {
         cache(cleanSrc, vaultList)
         select(cleanSrc, 'imported')
+        onSuccess?.(cleanSrc)
         reset()
       } else {
         setError('src', {

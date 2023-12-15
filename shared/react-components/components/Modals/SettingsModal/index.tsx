@@ -1,5 +1,5 @@
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
-import { LANGUAGE_ID, MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
+import { CURRENCY_ID, LANGUAGE_ID, MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Intl, VaultList } from '@shared/types'
 import { Modal } from '@shared/ui'
 import { ReactNode } from 'react'
@@ -19,6 +19,9 @@ export interface SettingsModalProps {
   localVaultLists: { [id: string]: VaultList }
   disable?: SettingsModalOption[]
   hide?: SettingsModalOption[]
+  onCurrencyChange?: (id: CURRENCY_ID) => void
+  onLanguageChange?: (id: LANGUAGE_ID) => void
+  onVaultListImport?: (id: string) => void
   intl?: {
     base?: Intl<
       | 'customizeExperience'
@@ -43,15 +46,37 @@ export interface SettingsModalProps {
 }
 
 export const SettingsModal = (props: SettingsModalProps) => {
-  const { view, setView, locales, localVaultLists, disable, hide, intl } = props
+  const {
+    view,
+    setView,
+    locales,
+    localVaultLists,
+    disable,
+    hide,
+    onCurrencyChange,
+    onLanguageChange,
+    onVaultListImport,
+    intl
+  } = props
 
   const { isModalOpen, setIsModalOpen } = useIsModalOpen(MODAL_KEYS.settings)
 
   const modalViews: Record<SettingsModalView, ReactNode> = {
     menu: <MenuView setView={setView} disable={disable} hide={hide} intl={intl?.base} />,
-    currency: <CurrencyView setView={setView} intl={intl?.base} />,
-    language: <LanguageView setView={setView} locales={locales} intl={intl?.base} />,
-    vaultLists: <VaultListView localVaultLists={localVaultLists} intl={intl} />
+    currency: (
+      <CurrencyView setView={setView} onCurrencyChange={onCurrencyChange} intl={intl?.base} />
+    ),
+    language: (
+      <LanguageView
+        setView={setView}
+        locales={locales}
+        onLanguageChange={onLanguageChange}
+        intl={intl?.base}
+      />
+    ),
+    vaultLists: (
+      <VaultListView localVaultLists={localVaultLists} onSuccess={onVaultListImport} intl={intl} />
+    )
   }
 
   if (isModalOpen) {

@@ -7,11 +7,12 @@ import { SettingsModalView } from '..'
 interface LanguageViewProps {
   setView: (view: SettingsModalView) => void
   locales?: LANGUAGE_ID[]
+  onLanguageChange?: (id: LANGUAGE_ID) => void
   intl?: Intl<'customizeLanguage'>
 }
 
 export const LanguageView = (props: LanguageViewProps) => {
-  const { setView, locales, intl } = props
+  const { setView, locales, onLanguageChange, intl } = props
 
   const allLanguages = Object.keys(SUPPORTED_LANGUAGES) as LANGUAGE_ID[]
   const languages =
@@ -25,7 +26,14 @@ export const LanguageView = (props: LanguageViewProps) => {
         {intl?.('customizeLanguage') ?? 'Customize Language'}
       </span>
       {languages.map((id) => {
-        return <LanguageItem key={`lang-item-${id}`} id={id} setView={setView} />
+        return (
+          <LanguageItem
+            key={`lang-item-${id}`}
+            id={id}
+            setView={setView}
+            onSelect={onLanguageChange}
+          />
+        )
       })}
     </div>
   )
@@ -34,10 +42,11 @@ export const LanguageView = (props: LanguageViewProps) => {
 interface LanguageItemProps {
   id: LANGUAGE_ID
   setView: (view: SettingsModalView) => void
+  onSelect?: (id: LANGUAGE_ID) => void
 }
 
 const LanguageItem = (props: LanguageItemProps) => {
-  const { id, setView } = props
+  const { id, setView, onSelect } = props
 
   const { selectedLanguage, setSelectedLanguage } = useSelectedLanguage()
 
@@ -49,6 +58,7 @@ const LanguageItem = (props: LanguageItemProps) => {
       )}
       onClick={() => {
         setSelectedLanguage(id)
+        onSelect?.(id)
         setView('menu')
       }}
     >

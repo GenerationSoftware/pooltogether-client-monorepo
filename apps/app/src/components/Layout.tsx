@@ -20,9 +20,10 @@ import {
   SettingsModal,
   WithdrawModal
 } from '@shared/react-components'
-import { ExternalLink, Footer, FooterItem, LINKS, Navbar, SocialIcon, toast } from '@shared/ui'
+import { Footer, FooterItem, LINKS, Navbar, SocialIcon, toast } from '@shared/ui'
 import { getDiscordInvite } from '@shared/utilities'
 import classNames from 'classnames'
+import * as fathom from 'fathom-client'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import Head from 'next/head'
@@ -31,7 +32,7 @@ import { useRouter } from 'next/router'
 import { ReactNode, useEffect, useState } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
-import { DEFAULT_VAULT_LISTS } from '@constants/config'
+import { DEFAULT_VAULT_LISTS, FATHOM_EVENTS } from '@constants/config'
 import { useSelectedPrizePool } from '@hooks/useSelectedPrizePool'
 import { useSettingsModalView } from '@hooks/useSettingsModalView'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
@@ -224,6 +225,9 @@ export const Layout = (props: LayoutProps) => {
         setView={setSettingsModalView}
         locales={['en', 'de', 'ru', 'ko', 'uk']}
         localVaultLists={DEFAULT_VAULT_LISTS}
+        onCurrencyChange={() => fathom.trackEvent(FATHOM_EVENTS.changedCurrency)}
+        onLanguageChange={() => fathom.trackEvent(FATHOM_EVENTS.changedLanguage)}
+        onVaultListImport={() => fathom.trackEvent(FATHOM_EVENTS.importedVaultList)}
         intl={{ base: t_settings, errors: t_errors }}
       />
 
@@ -234,6 +238,10 @@ export const Layout = (props: LayoutProps) => {
         addRecentTransaction={addRecentTransaction}
         onGoToAccount={() => router.push('/account')}
         refetchUserBalances={refetchUserBalances}
+        onSuccessfulExactApproval={() => fathom.trackEvent(FATHOM_EVENTS.approvedExact)}
+        onSuccessfulInfiniteApproval={() => fathom.trackEvent(FATHOM_EVENTS.approvedInfinite)}
+        onSuccessfulDeposit={() => fathom.trackEvent(FATHOM_EVENTS.deposited)}
+        onSuccessfulDepositWithPermit={() => fathom.trackEvent(FATHOM_EVENTS.depositedWithPermit)}
         intl={{
           base: t_txModals,
           common: t_common,
@@ -250,6 +258,7 @@ export const Layout = (props: LayoutProps) => {
         addRecentTransaction={addRecentTransaction}
         onGoToAccount={() => router.push('/account')}
         refetchUserBalances={refetchUserBalances}
+        onSuccessfulWithdrawal={() => fathom.trackEvent(FATHOM_EVENTS.redeemed)}
         intl={{
           base: t_txModals,
           common: t_common,
@@ -269,6 +278,8 @@ export const Layout = (props: LayoutProps) => {
       <CheckPrizesModal
         prizePools={prizePoolsArray}
         onGoToAccount={() => router.push('/account')}
+        onWin={() => fathom.trackEvent(FATHOM_EVENTS.checkedPrizes, { _value: 1 })}
+        onNoWin={() => fathom.trackEvent(FATHOM_EVENTS.checkedPrizes, { _value: 0 })}
         intl={t_prizeChecking}
       />
 

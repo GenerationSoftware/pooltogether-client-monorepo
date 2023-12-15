@@ -128,3 +128,18 @@ export const TWAB_REWARDS_SETTINGS: {
     fromBlock: 1_490_000n
   }
 }
+
+/**
+ * Fathom events
+ */
+export const FATHOM_EVENTS = {
+  approvedExact: 'ApprovedExact',
+  approvedInfinite: 'ApprovedInfinite',
+  deposited: 'Deposited',
+  depositedWithPermit: 'DepositedWithPermit',
+  redeemed: 'Redeemed',
+  checkedPrizes: 'CheckedPrizes',
+  changedCurrency: 'ChangedCurrency',
+  changedLanguage: 'ChangedLanguage',
+  importedVaultList: 'ImportedVaultList'
+}

@@ -6,11 +6,12 @@ import { SettingsModalView } from '..'
 
 interface CurrencyViewProps {
   setView: (view: SettingsModalView) => void
+  onCurrencyChange?: (id: CURRENCY_ID) => void
   intl?: Intl<'customizeCurrency'>
 }
 
 export const CurrencyView = (props: CurrencyViewProps) => {
-  const { setView, intl } = props
+  const { setView, onCurrencyChange, intl } = props
 
   const currencies = Object.keys(SUPPORTED_CURRENCIES) as CURRENCY_ID[]
 
@@ -20,7 +21,14 @@ export const CurrencyView = (props: CurrencyViewProps) => {
         {intl?.('customizeCurrency') ?? 'Customize Currency'}
       </span>
       {currencies.map((id) => {
-        return <CurrencyItem key={`curr-item-${id}`} id={id} setView={setView} />
+        return (
+          <CurrencyItem
+            key={`curr-item-${id}`}
+            id={id}
+            setView={setView}
+            onSelect={onCurrencyChange}
+          />
+        )
       })}
     </div>
   )
@@ -29,10 +37,11 @@ export const CurrencyView = (props: CurrencyViewProps) => {
 interface CurrencyItemProps {
   id: CURRENCY_ID
   setView: (view: SettingsModalView) => void
+  onSelect?: (id: CURRENCY_ID) => void
 }
 
 const CurrencyItem = (props: CurrencyItemProps) => {
-  const { id, setView } = props
+  const { id, setView, onSelect } = props
 
   const { selectedCurrency, setSelectedCurrency } = useSelectedCurrency()
 
@@ -44,6 +53,7 @@ const CurrencyItem = (props: CurrencyItemProps) => {
       )}
       onClick={() => {
         setSelectedCurrency(id)
+        onSelect?.(id)
         setView('menu')
       }}
     >

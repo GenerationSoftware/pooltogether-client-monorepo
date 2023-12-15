@@ -63,13 +63,14 @@ export const Footer = (props: FooterProps) => {
           )
         })}
       </div>
-      <a
-        href={LINKS.termsOfService}
-        target='_blank'
-        className='text-sm text-pt-purple-100 hover:underline'
-      >
-        Terms and Conditions
-      </a>
+      <div className='flex flex-col gap-1 items-center text-center text-sm text-pt-purple-100'>
+        <a href={LINKS.termsOfService} target='_blank' className='hover:underline'>
+          Terms and Conditions
+        </a>
+        <a href={LINKS.privacyPolicy} target='_blank' className='hover:underline'>
+          Privacy Policy
+        </a>
+      </div>
     </FlowbiteFooter>
   )
 }

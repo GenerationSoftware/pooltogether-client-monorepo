@@ -30,6 +30,7 @@ interface DepositWithPermitTxButtonProps {
   openChainModal?: () => void
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
+  onSuccessfulDepositWithPermit?: () => void
   intl?: {
     base?: Intl<
       | 'enterAnAmount'
@@ -53,6 +54,7 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
     openChainModal,
     addRecentTransaction,
     refetchUserBalances,
+    onSuccessfulDepositWithPermit,
     intl
   } = props
 
@@ -139,6 +141,7 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
         refetchVaultBalance()
         refetchTokenAllowance()
         refetchUserBalances?.()
+        onSuccessfulDepositWithPermit?.()
         setModalView('success')
       },
       onError: () => {

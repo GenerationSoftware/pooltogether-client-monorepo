@@ -5,10 +5,11 @@ import {
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { createVaultListToast } from '@shared/react-components'
 import { isNewerVersion } from '@shared/utilities'
+import * as fathom from 'fathom-client'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { DEFAULT_VAULT_LISTS } from '@constants/config'
+import { DEFAULT_VAULT_LISTS, FATHOM_EVENTS } from '@constants/config'
 
 export const VaultListHandler = () => {
   const router = useRouter()
@@ -25,7 +26,9 @@ export const VaultListHandler = () => {
     isFetching: isImportingVaultList,
     isSuccess: isSuccessVaultList,
     isError: isErrorVaultList
-  } = useVaultList(urlQueryVaultListSrc)
+  } = useVaultList(urlQueryVaultListSrc, {
+    onSuccess: () => fathom.trackEvent(FATHOM_EVENTS.importedVaultList)
+  })
 
   // Handling Default Vault Lists
   useEffect(() => {

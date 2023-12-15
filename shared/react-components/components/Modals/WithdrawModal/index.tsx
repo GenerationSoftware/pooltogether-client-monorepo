@@ -29,6 +29,7 @@ export interface WithdrawModalProps {
   openChainModal?: () => void
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
+  onSuccessfulWithdrawal?: () => void
   intl?: {
     base?: RichIntl<
       | 'withdrawFrom'
@@ -72,6 +73,7 @@ export const WithdrawModal = (props: WithdrawModalProps) => {
     openChainModal,
     addRecentTransaction,
     refetchUserBalances,
+    onSuccessfulWithdrawal,
     intl
   } = props
 
@@ -146,6 +148,7 @@ export const WithdrawModal = (props: WithdrawModalProps) => {
           openChainModal={openChainModal}
           addRecentTransaction={addRecentTransaction}
           refetchUserBalances={refetchUserBalances}
+          onSuccessfulWithdrawal={onSuccessfulWithdrawal}
           intl={intl}
         />
       </div>

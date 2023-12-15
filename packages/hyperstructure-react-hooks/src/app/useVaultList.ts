@@ -13,7 +13,10 @@ import { QUERY_KEYS } from '../constants'
  * @param src the source of the vault list
  * @returns
  */
-export const useVaultList = (src: string): UseQueryResult<VaultList | undefined, unknown> => {
+export const useVaultList = (
+  src: string,
+  options?: { onSuccess?: (id: string) => void }
+): UseQueryResult<VaultList | undefined, unknown> => {
   const publicClient = usePublicClient({ chainId: NETWORK.mainnet })
 
   const { select } = useSelectedVaultListIds()
@@ -28,6 +31,7 @@ export const useVaultList = (src: string): UseQueryResult<VaultList | undefined,
       if (!!vaultList) {
         cache(src, vaultList)
         select(src, 'imported')
+        options?.onSuccess?.(src)
       }
     }
   })

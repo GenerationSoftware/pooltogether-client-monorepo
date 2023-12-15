@@ -32,6 +32,9 @@ interface DepositTxButtonProps {
   openChainModal?: () => void
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
+  onSuccessfulExactApproval?: () => void
+  onSuccessfulInfiniteApproval?: () => void
+  onSuccessfulDeposit?: () => void
   intl?: {
     base?: Intl<
       | 'enterAnAmount'
@@ -61,6 +64,9 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
     openChainModal,
     addRecentTransaction,
     refetchUserBalances,
+    onSuccessfulExactApproval,
+    onSuccessfulInfiniteApproval,
+    onSuccessfulDeposit,
     intl
   } = props
 
@@ -115,7 +121,10 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
     txHash: exactApprovalTxHash,
     sendApproveTransaction: sendExactApproveTransaction
   } = useSendApproveTransaction(depositAmount, vault, {
-    onSuccess: () => refetchTokenAllowance()
+    onSuccess: () => {
+      refetchTokenAllowance()
+      onSuccessfulExactApproval?.()
+    }
   })
 
   const {
@@ -125,7 +134,10 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
     txHash: infiniteApprovalTxHash,
     sendApproveTransaction: sendInfiniteApproveTransaction
   } = useSendApproveTransaction(MAX_UINT_256, vault, {
-    onSuccess: () => refetchTokenAllowance()
+    onSuccess: () => {
+      refetchTokenAllowance()
+      onSuccessfulInfiniteApproval?.()
+    }
   })
 
   const {
@@ -145,6 +157,7 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
       refetchVaultBalance()
       refetchTokenAllowance()
       refetchUserBalances?.()
+      onSuccessfulDeposit?.()
       setModalView('success')
     },
     onError: () => {

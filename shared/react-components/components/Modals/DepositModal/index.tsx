@@ -35,6 +35,10 @@ export interface DepositModalProps {
   openChainModal?: () => void
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
+  onSuccessfulExactApproval?: () => void
+  onSuccessfulInfiniteApproval?: () => void
+  onSuccessfulDeposit?: () => void
+  onSuccessfulDepositWithPermit?: () => void
   intl?: {
     base?: RichIntl<
       | 'depositTo'
@@ -92,6 +96,10 @@ export const DepositModal = (props: DepositModalProps) => {
     openChainModal,
     addRecentTransaction,
     refetchUserBalances,
+    onSuccessfulExactApproval,
+    onSuccessfulInfiniteApproval,
+    onSuccessfulDeposit,
+    onSuccessfulDepositWithPermit,
     intl
   } = props
 
@@ -177,6 +185,7 @@ export const DepositModal = (props: DepositModalProps) => {
             openChainModal={openChainModal}
             addRecentTransaction={addRecentTransaction}
             refetchUserBalances={refetchUserBalances}
+            onSuccessfulDepositWithPermit={onSuccessfulDepositWithPermit}
             intl={intl}
           />
         ) : (
@@ -189,6 +198,9 @@ export const DepositModal = (props: DepositModalProps) => {
             openChainModal={openChainModal}
             addRecentTransaction={addRecentTransaction}
             refetchUserBalances={refetchUserBalances}
+            onSuccessfulExactApproval={onSuccessfulExactApproval}
+            onSuccessfulInfiniteApproval={onSuccessfulInfiniteApproval}
+            onSuccessfulDeposit={onSuccessfulDeposit}
             intl={intl}
           />
         )}

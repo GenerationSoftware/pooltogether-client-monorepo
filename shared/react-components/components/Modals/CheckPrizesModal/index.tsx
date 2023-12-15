@@ -20,11 +20,13 @@ export type CheckPrizesModalView = 'checking' | 'win' | 'noWin'
 export interface CheckPrizesModalProps {
   prizePools: PrizePool[]
   onGoToAccount: () => void
+  onWin?: () => void
+  onNoWin?: () => void
   intl?: Intl<'checking' | 'noPrizes' | 'viewAccount' | 'youWonX' | 'xWon'>
 }
 
 export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
-  const { prizePools, onGoToAccount, intl } = props
+  const { prizePools, onGoToAccount, onWin, onNoWin, intl } = props
 
   const { isModalOpen, setIsModalOpen } = useIsModalOpen(MODAL_KEYS.checkPrizes)
 
@@ -80,9 +82,11 @@ export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
             )
           ) {
             setView('win')
+            onWin?.()
             return
           }
           setView('noWin')
+          onNoWin?.()
         }
       }, sToMs(3.5))
     }
