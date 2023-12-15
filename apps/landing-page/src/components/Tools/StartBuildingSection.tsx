@@ -44,6 +44,12 @@ export const StartBuildingSection = (props: StartBuildingSectionProps) => {
           title='Cabana Rewards Builder'
           description='Create and manage bonus rewards for any PoolTogether prize vault.'
         />
+        <StartBuildingItem
+          href={LINKS.flashLiquidator}
+          imgSrc='/flashScreenshot.png'
+          title='Cabana Flash'
+          description='Flash liquidate yield from PoolTogether prize vaults.'
+        />
       </div>
     </section>
   )
