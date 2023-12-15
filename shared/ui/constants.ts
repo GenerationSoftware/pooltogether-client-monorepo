@@ -38,6 +38,7 @@ export const LINKS = Object.freeze({
   listDocs: `${DOMAINS.docs}/cabana-tools/cabana-lists`,
   analyticsDocs: `${DOMAINS.docs}/cabana-tools/cabanalytics`,
   swapDocs: `${DOMAINS.docs}/cabana-tools/cabana-swaps`,
+  flashDocs: `${DOMAINS.docs}/cabana-tools/cabana-flash`,
   appGuides: `${DOMAINS.docs}/cabana-app/guides`,
   toolGuides: `${DOMAINS.docs}/cabana-tools/guides`,
   protocolFaqs: `${DOMAINS.docs}/protocol/faqs`,
