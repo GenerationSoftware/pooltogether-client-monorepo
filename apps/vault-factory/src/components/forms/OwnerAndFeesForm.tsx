@@ -78,7 +78,8 @@ export const OwnerAndFeesForm = (props: OwnerAndFeesFormProps) => {
           validate={{
             isValidNumber: (v: string) => /^-?\d+\.?\d*$/.test(v) || 'Enter a valid number.',
             isValidPercentage: (v: string) =>
-              (parseFloat(v) >= 0 && parseFloat(v) <= 100) || 'Enter a number between 0 and 100.',
+              (parseFloat(v) >= 0 && parseFloat(v) < 100) ||
+              'Enter a number between 0 (inclusive) and 100 (exclusive).',
             isNotTooPrecise: (v) =>
               v.split('.').length < 2 || v.split('.')[1].length <= 6 || 'Too many decimals'
           }}
