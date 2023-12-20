@@ -1,8 +1,22 @@
 export const vaultFactoryABI = [
   {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'contract VaultV2', name: 'vault', type: 'address' },
+      {
+        indexed: true,
+        internalType: 'contract VaultFactoryV2',
+        name: 'vaultFactory',
+        type: 'address'
+      }
+    ],
+    name: 'NewFactoryVault',
+    type: 'event'
+  },
+  {
     inputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     name: 'allVaults',
-    outputs: [{ internalType: 'contract Vault', name: '', type: 'address' }],
+    outputs: [{ internalType: 'contract VaultV2', name: '', type: 'address' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -24,7 +38,7 @@ export const vaultFactoryABI = [
     type: 'function'
   },
   {
-    inputs: [{ internalType: 'contract Vault', name: '', type: 'address' }],
+    inputs: [{ internalType: 'address', name: '', type: 'address' }],
     name: 'deployedVaults',
     outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
     stateMutability: 'view',
@@ -43,19 +57,5 @@ export const vaultFactoryABI = [
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'contract Vault', name: 'vault', type: 'address' },
-      {
-        indexed: true,
-        internalType: 'contract VaultFactory',
-        name: 'vaultFactory',
-        type: 'address'
-      }
-    ],
-    name: 'NewFactoryVault',
-    type: 'event'
   }
 ] as const

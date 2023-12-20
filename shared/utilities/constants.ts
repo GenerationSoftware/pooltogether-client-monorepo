@@ -366,10 +366,10 @@ export const TWAB_REWARDS_ADDRESSES: { [chainId: number]: Address } = {
  * Vault factory addresses
  */
 export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
-  [NETWORK.optimism]: '0xF65FA202907D6046D1eF33C521889B54BdE08081',
-  [NETWORK['optimism-goerli']]: '0x53B7922eeCe8afE5bdaA170E20dc32c6deDA5277',
-  [NETWORK['optimism-sepolia']]: '0xE5526e74C554d7f6E07906f3a7c315edEbb26aF4',
-  [NETWORK['arbitrum-sepolia']]: '0xa4b085E5F024036125ed4D0659fE32388A03C6f8'
+  [NETWORK.optimism]: '0x6B17EE3a95BcCd605340454c5919e693Ef8EfF0E',
+  [NETWORK['optimism-goerli']]: '0x53B7922eeCe8afE5bdaA170E20dc32c6deDA5277', // old factory (deprecated)
+  [NETWORK['optimism-sepolia']]: '0x47266c3447459793903Fe79589f43230fEAF3666',
+  [NETWORK['arbitrum-sepolia']]: '0x443E475baABAEA1Ec6Bb503acAaa7Fd39945f38F'
 }
 
 /**
