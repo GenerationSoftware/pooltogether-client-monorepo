@@ -17,7 +17,7 @@ const defaultVaultList: VaultList = {
       decimals: 6,
       symbol: 'pUSDC.e',
       logoURI: `${LINKS.app}/icons/pUSDC.e.svg`,
-      tags: ['deprecatedsasd', 'o'],
+      tags: ['deprecated'],
       yieldSourceURI:
         'https://app.aave.com/reserve-overview/?underlyingAsset=0x7f5c764cbc14f9669b88837ca1490cca17c31607&marketName=proto_optimism_v3',
       extensions: {
