@@ -7,6 +7,7 @@ import { TokenWithLogo } from '@shared/types'
 import classNames from 'classnames'
 import { NetworkIcon } from '../Icons/NetworkIcon'
 import { TokenIcon } from '../Icons/TokenIcon'
+import { Tags } from './Tags'
 
 export interface VaultBadgeProps {
   vault: Vault
@@ -29,12 +30,6 @@ export const VaultBadge = (props: VaultBadgeProps) => {
     name: vault.name ?? shareData?.name,
     symbol: vault.shareData?.symbol ?? shareData?.symbol,
     logoURI: vault.logoURI ?? vault.tokenLogoURI
-  }
-
-  const TagView = () => {
-    if (vault.tags && vault.tags.length > 0) {
-      return <span className='gap-1'> - {vault.tags.join(',')}</span>
-    }
   }
 
   return (
@@ -66,7 +61,7 @@ export const VaultBadge = (props: VaultBadgeProps) => {
         </span>
         <span className={classNames('text-xs text-pt-purple-200', symbolClassName)}>
           {token.symbol}
-          <TagView />
+          <Tags vault={vault} />
         </span>
       </div>
     </div>
