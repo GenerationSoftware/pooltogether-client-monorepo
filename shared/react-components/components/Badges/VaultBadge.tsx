@@ -49,7 +49,7 @@ export const VaultBadge = (props: VaultBadgeProps) => {
       onClick={onClick}
     >
       <div>
-        <div className={classNames('relative pb-1 shrink-0', iconClassName)}>
+        <div className={classNames('relative shrink-0', iconClassName)}>
           <TokenIcon token={token} />
           <NetworkIcon chainId={vault.chainId} className='absolute top-3 left-3 h-4 w-4' />
         </div>
