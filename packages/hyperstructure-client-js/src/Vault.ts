@@ -33,6 +33,7 @@ export class Vault {
   owner: Address | undefined
   name: string | undefined
   logoURI: string | undefined
+  tags: string[] | undefined
   tokenLogoURI: string | undefined
   yieldSourceURI: string | undefined
 
@@ -55,6 +56,7 @@ export class Vault {
       tokenAddress?: Address
       name?: string
       logoURI?: string
+      tags?: string[]
       tokenLogoURI?: string
       yieldSourceURI?: string
     }
@@ -66,6 +68,7 @@ export class Vault {
     this.tokenAddress = options?.tokenAddress
     this.name = options?.name
     this.logoURI = options?.logoURI
+    this.tags = options?.tags
     this.tokenLogoURI = options?.tokenLogoURI
     this.yieldSourceURI = options?.yieldSourceURI
   }

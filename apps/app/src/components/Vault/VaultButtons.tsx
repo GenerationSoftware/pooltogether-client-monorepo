@@ -1,6 +1,7 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useUserVaultShareBalance } from '@generationsoftware/hyperstructure-react-hooks'
 import { DepositButton, WithdrawButton } from '@shared/react-components'
+import { Tooltip } from '@shared/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Address } from 'viem'
@@ -26,13 +27,23 @@ export const VaultButtons = (props: VaultButtonsProps) => {
 
   return (
     <div className={classNames('flex items-center gap-2', className)}>
-      <DepositButton
-        vault={vault}
-        fullSized={fullSized}
-        className={inverseOrder ? 'order-2' : 'order-1'}
+      <Tooltip
+        content={
+          <div className={classNames('max-w-[32ch] flex flex-col gap-2 text-start', className)}>
+            <strong>Deposits disabled</strong>
+            <span>This is an old vault, please use the new {vault.tokenData?.symbol} vault</span>
+          </div>
+        }
       >
-        {t('deposit')}
-      </DepositButton>
+        <DepositButton
+          vault={vault}
+          fullSized={fullSized}
+          className={inverseOrder ? 'order-2' : 'order-1'}
+          disabled
+        >
+          {t('deposit')}
+        </DepositButton>
+      </Tooltip>
       {shareBalance > 0n && (
         <WithdrawButton
           vault={vault}

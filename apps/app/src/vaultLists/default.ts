@@ -17,6 +17,7 @@ const defaultVaultList: VaultList = {
       decimals: 6,
       symbol: 'pUSDC.e',
       logoURI: `${LINKS.app}/icons/pUSDC.e.svg`,
+      tags: ['deprecated'],
       yieldSourceURI:
         'https://app.aave.com/reserve-overview/?underlyingAsset=0x7f5c764cbc14f9669b88837ca1490cca17c31607&marketName=proto_optimism_v3',
       extensions: {
@@ -30,10 +31,11 @@ const defaultVaultList: VaultList = {
     {
       chainId: NETWORK.optimism,
       address: '0x29Cb69D4780B53c1e5CD4D2B817142D2e9890715',
-      name: 'Prize WETH (classic) - Aave',
+      name: 'Prize WETH - Aave',
       decimals: 18,
       symbol: 'pWETH',
       logoURI: `${LINKS.app}/icons/pWETH.svg`,
+      tags: ['deprecated'],
       yieldSourceURI:
         'https://app.aave.com/reserve-overview/?underlyingAsset=0x4200000000000000000000000000000000000006&marketName=proto_optimism_v3',
       extensions: {
