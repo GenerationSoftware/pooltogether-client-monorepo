@@ -68,11 +68,7 @@ export const VaultFilters = (props: VaultFiltersProps) => {
     useAllUserVaultBalances(vaults, userAddress as Address)
 
   const vaultsArrayLessDeprecated = useMemo(() => {
-    return getVaultsNotDeprecatedUnlessBalance(
-      vaultsArray,
-      userVaultBalances,
-      isFetchedUserVaultBalances
-    )
+    return getVaultsNotDeprecatedUnlessBalance(vaultsArray, userVaultBalances)
   }, [vaultsArray])
 
   const [filterId, setFilterId] = useAtom(filterIdAtom)
@@ -236,20 +232,16 @@ const getVaultListIdFilteredVaults = (
 
 const getVaultsNotDeprecatedUnlessBalance = (
   vaults: Vault[],
-  userVaultBalances: { [vaultId: string]: TokenWithAmount } | undefined,
-  isFetchedUserVaultBalances: boolean
+  userVaultBalances: { [vaultId: string]: TokenWithAmount } | undefined
 ) => {
-  if (isFetchedUserVaultBalances) {
-    return vaults.filter((vault) => {
-      const balance = userVaultBalances?.[vault.id.toLowerCase()]
-      const deprecated = vault.tags?.includes('deprecated')
+  return vaults.filter((vault) => {
+    const balance = userVaultBalances?.[vault.id.toLowerCase()]
+    const deprecated = vault.tags?.includes('deprecated')
 
-      if (deprecated) {
-        return !!balance && balance?.amount > 0n && deprecated
-      } else {
-        return true
-      }
-    })
-  }
-  return vaults
+    if (deprecated) {
+      return !!balance && balance?.amount > 0n && deprecated
+    } else {
+      return true
+    }
+  })
 }
