@@ -6,8 +6,8 @@ import { testnetVaults } from './testnet'
 const defaultVaultList: VaultList = {
   name: 'Cabana Vault List',
   keywords: ['pooltogether', 'cabana', 'g9', 'optimism'],
-  version: { major: 1, minor: 15, patch: 2 },
-  timestamp: '2023-11-23T19:36:46Z',
+  version: { major: 1, minor: 16, patch: 1 },
+  timestamp: '2023-12-21T22:37:04Z',
   logoURI: `${LINKS.app}/pooltogether-token-logo.svg`,
   tokens: [
     {
@@ -17,6 +17,7 @@ const defaultVaultList: VaultList = {
       decimals: 6,
       symbol: 'pUSDC.e',
       logoURI: `${LINKS.app}/icons/pUSDC.e.svg`,
+      tags: ['deprecated'],
       yieldSourceURI:
         'https://app.aave.com/reserve-overview/?underlyingAsset=0x7f5c764cbc14f9669b88837ca1490cca17c31607&marketName=proto_optimism_v3',
       extensions: {
@@ -34,6 +35,7 @@ const defaultVaultList: VaultList = {
       decimals: 18,
       symbol: 'pWETH',
       logoURI: `${LINKS.app}/icons/pWETH.svg`,
+      tags: ['deprecated'],
       yieldSourceURI:
         'https://app.aave.com/reserve-overview/?underlyingAsset=0x4200000000000000000000000000000000000006&marketName=proto_optimism_v3',
       extensions: {
@@ -58,6 +60,40 @@ const defaultVaultList: VaultList = {
           address: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
           symbol: 'DAI',
           name: 'Dai Stablecoin'
+        }
+      }
+    },
+    {
+      chainId: NETWORK.optimism,
+      address: '0x77935f2c72b5eb814753a05921ae495aa283906b',
+      name: 'Prize USDC - Aave',
+      decimals: 6,
+      symbol: 'pUSDC',
+      logoURI: `${LINKS.app}/icons/pUSDC.e.svg`,
+      yieldSourceURI:
+        'https://app.aave.com/reserve-overview/?underlyingAsset=0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85&marketName=proto_optimism_v3',
+      extensions: {
+        underlyingAsset: {
+          address: '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85',
+          symbol: 'USDC',
+          name: 'USD Coin'
+        }
+      }
+    },
+    {
+      chainId: NETWORK.optimism,
+      address: '0xf0b19f02c63d51b69563a2b675e0160e1c34397c',
+      name: 'Prize WETH - Aave',
+      decimals: 18,
+      symbol: 'pWETH',
+      logoURI: `${LINKS.app}/icons/pWETH.svg`,
+      yieldSourceURI:
+        'https://app.aave.com/reserve-overview/?underlyingAsset=0x4200000000000000000000000000000000000006&marketName=proto_optimism_v3',
+      extensions: {
+        underlyingAsset: {
+          address: '0x4200000000000000000000000000000000000006',
+          symbol: 'WETH',
+          name: 'Wrapped Ether'
         }
       }
     },

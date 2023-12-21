@@ -166,7 +166,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
           token: {
             content: (
               <>
-                <Link href={`/vault/${vault.chainId}/${vault.address}`}>
+                <Link href={`/vault/${vault.chainId}/${vault.address}`} className='w-full'>
                   <VaultBadge vault={vault} onClick={() => {}} className='max-w-full' />
                 </Link>
                 {importedSrcs.length > 0 && (

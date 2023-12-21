@@ -215,6 +215,21 @@ export const testnetVaults: VaultList['tokens'] = [
     }
   },
   {
+    chainId: NETWORK['optimism-sepolia'],
+    address: '0x51d439F705911634263DFE265097645Eb1A3C42a',
+    name: 'Prize WETH - Test WETH',
+    decimals: 18,
+    symbol: 'pWETH',
+    logoURI: 'https://etherscan.io/token/images/weth_28.png',
+    extensions: {
+      underlyingAsset: {
+        address: '0xA416eD51158c5616b997B785FA6d18f02D0458A8',
+        symbol: 'WETH',
+        name: 'Wrapped Ether'
+      }
+    }
+  },
+  {
     chainId: NETWORK['arbitrum-sepolia'],
     address: '0x3adaa1D4F23C82130e1681c2cA9b38f5Fb9a0892',
     name: 'Prize DAI - LY',
@@ -309,6 +324,21 @@ export const testnetVaults: VaultList['tokens'] = [
     chainId: NETWORK['arbitrum-sepolia'],
     address: '0x5e733FC64179B18986ffa6D840023c99707984ad',
     name: 'Prize WETH',
+    decimals: 18,
+    symbol: 'PWETH',
+    logoURI: 'https://etherscan.io/token/images/weth_28.png',
+    extensions: {
+      underlyingAsset: {
+        address: '0x779275Fc1b987dB24463801f3708f42f3c6f6Ceb',
+        symbol: 'WETH',
+        name: 'Wrapped Ether'
+      }
+    }
+  },
+  {
+    chainId: NETWORK['arbitrum-sepolia'],
+    address: '0xa5905161eAb67b6A13104537a09A949EF043366E',
+    name: 'Prize WETH - Test WETH',
     decimals: 18,
     symbol: 'PWETH',
     logoURI: 'https://etherscan.io/token/images/weth_28.png',

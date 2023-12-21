@@ -1,10 +1,11 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useUserVaultShareBalance } from '@generationsoftware/hyperstructure-react-hooks'
-import { DepositButton, WithdrawButton } from '@shared/react-components'
+import { WithdrawButton } from '@shared/react-components'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
+import { DepositButtonWithDeprecated } from '../DepositButtonWithDeprecated'
 
 interface VaultButtonsProps {
   vault: Vault
@@ -24,19 +25,20 @@ export const VaultButtons = (props: VaultButtonsProps) => {
 
   const shareBalance = vaultBalance?.amount ?? 0n
 
+  const vaultDeprecated = vault.tags?.includes('deprecated')
+
   return (
     <div className={classNames('flex items-center gap-2', className)}>
-      <DepositButton
+      <DepositButtonWithDeprecated
         vault={vault}
         fullSized={fullSized}
-        className={inverseOrder ? 'order-2' : 'order-1'}
-      >
-        {t('deposit')}
-      </DepositButton>
+        inverseOrder={true}
+        vaultDeprecated={vaultDeprecated}
+      />
       {shareBalance > 0n && (
         <WithdrawButton
           vault={vault}
-          fullSized={fullSized}
+          fullSized={true}
           className={inverseOrder ? 'order-1' : 'order-2'}
           color='transparent'
         >

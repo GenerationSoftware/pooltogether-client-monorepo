@@ -9,6 +9,7 @@ import { Cog6ToothIcon } from '@heroicons/react/24/outline'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { NetworkIcon } from '@shared/react-components'
 import { VaultList } from '@shared/types'
+import { TokenWithAmount } from '@shared/types'
 import { Selection, SelectionItem } from '@shared/ui'
 import { getVaultId, NETWORK, STABLECOINS } from '@shared/utilities'
 import classNames from 'classnames'
@@ -66,6 +67,10 @@ export const VaultFilters = (props: VaultFiltersProps) => {
   const { data: userVaultBalances, isFetched: isFetchedUserVaultBalances } =
     useAllUserVaultBalances(vaults, userAddress as Address)
 
+  const vaultsArrayLessDeprecated = useMemo(() => {
+    return getVaultsNotDeprecatedUnlessBalance(vaultsArray, userVaultBalances)
+  }, [vaultsArray])
+
   const [filterId, setFilterId] = useAtom(filterIdAtom)
 
   const setFilteredVaults = useSetAtom(filteredVaultsAtom)
@@ -88,11 +93,11 @@ export const VaultFilters = (props: VaultFiltersProps) => {
   }
 
   const filterAll = () => {
-    filterOnClick(vaultsArray, (vaults) => vaults)
+    filterOnClick(vaultsArrayLessDeprecated, (vaults) => vaults)
   }
 
   const filterUserWallet = () => {
-    filterOnClick(vaultsArray, (vaults) =>
+    filterOnClick(vaultsArrayLessDeprecated, (vaults) =>
       vaults.filter((vault) => {
         const userWalletBalance = !!vault.tokenAddress
           ? userTokenBalances?.[vault.chainId]?.[vault.tokenAddress]?.amount ?? 0n
@@ -104,7 +109,7 @@ export const VaultFilters = (props: VaultFiltersProps) => {
   }
 
   const filterStablecoins = () => {
-    filterOnClick(vaultsArray, (vaults) =>
+    filterOnClick(vaultsArrayLessDeprecated, (vaults) =>
       vaults.filter((vault) =>
         Object.keys(STABLECOINS[vault.chainId as NETWORK]).includes(
           vault.tokenAddress?.toLowerCase() ?? '?'
@@ -114,7 +119,9 @@ export const VaultFilters = (props: VaultFiltersProps) => {
   }
 
   const filterNetwork = (chainId: NETWORK) => {
-    filterOnClick(vaultsArray, (vaults) => vaults.filter((vault) => vault.chainId === chainId))
+    filterOnClick(vaultsArrayLessDeprecated, (vaults) =>
+      vaults.filter((vault) => vault.chainId === chainId)
+    )
   }
 
   const filterItems: (SelectionItem & { filter: () => void })[] = useMemo(
@@ -150,13 +157,13 @@ export const VaultFilters = (props: VaultFiltersProps) => {
         }
       })
     ],
-    [networks, isFetchedUserTokenBalances, isFetchedUserVaultBalances, vaultsArray]
+    [networks, isFetchedUserTokenBalances, isFetchedUserVaultBalances, vaultsArrayLessDeprecated]
   )
 
   useEffect(() => {
     const filterItem = filterItems.find((item) => item.id === filterId)
     !!filterItem && filterItem.filter()
-  }, [filterItems, filterId, vaultsArray])
+  }, [filterItems, filterId, vaultsArrayLessDeprecated])
 
   if (router.isReady) {
     return (
@@ -221,4 +228,20 @@ const getVaultListIdFilteredVaults = (
     }
   }
   return vaults
+}
+
+const getVaultsNotDeprecatedUnlessBalance = (
+  vaults: Vault[],
+  userVaultBalances: { [vaultId: string]: TokenWithAmount } | undefined
+) => {
+  return vaults.filter((vault) => {
+    const balance = userVaultBalances?.[vault.id.toLowerCase()]
+    const deprecated = vault.tags?.includes('deprecated')
+
+    if (deprecated) {
+      return !!balance && balance?.amount > 0n && deprecated
+    } else {
+      return true
+    }
+  })
 }
