@@ -7,7 +7,6 @@ import { TokenWithLogo } from '@shared/types'
 import classNames from 'classnames'
 import { NetworkIcon } from '../Icons/NetworkIcon'
 import { TokenIcon } from '../Icons/TokenIcon'
-import { Tags } from './Tags'
 
 export interface VaultBadgeProps {
   vault: Vault
@@ -43,27 +42,21 @@ export const VaultBadge = (props: VaultBadgeProps) => {
       )}
       onClick={onClick}
     >
-      <div>
-        <div className={classNames('relative shrink-0', iconClassName)}>
-          <TokenIcon token={token} />
-          <NetworkIcon chainId={vault.chainId} className='absolute top-3 left-3 h-4 w-4' />
-        </div>
+      <div className={classNames('relative shrink-0', iconClassName)}>
+        <TokenIcon token={token} />
+        <NetworkIcon chainId={vault.chainId} className='absolute top-3 left-3 h-4 w-4' />
       </div>
-
-      <div className='flex flex-col'>
-        <span
-          className={classNames(
-            'text-sm font-medium overflow-hidden overflow-ellipsis',
-            nameClassName
-          )}
-        >
-          {token.name}
-        </span>
-        <span className={classNames('text-xs text-pt-purple-200', symbolClassName)}>
-          {token.symbol}
-          <Tags vault={vault} />
-        </span>
-      </div>
+      <span
+        className={classNames(
+          'text-sm font-medium overflow-hidden overflow-ellipsis',
+          nameClassName
+        )}
+      >
+        {token.name}
+      </span>
+      <span className={classNames('text-xs text-pt-purple-200', symbolClassName)}>
+        {token.symbol}
+      </span>{' '}
     </div>
   )
 }

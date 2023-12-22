@@ -3,6 +3,7 @@ import { DepositButton } from '@shared/react-components'
 import { Tooltip } from '@shared/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import { OLD_VAULT_NEW_VAULT_MAPPING } from '@constants/config'
 
 interface DepositButtonsProps {
   vault: Vault
@@ -10,11 +11,6 @@ interface DepositButtonsProps {
   inverseOrder?: boolean
   className?: string
   vaultDeprecated?: boolean
-}
-
-const OLD_VAULT_NEW_VAULT_MAPPING: Record<string, string> = {
-  'USDC.e': 'USDC',
-  'WETH': 'WETH'
 }
 
 export const DepositButtonWithDeprecated = (props: DepositButtonsProps) => {
