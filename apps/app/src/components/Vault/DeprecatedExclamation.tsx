@@ -9,25 +9,21 @@ interface DeprecatedExclamationProps {
 export const DeprecatedExclamation = (props: DeprecatedExclamationProps) => {
   const { vault } = props
 
-  return (
-    vault.tags &&
-    vault.tags.includes('deprecated') && (
-      <Tooltip
-        content={
-          <div className='max-w-[32ch] flex flex-col gap-2 text-start'>
-            <div className='font-bold'>Deposits disabled</div>
-            <span>
-              This vault has been deprecated. Please migrate to the new{' '}
-              {vault.tokenData?.symbol && OLD_VAULT_NEW_VAULT_MAPPING[vault.tokenData?.symbol]}{' '}
-              vault.
-            </span>
-          </div>
-        }
-      >
-        <Exclamation />
-      </Tooltip>
-    )
-  )
+  return vault.tags && vault.tags.includes('deprecated') ? (
+    <Tooltip
+      content={
+        <div className='max-w-[32ch] flex flex-col gap-2 text-start'>
+          <div className='font-bold'>Deposits disabled</div>
+          <span>
+            This vault has been deprecated. Please migrate to the new{' '}
+            {vault.tokenData?.symbol && OLD_VAULT_NEW_VAULT_MAPPING[vault.tokenData?.symbol]} vault.
+          </span>
+        </div>
+      }
+    >
+      <Exclamation />
+    </Tooltip>
+  ) : null
 }
 
 const Exclamation = () => {
