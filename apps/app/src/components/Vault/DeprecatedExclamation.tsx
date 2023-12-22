@@ -15,7 +15,8 @@ export const DeprecatedExclamation = (props: DeprecatedExclamationProps) => {
         <div className='max-w-[32ch] flex flex-col gap-2 text-start'>
           <div className='font-bold'>Deposits disabled</div>
           <span>
-            This vault has been deprecated. Please migrate to the new{' '}
+            This vault has been deprecated. It is still eligible to win prizes, but we encourage
+            users to migrate to the new{' '}
             {vault.tokenData?.symbol && OLD_VAULT_NEW_VAULT_MAPPING[vault.tokenData?.symbol]} vault.
           </span>
         </div>
