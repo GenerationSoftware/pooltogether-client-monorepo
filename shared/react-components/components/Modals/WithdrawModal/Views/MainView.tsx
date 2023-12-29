@@ -84,7 +84,7 @@ const TemporaryAaveCollaterizationWarning = (props: { vault: Vault }) => {
   const uniswapHref = `https://app.uniswap.org/tokens/${networkName}/${vault.address}`
 
   return (
-    <span className='text-center text-sm text-pt-purple-200'>
+    <span className='flex flex-col gap-2 text-center text-sm text-pt-purple-200'>
       <span>
         This vault is currently experiencing some exchange rate variation due to using a high % of
         it's underlying yield source's total supply. It is <strong>not recommended</strong> to
