@@ -4,8 +4,9 @@ import {
   useVaultShareData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl, RichIntl } from '@shared/types'
-import { Spinner } from '@shared/ui'
-import { getNiceNetworkNameByChainId } from '@shared/utilities'
+import { ExternalLink, LINKS, Spinner } from '@shared/ui'
+import { getNetworkNameByChainId, getNiceNetworkNameByChainId } from '@shared/utilities'
+import { formatUnits } from 'viem'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 import { WithdrawForm } from '../../../Form/WithdrawForm'
 import { ExchangeRateError } from '../../ExchangeRateError'
@@ -62,11 +63,44 @@ export const MainView = (props: MainViewProps) => {
       {!!vaultExchangeRate ? (
         <>
           <WithdrawForm vault={vault} showInputInfoRows={true} intl={intl} />
+          {vault.decimals !== undefined &&
+            parseFloat(formatUnits(vaultExchangeRate, vault.decimals)) !== 1 && (
+              <TemporaryAaveCollaterizationWarning vault={vault} />
+            )}
           <NetworkFees vault={vault} show={['withdraw']} intl={intl?.fees} />
         </>
       ) : (
         <ExchangeRateError vault={vault} intl={intl?.errors} />
       )}
     </div>
+  )
+}
+
+// TODO: remove once no longer an issue
+const TemporaryAaveCollaterizationWarning = (props: { vault: Vault }) => {
+  const { vault } = props
+
+  const networkName = getNetworkNameByChainId(vault.chainId)
+  const uniswapHref = `https://app.uniswap.org/tokens/${networkName}/${vault.address}`
+
+  return (
+    <span className='text-center text-sm text-pt-purple-200'>
+      <span>
+        This vault is currently experiencing some exchange rate variation due to using a high % of
+        it's underlying yield source's total supply. It is <strong>not recommended</strong> to
+        withdraw at this time.
+      </span>
+      <span>
+        You can still swap in and out of this vault through{' '}
+        <ExternalLink href={uniswapHref} size='sm' className='text-pt-teal'>
+          UniSwap
+        </ExternalLink>
+        , wait for it to normalize or for further updates on{' '}
+        <ExternalLink href={LINKS.discord} size='sm' className='text-pt-teal'>
+          Discord
+        </ExternalLink>
+        .
+      </span>
+    </span>
   )
 }
