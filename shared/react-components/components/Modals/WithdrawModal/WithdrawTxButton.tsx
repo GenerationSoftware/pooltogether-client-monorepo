@@ -6,13 +6,14 @@ import {
   useUserVaultShareBalance,
   useUserVaultTokenBalance,
   useVaultBalance,
+  useVaultExchangeRate,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
 import { Button } from '@shared/ui'
 import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
-import { Address, parseUnits } from 'viem'
+import { Address, formatUnits, parseUnits } from 'viem'
 import { useAccount, useNetwork } from 'wagmi'
 import { WithdrawModalView } from '.'
 import { isValidFormInput } from '../../Form/TxFormInput'
@@ -128,6 +129,9 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
     }
   }, [withdrawTxHash, isConfirmingWithdrawal])
 
+  // TODO: remove when no longer needed
+  const { data: vaultExchangeRate } = useVaultExchangeRate(vault)
+
   const withdrawEnabled =
     !isDisconnected &&
     !!userAddress &&
@@ -137,7 +141,11 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
     isValidFormShareAmount &&
     !!withdrawAmount &&
     userVaultShareBalance.amount >= withdrawAmount &&
-    !!sendRedeemTransaction
+    !!sendRedeemTransaction &&
+    // TODO: remove when no longer needed
+    vault.decimals !== undefined &&
+    !!vaultExchangeRate &&
+    parseFloat(formatUnits(vaultExchangeRate, vault.decimals)) === 1
 
   if (withdrawAmount === 0n) {
     return (
