@@ -9,7 +9,7 @@ interface DepositButtonProps extends Omit<ButtonProps, 'onClick'> {
 }
 
 export const DepositButton = (props: DepositButtonProps) => {
-  const { vault, children, className, ...rest } = props
+  const { vault, children, className, disabled, ...rest } = props
 
   const { setIsModalOpen } = useIsModalOpen(MODAL_KEYS.deposit)
 
@@ -20,8 +20,15 @@ export const DepositButton = (props: DepositButtonProps) => {
     setIsModalOpen(true)
   }
 
+  const isDeprecated = vault.tags?.includes('deprecated')
+
   return (
-    <Button onClick={handleClick} className={classNames('w-24', className)} {...rest}>
+    <Button
+      onClick={handleClick}
+      className={classNames('w-24', className)}
+      disabled={isDeprecated || disabled}
+      {...rest}
+    >
       {children ?? 'Deposit'}
     </Button>
   )

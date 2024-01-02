@@ -34,7 +34,7 @@ export const VaultBadge = (props: VaultBadgeProps) => {
   return (
     <div
       className={classNames(
-        'inline-flex items-center gap-2 shrink-0 px-3 py-2 w-full bg-pt-transparent rounded-lg',
+        'inline-flex items-center gap-2 shrink-0 px-3 py-2 bg-pt-transparent rounded-lg',
         'whitespace-nowrap overflow-hidden',
         'border border-pt-transparent',
         { 'cursor-pointer select-none hover:bg-pt-purple-50/20': !!onClick },
@@ -42,7 +42,7 @@ export const VaultBadge = (props: VaultBadgeProps) => {
       )}
       onClick={onClick}
     >
-      <div className={classNames('relative shrink-0', iconClassName)}>
+      <div className={classNames('relative pb-1 shrink-0', iconClassName)}>
         <TokenIcon token={token} />
         <NetworkIcon chainId={vault.chainId} className='absolute top-3 left-3 h-4 w-4' />
       </div>
@@ -56,7 +56,7 @@ export const VaultBadge = (props: VaultBadgeProps) => {
       </span>
       <span className={classNames('text-xs text-pt-purple-200', symbolClassName)}>
         {token.symbol}
-      </span>{' '}
+      </span>
     </div>
   )
 }

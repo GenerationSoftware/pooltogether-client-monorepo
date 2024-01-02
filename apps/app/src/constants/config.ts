@@ -143,8 +143,3 @@ export const FATHOM_EVENTS = {
   changedLanguage: 'ChangedLanguage',
   importedVaultList: 'ImportedVaultList'
 }
-
-export const OLD_VAULT_NEW_VAULT_MAPPING: Record<string, string> = {
-  'USDC.e': 'USDC',
-  'WETH': 'WETH'
-}

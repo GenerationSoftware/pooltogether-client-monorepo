@@ -21,7 +21,6 @@ import { ReactNode } from 'react'
 import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
 import { TWAB_REWARDS_SETTINGS } from '@constants/config'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
-import { DeprecatedExclamation } from './DeprecatedExclamation'
 import { VaultBonusRewards } from './VaultBonusRewards'
 import { VaultButtons } from './VaultButtons'
 import { VaultPrizeYield } from './VaultPrizeYield'
@@ -176,7 +175,6 @@ export const VaultsTable = (props: VaultsTableProps) => {
                     intl={t_tooltips('importedVault')}
                   />
                 )}
-                <DeprecatedExclamation vault={vault} />
               </>
             ),
             className: 'gap-2 pr-0'

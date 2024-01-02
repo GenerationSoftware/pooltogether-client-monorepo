@@ -47,13 +47,6 @@ export const VaultFilters = (props: VaultFiltersProps) => {
 
   const vaultListFilterId = useAtomValue(vaultListFilterIdAtom)
 
-  const vaultsArray = useMemo(() => {
-    return getVaultListIdFilteredVaults(vaultListFilterId, Object.values(vaults.vaults), {
-      ...localVaultLists,
-      ...importedVaultLists
-    })
-  }, [vaults, vaultListFilterId])
-
   const { address: userAddress } = useAccount()
 
   const { data: userTokenBalances, isFetched: isFetchedUserTokenBalances } =
@@ -67,9 +60,14 @@ export const VaultFilters = (props: VaultFiltersProps) => {
   const { data: userVaultBalances, isFetched: isFetchedUserVaultBalances } =
     useAllUserVaultBalances(vaults, userAddress as Address)
 
-  const vaultsArrayLessDeprecated = useMemo(() => {
-    return getVaultsNotDeprecatedUnlessBalance(vaultsArray, userVaultBalances)
-  }, [vaultsArray])
+  const vaultsArray = useMemo(() => {
+    return getVaultListIdFilteredVaults(
+      vaultListFilterId,
+      Object.values(vaults.vaults),
+      { ...localVaultLists, ...importedVaultLists },
+      userVaultBalances
+    )
+  }, [vaults, vaultListFilterId, userVaultBalances])
 
   const [filterId, setFilterId] = useAtom(filterIdAtom)
 
@@ -93,11 +91,11 @@ export const VaultFilters = (props: VaultFiltersProps) => {
   }
 
   const filterAll = () => {
-    filterOnClick(vaultsArrayLessDeprecated, (vaults) => vaults)
+    filterOnClick(vaultsArray, (vaults) => vaults)
   }
 
   const filterUserWallet = () => {
-    filterOnClick(vaultsArrayLessDeprecated, (vaults) =>
+    filterOnClick(vaultsArray, (vaults) =>
       vaults.filter((vault) => {
         const userWalletBalance = !!vault.tokenAddress
           ? userTokenBalances?.[vault.chainId]?.[vault.tokenAddress]?.amount ?? 0n
@@ -109,7 +107,7 @@ export const VaultFilters = (props: VaultFiltersProps) => {
   }
 
   const filterStablecoins = () => {
-    filterOnClick(vaultsArrayLessDeprecated, (vaults) =>
+    filterOnClick(vaultsArray, (vaults) =>
       vaults.filter((vault) =>
         Object.keys(STABLECOINS[vault.chainId as NETWORK]).includes(
           vault.tokenAddress?.toLowerCase() ?? '?'
@@ -119,9 +117,7 @@ export const VaultFilters = (props: VaultFiltersProps) => {
   }
 
   const filterNetwork = (chainId: NETWORK) => {
-    filterOnClick(vaultsArrayLessDeprecated, (vaults) =>
-      vaults.filter((vault) => vault.chainId === chainId)
-    )
+    filterOnClick(vaultsArray, (vaults) => vaults.filter((vault) => vault.chainId === chainId))
   }
 
   const filterItems: (SelectionItem & { filter: () => void })[] = useMemo(
@@ -157,13 +153,13 @@ export const VaultFilters = (props: VaultFiltersProps) => {
         }
       })
     ],
-    [networks, isFetchedUserTokenBalances, isFetchedUserVaultBalances, vaultsArrayLessDeprecated]
+    [networks, isFetchedUserTokenBalances, isFetchedUserVaultBalances, vaultsArray]
   )
 
   useEffect(() => {
     const filterItem = filterItems.find((item) => item.id === filterId)
     !!filterItem && filterItem.filter()
-  }, [filterItems, filterId, vaultsArrayLessDeprecated])
+  }, [filterItems, filterId, vaultsArray])
 
   if (router.isReady) {
     return (
@@ -219,29 +215,19 @@ const getVaultListIdFilteredVaults = (
   vaults: Vault[],
   vaultLists: {
     [id: string]: VaultList
-  }
+  },
+  userVaultBalances?: { [vaultId: string]: TokenWithAmount }
 ) => {
-  if (!!id && id !== 'all') {
-    const vaultList = vaultLists[id]
-    if (!!vaultList) {
-      return vaults.filter((vault) => vaultList.tokens.find((v) => vault.id === getVaultId(v)))
-    }
-  }
-  return vaults
-}
+  const validVaults = vaults.filter(
+    (vault) => id === 'all' || vaultLists[id]?.tokens.find((v) => vault.id === getVaultId(v))
+  )
 
-const getVaultsNotDeprecatedUnlessBalance = (
-  vaults: Vault[],
-  userVaultBalances: { [vaultId: string]: TokenWithAmount } | undefined
-) => {
-  return vaults.filter((vault) => {
-    const balance = userVaultBalances?.[vault.id.toLowerCase()]
-    const deprecated = vault.tags?.includes('deprecated')
+  const activeOrDepositedVaults = validVaults.filter((vault) => {
+    const isDeprecated = vault.tags?.includes('deprecated')
+    const isDeposited = (userVaultBalances?.[vault.id]?.amount ?? 0n) > 0n
 
-    if (deprecated) {
-      return !!balance && balance?.amount > 0n && deprecated
-    } else {
-      return true
-    }
+    return isDeprecated ? (isDeposited ? true : false) : true
   })
+
+  return activeOrDepositedVaults
 }

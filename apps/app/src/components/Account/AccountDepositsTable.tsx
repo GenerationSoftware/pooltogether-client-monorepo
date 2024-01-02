@@ -14,7 +14,6 @@ import Link from 'next/link'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
-import { DeprecatedExclamation } from '../Vault/DeprecatedExclamation'
 import { AccountVaultBalance } from './AccountVaultBalance'
 import { AccountVaultButtons } from './AccountVaultButtons'
 import { AccountVaultOdds } from './AccountVaultOdds'
@@ -117,7 +116,6 @@ export const AccountDepositsTable = (props: AccountDepositsTableProps) => {
                         intl={t_tooltips('importedVault')}
                       />
                     )}
-                    <DeprecatedExclamation vault={vault} />
                   </>
                 ),
                 className: 'gap-2'

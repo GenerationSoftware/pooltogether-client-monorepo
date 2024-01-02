@@ -1,11 +1,10 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useUserVaultShareBalance } from '@generationsoftware/hyperstructure-react-hooks'
-import { WithdrawButton } from '@shared/react-components'
+import { DepositButton, DeprecatedVaultTooltip, WithdrawButton } from '@shared/react-components'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
-import { DepositButtonWithDeprecated } from '../DepositButtonWithDeprecated'
 
 interface VaultButtonsProps {
   vault: Vault
@@ -17,7 +16,8 @@ interface VaultButtonsProps {
 export const VaultButtons = (props: VaultButtonsProps) => {
   const { vault, fullSized, inverseOrder, className } = props
 
-  const t = useTranslations('Common')
+  const t_common = useTranslations('Common')
+  const t_tooltips = useTranslations('Tooltips')
 
   const { address: userAddress } = useAccount()
 
@@ -25,24 +25,35 @@ export const VaultButtons = (props: VaultButtonsProps) => {
 
   const shareBalance = vaultBalance?.amount ?? 0n
 
-  const vaultDeprecated = vault.tags?.includes('deprecated')
+  const isDeprecated = vault.tags?.includes('deprecated')
 
   return (
     <div className={classNames('flex items-center gap-2', className)}>
-      <DepositButtonWithDeprecated
-        vault={vault}
-        fullSized={fullSized}
-        inverseOrder={true}
-        vaultDeprecated={vaultDeprecated}
-      />
+      {isDeprecated ? (
+        <div className={classNames('w-full', inverseOrder ? 'order-2' : 'order-1')}>
+          <DeprecatedVaultTooltip intl={t_tooltips('deprecatedVault')}>
+            <DepositButton vault={vault} fullSized={fullSized}>
+              {t_common('deposit')}
+            </DepositButton>
+          </DeprecatedVaultTooltip>
+        </div>
+      ) : (
+        <DepositButton
+          vault={vault}
+          fullSized={fullSized}
+          className={inverseOrder ? 'order-2' : 'order-1'}
+        >
+          {t_common('deposit')}
+        </DepositButton>
+      )}
       {shareBalance > 0n && (
         <WithdrawButton
           vault={vault}
-          fullSized={true}
+          fullSized={fullSized}
           className={inverseOrder ? 'order-1' : 'order-2'}
           color='transparent'
         >
-          {t('withdraw')}
+          {t_common('withdraw')}
         </WithdrawButton>
       )}
     </div>
