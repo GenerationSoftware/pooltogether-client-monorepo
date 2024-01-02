@@ -7,7 +7,7 @@ import { arbitrum, arbitrumSepolia, mainnet, optimism, optimismSepolia, sepolia 
  */
 export const SUPPORTED_NETWORKS = Object.freeze({
   mainnets: [NETWORK.mainnet, NETWORK.optimism, NETWORK.arbitrum],
-  testnets: [NETWORK.sepolia, NETWORK['optimism-sepolia'], NETWORK['arbitrum-sepolia']]
+  testnets: [NETWORK.sepolia, NETWORK.optimism_sepolia, NETWORK.arbitrum_sepolia]
 })
 
 /**
@@ -18,8 +18,8 @@ export const WAGMI_CHAINS = Object.freeze({
   [NETWORK.optimism]: optimism,
   [NETWORK.arbitrum]: arbitrum,
   [NETWORK.sepolia]: sepolia,
-  [NETWORK['optimism-sepolia']]: optimismSepolia,
-  [NETWORK['arbitrum-sepolia']]: arbitrumSepolia
+  [NETWORK.optimism_sepolia]: optimismSepolia,
+  [NETWORK.arbitrum_sepolia]: arbitrumSepolia
 })
 
 /**
@@ -30,8 +30,8 @@ export const RPC_URLS = {
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
   [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
   [NETWORK['sepolia']]: process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL,
-  [NETWORK['optimism-sepolia']]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
-  [NETWORK['arbitrum-sepolia']]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL
+  [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
+  [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL
 }
 
 /**
@@ -42,8 +42,8 @@ export const QUERY_START_BLOCK: { [chainId: number]: bigint } = {
   [NETWORK.optimism]: 108_927_000n,
   [NETWORK.arbitrum]: 1n,
   [NETWORK.sepolia]: 4_647_000n,
-  [NETWORK['optimism-sepolia']]: 3_783_000n,
-  [NETWORK['arbitrum-sepolia']]: 1_310_000n
+  [NETWORK.optimism_sepolia]: 3_783_000n,
+  [NETWORK.arbitrum_sepolia]: 1_310_000n
 }
 
 /**
@@ -53,7 +53,7 @@ export const DRAW_RESULTS_URL: { [chainId: number]: string } = {
   [NETWORK.optimism]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results-mainnet/main/prizes/${NETWORK.optimism}`,
   [NETWORK[
     'arbitrum-sepolia'
-  ]]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results-testnet/main/prizes/${NETWORK['arbitrum-sepolia']}`
+  ]]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results-testnet/main/prizes/${NETWORK.arbitrum_sepolia}`
 }
 
 /**

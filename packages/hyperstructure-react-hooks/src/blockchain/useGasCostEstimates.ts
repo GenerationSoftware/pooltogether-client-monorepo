@@ -52,7 +52,7 @@ export const useGasCostEstimates = (
     queryKey,
     async () => {
       if (!!txData) {
-        if (chainId === NETWORK.optimism || chainId === NETWORK['optimism-sepolia']) {
+        if (chainId === NETWORK.optimism || chainId === NETWORK.optimism_sepolia) {
           return await getOpL1GasAmount(publicClient, txData)
         }
       }

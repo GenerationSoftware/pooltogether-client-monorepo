@@ -18,8 +18,8 @@ export const usePublicClients = (options?: { useAll?: boolean }): PublicClient[]
       usePublicClient({ chainId: NETWORK.arbitrum })
     ],
     testnets: [
-      usePublicClient({ chainId: NETWORK['optimism-sepolia'] }),
-      usePublicClient({ chainId: NETWORK['arbitrum-sepolia'] })
+      usePublicClient({ chainId: NETWORK.optimism_sepolia }),
+      usePublicClient({ chainId: NETWORK.arbitrum_sepolia })
     ]
   }
 
@@ -54,8 +54,8 @@ export const usePublicClientsByChain = (options?: {
       [NETWORK.arbitrum]: usePublicClient({ chainId: NETWORK.arbitrum })
     },
     testnets: {
-      [NETWORK['optimism-sepolia']]: usePublicClient({ chainId: NETWORK['optimism-sepolia'] }),
-      [NETWORK['arbitrum-sepolia']]: usePublicClient({ chainId: NETWORK['arbitrum-sepolia'] })
+      [NETWORK.optimism_sepolia]: usePublicClient({ chainId: NETWORK.optimism_sepolia }),
+      [NETWORK.arbitrum_sepolia]: usePublicClient({ chainId: NETWORK.arbitrum_sepolia })
     }
   }
 

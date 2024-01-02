@@ -38,16 +38,16 @@ export const getNiceNetworkNameByChainId = (chainId: number): string => {
     case NETWORK.xdai: {
       return 'xDai'
     }
-    case NETWORK['optimism-sepolia']: {
+    case NETWORK.optimism_sepolia: {
       return 'Optimism Sepolia'
     }
-    case NETWORK['arbitrum-sepolia']: {
+    case NETWORK.arbitrum_sepolia: {
       return 'Arbitrum Sepolia'
     }
-    case NETWORK['bsc-testnet']: {
+    case NETWORK.bsc_testnet: {
       return 'BSC Testnet'
     }
-    case NETWORK['celo-testnet']: {
+    case NETWORK.celo_testnet: {
       return 'Celo Testnet'
     }
     default: {
@@ -67,20 +67,20 @@ export const isTestnet = (chainId: number) => {
     [NETWORK.mainnet]: false,
     [NETWORK.sepolia]: true,
     [NETWORK.bsc]: false,
-    [NETWORK['bsc-testnet']]: true,
+    [NETWORK.bsc_testnet]: true,
     [NETWORK.xdai]: false,
     [NETWORK.polygon]: false,
     [NETWORK.mumbai]: true,
     [NETWORK.optimism]: false,
-    [NETWORK['optimism-sepolia']]: true,
+    [NETWORK.optimism_sepolia]: true,
     [NETWORK.avalanche]: false,
     [NETWORK.fuji]: true,
     [NETWORK.celo]: false,
-    [NETWORK['celo-testnet']]: true,
+    [NETWORK.celo_testnet]: true,
     [NETWORK.arbitrum]: false,
-    [NETWORK['arbitrum-sepolia']]: true,
+    [NETWORK.arbitrum_sepolia]: true,
     [NETWORK.base]: false,
-    [NETWORK['base-sepolia']]: true
+    [NETWORK.base_sepolia]: true
   }
 
   return values[chainId as NETWORK] ?? false

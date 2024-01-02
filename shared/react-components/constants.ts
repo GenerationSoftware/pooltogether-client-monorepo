@@ -29,7 +29,7 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   },
   [NETWORK.sepolia]: {},
   [NETWORK.bsc]: {},
-  [NETWORK['bsc-testnet']]: {},
+  [NETWORK.bsc_testnet]: {},
   [NETWORK.xdai]: {},
   [NETWORK.polygon]: {
     '0x2791bca1f2de4661ed88a30c99a7a9449aa84174': tokenLogoUrls.usdc,
@@ -47,7 +47,7 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0xc40f949f8a4e094d1b49a23ea9241d289b7b2819': tokenLogoUrls.lusd,
     '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': tokenLogoUrls.ageur
   },
-  [NETWORK['optimism-sepolia']]: {
+  [NETWORK.optimism_sepolia]: {
     '0x8067f3cb6eef936256108ff19a05574b8ad99cf3': tokenLogoUrls.usdc,
     '0xd590ec14364731b62265a5cc807164a17c6797d4': tokenLogoUrls.dai,
     '0x1a188719711d62423abf1a4de7d8aa9014a39d73': tokenLogoUrls.gusd,
@@ -59,9 +59,9 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   },
   [NETWORK.fuji]: {},
   [NETWORK.celo]: {},
-  [NETWORK['celo-testnet']]: {},
+  [NETWORK.celo_testnet]: {},
   [NETWORK.arbitrum]: {},
-  [NETWORK['arbitrum-sepolia']]: {
+  [NETWORK.arbitrum_sepolia]: {
     '0x7a6dbc7ff4f1a2d864291db3aec105a8eee4a3d2': tokenLogoUrls.usdc,
     '0x08c19fe57af150a1af975cb9a38769848c7df98e': tokenLogoUrls.dai,
     '0xb84460d777133a4b86540d557db35952e4adfee7': tokenLogoUrls.gusd,
@@ -69,7 +69,7 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x1bc266e1f397517ece9e384c55c7a5414b683639': tokenLogoUrls.wbtc
   },
   [NETWORK.base]: {},
-  [NETWORK['base-sepolia']]: {}
+  [NETWORK.base_sepolia]: {}
 }
 
 /**

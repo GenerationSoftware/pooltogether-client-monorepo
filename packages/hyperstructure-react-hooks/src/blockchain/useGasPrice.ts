@@ -12,10 +12,10 @@ import { QUERY_KEYS } from '../constants'
 export const useGasPrice = (chainId: number, refetchInterval?: number) => {
   const redirects: { [chainId: number]: number } = {
     [NETWORK.sepolia]: NETWORK.mainnet,
-    [NETWORK['bsc-testnet']]: NETWORK.bsc,
+    [NETWORK.bsc_testnet]: NETWORK.bsc,
     [NETWORK.mumbai]: NETWORK.polygon,
     [NETWORK.fuji]: NETWORK.avalanche,
-    [NETWORK['celo-testnet']]: NETWORK.celo
+    [NETWORK.celo_testnet]: NETWORK.celo
   }
 
   const _chainId = redirects[chainId] ?? chainId

@@ -26,8 +26,8 @@ import { arbitrum, arbitrumSepolia, Chain, mainnet, optimism, optimismSepolia } 
  */
 export const SUPPORTED_NETWORKS = [
   NETWORK.optimism,
-  NETWORK['optimism-sepolia'],
-  NETWORK['arbitrum-sepolia']
+  NETWORK.optimism_sepolia,
+  NETWORK.arbitrum_sepolia
 ] as const
 
 /**
@@ -36,9 +36,9 @@ export const SUPPORTED_NETWORKS = [
 export const WAGMI_CHAINS = {
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism,
-  [NETWORK['optimism-sepolia']]: optimismSepolia,
+  [NETWORK.optimism_sepolia]: optimismSepolia,
   [NETWORK.arbitrum]: arbitrum,
-  [NETWORK['arbitrum-sepolia']]: arbitrumSepolia
+  [NETWORK.arbitrum_sepolia]: arbitrumSepolia
 } as const
 
 /**
@@ -71,9 +71,9 @@ export const WALLETS: {
 export const RPC_URLS = {
   [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
-  [NETWORK['optimism-sepolia']]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
+  [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
-  [NETWORK['arbitrum-sepolia']]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL
+  [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL
 } as const
 
 /**
@@ -84,7 +84,7 @@ export const PROMOTION_FILTERS: {
 } = {
   [NETWORK.mainnet]: {},
   [NETWORK.optimism]: { fromBlock: 112_933_000n },
-  [NETWORK['optimism-sepolia']]: { fromBlock: 4_400_000n },
+  [NETWORK.optimism_sepolia]: { fromBlock: 4_400_000n },
   [NETWORK.arbitrum]: {},
-  [NETWORK['arbitrum-sepolia']]: { fromBlock: 1_490_000n }
+  [NETWORK.arbitrum_sepolia]: { fromBlock: 1_490_000n }
 }

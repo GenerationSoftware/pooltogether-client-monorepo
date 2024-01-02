@@ -27,8 +27,8 @@ import { arbitrum, arbitrumSepolia, Chain, mainnet, optimism, optimismSepolia } 
  */
 export const SUPPORTED_NETWORKS = [
   NETWORK.optimism,
-  NETWORK['optimism-sepolia'],
-  NETWORK['arbitrum-sepolia']
+  NETWORK.optimism_sepolia,
+  NETWORK.arbitrum_sepolia
 ] as const
 
 /**
@@ -37,9 +37,9 @@ export const SUPPORTED_NETWORKS = [
 export const WAGMI_CHAINS = {
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism,
-  [NETWORK['optimism-sepolia']]: optimismSepolia,
+  [NETWORK.optimism_sepolia]: optimismSepolia,
   [NETWORK.arbitrum]: arbitrum,
-  [NETWORK['arbitrum-sepolia']]: arbitrumSepolia
+  [NETWORK.arbitrum_sepolia]: arbitrumSepolia
 } as const
 
 /**
@@ -72,9 +72,9 @@ export const WALLETS: {
 export const RPC_URLS = {
   [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
-  [NETWORK['optimism-sepolia']]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
+  [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
-  [NETWORK['arbitrum-sepolia']]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL
+  [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL
 } as const
 
 /**
@@ -85,13 +85,13 @@ export const CONTRACTS: Record<SupportedNetwork, { prizePool: Address; claimer: 
     prizePool: '0xe32e5E1c5f0c80bD26Def2d0EA5008C107000d6A',
     claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism]
   },
-  [NETWORK['optimism-sepolia']]: {
+  [NETWORK.optimism_sepolia]: {
     prizePool: '0x46547a849f68178208490Cdd491Df15a5bEeA4B2',
-    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK['optimism-sepolia']]
+    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism_sepolia]
   },
-  [NETWORK['arbitrum-sepolia']]: {
+  [NETWORK.arbitrum_sepolia]: {
     prizePool: '0x6Fd1dF849DFC4F76F0B15ba0c8D3e99FF84817f1',
-    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK['arbitrum-sepolia']]
+    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.arbitrum_sepolia]
   }
 } as const
 
@@ -113,11 +113,11 @@ export const LP_CONFIG: Record<
     targetFirstSaleTimeFraction: 0.5,
     liquidationGasAmount: 300_000n
   },
-  [NETWORK['optimism-sepolia']]: {
+  [NETWORK.optimism_sepolia]: {
     targetFirstSaleTimeFraction: 0.5,
     liquidationGasAmount: 300_000n
   },
-  [NETWORK['arbitrum-sepolia']]: {
+  [NETWORK.arbitrum_sepolia]: {
     targetFirstSaleTimeFraction: 0.5,
     liquidationGasAmount: 300_000n
   }
@@ -128,6 +128,6 @@ export const LP_CONFIG: Record<
  */
 export const NETWORK_DESCRIPTIONS: Record<SupportedNetwork, string> = {
   [NETWORK.optimism]: 'The OG optimistic rollup on Ethereum.',
-  [NETWORK['optimism-sepolia']]: 'Sepolia testnet for the Optimism network.',
-  [NETWORK['arbitrum-sepolia']]: 'Sepolia testnet for the Arbitrum network.'
+  [NETWORK.optimism_sepolia]: 'Sepolia testnet for the Optimism network.',
+  [NETWORK.arbitrum_sepolia]: 'Sepolia testnet for the Arbitrum network.'
 }
