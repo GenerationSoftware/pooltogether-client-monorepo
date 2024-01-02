@@ -51,9 +51,7 @@ export const QUERY_START_BLOCK: { [chainId: number]: bigint } = {
  */
 export const DRAW_RESULTS_URL: { [chainId: number]: string } = {
   [NETWORK.optimism]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results-mainnet/main/prizes/${NETWORK.optimism}`,
-  [NETWORK[
-    'arbitrum-sepolia'
-  ]]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results-testnet/main/prizes/${NETWORK.arbitrum_sepolia}`
+  [NETWORK.arbitrum_sepolia]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results-testnet/main/prizes/${NETWORK.arbitrum_sepolia}`
 }
 
 /**

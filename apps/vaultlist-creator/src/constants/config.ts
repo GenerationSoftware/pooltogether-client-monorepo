@@ -6,7 +6,7 @@ import { arbitrum, arbitrumSepolia, mainnet, optimism, optimismSepolia } from 'v
  */
 export const SUPPORTED_NETWORKS = Object.freeze({
   mainnets: [NETWORK.mainnet, NETWORK.optimism, NETWORK.arbitrum],
-  testnets: [, NETWORK.optimism_sepolia, NETWORK.arbitrum_sepolia]
+  testnets: [NETWORK.optimism_sepolia, NETWORK.arbitrum_sepolia]
 })
 
 /**
