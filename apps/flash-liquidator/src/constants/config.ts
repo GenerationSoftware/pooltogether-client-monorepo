@@ -20,15 +20,7 @@ import {
 import { NETWORK, POOL_TOKEN_ADDRESSES } from '@shared/utilities'
 import { LiquidationPair, SupportedNetwork } from 'src/types'
 import { Address } from 'viem'
-import {
-  arbitrum,
-  arbitrumSepolia,
-  Chain,
-  mainnet,
-  optimism,
-  optimismGoerli,
-  optimismSepolia
-} from 'viem/chains'
+import { arbitrum, arbitrumSepolia, Chain, mainnet, optimism, optimismSepolia } from 'viem/chains'
 
 /**
  * Supported networks
@@ -41,7 +33,6 @@ export const SUPPORTED_NETWORKS = [NETWORK.optimism] as const
 export const WAGMI_CHAINS = {
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism,
-  [NETWORK['optimism-goerli']]: optimismGoerli,
   [NETWORK['optimism-sepolia']]: optimismSepolia,
   [NETWORK.arbitrum]: arbitrum,
   [NETWORK['arbitrum-sepolia']]: arbitrumSepolia
@@ -77,7 +68,6 @@ export const WALLETS: {
 export const RPC_URLS = {
   [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
-  [NETWORK['optimism-goerli']]: process.env.NEXT_PUBLIC_OPTIMISM_GOERLI_RPC_URL,
   [NETWORK['optimism-sepolia']]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
   [NETWORK['arbitrum-sepolia']]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL

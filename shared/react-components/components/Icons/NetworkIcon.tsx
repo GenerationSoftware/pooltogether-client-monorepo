@@ -165,14 +165,11 @@ const ArbitrumIcon = (props: { className?: string }) => (
 
 const icons = Object.freeze({
   [NETWORK.mainnet]: { svgIcon: EthereumIcon, iconBgColor: '#484c50' },
-  [NETWORK.goerli]: { svgIcon: EthereumIcon, iconBgColor: '#484c50' },
   [NETWORK.sepolia]: { svgIcon: EthereumIcon, iconBgColor: '#484c50' },
   [NETWORK.polygon]: { svgIcon: PolygonIcon, iconBgColor: '#9f71ec' },
   [NETWORK.mumbai]: { svgIcon: PolygonIcon, iconBgColor: '#9f71ec' },
   [NETWORK.optimism]: { svgIcon: OptimismIcon, iconBgColor: '#ff5a57' },
-  [NETWORK['optimism-goerli']]: { svgIcon: OptimismIcon, iconBgColor: '#ff5a57' },
   [NETWORK['optimism-sepolia']]: { svgIcon: OptimismIcon, iconBgColor: '#ff5a57' },
   [NETWORK.arbitrum]: { svgIcon: ArbitrumIcon, iconBgColor: '#96bedc' },
-  [NETWORK['arbitrum-goerli']]: { svgIcon: ArbitrumIcon, iconBgColor: '#96bedc' },
   [NETWORK['arbitrum-sepolia']]: { svgIcon: ArbitrumIcon, iconBgColor: '#96bedc' }
 })

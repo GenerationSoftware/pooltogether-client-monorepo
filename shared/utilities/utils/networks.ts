@@ -38,12 +38,6 @@ export const getNiceNetworkNameByChainId = (chainId: number): string => {
     case NETWORK.xdai: {
       return 'xDai'
     }
-    case NETWORK['optimism-goerli']: {
-      return 'Optimism Goerli'
-    }
-    case NETWORK['arbitrum-goerli']: {
-      return 'Arbitrum Goerli'
-    }
     case NETWORK['optimism-sepolia']: {
       return 'Optimism Sepolia'
     }
@@ -71,7 +65,6 @@ export const getNiceNetworkNameByChainId = (chainId: number): string => {
 export const isTestnet = (chainId: number) => {
   const values: Record<NETWORK, boolean> = {
     [NETWORK.mainnet]: false,
-    [NETWORK.goerli]: true,
     [NETWORK.sepolia]: true,
     [NETWORK.bsc]: false,
     [NETWORK['bsc-testnet']]: true,
@@ -79,17 +72,14 @@ export const isTestnet = (chainId: number) => {
     [NETWORK.polygon]: false,
     [NETWORK.mumbai]: true,
     [NETWORK.optimism]: false,
-    [NETWORK['optimism-goerli']]: true,
     [NETWORK['optimism-sepolia']]: true,
     [NETWORK.avalanche]: false,
     [NETWORK.fuji]: true,
     [NETWORK.celo]: false,
     [NETWORK['celo-testnet']]: true,
     [NETWORK.arbitrum]: false,
-    [NETWORK['arbitrum-goerli']]: true,
     [NETWORK['arbitrum-sepolia']]: true,
     [NETWORK.base]: false,
-    [NETWORK['base-goerli']]: true,
     [NETWORK['base-sepolia']]: true
   }
 

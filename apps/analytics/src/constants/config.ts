@@ -1,28 +1,13 @@
 import { NETWORK } from '@shared/utilities'
 import { Address } from 'viem'
-import {
-  arbitrum,
-  arbitrumSepolia,
-  goerli,
-  mainnet,
-  optimism,
-  optimismGoerli,
-  optimismSepolia,
-  sepolia
-} from 'viem/chains'
+import { arbitrum, arbitrumSepolia, mainnet, optimism, optimismSepolia, sepolia } from 'viem/chains'
 
 /**
  * Supported networks
  */
 export const SUPPORTED_NETWORKS = Object.freeze({
   mainnets: [NETWORK.mainnet, NETWORK.optimism, NETWORK.arbitrum],
-  testnets: [
-    NETWORK.goerli,
-    NETWORK.sepolia,
-    NETWORK['optimism-goerli'],
-    NETWORK['optimism-sepolia'],
-    NETWORK['arbitrum-sepolia']
-  ]
+  testnets: [NETWORK.sepolia, NETWORK['optimism-sepolia'], NETWORK['arbitrum-sepolia']]
 })
 
 /**
@@ -32,9 +17,7 @@ export const WAGMI_CHAINS = Object.freeze({
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism,
   [NETWORK.arbitrum]: arbitrum,
-  [NETWORK.goerli]: goerli,
   [NETWORK.sepolia]: sepolia,
-  [NETWORK['optimism-goerli']]: optimismGoerli,
   [NETWORK['optimism-sepolia']]: optimismSepolia,
   [NETWORK['arbitrum-sepolia']]: arbitrumSepolia
 })
@@ -46,9 +29,7 @@ export const RPC_URLS = {
   [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
   [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
-  [NETWORK.goerli]: process.env.NEXT_PUBLIC_GOERLI_RPC_URL,
   [NETWORK['sepolia']]: process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL,
-  [NETWORK['optimism-goerli']]: process.env.NEXT_PUBLIC_OPTIMISM_GOERLI_RPC_URL,
   [NETWORK['optimism-sepolia']]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK['arbitrum-sepolia']]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL
 }
@@ -60,9 +41,7 @@ export const QUERY_START_BLOCK: { [chainId: number]: bigint } = {
   [NETWORK.mainnet]: 18_052_000n,
   [NETWORK.optimism]: 108_927_000n,
   [NETWORK.arbitrum]: 1n,
-  [NETWORK.goerli]: 9_820_000n,
   [NETWORK.sepolia]: 4_647_000n,
-  [NETWORK['optimism-goerli']]: 16_076_000n,
   [NETWORK['optimism-sepolia']]: 3_783_000n,
   [NETWORK['arbitrum-sepolia']]: 1_310_000n
 }
@@ -73,8 +52,8 @@ export const QUERY_START_BLOCK: { [chainId: number]: bigint } = {
 export const DRAW_RESULTS_URL: { [chainId: number]: string } = {
   [NETWORK.optimism]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results-mainnet/main/prizes/${NETWORK.optimism}`,
   [NETWORK[
-    'optimism-goerli'
-  ]]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results-testnet/main/prizes/${NETWORK['optimism-goerli']}`
+    'arbitrum-sepolia'
+  ]]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results-testnet/main/prizes/${NETWORK['arbitrum-sepolia']}`
 }
 
 /**

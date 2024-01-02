@@ -27,7 +27,6 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599': tokenLogoUrls.wbtc,
     '0x5f98805a4e8be255a32880fdec7f6728c6568ba0': tokenLogoUrls.lusd
   },
-  [NETWORK.goerli]: {},
   [NETWORK.sepolia]: {},
   [NETWORK.bsc]: {},
   [NETWORK['bsc-testnet']]: {},
@@ -48,13 +47,6 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0xc40f949f8a4e094d1b49a23ea9241d289b7b2819': tokenLogoUrls.lusd,
     '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': tokenLogoUrls.ageur
   },
-  [NETWORK['optimism-goerli']]: {
-    '0xb7930c829cc1de1b37a3bb9b477e33251da15a50': tokenLogoUrls.usdc,
-    '0x4d07ba104ff254c19b443ade6224f744db84fb8a': tokenLogoUrls.dai,
-    '0x041a898bc37129d2d2232163c3374f4077255f74': tokenLogoUrls.gusd,
-    '0xb8e70b16b8d99753ce55f0e4c2a7eceeece30b64': tokenLogoUrls.weth,
-    '0x331cdb619147a20c32e7b9391a4797ed9656b104': tokenLogoUrls.wbtc
-  },
   [NETWORK['optimism-sepolia']]: {
     '0x8067f3cb6eef936256108ff19a05574b8ad99cf3': tokenLogoUrls.usdc,
     '0xd590ec14364731b62265a5cc807164a17c6797d4': tokenLogoUrls.dai,
@@ -69,7 +61,6 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   [NETWORK.celo]: {},
   [NETWORK['celo-testnet']]: {},
   [NETWORK.arbitrum]: {},
-  [NETWORK['arbitrum-goerli']]: {},
   [NETWORK['arbitrum-sepolia']]: {
     '0x7a6dbc7ff4f1a2d864291db3aec105a8eee4a3d2': tokenLogoUrls.usdc,
     '0x08c19fe57af150a1af975cb9a38769848c7df98e': tokenLogoUrls.dai,
@@ -78,7 +69,6 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x1bc266e1f397517ece9e384c55c7a5414b683639': tokenLogoUrls.wbtc
   },
   [NETWORK.base]: {},
-  [NETWORK['base-goerli']]: {},
   [NETWORK['base-sepolia']]: {}
 }
 

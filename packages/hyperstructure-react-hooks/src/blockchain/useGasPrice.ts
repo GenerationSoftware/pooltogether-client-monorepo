@@ -11,14 +11,11 @@ import { QUERY_KEYS } from '../constants'
  */
 export const useGasPrice = (chainId: number, refetchInterval?: number) => {
   const redirects: { [chainId: number]: number } = {
-    [NETWORK.goerli]: NETWORK.mainnet,
     [NETWORK.sepolia]: NETWORK.mainnet,
     [NETWORK['bsc-testnet']]: NETWORK.bsc,
     [NETWORK.mumbai]: NETWORK.polygon,
-    [NETWORK['optimism-goerli']]: NETWORK.optimism,
     [NETWORK.fuji]: NETWORK.avalanche,
-    [NETWORK['celo-testnet']]: NETWORK.celo,
-    [NETWORK['arbitrum-goerli']]: NETWORK.arbitrum
+    [NETWORK['celo-testnet']]: NETWORK.celo
   }
 
   const _chainId = redirects[chainId] ?? chainId
