@@ -93,10 +93,12 @@ export const getClaimableRewards = async (
         const epochRewards = typeof result === 'object' ? result : undefined
         if (!!epochRewards) {
           promotionEpochs[id].forEach((epochId, j) => {
-            if (claimableRewards[id] === undefined) {
-              claimableRewards[id] = {}
+            if (epochRewards[j] > 0n) {
+              if (claimableRewards[id] === undefined) {
+                claimableRewards[id] = {}
+              }
+              claimableRewards[id][epochId] = epochRewards[j]
             }
-            claimableRewards[id][epochId] = epochRewards[j]
           })
         }
       })
