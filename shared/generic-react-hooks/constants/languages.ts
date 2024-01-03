@@ -69,7 +69,7 @@ export const SUPPORTED_LANGUAGES: Record<LANGUAGE_ID, { name: string; nativeName
     nativeName: 'Filipino'
   },
   uk: {
-    name: 'Ukranian',
+    name: 'Ukrainian',
     nativeName: 'українську'
   }
 }

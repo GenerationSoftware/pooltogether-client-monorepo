@@ -1,1 +1,307 @@
-{}
+{
+  "Common": {
+    "depositToWin": "जीतने के लिए जमा करें",
+    "prizePool": "{network} पुरस्कार पूल",
+    "grandPrize": "भव्य पुरस्कार",
+    "joinDiscord": "हमारे डिस्कॉर्ड समुदाय में शामिल हों",
+    "showMore": "और दिखाओ",
+    "drawId": "ड्रा #{id}",
+    "manage": "प्रबंधित करना",
+    "deposit": "जमा",
+    "withdraw": "निकालना",
+    "learnMore": "और अधिक जानें",
+    "back": "पीछे",
+    "connectWallet": "वॉलेट कनेक्ट करें",
+    "viewTx": "लेन-देन देखें",
+    "viewOn": "{name} पर देखें",
+    "close": "बंद करना",
+    "learnAboutRisks": "जोखिमों के बारे में जानें",
+    "readDocs": "दस्तावेज़ पढ़ें",
+    "termsOfService": "सेवा की शर्तें",
+    "bonusRewards": "बोनस पुरस्कार",
+    "claim": "दावा",
+    "apr": "ऐपर"
+  },
+  "Navigation": {
+    "home": "घर",
+    "prizes": "पुरस्कार",
+    "vaults": "वाल्टों",
+    "vault": "वॉल्ट",
+    "account": "खाता"
+  },
+  "Home": {
+    "winUpTo": {
+      "beforeValue": "जीतने के दैनिक अवसर के लिए जमा करें",
+      "afterValue": ""
+    },
+    "withdrawAnyTime": "आप किसी भी समय अपनी पूरी जमा राशि निकाल सकते हैं"
+  },
+  "Prizes": {
+    "learnMore": "पुरस्कार कैसे काम करते हैं इसके बारे में और जानें",
+    "switchPrizePool": "पुरस्कार पूल बदलें",
+    "estPrizeValue": "अनुमानित पुरस्कार मूल्य",
+    "estPrizeFreq": "अनुमानित आवृत्ति",
+    "recentWinners": "हाल के पुरस्कार पूल विजेता",
+    "drawWinners": {
+      "beforeValue": "{numWallets, plural, one {# बटुआ} other {# बटुए}} जीत गया",
+      "afterValue": {
+        "today": "आज",
+        "yesterday": "कल",
+        "onXDate": "{date} पर"
+      },
+      "drawIsOngoing": "ड्रा जारी है"
+    },
+    "drawModal": {
+      "drawTotal": {
+        "beforeValue": "इस ड्रा में {numWallets} के अद्वितीय वॉलेट ने कुल मिलाकर जीत हासिल की",
+        "afterValue": "पुरस्कारों में.",
+        "afterValueOngoing": "अब तक के पुरस्कारों में |"
+      },
+      "winner": "विजेता",
+      "prize": "पुरस्कार",
+      "youWereEligible": "आप इस ड्रा के लिए पात्र थे |"
+    }
+  },
+  "Vaults": {
+    "filter": "फ़िल्टर",
+    "filters": {
+      "showAll": "सब दिखाएं",
+      "inWallet": "आपके बटुए में",
+      "stablecoins": "स्थिर सिक्के",
+      "allVaultLists": "सभी वॉल्ट सूचियाँ"
+    },
+    "manageVaultLists": "वॉल्ट सूचियाँ प्रबंधित करें",
+    "clearFilters": "फ़िल्टर साफ़ करें",
+    "disclaimer": "पूलटुगेदर पुरस्कार वॉल्ट को कोई भी तैनात कर सकता है। <link>जानें कि आप क्या जमा कर रहे हैं</link>",
+    "headers": {
+      "token": "टोकन",
+      "prizeYield": "पुरस्कार प्राप्ति",
+      "bonusRewards": "बोनस पुरस्कार",
+      "totalDeposits": "कुल जमा",
+      "yourBalance": "आपका बैलेंस"
+    }
+  },
+  "Vault": {
+    "headers": {
+      "yourBalance": "आपका बैलेंस",
+      "yourWinChance": "आपकी जीत का मौका",
+      "balance": "संतुलन",
+      "winChance": "जीतने का मौका",
+      "prizeYield": "पुरस्कार प्राप्ति",
+      "bonusRewards": "बोनस पुरस्कार",
+      "tvl": "टी वी लाइनों",
+      "contributions": "{number}डी पुरस्कार पूल योगदान",
+      "depositToken": "जमा टोकन",
+      "prizeToken": "पुरस्कार टोकन",
+      "delegatedToYou": "आपको सौंपा गया",
+      "delegatedAmount": "प्रत्यायोजित राशि",
+      "vaultFee": "तिजोरी शुल्क",
+      "feeRecipient": "शुल्क प्राप्तकर्ता",
+      "yieldSource": "उपज स्रोत"
+    },
+    "returnToVaults": "वॉल्ट्स को लौटें",
+    "learnAboutVault": "{vaultName} के बारे में जानें",
+    "smartContractRisk": "पूलटुगेदर एक अनुमति रहित प्रोटोकॉल है जिसका उपयोग कोई भी पुरस्कार वॉल्ट तैनात करने के लिए कर सकता है। यह पुरस्कार वॉल्ट आपको निम्नलिखित अनुबंधों से स्मार्ट अनुबंध जोखिम से अवगत कराता है:",
+    "vaultContract": "तिजोरी अनुबंध",
+    "yieldSourceContract": "उपज स्रोत अनुबंध",
+    "inVaultLists": "यह पुरस्कार तिजोरी आपके द्वारा चुनी गई निम्नलिखित तिजोरी सूचियों में है:",
+    "notInVaultLists": "यह पुरस्कार तिजोरी आपके द्वारा चुनी गई किसी भी तिजोरी सूची में नहीं है।",
+    "shortWarningNotInVaultLists": "चेतावनी! यह वॉल्ट आपकी किसी भी सक्रिय सूची में नहीं है |"
+  },
+  "Account": {
+    "connectWallet": "खाते की स्थिति देखने के लिए अपना वॉलेट कनेक्ट करें",
+    "noVaultLists": "आपके पास कोई वॉल्ट सूची चयनित नहीं है |",
+    "noPrizeTokens": "आपके पास कोई पुरस्कार टोकन नहीं है |",
+    "depositNow": "अभी जमा करें |",
+    "yourDeposits": "आपकी जमा राशि",
+    "yourDelegations": "आपको सौंपा गया",
+    "yourWinnings": "आपकी जीत",
+    "delegatedTo": "<link>{account}</link> को सौंपा गया",
+    "externalAccountDeposits": "{account} की जमा राशि",
+    "externalAccountDelegations": "{account} में प्रतिनिधिमंडल",
+    "externalAccountWinnings": "{account} की जीत",
+    "dailyPrizeOdds": "दैनिक पुरस्कार संभावनाएँ",
+    "weeklyPrizeOdds": "साप्ताहिक पुरस्कार संभावनाएँ",
+    "oneInXChance": "1 इन {number}",
+    "noPrizesRecently": "आपने हाल ही में कोई पुरस्कार नहीं जीता है |",
+    "learnHowItWorks": "जानें कि पूलटुगेदर कैसे काम करता है",
+    "claimRewardsTx": "{symbol} पुरस्कार का दावा",
+    "winHeaders": {
+      "date": "तारीख",
+      "prizePool": "कीमत पूल",
+      "winnings": "जीत",
+      "moreInfo": "और जानकारी"
+    },
+    "bonusRewardHeaders": {
+      "token": "टोकन",
+      "rewardToken": "इनाम टोकन",
+      "rewardsEarned": "पुरस्कार अर्जित किये गये",
+      "claims": "दावा"
+    },
+    "prizeChecking": {
+      "eligibleDraws": "आप {number, plural, one {# ड्रा} other {# ड्रा}} के लिए पात्र थे",
+      "totalPrizes": {
+        "beforeValue": "योग",
+        "afterValue": "पुरस्कारों में"
+      },
+      "checkPrizes": "पुरस्कारों के लिए जाँच करें",
+      "checking": "ब्लॉकचेन की जाँच हो रही है...",
+      "noPrizes": "क्षमा करें, इस बार कोई पुरस्कार नहीं।",
+      "viewAccount": "अपना खाता देखें",
+      "youWonX": "आप जीते",
+      "xWon": "जीत गया!"
+    }
+  },
+  "TxModals": {
+    "depositTo": "{network} पर {name} को जमा करें",
+    "depositToShort": "{name} पर जमा करें",
+    "withdrawFrom": "{network} पर {name} से निकासी",
+    "withdrawFromShort": "{name} से वापस लें",
+    "fees": {
+      "title": "अनुमानित नेटवर्क शुल्क",
+      "approval": "अनुमोदन",
+      "deposit": "जमा",
+      "withdrawal": "निकासी"
+    },
+    "dailyChances": "जीतने की दैनिक संभावना",
+    "weeklyChances": "जीतने की साप्ताहिक संभावना",
+    "oneInXChance": "1 इन {number}",
+    "max": "अधिकतम",
+    "balance": "संतुलन:",
+    "enterAnAmount": "एक राशि दर्ज करें",
+    "approvalButton": "स्वीकृत करें {symbol}",
+    "exactApprovalButton": "{symbol} की सटीक मात्रा स्वीकृत करें",
+    "exactApprovalTx": "सटीक {symbol} अनुमोदन",
+    "infiniteApprovalButton": "{symbol} की असीमित मात्रा स्वीकृत करें",
+    "infiniteApprovalTx": "अनंत {symbol} अनुमोदन",
+    "reviewDeposit": "जमा की समीक्षा करें",
+    "reviewWithdrawal": "निकासी की समीक्षा करें",
+    "confirmDeposit": "जमा की पुष्टि करें",
+    "confirmWithdrawal": "निकासी की पुष्टि करें",
+    "depositTx": "{symbol} जमा",
+    "withdrawTx": "{symbol} निकासी",
+    "switchNetwork": "{network} पर स्विच करें",
+    "switchingNetwork": "{network} पर स्विच किया जा रहा है...",
+    "confirmNotice": "वॉलेट में लेनदेन की पुष्टि करें",
+    "submissionNotice": "लेन-देन प्रस्तुत किया गया",
+    "depositing": "{tokens} जमा किया जा रहा है...",
+    "withdrawing": "{tokens} वापस लिया जा रहा है...",
+    "success": "सफलता!",
+    "deposited": "आपने {tokens} जमा कर दिए",
+    "withdrew": "आपने {tokens} वापस ले लिया",
+    "nowEligible": "अब आप इस पूल में भविष्य के सभी ड्रा के लिए पात्र हैं।",
+    "shareTwitter": "ट्विटर पर साझा करें",
+    "shareWarpcast": "वरपकास्ट पर साझा करें",
+    "shareHey": "अरे पर साझा करें",
+    "viewAccount": "अपना खाता देखें",
+    "uhOh": "उह ओह!",
+    "failedTx": "कुछ गलत हो गया....",
+    "tryAgain": "पुनः प्रयास करें",
+    "risksDisclaimer": "पूलटुगेदर एक अनुमति रहित प्रोटोकॉल है। पुरस्कार तिजोरी को कोई भी तैनात कर सकता है। सुनिश्चित करें कि आप जानते हैं कि आप क्या जमा कर रहे हैं। <vaultLink>इस पुरस्कार वॉल्ट के बारे में और जानें।</vaultLink>",
+    "depositDisclaimer": "\"जमा की पुष्टि करें\" पर क्लिक करके, आप कैबाना की <tosLink>सेवा की शर्तों</tosLink> से सहमत होते हैं। जिस वॉल्ट में आप जमा कर रहे हैं उसके बारे में अधिक जानने के लिए <vaultLink>यहां</vaultLink> क्लिक करें।"
+  },
+  "Footer": {
+    "titles": {
+      "getHelp": "मदद लें",
+      "ecosystem": "पारिस्थितिकी तंत्र",
+      "community": "समुदाय",
+      "settings": "समायोजन"
+    },
+    "userDocs": "उपयोगकर्ता दस्तावेज़",
+    "faq": "सामान्य प्रश्न",
+    "devDocs": "डेवलपर दस्तावेज़",
+    "extensions": "एक्सटेंशन",
+    "governance": "शासन",
+    "security": "सुरक्षा",
+    "enableTestnets": "टेस्टनेट सक्षम करें",
+    "disableTestnets": "टेस्टनेट अक्षम करें"
+  },
+  "Settings": {
+    "customizeExperience": "अपने अनुभव को अनुकूलित करें",
+    "customizeCurrency": "मुद्रा अनुकूलित करें",
+    "customizeLanguage": "भाषा अनुकूलित करें",
+    "changeCurrency": "मुद्रा परिवर्तन करें",
+    "changeLanguage": "भाषा बदलें",
+    "viewEcosystem": "पारिस्थितिकी तंत्र देखें",
+    "manageVaultLists": "वॉल्ट सूचियाँ प्रबंधित करें",
+    "getHelp": "मदद लें",
+    "getHelpWithCabana": "कबाना का उपयोग करते समय सहायता प्राप्त करें",
+    "vaultListsDescription": "वॉल्ट सूचियाँ यह निर्धारित करती हैं कि पूरे ऐप में कौन से पुरस्कार वॉल्ट प्रदर्शित किए जाएंगे। आयातित सूचियों के साथ इंटरैक्ट करते समय सावधानी बरतें।",
+    "learnMoreVaultLists": "वॉल्ट सूचियों के बारे में और जानें",
+    "urlInput": "https:// या ipfs:// या ENS नाम",
+    "addVaultList": "वॉल्ट सूची जोड़ें",
+    "clearImportedVaultLists": "सभी आयातित वॉल्ट सूचियाँ साफ़ करें",
+    "numTokens": "{number, plural, one {# टोकन} other {# टोकन}}",
+    "imported": "आयातित"
+  },
+  "Abbreviations": {
+    "days": "दिन",
+    "hours": "घंटे",
+    "minutes": "मिनट",
+    "seconds": "सेकेंड"
+  },
+  "Frequency": {
+    "daily": "दैनिक",
+    "everyXdays": "प्रत्येक {number} दिन",
+    "everyXweeks": "हर {number} सप्ताह",
+    "everyXmonths": "हर {number} महीने",
+    "everyXyears": "प्रत्येक {number} वर्ष",
+    "xPrizesDaily": "{number, plural, one {# पुरस्कार} other {#पुरस्कार}} प्रतिदिन",
+    "xPrizesWeekly": "{number, plural, one {# पुरस्कार} other {# पुरस्कार}} साप्ताहिक",
+    "xPrizesMonthly": "{number, plural, one {# पुरस्कार} other {# पुरस्कार}} साप्ताहिक",
+    "xPrizesYearly": "{number, plural, one {# पुरस्कार} other {# पुरस्कार}} वार्षिक"
+  },
+  "Tooltips": {
+    "prizeYield": "पुरस्कार पूल में वॉल्ट के योगदान का हालिया औसत",
+    "bonusRewards": "जमाकर्ताओं के लिए वर्तमान अतिरिक्त प्रोत्साहनों का एक अनुमान",
+    "winChance": "किसी भी ड्रा में पुरस्कार जीतने का आपका मौका",
+    "exactApproval": "आप {symbol} की एक विशिष्ट राशि जमा करने के लिए अपनी स्वीकृति देंगे",
+    "infiniteApproval": "अगली बार जब आप जमा करना चाहेंगे तो आपको {symbol} स्वीकृत करने की आवश्यकता नहीं होगी",
+    "vaultFee": "उपज का एक प्रतिशत जो पुरस्कारों में नहीं जाता है, और वॉल्ट डिप्लॉयर द्वारा निर्धारित किया जाता है",
+    "importedVault": "यह वॉल्ट निम्नलिखित आयातित सूची(सूचियों) में से है:",
+    "vaultContribution": "पिछले {days} दिनों में {symbol} की राशि ने पुरस्कार पूल में योगदान दिया"
+  },
+  "Toasts": {
+    "transactions": {
+      "deposit": "जमा",
+      "withdrawal": "निकासी",
+      "depositing": "{tokens} जमा किया जा रहा है...",
+      "withdrawing": "{tokens} वापस लिया जा रहा है...",
+      "viewOn": "{name} पर देखें",
+      "success": "सफलता!",
+      "deposited": "आपने {network} पर {tokens} जमा किए",
+      "withdrew": "आपने {network} पर {tokens} वापस ले लिए",
+      "uhOh": "उह ओह!",
+      "failedTx": "कुछ गलत हो गया....",
+      "tryAgain": "पुनः प्रयास करें"
+    },
+    "vaultListImports": {
+      "importingFrom": "{src} से वॉल्ट सूची आयात की जा रही है...",
+      "successfulImport": "वॉल्ट सूची सफलतापूर्वक आयात की गई |",
+      "selectedVaultList": "\"{name}\" को आपकी वर्तमान में चयनित वॉल्ट सूची में जोड़ दिया गया है।",
+      "failedImport": "{src} से वॉल्ट सूची आयात करते समय कुछ गलत हो गया।"
+    }
+  },
+  "Error": {
+    "oops": "उफ़!",
+    "noVaultListsEnabled": "ऐसा लगता है कि आपके पास कोई वैध वॉल्ट सूची सक्षम नहीं है।",
+    "noVaultsMatchingFilters": "ऐसे कोई वॉल्ट नहीं हैं जो आपके फ़िल्टर से मेल खाते हों।",
+    "vaultInvalidNetwork": "इस वॉल्ट का नेटवर्क समर्थित नहीं है.",
+    "vaultEnableTestnets": "यदि आप टेस्टनेट वॉल्ट देखना चाह रहे हैं, तो नीचे दी गई सेटिंग्स में \"टेस्टनेट सक्षम करें\" सुनिश्चित करें।",
+    "vaultDisableTestnets": "यदि आप मेननेट वॉल्ट देखना चाह रहे हैं, तो नीचे दी गई सेटिंग्स में \"टेस्टनेट अक्षम करें\" सुनिश्चित करें।",
+    "vaultInvalidInterface": "यह वैध वॉल्ट पता जैसा नहीं लगता |",
+    "vaultQueryError": "इस वॉल्ट की जानकारी पूछते समय कुछ गलत हो गया।",
+    "hmmm": "हम्म...",
+    "pageNotFound": "हमें वह पेज नहीं मिला जिसे आप ढूंढ रहे थे।",
+    "return": "पूल पर लौटें",
+    "exchangeRateError": "इस तिजोरी के लिए विनिमय दरों की गणना करते समय कुछ गलत हो गया। आप अभी भी एक्सचेंज या एक्सचेंज एग्रीगेटर (उदाहरण के लिए <link>यूनिस्वैप</link>) के माध्यम से इस वॉल्ट के अंदर या बाहर स्वैप कर सकते हैं।",
+    "formErrors": {
+      "invalidSrc": "मान्य यूआरएल या ईएनएस डोमेन नहीं है",
+      "invalidVaultList": "कोई वैध वॉल्ट सूची नहीं मिली",
+      "notEnoughTokens": "बटुए में पर्याप्त {symbol} नहीं है",
+      "invalidNumber": "एक वैध संख्या दर्ज करें",
+      "negativeNumber": "एक सकारात्मक संख्या दर्ज करें",
+      "tooManyDecimals": "बहुत अधिक दशमलव"
+    }
+  }
+}
