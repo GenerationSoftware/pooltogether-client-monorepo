@@ -39,12 +39,30 @@ export const CurrencyValue = (props: CurrencyValueProps) => {
     ...rest
   } = props
 
-  const { data: exchangeRates, isFetched: isFetchedExchangeRates } = useCoingeckoExchangeRates()
+  const { data: coingeckoExchangeRates, isFetched: isFetchedCoingeckoExchangeRates } =
+    useCoingeckoExchangeRates()
   const { selectedCurrency } = useSelectedCurrency()
 
-  const { data: tokenPrices, isFetched: isFetchedTokenPrices } = useTokenPrices(NETWORK.mainnet, [
-    USDC_TOKEN_ADDRESSES[NETWORK.mainnet]
-  ])
+  const { data: stablecoinPrices, isFetched: isFetchedStablecoinPrices } = useTokenPrices(
+    NETWORK.mainnet,
+    [USDC_TOKEN_ADDRESSES[NETWORK.mainnet]]
+  )
+
+  const exchangeRates = useMemo(() => {
+    const rates = { ...coingeckoExchangeRates }
+
+    if (!!rates.eth && !!stablecoinPrices) {
+      const usdcPrice = stablecoinPrices[USDC_TOKEN_ADDRESSES[NETWORK.mainnet]]
+
+      if (!!rates.usd && usdcPrice) {
+        rates.usd.value = (1 / usdcPrice) * rates.eth.value
+      }
+    }
+
+    return rates
+  }, [coingeckoExchangeRates, stablecoinPrices])
+
+  const isFetchedExchangeRates = isFetchedCoingeckoExchangeRates && isFetchedStablecoinPrices
 
   const [isFallbackUsdCurrency, setIsFallbackUsdCurrency] = useState<boolean>(false)
 
@@ -59,35 +77,21 @@ export const CurrencyValue = (props: CurrencyValueProps) => {
       return Number(baseValue)
     }
 
-    if (isFetchedExchangeRates && !!exchangeRates && isFetchedTokenPrices && !!tokenPrices) {
-      const usdcTokenPrice = tokenPrices[USDC_TOKEN_ADDRESSES[NETWORK.mainnet]]
-      if (!!usdcTokenPrice) {
-        const usdValue =
-          baseCurrency === 'usd' ? Number(baseValue) : Number(baseValue) * (1 / usdcTokenPrice)
-        const value = calculateCurrencyValue(usdValue, selectedCurrency, exchangeRates, {
-          baseCurrency: 'usd'
-        })
-        if (value !== undefined) {
-          return value
-        } else {
-          setIsFallbackUsdCurrency(true)
-          return usdValue
-        }
-      } else {
-        return calculateCurrencyValue(baseValue, selectedCurrency, exchangeRates, {
-          baseCurrency
-        })
+    const value = calculateCurrencyValue(baseValue, selectedCurrency, exchangeRates, {
+      baseCurrency
+    })
+
+    if (value !== undefined) {
+      return value
+    } else {
+      const usdValue = calculateCurrencyValue(baseValue, 'usd', exchangeRates, { baseCurrency })
+
+      if (!!usdValue !== undefined) {
+        setIsFallbackUsdCurrency(true)
+        return usdValue
       }
     }
-  }, [
-    isFetchedExchangeRates,
-    exchangeRates,
-    isFetchedTokenPrices,
-    tokenPrices,
-    baseValue,
-    selectedCurrency,
-    baseCurrency
-  ])
+  }, [exchangeRates, baseValue, selectedCurrency, baseCurrency])
 
   const minValue = 1 / 10 ** (decimals ?? 2)
 
@@ -101,11 +105,13 @@ export const CurrencyValue = (props: CurrencyValueProps) => {
     return fallback ?? <>?</>
   } else if (currencyValue > 0 && currencyValue < minValue) {
     return (
-      <>{`< ${formatCurrencyNumberForDisplay(
-        minValue,
-        !isFallbackUsdCurrency ? selectedCurrency : 'usd',
-        { ...rest }
-      )}`}</>
+      <>
+        {`< ${formatCurrencyNumberForDisplay(
+          minValue,
+          !isFallbackUsdCurrency ? selectedCurrency : 'usd',
+          { ...rest }
+        )}`}
+      </>
     )
   } else if (countUp) {
     const fractionDigits = decimals ?? currencyValue > 10_000 ? 0 : 2

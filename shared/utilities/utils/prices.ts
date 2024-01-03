@@ -42,7 +42,9 @@ export const getTokenPrices = async (
       ) {
         const redirectedTokenPrices = await getRedirectedTokenPrices(chainId, tokenAddresses)
         Object.entries(redirectedTokenPrices).forEach(([address, price]) => {
-          tokenPrices[address as Address] = price
+          if (!tokenPrices[address as Address]) {
+            tokenPrices[address as Address] = price
+          }
         })
       }
 
