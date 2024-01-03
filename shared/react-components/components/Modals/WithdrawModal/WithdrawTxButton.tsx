@@ -84,6 +84,8 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
 
   const { refetch: refetchVaultBalance } = useVaultBalance(vault)
 
+  const { data: vaultExchangeRate } = useVaultExchangeRate(vault)
+
   const formShareAmount = useAtomValue(withdrawFormShareAmountAtom)
 
   const isValidFormShareAmount =
@@ -129,8 +131,11 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
     }
   }, [withdrawTxHash, isConfirmingWithdrawal])
 
-  // TODO: remove when no longer needed
-  const { data: vaultExchangeRate } = useVaultExchangeRate(vault)
+  const isAaveCollateralizationErrored =
+    vault.tags?.includes('aave') &&
+    !!vaultExchangeRate &&
+    vault.decimals !== undefined &&
+    parseFloat(formatUnits(vaultExchangeRate, vault.decimals)) !== 1
 
   const withdrawEnabled =
     !isDisconnected &&
@@ -142,10 +147,7 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
     !!withdrawAmount &&
     userVaultShareBalance.amount >= withdrawAmount &&
     !!sendRedeemTransaction &&
-    // TODO: remove when no longer needed
-    vault.decimals !== undefined &&
-    !!vaultExchangeRate &&
-    parseFloat(formatUnits(vaultExchangeRate, vault.decimals)) === 1
+    !isAaveCollateralizationErrored
 
   if (withdrawAmount === 0n) {
     return (

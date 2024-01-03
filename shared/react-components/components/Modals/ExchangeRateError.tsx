@@ -1,8 +1,5 @@
-import {
-  getNetworkNameByChainId,
-  RichIntl,
-  Vault
-} from '@generationsoftware/hyperstructure-client-js'
+import { getNetworkNameByChainId, Vault } from '@generationsoftware/hyperstructure-client-js'
+import { RichIntl } from '@shared/types'
 import { ExternalLink } from '@shared/ui'
 import classNames from 'classnames'
 import { ReactNode } from 'react'
