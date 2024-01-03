@@ -1,5 +1,5 @@
 import { NETWORK } from '@shared/utilities'
-import { Address } from 'viem'
+import { Address, parseEther } from 'viem'
 import { mainnet, optimism } from 'viem/chains'
 
 /**
@@ -44,3 +44,8 @@ export const VAULT_ADDRESSES = {
 export const CURVE_POOLS: { [chainId: number]: { [vaultAddress: Address]: string } } = {
   [NETWORK.optimism]: { '0x31515cfc4550d9c83e2d86e8a352886d1364e2d9': 'factory-v2-76' }
 }
+
+/**
+ * Minimum "big win" POOL amount
+ */
+export const MIN_BIG_WIN = parseEther('100')
