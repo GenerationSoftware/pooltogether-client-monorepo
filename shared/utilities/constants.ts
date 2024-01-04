@@ -81,7 +81,12 @@ export const TOKEN_PRICES_API_URL = 'https://token-prices.api.cabana.fi'
 export const PRIZE_POOLS: {
   chainId: NETWORK
   address: Address
-  options: { prizeTokenAddress: Address; drawPeriodInSeconds: number; tierShares: number }
+  options: {
+    prizeTokenAddress: Address
+    drawPeriodInSeconds: number
+    tierShares: number
+    reserveShares: number
+  }
 }[] = [
   {
     chainId: NETWORK.optimism,
@@ -89,7 +94,8 @@ export const PRIZE_POOLS: {
     options: {
       prizeTokenAddress: '0x395ae52bb17aef68c2888d941736a71dc6d4e125',
       drawPeriodInSeconds: 86_400,
-      tierShares: 100
+      tierShares: 100,
+      reserveShares: 80
     }
   },
   {
@@ -98,7 +104,8 @@ export const PRIZE_POOLS: {
     options: {
       prizeTokenAddress: '0xD675B9c8eea7f6Bd506d5FF66A10cF7B887CD293',
       drawPeriodInSeconds: 21_600,
-      tierShares: 100
+      tierShares: 100,
+      reserveShares: 80
     }
   },
   {
@@ -107,7 +114,8 @@ export const PRIZE_POOLS: {
     options: {
       prizeTokenAddress: '0xF401D1482DFAa89A050F111992A222e9ad123E14',
       drawPeriodInSeconds: 21_600,
-      tierShares: 100
+      tierShares: 100,
+      reserveShares: 80
     }
   }
 ]

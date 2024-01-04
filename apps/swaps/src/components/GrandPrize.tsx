@@ -24,6 +24,7 @@ export const GrandPrize = (props: GrandPrizeProps) => {
       prizeTokenAddress: `0x${string}`
       drawPeriodInSeconds: number
       tierShares: number
+      reserveShares: number
     }
   }
   const prizePool = usePrizePool(chainId, prizePoolInfo.address, prizePoolInfo.options)

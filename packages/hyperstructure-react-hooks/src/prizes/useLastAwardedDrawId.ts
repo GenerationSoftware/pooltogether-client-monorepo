@@ -6,13 +6,18 @@ import { QUERY_KEYS } from '../constants'
 /**
  * Returns a prize pool's last awarded draw ID
  * @param prizePool instance of the `PrizePool` class
+ * @param options optional settings
  * @returns
  */
-export const useLastAwardedDrawId = (prizePool: PrizePool): UseQueryResult<number, unknown> => {
+export const useLastAwardedDrawId = (
+  prizePool: PrizePool,
+  options?: { refetchInterval?: number }
+): UseQueryResult<number, unknown> => {
   const queryKey = [QUERY_KEYS.lastAwardedDrawId, prizePool?.id]
 
   return useQuery(queryKey, async () => await prizePool.getLastAwardedDrawId(), {
     enabled: !!prizePool,
-    ...NO_REFETCH
+    ...NO_REFETCH,
+    refetchInterval: options?.refetchInterval ?? false
   })
 }

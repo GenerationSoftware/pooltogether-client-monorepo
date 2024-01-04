@@ -34,7 +34,12 @@ export const useLiquidationPairInfo = (
   const prizePoolInfo = PRIZE_POOLS.find((pool) => pool.chainId === chainId) as {
     chainId: SupportedNetwork
     address: Address
-    options: { prizeTokenAddress: Address; drawPeriodInSeconds: number; tierShares: number }
+    options: {
+      prizeTokenAddress: Address
+      drawPeriodInSeconds: number
+      tierShares: number
+      reserveShares: number
+    }
   }
 
   const prizePool = usePrizePool(chainId, prizePoolInfo.address)

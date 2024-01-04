@@ -21,6 +21,7 @@ export class PrizePool {
   prizeTokenAddress: Address | undefined
   drawPeriodInSeconds: number | undefined
   tierShares: number | undefined
+  reserveShares: number | undefined
 
   /**
    * Creates an instance of a Prize Pool with a given public and optional wallet client
@@ -40,6 +41,7 @@ export class PrizePool {
       prizeTokenAddress?: Address
       drawPeriodInSeconds?: number
       tierShares?: number
+      reserveShares?: number
     }
   ) {
     this.id = getPrizePoolId(chainId, address)
@@ -48,6 +50,7 @@ export class PrizePool {
     this.prizeTokenAddress = options?.prizeTokenAddress
     this.drawPeriodInSeconds = options?.drawPeriodInSeconds
     this.tierShares = options?.tierShares
+    this.reserveShares = options?.reserveShares
   }
 
   /* ============================== Read Functions ============================== */
@@ -125,6 +128,26 @@ export class PrizePool {
 
     this.tierShares = tierShares
     return tierShares
+  }
+
+  /**
+   * Returns the number of shares allocated to the reserve
+   * @returns
+   */
+  async getReserveShares(): Promise<number> {
+    if (this.reserveShares !== undefined) return this.reserveShares
+
+    const source = 'Prize Pool [getReserveShares]'
+    await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    const reserveShares = await this.publicClient.readContract({
+      address: this.address,
+      abi: prizePoolABI,
+      functionName: 'reserveShares'
+    })
+
+    this.reserveShares = reserveShares
+    return reserveShares
   }
 
   /**
