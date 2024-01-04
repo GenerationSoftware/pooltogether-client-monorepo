@@ -13,7 +13,10 @@ export const useReserve = (prizePool: PrizePool, options?: { refetchInterval?: n
     refetchInterval: options?.refetchInterval
   })
 
-  const { status: lastDrawStatus } = useDrawStatus(prizePool, lastAwardedDrawId as number)
+  const { status: lastDrawStatus, isSkipped: isLastDrawSkipped } = useDrawStatus(
+    prizePool,
+    lastAwardedDrawId as number
+  )
 
   const queryKey = ['reserve', prizePool?.chainId, lastAwardedDrawId, lastDrawStatus]
 
@@ -40,11 +43,12 @@ export const useReserve = (prizePool: PrizePool, options?: { refetchInterval?: n
 
         const pending = typeof multicallResults[1] === 'bigint' ? multicallResults[1] : 0n
 
-        const contributions = typeof multicallResults[2] === 'bigint' ? multicallResults[2] : 0n
+        const contributions =
+          typeof multicallResults[2] === 'bigint' ? multicallResults[2] : undefined
         const numTiers = typeof multicallResults[3] === 'number' ? multicallResults[3] : 0
         const pendingFallback = calculateFallbackPendingReserve(prizePool, contributions, numTiers)
 
-        if (lastDrawStatus === 'awarded' && !!pendingFallback) {
+        if ((lastDrawStatus === 'awarded' || isLastDrawSkipped) && pendingFallback !== undefined) {
           return { current, pending: pendingFallback }
         } else {
           return { current, pending }
@@ -61,14 +65,14 @@ export const useReserve = (prizePool: PrizePool, options?: { refetchInterval?: n
 
 const calculateFallbackPendingReserve = (
   prizePool: PrizePool,
-  contributions: bigint,
+  contributions: bigint | undefined,
   numTiers: number
 ) => {
   if (
     !!prizePool &&
     !!prizePool.tierShares &&
     !!prizePool.reserveShares &&
-    !!contributions &&
+    contributions !== undefined &&
     !!numTiers
   ) {
     const reserveShares = BigInt(prizePool.reserveShares)
