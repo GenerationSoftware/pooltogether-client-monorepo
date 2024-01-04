@@ -223,7 +223,7 @@ export const Layout = (props: LayoutProps) => {
       <SettingsModal
         view={settingsModalView}
         setView={setSettingsModalView}
-        locales={['en', 'de', 'ru', 'ko', 'uk']}
+        locales={['en', 'de', 'ru', 'ko', 'uk', 'hi', 'es']}
         localVaultLists={DEFAULT_VAULT_LISTS}
         onCurrencyChange={() => fathom.trackEvent(FATHOM_EVENTS.changedCurrency)}
         onLanguageChange={() => fathom.trackEvent(FATHOM_EVENTS.changedLanguage)}
