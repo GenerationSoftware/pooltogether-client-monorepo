@@ -15,7 +15,7 @@ export const useDrawStatus = (prizePool: PrizePool, drawId: number) => {
   const { data: allRngTxs, isFetched: isFetchedAllRngTxs } = useRngTxs(prizePool)
 
   const data = useMemo(() => {
-    if (!!firstDrawOpenedAt && !!drawPeriod && !!allRngTxs) {
+    if (!!drawId && !!firstDrawOpenedAt && !!drawPeriod && !!allRngTxs) {
       const rngTxs = allRngTxs.find((txs) => txs.rng.drawId === drawId)
 
       const openedAt = firstDrawOpenedAt + drawPeriod * (drawId - 1)
@@ -53,7 +53,8 @@ export const useDrawStatus = (prizePool: PrizePool, drawId: number) => {
     }
   }, [drawId, firstDrawOpenedAt, drawPeriod, allRngTxs])
 
-  const isFetched = isFetchedFirstDrawOpenedAt && isFetchedDrawPeriod && isFetchedAllRngTxs
+  const isFetched =
+    !!drawId && isFetchedFirstDrawOpenedAt && isFetchedDrawPeriod && isFetchedAllRngTxs
 
   return { ...data, isFetched }
 }

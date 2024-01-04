@@ -30,7 +30,12 @@ export const BurnView = (props: BurnViewProps) => {
     const prizePoolInfo = PRIZE_POOLS.find((pool) => pool.chainId === chainId) as {
       chainId: number
       address: Address
-      options: { prizeTokenAddress: Address; drawPeriodInSeconds: number; tierShares: number }
+      options: {
+        prizeTokenAddress: Address
+        drawPeriodInSeconds: number
+        tierShares: number
+        reserveShares: number
+      }
     }
 
     return new PrizePool(
