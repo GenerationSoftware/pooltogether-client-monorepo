@@ -32,10 +32,10 @@ Each app is already setup with its own port through its `package.json` dev scrip
 - `landing-page`: Landing page for the many interfaces in this monorepo.
 - `vault-factory`: App to create and manage 4626 vaults.
 - `vaultlist-creator`: App to create, edit and distribute vault lists.
-- `analytics` - App to visualize analytics and general health metrics of the PoolTogether protocol.
-- `swaps` - Simple app to guide users to swap into PoolTogether vaults.
-- `rewards-builder` - App to create and manage TWAB reward promotions for any prize vault.
-- `flash-liquidator` - App to flash liquidate yield from any PoolTogether liquidation pair linked to a prize vault.
+- `analytics`: App to visualize analytics and general health metrics of the PoolTogether protocol.
+- `swaps`: Simple app to guide users to swap into PoolTogether vaults.
+- `rewards-builder`: App to create and manage TWAB reward promotions for any prize vault.
+- `flash-liquidator`: App to flash liquidate yield from any PoolTogether liquidation pair linked to a prize vault.
 
 All apps above are [Next.js](https://nextjs.org/) apps with [Tailwind CSS](https://tailwindcss.com/) support, written in [TypeScript](https://www.typescriptlang.org/).
 
