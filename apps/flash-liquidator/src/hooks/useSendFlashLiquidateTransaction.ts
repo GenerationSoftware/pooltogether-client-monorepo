@@ -53,12 +53,15 @@ export const useSendFlashLiquidateTransaction = (
 
   const args = useBestLiquidationArgs(liquidationPair, { receiver: userAddress })
 
+  const gasLimit = 550_000n + BigInt(((liquidationPair.swapPath.length - 1) / 2) * 150_000)
+
   const { config } = usePrepareContractWrite({
     chainId,
     address,
     abi: flashLiquidatorABI,
     functionName: 'flashLiquidate',
     args,
+    gas: gasLimit,
     enabled:
       !!liquidationPair &&
       chain?.id === chainId &&
