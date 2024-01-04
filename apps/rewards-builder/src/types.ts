@@ -16,3 +16,5 @@ export type Promotion = { chainId: number; id: number; vault: Vault } & Omit<
   PartialPromotionInfo,
   'vault'
 >
+
+export type PromotionStatus = 'active' | 'ended' | 'destroyed'

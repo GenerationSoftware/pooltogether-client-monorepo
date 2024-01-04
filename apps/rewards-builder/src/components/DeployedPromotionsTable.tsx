@@ -1,15 +1,14 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { usePublicClientsByChain, useToken } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  ArchiveBoxXMarkIcon,
+  ArrowRightOnRectangleIcon,
+  SquaresPlusIcon
+} from '@heroicons/react/24/outline'
 import { useScreenSize } from '@shared/generic-react-hooks'
 import { TokenIcon, VaultBadge } from '@shared/react-components'
-import { LINKS, Spinner, Table, TableData } from '@shared/ui'
-import {
-  getBlockExplorerUrl,
-  getSecondsSinceEpoch,
-  getSimpleDate,
-  isTestnet,
-  shorten
-} from '@shared/utilities'
+import { LINKS, Spinner, Table, TableData, Tooltip } from '@shared/ui'
+import { getBlockExplorerUrl, getSimpleDate, isTestnet, shorten } from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -19,6 +18,7 @@ import { Address, zeroAddress } from 'viem'
 import { useAccount } from 'wagmi'
 import { SUPPORTED_NETWORKS } from '@constants/config'
 import { useAllPromotions } from '@hooks/useAllPromotions'
+import { usePromotionStatus } from '@hooks/usePromotionStatus'
 import { DeployedPromotionCard } from './DeployedPromotionCard'
 
 interface DeployedPromotionsTableProps {
@@ -56,8 +56,7 @@ export const DeployedPromotionsTable = (props: DeployedPromotionsTableProps) => 
       }
     })
 
-    // TODO: sort these somehow?
-    return array
+    return array.sort((a, b) => Number(b.startTimestamp - a.startTimestamp))
   }, [allPromotions])
 
   const { width: screenWidth } = useScreenSize()
@@ -88,17 +87,11 @@ export const DeployedPromotionsTable = (props: DeployedPromotionsTableProps) => 
           position: 'center'
         },
         status: {
-          content: (
-            <StatusItem
-              startTimestamp={Number(promotion.startTimestamp)}
-              epochDuration={promotion.epochDuration}
-              numberOfEpochs={promotion.numberOfEpochs}
-            />
-          ),
+          content: <StatusItem promotion={promotion} />,
           position: 'center'
         },
         actions: {
-          content: <ActionsItem />,
+          content: !!onlyUser ? <ActionsItem promotion={promotion} /> : <></>,
           position: 'center'
         }
       }
@@ -189,86 +182,86 @@ const AddressItem = (props: { chainId: number; address: Address }) => {
   )
 }
 
-const StatusItem = (props: {
-  startTimestamp: number
-  epochDuration: number
-  numberOfEpochs?: number
-}) => {
-  const { startTimestamp, epochDuration, numberOfEpochs } = props
+const StatusItem = (props: { promotion: Promotion }) => {
+  const { promotion } = props
 
-  const currentTimestamp = getSecondsSinceEpoch()
-  const promotionEndsAt = !!numberOfEpochs
-    ? startTimestamp + numberOfEpochs * epochDuration
-    : undefined
+  const { status, endsAt } = usePromotionStatus(promotion)
 
-  if (!!promotionEndsAt && promotionEndsAt > currentTimestamp) {
+  if (status === 'active') {
     return (
       <span className='text-sm text-pt-purple-300'>
-        active (ends {getSimpleDate(promotionEndsAt)})
+        active{!!endsAt ? ` (ends ${getSimpleDate(endsAt)})` : ''}
       </span>
     )
-  } else {
+  } else if (status === 'ended') {
     return <span className='text-sm text-pt-warning-light'>ended</span>
+  } else if (status === 'destroyed') {
+    return <span className='text-sm text-pt-warning-light'>destroyed</span>
+  } else {
+    return <>?</>
   }
 }
 
-const ActionsItem = (props: {}) => {
-  const {} = props
+const ActionsItem = (props: { promotion: Promotion }) => {
+  const { promotion } = props
 
   const router = useRouter()
 
   const { address } = useAccount()
 
-  // TODO: add extend and destroy functionality if user is promotion owner
+  const { status, canDestroy } = usePromotionStatus(promotion)
 
-  // const { data: vaultOwner } = useVaultOwner(vault)
+  const isPromotionOwner =
+    !!promotion?.creator && !!address && promotion.creator.toLowerCase() === address.toLowerCase()
 
-  // const { setStep: setLpStep } = useLiquidationPairSteps()
+  const onClickExtend = () => {
+    router.push(`/extend/${promotion.chainId}/${promotion.id}`)
+  }
 
-  // const { removeVault } = useDeployedVaults()
+  const onClickEnd = () => {
+    router.push(`/end/${promotion.chainId}/${promotion.id}`)
+  }
 
-  // const onClickDeployLp = () => {
-  //   setLpStep(0)
-  //   router.push(`/lp/${vault.chainId}/${vault.address}`)
-  // }
+  const onClickDestroy = () => {
+    router.push(`/destroy/${promotion.chainId}/${promotion.id}`)
+  }
 
-  // const onClickSetClaimer = () => {
-  //   router.push(`/claimer/${vault.chainId}/${vault.address}`)
-  // }
+  const iconClassName = 'h-6 w-6 text-pt-purple-300 cursor-pointer'
 
-  // const onClickRemoveVault = () => {
-  //   removeVault(vault)
-  // }
-
-  // const isVaultOwner =
-  //   !!vaultOwner && !!address && vaultOwner.toLowerCase() === address.toLowerCase()
-
-  // const iconClassName = 'h-6 w-6 text-pt-purple-300 cursor-pointer'
-  // const ownerOnlyIconClassName = classNames(iconClassName, {
-  //   'cursor-auto opacity-50': !isVaultOwner
-  // })
-
-  // return (
-  //   <div className='flex gap-1 items-center'>
-  //     <Tooltip content='Deploy LP'>
-  //       <ArrowPathRoundedSquareIcon
-  //         onClick={isVaultOwner ? onClickDeployLp : undefined}
-  //         className={ownerOnlyIconClassName}
-  //       />
-  //     </Tooltip>
-  //     <Tooltip content='Set Claimer'>
-  //       <WrenchIcon
-  //         onClick={isVaultOwner ? onClickSetClaimer : undefined}
-  //         className={ownerOnlyIconClassName}
-  //       />
-  //     </Tooltip>
-  //     <Tooltip content='Remove Vault'>
-  //       <TrashIcon onClick={onClickRemoveVault} className={iconClassName} />
-  //     </Tooltip>
-  //   </div>
-  // )
-
-  return <></>
+  return (
+    <div className='flex gap-1 items-center'>
+      {status === 'active' && (
+        <>
+          <Tooltip content='Extend Promotion'>
+            <SquaresPlusIcon
+              onClick={isPromotionOwner ? onClickExtend : undefined}
+              className={classNames(iconClassName, {
+                'cursor-default opacity-50': !isPromotionOwner
+              })}
+            />
+          </Tooltip>
+          <Tooltip content='End Promotion Early'>
+            <ArrowRightOnRectangleIcon
+              onClick={isPromotionOwner ? onClickEnd : undefined}
+              className={classNames(iconClassName, {
+                'cursor-default opacity-50': !isPromotionOwner
+              })}
+            />
+          </Tooltip>
+        </>
+      )}
+      {status === 'ended' && (
+        <Tooltip content='Destroy Promotion'>
+          <ArchiveBoxXMarkIcon
+            onClick={isPromotionOwner && canDestroy ? onClickDestroy : undefined}
+            className={classNames(iconClassName, {
+              'cursor-default opacity-50': !isPromotionOwner || !canDestroy
+            })}
+          />
+        </Tooltip>
+      )}
+    </div>
+  )
 }
 
 // NOTE: This is wrapped to avoid table overflow on spinner animation
