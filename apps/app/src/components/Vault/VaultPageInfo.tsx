@@ -5,6 +5,7 @@ import {
   useUserVaultDelegationBalance,
   useUserVaultShareBalance,
   useVaultFeeInfo,
+  useVaultOwner,
   useVaultPromotionsApr,
   useVaultShareData,
   useVaultTokenData
@@ -56,6 +57,8 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
 
   const { data: shareBalance } = useUserVaultShareBalance(vault, userAddress as Address)
   const { data: delegationBalance } = useUserVaultDelegationBalance(vault, userAddress as Address)
+
+  const { data: vaultOwner, isFetched: isFetchedVaultOwner } = useVaultOwner(vault)
 
   const { data: vaultFee } = useVaultFeeInfo(vault)
 
@@ -200,6 +203,20 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
           isFetchedShareData ? (
             !!shareData ? (
               <VaultInfoToken token={shareData} />
+            ) : (
+              '?'
+            )
+          ) : (
+            <Spinner />
+          )
+        }
+      />
+      <VaultInfoRow
+        name={t_vault('headers.vaultOwner')}
+        data={
+          isFetchedVaultOwner ? (
+            !!vaultOwner ? (
+              <VaultInfoAddress chainId={vault.chainId} address={vaultOwner} />
             ) : (
               '?'
             )

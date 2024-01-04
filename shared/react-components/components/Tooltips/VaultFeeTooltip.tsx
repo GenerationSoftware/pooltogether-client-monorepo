@@ -18,7 +18,7 @@ export const VaultFeeTooltip = (props: VaultFeeTooltipProps) => {
         <div className={classNames('max-w-[16ch] text-center', className)}>
           <span>
             {intl?.text ??
-              'A percentage of yield that does not go towards prizes, and is determined by the vault deployer'}
+              'A percentage of yield that does not go towards prizes, and is determined by the vault owner'}
           </span>
         </div>
       }
