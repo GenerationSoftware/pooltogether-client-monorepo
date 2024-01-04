@@ -232,7 +232,7 @@ const VaultActionsItem = (props: ItemProps) => {
 
   const iconClassName = 'h-6 w-6 text-pt-purple-300 cursor-pointer'
   const ownerOnlyIconClassName = classNames(iconClassName, {
-    'cursor-auto opacity-50': !isVaultOwner
+    'cursor-default opacity-50': !isVaultOwner
   })
 
   return (
