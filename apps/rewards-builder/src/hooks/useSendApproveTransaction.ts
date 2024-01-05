@@ -1,11 +1,5 @@
 import { erc20ABI, TWAB_REWARDS_ADDRESSES } from '@shared/utilities'
-import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
-import {
-  promotionChainIdAtom,
-  promotionTokenAddressAtom,
-  promotionTokenAmountAtom
-} from 'src/atoms'
 import { Address, TransactionReceipt } from 'viem'
 import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 
@@ -14,11 +8,16 @@ import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransa
  * @param options optional callbacks
  * @returns
  */
-export const useSendApproveTransaction = (options?: {
-  onSend?: (txHash: `0x${string}`) => void
-  onSuccess?: (txReceipt: TransactionReceipt) => void
-  onError?: () => void
-}): {
+export const useSendApproveTransaction = (
+  chainId: number,
+  tokenAddress: Address,
+  amount: bigint,
+  options?: {
+    onSend?: (txHash: `0x${string}`) => void
+    onSuccess?: (txReceipt: TransactionReceipt) => void
+    onError?: () => void
+  }
+): {
   isWaiting: boolean
   isConfirming: boolean
   isSuccess: boolean
@@ -28,10 +27,6 @@ export const useSendApproveTransaction = (options?: {
   sendApproveTransaction?: () => void
 } => {
   const { chain } = useNetwork()
-
-  const chainId = useAtomValue(promotionChainIdAtom)
-  const tokenAddress = useAtomValue(promotionTokenAddressAtom)
-  const amount = useAtomValue(promotionTokenAmountAtom)
 
   const twabRewardsAddress = !!chainId ? TWAB_REWARDS_ADDRESSES[chainId] : undefined
 
@@ -43,7 +38,7 @@ export const useSendApproveTransaction = (options?: {
     address: tokenAddress,
     abi: erc20ABI,
     functionName: 'approve',
-    args: [twabRewardsAddress as Address, amount as bigint],
+    args: [twabRewardsAddress as Address, amount],
     enabled
   })
 

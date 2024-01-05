@@ -87,9 +87,12 @@ export const DeployPromotionButton = (props: DeployPromotionButtonProps) => {
     isSuccess: isSuccessfulApproval,
     txHash: approvalTxHash,
     sendApproveTransaction
-  } = useSendApproveTransaction({
-    onSuccess: () => refetchTokenAllowance()
-  })
+  } = useSendApproveTransaction(
+    chainId as SupportedNetwork,
+    rewardTokenAddress as Address,
+    rewardTokenAmount as bigint,
+    { onSuccess: () => refetchTokenAllowance() }
+  )
 
   const { isWaiting, isConfirming, isSuccess, txHash, sendCreatePromotionTransaction } =
     useSendCreatePromotionTransaction(
