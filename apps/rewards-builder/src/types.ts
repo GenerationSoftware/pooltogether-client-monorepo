@@ -12,6 +12,7 @@ export type FormKey =
   | 'promotionTokenAddress'
   | 'promotionTokenAmount'
   | 'numExtensionEpochs'
+  | 'recipientAddress'
 
 export type Promotion = { chainId: number; id: number; vault: Vault } & Omit<
   PartialPromotionInfo,

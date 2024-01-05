@@ -1,6 +1,8 @@
 import { TokenAmount } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
+import { ExtendPromotionButton } from '@components/buttons/ExtendPromotionButton'
 import { ExtensionEpochsForm } from '@components/forms/ExtensionEpochsForm'
 import { useAllPromotions } from '@hooks/useAllPromotions'
 
@@ -11,6 +13,8 @@ export interface ExtendPromotionViewProps {
 
 export const ExtendPromotionView = (props: ExtendPromotionViewProps) => {
   const { chainId, promotionId } = props
+
+  const router = useRouter()
 
   const [numEpochs, setNumEpochs] = useState<number>(0)
 
@@ -38,7 +42,15 @@ export const ExtendPromotionView = (props: ExtendPromotionViewProps) => {
             }}
           />
         </div>
-        {/* TODO: add ExtendPromotionButton */}
+        <ExtendPromotionButton
+          chainId={chainId}
+          promotionId={promotionId}
+          tokenAddress={promotionInfo.token}
+          tokensPerEpoch={promotionInfo.tokensPerEpoch}
+          numEpochs={numEpochs}
+          onSuccess={() => router.push('/')}
+          className='mt-2'
+        />
       </>
     )
   }

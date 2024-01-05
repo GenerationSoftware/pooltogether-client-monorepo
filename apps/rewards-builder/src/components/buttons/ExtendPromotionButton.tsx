@@ -1,10 +1,11 @@
 import {
   useSendExtendPromotionTransaction,
-  useToken,
-  useTokenAllowance
+  useTokenAllowance,
+  useTokenBalance
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { TransactionButton } from '@shared/react-components'
+import { Spinner } from '@shared/ui'
 import { TWAB_REWARDS_ADDRESSES } from '@shared/utilities'
 import classNames from 'classnames'
 import { Address } from 'viem'
@@ -54,7 +55,11 @@ export const ExtendPromotionButton = (props: ExtendPromotionButtonProps) => {
     tokenAddress
   )
 
-  const { data: token } = useToken(chainId, tokenAddress)
+  const {
+    data: token,
+    isFetched: isFetchedTokenBalance,
+    refetch: refetchTokenBalance
+  } = useTokenBalance(chainId, userAddress as Address, tokenAddress, { refetchOnWindowFocus: true })
 
   const tokenAmount = tokensPerEpoch * BigInt(numEpochs)
 
@@ -82,6 +87,7 @@ export const ExtendPromotionButton = (props: ExtendPromotionButtonProps) => {
         onSuccess: () => {
           refetchAllPromotions()
           refetchTokenAllowance()
+          refetchTokenBalance()
           onSuccess?.()
         }
       }
@@ -91,10 +97,6 @@ export const ExtendPromotionButton = (props: ExtendPromotionButtonProps) => {
 
   const extendPromotionEnabled =
     !!promotionId && !!token && !!tokenAmount && !!sendExtendPromotionTransaction
-
-  if (!chainId || !tokenAmount) {
-    return <></>
-  }
 
   if (isFetchedAllowance && allowance !== undefined && allowance < tokenAmount) {
     return (
@@ -139,7 +141,15 @@ export const ExtendPromotionButton = (props: ExtendPromotionButtonProps) => {
         )}
         innerClassName={classNames('flex gap-2 items-center text-pt-purple-50', innerClassName)}
       >
-        Extend Rewards
+        {isFetchedTokenBalance && token !== undefined ? (
+          token.amount >= tokenAmount ? (
+            'Extend Rewards'
+          ) : (
+            `Not enough ${token?.symbol} in wallet`
+          )
+        ) : (
+          <Spinner />
+        )}
       </TransactionButton>
     )
   }

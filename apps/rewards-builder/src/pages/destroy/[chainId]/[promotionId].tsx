@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router'
 import { SupportedNetwork } from 'src/types'
+import { DestroyPromotionView } from '@components/DestroyPromotionView'
 import { Layout } from '@components/Layout'
 import { StepInfo } from '@components/StepInfo'
 import { SUPPORTED_NETWORKS } from '@constants/config'
@@ -39,8 +40,9 @@ export default function DestroyPage() {
                 className='grow items-center justify-center lg:items-start'
               />
             </div>
-            {/* TODO: add form to select address to receive tokens */}
-            {/* TODO: add button to destroy promotion */}
+            <div className='w-full flex flex-col gap-4 items-center justify-center'>
+              <DestroyPromotionView chainId={chainId} promotionId={promotionId} />
+            </div>
           </div>
         </Layout>
       )
