@@ -64,7 +64,7 @@ export const useSendCreatePromotionTransaction = (
     vault?.chainId,
     userAddress as Address,
     twabRewardsAddress as Address,
-    tokenAddress as Address
+    tokenAddress
   )
 
   const { data: twabControllerAddress } = useContractRead({
