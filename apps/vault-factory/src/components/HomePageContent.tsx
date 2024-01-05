@@ -59,8 +59,9 @@ const DeployNewVaultButton = (props: DeployNewVaultButtonProps) => {
     router.replace('/create')
   }
 
+  // TODO: re-enable once vault factory is re-deployed or app is re-designed
   return (
-    <PurpleButton onClick={onClickDeploy} className={className}>
+    <PurpleButton onClick={onClickDeploy} className={className} disabled={true}>
       Deploy a Prize Vault
     </PurpleButton>
   )
