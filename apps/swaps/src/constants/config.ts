@@ -30,10 +30,7 @@ export const RPC_URLS = {
  * Vaults to display
  */
 export const VAULT_ADDRESSES = {
-  [NETWORK.optimism]: [
-    '0xE3B3a464ee575E8E25D2508918383b89c832f275',
-    '0x29Cb69D4780B53c1e5CD4D2B817142D2e9890715'
-  ]
+  [NETWORK.optimism]: ['0x29Cb69D4780B53c1e5CD4D2B817142D2e9890715']
 } as const
 
 /**
