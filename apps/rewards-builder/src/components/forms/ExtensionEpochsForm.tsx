@@ -1,6 +1,5 @@
-import { TokenAmount } from '@shared/react-components'
-import { PromotionInfo } from '@shared/types'
 import classNames from 'classnames'
+import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { SimpleInput } from './SimpleInput'
 
@@ -9,26 +8,30 @@ interface ExtensionEpochsFormValues {
 }
 
 interface ExtensionEpochsFormProps {
-  chainId: number
-  promotionId: number
-  promotionInfo: PromotionInfo
+  numPromotionEpochs: number
+  onChange: (numEpochs: number) => void
   className?: string
 }
 
 export const ExtensionEpochsForm = (props: ExtensionEpochsFormProps) => {
-  const { chainId, promotionId, promotionInfo, className } = props
+  const { numPromotionEpochs, onChange, className } = props
 
   const formMethods = useForm<ExtensionEpochsFormValues>({ mode: 'onChange' })
 
   const { numExtensionEpochs } = formMethods.watch()
 
-  const maxNumExtensionEpochs = 255 - promotionInfo.numberOfEpochs
+  const maxNumExtensionEpochs = 255 - numPromotionEpochs
+
+  useEffect(() => {
+    const num = parseInt(numExtensionEpochs)
+    onChange(num >= 1 && num <= maxNumExtensionEpochs ? num : 0)
+  }, [numExtensionEpochs])
 
   return (
     <FormProvider {...formMethods}>
       <form
         onSubmit={formMethods.handleSubmit(() => {})}
-        className={classNames('flex flex-col grow gap-8 items-center justify-center', className)}
+        className={classNames('flex flex-col items-center justify-center', className)}
       >
         <SimpleInput
           formKey='numExtensionEpochs'
@@ -43,17 +46,6 @@ export const ExtensionEpochsForm = (props: ExtensionEpochsFormProps) => {
           label='How many reward epochs to extend by?'
           className='w-full max-w-md'
         />
-        <div className='flex gap-2 text-lg'>
-          <span className='font-semibold text-pt-purple-200'>Tokens Required:</span>
-          <TokenAmount
-            token={{
-              chainId,
-              address: promotionInfo.token,
-              amount: promotionInfo.tokensPerEpoch * BigInt(numExtensionEpochs)
-            }}
-          />
-        </div>
-        {/* TODO: add ExtendPromotionButton */}
       </form>
     </FormProvider>
   )
