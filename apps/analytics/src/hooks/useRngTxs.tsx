@@ -170,9 +170,12 @@ export const useRngTxs = (prizePool: PrizePool) => {
                   ? {
                       drawId: drawId,
                       fee: secondRelayEvent.args.reward,
-                      feeFraction: !!rng.fee
-                        ? secondRelayEvent.args.reward / (rng.fee / rng.feeFraction)
-                        : undefined,
+                      feeFraction:
+                        !!rng.fee && !!rng.feeFraction
+                          ? rng.fee / rng.feeFraction !== 0n
+                            ? secondRelayEvent.args.reward / (rng.fee / rng.feeFraction)
+                            : secondRelayEvent.args.reward
+                          : undefined,
                       feeRecipient: secondRelayEvent.args.recipient,
                       reserve: drawAwardedEvent.args.reserve,
                       hash: secondRelayEvent.transactionHash,
