@@ -1,5 +1,7 @@
+import { useGasAmountEstimate } from '@generationsoftware/hyperstructure-react-hooks'
 import { useEffect } from 'react'
 import { LiquidationPair } from 'src/types'
+import { getFallbackGasAmount } from 'src/utils'
 import { Address, TransactionReceipt } from 'viem'
 import {
   useAccount,
@@ -53,7 +55,27 @@ export const useSendFlashLiquidateTransaction = (
 
   const args = useBestLiquidationArgs(liquidationPair, { receiver: userAddress })
 
-  const gasLimit = 550_000n + BigInt(((liquidationPair.swapPath.length - 1) / 2) * 150_000)
+  const enabled =
+    !!liquidationPair &&
+    chain?.id === chainId &&
+    isFetchedBestLiquidation &&
+    !!bestLiquidation &&
+    !!bestLiquidation.success &&
+    !!args
+
+  const { data: gasEstimate } = useGasAmountEstimate(
+    chainId,
+    {
+      address,
+      abi: flashLiquidatorABI,
+      functionName: 'flashLiquidate',
+      args,
+      account: userAddress as Address
+    },
+    { enabled }
+  )
+
+  const fallbackGasEstimate = getFallbackGasAmount(liquidationPair.swapPath)
 
   const { config } = usePrepareContractWrite({
     chainId,
@@ -61,14 +83,12 @@ export const useSendFlashLiquidateTransaction = (
     abi: flashLiquidatorABI,
     functionName: 'flashLiquidate',
     args,
-    gas: gasLimit,
-    enabled:
-      !!liquidationPair &&
-      chain?.id === chainId &&
-      isFetchedBestLiquidation &&
-      !!bestLiquidation &&
-      !!bestLiquidation.success &&
-      !!args
+    gas: !!gasEstimate
+      ? gasEstimate > fallbackGasEstimate
+        ? gasEstimate
+        : fallbackGasEstimate
+      : undefined,
+    enabled
   })
 
   const {

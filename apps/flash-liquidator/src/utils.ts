@@ -117,3 +117,12 @@ export const getEncodedSwapPath = (swapPath: SwapPath) => {
     return encodePacked(abiParams, swapPath)
   }
 }
+
+/**
+ * Returns an estimated gas amount for a flash liquidation transaction
+ * @param swapPath a swap path to estimate gas for
+ * @returns
+ */
+export const getFallbackGasAmount = (swapPath: SwapPath) => {
+  return 550_000n + BigInt(((swapPath.length - 1) / 2) * 150_000)
+}

@@ -4,6 +4,7 @@ import {
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { GasCostEstimates } from '@shared/types'
 import { LiquidationPair } from 'src/types'
+import { getFallbackGasAmount } from 'src/utils'
 import { zeroAddress } from 'viem'
 import { useAccount } from 'wagmi'
 import { FLASH_LIQUIDATORS } from '@constants/config'
@@ -40,11 +41,10 @@ export const useBestLiquidationGasEstimate = (
   )
 
   const tx = !!args ? { abi: flashLiquidatorABI, functionName: 'flashLiquidate', args } : undefined
-  const fallbackGasAmount = 400_000n + BigInt(((liquidationPair.swapPath.length - 1) / 2) * 100_000)
 
   const { data: gasCost, isFetched: isFetchedGasCost } = useGasCostEstimates(
     liquidationPair.chainId,
-    gasAmount ?? fallbackGasAmount,
+    gasAmount ?? getFallbackGasAmount(liquidationPair.swapPath),
     { tx }
   )
 
