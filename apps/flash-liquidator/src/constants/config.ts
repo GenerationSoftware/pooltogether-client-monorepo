@@ -105,11 +105,11 @@ export const LIQUIDATION_PAIRS: LiquidationPair[] = [
     address: '0xe7680701a2794E6E0a38aC72630c535B9720dA5b',
     swapPath: [
       TOKENS[NETWORK.optimism]['pUSDC.e'],
-      100,
+      500,
       TOKENS[NETWORK.optimism]['USDC.e'],
       500,
       TOKENS[NETWORK.optimism].WETH,
-      3000,
+      10_000,
       TOKENS[NETWORK.optimism].POOL
     ]
   },
@@ -120,7 +120,7 @@ export const LIQUIDATION_PAIRS: LiquidationPair[] = [
       TOKENS[NETWORK.optimism]['pWETH'],
       100,
       TOKENS[NETWORK.optimism].WETH,
-      3000,
+      10_000,
       TOKENS[NETWORK.optimism].POOL
     ]
   }
