@@ -11,7 +11,8 @@ const tokenLogoUrls = Object.freeze({
   weth: 'https://etherscan.io/token/images/weth_28.png',
   wbtc: 'https://etherscan.io/token/images/wbtc_28.png?v=1',
   lusd: 'https://etherscan.io/token/images/liquitylusd_32.png',
-  ageur: 'https://etherscan.io/token/images/ageur_32.png?=v982'
+  ageur: 'https://etherscan.io/token/images/ageur_32.png?=v982',
+  op: 'https://optimistic.etherscan.io/token/images/optimism_32.png'
 })
 
 /**
@@ -49,7 +50,8 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x4200000000000000000000000000000000000006': tokenLogoUrls.weth,
     '0x68f180fcce6836688e9084f035309e29bf0a2095': tokenLogoUrls.wbtc,
     '0xc40f949f8a4e094d1b49a23ea9241d289b7b2819': tokenLogoUrls.lusd,
-    '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': tokenLogoUrls.ageur
+    '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': tokenLogoUrls.ageur,
+    '0x4200000000000000000000000000000000000042': tokenLogoUrls.op
   },
   [NETWORK.optimism_sepolia]: {
     [POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia].toLowerCase()]: tokenLogoUrls.pool,
