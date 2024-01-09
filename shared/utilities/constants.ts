@@ -124,7 +124,9 @@ export const PRIZE_POOLS: {
  * Subgraph API URLs
  */
 export const SUBGRAPH_API_URLS = Object.freeze({
-  [NETWORK.optimism]: 'https://api.studio.thegraph.com/query/50959/pt-v5-op/version/latest'
+  [NETWORK.optimism]: 'https://api.studio.thegraph.com/query/50959/pt-v5-op/version/latest',
+  [NETWORK.arbitrum_sepolia]:
+    'https://api.thegraph.com/subgraphs/name/chuckbergeron/pt-v5-arb-sepolia' // TODO: switch to proper version once available
 })
 
 /**
