@@ -426,6 +426,94 @@ importers:
         specifier: ^5.0.4
         version: 5.0.4
 
+  apps/migrations:
+    dependencies:
+      '@generationsoftware/hyperstructure-client-js':
+        specifier: workspace:*
+        version: link:../../packages/hyperstructure-client-js
+      '@generationsoftware/hyperstructure-react-hooks':
+        specifier: workspace:*
+        version: link:../../packages/hyperstructure-react-hooks
+      '@heroicons/react':
+        specifier: ^2.0.16
+        version: 2.0.17(react@18.2.0)
+      '@rainbow-me/rainbowkit':
+        specifier: ^1.0.9
+        version: 1.0.11(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0)(viem@1.19.1)(wagmi@1.4.7)
+      '@tanstack/react-query':
+        specifier: ^4.24.10
+        version: 4.29.5(react-dom@18.2.0)(react@18.2.0)
+      axios:
+        specifier: ^1.4.0
+        version: 1.4.0
+      classnames:
+        specifier: ^2.3.2
+        version: 2.3.2
+      deepmerge:
+        specifier: ^4.3.1
+        version: 4.3.1
+      flowbite:
+        specifier: 1.6.5
+        version: 1.6.5
+      flowbite-react:
+        specifier: 0.4.7
+        version: 0.4.7(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.1)
+      framer-motion:
+        specifier: ^10.12.16
+        version: 10.12.16(react-dom@18.2.0)(react@18.2.0)
+      jotai:
+        specifier: ^1.13.1
+        version: 1.13.1(react@18.2.0)
+      lottie-react:
+        specifier: ^2.4.0
+        version: 2.4.0(react-dom@18.2.0)(react@18.2.0)
+      next:
+        specifier: 13.3.0
+        version: 13.3.0(react-dom@18.2.0)(react@18.2.0)
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+      react-hook-form:
+        specifier: ^7.43.2
+        version: 7.44.3(react@18.2.0)
+      sonner:
+        specifier: ^0.4.0
+        version: 0.4.0(react-dom@18.2.0)(react@18.2.0)
+      viem:
+        specifier: ^1.19.1
+        version: 1.19.1(typescript@5.0.4)
+      wagmi:
+        specifier: ^1.4.7
+        version: 1.4.7(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0)(typescript@5.0.4)(viem@1.19.1)
+    devDependencies:
+      '@types/node':
+        specifier: ^17.0.45
+        version: 17.0.45
+      '@types/react':
+        specifier: ^18.2.0
+        version: 18.2.8
+      '@types/react-dom':
+        specifier: ^18.2.0
+        version: 18.2.4
+      autoprefixer:
+        specifier: ^10.4.13
+        version: 10.4.14(postcss@8.4.23)
+      postcss:
+        specifier: ^8.4.21
+        version: 8.4.23
+      tailwindcss:
+        specifier: ^3.3.1
+        version: 3.3.1(postcss@8.4.23)
+      tslib:
+        specifier: ^2.5.0
+        version: 2.5.0
+      typescript:
+        specifier: ^5.0.4
+        version: 5.0.4
+
   apps/rewards-builder:
     dependencies:
       '@generationsoftware/hyperstructure-client-js':
