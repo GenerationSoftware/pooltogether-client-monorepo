@@ -1,4 +1,4 @@
-import { formatBigIntForDisplay } from '@shared/utilities'
+import { formatBigIntForDisplay, getNiceNetworkNameByChainId } from '@shared/utilities'
 import classNames from 'classnames'
 import { V3BalanceToMigrate } from '@hooks/useUserV3Balances'
 
@@ -13,6 +13,7 @@ export const V3Migration = (props: V3MigrationProps) => {
   return (
     <div className={classNames('flex flex-col', className)}>
       <span>
+        {getNiceNetworkNameByChainId(migration.token.chainId)}{' '}
         {formatBigIntForDisplay(migration.token.amount, migration.token.decimals)}{' '}
         {migration.token.symbol} ({migration.type})
       </span>

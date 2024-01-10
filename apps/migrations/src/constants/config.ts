@@ -27,7 +27,6 @@ import { arbitrum, avalanche, celo, Chain, mainnet, optimism, polygon } from 'vi
 export const SUPPORTED_NETWORKS = [
   NETWORK.mainnet,
   NETWORK.optimism,
-  NETWORK.arbitrum,
   NETWORK.polygon,
   NETWORK.avalanche,
   NETWORK.celo
@@ -145,7 +144,6 @@ export const V3_POOLS: Record<
     } // POOL
   ],
   [NETWORK.optimism]: [],
-  [NETWORK.arbitrum]: [],
   [NETWORK.polygon]: [
     {
       address: '0xee06abe9e2af61cabcb13170e01266af2defa946',

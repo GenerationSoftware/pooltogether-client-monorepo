@@ -15,7 +15,10 @@ export const usePublicClients = (options?: { useAll?: boolean }): PublicClient[]
     mainnets: [
       usePublicClient({ chainId: NETWORK.mainnet }),
       usePublicClient({ chainId: NETWORK.optimism }),
-      usePublicClient({ chainId: NETWORK.arbitrum })
+      usePublicClient({ chainId: NETWORK.arbitrum }),
+      usePublicClient({ chainId: NETWORK.polygon }),
+      usePublicClient({ chainId: NETWORK.avalanche }),
+      usePublicClient({ chainId: NETWORK.celo })
     ],
     testnets: [
       usePublicClient({ chainId: NETWORK.optimism_sepolia }),
@@ -51,7 +54,10 @@ export const usePublicClientsByChain = (options?: {
     mainnets: {
       [NETWORK.mainnet]: usePublicClient({ chainId: NETWORK.mainnet }),
       [NETWORK.optimism]: usePublicClient({ chainId: NETWORK.optimism }),
-      [NETWORK.arbitrum]: usePublicClient({ chainId: NETWORK.arbitrum })
+      [NETWORK.arbitrum]: usePublicClient({ chainId: NETWORK.arbitrum }),
+      [NETWORK.polygon]: usePublicClient({ chainId: NETWORK.polygon }),
+      [NETWORK.avalanche]: usePublicClient({ chainId: NETWORK.avalanche }),
+      [NETWORK.celo]: usePublicClient({ chainId: NETWORK.celo })
     },
     testnets: {
       [NETWORK.optimism_sepolia]: usePublicClient({ chainId: NETWORK.optimism_sepolia }),
