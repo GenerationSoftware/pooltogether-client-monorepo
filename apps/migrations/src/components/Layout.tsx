@@ -2,6 +2,8 @@ import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { Toaster } from '@shared/ui'
 import classNames from 'classnames'
 import Head from 'next/head'
+import Image from 'next/image'
+import Link from 'next/link'
 import { ReactNode } from 'react'
 
 interface LayoutProps {
@@ -48,8 +50,15 @@ const SimpleNavbar = (props: SimpleNavbarProps) => {
         className
       )}
     >
-      {/* TODO: logo */}
-      <span>logo</span>
+      <Link href='/'>
+        <Image
+          src='/ptLogo.svg'
+          alt='PoolTogether'
+          width={133}
+          height={52}
+          className='w-32 h-auto'
+        />
+      </Link>
       <ConnectButton
         showBalance={false}
         chainStatus={{ smallScreen: 'icon', largeScreen: 'full' }}
