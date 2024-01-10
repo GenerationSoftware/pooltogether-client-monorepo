@@ -1,3 +1,4 @@
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { Toaster } from '@shared/ui'
 import classNames from 'classnames'
 import Head from 'next/head'
@@ -17,6 +18,8 @@ export const Layout = (props: LayoutProps) => {
         <title>Cabana Migrations</title>
       </Head>
 
+      <SimpleNavbar />
+
       <Toaster />
 
       <main
@@ -27,6 +30,31 @@ export const Layout = (props: LayoutProps) => {
       >
         {children}
       </main>
+    </div>
+  )
+}
+
+interface SimpleNavbarProps {
+  className?: string
+}
+
+const SimpleNavbar = (props: SimpleNavbarProps) => {
+  const { className } = props
+
+  return (
+    <div
+      className={classNames(
+        'flex flex-col gap-6 items-center justify-between px-12 py-6 z-30 md:h-36 md:flex-row md:py-0',
+        className
+      )}
+    >
+      {/* TODO: logo */}
+      <span>logo</span>
+      <ConnectButton
+        showBalance={false}
+        chainStatus={{ smallScreen: 'icon', largeScreen: 'full' }}
+        accountStatus='full'
+      />
     </div>
   )
 }
