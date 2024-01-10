@@ -23,7 +23,7 @@ export const Migrations = (props: MigrationsProps) => {
   const isEmpty = isFetched && !userV4Balances.length && !userV3Balances.length
 
   return (
-    <div className={classNames('flex flex-col', className)}>
+    <div className={classNames('flex flex-col gap-8', className)}>
       {!isFetched && <Spinner />}
       {isFetched && !isEmpty && (
         <>
