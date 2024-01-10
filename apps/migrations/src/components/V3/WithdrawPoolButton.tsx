@@ -1,32 +1,37 @@
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { TransactionButton } from '@shared/react-components'
-import { useSendV4WithdrawTransaction } from '@hooks/useSendV4WithdrawTransaction'
-import { V4BalanceToMigrate } from '@hooks/useUserV4Balances'
+import { useSendV3PoolWithdrawTransaction } from '@hooks/useSendV3PoolWithdrawTransaction'
+import { V3BalanceToMigrate } from '@hooks/useUserV3Balances'
 
-export interface WithdrawButtonProps {
-  migration: V4BalanceToMigrate
-  txOptions?: Parameters<typeof useSendV4WithdrawTransaction>[2]
+export interface WithdrawPoolButtonProps {
+  migration: V3BalanceToMigrate
+  txOptions?: Parameters<typeof useSendV3PoolWithdrawTransaction>[3]
   className?: string
 }
 
-export const WithdrawButton = (props: WithdrawButtonProps) => {
+export const WithdrawPoolButton = (props: WithdrawPoolButtonProps) => {
   const { migration, txOptions, className } = props
 
   const { openConnectModal } = useConnectModal()
   const { openChainModal } = useChainModal()
   const addRecentTransaction = useAddRecentTransaction()
 
-  const { sendV4WithdrawTransaction, isWaiting, isConfirming, isSuccess, txHash } =
-    useSendV4WithdrawTransaction(migration.token.chainId, migration.token.amount, txOptions)
+  const { sendV3PoolWithdrawTransaction, isWaiting, isConfirming, isSuccess, txHash } =
+    useSendV3PoolWithdrawTransaction(
+      migration.token.chainId,
+      migration.token.address,
+      migration.token.amount,
+      txOptions
+    )
 
   return (
     <TransactionButton
       chainId={migration.token.chainId}
       isTxLoading={isWaiting || isConfirming}
       isTxSuccess={isSuccess}
-      write={sendV4WithdrawTransaction}
+      write={sendV3PoolWithdrawTransaction}
       txHash={txHash}
-      txDescription={`${migration.token.symbol} V4 Withdrawal`}
+      txDescription={`${migration.token.symbol} V3 Pool Withdrawal`}
       openConnectModal={openConnectModal}
       openChainModal={openChainModal}
       addRecentTransaction={addRecentTransaction}

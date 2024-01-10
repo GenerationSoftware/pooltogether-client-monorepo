@@ -1,32 +1,37 @@
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { TransactionButton } from '@shared/react-components'
-import { useSendV4WithdrawTransaction } from '@hooks/useSendV4WithdrawTransaction'
-import { V4BalanceToMigrate } from '@hooks/useUserV4Balances'
+import { useSendV3PodWithdrawTransaction } from '@hooks/useSendV3PodWithdrawTransaction'
+import { V3BalanceToMigrate } from '@hooks/useUserV3Balances'
 
-export interface WithdrawButtonProps {
-  migration: V4BalanceToMigrate
-  txOptions?: Parameters<typeof useSendV4WithdrawTransaction>[2]
+export interface WithdrawPodButtonProps {
+  migration: V3BalanceToMigrate
+  txOptions?: Parameters<typeof useSendV3PodWithdrawTransaction>[3]
   className?: string
 }
 
-export const WithdrawButton = (props: WithdrawButtonProps) => {
+export const WithdrawPodButton = (props: WithdrawPodButtonProps) => {
   const { migration, txOptions, className } = props
 
   const { openConnectModal } = useConnectModal()
   const { openChainModal } = useChainModal()
   const addRecentTransaction = useAddRecentTransaction()
 
-  const { sendV4WithdrawTransaction, isWaiting, isConfirming, isSuccess, txHash } =
-    useSendV4WithdrawTransaction(migration.token.chainId, migration.token.amount, txOptions)
+  const { sendV3PodWithdrawTransaction, isWaiting, isConfirming, isSuccess, txHash } =
+    useSendV3PodWithdrawTransaction(
+      migration.token.chainId,
+      migration.token.address,
+      migration.token.amount,
+      txOptions
+    )
 
   return (
     <TransactionButton
       chainId={migration.token.chainId}
       isTxLoading={isWaiting || isConfirming}
       isTxSuccess={isSuccess}
-      write={sendV4WithdrawTransaction}
+      write={sendV3PodWithdrawTransaction}
       txHash={txHash}
-      txDescription={`${migration.token.symbol} V4 Withdrawal`}
+      txDescription={`${migration.token.symbol} V3 Pod Withdrawal`}
       openConnectModal={openConnectModal}
       openChainModal={openChainModal}
       addRecentTransaction={addRecentTransaction}
