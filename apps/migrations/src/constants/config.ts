@@ -96,7 +96,7 @@ export const V4_POOLS: {
       chainId: NETWORK.mainnet,
       address: '0xdd4d117723c257cee402285d3acf218e9a8236e1',
       symbol: 'PTaUSDC',
-      name: 'PT V4 aUSDC Ticket',
+      name: 'PoolTogether V4 USDC',
       decimals: 6,
       logoURI: 'https://raw.githubusercontent.com/pooltogether/v4-ui/production/public/ptausdc.png'
     }
@@ -107,7 +107,7 @@ export const V4_POOLS: {
       chainId: NETWORK.optimism,
       address: '0x62bb4fc73094c83b5e952c2180b23fa7054954c4',
       symbol: 'PTaOptUSDC',
-      name: 'PT V4 aOptUSDC Ticket',
+      name: 'PoolTogether V4 USDC',
       decimals: 6,
       logoURI: 'https://raw.githubusercontent.com/pooltogether/v4-ui/production/public/ptausdc.png'
     }
@@ -118,7 +118,7 @@ export const V4_POOLS: {
       chainId: NETWORK.polygon,
       address: '0x6a304dfdb9f808741244b6bfee65ca7b3b3a6076',
       symbol: 'PTaUSDC',
-      name: 'PT V4 aUSDC Ticket',
+      name: 'PoolTogether V4 USDC',
       decimals: 6,
       logoURI: 'https://raw.githubusercontent.com/pooltogether/v4-ui/production/public/ptausdc.png'
     }
@@ -129,7 +129,7 @@ export const V4_POOLS: {
       chainId: NETWORK.avalanche,
       address: '0xb27f379c050f6ed0973a01667458af6ecebc1d90',
       symbol: 'PTavUSDCe',
-      name: 'PT V4 avUSDCe Ticket',
+      name: 'PoolTogether V4 USDC',
       decimals: 6,
       logoURI: 'https://raw.githubusercontent.com/pooltogether/v4-ui/production/public/ptausdc.png'
     }

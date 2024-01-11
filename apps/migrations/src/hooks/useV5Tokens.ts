@@ -38,6 +38,7 @@ const isValidToken = (vaultInfo: VaultInfo): vaultInfo is TokenWithLogo => {
     !!vaultInfo.symbol &&
     !!vaultInfo.name &&
     vaultInfo.decimals !== undefined &&
-    !!vaultInfo.logoURI
+    !!vaultInfo.logoURI &&
+    !vaultInfo.tags?.includes('deprecated')
   )
 }

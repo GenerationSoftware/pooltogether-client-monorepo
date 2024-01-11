@@ -8,7 +8,10 @@ import { useV4Tokens } from '@hooks/useV4Tokens'
 import { useV5Tokens } from '@hooks/useV5Tokens'
 
 export interface SwapWidgetProps {
-  config?: Omit<WidgetConfig, 'integrator' | 'chains' | 'tokens' | 'walletManagement'>
+  config?: Omit<
+    WidgetConfig,
+    'integrator' | 'chains' | 'tokens' | 'walletManagement' | 'variant' | 'subvariant'
+  >
   className?: string
 }
 
@@ -27,6 +30,8 @@ export const SwapWidget = (props: SwapWidgetProps) => {
       chains: { allow: [...SUPPORTED_NETWORKS] },
       tokens: { featured: [...v5Tokens, ...v4Tokens] },
       walletManagement,
+      variant: 'expandable',
+      subvariant: 'default',
       ...config
     }),
     [config, v4Tokens, v5Tokens, walletManagement]
