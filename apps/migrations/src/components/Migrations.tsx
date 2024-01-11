@@ -1,10 +1,15 @@
 import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
+import dynamic from 'next/dynamic'
 import { Address } from 'viem'
 import { useUserV3Balances } from '@hooks/useUserV3Balances'
 import { useUserV4Balances } from '@hooks/useUserV4Balances'
 import { V3Migrations } from './V3/V3Migrations'
 import { V4Migrations } from './V4/V4Migrations'
+
+const SwapWidget = dynamic(() => import('./SwapWidget').then((module) => module.SwapWidget), {
+  ssr: false
+})
 
 export interface MigrationsProps {
   userAddress: Address
@@ -29,6 +34,7 @@ export const Migrations = (props: MigrationsProps) => {
         <>
           {!!userV4Balances.length && <V4Migrations userAddress={userAddress} />}
           {!!userV3Balances.length && <V3Migrations userAddress={userAddress} />}
+          <SwapWidget />
         </>
       )}
       {isFetched && isEmpty && (

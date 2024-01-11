@@ -5,7 +5,8 @@ module.exports = {
     'file:../../shared/react-components',
     'file:../../shared/types',
     'file:../../shared/ui',
-    'file:../../shared/utilities'
+    'file:../../shared/utilities',
+    '@lifi/widget'
   ],
   webpack: (config, { isServer }) => {
     if (!isServer) {
