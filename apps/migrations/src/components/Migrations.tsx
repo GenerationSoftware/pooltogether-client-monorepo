@@ -4,6 +4,8 @@ import dynamic from 'next/dynamic'
 import { Address } from 'viem'
 import { useUserV3Balances } from '@hooks/useUserV3Balances'
 import { useUserV4Balances } from '@hooks/useUserV4Balances'
+import { useV4Tokens } from '@hooks/useV4Tokens'
+import { useV5Tokens } from '@hooks/useV5Tokens'
 import { V3Migrations } from './V3/V3Migrations'
 import { V4Migrations } from './V4/V4Migrations'
 
@@ -24,6 +26,9 @@ export const Migrations = (props: MigrationsProps) => {
   const { data: userV3Balances, isFetched: isFetchedUserV3Balances } =
     useUserV3Balances(userAddress)
 
+  const v4Tokens = useV4Tokens()
+  const { data: v5Tokens } = useV5Tokens()
+
   const isFetched = isFetchedUserV4Balances && isFetchedUserV3Balances
   const isEmpty = isFetched && !userV4Balances.length && !userV3Balances.length
 
@@ -34,7 +39,7 @@ export const Migrations = (props: MigrationsProps) => {
         <>
           {!!userV4Balances.length && <V4Migrations userAddress={userAddress} />}
           {!!userV3Balances.length && <V3Migrations userAddress={userAddress} />}
-          <SwapWidget />
+          <SwapWidget tokens={{ featured: [...v5Tokens, ...v4Tokens] }} />
         </>
       )}
       {isFetched && isEmpty && (
