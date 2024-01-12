@@ -9,7 +9,8 @@ import { V3Migrations } from './V3/V3Migrations'
 import { V4Migrations } from './V4/V4Migrations'
 
 const SwapWidget = dynamic(() => import('./SwapWidget').then((module) => module.SwapWidget), {
-  ssr: false
+  ssr: false,
+  loading: () => <Spinner />
 })
 
 export interface MigrationsProps {
