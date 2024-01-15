@@ -20,7 +20,7 @@ export const useUserV4Balances = (
     const ticketAddresses: { [network: number]: Address[] } = {}
 
     SUPPORTED_NETWORKS.forEach((network) => {
-      const ticketAddress = V4_POOLS[network]?.ticketAddress
+      const ticketAddress = V4_POOLS[network]?.ticket.address
 
       if (!!ticketAddress) {
         networks.push(network)
