@@ -88,6 +88,7 @@ export const V4_POOLS: {
   [network: number]: {
     address: Lowercase<Address>
     ticket: TokenWithLogo & { address: Lowercase<Address> }
+    underlyingTokenAddress: Lowercase<Address>
   }
 } = {
   [NETWORK.mainnet]: {
@@ -99,7 +100,8 @@ export const V4_POOLS: {
       name: 'PoolTogether V4 USDC',
       decimals: 6,
       logoURI: 'https://raw.githubusercontent.com/pooltogether/v4-ui/production/public/ptausdc.png'
-    }
+    },
+    underlyingTokenAddress: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
   },
   [NETWORK.optimism]: {
     address: '0x79bc8bd53244bc8a9c8c27509a2d573650a83373',
@@ -110,7 +112,8 @@ export const V4_POOLS: {
       name: 'PoolTogether V4 USDC',
       decimals: 6,
       logoURI: 'https://raw.githubusercontent.com/pooltogether/v4-ui/production/public/ptausdc.png'
-    }
+    },
+    underlyingTokenAddress: '0x7f5c764cbc14f9669b88837ca1490cca17c31607'
   },
   [NETWORK.polygon]: {
     address: '0x19de635fb3678d8b8154e37d8c9cdf182fe84e60',
@@ -121,7 +124,8 @@ export const V4_POOLS: {
       name: 'PoolTogether V4 USDC',
       decimals: 6,
       logoURI: 'https://raw.githubusercontent.com/pooltogether/v4-ui/production/public/ptausdc.png'
-    }
+    },
+    underlyingTokenAddress: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174'
   },
   [NETWORK.avalanche]: {
     address: '0xf830f5cb2422d555ec34178e27094a816c8f95ec',
@@ -132,7 +136,8 @@ export const V4_POOLS: {
       name: 'PoolTogether V4 USDC',
       decimals: 6,
       logoURI: 'https://raw.githubusercontent.com/pooltogether/v4-ui/production/public/ptausdc.png'
-    }
+    },
+    underlyingTokenAddress: '0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664'
   }
 } as const
 
