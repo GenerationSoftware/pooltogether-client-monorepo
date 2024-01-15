@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic'
 import { Address } from 'viem'
 import { useUserV3Balances } from '@hooks/useUserV3Balances'
 import { useUserV4Balances } from '@hooks/useUserV4Balances'
+import { MigrationsHeader } from './MigrationsHeader'
 import { V3Migrations } from './V3/V3Migrations'
 import { V4Migrations } from './V4/V4Migrations'
 
@@ -30,7 +31,8 @@ export const Migrations = (props: MigrationsProps) => {
   const isEmpty = isFetched && !userV4Balances.length && !userV3Balances.length
 
   return (
-    <div className={classNames('flex flex-col gap-8', className)}>
+    <div className={classNames('w-full flex flex-col gap-8', className)}>
+      <MigrationsHeader />
       {!isFetched && <Spinner />}
       {isFetched && !isEmpty && (
         <>
