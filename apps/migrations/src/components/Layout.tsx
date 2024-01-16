@@ -17,7 +17,7 @@ export const Layout = (props: LayoutProps) => {
   return (
     <div className='flex flex-col min-h-screen'>
       <Head>
-        <title>Cabana Migrations</title>
+        <title>PoolTogether Migrations</title>
       </Head>
 
       <SimpleNavbar />

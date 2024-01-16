@@ -26,7 +26,7 @@ export const SwapWidget = (props: SwapWidgetProps) => {
 
   const widgetConfig: WidgetConfig = useMemo(
     () => ({
-      integrator: 'Cabana',
+      integrator: 'PoolTogether',
       chains: { allow: [...SUPPORTED_NETWORKS] },
       tokens: { featured: [...v5Tokens, ...v4Tokens] },
       walletManagement,
@@ -39,7 +39,7 @@ export const SwapWidget = (props: SwapWidgetProps) => {
 
   return (
     <div className={className}>
-      <LiFiWidget integrator='Cabana' config={widgetConfig} />
+      <LiFiWidget integrator='PoolTogether' config={widgetConfig} />
     </div>
   )
 }

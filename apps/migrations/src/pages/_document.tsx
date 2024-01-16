@@ -16,7 +16,7 @@ class MyDocument extends Document {
   }
 
   render() {
-    const title = 'Cabana Migrations'
+    const title = 'PoolTogether Migrations'
     const description = 'Easily migrate funds in old versions of the PoolTogether protocol.'
     const keywords =
       'prize savings win save protocol blockchain vault ethereum polygon avalanche celo v3 v4 v5'

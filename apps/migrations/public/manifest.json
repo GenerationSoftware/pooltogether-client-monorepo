@@ -1,6 +1,6 @@
 {
-  "short_name": "Cabana Migrations",
-  "name": "Cabana Migrations",
+  "short_name": "PoolTogether Migrations",
+  "name": "PoolTogether Migrations",
   "description": "Easily migrate funds in old versions of the PoolTogether protocol.",
   "start_url": "/",
   "scope": "/",
