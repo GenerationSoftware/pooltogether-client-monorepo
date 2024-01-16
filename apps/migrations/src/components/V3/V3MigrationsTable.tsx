@@ -147,9 +147,10 @@ const ManageItem = (props: ManageItemProps) => {
       {migration.type === 'pod' && (
         <WithdrawPodButton migration={migration} color='transparent' className='min-w-[6rem]' />
       )}
-      <Link href={migrationURL} passHref={true}>
-        <Button>Migrate</Button>
-      </Link>
+      {/* TODO: enable once v3 migration is implemented */}
+      {/* <Link href={migrationURL} passHref={true}> */}
+      <Button disabled={true}>Migrate</Button>
+      {/* </Link> */}
     </div>
   )
 }

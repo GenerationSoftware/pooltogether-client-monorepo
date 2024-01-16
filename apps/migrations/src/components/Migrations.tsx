@@ -7,12 +7,6 @@ import { MigrationsHeader } from './MigrationsHeader'
 import { V3Migrations } from './V3/V3Migrations'
 import { V4Migrations } from './V4/V4Migrations'
 
-// TODO: remove
-// const SwapWidget = dynamic(() => import('./SwapWidget').then((module) => module.SwapWidget), {
-//   ssr: false,
-//   loading: () => <Spinner />
-// })
-
 export interface MigrationsProps {
   userAddress: Address
   className?: string

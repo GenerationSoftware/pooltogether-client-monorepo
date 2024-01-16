@@ -2,12 +2,13 @@ import { useTokenBalancesAcrossChains } from '@generationsoftware/hyperstructure
 import { TokenWithAmount } from '@shared/types'
 import { useMemo } from 'react'
 import { Address } from 'viem'
-import { SUPPORTED_NETWORKS, V3_POOLS } from '@constants/config'
+import { SUPPORTED_NETWORKS, SupportedNetwork, V3_POOLS } from '@constants/config'
 
 export interface V3BalanceToMigrate {
   token: TokenWithAmount
   contractAddress: Address
   type: 'pool' | 'pod'
+  destination: { chainId: SupportedNetwork; address: Lowercase<Address> }
 }
 
 export const useUserV3Balances = (
@@ -49,12 +50,17 @@ export const useUserV3Balances = (
       if (isFetchedPoolBalances) {
         Object.values(poolBalances[network] ?? {}).forEach((token) => {
           if (!!token.amount) {
-            const contractAddress = V3_POOLS[network].find(
+            const v3Pool = V3_POOLS[network].find(
               (entry) => entry.ticketAddress === token.address.toLowerCase()
-            )?.address
+            )
 
-            if (!!contractAddress) {
-              balancesToMigrate.push({ token, contractAddress, type: 'pool' })
+            if (!!v3Pool) {
+              balancesToMigrate.push({
+                token,
+                contractAddress: v3Pool.address,
+                type: 'pool',
+                destination: v3Pool.migrateTo
+              })
             }
           }
         })

@@ -2,6 +2,7 @@ import { useRouter } from 'next/router'
 import { Address, isAddress } from 'viem'
 import { useAccount } from 'wagmi'
 import { Layout } from '@components/Layout'
+import { V4Migration } from '@components/V4/V4Migration'
 import { SUPPORTED_NETWORKS, SupportedNetwork } from '@constants/config'
 import { useUserV3Balances } from '@hooks/useUserV3Balances'
 import { useUserV4Balances } from '@hooks/useUserV4Balances'
@@ -44,8 +45,11 @@ export default function MigrationPage() {
         )
 
         if (!!v4Migration) {
-          // TODO
-          return <Layout>V4 Migration</Layout>
+          return (
+            <Layout>
+              <V4Migration migration={v4Migration} />
+            </Layout>
+          )
         }
       } else if (version === 'v3') {
         const v3Migration = userV3Balances.find(

@@ -34,6 +34,8 @@ export const Layout = (props: LayoutProps) => {
       >
         {children}
       </main>
+
+      {/* TODO: add footer */}
     </div>
   )
 }

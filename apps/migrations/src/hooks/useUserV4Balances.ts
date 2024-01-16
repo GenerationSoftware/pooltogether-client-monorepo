@@ -2,11 +2,12 @@ import { useTokenBalancesAcrossChains } from '@generationsoftware/hyperstructure
 import { TokenWithAmount } from '@shared/types'
 import { useMemo } from 'react'
 import { Address } from 'viem'
-import { SUPPORTED_NETWORKS, V4_POOLS } from '@constants/config'
+import { SUPPORTED_NETWORKS, SupportedNetwork, V4_POOLS } from '@constants/config'
 
 export interface V4BalanceToMigrate {
   token: TokenWithAmount
   contractAddress: Address
+  destination: { chainId: SupportedNetwork; address: Lowercase<Address> }
 }
 
 export const useUserV4Balances = (
@@ -44,7 +45,11 @@ export const useUserV4Balances = (
       SUPPORTED_NETWORKS.forEach((network) => {
         Object.values(poolBalances[network] ?? {}).forEach((token) => {
           if (!!token.amount) {
-            balancesToMigrate.push({ token, contractAddress: V4_POOLS[network].address })
+            balancesToMigrate.push({
+              token,
+              contractAddress: V4_POOLS[network].address,
+              destination: V4_POOLS[network].migrateTo
+            })
           }
         })
       })
