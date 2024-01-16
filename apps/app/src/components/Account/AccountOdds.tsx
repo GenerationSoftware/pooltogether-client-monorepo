@@ -55,7 +55,7 @@ export const AccountOdds = (props: AccountOddsProps) => {
       const formattedValue = formatNumberForDisplay(value, { maximumSignificantDigits: 3 })
       return t('oneInXChance', { number: formattedValue })
     }
-  }, [isFetched])
+  }, [isFetched, userAddress])
 
   if (isFetched && weeklyChance !== undefined) {
     return (
