@@ -1,7 +1,5 @@
 import { Spinner } from '@shared/ui'
-import { NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
-import dynamic from 'next/dynamic'
 import { Address } from 'viem'
 import { useUserV3Balances } from '@hooks/useUserV3Balances'
 import { useUserV4Balances } from '@hooks/useUserV4Balances'
@@ -9,10 +7,11 @@ import { MigrationsHeader } from './MigrationsHeader'
 import { V3Migrations } from './V3/V3Migrations'
 import { V4Migrations } from './V4/V4Migrations'
 
-const SwapWidget = dynamic(() => import('./SwapWidget').then((module) => module.SwapWidget), {
-  ssr: false,
-  loading: () => <Spinner />
-})
+// TODO: remove
+// const SwapWidget = dynamic(() => import('./SwapWidget').then((module) => module.SwapWidget), {
+//   ssr: false,
+//   loading: () => <Spinner />
+// })
 
 export interface MigrationsProps {
   userAddress: Address
@@ -31,20 +30,13 @@ export const Migrations = (props: MigrationsProps) => {
   const isEmpty = isFetched && !userV4Balances.length && !userV3Balances.length
 
   return (
-    <div className={classNames('w-full flex flex-col gap-8', className)}>
+    <div className={classNames('w-full flex flex-col gap-8 items-center', className)}>
       <MigrationsHeader />
       {!isFetched && <Spinner />}
       {isFetched && !isEmpty && (
         <>
           {!!userV4Balances.length && <V4Migrations userAddress={userAddress} />}
           {!!userV3Balances.length && <V3Migrations userAddress={userAddress} />}
-          {/* TODO: dynamically set route based on migration path */}
-          <SwapWidget
-            config={{
-              toChain: NETWORK.optimism,
-              toToken: '0xE3B3a464ee575E8E25D2508918383b89c832f275'
-            }}
-          />
         </>
       )}
       {isFetched && isEmpty && (

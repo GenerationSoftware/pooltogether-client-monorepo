@@ -50,7 +50,7 @@ export const V4Migrations = (props: V4MigrationsProps) => {
   }
 
   return (
-    <section className={classNames('w-full flex flex-col items-center gap-6', className)}>
+    <section className={classNames('w-full flex flex-col gap-6 items-center', className)}>
       <SimpleBadge>
         <TokenIcon
           token={{ chainId: NETWORK.mainnet, address: POOL_TOKEN_ADDRESSES[NETWORK.mainnet] }}
