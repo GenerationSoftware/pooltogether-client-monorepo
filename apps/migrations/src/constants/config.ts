@@ -153,7 +153,7 @@ export const V4_POOLS: {
     underlyingTokenAddress: '0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664',
     migrateTo: MIGRATION_DESTINATIONS.usdcVault
   }
-} as const
+}
 
 /**
  * V3 Pools
@@ -238,4 +238,4 @@ export const V3_POOLS: Record<
       migrateTo: MIGRATION_DESTINATIONS.usdcVault
     }
   ]
-} as const
+}
