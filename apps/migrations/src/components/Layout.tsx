@@ -1,9 +1,11 @@
+import { ArrowUturnLeftIcon } from '@heroicons/react/24/outline'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { Toaster } from '@shared/ui'
 import classNames from 'classnames'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
 
 interface LayoutProps {
@@ -43,10 +45,13 @@ interface SimpleNavbarProps {
 const SimpleNavbar = (props: SimpleNavbarProps) => {
   const { className } = props
 
+  const router = useRouter()
+
   return (
     <div
       className={classNames(
-        'flex flex-col gap-6 items-center justify-between px-12 py-6 z-30 md:h-36 md:flex-row md:py-0',
+        'relative flex flex-col gap-6 items-center justify-between px-12 py-6 z-30',
+        'md:h-36 md:flex-row md:py-0',
         className
       )}
     >
@@ -60,6 +65,15 @@ const SimpleNavbar = (props: SimpleNavbarProps) => {
           priority={true}
         />
       </Link>
+      {router.pathname !== '/' && (
+        <Link
+          href='/'
+          className='absolute inset-0 flex gap-1 items-center justify-center text-pt-purple-100'
+        >
+          <ArrowUturnLeftIcon className='h-6 w-6' />
+          <span className='font-medium'>Back to Home</span>
+        </Link>
+      )}
       <ConnectButton
         showBalance={false}
         chainStatus={{ smallScreen: 'icon', largeScreen: 'full' }}
