@@ -32,6 +32,7 @@ export const SUPPORTED_NETWORKS = [
   NETWORK.avalanche,
   NETWORK.celo
 ] as const
+export type SupportedNetwork = (typeof SUPPORTED_NETWORKS)[number]
 
 /**
  * Wagmi networks
@@ -145,7 +146,7 @@ export const V4_POOLS: {
  * V3 Pools
  */
 export const V3_POOLS: Record<
-  (typeof SUPPORTED_NETWORKS)[number],
+  SupportedNetwork,
   {
     address: Lowercase<Address>
     ticketAddress: Lowercase<Address>

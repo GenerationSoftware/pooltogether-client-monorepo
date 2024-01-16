@@ -1,9 +1,10 @@
 import { useScreenSize } from '@shared/generic-react-hooks'
 import { TokenIcon, TokenValueAndAmount } from '@shared/react-components'
 import { TokenWithAmount } from '@shared/types'
-import { Table, TableData } from '@shared/ui'
+import { Button, Table, TableData } from '@shared/ui'
 import { NETWORK, POOL_TOKEN_ADDRESSES } from '@shared/utilities'
 import classNames from 'classnames'
+import Link from 'next/link'
 import { Address } from 'viem'
 import { SimpleBadge } from '@components/SimpleBadge'
 import { TokenBadge } from '@components/TokenBadge'
@@ -143,10 +144,14 @@ interface ManageItemProps {
 const ManageItem = (props: ManageItemProps) => {
   const { migration, className } = props
 
+  const migrationURL = `/migrate/${migration.token.chainId}/v4/${migration.token.address}`
+
   return (
-    <div className={classNames('', className)}>
+    <div className={classNames('flex gap-2 items-center', className)}>
       <WithdrawButton migration={migration} color='transparent' className='min-w-[6rem]' />
-      {/* TODO: add migrate button */}
+      <Link href={migrationURL} passHref={true}>
+        <Button>Migrate</Button>
+      </Link>
     </div>
   )
 }

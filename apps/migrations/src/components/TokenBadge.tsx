@@ -2,7 +2,7 @@ import { NetworkIcon, TokenIcon } from '@shared/react-components'
 import { Token } from '@shared/types'
 import classNames from 'classnames'
 import { useMemo } from 'react'
-import { SUPPORTED_NETWORKS, V3_POOLS, V4_POOLS } from '@constants/config'
+import { SupportedNetwork, V3_POOLS, V4_POOLS } from '@constants/config'
 import { SimpleBadge } from './SimpleBadge'
 
 export interface TokenBadgeProps {
@@ -21,9 +21,9 @@ export const TokenBadge = (props: TokenBadgeProps) => {
 
     if (!!v4Ticket) return v4Ticket
 
-    const v3UnderlyingTokenAddress = V3_POOLS[
-      token.chainId as (typeof SUPPORTED_NETWORKS)[number]
-    ]?.find((pool) => pool.ticketAddress === token.address.toLowerCase())?.tokenAddress
+    const v3UnderlyingTokenAddress = V3_POOLS[token.chainId as SupportedNetwork]?.find(
+      (pool) => pool.ticketAddress === token.address.toLowerCase()
+    )?.tokenAddress
 
     const v3Ticket = !!v3UnderlyingTokenAddress
       ? { ...token, address: v3UnderlyingTokenAddress }

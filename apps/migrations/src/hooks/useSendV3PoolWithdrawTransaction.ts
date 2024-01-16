@@ -7,8 +7,7 @@ import {
   usePrepareContractWrite,
   useWaitForTransaction
 } from 'wagmi'
-import { V3_POOLS } from '@constants/config'
-import { SUPPORTED_NETWORKS } from '@constants/config'
+import { SupportedNetwork, V3_POOLS } from '@constants/config'
 import { v3PoolABI } from '@constants/v3PoolABI'
 
 export const useSendV3PoolWithdrawTransaction = (
@@ -34,7 +33,7 @@ export const useSendV3PoolWithdrawTransaction = (
 
   const poolAddress =
     !!chainId && !!tokenAddress
-      ? V3_POOLS[chainId as (typeof SUPPORTED_NETWORKS)[number]]?.find(
+      ? V3_POOLS[chainId as SupportedNetwork]?.find(
           (entry) => entry.ticketAddress === tokenAddress.toLowerCase()
         )?.address
       : undefined
