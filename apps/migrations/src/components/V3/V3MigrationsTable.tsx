@@ -137,7 +137,7 @@ interface ManageItemProps {
 const ManageItem = (props: ManageItemProps) => {
   const { migration, className } = props
 
-  const migrationURL = `/migrate/${migration.token.chainId}/v3/${migration.token.address}`
+  const migrationURL = `/migrate/v3/${migration.token.chainId}/${migration.token.address}`
 
   return (
     <div className={classNames('flex gap-2 items-center', className)}>
