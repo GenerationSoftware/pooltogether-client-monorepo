@@ -1,18 +1,11 @@
 import { Web3Provider } from '@ethersproject/providers'
-import { WidgetConfig } from '@lifi/widget'
-import { Spinner } from '@shared/ui'
+import { LiFiWidget, WidgetConfig } from '@lifi/widget'
 import { getNetwork, getWalletClient, switchNetwork, WalletClient } from '@wagmi/core'
-import dynamic from 'next/dynamic'
 import { useMemo } from 'react'
 import { useConnect, useDisconnect, useWalletClient } from 'wagmi'
 import { SUPPORTED_NETWORKS } from '@constants/config'
 import { useV4Tokens } from '@hooks/useV4Tokens'
 import { useV5Tokens } from '@hooks/useV5Tokens'
-
-const LiFiWidget = dynamic(() => import('@lifi/widget').then((module) => module.LiFiWidget), {
-  ssr: false,
-  loading: () => <Spinner />
-})
 
 export interface SwapWidgetProps {
   config?: Omit<
@@ -22,6 +15,7 @@ export interface SwapWidgetProps {
   className?: string
 }
 
+// NOTE: This component needs to be dynamically imported
 export const SwapWidget = (props: SwapWidgetProps) => {
   const { config, className } = props
 

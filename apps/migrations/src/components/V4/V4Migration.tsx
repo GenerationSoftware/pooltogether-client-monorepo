@@ -1,7 +1,13 @@
+import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
+import dynamic from 'next/dynamic'
 import { formatUnits } from 'viem'
-import { SwapWidget } from '@components/SwapWidget'
 import { V4BalanceToMigrate } from '@hooks/useUserV4Balances'
+
+const SwapWidget = dynamic(() => import('../SwapWidget').then((module) => module.SwapWidget), {
+  ssr: false,
+  loading: () => <Spinner />
+})
 
 export interface V4MigrationProps {
   migration: V4BalanceToMigrate
