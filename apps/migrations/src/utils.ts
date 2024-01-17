@@ -46,7 +46,7 @@ export const createCustomWagmiConfig = (): Config<
  */
 const getWalletConnectors = (chains: Chain[]): (() => Connector[]) => {
   const appName = 'PoolTogether Migrations'
-  const projectId = '3eb812d6ed9689e2ced204df2b9e6c76'
+  const projectId = '3eb812d6ed9689e2ced204df2b9e6c76' // TODO: update to new pooltogether-specific project ID (not Cabana)
 
   const walletGroups: { groupName: string; wallets: Wallet[] }[] = []
 
