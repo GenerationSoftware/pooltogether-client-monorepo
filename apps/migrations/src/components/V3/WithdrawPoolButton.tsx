@@ -1,6 +1,5 @@
-import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
-import { TransactionButton } from '@shared/react-components'
 import { ButtonProps } from '@shared/ui'
+import { TransactionButton } from '@components/TransactionButton'
 import { useSendV3PoolWithdrawTransaction } from '@hooks/useSendV3PoolWithdrawTransaction'
 import { V3BalanceToMigrate } from '@hooks/useUserV3Balances'
 
@@ -11,10 +10,6 @@ export interface WithdrawPoolButtonProps extends Omit<ButtonProps, 'onClick'> {
 
 export const WithdrawPoolButton = (props: WithdrawPoolButtonProps) => {
   const { migration, txOptions, ...rest } = props
-
-  const { openConnectModal } = useConnectModal()
-  const { openChainModal } = useChainModal()
-  const addRecentTransaction = useAddRecentTransaction()
 
   const { sendV3PoolWithdrawTransaction, isWaiting, isConfirming, isSuccess, txHash } =
     useSendV3PoolWithdrawTransaction(
@@ -32,9 +27,6 @@ export const WithdrawPoolButton = (props: WithdrawPoolButtonProps) => {
       write={sendV3PoolWithdrawTransaction}
       txHash={txHash}
       txDescription={`${migration.token.symbol} V3 Pool Withdrawal`}
-      openConnectModal={openConnectModal}
-      openChainModal={openChainModal}
-      addRecentTransaction={addRecentTransaction}
       {...rest}
     >
       Withdraw
