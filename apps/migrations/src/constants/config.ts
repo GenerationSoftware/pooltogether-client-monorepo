@@ -156,6 +156,50 @@ export const V4_POOLS: {
 }
 
 /**
+ * V4 TWAB Promotions
+ */
+export const V4_PROMOTIONS: {
+  [network: number]: {
+    twabRewardsAddress: Lowercase<Address>
+    token: { address: Lowercase<Address>; decimals: number; symbol: string }
+    promotions: {
+      [id: string]: {
+        startTimestamp: bigint
+        numberOfEpochs: number
+        epochDuration: number
+      }
+    }
+  }
+} = {
+  [NETWORK.optimism]: {
+    twabRewardsAddress: '0x1470c87e2db5247a36c60de3d65d7c972c62ea0f',
+    token: { address: '0x4200000000000000000000000000000000000042', decimals: 18, symbol: 'OP' },
+    promotions: {
+      '5': {
+        startTimestamp: 1_658_862_000n,
+        numberOfEpochs: 4,
+        epochDuration: 604_800
+      },
+      '6': {
+        startTimestamp: 1_661_281_200n,
+        numberOfEpochs: 4,
+        epochDuration: 604_800
+      },
+      '7': {
+        startTimestamp: 1_663_700_400n,
+        numberOfEpochs: 8,
+        epochDuration: 604_800
+      },
+      '8': {
+        startTimestamp: 1_668_546_000n,
+        numberOfEpochs: 19,
+        epochDuration: 604_800
+      }
+    }
+  }
+}
+
+/**
  * V3 Pools
  */
 export const V3_POOLS: Record<

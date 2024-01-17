@@ -210,7 +210,9 @@ export const STABLECOINS: Record<NETWORK, { [address: Address]: string }> = {
   [NETWORK.bsc]: {},
   [NETWORK.bsc_testnet]: {},
   [NETWORK.xdai]: {},
-  [NETWORK.polygon]: {},
+  [NETWORK.polygon]: {
+    '0x2791bca1f2de4661ed88a30c99a7a9449aa84174': 'usd' // USDC.e
+  },
   [NETWORK.mumbai]: {},
   [NETWORK.optimism]: {
     '0x0b2c639c533813f4aa9d7837caf62653d097ff85': 'usd', // USDC
@@ -223,7 +225,9 @@ export const STABLECOINS: Record<NETWORK, { [address: Address]: string }> = {
     '0xd590ec14364731b62265a5cc807164a17c6797d4': 'usd', // DAI
     '0x1a188719711d62423abf1a4de7d8aa9014a39d73': 'usd' // GUSD
   },
-  [NETWORK.avalanche]: {},
+  [NETWORK.avalanche]: {
+    '0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664': 'usd' // USDC.e
+  },
   [NETWORK.fuji]: {},
   [NETWORK.celo]: {},
   [NETWORK.celo_testnet]: {},

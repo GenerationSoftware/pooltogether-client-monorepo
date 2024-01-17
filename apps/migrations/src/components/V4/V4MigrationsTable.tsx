@@ -1,13 +1,16 @@
 import { useScreenSize } from '@shared/generic-react-hooks'
 import { TokenValueAndAmount } from '@shared/react-components'
 import { TokenWithAmount } from '@shared/types'
-import { Button, Table, TableData } from '@shared/ui'
+import { Button, Spinner, Table, TableData } from '@shared/ui'
+import { formatBigIntForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
+import { useMemo } from 'react'
 import { Address } from 'viem'
 import { TokenBadge } from '@components/TokenBadge'
-import { V4_POOLS } from '@constants/config'
+import { V4_POOLS, V4_PROMOTIONS } from '@constants/config'
 import { useUserV4Balances, V4BalanceToMigrate } from '@hooks/useUserV4Balances'
+import { useUserV4ClaimableRewards } from '@hooks/useUserV4ClaimableRewards'
 import { WithdrawButton } from './WithdrawButton'
 
 export interface V4MigrationsTableProps {
@@ -105,9 +108,43 @@ interface RewardsItemProps {
 const RewardsItem = (props: RewardsItemProps) => {
   const { chainId, userAddress, className } = props
 
-  // TODO: display unclaimed OP rewards if item is on OP, if any
+  const { data: claimable, isFetched: isFetchedClaimable } = useUserV4ClaimableRewards(
+    chainId,
+    userAddress
+  )
 
-  return <>-</>
+  const amount = useMemo(() => {
+    let total = 0n
+
+    if (!!claimable) {
+      Object.keys(claimable.rewards).forEach((id) => {
+        Object.values(claimable.rewards[id]).forEach((amount) => {
+          total += amount
+        })
+      })
+    }
+
+    return total
+  }, [isFetchedClaimable])
+
+  if (!isFetchedClaimable && !!V4_PROMOTIONS[chainId]) {
+    return <Spinner />
+  }
+
+  return (
+    <div className={className}>
+      {!!claimable && !!amount ? (
+        <span className='flex gap-1 items-center'>
+          <span className='text-xl font-medium text-pt-purple-100'>
+            {formatBigIntForDisplay(amount, claimable.token.decimals)}
+          </span>
+          <span className='text-sm text-pt-purple-400'>{claimable.token.symbol}</span>
+        </span>
+      ) : (
+        <>-</>
+      )}
+    </div>
+  )
 }
 
 interface BalanceItemProps {
