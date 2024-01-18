@@ -1,15 +1,13 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
   reactStrictMode: true,
-  swcMinify: true,
   transpilePackages: [
     'file:../../shared/generic-react-hooks',
     'file:../../shared/react-components',
     'file:../../shared/types',
     'file:../../shared/ui',
     'file:../../shared/utilities',
-    '@lifi/widget',
-    '@lifi/wallet-management'
+    '@lifi/widget'
   ],
   webpack: (config, { isServer }) => {
     if (!isServer) {

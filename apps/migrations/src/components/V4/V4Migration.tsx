@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import dynamic from 'next/dynamic'
 import { ReactNode, useMemo, useState } from 'react'
 import { Address, formatUnits } from 'viem'
+import { V4_PROMOTIONS } from '@constants/config'
 import { V4BalanceToMigrate } from '@hooks/useUserV4Balances'
 import { useUserV4ClaimableRewards } from '@hooks/useUserV4ClaimableRewards'
 
@@ -31,7 +32,7 @@ export const V4Migration = (props: V4MigrationProps) => {
   } as const satisfies { [name: string]: { content: ReactNode } }
 
   const migrationActions = useMemo(() => {
-    if (isFetchedClaimable) {
+    if (isFetchedClaimable || !V4_PROMOTIONS[migration.token.chainId]) {
       const isRewardsClaimable = !!claimable && !!Object.keys(claimable.rewards).length
 
       if (isRewardsClaimable) {
