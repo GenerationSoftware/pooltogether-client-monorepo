@@ -22,6 +22,7 @@ export const useUserVaultShareBalance = (
   return useQuery(queryKey, async () => await vault.getUserShareBalance(userAddress), {
     enabled: !!vault && !!userAddress,
     ...NO_REFETCH,
-    refetchInterval: refetchInterval ?? false
+    refetchInterval: refetchInterval ?? false,
+    refetchOnWindowFocus: true
   })
 }

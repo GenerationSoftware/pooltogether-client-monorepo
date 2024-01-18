@@ -44,13 +44,15 @@ export const useAllVaultPercentageContributions = (
           return contributionPercentages
         },
         enabled: !!prizePool && !!vaults,
-        ...NO_REFETCH
+        ...NO_REFETCH,
+        refetchOnWindowFocus: true
       }
     })
   })
 
   return useMemo(() => {
     const isFetched = results?.every((result) => result.isFetched)
+    const isRefetching = results?.every((result) => result.isRefetching)
     const refetch = () => results?.forEach((result) => result.refetch())
 
     const data: { [vaultId: string]: number } = Object.assign(
@@ -58,6 +60,6 @@ export const useAllVaultPercentageContributions = (
       ...results.map((result) => result.data)
     )
 
-    return { isFetched, refetch, data }
+    return { isFetched, isRefetching, refetch, data }
   }, [results])
 }

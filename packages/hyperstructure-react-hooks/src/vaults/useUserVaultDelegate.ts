@@ -18,6 +18,7 @@ export const useUserVaultDelegate = (
 
   return useQuery(queryKey, async () => await vault.getUserDelegate(userAddress), {
     enabled: !!vault && !!userAddress,
-    ...NO_REFETCH
+    ...NO_REFETCH,
+    refetchOnWindowFocus: true
   })
 }

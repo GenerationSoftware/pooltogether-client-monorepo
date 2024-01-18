@@ -23,6 +23,7 @@ export const useAllVaultShareData = (
   return useQuery(getQueryKey(vaultIds), async () => await vaults.getShareData(), {
     enabled: !!vaults,
     ...NO_REFETCH,
+    refetchOnWindowFocus: true,
     onSuccess: (data) => populateCachePerId(queryClient, getQueryKey, data)
   })
 }

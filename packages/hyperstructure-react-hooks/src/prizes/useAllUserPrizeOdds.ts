@@ -21,28 +21,42 @@ import { QUERY_KEYS } from '../constants'
 export const useAllUserPrizeOdds = (
   prizePools: PrizePool[],
   userAddress: string
-): { data: { [prizePoolId: string]: number }; isFetched: boolean } => {
+): { data: { [prizePoolId: string]: number }; isFetched: boolean; isRefetching: boolean } => {
   const { vaults } = useSelectedVaults()
 
   const {
     data: shareData,
     isFetched: isFetchedShareData,
-    refetch: refetchShareData
+    refetch: refetchShareData,
+    isRefetching: isRefetchingShareData
   } = useAllVaultShareData(vaults)
 
-  const { refetch: refetchShareBalances } = useAllUserVaultBalances(vaults, userAddress)
+  const { refetch: refetchShareBalances, isRefetching: isRefetchingShareBalances } =
+    useAllUserVaultBalances(vaults, userAddress, {
+      refetchOnWindowFocus: true
+    })
 
   const {
     data: delegationBalances,
     isFetched: isFetchedDelegationBalances,
+    isRefetching: isRefetchingDelegationBalances,
     refetch: refetchDelegationBalances
-  } = useAllUserVaultDelegationBalances(vaults, userAddress)
+  } = useAllUserVaultDelegationBalances(vaults, userAddress, {
+    refetchOnWindowFocus: true
+  })
 
   const {
     data: vaultContributions,
     isFetched: isFetchedVaultContributions,
+    isRefetching: isRefetchingVaultContributions,
     refetch: refetchVaultContributions
   } = useAllVaultPercentageContributions(prizePools, vaults)
+
+  const isRefetchingUserPrizeOdds =
+    isRefetchingShareData &&
+    isRefetchingShareBalances &&
+    isRefetchingDelegationBalances &&
+    isRefetchingVaultContributions
 
   const results = useQueries({
     queries: prizePools.map((prizePool) => {
@@ -85,13 +99,16 @@ export const useAllUserPrizeOdds = (
           return { prizePoolId, odds }
         },
         enabled,
-        ...NO_REFETCH
+        ...NO_REFETCH,
+        refetchOnWindowFocus: true
       }
     })
   })
 
   return useMemo(() => {
     const isFetched = results?.every((result) => result.isFetched)
+    const isRefetching =
+      isRefetchingUserPrizeOdds || results?.every((result) => result.isRefetching)
 
     const refetch = () => {
       refetchShareData()
@@ -110,6 +127,6 @@ export const useAllUserPrizeOdds = (
       }
     })
 
-    return { isFetched, refetch, data }
+    return { isFetched, refetch, isRefetching, data }
   }, [results])
 }
