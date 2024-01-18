@@ -47,7 +47,7 @@ export default function MigrationPage() {
         if (!!v4Migration) {
           return (
             <Layout>
-              <V4Migration migration={v4Migration} />
+              <V4Migration userAddress={userAddress} migration={v4Migration} />
             </Layout>
           )
         }
