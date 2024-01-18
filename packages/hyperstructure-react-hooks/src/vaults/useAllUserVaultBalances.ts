@@ -35,7 +35,7 @@ export const useAllUserVaultBalances = (
       ...NO_REFETCH,
       refetchInterval: options?.refetchInterval ?? false,
       refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
-      // onSuccess: (data) => populateCachePerId(queryClient, getQueryKey, data)
+      onSuccess: (data) => populateCachePerId(queryClient, getQueryKey, data)
     }
   )
 }
