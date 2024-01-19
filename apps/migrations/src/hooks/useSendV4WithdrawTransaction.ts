@@ -41,6 +41,7 @@ export const useSendV4WithdrawTransaction = (
     chain?.id === chainId
 
   const { config } = usePrepareContractWrite({
+    account: userAddress as Address,
     chainId,
     address: prizePoolAddress,
     abi: v4PrizePoolABI,

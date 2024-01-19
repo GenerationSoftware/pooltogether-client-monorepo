@@ -138,7 +138,7 @@ const RewardsItem = (props: RewardsItemProps) => {
     }
 
     return total
-  }, [isFetchedClaimable])
+  }, [claimable, isFetchedClaimable])
 
   if (!isFetchedClaimable && !!V4_PROMOTIONS[chainId]) {
     return <Spinner />

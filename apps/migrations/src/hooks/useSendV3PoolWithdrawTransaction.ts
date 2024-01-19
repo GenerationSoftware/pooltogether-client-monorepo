@@ -48,6 +48,7 @@ export const useSendV3PoolWithdrawTransaction = (
     chain?.id === chainId
 
   const { config } = usePrepareContractWrite({
+    account: userAddress as Address,
     chainId,
     address: poolAddress,
     abi: v3PoolABI,
