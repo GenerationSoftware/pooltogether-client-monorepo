@@ -30,8 +30,10 @@ export const Migrations = (props: MigrationsProps) => {
       {!isFetched && <Spinner />}
       {isFetched && !isEmpty && (
         <>
-          {!!userV4Balances.length && <V4Migrations userAddress={userAddress} />}
-          {!!userV3Balances.length && <V3Migrations userAddress={userAddress} />}
+          {!!userV4Balances.length && <V4Migrations userAddress={userAddress} showPooly={true} />}
+          {!!userV3Balances.length && (
+            <V3Migrations userAddress={userAddress} showPooly={!userV4Balances.length} />
+          )}
         </>
       )}
       {isFetched && isEmpty && <NoMigrationsAvailable />}

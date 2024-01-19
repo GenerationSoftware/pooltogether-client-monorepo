@@ -4,6 +4,7 @@ import { TokenWithAmount } from '@shared/types'
 import { Button, Spinner, Table, TableData } from '@shared/ui'
 import { formatBigIntForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useMemo } from 'react'
 import { Address } from 'viem'
@@ -15,11 +16,12 @@ import { WithdrawButton } from './WithdrawButton'
 
 export interface V4MigrationsTableProps {
   userAddress: Address
+  showPooly?: boolean
   className?: string
 }
 
 export const V4MigrationsTable = (props: V4MigrationsTableProps) => {
-  const { userAddress, className } = props
+  const { userAddress, showPooly, className } = props
 
   const { data: userV4Balances } = useUserV4Balances(userAddress)
 
@@ -65,14 +67,25 @@ export const V4MigrationsTable = (props: V4MigrationsTableProps) => {
   }
 
   return (
-    <Table
-      keyPrefix='v4Migrations'
-      data={tableData}
-      className={classNames('w-full rounded-t-2xl rounded-b-[2.5rem]', className)}
-      innerClassName='!gap-3'
-      headerClassName='px-4'
-      rowClassName='!px-4 py-4 rounded-3xl'
-    />
+    <div className='relative w-full'>
+      <Table
+        keyPrefix='v4Migrations'
+        data={tableData}
+        className={classNames('w-full rounded-t-2xl rounded-b-[2.5rem]', className)}
+        innerClassName='!gap-3'
+        headerClassName='px-4'
+        rowClassName='!px-4 py-4 rounded-3xl'
+      />
+      {showPooly && (
+        <Image
+          src='/pooly.svg'
+          alt='Pooly'
+          height={64}
+          width={72}
+          className='absolute -top-16 right-16 h-16 w-auto'
+        />
+      )}
+    </div>
   )
 }
 

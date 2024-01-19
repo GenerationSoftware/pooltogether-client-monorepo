@@ -7,16 +7,17 @@ import { V4MigrationsTable } from './V4MigrationsTable'
 
 export interface V4MigrationsProps {
   userAddress: Address
+  showPooly?: boolean
   className?: string
 }
 
 export const V4Migrations = (props: V4MigrationsProps) => {
-  const { userAddress, className } = props
+  const { userAddress, showPooly, className } = props
 
   return (
     <section className={classNames('w-full flex flex-col gap-6 items-center', className)}>
       <V4Badge />
-      <V4MigrationsTable userAddress={userAddress} />
+      <V4MigrationsTable userAddress={userAddress} showPooly={showPooly} />
     </section>
   )
 }

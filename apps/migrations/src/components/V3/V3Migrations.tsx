@@ -7,16 +7,17 @@ import { V3MigrationsTable } from './V3MigrationsTable'
 
 export interface V3MigrationsProps {
   userAddress: Address
+  showPooly?: boolean
   className?: string
 }
 
 export const V3Migrations = (props: V3MigrationsProps) => {
-  const { userAddress, className } = props
+  const { userAddress, showPooly, className } = props
 
   return (
     <section className={classNames('w-full flex flex-col gap-6 items-center', className)}>
       <V3Badge />
-      <V3MigrationsTable userAddress={userAddress} />
+      <V3MigrationsTable userAddress={userAddress} showPooly={showPooly} />
     </section>
   )
 }
