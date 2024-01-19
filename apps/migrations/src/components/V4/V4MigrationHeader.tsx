@@ -36,42 +36,41 @@ export const V4MigrationHeader = (props: V4MigrationHeaderProps) => {
         <div className='flex items-center justify-between isolate'>
           {actions.length > 1 &&
             [...Array(actions.length).keys()].map((i) => (
-              <>
-                <div className='w-32 flex justify-center'>
-                  <div
-                    className={classNames(
-                      'relative h-6 w-6 flex items-center justify-center',
-                      'border-4 border-gray-100/30 rounded-full',
-                      {
-                        'border-pt-pink': actionsCompleted >= i,
-                        'bg-pt-pink': actionsCompleted > i
-                      }
-                    )}
-                  >
-                    <CheckIcon
-                      className={classNames('h-5 w-5 stroke-[3] text-transparent', {
-                        '!text-pt-pink-dark': actionsCompleted > i
-                      })}
+              <div key={`migration-step-graphic-${i}`} className='w-32 flex justify-center'>
+                <div
+                  className={classNames(
+                    'relative h-6 w-6 flex items-center justify-center',
+                    'border-4 border-gray-100/30 rounded-full',
+                    {
+                      'border-pt-pink': actionsCompleted >= i,
+                      'bg-pt-pink': actionsCompleted > i
+                    }
+                  )}
+                >
+                  <CheckIcon
+                    className={classNames('h-5 w-5 stroke-[3] text-transparent', {
+                      '!text-pt-pink-dark': actionsCompleted > i
+                    })}
+                  />
+                  {i !== actions.length - 1 && (
+                    <div
+                      className='absolute left-[calc(100%+3px)] h-1 w-[calc(11rem-6px)] -z-10'
+                      style={{
+                        background:
+                          actionsCompleted > i
+                            ? 'repeating-linear-gradient(90deg, rgba(250, 72, 232, 1), rgba(250, 72, 232, 1) 8px, rgb(243 244 246 / 0.2) 8px, rgb(243 244 246 / 0.2) 16px)'
+                            : 'repeating-linear-gradient(90deg, rgb(243 244 246 / 0.3), rgb(243 244 246 / 0.3) 8px, rgb(243 244 246 / 0.2) 8px, rgb(243 244 246 / 0.2) 16px)'
+                      }}
                     />
-                    {i !== actions.length - 1 && (
-                      <div
-                        className='absolute left-[calc(100%+3px)] h-1 w-[calc(11rem-6px)] -z-10'
-                        style={{
-                          background:
-                            actionsCompleted > i
-                              ? 'repeating-linear-gradient(90deg, rgba(250, 72, 232, 1), rgba(250, 72, 232, 1) 8px, rgb(243 244 246 / 0.2) 8px, rgb(243 244 246 / 0.2) 16px)'
-                              : 'repeating-linear-gradient(90deg, rgb(243 244 246 / 0.3), rgb(243 244 246 / 0.3) 8px, rgb(243 244 246 / 0.2) 8px, rgb(243 244 246 / 0.2) 16px)'
-                        }}
-                      />
-                    )}
-                  </div>
+                  )}
                 </div>
-              </>
+              </div>
             ))}
         </div>
         <div className='flex gap-16 items-center justify-between text-center'>
           {actions.map((action, i) => (
             <span
+              key={`migration-step-name-${i}`}
               className={classNames('w-32 text-xl font-semibold', {
                 'w-auto': actions.length === 1
               })}
