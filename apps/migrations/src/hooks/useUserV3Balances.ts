@@ -6,6 +6,7 @@ import { SUPPORTED_NETWORKS, SupportedNetwork, V3_POOLS } from '@constants/confi
 
 export interface V3BalanceToMigrate {
   token: TokenWithAmount
+  underlyingTokenAddress: Lowercase<Address>
   contractAddress: Address
   type: 'pool' | 'pod'
   destination: { chainId: SupportedNetwork; address: Lowercase<Address> }
@@ -79,6 +80,7 @@ export const useUserV3Balances = (
             if (!!v3Pool) {
               balancesToMigrate.push({
                 token,
+                underlyingTokenAddress: v3Pool.tokenAddress,
                 contractAddress: v3Pool.address,
                 type: 'pool',
                 destination: v3Pool.migrateTo
@@ -98,6 +100,7 @@ export const useUserV3Balances = (
             if (!!v3Pool) {
               balancesToMigrate.push({
                 token,
+                underlyingTokenAddress: v3Pool.tokenAddress,
                 contractAddress: v3Pool.address,
                 type: 'pod',
                 destination: v3Pool.migrateTo

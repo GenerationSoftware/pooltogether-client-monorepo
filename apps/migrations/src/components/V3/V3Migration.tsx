@@ -1,3 +1,4 @@
+import { useTokenBalance } from '@generationsoftware/hyperstructure-react-hooks'
 import { ArrowUturnLeftIcon } from '@heroicons/react/24/outline'
 import { CurrencyValue, NetworkBadge, TokenIcon } from '@shared/react-components'
 import { Button, Spinner } from '@shared/ui'
@@ -44,7 +45,7 @@ export const V3Migration = (props: V3MigrationProps) => {
         }}
       />
     ),
-    swap: <SwapContent migration={migration} />
+    swap: <SwapContent userAddress={userAddress} migration={migration} />
   } as const satisfies { [name: string]: ReactNode }
 
   const migrationActions: (keyof typeof allMigrationActions)[] = ['withdraw', 'swap']
@@ -140,6 +141,7 @@ const WithdrawContent = (props: WithdrawContentProps) => {
 }
 
 interface SwapContentProps {
+  userAddress: Address
   migration: V3BalanceToMigrate
   onSuccess?: () => void
   className?: string
@@ -147,17 +149,26 @@ interface SwapContentProps {
 
 // TODO: need to trigger onSuccess when a swap is completed and the destination is the expected destination token
 const SwapContent = (props: SwapContentProps) => {
-  const { migration, onSuccess, className } = props
+  const { userAddress, migration, onSuccess, className } = props
+
+  const { data: underlyingToken } = useTokenBalance(
+    migration.token.chainId,
+    userAddress,
+    migration.underlyingTokenAddress,
+    { refetchOnWindowFocus: true }
+  )
 
   const swapWidgetConfig = useMemo(() => {
     return {
       fromChain: migration.token.chainId,
-      fromToken: migration.token.address,
-      fromAmount: formatUnits(migration.token.amount, migration.token.decimals),
+      fromToken: migration.underlyingTokenAddress,
+      fromAmount: !!underlyingToken
+        ? formatUnits(underlyingToken.amount, underlyingToken.decimals)
+        : undefined,
       toChain: migration.destination.chainId,
       toToken: migration.destination.address
     }
-  }, [migration])
+  }, [migration, underlyingToken])
 
   return <SwapWidget config={swapWidgetConfig} className={className} />
 }
