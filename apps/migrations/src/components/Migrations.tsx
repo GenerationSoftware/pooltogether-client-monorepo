@@ -1,5 +1,6 @@
 import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
+import Image from 'next/image'
 import { Address } from 'viem'
 import { useUserV3Balances } from '@hooks/useUserV3Balances'
 import { useUserV4Balances } from '@hooks/useUserV4Balances'
@@ -33,10 +34,23 @@ export const Migrations = (props: MigrationsProps) => {
           {!!userV3Balances.length && <V3Migrations userAddress={userAddress} />}
         </>
       )}
-      {isFetched && isEmpty && (
-        // TODO: improve empty content here
-        <span>nothing to migrate</span>
-      )}
+      {isFetched && isEmpty && <NoMigrationsAvailable />}
+    </div>
+  )
+}
+
+const NoMigrationsAvailable = () => {
+  return (
+    <div className='w-full p-4 bg-pt-bg-purple-dark rounded-t-2xl rounded-b-[2.5rem]'>
+      <div className='w-full flex flex-col gap-6 items-center px-4 py-16 bg-pt-transparent rounded-3xl'>
+        <Image src='/pooly.svg' alt='Pooly' height={64} width={72} className='h-16 w-auto' />
+        <div className='flex flex-col gap-1 text-center'>
+          <span className='text-3xl'>You're all set!</span>
+          <span className='text-sm'>
+            We couldn't find any prize tokens in your wallet that need migrating.
+          </span>
+        </div>
+      </div>
     </div>
   )
 }
