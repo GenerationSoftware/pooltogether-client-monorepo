@@ -1,7 +1,7 @@
 import { useScreenSize } from '@shared/generic-react-hooks'
 import { TokenValueAndAmount } from '@shared/react-components'
 import { TokenWithAmount } from '@shared/types'
-import { Button, Table, TableData } from '@shared/ui'
+import { Button, ExternalLink, Table, TableData } from '@shared/ui'
 import classNames from 'classnames'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -117,9 +117,15 @@ interface RewardsItemProps {
 const RewardsItem = (props: RewardsItemProps) => {
   const { className } = props
 
-  // TODO: add link to tools app for V3 rewards
-
-  return <>-</>
+  return (
+    <ExternalLink
+      href={'https://tools.pooltogether.com/token-faucet'}
+      size='sm'
+      className={classNames('text-pt-purple-400', className)}
+    >
+      Check
+    </ExternalLink>
+  )
 }
 
 interface BalanceItemProps {
