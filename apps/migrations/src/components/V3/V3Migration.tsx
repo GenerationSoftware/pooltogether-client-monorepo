@@ -8,8 +8,12 @@ import Link from 'next/link'
 import { ReactNode, useMemo, useState } from 'react'
 import { Address, formatUnits } from 'viem'
 import { SimpleBadge } from '@components/SimpleBadge'
+import { SupportedNetwork, V3_POOLS } from '@constants/config'
 import { V3BalanceToMigrate } from '@hooks/useUserV3Balances'
+import { useV3WithdrawGasEstimate } from '@hooks/useV3WithdrawGasEstimate'
 import { V3MigrationHeader } from './V3MigrationHeader'
+import { WithdrawPodButton } from './WithdrawPodButton'
+import { WithdrawPoolButton } from './WithdrawPoolButton'
 
 const SwapWidget = dynamic(() => import('../SwapWidget').then((module) => module.SwapWidget), {
   ssr: false,
@@ -77,40 +81,57 @@ interface WithdrawContentProps {
 const WithdrawContent = (props: WithdrawContentProps) => {
   const { userAddress, migration, onSuccess, className } = props
 
-  // TODO: withdraw content
+  const { data: gasEstimate, isFetched: isFetchedGasEstimate } = useV3WithdrawGasEstimate(
+    userAddress,
+    migration
+  )
 
-  return <>withdraw content</>
+  const v3UnderlyingTokenAddress = V3_POOLS[migration.token.chainId as SupportedNetwork]?.find(
+    (pool) =>
+      pool.ticketAddress === migration.token.address.toLowerCase() ||
+      pool.podAddress === migration.token.address.toLowerCase()
+  )?.tokenAddress
 
-  // return (
-  //   <div
-  //     className={classNames(
-  //       'w-full max-w-xl flex flex-col gap-6 items-center px-8 py-11 bg-pt-purple-700 rounded-md',
-  //       className
-  //     )}
-  //   >
-  //     <NetworkBadge chainId={chainId} />
-  //     <span className='text-sm font-semibold text-pt-purple-100'>Claim Your Rewards:</span>
-  //     <SimpleBadge className='gap-2 !text-2xl font-semibold'>
-  //       {formatBigIntForDisplay(claimable.total, claimable.token.decimals)}{' '}
-  //       <TokenIcon token={{ chainId, ...claimable.token }} />{' '}
-  //       <span className='text-pt-purple-200'>OP</span>
-  //     </SimpleBadge>
-  //     <span className='flex gap-1 items-center text-sm font-semibold text-pt-purple-100'>
-  //       Estimated Network Fee:{' '}
-  //       {isFetchedGasEstimate && !!gasEstimate ? (
-  //         <CurrencyValue baseValue={gasEstimate.totalGasEth} />
-  //       ) : (
-  //         <Spinner />
-  //       )}
-  //     </span>
-  //     <ClaimRewardsButton
-  //       chainId={chainId}
-  //       userAddress={userAddress}
-  //       txOptions={{ onSuccess }}
-  //       fullSized={true}
-  //     />
-  //   </div>
-  // )
+  return (
+    <div
+      className={classNames(
+        'w-full max-w-xl flex flex-col gap-6 items-center px-8 py-11 bg-pt-purple-700 rounded-md',
+        className
+      )}
+    >
+      <NetworkBadge chainId={migration.token.chainId} />
+      <span className='text-sm font-semibold text-pt-purple-100'>Withdraw From V3:</span>
+      <SimpleBadge className='gap-2 !text-2xl font-semibold'>
+        {formatBigIntForDisplay(migration.token.amount, migration.token.decimals)}
+        <TokenIcon token={{ ...migration.token, address: v3UnderlyingTokenAddress }} />
+        <span className='text-pt-purple-200'>{migration.token.symbol}</span>
+      </SimpleBadge>
+      <span className='flex gap-1 items-center text-sm font-semibold text-pt-purple-100'>
+        Estimated Network Fee:{' '}
+        {isFetchedGasEstimate && !!gasEstimate ? (
+          <CurrencyValue baseValue={gasEstimate.totalGasEth} />
+        ) : (
+          <Spinner />
+        )}
+      </span>
+      {migration.type === 'pool' && (
+        <WithdrawPoolButton
+          migration={migration}
+          txOptions={{ onSuccess }}
+          includeTokenSymbol={true}
+          fullSized={true}
+        />
+      )}
+      {migration.type === 'pod' && (
+        <WithdrawPodButton
+          migration={migration}
+          txOptions={{ onSuccess }}
+          includeTokenSymbol={true}
+          fullSized={true}
+        />
+      )}
+    </div>
+  )
 }
 
 interface SwapContentProps {

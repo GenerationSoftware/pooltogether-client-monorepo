@@ -161,10 +161,20 @@ const ManageItem = (props: ManageItemProps) => {
   return (
     <div className={classNames('flex gap-2 items-center', className)}>
       {migration.type === 'pool' && (
-        <WithdrawPoolButton migration={migration} color='transparent' className='min-w-[6rem]' />
+        <WithdrawPoolButton
+          migration={migration}
+          hideWrongNetworkState={true}
+          color='transparent'
+          className='min-w-[6rem]'
+        />
       )}
       {migration.type === 'pod' && (
-        <WithdrawPodButton migration={migration} color='transparent' className='min-w-[6rem]' />
+        <WithdrawPodButton
+          migration={migration}
+          hideWrongNetworkState={true}
+          color='transparent'
+          className='min-w-[6rem]'
+        />
       )}
       <Link href={migrationURL} passHref={true}>
         <Button>Migrate</Button>

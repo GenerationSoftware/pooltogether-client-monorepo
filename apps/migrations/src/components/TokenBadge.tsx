@@ -22,7 +22,9 @@ export const TokenBadge = (props: TokenBadgeProps) => {
     if (!!v4Ticket) return v4Ticket
 
     const v3UnderlyingTokenAddress = V3_POOLS[token.chainId as SupportedNetwork]?.find(
-      (pool) => pool.ticketAddress === token.address.toLowerCase()
+      (pool) =>
+        pool.ticketAddress === token.address.toLowerCase() ||
+        pool.podAddress === token.address.toLowerCase()
     )?.tokenAddress
 
     const v3Ticket = !!v3UnderlyingTokenAddress

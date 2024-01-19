@@ -120,9 +120,9 @@ const ClaimContent = (props: ClaimContentProps) => {
       <NetworkBadge chainId={chainId} />
       <span className='text-sm font-semibold text-pt-purple-100'>Claim Your Rewards:</span>
       <SimpleBadge className='gap-2 !text-2xl font-semibold'>
-        {formatBigIntForDisplay(claimable.total, claimable.token.decimals)}{' '}
-        <TokenIcon token={{ chainId, ...claimable.token }} />{' '}
-        <span className='text-pt-purple-200'>OP</span>
+        {formatBigIntForDisplay(claimable.total, claimable.token.decimals)}
+        <TokenIcon token={{ chainId, ...claimable.token }} />
+        <span className='text-pt-purple-200'>{claimable.token.symbol}</span>
       </SimpleBadge>
       <span className='flex gap-1 items-center text-sm font-semibold text-pt-purple-100'>
         Estimated Network Fee:{' '}

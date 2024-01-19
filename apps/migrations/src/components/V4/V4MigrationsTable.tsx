@@ -175,7 +175,12 @@ const ManageItem = (props: ManageItemProps) => {
 
   return (
     <div className={classNames('flex gap-2 items-center', className)}>
-      <WithdrawButton migration={migration} color='transparent' className='min-w-[6rem]' />
+      <WithdrawButton
+        migration={migration}
+        hideWrongNetworkState={true}
+        color='transparent'
+        className='min-w-[6rem]'
+      />
       <Link href={migrationURL} passHref={true}>
         <Button>Migrate</Button>
       </Link>

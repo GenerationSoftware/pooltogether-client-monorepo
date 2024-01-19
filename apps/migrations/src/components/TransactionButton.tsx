@@ -12,6 +12,7 @@ export interface TransactionButtonProps extends Omit<ButtonProps, 'onClick'> {
   write?: () => void
   txHash?: string
   txDescription?: string
+  hideWrongNetworkState?: boolean
   innerClassName?: string
 }
 
@@ -23,6 +24,7 @@ export const TransactionButton = (props: TransactionButtonProps) => {
     write,
     txHash,
     txDescription,
+    hideWrongNetworkState,
     innerClassName,
     disabled,
     children,
@@ -70,7 +72,9 @@ export const TransactionButton = (props: TransactionButtonProps) => {
           </span>
         )}
         {!isSwitchingNetwork && (
-          <span className={classNames('whitespace-nowrap', innerClassName)}>{children}</span>
+          <span className={classNames('whitespace-nowrap', innerClassName)}>
+            {hideWrongNetworkState ? children : `Switch to ${networkName}`}
+          </span>
         )}
       </Button>
     )

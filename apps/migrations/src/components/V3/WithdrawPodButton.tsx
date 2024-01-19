@@ -6,10 +6,12 @@ import { V3BalanceToMigrate } from '@hooks/useUserV3Balances'
 export interface WithdrawPodButtonProps extends Omit<ButtonProps, 'onClick'> {
   migration: V3BalanceToMigrate
   txOptions?: Parameters<typeof useSendV3PodWithdrawTransaction>[3]
+  includeTokenSymbol?: boolean
+  hideWrongNetworkState?: boolean
 }
 
 export const WithdrawPodButton = (props: WithdrawPodButtonProps) => {
-  const { migration, txOptions, ...rest } = props
+  const { migration, txOptions, includeTokenSymbol, hideWrongNetworkState, ...rest } = props
 
   const { sendV3PodWithdrawTransaction, isWaiting, isConfirming, isSuccess, txHash } =
     useSendV3PodWithdrawTransaction(
@@ -27,9 +29,10 @@ export const WithdrawPodButton = (props: WithdrawPodButtonProps) => {
       write={sendV3PodWithdrawTransaction}
       txHash={txHash}
       txDescription={`${migration.token.symbol} V3 Pod Withdrawal`}
+      hideWrongNetworkState={hideWrongNetworkState}
       {...rest}
     >
-      Withdraw
+      Withdraw{includeTokenSymbol ? ` ${migration.token.symbol}` : ''}
     </TransactionButton>
   )
 }
