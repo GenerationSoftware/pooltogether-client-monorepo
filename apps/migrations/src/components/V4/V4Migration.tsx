@@ -6,6 +6,7 @@ import { Address, formatUnits } from 'viem'
 import { V4_PROMOTIONS } from '@constants/config'
 import { V4BalanceToMigrate } from '@hooks/useUserV4Balances'
 import { useUserV4ClaimableRewards } from '@hooks/useUserV4ClaimableRewards'
+import { V4MigrationHeader } from './V4MigrationHeader'
 
 const SwapWidget = dynamic(() => import('../SwapWidget').then((module) => module.SwapWidget), {
   ssr: false,
@@ -26,35 +27,40 @@ export const V4Migration = (props: V4MigrationProps) => {
     userAddress
   )
 
+  const isRewardsClaimable =
+    isFetchedClaimable || !V4_PROMOTIONS[migration.token.chainId]
+      ? !!claimable && !!Object.keys(claimable.rewards).length
+      : undefined
+
   const allMigrationActions = {
-    claim: { content: <ClaimContent /> },
-    swap: { content: <SwapContent migration={migration} /> }
-  } as const satisfies { [name: string]: { content: ReactNode } }
+    claim: <ClaimContent />,
+    swap: <SwapContent migration={migration} />
+  } as const satisfies { [name: string]: ReactNode }
 
-  const migrationActions = useMemo(() => {
-    if (isFetchedClaimable || !V4_PROMOTIONS[migration.token.chainId]) {
-      const isRewardsClaimable = !!claimable && !!Object.keys(claimable.rewards).length
-
-      if (isRewardsClaimable) {
-        return [allMigrationActions.claim, allMigrationActions.swap]
-      } else {
-        return [allMigrationActions.swap]
-      }
+  const migrationActions = useMemo((): (keyof typeof allMigrationActions)[] => {
+    if (isRewardsClaimable) {
+      return ['claim', 'swap']
+    } else if (isRewardsClaimable !== undefined) {
+      return ['swap']
+    } else {
+      return []
     }
-  }, [allMigrationActions, claimable, isFetchedClaimable])
+  }, [allMigrationActions, isRewardsClaimable])
 
   const [actionsCompleted, setActionsCompleted] = useState(0)
 
   return (
     <div className={classNames('w-full flex flex-col gap-32 items-center', className)}>
-      <div className={classNames('flex flex-col items-center text-center', className)}>
-        <h2 className='font-averta font-semibold text-4xl'>
-          Migrate your <span className='text-pt-purple-400'>{migration.token.symbol}</span> to
-          PoolTogether V5
-        </h2>
-        {/* TODO: add action path based on what actions should be taken */}
-      </div>
-      {!!migrationActions ? migrationActions[actionsCompleted]?.content : <Spinner />}
+      <V4MigrationHeader
+        migration={migration}
+        actions={migrationActions}
+        actionsCompleted={actionsCompleted}
+      />
+      {!!migrationActions?.length ? (
+        allMigrationActions[migrationActions[actionsCompleted]]
+      ) : (
+        <Spinner />
+      )}
     </div>
   )
 }

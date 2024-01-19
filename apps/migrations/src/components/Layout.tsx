@@ -71,7 +71,7 @@ const SimpleNavbar = (props: SimpleNavbarProps) => {
       {router.pathname !== '/' && (
         <Link
           href='/'
-          className='absolute inset-0 flex gap-1 items-center justify-center text-pt-purple-100'
+          className='absolute inset-x-0 flex gap-1 items-center justify-center text-pt-purple-100'
         >
           <ArrowUturnLeftIcon className='h-6 w-6' />
           <span className='font-medium'>Back to Home</span>
