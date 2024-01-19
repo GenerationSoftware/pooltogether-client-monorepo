@@ -96,7 +96,7 @@ interface V4MigrationCardProps {
 const V4MigrationCard = (props: V4MigrationCardProps) => {
   const { migration, className } = props
 
-  // TODO
+  // TODO: mobile card
 
   return <></>
 }

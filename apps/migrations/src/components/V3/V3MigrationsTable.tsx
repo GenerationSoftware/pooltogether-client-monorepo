@@ -95,7 +95,7 @@ interface V3MigrationCardProps {
 const V3MigrationCard = (props: V3MigrationCardProps) => {
   const { migration, className } = props
 
-  // TODO
+  // TODO: mobile card
 
   return <></>
 }

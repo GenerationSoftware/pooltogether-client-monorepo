@@ -18,30 +18,43 @@ export const useUserV3Balances = (
   isFetched: boolean
 } => {
   const queryData = useMemo(() => {
-    const networks: number[] = []
     const ticketAddresses: { [network: number]: Address[] } = {}
+    const podAddresses: { [network: number]: Address[] } = {}
 
     SUPPORTED_NETWORKS.forEach((network) => {
-      const addresses = V3_POOLS[network].map((pool) => pool.ticketAddress)
+      const pools = V3_POOLS[network]
 
-      if (!!addresses.length) {
-        networks.push(network)
-        ticketAddresses[network] = addresses
-      }
+      pools.forEach((pool) => {
+        if (ticketAddresses[network] === undefined) {
+          ticketAddresses[network] = [pool.ticketAddress]
+        } else {
+          ticketAddresses[network].push(pool.ticketAddress)
+        }
+
+        if (!!pool.podAddress) {
+          if (podAddresses[network] === undefined) {
+            podAddresses[network] = [pool.podAddress]
+          } else {
+            podAddresses[network].push(pool.podAddress)
+          }
+        }
+      })
     })
 
-    return { networks, ticketAddresses }
+    return { ticketAddresses, podAddresses }
   }, [])
 
   const { data: poolBalances, isFetched: isFetchedPoolBalances } = useTokenBalancesAcrossChains(
-    queryData.networks,
+    Object.keys(queryData.ticketAddresses).map((k) => parseInt(k)),
     userAddress,
     queryData.ticketAddresses
   )
 
-  // TODO: get pod balances
-  const podBalances = {}
-  const isFetchedPodBalances = true
+  const { data: podBalances, isFetched: isFetchedPodBalances } = useTokenBalancesAcrossChains(
+    Object.keys(queryData.podAddresses).map((k) => parseInt(k)),
+    userAddress,
+    queryData.podAddresses
+  )
 
   const data = useMemo(() => {
     const balancesToMigrate: V3BalanceToMigrate[] = []
@@ -67,7 +80,22 @@ export const useUserV3Balances = (
       }
 
       if (isFetchedPodBalances) {
-        // TODO: add pod balances
+        Object.values(podBalances[network] ?? {}).forEach((token) => {
+          if (!!token.amount) {
+            const v3Pool = V3_POOLS[network].find(
+              (entry) => entry.podAddress === token.address.toLowerCase()
+            )
+
+            if (!!v3Pool) {
+              balancesToMigrate.push({
+                token,
+                contractAddress: v3Pool.address,
+                type: 'pod',
+                destination: v3Pool.migrateTo
+              })
+            }
+          }
+        })
       }
     })
 
