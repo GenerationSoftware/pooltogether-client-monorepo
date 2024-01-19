@@ -6,7 +6,6 @@ import { formatBigIntForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useMemo } from 'react'
 import { Address } from 'viem'
 import { TokenBadge } from '@components/TokenBadge'
 import { V4_POOLS, V4_PROMOTIONS } from '@constants/config'
@@ -126,30 +125,16 @@ const RewardsItem = (props: RewardsItemProps) => {
     userAddress
   )
 
-  const amount = useMemo(() => {
-    let total = 0n
-
-    if (!!claimable) {
-      Object.keys(claimable.rewards).forEach((id) => {
-        Object.values(claimable.rewards[id]).forEach((amount) => {
-          total += amount
-        })
-      })
-    }
-
-    return total
-  }, [claimable, isFetchedClaimable])
-
   if (!isFetchedClaimable && !!V4_PROMOTIONS[chainId]) {
     return <Spinner />
   }
 
   return (
     <div className={className}>
-      {!!claimable && !!amount ? (
+      {!!claimable?.total ? (
         <span className='flex gap-1 items-center'>
           <span className='text-xl font-medium text-pt-purple-100'>
-            {formatBigIntForDisplay(amount, claimable.token.decimals)}
+            {formatBigIntForDisplay(claimable.total, claimable.token.decimals)}
           </span>
           <span className='text-sm text-pt-purple-400'>{claimable.token.symbol}</span>
         </span>

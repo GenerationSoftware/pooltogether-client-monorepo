@@ -16,7 +16,13 @@ export const useUserV4ClaimableRewards = (chainId: number, userAddress: Address)
     queryKey,
     async () => {
       const rewards = await getClaimableRewards(publicClient, userAddress)
-      return { token, rewards }
+
+      let total = 0n
+      Object.values(rewards).forEach((promotionRewards) => {
+        total += Object.values(promotionRewards).reduce((a, b) => a + b, 0n)
+      })
+
+      return { token, rewards, total }
     },
     {
       enabled: !!chainId && !!publicClient && !!userAddress && !!token,

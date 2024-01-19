@@ -23,8 +23,14 @@ export const V4MigrationHeader = (props: V4MigrationHeaderProps) => {
   return (
     <div className={classNames('flex flex-col gap-12 items-center text-center', className)}>
       <h2 className='font-averta font-semibold text-4xl'>
-        Migrate your <span className='text-pt-purple-400'>{migration.token.symbol}</span> to
-        PoolTogether V5
+        {actionsCompleted >= actions.length ? (
+          <span>Congrats, you've landed onto PoolTogether V5!</span>
+        ) : (
+          <span>
+            Migrate your <span className='text-pt-purple-400'>{migration.token.symbol}</span> to
+            PoolTogether V5
+          </span>
+        )}
       </h2>
       <div className='flex flex-col gap-3'>
         <div className='flex items-center justify-between isolate'>
