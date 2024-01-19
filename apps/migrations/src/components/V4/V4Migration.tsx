@@ -31,10 +31,11 @@ export const V4Migration = (props: V4MigrationProps) => {
 
   const [actionsCompleted, setActionsCompleted] = useState(0)
 
-  const { data: claimable, isFetched: isFetchedClaimable } = useUserV4ClaimableRewards(
-    migration.token.chainId,
-    userAddress
-  )
+  const {
+    data: claimable,
+    isFetched: isFetchedClaimable,
+    refetch: refetchClaimable
+  } = useUserV4ClaimableRewards(migration.token.chainId, userAddress)
 
   const isRewardsClaimable =
     isFetchedClaimable || !V4_PROMOTIONS[migration.token.chainId]
@@ -46,7 +47,10 @@ export const V4Migration = (props: V4MigrationProps) => {
       <ClaimContent
         chainId={migration.token.chainId}
         userAddress={userAddress}
-        onSuccess={() => setActionsCompleted(actionsCompleted + 1)}
+        onSuccess={() => {
+          refetchClaimable()
+          setActionsCompleted(actionsCompleted + 1)
+        }}
       />
     ),
     swap: <SwapContent migration={migration} />

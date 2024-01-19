@@ -47,7 +47,10 @@ export const V4MigrationsTable = (props: V4MigrationsTableProps) => {
           position: 'center'
         },
         balance: { content: <BalanceItem token={migration.token} />, position: 'center' },
-        manage: { content: <ManageItem migration={migration} />, position: 'right' }
+        manage: {
+          content: <ManageItem userAddress={userAddress} migration={migration} />,
+          position: 'right'
+        }
       }
     }))
   }
@@ -164,12 +167,15 @@ const BalanceItem = (props: BalanceItemProps) => {
 }
 
 interface ManageItemProps {
+  userAddress: Address
   migration: V4BalanceToMigrate
   className?: string
 }
 
 const ManageItem = (props: ManageItemProps) => {
-  const { migration, className } = props
+  const { userAddress, migration, className } = props
+
+  const { refetch: refetchUserV4Balances } = useUserV4Balances(userAddress)
 
   const migrationURL = `/migrate/v4/${migration.token.chainId}/${migration.token.address}`
 
@@ -177,6 +183,7 @@ const ManageItem = (props: ManageItemProps) => {
     <div className={classNames('flex gap-2 items-center', className)}>
       <WithdrawButton
         migration={migration}
+        txOptions={{ onSuccess: refetchUserV4Balances }}
         hideWrongNetworkState={true}
         color='transparent'
         className='min-w-[6rem]'

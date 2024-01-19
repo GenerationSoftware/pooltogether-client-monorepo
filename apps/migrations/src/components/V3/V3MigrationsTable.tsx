@@ -46,7 +46,10 @@ export const V3MigrationsTable = (props: V3MigrationsTableProps) => {
           position: 'center'
         },
         balance: { content: <BalanceItem token={migration.token} />, position: 'center' },
-        manage: { content: <ManageItem migration={migration} />, position: 'right' }
+        manage: {
+          content: <ManageItem userAddress={userAddress} migration={migration} />,
+          position: 'right'
+        }
       }
     }))
   }
@@ -149,12 +152,15 @@ const BalanceItem = (props: BalanceItemProps) => {
 }
 
 interface ManageItemProps {
+  userAddress: Address
   migration: V3BalanceToMigrate
   className?: string
 }
 
 const ManageItem = (props: ManageItemProps) => {
-  const { migration, className } = props
+  const { userAddress, migration, className } = props
+
+  const { refetch: refetchUserV3Balances } = useUserV3Balances(userAddress)
 
   const migrationURL = `/migrate/v3/${migration.token.chainId}/${migration.token.address}`
 
@@ -163,6 +169,7 @@ const ManageItem = (props: ManageItemProps) => {
       {migration.type === 'pool' && (
         <WithdrawPoolButton
           migration={migration}
+          txOptions={{ onSuccess: refetchUserV3Balances }}
           hideWrongNetworkState={true}
           color='transparent'
           className='min-w-[6rem]'
@@ -171,6 +178,7 @@ const ManageItem = (props: ManageItemProps) => {
       {migration.type === 'pod' && (
         <WithdrawPodButton
           migration={migration}
+          txOptions={{ onSuccess: refetchUserV3Balances }}
           hideWrongNetworkState={true}
           color='transparent'
           className='min-w-[6rem]'

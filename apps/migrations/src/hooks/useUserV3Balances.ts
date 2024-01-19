@@ -16,6 +16,7 @@ export const useUserV3Balances = (
 ): {
   data: V3BalanceToMigrate[]
   isFetched: boolean
+  refetch: () => void
 } => {
   const queryData = useMemo(() => {
     const ticketAddresses: { [network: number]: Address[] } = {}
@@ -44,13 +45,21 @@ export const useUserV3Balances = (
     return { ticketAddresses, podAddresses }
   }, [])
 
-  const { data: poolBalances, isFetched: isFetchedPoolBalances } = useTokenBalancesAcrossChains(
+  const {
+    data: poolBalances,
+    isFetched: isFetchedPoolBalances,
+    refetch: refetchPoolBalances
+  } = useTokenBalancesAcrossChains(
     Object.keys(queryData.ticketAddresses).map((k) => parseInt(k)),
     userAddress,
     queryData.ticketAddresses
   )
 
-  const { data: podBalances, isFetched: isFetchedPodBalances } = useTokenBalancesAcrossChains(
+  const {
+    data: podBalances,
+    isFetched: isFetchedPodBalances,
+    refetch: refetchPodBalances
+  } = useTokenBalancesAcrossChains(
     Object.keys(queryData.podAddresses).map((k) => parseInt(k)),
     userAddress,
     queryData.podAddresses
@@ -104,5 +113,10 @@ export const useUserV3Balances = (
 
   const isFetched = isFetchedPoolBalances && isFetchedPodBalances
 
-  return { data, isFetched }
+  const refetch = () => {
+    refetchPoolBalances()
+    refetchPodBalances()
+  }
+
+  return { data, isFetched, refetch }
 }

@@ -15,6 +15,7 @@ export const useUserV4Balances = (
 ): {
   data: V4BalanceToMigrate[]
   isFetched: boolean
+  refetch: () => void
 } => {
   const queryData = useMemo(() => {
     const networks: number[] = []
@@ -32,11 +33,11 @@ export const useUserV4Balances = (
     return { networks, ticketAddresses }
   }, [])
 
-  const { data: poolBalances, isFetched: isFetchedPoolBalances } = useTokenBalancesAcrossChains(
-    queryData.networks,
-    userAddress,
-    queryData.ticketAddresses
-  )
+  const {
+    data: poolBalances,
+    isFetched: isFetchedPoolBalances,
+    refetch
+  } = useTokenBalancesAcrossChains(queryData.networks, userAddress, queryData.ticketAddresses)
 
   const data = useMemo(() => {
     const balancesToMigrate: V4BalanceToMigrate[] = []
@@ -58,5 +59,5 @@ export const useUserV4Balances = (
     return balancesToMigrate
   }, [poolBalances, isFetchedPoolBalances])
 
-  return { data, isFetched: isFetchedPoolBalances }
+  return { data, isFetched: isFetchedPoolBalances, refetch }
 }

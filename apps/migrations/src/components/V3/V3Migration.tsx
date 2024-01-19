@@ -9,7 +9,7 @@ import { ReactNode, useMemo, useState } from 'react'
 import { Address, formatUnits } from 'viem'
 import { SimpleBadge } from '@components/SimpleBadge'
 import { SupportedNetwork, V3_POOLS } from '@constants/config'
-import { V3BalanceToMigrate } from '@hooks/useUserV3Balances'
+import { useUserV3Balances, V3BalanceToMigrate } from '@hooks/useUserV3Balances'
 import { useV3WithdrawGasEstimate } from '@hooks/useV3WithdrawGasEstimate'
 import { V3MigrationHeader } from './V3MigrationHeader'
 import { WithdrawPodButton } from './WithdrawPodButton'
@@ -31,12 +31,17 @@ export const V3Migration = (props: V3MigrationProps) => {
 
   const [actionsCompleted, setActionsCompleted] = useState(0)
 
+  const { refetch: refetchUserV3Balances } = useUserV3Balances(userAddress)
+
   const allMigrationActions = {
     withdraw: (
       <WithdrawContent
         userAddress={userAddress}
         migration={migration}
-        onSuccess={() => setActionsCompleted(actionsCompleted + 1)}
+        onSuccess={() => {
+          refetchUserV3Balances()
+          setActionsCompleted(actionsCompleted + 1)
+        }}
       />
     ),
     swap: <SwapContent migration={migration} />
