@@ -5,6 +5,7 @@ import { Button, ExternalLink, Table, TableData } from '@shared/ui'
 import classNames from 'classnames'
 import Image from 'next/image'
 import Link from 'next/link'
+import { ReactNode } from 'react'
 import { Address } from 'viem'
 import { TokenBadge } from '@components/TokenBadge'
 import { SupportedNetwork, V3_POOLS } from '@constants/config'
@@ -60,7 +61,9 @@ export const V3MigrationsTable = (props: V3MigrationsTableProps) => {
         {userV3Balances.map((migration) => (
           <V3MigrationCard
             key={`v3Migration-${migration.token.chainId}-${migration.contractAddress}`}
+            userAddress={userAddress}
             migration={migration}
+            className='w-full max-w-md'
           />
         ))}
       </div>
@@ -92,16 +95,56 @@ export const V3MigrationsTable = (props: V3MigrationsTableProps) => {
 }
 
 interface V3MigrationCardProps {
+  userAddress: Address
   migration: V3BalanceToMigrate
   className?: string
 }
 
 const V3MigrationCard = (props: V3MigrationCardProps) => {
-  const { migration, className } = props
+  const { userAddress, migration, className } = props
 
-  // TODO: mobile card
+  const cardData = [
+    { label: 'Status', content: <StatusItem className='text-sm' /> },
+    {
+      label: 'Unclaimed Rewards',
+      content: <RewardsItem />
+    },
+    {
+      label: 'Your Balance',
+      content: <BalanceItem token={migration.token} className='!items-end text-sm text-right' />
+    }
+  ] satisfies {
+    label: string
+    content: ReactNode
+  }[]
 
-  return <></>
+  return (
+    <div
+      className={classNames(
+        'flex flex-col gap-4 items-start bg-pt-transparent rounded-lg px-3 pt-3 pb-6',
+        className
+      )}
+    >
+      <TokenBadge token={migration.token} />
+      <div className='w-full flex flex-col gap-1 px-3'>
+        {cardData.map((data, i) => (
+          <div
+            key={`cl-${i}-${migration.token.chainId}-${migration.contractAddress}`}
+            className='flex items-center justify-between'
+          >
+            <span className='text-xs text-pt-purple-200'>{data.label}</span>
+            {data.content}
+          </div>
+        ))}
+      </div>
+      <ManageItem
+        userAddress={userAddress}
+        migration={migration}
+        fullSized={true}
+        className='w-full justify-center'
+      />
+    </div>
+  )
 }
 
 interface StatusItemProps {
@@ -148,7 +191,7 @@ const BalanceItem = (props: BalanceItemProps) => {
     <TokenValueAndAmount
       token={{ ...token, address: underlyingTokenAddress ?? token.address }}
       className={className}
-      amountClassName='text-center'
+      amountClassName='md:text-center'
     />
   )
 }
@@ -156,11 +199,12 @@ const BalanceItem = (props: BalanceItemProps) => {
 interface ManageItemProps {
   userAddress: Address
   migration: V3BalanceToMigrate
+  fullSized?: boolean
   className?: string
 }
 
 const ManageItem = (props: ManageItemProps) => {
-  const { userAddress, migration, className } = props
+  const { userAddress, migration, fullSized, className } = props
 
   const { refetch: refetchUserV3Balances } = useUserV3Balances(userAddress)
 
@@ -174,7 +218,8 @@ const ManageItem = (props: ManageItemProps) => {
           txOptions={{ onSuccess: refetchUserV3Balances }}
           hideWrongNetworkState={true}
           color='transparent'
-          className='min-w-[6rem]'
+          fullSized={fullSized}
+          className='md:min-w-[6rem]'
         />
       )}
       {migration.type === 'pod' && (
@@ -183,11 +228,12 @@ const ManageItem = (props: ManageItemProps) => {
           txOptions={{ onSuccess: refetchUserV3Balances }}
           hideWrongNetworkState={true}
           color='transparent'
-          className='min-w-[6rem]'
+          fullSized={fullSized}
+          className='md:min-w-[6rem]'
         />
       )}
-      <Link href={migrationURL} passHref={true}>
-        <Button>Migrate</Button>
+      <Link href={migrationURL} passHref={true} className='w-full'>
+        <Button fullSized={fullSized}>Migrate</Button>
       </Link>
     </div>
   )
