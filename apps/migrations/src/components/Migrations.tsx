@@ -4,9 +4,11 @@ import Image from 'next/image'
 import { Address } from 'viem'
 import { useUserV3Balances } from '@hooks/useUserV3Balances'
 import { useUserV4Balances } from '@hooks/useUserV4Balances'
+import { useUserV5Balances } from '@hooks/useUserV5Balances'
 import { MigrationsHeader } from './MigrationsHeader'
 import { V3Migrations } from './V3/V3Migrations'
 import { V4Migrations } from './V4/V4Migrations'
+import { V5Migrations } from './V5/V5Migrations'
 
 export interface MigrationsProps {
   userAddress: Address
@@ -16,13 +18,16 @@ export interface MigrationsProps {
 export const Migrations = (props: MigrationsProps) => {
   const { userAddress, className } = props
 
+  const { data: userV5Balances, isFetched: isFetchedUserV5Balances } =
+    useUserV5Balances(userAddress)
   const { data: userV4Balances, isFetched: isFetchedUserV4Balances } =
     useUserV4Balances(userAddress)
   const { data: userV3Balances, isFetched: isFetchedUserV3Balances } =
     useUserV3Balances(userAddress)
 
-  const isFetched = isFetchedUserV4Balances && isFetchedUserV3Balances
-  const isEmpty = isFetched && !userV4Balances.length && !userV3Balances.length
+  const isFetched = isFetchedUserV5Balances && isFetchedUserV4Balances && isFetchedUserV3Balances
+  const isEmpty =
+    isFetched && !userV5Balances.length && !userV4Balances.length && !userV3Balances.length
 
   return (
     <div className={classNames('w-full flex flex-col gap-8 items-center', className)}>
@@ -30,7 +35,10 @@ export const Migrations = (props: MigrationsProps) => {
       {!isFetched && <Spinner />}
       {isFetched && !isEmpty && (
         <>
-          {!!userV4Balances.length && <V4Migrations userAddress={userAddress} showPooly={true} />}
+          {!!userV5Balances.length && <V5Migrations userAddress={userAddress} showPooly={true} />}
+          {!!userV4Balances.length && (
+            <V4Migrations userAddress={userAddress} showPooly={!userV5Balances.length} />
+          )}
           {!!userV3Balances.length && (
             <V3Migrations userAddress={userAddress} showPooly={!userV4Balances.length} />
           )}

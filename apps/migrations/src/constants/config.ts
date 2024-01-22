@@ -17,7 +17,7 @@ import {
   xdefiWallet,
   zerionWallet
 } from '@rainbow-me/rainbowkit/wallets'
-import { TokenWithLogo } from '@shared/types'
+import { TokenWithLogo, VaultInfo } from '@shared/types'
 import { NETWORK } from '@shared/utilities'
 import { Address } from 'viem'
 import { arbitrum, avalanche, celo, Chain, mainnet, optimism, polygon } from 'viem/chains'
@@ -89,6 +89,54 @@ export const MIGRATION_DESTINATIONS = {
   wethVault: { chainId: NETWORK.optimism, address: '0xf0b19f02c63d51b69563a2b675e0160e1c34397c' },
   usdcVault: { chainId: NETWORK.optimism, address: '0xe3b3a464ee575e8e25d2508918383b89c832f275' }
 } as const satisfies Record<string, { chainId: SupportedNetwork; address: Lowercase<Address> }>
+
+/**
+ * V5 Vault Tags
+ */
+export type V5_TAG = 'beta' | 'replaced' | 'old-prize-pool'
+
+/**
+ * Deprecated V5 Vaults
+ */
+export const OLD_V5_VAULTS: {
+  [network: number]: {
+    vault: VaultInfo & { tags?: V5_TAG[] }
+    migrateTo: { chainId: SupportedNetwork; address: Lowercase<Address> }
+  }[]
+} = {
+  [NETWORK.optimism]: [
+    {
+      vault: {
+        chainId: NETWORK.optimism,
+        address: '0x31515cfc4550d9c83e2d86e8a352886d1364e2d9',
+        name: 'Beta Prize USDC',
+        tags: ['beta'],
+        logoURI: 'https://etherscan.io/token/images/centre-usdc_28.png'
+      },
+      migrateTo: MIGRATION_DESTINATIONS.usdcVault
+    },
+    {
+      vault: {
+        chainId: NETWORK.optimism,
+        address: '0x1732ce5486ea47f607550ccbe499cd0f894e0494',
+        name: 'Beta Prize WETH',
+        tags: ['beta'],
+        logoURI: 'https://etherscan.io/token/images/weth_28.png'
+      },
+      migrateTo: MIGRATION_DESTINATIONS.wethVault
+    },
+    {
+      vault: {
+        chainId: NETWORK.optimism,
+        address: '0x29cb69d4780b53c1e5cd4d2b817142d2e9890715',
+        name: 'Prize WETH',
+        tags: ['replaced'],
+        logoURI: 'https://etherscan.io/token/images/weth_28.png'
+      },
+      migrateTo: MIGRATION_DESTINATIONS.wethVault
+    }
+  ]
+}
 
 /**
  * V4 Pools
