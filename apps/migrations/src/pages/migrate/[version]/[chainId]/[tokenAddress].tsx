@@ -4,15 +4,18 @@ import { useAccount } from 'wagmi'
 import { Layout } from '@components/Layout'
 import { V3Migration } from '@components/V3/V3Migration'
 import { V4Migration } from '@components/V4/V4Migration'
+import { V5Migration } from '@components/V5/V5Migration'
 import { SUPPORTED_NETWORKS, SupportedNetwork } from '@constants/config'
 import { useUserV3Balances } from '@hooks/useUserV3Balances'
 import { useUserV4Balances } from '@hooks/useUserV4Balances'
+import { useUserV5Balances } from '@hooks/useUserV5Balances'
 
 export default function MigrationPage() {
   const router = useRouter()
 
   const { address: userAddress } = useAccount()
 
+  const { data: userV5Balances } = useUserV5Balances(userAddress as Address)
   const { data: userV4Balances } = useUserV4Balances(userAddress as Address)
   const { data: userV3Balances } = useUserV3Balances(userAddress as Address)
 
@@ -25,10 +28,9 @@ export default function MigrationPage() {
         : undefined
 
     const version =
-      (!!router.query.version &&
-        typeof router.query.version === 'string' &&
-        router.query.version === 'v4') ||
-      router.query.version === 'v3'
+      !!router.query.version &&
+      typeof router.query.version === 'string' &&
+      ['v5', 'v4', 'v3'].includes(router.query.version)
         ? router.query.version
         : undefined
 
@@ -40,7 +42,19 @@ export default function MigrationPage() {
         : undefined
 
     if (!!userAddress && !!chainId && !!version && !!tokenAddress) {
-      if (version === 'v4') {
+      if (version === 'v5') {
+        const v5Migration = userV5Balances.find(
+          (balance) => balance.token.address.toLowerCase() === tokenAddress
+        )
+
+        if (!!v5Migration) {
+          return (
+            <Layout>
+              <V5Migration userAddress={userAddress} migration={v5Migration} />
+            </Layout>
+          )
+        }
+      } else if (version === 'v4') {
         const v4Migration = userV4Balances.find(
           (balance) => balance.token.address.toLowerCase() === tokenAddress
         )

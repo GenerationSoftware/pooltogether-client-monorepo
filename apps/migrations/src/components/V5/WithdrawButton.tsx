@@ -6,11 +6,12 @@ import { V5BalanceToMigrate } from '@hooks/useUserV5Balances'
 export interface WithdrawButtonProps extends Omit<ButtonProps, 'onClick'> {
   migration: V5BalanceToMigrate
   txOptions?: Parameters<typeof useSendRedeemTransaction>[2]
+  includeTokenSymbol?: boolean
   hideWrongNetworkState?: boolean
 }
 
 export const WithdrawButton = (props: WithdrawButtonProps) => {
-  const { migration, txOptions, hideWrongNetworkState, ...rest } = props
+  const { migration, txOptions, includeTokenSymbol, hideWrongNetworkState, ...rest } = props
 
   const vault = useVault(migration.vaultInfo)
 
@@ -28,7 +29,7 @@ export const WithdrawButton = (props: WithdrawButtonProps) => {
       hideWrongNetworkState={hideWrongNetworkState}
       {...rest}
     >
-      Withdraw
+      Withdraw{includeTokenSymbol ? ` ${migration.token.symbol}` : ''}
     </TransactionButton>
   )
 }
