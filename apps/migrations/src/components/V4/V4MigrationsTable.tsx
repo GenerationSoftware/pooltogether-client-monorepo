@@ -77,6 +77,7 @@ export const V4MigrationsTable = (props: V4MigrationsTableProps) => {
         innerClassName='!gap-3'
         headerClassName='px-4'
         rowClassName='!px-4 py-4 rounded-3xl'
+        gridColsClassName='grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.5fr)]'
       />
       {showPooly && (
         <Image
@@ -162,6 +163,7 @@ const BalanceItem = (props: BalanceItemProps) => {
     <TokenValueAndAmount
       token={{ ...token, address: underlyingTokenAddress ?? token.address }}
       className={className}
+      amountClassName='text-center'
     />
   )
 }
