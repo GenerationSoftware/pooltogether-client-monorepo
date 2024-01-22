@@ -35,8 +35,7 @@ export interface DepositModalProps {
   openChainModal?: () => void
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
-  onSuccessfulExactApproval?: () => void
-  onSuccessfulInfiniteApproval?: () => void
+  onSuccessfulApproval?: () => void
   onSuccessfulDeposit?: () => void
   onSuccessfulDepositWithPermit?: () => void
   intl?: {
@@ -49,10 +48,7 @@ export interface DepositModalProps {
       | 'balance'
       | 'enterAnAmount'
       | 'approvalButton'
-      | 'exactApprovalButton'
-      | 'exactApprovalTx'
-      | 'infiniteApprovalButton'
-      | 'infiniteApprovalTx'
+      | 'approvalTx'
       | 'reviewDeposit'
       | 'confirmDeposit'
       | 'depositTx'
@@ -76,7 +72,7 @@ export interface DepositModalProps {
     >
     common?: Intl<'prizePool' | 'connectWallet' | 'close' | 'viewOn' | 'learnAboutRisks'>
     fees?: NetworkFeesProps['intl']
-    tooltips?: Intl<'exactApproval' | 'infiniteApproval'>
+    tooltips?: Intl<'approval'>
     txToast?: DepositTxToastProps['intl']
     errors?: RichIntl<
       | 'exchangeRateError'
@@ -96,8 +92,7 @@ export const DepositModal = (props: DepositModalProps) => {
     openChainModal,
     addRecentTransaction,
     refetchUserBalances,
-    onSuccessfulExactApproval,
-    onSuccessfulInfiniteApproval,
+    onSuccessfulApproval,
     onSuccessfulDeposit,
     onSuccessfulDepositWithPermit,
     intl
@@ -198,8 +193,7 @@ export const DepositModal = (props: DepositModalProps) => {
             openChainModal={openChainModal}
             addRecentTransaction={addRecentTransaction}
             refetchUserBalances={refetchUserBalances}
-            onSuccessfulExactApproval={onSuccessfulExactApproval}
-            onSuccessfulInfiniteApproval={onSuccessfulInfiniteApproval}
+            onSuccessfulApproval={onSuccessfulApproval}
             onSuccessfulDeposit={onSuccessfulDeposit}
             intl={intl}
           />

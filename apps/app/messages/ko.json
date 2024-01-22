@@ -161,10 +161,7 @@
     "balance": "잔액:",
     "enterAnAmount": "금액 입력",
     "approvalButton": "{symbol} 승인",
-    "exactApprovalButton": "{symbol} 정확한 금액 승인",
-    "exactApprovalTx": "{symbol} 정확한 승인",
-    "infiniteApprovalButton": "{symbol} 무제한 금액 승인",
-    "infiniteApprovalTx": "{symbol} 무제한 승인",
+    "approvalTx": "{symbol} 정확한 승인",
     "reviewDeposit": "입금 검토",
     "reviewWithdrawal": "출금 검토",
     "confirmDeposit": "입금 확인",
@@ -245,8 +242,7 @@
   "Tooltips": {
     "prizeYield": "금고가 상금 풀에 기여한 최근 평균",
     "winChance": "어떤 추첨에서 상을 받을 확률",
-    "exactApproval": "{symbol} 의 특정 금액 입금에 대한 승인을 줄 것입니다",
-    "infiniteApproval": "다음에 {symbol} 를 입금할 때 승인할 필요가 없습니다",
+    "approval": "{symbol} 의 특정 금액 입금에 대한 승인을 줄 것입니다",
     "vaultFee": "상금으로 가지 않는 수익의 비율로, 금고 배포자가 결정합니다",
     "importedVault": "이 금고는 다음과 같은 가져온 목록에서 왔습니다:",
     "vaultContribution": "지난 {days} 일 동안 상금 풀에 기여한 {symbol} 의 금액"

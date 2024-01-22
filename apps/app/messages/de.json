@@ -159,10 +159,7 @@
     "balance": "Guthaben:",
     "enterAnAmount": "Gib eine Anzahl ein",
     "approvalButton": "{symbol} genehmigen",
-    "exactApprovalButton": "Die genaue Anzahl von {symbol} genehmigen",
-    "exactApprovalTx": "Genaue {symbol} Genehmigung",
-    "infiniteApprovalButton": "Unbegrenzte Anzahl von {symbol} genehmigen",
-    "infiniteApprovalTx": "Unbegrenzte Genehmigung von {symbol}",
+    "approvalTx": "Genaue {symbol} Genehmigung",
     "reviewDeposit": "Einzahlung überprüfen",
     "reviewWithdrawal": "Abhebung überprüfen",
     "confirmDeposit": "Einzahlung bestätigen",
@@ -242,8 +239,7 @@
   },
   "Tooltips": {
     "winChance": "Deine Chance, einen Preis bei einer beliebigen Auslosung zu gewinnen",
-    "exactApproval": "Du gibst Deine Zustimmung, eine bestimmte Anzahl von {symbol} einzuzahlen",
-    "infiniteApproval": "Du brauchst {symbol} nicht zu genehmigen, wenn Du das nächste Mal einzahlen möchtest",
+    "approval": "Du gibst Deine Zustimmung, eine bestimmte Anzahl von {symbol} einzuzahlen",
     "vaultFee": "Ein Prozentsatz des Yield, der nicht in Preise fließt und vom Vault Ersteller bestimmt wird",
     "importedVault": "Dieses Vault stammt von der(n) folgenden importierten Liste(n):",
     "vaultContribution": "Die Gesamtzahl von {symbol} hat in den letzten {days} Tagen zum Preispool beigetragen"

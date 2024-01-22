@@ -106,7 +106,7 @@ export const ExtendPromotionButton = (props: ExtendPromotionButtonProps) => {
         isTxSuccess={isSuccessfulApproval}
         write={sendApproveTransaction}
         txHash={approvalTxHash}
-        txDescription={`Exact ${token?.symbol} Approval`}
+        txDescription={`${token?.symbol} Approval`}
         disabled={!approvalEnabled}
         openConnectModal={openConnectModal}
         openChainModal={openChainModal}

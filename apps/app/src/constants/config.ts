@@ -123,7 +123,6 @@ export const TWAB_REWARDS_SETTINGS: {
  */
 export const FATHOM_EVENTS = {
   approvedExact: 'ApprovedExact',
-  approvedInfinite: 'ApprovedInfinite',
   deposited: 'Deposited',
   depositedWithPermit: 'DepositedWithPermit',
   redeemed: 'Redeemed',

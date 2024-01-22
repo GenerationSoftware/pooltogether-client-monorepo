@@ -136,7 +136,7 @@ export const DeployPromotionButton = (props: DeployPromotionButtonProps) => {
         isTxSuccess={isSuccessfulApproval}
         write={sendApproveTransaction}
         txHash={approvalTxHash}
-        txDescription={`Exact ${rewardToken?.symbol} Approval`}
+        txDescription={`${rewardToken?.symbol} Approval`}
         disabled={!approvalEnabled}
         openConnectModal={openConnectModal}
         openChainModal={openChainModal}

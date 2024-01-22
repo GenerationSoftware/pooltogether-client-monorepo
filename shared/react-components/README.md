@@ -83,11 +83,10 @@ A React componponent library utilizing some simpler components from the internal
 
 ### Tooltip Components
 
+- `ApprovalTooltip`
 - `BonusRewardsTooltip`
 - `DeprecatedVaultTooltip`
-- `ExactApprovalTooltip`
 - `ImportedVaultTooltip`
-- `InfiniteApprovalTooltip`
 - `PrizeYieldTooltip`
 - `VaultContributionsTooltip`
 - `VaultFeeTooltip`

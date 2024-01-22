@@ -11,16 +11,14 @@ import {
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
 import { Button } from '@shared/ui'
-import { MAX_UINT_256, NETWORK, WRAPPED_NATIVE_ASSETS } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
-import { ReactNode, useEffect } from 'react'
+import { useEffect } from 'react'
 import { Address, parseUnits } from 'viem'
 import { useAccount, useNetwork } from 'wagmi'
 import { DepositModalView } from '.'
 import { depositFormTokenAmountAtom } from '../../Form/DepositForm'
 import { isValidFormInput } from '../../Form/TxFormInput'
-import { ExactApprovalTooltip } from '../../Tooltips/ExactApprovalTooltip'
-import { InfiniteApprovalTooltip } from '../../Tooltips/InfiniteApprovalTooltip'
+import { ApprovalTooltip } from '../../Tooltips/ApprovalTooltip'
 import { TransactionButton } from '../../Transaction/TransactionButton'
 
 interface DepositTxButtonProps {
@@ -32,17 +30,13 @@ interface DepositTxButtonProps {
   openChainModal?: () => void
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
-  onSuccessfulExactApproval?: () => void
-  onSuccessfulInfiniteApproval?: () => void
+  onSuccessfulApproval?: () => void
   onSuccessfulDeposit?: () => void
   intl?: {
     base?: Intl<
       | 'enterAnAmount'
       | 'approvalButton'
-      | 'exactApprovalButton'
-      | 'exactApprovalTx'
-      | 'infiniteApprovalButton'
-      | 'infiniteApprovalTx'
+      | 'approvalTx'
       | 'reviewDeposit'
       | 'confirmDeposit'
       | 'depositTx'
@@ -50,7 +44,7 @@ interface DepositTxButtonProps {
       | 'switchingNetwork'
     >
     common?: Intl<'connectWallet'>
-    tooltips?: Intl<'exactApproval' | 'infiniteApproval'>
+    tooltips?: Intl<'approval'>
   }
 }
 
@@ -64,8 +58,7 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
     openChainModal,
     addRecentTransaction,
     refetchUserBalances,
-    onSuccessfulExactApproval,
-    onSuccessfulInfiniteApproval,
+    onSuccessfulApproval,
     onSuccessfulDeposit,
     intl
   } = props
@@ -115,28 +108,15 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
     : 0n
 
   const {
-    isWaiting: isWaitingExactApproval,
-    isConfirming: isConfirmingExactApproval,
-    isSuccess: isSuccessfulExactApproval,
-    txHash: exactApprovalTxHash,
-    sendApproveTransaction: sendExactApproveTransaction
+    isWaiting: isWaitingApproval,
+    isConfirming: isConfirmingApproval,
+    isSuccess: isSuccessfulApproval,
+    txHash: approvalTxHash,
+    sendApproveTransaction: sendApproveTransaction
   } = useSendApproveTransaction(depositAmount, vault, {
     onSuccess: () => {
       refetchTokenAllowance()
-      onSuccessfulExactApproval?.()
-    }
-  })
-
-  const {
-    isWaiting: isWaitingInfiniteApproval,
-    isConfirming: isConfirmingInfiniteApproval,
-    isSuccess: isSuccessfulInfiniteApproval,
-    txHash: infiniteApprovalTxHash,
-    sendApproveTransaction: sendInfiniteApproveTransaction
-  } = useSendApproveTransaction(MAX_UINT_256, vault, {
-    onSuccess: () => {
-      refetchTokenAllowance()
-      onSuccessfulInfiniteApproval?.()
+      onSuccessfulApproval?.()
     }
   })
 
@@ -202,90 +182,35 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
     )
   }
 
-  const ExactApprovalButton = (props: { children: ReactNode }) => (
-    <TransactionButton
-      chainId={vault.chainId}
-      isTxLoading={isWaitingExactApproval || isConfirmingExactApproval}
-      isTxSuccess={isSuccessfulExactApproval}
-      write={sendExactApproveTransaction}
-      txHash={exactApprovalTxHash}
-      txDescription={
-        intl?.base?.('exactApprovalTx', { symbol: tokenData?.symbol ?? '?' }) ??
-        `Exact ${tokenData?.symbol ?? '?'} Approval`
-      }
-      fullSized={true}
-      disabled={!approvalEnabled}
-      openConnectModal={openConnectModal}
-      openChainModal={openChainModal}
-      addRecentTransaction={addRecentTransaction}
-      innerClassName='flex gap-2 items-center'
-      intl={intl}
-    >
-      {props.children}
-    </TransactionButton>
-  )
-
-  const InfiniteApprovalButton = (props: { children: ReactNode }) => (
-    <TransactionButton
-      chainId={vault.chainId}
-      isTxLoading={isWaitingInfiniteApproval || isConfirmingInfiniteApproval}
-      isTxSuccess={isSuccessfulInfiniteApproval}
-      write={sendInfiniteApproveTransaction}
-      txHash={infiniteApprovalTxHash}
-      txDescription={
-        intl?.base?.('infiniteApprovalTx', { symbol: tokenData?.symbol ?? '?' }) ??
-        `Infinite ${tokenData?.symbol ?? '?'} Approval`
-      }
-      fullSized={true}
-      disabled={!approvalEnabled}
-      openConnectModal={openConnectModal}
-      openChainModal={openChainModal}
-      addRecentTransaction={addRecentTransaction}
-      color='transparent'
-      innerClassName='flex gap-2 items-center'
-      intl={intl}
-    >
-      {props.children}
-    </TransactionButton>
-  )
-
-  // Needs approval for wrapped native asset
-  if (
-    isDataFetched &&
-    tokenData.address.toLowerCase() === WRAPPED_NATIVE_ASSETS[tokenData.chainId as NETWORK] &&
-    (allowance < depositAmount || allowance > MAX_UINT_256 / 2n)
-  ) {
-    return (
-      <ExactApprovalButton>
-        {intl?.base?.('approvalButton', { symbol: tokenData.symbol }) ??
-          `Approve ${tokenData.symbol}`}
-      </ExactApprovalButton>
-    )
-  }
-
   // Needs approval
   if (isDataFetched && allowance < depositAmount) {
     return (
-      <div className='flex flex-col w-full gap-4 md:gap-6'>
-        <ExactApprovalButton>
-          {intl?.base?.('exactApprovalButton', { symbol: tokenData.symbol }) ??
-            `Approve exact amount of ${tokenData.symbol}`}
-          <ExactApprovalTooltip
-            tokenSymbol={tokenData.symbol}
-            intl={intl?.tooltips}
-            className='whitespace-normal'
-          />
-        </ExactApprovalButton>
-        <InfiniteApprovalButton>
-          {intl?.base?.('infiniteApprovalButton', { symbol: tokenData.symbol }) ??
-            `Approve unlimited amount of ${tokenData.symbol}`}
-          <InfiniteApprovalTooltip
-            tokenSymbol={tokenData.symbol}
-            intl={intl?.tooltips}
-            className='whitespace-normal'
-          />
-        </InfiniteApprovalButton>
-      </div>
+      <TransactionButton
+        chainId={vault.chainId}
+        isTxLoading={isWaitingApproval || isConfirmingApproval}
+        isTxSuccess={isSuccessfulApproval}
+        write={sendApproveTransaction}
+        txHash={approvalTxHash}
+        txDescription={
+          intl?.base?.('approvalTx', { symbol: tokenData?.symbol ?? '?' }) ??
+          `${tokenData?.symbol ?? '?'} Approval`
+        }
+        fullSized={true}
+        disabled={!approvalEnabled}
+        openConnectModal={openConnectModal}
+        openChainModal={openChainModal}
+        addRecentTransaction={addRecentTransaction}
+        innerClassName='flex gap-2 items-center'
+        intl={intl}
+      >
+        {intl?.base?.('approvalButton', { symbol: tokenData?.symbol ?? '?' }) ??
+          `Approve ${tokenData?.symbol}`}
+        <ApprovalTooltip
+          tokenSymbol={tokenData.symbol}
+          intl={intl?.tooltips}
+          className='whitespace-normal'
+        />
+      </TransactionButton>
     )
   }
 
