@@ -68,20 +68,20 @@ const SimpleNavbar = (props: SimpleNavbarProps) => {
           priority={true}
         />
       </Link>
-      {router.pathname !== '/' && (
-        <Link
-          href='/'
-          className='absolute inset-x-0 flex gap-1 items-center justify-center text-pt-purple-100'
-        >
-          <ArrowUturnLeftIcon className='h-6 w-6' />
-          <span className='font-medium'>Back to Home</span>
-        </Link>
-      )}
       <ConnectButton
         showBalance={false}
         chainStatus={{ smallScreen: 'icon', largeScreen: 'full' }}
         accountStatus='full'
       />
+      {router.pathname !== '/' && (
+        <Link
+          href='/'
+          className='flex gap-1 items-center justify-center text-pt-purple-100 md:absolute md:inset-x-0 md:bottom-0 lg:bottom-auto'
+        >
+          <ArrowUturnLeftIcon className='h-6 w-6' />
+          <span className='font-medium'>Back to Home</span>
+        </Link>
+      )}
     </div>
   )
 }

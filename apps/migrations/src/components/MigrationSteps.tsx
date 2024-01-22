@@ -46,7 +46,7 @@ export const MigrationSteps = (props: MigrationStepsProps) => {
             </div>
           ))}
       </div>
-      <div className='flex gap-16 items-center justify-between text-center'>
+      <div className='flex gap-16 justify-between text-center'>
         {actionNames.map((actionName, i) => (
           <span
             key={`migration-step-name-${i}`}
