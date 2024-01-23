@@ -9,12 +9,16 @@ import { QUERY_KEYS } from '../constants'
  * @param prizePools array of instances of the `PrizePool` class
  * @param vaults instance of the `Vaults` class
  * @param numDraws number of past draws to consider (default is `7`)
+ * @param options optional settings
  * @returns
  */
 export const useAllVaultPercentageContributions = (
   prizePools: PrizePool[],
   vaults: Vaults,
-  numDraws: number = 7
+  numDraws: number = 7,
+  options?: {
+    refetchOnWindowFocus?: boolean
+  }
 ) => {
   const results = useQueries({
     queries: prizePools.map((prizePool) => {
@@ -44,13 +48,15 @@ export const useAllVaultPercentageContributions = (
           return contributionPercentages
         },
         enabled: !!prizePool && !!vaults,
-        ...NO_REFETCH
+        ...NO_REFETCH,
+        refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
       }
     })
   })
 
   return useMemo(() => {
     const isFetched = results?.every((result) => result.isFetched)
+    const isRefetching = results?.every((result) => result.isRefetching)
     const refetch = () => results?.forEach((result) => result.refetch())
 
     const data: { [vaultId: string]: number } = Object.assign(
@@ -58,6 +64,6 @@ export const useAllVaultPercentageContributions = (
       ...results.map((result) => result.data)
     )
 
-    return { isFetched, refetch, data }
+    return { isFetched, isRefetching, refetch, data }
   }, [results])
 }
