@@ -44,6 +44,7 @@ export const useGasCostEstimates = (
     options?.refetchInterval
   )
 
+  console.log(options?.tx)
   const txData = !!options?.tx ? encodeFunctionData(options.tx) : undefined
   const queryKey = [QUERY_KEYS.gasCostRollup, chainId, txData]
 

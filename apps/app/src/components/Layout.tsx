@@ -15,6 +15,7 @@ import { MODAL_KEYS, useIsModalOpen, useIsTestnets } from '@shared/generic-react
 import {
   CaptchaModal,
   CheckPrizesModal,
+  DelegateModal,
   DepositModal,
   DrawModal,
   SettingsModal,
@@ -258,6 +259,21 @@ export const Layout = (props: LayoutProps) => {
         onGoToAccount={() => router.push('/account')}
         refetchUserBalances={refetchUserBalances}
         onSuccessfulWithdrawal={() => fathom.trackEvent(FATHOM_EVENTS.redeemed)}
+        intl={{
+          base: t_txModals,
+          common: t_common,
+          fees: t_txFees,
+          txToast: t_txToasts,
+          errors: t_errors
+        }}
+      />
+
+      <DelegateModal
+        openChainModal={openChainModal}
+        addRecentTransaction={addRecentTransaction}
+        onGoToAccount={() => router.push('/account')}
+        refetchUserBalances={refetchUserBalances}
+        onSuccessfulDelegation={() => fathom.trackEvent(FATHOM_EVENTS.redeemed)}
         intl={{
           base: t_txModals,
           common: t_common,
