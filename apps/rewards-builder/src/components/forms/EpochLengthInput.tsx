@@ -17,42 +17,68 @@ interface EpochLengthInputFormValues {
 interface EpochLengthInputProps {
   type: LengthType
   className?: string
-  labelClassName?: string
 }
 
 export const EpochLengthInput = (props: EpochLengthInputProps) => {
-  const { type, className, labelClassName } = props
+  const { type, className } = props
+
+  const { setValue } = useFormContext<EpochLengthInputFormValues>()
+  const { promotionEpochLength } = useWatch<EpochLengthInputFormValues>()
+
+  const isSelected = !!promotionEpochLength && lengthTypes[type] === parseInt(promotionEpochLength)
+
+  return (
+    <Button
+      onClick={() =>
+        setValue('promotionEpochLength', lengthTypes[type].toString(), { shouldValidate: true })
+      }
+      color='transparent'
+      className={classNames(
+        'capitalize focus:ring-transparent',
+        { '!border-pt-teal-dark': isSelected },
+        className
+      )}
+    >
+      1 {type}
+    </Button>
+  )
+}
+
+interface CustomEpochLengthInputProps {
+  className?: string
+}
+
+export const CustomEpochLengthInput = (props: CustomEpochLengthInputProps) => {
+  const { className } = props
 
   const { register } = useFormContext<EpochLengthInputFormValues>()
   const { promotionEpochLength } = useWatch<EpochLengthInputFormValues>()
 
-  const id = `epochLength-${type}`
-  const isSelected = !!promotionEpochLength && lengthTypes[type] === parseInt(promotionEpochLength)
-
   return (
-    <div className={className}>
+    <div className={classNames('flex flex-col gap-1', className)}>
       <input
-        id={id}
+        id='customEpochLengthInput'
         {...register('promotionEpochLength', {
-          validate: { isSelected: (v: string) => !!v || 'Select an epoch length!' }
+          validate: {
+            isSelected: (v: string) => (!!v && !!parseInt(v)) || 'Select an epoch length!'
+          }
         })}
-        type='radio'
-        value={lengthTypes[type]}
-        className='hidden'
+        type='range'
+        min={!!promotionEpochLength ? SECONDS_PER_HOUR : 0}
+        max={SECONDS_PER_WEEK}
+        step={SECONDS_PER_HOUR}
+        value={promotionEpochLength ?? 0}
       />
-      <label htmlFor={id}>
-        <span
-          className={classNames(
-            'inline-flex items-center justify-center gap-1 px-3 py-2 text-sm rounded-lg capitalize',
-            'border border-pt-transparent bg-pt-transparent',
-            'cursor-pointer select-none hover:bg-pt-purple-50/20',
-            { '!border-pt-teal-dark': isSelected },
-            labelClassName
-          )}
-        >
-          1 {type}
-        </span>
-      </label>
+      <span
+        className={classNames('opacity-0', {
+          'opacity-100':
+            !!promotionEpochLength &&
+            !!parseInt(promotionEpochLength) &&
+            !Object.values(lengthTypes).includes(parseInt(promotionEpochLength))
+        })}
+      >
+        Custom: {parseInt(promotionEpochLength ?? '0') / SECONDS_PER_HOUR} Hours
+      </span>
     </div>
   )
 }

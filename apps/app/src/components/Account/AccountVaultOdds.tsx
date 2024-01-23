@@ -32,7 +32,6 @@ export const AccountVaultOdds = (props: AccountVaultOddsProps) => {
   const { data: shareBalance, isFetched: isFetchedShareBalance } = useUserVaultShareBalance(
     vault,
     userAddress as Address,
-    7,
     { refetchOnWindowFocus: true }
   )
 
