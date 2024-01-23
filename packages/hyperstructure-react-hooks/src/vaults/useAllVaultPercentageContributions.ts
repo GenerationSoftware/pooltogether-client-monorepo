@@ -9,12 +9,16 @@ import { QUERY_KEYS } from '../constants'
  * @param prizePools array of instances of the `PrizePool` class
  * @param vaults instance of the `Vaults` class
  * @param numDraws number of past draws to consider (default is `7`)
+ * @param options optional settings
  * @returns
  */
 export const useAllVaultPercentageContributions = (
   prizePools: PrizePool[],
   vaults: Vaults,
-  numDraws: number = 7
+  numDraws: number = 7,
+  options?: {
+    refetchOnWindowFocus?: boolean
+  }
 ) => {
   const results = useQueries({
     queries: prizePools.map((prizePool) => {
@@ -45,7 +49,7 @@ export const useAllVaultPercentageContributions = (
         },
         enabled: !!prizePool && !!vaults,
         ...NO_REFETCH,
-        refetchOnWindowFocus: true
+        refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
       }
     })
   })

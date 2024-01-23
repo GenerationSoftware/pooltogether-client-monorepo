@@ -29,7 +29,9 @@ export const useAllUserPrizeOdds = (
     isFetched: isFetchedShareData,
     refetch: refetchShareData,
     isRefetching: isRefetchingShareData
-  } = useAllVaultShareData(vaults)
+  } = useAllVaultShareData(vaults, {
+    refetchOnWindowFocus: true
+  })
 
   const { refetch: refetchShareBalances, isRefetching: isRefetchingShareBalances } =
     useAllUserVaultBalances(vaults, userAddress, {
@@ -45,12 +47,15 @@ export const useAllUserPrizeOdds = (
     refetchOnWindowFocus: true
   })
 
+  const numDraws = 7
   const {
     data: vaultContributions,
     isFetched: isFetchedVaultContributions,
     isRefetching: isRefetchingVaultContributions,
     refetch: refetchVaultContributions
-  } = useAllVaultPercentageContributions(prizePools, vaults)
+  } = useAllVaultPercentageContributions(prizePools, vaults, numDraws, {
+    refetchOnWindowFocus: true
+  })
 
   const isRefetchingUserPrizeOdds =
     isRefetchingShareData &&
