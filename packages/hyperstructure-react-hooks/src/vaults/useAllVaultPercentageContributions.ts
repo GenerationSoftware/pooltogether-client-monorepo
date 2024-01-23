@@ -15,11 +15,13 @@ import { QUERY_KEYS } from '../constants'
 export const useAllVaultPercentageContributions = (
   prizePools: PrizePool[],
   vaults: Vaults,
-  numDraws: number = 7,
   options?: {
+    numDraws?: number
     refetchOnWindowFocus?: boolean
   }
 ) => {
+  const numDraws = options?.numDraws ?? 7
+
   const results = useQueries({
     queries: prizePools.map((prizePool) => {
       const getQueryKey = (val: (string | number)[]) => [

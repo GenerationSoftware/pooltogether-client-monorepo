@@ -52,7 +52,7 @@ export const useAllUserPrizeOdds = (
     isFetched: isFetchedVaultContributions,
     isRefetching: isRefetchingVaultContributions,
     refetch: refetchVaultContributions
-  } = useAllVaultPercentageContributions(prizePools, vaults, 7, {
+  } = useAllVaultPercentageContributions(prizePools, vaults, {
     refetchOnWindowFocus: true
   })
 
