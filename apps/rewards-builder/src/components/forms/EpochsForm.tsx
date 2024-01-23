@@ -6,7 +6,7 @@ import { promotionEpochLengthAtom, promotionEpochsAtom } from 'src/atoms'
 import { NextButton } from '@components/buttons/NextButton'
 import { PrevButton } from '@components/buttons/PrevButton'
 import { usePromotionCreationSteps } from '@hooks/usePromotionCreationSteps'
-import { EpochLengthInput } from './EpochLengthInput'
+import { CustomEpochLengthInput, EpochLengthInput } from './EpochLengthInput'
 import { SimpleInput } from './SimpleInput'
 
 interface EpochsFormValues {
@@ -66,12 +66,12 @@ export const EpochsForm = (props: EpochsFormProps) => {
         <div className='w-full max-w-md flex flex-col gap-4'>
           <span className='text-sm font-medium text-pt-purple-100'>Epoch Length</span>
           <div className='w-full flex flex-wrap gap-4'>
-            <EpochLengthInput type='hour' className='flex-grow' labelClassName='w-full' />
-            <EpochLengthInput type='day' className='flex-grow' labelClassName='w-full' />
-            <EpochLengthInput type='week' className='flex-grow' labelClassName='w-full' />
+            <EpochLengthInput type='hour' className='flex-grow' />
+            <EpochLengthInput type='day' className='flex-grow' />
+            <EpochLengthInput type='week' className='flex-grow' />
           </div>
+          <CustomEpochLengthInput />
         </div>
-        {/* TODO: add custom epoch length option (multiples of 1 hour) */}
         <div className='flex gap-2 items-center'>
           <PrevButton />
           <NextButton disabled={!formMethods.formState.isValid} />
