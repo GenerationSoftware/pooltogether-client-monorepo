@@ -15,13 +15,17 @@ import { QUERY_KEYS } from '../constants'
 export const useUserVaultShareBalance = (
   vault: Vault,
   userAddress: Address,
-  refetchInterval?: number
+  refetchInterval?: number,
+  options?: {
+    refetchOnWindowFocus?: boolean
+  }
 ): UseQueryResult<TokenWithAmount, unknown> => {
   const queryKey = [QUERY_KEYS.userVaultBalances, userAddress, vault?.id]
 
   return useQuery(queryKey, async () => await vault.getUserShareBalance(userAddress), {
     enabled: !!vault && !!userAddress,
     ...NO_REFETCH,
-    refetchInterval: refetchInterval ?? false
+    refetchInterval: refetchInterval ?? false,
+    refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
   })
 }
