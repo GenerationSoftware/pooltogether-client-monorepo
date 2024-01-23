@@ -47,20 +47,19 @@ export const useAllUserPrizeOdds = (
     refetchOnWindowFocus: true
   })
 
-  const numDraws = 7
   const {
     data: vaultContributions,
     isFetched: isFetchedVaultContributions,
     isRefetching: isRefetchingVaultContributions,
     refetch: refetchVaultContributions
-  } = useAllVaultPercentageContributions(prizePools, vaults, numDraws, {
+  } = useAllVaultPercentageContributions(prizePools, vaults, 7, {
     refetchOnWindowFocus: true
   })
 
   const isRefetchingUserPrizeOdds =
-    isRefetchingShareData &&
-    isRefetchingShareBalances &&
-    isRefetchingDelegationBalances &&
+    isRefetchingShareData ||
+    isRefetchingShareBalances ||
+    isRefetchingDelegationBalances ||
     isRefetchingVaultContributions
 
   const results = useQueries({
@@ -112,8 +111,7 @@ export const useAllUserPrizeOdds = (
 
   return useMemo(() => {
     const isFetched = results?.every((result) => result.isFetched)
-    const isRefetching =
-      isRefetchingUserPrizeOdds || results?.every((result) => result.isRefetching)
+    const isRefetching = isRefetchingUserPrizeOdds || results?.some((result) => result.isRefetching)
 
     const refetch = () => {
       refetchShareData()
