@@ -1,8 +1,5 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import {
-  useVaultExchangeRate,
-  useVaultShareData
-} from '@generationsoftware/hyperstructure-react-hooks'
+import { useVaultShareData } from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl, RichIntl } from '@shared/types'
 import { Spinner } from '@shared/ui'
 import { getNiceNetworkNameByChainId } from '@shared/utilities'
@@ -10,13 +7,12 @@ import { formatUnits } from 'viem'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 import { DelegateForm } from '../../../Form/DelegateForm'
 import { AaveCollateralizationError } from '../../AaveCollateralizationError'
-import { ExchangeRateError } from '../../ExchangeRateError'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 
 interface MainViewProps {
   vault: Vault
   intl?: {
-    base?: Intl<'delegateFrom' | 'delegateFromShort' | 'balance' | 'max'>
+    base?: Intl<'delegateFrom' | 'delegateFromShort' | 'delegateDescription' | 'balance' | 'max'>
     common?: Intl<'prizePool' | 'warning'>
     fees?: NetworkFeesProps['intl']
     errors?: RichIntl<
@@ -37,16 +33,9 @@ export const MainView = (props: MainViewProps) => {
 
   const { data: shareData } = useVaultShareData(vault)
 
-  const { data: vaultExchangeRate } = useVaultExchangeRate(vault)
-
   const vaultName = vault.name ?? `"${shareData?.name}"`
+  const vaultToken = vault.tokenData?.symbol ?? `"${shareData?.name}"`
   const networkName = getNiceNetworkNameByChainId(vault.chainId)
-
-  const isAaveCollateralizationErrored =
-    vault.tags?.includes('aave') &&
-    !!vaultExchangeRate &&
-    vault.decimals !== undefined &&
-    parseFloat(formatUnits(vaultExchangeRate, vault.decimals)) !== 1
 
   return (
     <div className='flex flex-col gap-6'>
@@ -54,14 +43,21 @@ export const MainView = (props: MainViewProps) => {
         {!!vaultName && (
           <span className='hidden md:inline-block'>
             {intl?.base?.('delegateFrom', { name: vaultName, network: networkName }) ??
-              `Delegate from ${vaultName} on ${networkName}`}
+              `Delegate your ${vaultName} on ${networkName}`}
           </span>
         )}
         {!!vaultName && (
           <span className='inline-block md:hidden'>
-            {intl?.base?.('delegateFromShort', { name: vaultName }) ?? `Delegate from ${vaultName}`}
+            {intl?.base?.('delegateFromShort', { name: vaultName }) ?? `Delegate your ${vaultName}`}
           </span>
         )}
+        {!!vaultName && (
+          <span className='text-sm my-2 font-normal text-pt-purple-200 block'>
+            {intl?.base?.('delegateDescription', { tokenSymbol: vaultToken }) ??
+              `The delegated address receives any prizes your ${vaultToken} deposit wins.`}
+          </span>
+        )}
+
         {!vaultName && <Spinner />}
       </span>
       <PrizePoolBadge
@@ -70,21 +66,10 @@ export const MainView = (props: MainViewProps) => {
         intl={intl?.common}
         className='!py-1 mx-auto'
       />
-      {!!vaultExchangeRate ? (
-        <>
-          <DelegateForm vault={vault} showInputInfoRows={true} intl={intl} />
-          {isAaveCollateralizationErrored ? (
-            <AaveCollateralizationError
-              vault={vault}
-              intl={{ warning: intl?.common?.('warning'), error: intl?.errors }}
-            />
-          ) : (
-            <NetworkFees vault={vault} show={['delegate']} intl={intl?.fees} />
-          )}
-        </>
-      ) : (
-        <ExchangeRateError vault={vault} intl={intl?.errors} />
-      )}
+      <>
+        <DelegateForm vault={vault} showInputInfoRows={true} intl={intl} />
+        <NetworkFees vault={vault} show={['delegate']} intl={intl?.fees} />
+      </>
     </div>
   )
 }

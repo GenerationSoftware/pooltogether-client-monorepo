@@ -162,8 +162,9 @@
     "depositToShort": "Deposit to {name}",
     "withdrawFrom": "Withdraw from {name} on {network}",
     "withdrawFromShort": "Withdraw from {name}",
-    "delegateFrom": "Delegate from {name} on {network}",
-    "delegateFromShort": "Delegate from {name}",
+    "delegateFrom": "Delegate your {name} on {network}",
+    "delegateFromShort": "Delegate your {name}",
+    "delegateDescription": "The delegated address receives any prizes your {tokenSymbol} deposit wins.",
     "fees": {
       "title": "Estimated Network Fees",
       "approval": "Approval",
