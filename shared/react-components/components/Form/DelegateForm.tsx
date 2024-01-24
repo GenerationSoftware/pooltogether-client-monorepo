@@ -5,9 +5,10 @@ import { Spinner } from '@shared/ui'
 import { atom, useSetAtom } from 'jotai'
 import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { Address } from 'viem'
+import { Address, isAddress } from 'viem'
 import { useAccount } from 'wagmi'
-import { AddressInput, AddressInputFormValues } from './AddressInput'
+// import { AddressInput, AddressInputFormValues } from './AddressInput'
+import { SimpleInput } from './SimpleInput'
 
 // import { isValidFormInput } from './TxFormInput'
 
@@ -35,8 +36,6 @@ export const DelegateForm = (props: DelegateFormProps) => {
     userAddress as Address,
     { refetchOnWindowFocus: true }
   )
-  console.log('delegate')
-  console.log(delegate)
 
   if (!isFetchedDelegate) {
     return <Spinner />
@@ -46,45 +45,64 @@ export const DelegateForm = (props: DelegateFormProps) => {
     const twabController = await vault.getTWABController()
   }
 
-  const formMethods = useForm<AddressInputFormValues>({
-    mode: 'onChange',
+  const formMethods = useForm<DelegateFormValues>({
+    mode: 'on',
     defaultValues: { address: '' }
   })
 
   const setFormNewDelegateAddress = useSetAtom(delegateFormNewDelegateAddressAtom)
 
   useEffect(() => {
-    setFormNewDelegateAddress('')
+    setFormNewDelegateAddress('0x')
   }, [])
 
-  const handleNewDelegateAddressChange = (newDelegateAddress: Address) => {
+  const handleNewDelegateAddress = (newDelegateAddress: Address) => {
     if (isValidFormInput(newDelegateAddress)) {
       // prob don't need both of these:
       setFormNewDelegateAddress(newDelegateAddress)
 
       // prob don't need both of these:
-      formMethods.setValue('newDelegateAddress', newDelegateAddress, {
-        shouldValidate: true
-      })
+      // formMethods.setValue('newDelegateAddress', newDelegateAddress, {
+      //   shouldValidate: true
+      // })
     } else {
       setFormToErroredState()
     }
   }
 
   const setFormToErroredState = () => {
-    setFormNewDelegateAddress('')
+    setFormNewDelegateAddress('0x')
   }
 
   return (
     <div className='flex flex-col'>
       <FormProvider {...formMethods}>
-        <AddressInput
+        <SimpleInput
+          formKey='recipientAddress'
+          validate={{
+            isValidAddress: (v: string) => isAddress(v?.trim()) || 'Enter a valid wallet address.'
+          }}
+          placeholder='0x0000...'
+          label='Recipient Address'
+          needsOverride={true}
+          keepValueOnOverride={true}
+          className='w-full max-w-md'
+        />
+
+        {/* <AddressInput
+          label={<>Delegated address</>}
           id='change-delegate-address'
           formKey='address'
-          // onChange={handleAddressChange}
+          // on={handleAddress}
+          validate={{
+            isValidAddress: (v: string) => isAddress(v?.trim()) || 'Enter a valid wallet address.'
+          }}
+          needsOverride={true}
+          placeholder={delegate}
+          defaultValue={delegate}
           intl={intl}
           className='mb-0.5'
-        />
+        /> */}
       </FormProvider>
     </div>
   )

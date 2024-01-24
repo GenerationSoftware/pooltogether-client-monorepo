@@ -2,11 +2,11 @@ import { useSelectedVault } from '@generationsoftware/hyperstructure-react-hooks
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Intl, RichIntl } from '@shared/types'
 import { Modal } from '@shared/ui'
-import { formatNumberForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
-import { ReactNode, useState } from 'react'
-import { delegateFormTokenAmountAtom } from '../../Form/DelegateForm'
+import { ReactNode, useEffect, useState } from 'react'
+import { Address } from 'viem'
+import { delegateFormNewDelegateAddressAtom } from '../../Form/DelegateForm'
 import { createDelegateTxToast, DelegateTxToastProps } from '../../Toasts/DelegateTxToast'
 import { NetworkFeesProps } from '../NetworkFees'
 import { DelegateTxButton } from './DelegateTxButton'
@@ -83,12 +83,16 @@ export const DelegateModal = (props: DelegateModalProps) => {
 
   const [delegateTxHash, setDelegateTxHash] = useState<string>()
 
-  const formTokenAmount = useAtomValue(delegateFormTokenAmountAtom)
+  const newDelegateAddress: Address = useAtomValue(delegateFormNewDelegateAddressAtom)
+  console.log('newDelegateAddress')
+  console.log(newDelegateAddress)
 
-  let twabController: Address
+  let twabController: Address | undefined
   useEffect(() => {
     const getTwabController = async () => {
-      twabController = await vault.getTWABController()
+      if (vault) {
+        twabController = await vault.getTWABController()
+      }
     }
     getTwabController()
   }, [vault])
@@ -98,7 +102,7 @@ export const DelegateModal = (props: DelegateModalProps) => {
       createDelegateTxToast({
         vault: vault,
         txHash: delegateTxHash,
-        formattedAmount: formatNumberForDisplay(formTokenAmount),
+        formattedAmount: '0',
         addRecentTransaction: addRecentTransaction,
         refetchUserBalances: refetchUserBalances,
         intl: intl?.txToast
@@ -143,19 +147,21 @@ export const DelegateModal = (props: DelegateModalProps) => {
           hidden: view !== 'main' && view !== 'review'
         })}
       >
-        <DelegateTxButton
-          twabController={twabController}
-          vault={vault}
-          modalView={view}
-          setModalView={setView}
-          setDelegateTxHash={setDelegateTxHash}
-          openConnectModal={openConnectModal}
-          openChainModal={openChainModal}
-          addRecentTransaction={addRecentTransaction}
-          refetchUserBalances={refetchUserBalances}
-          onSuccessfulDelegation={onSuccessfulDelegation}
-          intl={intl}
-        />
+        {!!twabController && (
+          <DelegateTxButton
+            twabController={twabController}
+            vault={vault}
+            modalView={view}
+            setModalView={setView}
+            setDelegateTxHash={setDelegateTxHash}
+            openConnectModal={openConnectModal}
+            openChainModal={openChainModal}
+            addRecentTransaction={addRecentTransaction}
+            refetchUserBalances={refetchUserBalances}
+            onSuccessfulDelegation={onSuccessfulDelegation}
+            intl={intl}
+          />
+        )}
       </div>
     )
 

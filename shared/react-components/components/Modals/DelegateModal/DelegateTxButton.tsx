@@ -13,6 +13,7 @@ import { Address } from 'viem'
 import { useAccount, useNetwork } from 'wagmi'
 import { DelegateModalView } from '.'
 import { delegateFormNewDelegateAddressAtom } from '../../Form/DelegateForm'
+import { isValidFormInput } from '../../Form/TxFormInput'
 // import { isValidFormInput } from '../../Form/TxFormInput'
 import { TransactionButton } from '../../Transaction/TransactionButton'
 
@@ -25,7 +26,6 @@ interface DelegateTxButtonProps {
   openConnectModal?: () => void
   openChainModal?: () => void
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
-  refetchUserBalances?: () => void
   onSuccessfulDelegation?: () => void
   intl?: {
     base?: Intl<
@@ -50,7 +50,6 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
     openConnectModal,
     openChainModal,
     addRecentTransaction,
-    refetchUserBalances,
     onSuccessfulDelegation,
     intl
   } = props
@@ -103,13 +102,13 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
     }
   }, [delegateTxHash, isConfirmingDelegation])
 
+  const formIsValid = false
+
   const delegateEnabled =
     !isDisconnected &&
     !!userAddress &&
-    isFetchedUserVaultShareBalance &&
-    !!userVaultShareBalance &&
-    isValidFormShareAmount &&
-    !!delegateAmount &&
+    formIsValid &&
+    !!newDelegateAddress &&
     !!sendDelegateTransaction
 
   if (!!delegateTxHash || isConfirmingDelegation) {
