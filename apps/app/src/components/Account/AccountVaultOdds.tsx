@@ -29,11 +29,9 @@ export const AccountVaultOdds = (props: AccountVaultOddsProps) => {
   const { address: _userAddress } = useAccount()
   const userAddress = address ?? _userAddress
 
-  const numDraws = 7
   const { data: shareBalance, isFetched: isFetchedShareBalance } = useUserVaultShareBalance(
     vault,
     userAddress as Address,
-    numDraws,
     { refetchOnWindowFocus: true }
   )
 

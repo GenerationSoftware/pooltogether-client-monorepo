@@ -22,7 +22,7 @@ export const useUserVaultTokenBalance = (
     data: shareBalance,
     isFetched: isFetchedShareBalance,
     refetch: refetchShareBalance
-  } = useUserVaultShareBalance(vault, userAddress, refetchInterval)
+  } = useUserVaultShareBalance(vault, userAddress, { refetchInterval })
 
   const {
     data: exchangeRate,
