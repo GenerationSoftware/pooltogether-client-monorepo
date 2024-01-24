@@ -13,7 +13,7 @@ import { Intl } from '@shared/types'
 import { Button } from '@shared/ui'
 import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
-import { Address, formatUnits, parseUnits } from 'viem'
+import { Address, parseUnits } from 'viem'
 import { useAccount, useNetwork } from 'wagmi'
 import { DelegateModalView } from '.'
 import { delegateFormShareAmountAtom } from '../../Form/DelegateForm'
@@ -34,6 +34,7 @@ interface DelegateTxButtonProps {
     base?: Intl<
       | 'enterAnAmount'
       | 'reviewDelegation'
+      | 'updateDelegatedAddress'
       | 'delegateTx'
       | 'confirmDelegation'
       | 'switchNetwork'
@@ -100,7 +101,7 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
     isConfirming: isConfirmingDelegation,
     isSuccess: isSuccessfulDelegation,
     txHash: delegateTxHash,
-    sendRedeemTransaction
+    sendDelegateTransaction
   } = useSendRedeemTransaction(delegateAmount, vault, {
     onSend: () => {
       setModalView('waiting')
@@ -131,28 +132,19 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
     }
   }, [delegateTxHash, isConfirmingDelegation])
 
-  const isAaveCollateralizationErrored =
-    vault.tags?.includes('aave') &&
-    !!vaultExchangeRate &&
-    vault.decimals !== undefined &&
-    parseFloat(formatUnits(vaultExchangeRate, vault.decimals)) !== 1
-
   const delegateEnabled =
     !isDisconnected &&
     !!userAddress &&
-    !!tokenData &&
     isFetchedUserVaultShareBalance &&
     !!userVaultShareBalance &&
     isValidFormShareAmount &&
     !!delegateAmount &&
-    userVaultShareBalance.amount >= delegateAmount &&
-    !!sendRedeemTransaction &&
-    !isAaveCollateralizationErrored
+    !!sendDelegateTransaction
 
   if (delegateAmount === 0n) {
     return (
       <Button color='transparent' fullSized={true} disabled={true}>
-        {intl?.base?.('enterAnAmount') ?? 'Enter an amount'}
+        {intl?.base?.('updateDelegatedAddress') ?? 'Update delegated address'}
       </Button>
     )
   } else if (!isDisconnected && chain?.id === vault.chainId && modalView === 'main') {
@@ -167,7 +159,7 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
         chainId={vault.chainId}
         isTxLoading={isWaitingDelegation || isConfirmingDelegation}
         isTxSuccess={isSuccessfulDelegation}
-        write={sendRedeemTransaction}
+        write={sendDelegateTransaction}
         txHash={delegateTxHash}
         txDescription={
           intl?.base?.('delegateTx', { symbol: tokenData?.symbol ?? '?' }) ??

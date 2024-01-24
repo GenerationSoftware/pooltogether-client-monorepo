@@ -14,7 +14,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { Address, formatUnits, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { AddressInput } from './AddressInput'
-import { isValidFormInput, TxFormInput, TxFormValues } from './TxFormInput'
+import { isValidFormInput, TxFormValues } from './TxFormInput'
 
 export const delegateFormShareAmountAtom = atom<string>('')
 export const delegateFormTokenAmountAtom = atom<string>('')
@@ -76,15 +76,6 @@ export const DelegateForm = (props: DelegateFormProps) => {
     if (!!vaultExchangeRate && decimals !== undefined) {
       if (isValidFormInput(tokenAmount, decimals)) {
         setFormTokenAmount(tokenAmount)
-
-        const tokens = parseUnits(tokenAmount, decimals)
-        const shares = getSharesFromAssets(tokens, vaultExchangeRate, decimals)
-        const formattedShares = formatUnits(shares, decimals)
-        const slicedShares = formattedShares.endsWith('.0')
-          ? formattedShares.slice(0, -2)
-          : formattedShares
-
-        setFormShareAmount(slicedShares)
 
         formMethods.setValue('shareAmount', slicedShares, {
           shouldValidate: true
