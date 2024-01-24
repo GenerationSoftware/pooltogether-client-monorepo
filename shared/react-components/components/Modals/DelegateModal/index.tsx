@@ -40,11 +40,12 @@ export interface DelegateModalProps {
       | 'reviewWithdrawal'
       | 'delegateTx'
       | 'confirmDelegation'
+      | 'reviewDelegation'
+      | 'updateDelegatedAddress'
       | 'switchNetwork'
       | 'switchingNetwork'
       | 'confirmNotice'
       | 'submissionNotice'
-      | 'withdrawing'
       | 'success'
       | 'delegated'
       | 'viewAccount'
@@ -89,7 +90,7 @@ export const DelegateModal = (props: DelegateModalProps) => {
 
   const formTokenAmount = useAtomValue(delegateFormTokenAmountAtom)
 
-  const { data: vaultExchangeRate } = useVaultExchangeRate(vault as Vault)
+  // const { data: vaultExchangeRate } = useVaultExchangeRate(vault as Vault)
 
   const createToast = () => {
     if (!!vault && !!delegateTxHash && view === 'confirming') {
@@ -135,7 +136,7 @@ export const DelegateModal = (props: DelegateModalProps) => {
       error: <ErrorView setModalView={setView} intl={intl?.base} />
     }
 
-    const modalFooterContent = !!vaultExchangeRate ? (
+    const modalFooterContent = (
       <div
         className={classNames('flex flex-col items-center gap-6', {
           hidden: view !== 'main' && view !== 'review'
@@ -154,7 +155,7 @@ export const DelegateModal = (props: DelegateModalProps) => {
           intl={intl}
         />
       </div>
-    ) : undefined
+    )
 
     return (
       <Modal
