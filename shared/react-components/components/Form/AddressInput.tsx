@@ -3,13 +3,14 @@ import classNames from 'classnames'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { isAddress } from 'viem'
 
-interface AddressInputFormValues {
+export interface AddressInputFormValues {
   address: string
 }
 
 interface AddressInputProps {
   id: string
   className?: string
+  formKey: keyof AddressInputFormValues
   intl?: {
     errors?: Intl<'formErrors.invalidAddress'>
   }

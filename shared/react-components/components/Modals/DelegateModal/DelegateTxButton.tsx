@@ -1,26 +1,23 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
-  useSendRedeemTransaction,
-  useTokenBalance,
-  useUserVaultDelegationBalance,
-  useUserVaultShareBalance,
-  useUserVaultTokenBalance,
-  useVaultBalance,
-  useVaultExchangeRate,
+  useSendDelegateTransaction,
+  useUserVaultDelegate,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
+import { Spinner } from '@shared/ui'
 import { Button } from '@shared/ui'
 import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
-import { Address, parseUnits } from 'viem'
+import { Address } from 'viem'
 import { useAccount, useNetwork } from 'wagmi'
 import { DelegateModalView } from '.'
-import { delegateFormShareAmountAtom } from '../../Form/DelegateForm'
-import { isValidFormInput } from '../../Form/TxFormInput'
+import { delegateFormNewDelegateAddressAtom } from '../../Form/DelegateForm'
+// import { isValidFormInput } from '../../Form/TxFormInput'
 import { TransactionButton } from '../../Transaction/TransactionButton'
 
 interface DelegateTxButtonProps {
+  twabController: Address
   vault: Vault
   modalView: string
   setModalView: (view: DelegateModalView) => void
@@ -33,7 +30,6 @@ interface DelegateTxButtonProps {
   intl?: {
     base?: Intl<
       | 'enterAnAmount'
-      | 'reviewDelegation'
       | 'updateDelegatedAddress'
       | 'delegateTx'
       | 'confirmDelegation'
@@ -46,6 +42,7 @@ interface DelegateTxButtonProps {
 
 export const DelegateTxButton = (props: DelegateTxButtonProps) => {
   const {
+    twabController,
     vault,
     modalView,
     setModalView,
@@ -62,39 +59,17 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
   const { chain } = useNetwork()
 
   const { data: tokenData } = useVaultTokenData(vault)
-  const decimals = vault.decimals ?? tokenData?.decimals
 
-  const { data: userVaultShareBalance, isFetched: isFetchedUserVaultShareBalance } =
-    useUserVaultShareBalance(vault, userAddress as Address)
+  const newDelegateAddress: Address = useAtomValue(delegateFormNewDelegateAddressAtom)
 
-  const { refetch: refetchUserVaultTokenBalance } = useUserVaultTokenBalance(
+  const isValidChangeDelegateForm = false
+  // const isValidChangeDelegateForm = isValidFormInput(formShareAmount, decimals)
+
+  const { refetch: refetchUserVaultDelegate } = useUserVaultDelegate(
     vault,
-    userAddress as Address
-  )
-
-  const { refetch: refetchUserTokenBalance } = useTokenBalance(
-    vault.chainId,
     userAddress as Address,
-    tokenData?.address as Address
+    { refetchOnWindowFocus: true }
   )
-
-  const { refetch: refetchUserVaultDelegationBalance } = useUserVaultDelegationBalance(
-    vault,
-    userAddress as Address
-  )
-
-  const { refetch: refetchVaultBalance } = useVaultBalance(vault)
-
-  const { data: vaultExchangeRate } = useVaultExchangeRate(vault)
-
-  const formShareAmount = useAtomValue(delegateFormShareAmountAtom)
-
-  const isValidFormShareAmount =
-    decimals !== undefined ? isValidFormInput(formShareAmount, decimals) : false
-
-  const delegateAmount = isValidFormShareAmount
-    ? parseUnits(formShareAmount, decimals as number)
-    : 0n
 
   const {
     isWaiting: isWaitingDelegation,
@@ -102,16 +77,12 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
     isSuccess: isSuccessfulDelegation,
     txHash: delegateTxHash,
     sendDelegateTransaction
-  } = useSendRedeemTransaction(delegateAmount, vault, {
+  } = useSendDelegateTransaction(twabController, newDelegateAddress, vault, {
     onSend: () => {
       setModalView('waiting')
     },
     onSuccess: () => {
-      refetchUserTokenBalance()
-      refetchUserVaultTokenBalance()
-      refetchUserVaultDelegationBalance()
-      refetchVaultBalance()
-      refetchUserBalances?.()
+      refetchUserVaultDelegate()
       onSuccessfulDelegation?.()
       setModalView('success')
     },
@@ -141,7 +112,13 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
     !!delegateAmount &&
     !!sendDelegateTransaction
 
-  if (delegateAmount === 0n) {
+  if (!!delegateTxHash || isConfirmingDelegation) {
+    return (
+      <Button color='transparent' fullSized={true} disabled={true}>
+        <Spinner /> Waiting for transaction
+      </Button>
+    )
+  } else if (!formIsValid) {
     return (
       <Button color='transparent' fullSized={true} disabled={true}>
         {intl?.base?.('updateDelegatedAddress') ?? 'Update delegated address'}
@@ -150,7 +127,7 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
   } else if (!isDisconnected && chain?.id === vault.chainId && modalView === 'main') {
     return (
       <Button onClick={() => setModalView('review')} fullSized={true} disabled={!delegateEnabled}>
-        {intl?.base?.('reviewDelegation') ?? 'Review Delegation'}
+        {intl?.base?.('updateDelegatedAddress') ?? 'Update delegated address'}
       </Button>
     )
   } else {

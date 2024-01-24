@@ -1,116 +1,78 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import {
-  useTokenBalance,
-  useUserVaultShareBalance,
-  useVaultExchangeRate,
-  useVaultSharePrice,
-  useVaultTokenPrice
-} from '@generationsoftware/hyperstructure-react-hooks'
+import { useUserVaultDelegate } from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
-import { getAssetsFromShares, getSharesFromAssets } from '@shared/utilities'
+import { Spinner } from '@shared/ui'
 import { atom, useSetAtom } from 'jotai'
 import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { Address, formatUnits, parseUnits } from 'viem'
+import { Address } from 'viem'
 import { useAccount } from 'wagmi'
-import { AddressInput } from './AddressInput'
-import { isValidFormInput, TxFormValues } from './TxFormInput'
+import { AddressInput, AddressInputFormValues } from './AddressInput'
 
-export const delegateFormShareAmountAtom = atom<string>('')
-export const delegateFormTokenAmountAtom = atom<string>('')
+// import { isValidFormInput } from './TxFormInput'
+
+export const delegateFormNewDelegateAddressAtom = atom<Address>('0x')
+
+interface DelegateFormValues {
+  newDelegateAddress: Address
+}
 
 export interface DelegateFormProps {
   vault: Vault
-  showInputInfoRows?: boolean
   intl?: {
-    base?: Intl<'balance' | 'max'>
-    errors?: Intl<
-      | 'formErrors.notEnoughTokens'
-      | 'formErrors.invalidNumber'
-      | 'formErrors.negativeNumber'
-      | 'formErrors.tooManyDecimals'
-    >
+    base?: Intl<'balance'>
+    errors?: Intl<'formErrors.invalidAddress'>
   }
 }
 
 export const DelegateForm = (props: DelegateFormProps) => {
-  const { vault, showInputInfoRows, intl } = props
-
-  const { data: vaultExchangeRate } = useVaultExchangeRate(vault)
+  const { vault, intl } = props
 
   const { address: userAddress } = useAccount()
 
-  const { data: shareToken } = useVaultSharePrice(vault)
-  const { data: vaultToken } = useVaultTokenPrice(vault)
-
-  const decimals = vault.decimals ?? shareToken?.decimals
-
-  const { data: tokenWithAmount, isFetched: isFetchedTokenBalance } = useTokenBalance(
-    vault.chainId,
+  const { data: delegate, isFetched: isFetchedDelegate } = useUserVaultDelegate(
+    vault,
     userAddress as Address,
-    vaultToken?.address as Address,
     { refetchOnWindowFocus: true }
   )
-  const tokenBalance = isFetchedTokenBalance && !!tokenWithAmount ? tokenWithAmount.amount : 0n
+  console.log('delegate')
+  console.log(delegate)
 
-  const { data: vaultBalance, isFetched: isFetchedVaultBalance } = useUserVaultShareBalance(
-    vault,
-    userAddress as Address
-  )
-  const shareBalance = isFetchedVaultBalance && !!vaultBalance ? vaultBalance.amount : 0n
-
-  const formMethods = useForm<TxFormValues>({
-    mode: 'onChange',
-    defaultValues: { shareAmount: '', tokenAmount: '' }
-  })
-
-  const setFormShareAmount = useSetAtom(delegateFormShareAmountAtom)
-  const setFormTokenAmount = useSetAtom(delegateFormTokenAmountAtom)
-
-  useEffect(() => {
-    setFormShareAmount('')
-    setFormTokenAmount('')
-  }, [])
-
-  const handleTokenAmountChange = (tokenAmount: string) => {
-    if (!!vaultExchangeRate && decimals !== undefined) {
-      if (isValidFormInput(tokenAmount, decimals)) {
-        setFormTokenAmount(tokenAmount)
-
-        formMethods.setValue('shareAmount', slicedShares, {
-          shouldValidate: true
-        })
-      } else {
-        setFormToErroredState()
-      }
-    }
+  if (!isFetchedDelegate) {
+    return <Spinner />
   }
 
-  const handleShareAmountChange = (shareAmount: string) => {
-    if (!!vaultExchangeRate && decimals !== undefined) {
-      if (isValidFormInput(shareAmount, decimals)) {
-        setFormShareAmount(shareAmount)
+  const onSubmit = async (data: DelegateFormValues) => {
+    const twabController = await vault.getTWABController()
+  }
 
-        const shares = parseUnits(shareAmount, decimals)
-        const tokens = getAssetsFromShares(shares, vaultExchangeRate, decimals)
-        const formattedTokens = formatUnits(tokens, decimals)
-        const slicedTokens = formattedTokens.endsWith('.0')
-          ? formattedTokens.slice(0, -2)
-          : formattedTokens
+  const formMethods = useForm<AddressInputFormValues>({
+    mode: 'onChange',
+    defaultValues: { address: '' }
+  })
 
-        setFormTokenAmount(slicedTokens)
+  const setFormNewDelegateAddress = useSetAtom(delegateFormNewDelegateAddressAtom)
 
-        formMethods.setValue('tokenAmount', slicedTokens, {
-          shouldValidate: true
-        })
-      } else {
-        setFormToErroredState()
-      }
+  useEffect(() => {
+    setFormNewDelegateAddress('')
+  }, [])
+
+  const handleNewDelegateAddressChange = (newDelegateAddress: Address) => {
+    if (isValidFormInput(newDelegateAddress)) {
+      // prob don't need both of these:
+      setFormNewDelegateAddress(newDelegateAddress)
+
+      // prob don't need both of these:
+      formMethods.setValue('newDelegateAddress', newDelegateAddress, {
+        shouldValidate: true
+      })
+    } else {
+      setFormToErroredState()
     }
   }
 
   const setFormToErroredState = () => {
-    setFormChangeDelegateAddress('')
+    setFormNewDelegateAddress('')
   }
 
   return (
@@ -118,8 +80,8 @@ export const DelegateForm = (props: DelegateFormProps) => {
       <FormProvider {...formMethods}>
         <AddressInput
           id='change-delegate-address'
-          formKey='changeDelegateAddress'
-          onChange={handleShareAmountChange}
+          formKey='address'
+          // onChange={handleAddressChange}
           intl={intl}
           className='mb-0.5'
         />

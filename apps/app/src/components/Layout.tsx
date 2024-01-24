@@ -273,7 +273,7 @@ export const Layout = (props: LayoutProps) => {
         addRecentTransaction={addRecentTransaction}
         onGoToAccount={() => router.push('/account')}
         refetchUserBalances={refetchUserBalances}
-        onSuccessfulDelegation={() => fathom.trackEvent(FATHOM_EVENTS.redeemed)}
+        onSuccessfulDelegation={() => fathom.trackEvent(FATHOM_EVENTS.delegated)}
         intl={{
           base: t_txModals,
           common: t_common,

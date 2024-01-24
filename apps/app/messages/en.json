@@ -181,6 +181,7 @@
     "enterAnAmount": "Enter an amount",
     "approvalButton": "Approve {symbol}",
     "approvalTx": "{symbol} Approval",
+    "reviewDelegation": "Review Delegation",
     "reviewDeposit": "Review Deposit",
     "reviewWithdrawal": "Review Withdrawal",
     "confirmDeposit": "Confirm Deposit",

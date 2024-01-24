@@ -129,5 +129,6 @@ export const FATHOM_EVENTS = {
   checkedPrizes: 'CheckedPrizes',
   changedCurrency: 'ChangedCurrency',
   changedLanguage: 'ChangedLanguage',
-  importedVaultList: 'ImportedVaultList'
+  importedVaultList: 'ImportedVaultList',
+  delegated: 'Delegated'
 }

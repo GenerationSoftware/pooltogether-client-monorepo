@@ -3,10 +3,7 @@ import { useVaultShareData } from '@generationsoftware/hyperstructure-react-hook
 import { Intl, RichIntl } from '@shared/types'
 import { Spinner } from '@shared/ui'
 import { getNiceNetworkNameByChainId } from '@shared/utilities'
-import { formatUnits } from 'viem'
-import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 import { DelegateForm } from '../../../Form/DelegateForm'
-import { AaveCollateralizationError } from '../../AaveCollateralizationError'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 
 interface MainViewProps {
@@ -15,16 +12,7 @@ interface MainViewProps {
     base?: Intl<'delegateFrom' | 'delegateFromShort' | 'delegateDescription' | 'balance' | 'max'>
     common?: Intl<'prizePool' | 'warning'>
     fees?: NetworkFeesProps['intl']
-    errors?: RichIntl<
-      | 'exchangeRateError'
-      | 'aaveCollateralizationError.issue'
-      | 'aaveCollateralizationError.recommendation'
-      | 'aaveCollateralizationError.moreInfo'
-      | 'formErrors.notEnoughTokens'
-      | 'formErrors.invalidNumber'
-      | 'formErrors.negativeNumber'
-      | 'formErrors.tooManyDecimals'
-    >
+    errors?: RichIntl<'formErrors.invalidAddress'>
   }
 }
 

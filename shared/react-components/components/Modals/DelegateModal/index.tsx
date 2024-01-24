@@ -1,8 +1,4 @@
-import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import {
-  useSelectedVault,
-  useVaultExchangeRate
-} from '@generationsoftware/hyperstructure-react-hooks'
+import { useSelectedVault } from '@generationsoftware/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Intl, RichIntl } from '@shared/types'
 import { Modal } from '@shared/ui'
@@ -40,7 +36,6 @@ export interface DelegateModalProps {
       | 'reviewWithdrawal'
       | 'delegateTx'
       | 'confirmDelegation'
-      | 'reviewDelegation'
       | 'updateDelegatedAddress'
       | 'switchNetwork'
       | 'switchingNetwork'
@@ -90,7 +85,13 @@ export const DelegateModal = (props: DelegateModalProps) => {
 
   const formTokenAmount = useAtomValue(delegateFormTokenAmountAtom)
 
-  // const { data: vaultExchangeRate } = useVaultExchangeRate(vault as Vault)
+  let twabController: Address
+  useEffect(() => {
+    const getTwabController = async () => {
+      twabController = await vault.getTWABController()
+    }
+    getTwabController()
+  }, [vault])
 
   const createToast = () => {
     if (!!vault && !!delegateTxHash && view === 'confirming') {
@@ -143,6 +144,7 @@ export const DelegateModal = (props: DelegateModalProps) => {
         })}
       >
         <DelegateTxButton
+          twabController={twabController}
           vault={vault}
           modalView={view}
           setModalView={setView}
