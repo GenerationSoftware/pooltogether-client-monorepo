@@ -9,10 +9,11 @@ import {
 import { Intl } from '@shared/types'
 import { getAssetsFromShares, getSharesFromAssets } from '@shared/utilities'
 import { atom, useSetAtom } from 'jotai'
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Address, formatUnits, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
+import { AddressInput } from './AddressInput'
 import { isValidFormInput, TxFormInput, TxFormValues } from './TxFormInput'
 
 export const delegateFormShareAmountAtom = atom<string>('')
@@ -118,66 +119,20 @@ export const DelegateForm = (props: DelegateFormProps) => {
   }
 
   const setFormToErroredState = () => {
-    setFormShareAmount('0')
+    setFormChangeDelegateAddress('')
   }
-
-  const shareInputData = useMemo(() => {
-    if (!!shareToken) {
-      return {
-        ...shareToken,
-        amount: shareBalance,
-        price: shareToken?.price ?? 0,
-        logoURI: vault.logoURI ?? vault.tokenLogoURI
-      }
-    }
-  }, [vault, shareToken, shareBalance])
-
-  const tokenInputData = useMemo(() => {
-    if (!!vaultToken) {
-      return {
-        ...vaultToken,
-        amount: tokenBalance,
-        price: vaultToken?.price ?? 0,
-        logoURI: vault.tokenLogoURI
-      }
-    }
-  }, [vault, vaultToken, tokenBalance])
 
   return (
     <div className='flex flex-col'>
-      {!!shareInputData && !!tokenInputData && decimals !== undefined && (
-        <>
-          <FormProvider {...formMethods}>
-            <TxFormInput
-              token={shareInputData}
-              formKey='shareAmount'
-              validate={{
-                isNotGreaterThanShareBalance: (v) =>
-                  parseFloat(formatUnits(shareBalance, decimals)) >= parseFloat(v) ||
-                  !isFetchedVaultBalance ||
-                  !vaultBalance ||
-                  (intl?.errors?.('formErrors.notEnoughTokens', {
-                    symbol: shareToken?.symbol ?? '?'
-                  }) ??
-                    `Not enough ${shareToken?.symbol ?? '?'} in wallet`)
-              }}
-              onChange={handleShareAmountChange}
-              showInfoRow={showInputInfoRows}
-              showMaxButton={true}
-              intl={intl}
-              className='mb-0.5'
-            />
-            <TxFormInput
-              token={tokenInputData}
-              formKey='tokenAmount'
-              onChange={handleTokenAmountChange}
-              showInfoRow={showInputInfoRows}
-              intl={intl}
-              className='my-0.5'
-            />
-          </FormProvider>
-        </>
-      )}
+      <FormProvider {...formMethods}>
+        <AddressInput
+          id='change-delegate-address'
+          formKey='changeDelegateAddress'
+          onChange={handleShareAmountChange}
+          intl={intl}
+          className='mb-0.5'
+        />
+      </FormProvider>
     </div>
   )
 }

@@ -318,6 +318,7 @@
       "invalidVaultList": "No valid vault list found",
       "notEnoughTokens": "Not enough {symbol} in wallet",
       "invalidNumber": "Enter a valid number",
+      "invalidAddress": "Enter a valid EVM address",
       "negativeNumber": "Enter a positive number",
       "tooManyDecimals": "Too many decimals"
     }

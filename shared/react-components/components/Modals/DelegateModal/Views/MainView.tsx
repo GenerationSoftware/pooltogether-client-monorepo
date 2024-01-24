@@ -60,14 +60,8 @@ export const MainView = (props: MainViewProps) => {
 
         {!vaultName && <Spinner />}
       </span>
-      <PrizePoolBadge
-        chainId={vault.chainId}
-        hideBorder={true}
-        intl={intl?.common}
-        className='!py-1 mx-auto'
-      />
       <>
-        <DelegateForm vault={vault} showInputInfoRows={true} intl={intl} />
+        <DelegateForm vault={vault} intl={intl} />
         <NetworkFees vault={vault} show={['delegate']} intl={intl?.fees} />
       </>
     </div>
