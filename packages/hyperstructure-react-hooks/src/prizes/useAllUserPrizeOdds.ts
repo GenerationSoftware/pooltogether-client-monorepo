@@ -16,11 +16,13 @@ import { QUERY_KEYS } from '../constants'
  * Return the odds of a user winning any prize within one draw for any given prize pools
  * @param prizePools array of instances of the `PrizePool` class
  * @param userAddress the user's wallet address
+ * @param options optional settings
  * @returns
  */
 export const useAllUserPrizeOdds = (
   prizePools: PrizePool[],
-  userAddress: string
+  userAddress: string,
+  options?: { refetchOnWindowFocus?: boolean }
 ): { data: { [prizePoolId: string]: number }; isFetched: boolean; isRefetching: boolean } => {
   const { vaults } = useSelectedVaults()
 
@@ -29,31 +31,29 @@ export const useAllUserPrizeOdds = (
     isFetched: isFetchedShareData,
     refetch: refetchShareData,
     isRefetching: isRefetchingShareData
-  } = useAllVaultShareData(vaults, {
-    refetchOnWindowFocus: true
-  })
+  } = useAllVaultShareData(vaults, { refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false })
 
   const { refetch: refetchShareBalances, isRefetching: isRefetchingShareBalances } =
     useAllUserVaultBalances(vaults, userAddress, {
-      refetchOnWindowFocus: true
+      refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
     })
 
   const {
     data: delegationBalances,
     isFetched: isFetchedDelegationBalances,
-    isRefetching: isRefetchingDelegationBalances,
-    refetch: refetchDelegationBalances
+    refetch: refetchDelegationBalances,
+    isRefetching: isRefetchingDelegationBalances
   } = useAllUserVaultDelegationBalances(vaults, userAddress, {
-    refetchOnWindowFocus: true
+    refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
   })
 
   const {
     data: vaultContributions,
     isFetched: isFetchedVaultContributions,
-    isRefetching: isRefetchingVaultContributions,
-    refetch: refetchVaultContributions
+    refetch: refetchVaultContributions,
+    isRefetching: isRefetchingVaultContributions
   } = useAllVaultPercentageContributions(prizePools, vaults, {
-    refetchOnWindowFocus: true
+    refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
   })
 
   const isRefetchingUserPrizeOdds =
@@ -104,7 +104,7 @@ export const useAllUserPrizeOdds = (
         },
         enabled,
         ...NO_REFETCH,
-        refetchOnWindowFocus: true
+        refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
       }
     })
   })

@@ -8,6 +8,7 @@ import { QUERY_KEYS } from '../constants'
  * Returns a user's delegate for a vault
  * @param vault instance of the `Vault` class
  * @param userAddress user address to get delegate for
+ * @param options optional settings
  * @returns
  */
 export const useUserVaultDelegate = (

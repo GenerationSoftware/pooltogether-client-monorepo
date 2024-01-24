@@ -29,10 +29,10 @@ export const AccountOdds = (props: AccountOddsProps) => {
   const prizePoolsArray = Object.values(prizePools)
 
   const {
-    data: prizeOdds,
+    data: userPrizeOdds,
     isFetched: isFetchedUserPrizeOdds,
     isRefetching
-  } = useAllUserPrizeOdds(prizePoolsArray, userAddress as Address)
+  } = useAllUserPrizeOdds(prizePoolsArray, userAddress as Address, { refetchOnWindowFocus: true })
 
   const { data: drawPeriods, isFetched: isFetchedDrawPeriods } = useAllDrawPeriods(prizePoolsArray)
 
@@ -41,8 +41,8 @@ export const AccountOdds = (props: AccountOddsProps) => {
   const weeklyChance = useMemo(() => {
     const events: number[] = []
 
-    for (const prizePoolId in prizeOdds) {
-      const odds = prizeOdds[prizePoolId]
+    for (const prizePoolId in userPrizeOdds) {
+      const odds = userPrizeOdds[prizePoolId]
       const drawPeriod = drawPeriods[prizePoolId]
       if (!!odds && !!drawPeriod) {
         const drawsPerWeek = SECONDS_PER_WEEK / drawPeriod
@@ -57,7 +57,7 @@ export const AccountOdds = (props: AccountOddsProps) => {
       const formattedValue = formatNumberForDisplay(value, { maximumSignificantDigits: 3 })
       return t('oneInXChance', { number: formattedValue })
     }
-  }, [isFetched, userAddress, isRefetching])
+  }, [userPrizeOdds, drawPeriods])
 
   if (isFetched && weeklyChance !== undefined) {
     return (

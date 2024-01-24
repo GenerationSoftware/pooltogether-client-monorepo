@@ -8,7 +8,6 @@ import { QUERY_KEYS } from '../constants'
  * Returns all vault percentage contributions to each of their respective prize pools
  * @param prizePools array of instances of the `PrizePool` class
  * @param vaults instance of the `Vaults` class
- * @param numDraws number of past draws to consider (default is `7`)
  * @param options optional settings
  * @returns
  */
@@ -58,7 +57,7 @@ export const useAllVaultPercentageContributions = (
 
   return useMemo(() => {
     const isFetched = results?.every((result) => result.isFetched)
-    const isRefetching = results?.every((result) => result.isRefetching)
+    const isRefetching = results?.some((result) => result.isRefetching)
     const refetch = () => results?.forEach((result) => result.refetch())
 
     const data: { [vaultId: string]: number } = Object.assign(
@@ -66,6 +65,6 @@ export const useAllVaultPercentageContributions = (
       ...results.map((result) => result.data)
     )
 
-    return { isFetched, isRefetching, refetch, data }
+    return { isFetched, refetch, isRefetching, data }
   }, [results])
 }

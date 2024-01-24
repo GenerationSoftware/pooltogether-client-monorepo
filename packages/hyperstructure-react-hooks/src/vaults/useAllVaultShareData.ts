@@ -10,6 +10,7 @@ import { QUERY_KEYS } from '../constants'
  *
  * Stores queried share data in cache
  * @param vaults instance of the `Vaults` class
+ * @param options optional settings
  * @returns
  */
 export const useAllVaultShareData = (

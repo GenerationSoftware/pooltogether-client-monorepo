@@ -9,7 +9,7 @@ import { QUERY_KEYS } from '../constants'
  * Returns a user's share balance in a vault
  * @param vault instance of the `Vault` class
  * @param userAddress user address to get balance for
- * @param refetchInterval optional automatic refetching interval in ms
+ * @param options optional settings
  * @returns
  */
 export const useUserVaultShareBalance = (
