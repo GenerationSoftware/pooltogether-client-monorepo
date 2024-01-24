@@ -14,6 +14,7 @@ import {
   promotionChainIdAtom,
   promotionEpochLengthAtom,
   promotionEpochsAtom,
+  promotionStartTimestampAtom,
   promotionTokenAddressAtom,
   promotionTokenAmountAtom,
   promotionVaultAddressAtom
@@ -30,6 +31,7 @@ export const PromotionPreview = (props: PromotionPreviewProps) => {
 
   const chainId = useAtomValue(promotionChainIdAtom)
   const vaultAddress = useAtomValue(promotionVaultAddressAtom)
+  const startTimestamp = useAtomValue(promotionStartTimestampAtom)
   const numEpochs = useAtomValue(promotionEpochsAtom)
   const epochLength = useAtomValue(promotionEpochLengthAtom)
   const tokenAddress = useAtomValue(promotionTokenAddressAtom)
@@ -49,6 +51,20 @@ export const PromotionPreview = (props: PromotionPreviewProps) => {
       return calculatePercentageOfBigInt(tokenAmount, 1 / numEpochs)
     }
   }, [numEpochs, tokenAmount])
+
+  const startDateTime = useMemo(() => {
+    const date = new Date(Number(startTimestamp) * 1e3)
+
+    return `${date.toLocaleDateString(undefined, {
+      month: 'short',
+      day: 'numeric'
+    })}, ${date.toLocaleTimeString(undefined, {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: false,
+      timeZoneName: 'short'
+    })}`
+  }, [startTimestamp])
 
   return (
     <div
@@ -110,6 +126,7 @@ export const PromotionPreview = (props: PromotionPreviewProps) => {
           valueClassName='text-pt-warning-light'
         />
       )}
+      <PreviewItem label='Start Date/Time' value={startDateTime} />
       {!!numEpochs && <PreviewItem label='# of Epochs' value={`${numEpochs}`} />}
       {!!epochLength && (
         <PreviewItem
