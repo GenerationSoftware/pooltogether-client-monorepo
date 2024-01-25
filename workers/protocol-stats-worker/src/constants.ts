@@ -10,7 +10,7 @@ export const DEFAULT_HEADERS = {
 }
 
 export const KV_KEYS = {
-  stats: 'stats'
+  v3_stats: 'v3_stats',
+  v4_stats: 'v4_stats',
+  v5_stats: 'v5_stats'
 }
-
-export const POOL_EXPLORER_URL = 'https://poolexplorer.xyz'

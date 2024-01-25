@@ -1,32 +1,37 @@
 import { KV_KEYS } from './constants'
-import { PoolExplorerApiHistory, PoolExplorerApiStats, ProtocolStats } from './types'
+import { ProtocolStats } from './types'
 
 export const updateHandler = async (
   event: FetchEvent | ScheduledEvent,
-  basicStats?: PoolExplorerApiStats,
-  prizeHistory?: PoolExplorerApiHistory[]
+  v3Stats?: ProtocolStats,
+  v4Stats?: ProtocolStats,
+  v5Stats?: ProtocolStats
 ) => {
-  if (!basicStats || !prizeHistory) {
-    return { message: 'No stats updated.', basicStats, prizeHistory }
+  const updateDate = new Date(Date.now()).toUTCString()
+
+  if (!!v3Stats) {
+    event.waitUntil(
+      PROTOCOL_STATS.put(KV_KEYS.v3_stats, JSON.stringify(v3Stats), {
+        metadata: { lastUpdated: updateDate }
+      })
+    )
   }
 
-  const protocolStats: ProtocolStats = {
-    uniqueWallets: basicStats.totalPlayers,
-    poolPrice: basicStats.pool,
-    tvl: basicStats.tvl.total,
-    uniqueWinners: basicStats.historicalWinners,
-    totalPrizes: prizeHistory.reduce((a, b) => a + parseInt(b.c), 0)
+  if (!!v4Stats) {
+    event.waitUntil(
+      PROTOCOL_STATS.put(KV_KEYS.v4_stats, JSON.stringify(v4Stats), {
+        metadata: { lastUpdated: updateDate }
+      })
+    )
   }
 
-  const stringifiedProtocolStats = JSON.stringify(protocolStats)
+  if (!!v5Stats) {
+    event.waitUntil(
+      PROTOCOL_STATS.put(KV_KEYS.v5_stats, JSON.stringify(v5Stats), {
+        metadata: { lastUpdated: updateDate }
+      })
+    )
+  }
 
-  event.waitUntil(
-    PROTOCOL_STATS.put(KV_KEYS.stats, stringifiedProtocolStats, {
-      metadata: {
-        lastUpdated: new Date(Date.now()).toUTCString()
-      }
-    })
-  )
-
-  return protocolStats
+  return { v3: v3Stats, v4: v4Stats, v5: v5Stats }
 }
