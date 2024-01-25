@@ -6,12 +6,12 @@ import {
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Intl, RichIntl } from '@shared/types'
 import { Modal } from '@shared/ui'
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { Address } from 'viem'
 import { createDelegateTxToast, DelegateTxToastProps } from '../../Toasts/DelegateTxToast'
 import { NetworkFeesProps } from '../NetworkFees'
+import { DelegateModalBody } from './DelegateModalBody'
 import { DelegateTxButton } from './DelegateTxButton'
-import { MainView } from './Views/MainView'
 
 export type DelegateModalView = 'main' | 'waiting' | 'success' | 'error' | 'confirming'
 
@@ -81,27 +81,30 @@ export const DelegateModal = (props: DelegateModalProps) => {
   }
 
   if (isModalOpen && !!vault) {
-    const modalViews: Record<DelegateModalView, ReactNode> = {
-      main: <MainView vault={vault} intl={intl} />,
-      waiting: null,
-      // waiting: <WaitingView vault={vault} closeModal={handleClose} intl={intl} />,
-      confirming: null,
-      // confirming: (
-      //   <ConfirmingView vault={vault} txHash={depositTxHash} closeModal={handleClose} intl={intl} />
-      // ),
-      success: null,
-      // success: (
-      //   <SuccessView
-      //     vault={vault}
-      //     txHash={depositTxHash}
-      //     closeModal={handleClose}
-      //     goToAccount={onGoToAccount}
-      //     intl={intl}
-      //   />
-      // ),
-      error: null
-      // error: <ErrorView setModalView={setView} intl={intl?.base} />
-    }
+    // const modalViews: Record<DelegateModalView, ReactNode> = {
+    //   main: <MainView vault={vault} intl={intl} />,
+    //   waiting: null,
+    //   // waiting: <WaitingView vault={vault} closeModal={handleClose} intl={intl} />,
+    //   confirming: null,
+    //   // confirming: (
+    //   //   <ConfirmingView vault={vault} txHash={depositTxHash} closeModal={handleClose} intl={intl} />
+    //   // ),
+    //   success: null,
+    //   // success: (
+    //   //   <SuccessView
+    //   //     vault={vault}
+    //   //     txHash={depositTxHash}
+    //   //     closeModal={handleClose}
+    //   //     goToAccount={onGoToAccount}
+    //   //     intl={intl}
+    //   //   />
+    //   // ),
+    //   error: null
+    //   // error: <ErrorView setModalView={setView} intl={intl?.base} />
+    // }
+    console.log('view')
+    console.log(view)
+    const modalBodyContent = <DelegateModalBody modalView={view} vault={vault} intl={intl} />
 
     const modalFooterContent = (
       <div className={'flex flex-col items-center gap-6'}>
@@ -122,7 +125,7 @@ export const DelegateModal = (props: DelegateModalProps) => {
 
     return (
       <Modal
-        bodyContent={modalViews[view]}
+        bodyContent={modalBodyContent}
         footerContent={modalFooterContent}
         onClose={handleClose}
         label='delegate-flow'

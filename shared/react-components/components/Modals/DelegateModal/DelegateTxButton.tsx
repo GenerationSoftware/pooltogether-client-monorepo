@@ -13,8 +13,6 @@ import { Address, isAddress } from 'viem'
 import { useAccount, useNetwork } from 'wagmi'
 import { DelegateModalView } from '.'
 import { delegateFormNewDelegateAddressAtom } from '../../Form/DelegateForm'
-import { isValidFormInput } from '../../Form/TxFormInput'
-// import { isValidFormInput } from '../../Form/TxFormInput'
 import { TransactionButton } from '../../Transaction/TransactionButton'
 
 interface DelegateTxButtonProps {
@@ -28,7 +26,13 @@ interface DelegateTxButtonProps {
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   onSuccessfulDelegation?: () => void
   intl?: {
-    base?: Intl<'updateDelegatedAddress' | 'delegateTx' | 'switchNetwork' | 'switchingNetwork'>
+    base?: Intl<
+      | 'updateDelegatedAddress'
+      | 'delegateTx'
+      | 'switchNetwork'
+      | 'switchingNetwork'
+      | 'confirmNotice'
+    >
     common?: Intl<'connectWallet'>
   }
 }
@@ -53,8 +57,6 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
   const { data: tokenData } = useVaultTokenData(vault)
 
   const newDelegateAddress: Address = useAtomValue(delegateFormNewDelegateAddressAtom)
-  console.log('newDelegateAddress')
-  console.log(newDelegateAddress)
 
   const { data: delegate, refetch: refetchUserVaultDelegate } = useUserVaultDelegate(
     vault,
@@ -78,9 +80,15 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
       setModalView('success')
     },
     onError: () => {
-      setModalView('error')
+      setModalView('main')
     }
   })
+
+  useEffect(() => {
+    if (isWaitingDelegation && modalView !== 'waiting') {
+      setModalView('waiting')
+    }
+  }, [isWaitingDelegation])
 
   useEffect(() => {
     if (
@@ -104,7 +112,16 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
     delegateAddressHasChanged &&
     !!sendDelegateTransaction
 
-  if (!!delegateTxHash || isConfirmingDelegation) {
+  if (!!delegateTxHash || isWaitingDelegation) {
+    return (
+      <Button color='transparent' fullSized={true} disabled={true}>
+        <Spinner />{' '}
+        <span className='inline-block ml-2'>
+          {intl?.base?.('confirmNotice') ?? 'Confirm Transaction in Wallet'}
+        </span>
+      </Button>
+    )
+  } else if (!!delegateTxHash || isConfirmingDelegation) {
     return (
       <Button color='transparent' fullSized={true} disabled={true}>
         <Spinner /> Waiting for transaction

@@ -3,11 +3,13 @@ import { useVaultShareData } from '@generationsoftware/hyperstructure-react-hook
 import { Intl, RichIntl } from '@shared/types'
 import { Spinner } from '@shared/ui'
 import { getNiceNetworkNameByChainId } from '@shared/utilities'
-import { DelegateForm } from '../../../Form/DelegateForm'
-import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
+import { DelegateForm } from '../../Form/DelegateForm'
+import { NetworkFees, NetworkFeesProps } from '../NetworkFees'
+import { DelegateModalView } from './index'
 
-interface MainViewProps {
+interface DelegateModalBodyProps {
   vault: Vault
+  modalView: DelegateModalView
   intl?: {
     base?: Intl<
       | 'delegateFrom'
@@ -22,8 +24,8 @@ interface MainViewProps {
   }
 }
 
-export const MainView = (props: MainViewProps) => {
-  const { vault, intl } = props
+export const DelegateModalBody = (props: DelegateModalBodyProps) => {
+  const { vault, modalView, intl } = props
 
   const { data: shareData } = useVaultShareData(vault)
 
@@ -55,7 +57,7 @@ export const MainView = (props: MainViewProps) => {
         {!vaultName && <Spinner />}
       </span>
       <>
-        <DelegateForm vault={vault} intl={intl} />
+        <DelegateForm modalView={modalView} vault={vault} intl={intl} />
         {/* <NetworkFees vault={vault} show={['delegate']} intl={intl?.fees} /> */}
       </>
     </div>

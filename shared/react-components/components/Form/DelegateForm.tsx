@@ -7,6 +7,7 @@ import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Address, isAddress } from 'viem'
 import { useAccount } from 'wagmi'
+import { DelegateModalView } from '../Modals/DelegateModal'
 import { SimpleInput } from './SimpleInput'
 
 export const delegateFormNewDelegateAddressAtom = atom<Address>('0x')
@@ -17,6 +18,7 @@ interface DelegateFormValues {
 
 export interface DelegateFormProps {
   vault: Vault
+  modalView: DelegateModalView
   intl?: {
     base?: Intl<'changeDelegateAddress' | 'delegatedAddress'>
     errors?: Intl<'formErrors.invalidAddress'>
@@ -24,7 +26,7 @@ export interface DelegateFormProps {
 }
 
 export const DelegateForm = (props: DelegateFormProps) => {
-  const { vault, intl } = props
+  const { vault, modalView, intl } = props
 
   const { address: userAddress } = useAccount()
 
@@ -40,49 +42,16 @@ export const DelegateForm = (props: DelegateFormProps) => {
 
   const formMethods = useForm<DelegateFormValues>({ mode: 'onChange' })
   const { newDelegateAddress } = formMethods.watch()
-  console.log(formMethods.watch())
 
   const setFormNewDelegateAddressAtom = useSetAtom(delegateFormNewDelegateAddressAtom)
 
-  // console.log('newDelegateAddress')
-  // console.log(newDelegateAddress)
-
   useEffect(() => {
-    if (!!delegate && !newDelegateAddress) {
-      console.log('setting default')
-      console.log(delegate)
-      // formMethods.setValue('newDelegateAddress', delegate, { shouldValidate: true })
-    }
-  }, [delegate])
-
-  useEffect(() => {
-    // console.log('newDelegateAddress changed!')
-    // console.log(newDelegateAddress)
-    // if (isAddress(newDelegateAddress?.trim())) {
-    //   console.log('newDelegateAddress')
-    //   console.log(newDelegateAddress)
-    //   // setFormNewDelegateAddressAtom('0x')
-    // }
-
-    console.log('aloha')
-    // if (isAddress(newDelegateAddress?.trim())) {
-    console.log('in here')
-    // prob don't need both of these:
     setFormNewDelegateAddressAtom(newDelegateAddress)
-
-    // prob don't need both of these:
-    // formMethods.setValue('newDelegateAddress', newDelegateAddress, {
-    //   shouldValidate: true
-    // })
-    // } else {
-    // setFormToErroredState()
-    // }
   }, [newDelegateAddress])
 
-  const setFormToErroredState = () => {
-    // console.log('setting form to error state')
-    // setFormNewDelegateAddressAtom('0x')
-  }
+  console.log('modalView')
+  console.log(modalView)
+  const disabled = modalView === 'confirming' || modalView === 'waiting'
 
   return (
     <div className='flex flex-col'>
@@ -90,10 +59,8 @@ export const DelegateForm = (props: DelegateFormProps) => {
         <SimpleInput
           formKey='newDelegateAddress'
           autoComplete='off'
+          disabled={disabled}
           validate={{
-            // isChanged: (v: string) =>
-            //   v?.trim() !== delegate ||
-            //   (intl?.errors?.('formErrors.unchangedDelegate') ?? ``),
             isValidAddress: (v: string) =>
               isAddress(v?.trim()) ||
               (intl?.errors?.('formErrors.invalidAddress') ?? `Enter a valid EVM address`)
