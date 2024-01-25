@@ -40,6 +40,7 @@ export const useSendDelegateTransaction = (
   const { chain } = useNetwork()
 
   const enabled =
+    !!twabController &&
     !!address &&
     isAddress(address) &&
     !!vault &&
@@ -47,6 +48,8 @@ export const useSendDelegateTransaction = (
     isAddress(userAddress) &&
     chain?.id === vault.chainId
 
+  console.log('enabled')
+  console.log(enabled)
   const { data: gasEstimate } = useGasAmountEstimate(
     vault?.chainId,
     {

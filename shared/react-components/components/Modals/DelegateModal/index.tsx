@@ -1,4 +1,8 @@
-import { useSelectedVault } from '@generationsoftware/hyperstructure-react-hooks'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
+import {
+  useSelectedVault,
+  useVaultTwabController
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Intl, RichIntl } from '@shared/types'
 import { Modal } from '@shared/ui'
@@ -61,15 +65,11 @@ export const DelegateModal = (props: DelegateModalProps) => {
   console.log('newDelegateAddress')
   console.log(newDelegateAddress)
 
-  let twabController: Address | undefined
-  useEffect(() => {
-    const getTwabController = async () => {
-      if (vault) {
-        twabController = await vault.getTWABController()
-      }
-    }
-    getTwabController()
-  }, [vault])
+  const { data: twabController, isFetched: isFetchedTwabController } = useVaultTwabController(
+    vault as Vault
+  )
+  console.log('twabController')
+  console.log(twabController)
 
   const createToast = () => {
     if (!!vault && !!delegateTxHash && view === 'confirming') {
@@ -113,20 +113,18 @@ export const DelegateModal = (props: DelegateModalProps) => {
 
     const modalFooterContent = (
       <div className={'flex flex-col items-center gap-6'}>
-        {!!twabController && (
-          <DelegateTxButton
-            twabController={twabController}
-            vault={vault}
-            modalView={view}
-            setModalView={setView}
-            setDelegateTxHash={setDelegateTxHash}
-            openConnectModal={openConnectModal}
-            openChainModal={openChainModal}
-            addRecentTransaction={addRecentTransaction}
-            onSuccessfulDelegation={onSuccessfulDelegation}
-            intl={intl}
-          />
-        )}
+        <DelegateTxButton
+          twabController={twabController}
+          vault={vault}
+          modalView={view}
+          setModalView={setView}
+          setDelegateTxHash={setDelegateTxHash}
+          openConnectModal={openConnectModal}
+          openChainModal={openChainModal}
+          addRecentTransaction={addRecentTransaction}
+          onSuccessfulDelegation={onSuccessfulDelegation}
+          intl={intl}
+        />
       </div>
     )
 

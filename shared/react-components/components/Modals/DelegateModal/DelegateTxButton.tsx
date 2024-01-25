@@ -18,7 +18,7 @@ import { isValidFormInput } from '../../Form/TxFormInput'
 import { TransactionButton } from '../../Transaction/TransactionButton'
 
 interface DelegateTxButtonProps {
-  twabController: Address
+  twabController: Address | undefined
   vault: Vault
   modalView: string
   setModalView: (view: DelegateModalView) => void

@@ -152,6 +152,7 @@ export * from './vaults/useVaultTokenAddress'
 export * from './vaults/useVaultTokenData'
 export * from './vaults/useVaultTokenPrice'
 export * from './vaults/useVaultTotalSupplyTwab'
+export * from './vaults/useVaultTwabController'
 export * from './vaults/useVaultYieldSource'
 
 /**
