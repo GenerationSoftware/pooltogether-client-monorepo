@@ -82,15 +82,15 @@ export const DelegateForm = (props: DelegateFormProps) => {
           validate={{
             isValidAddress: (v: string) => isAddress(v?.trim()) || 'Enter a valid wallet address.'
           }}
-          placeholder='0x0000...'
-          label='Recipient Address'
+          placeholder={delegate}
+          label='Delegated Address'
           needsOverride={true}
           keepValueOnOverride={true}
           className='w-full max-w-md'
         />
 
         {/* <AddressInput
-          label={<>Delegated address</>}
+          label={<></>}
           id='change-delegate-address'
           formKey='address'
           // on={handleAddress}

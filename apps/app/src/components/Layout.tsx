@@ -272,7 +272,6 @@ export const Layout = (props: LayoutProps) => {
         openChainModal={openChainModal}
         addRecentTransaction={addRecentTransaction}
         onGoToAccount={() => router.push('/account')}
-        refetchUserBalances={refetchUserBalances}
         onSuccessfulDelegation={() => fathom.trackEvent(FATHOM_EVENTS.delegated)}
         intl={{
           base: t_txModals,

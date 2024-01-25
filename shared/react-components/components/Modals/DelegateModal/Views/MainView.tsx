@@ -9,7 +9,7 @@ import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 interface MainViewProps {
   vault: Vault
   intl?: {
-    base?: Intl<'delegateFrom' | 'delegateFromShort' | 'delegateDescription' | 'balance' | 'max'>
+    base?: Intl<'delegateFrom' | 'delegateFromShort' | 'delegateDescription'>
     common?: Intl<'prizePool' | 'warning'>
     fees?: NetworkFeesProps['intl']
     errors?: RichIntl<'formErrors.invalidAddress'>
@@ -50,7 +50,7 @@ export const MainView = (props: MainViewProps) => {
       </span>
       <>
         <DelegateForm vault={vault} intl={intl} />
-        <NetworkFees vault={vault} show={['delegate']} intl={intl?.fees} />
+        {/* <NetworkFees vault={vault} show={['delegate']} intl={intl?.fees} /> */}
       </>
     </div>
   )

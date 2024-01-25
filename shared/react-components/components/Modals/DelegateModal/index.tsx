@@ -2,7 +2,6 @@ import { useSelectedVault } from '@generationsoftware/hyperstructure-react-hooks
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Intl, RichIntl } from '@shared/types'
 import { Modal } from '@shared/ui'
-import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { ReactNode, useEffect, useState } from 'react'
 import { Address } from 'viem'
@@ -10,30 +9,21 @@ import { delegateFormNewDelegateAddressAtom } from '../../Form/DelegateForm'
 import { createDelegateTxToast, DelegateTxToastProps } from '../../Toasts/DelegateTxToast'
 import { NetworkFeesProps } from '../NetworkFees'
 import { DelegateTxButton } from './DelegateTxButton'
-import { ConfirmingView } from './Views/ConfirmingView'
-import { ErrorView } from './Views/ErrorView'
 import { MainView } from './Views/MainView'
-import { ReviewView } from './Views/ReviewView'
-import { SuccessView } from './Views/SuccessView'
-import { WaitingView } from './Views/WaitingView'
 
-export type DelegateModalView = 'main' | 'review' | 'waiting' | 'confirming' | 'success' | 'error'
+export type DelegateModalView = 'main' | 'waiting' | 'success' | 'error' | 'confirming'
 
 export interface DelegateModalProps {
-  onGoToAccount?: () => void
   openConnectModal?: () => void
   openChainModal?: () => void
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
-  refetchUserBalances?: () => void
   onSuccessfulDelegation?: () => void
   intl?: {
     base?: RichIntl<
       | 'delegateFrom'
       | 'delegateFromShort'
-      | 'max'
-      | 'balance'
+      | 'delegateDescription'
       | 'enterAnAmount'
-      | 'reviewWithdrawal'
       | 'delegateTx'
       | 'confirmDelegation'
       | 'updateDelegatedAddress'
@@ -43,7 +33,7 @@ export interface DelegateModalProps {
       | 'submissionNotice'
       | 'success'
       | 'delegated'
-      | 'viewAccount'
+      | 'waiting'
       | 'uhOh'
       | 'failedTx'
       | 'tryAgain'
@@ -51,29 +41,13 @@ export interface DelegateModalProps {
     common?: Intl<'prizePool' | 'connectWallet' | 'close' | 'viewOn' | 'warning'>
     fees?: NetworkFeesProps['intl']
     txToast?: DelegateTxToastProps['intl']
-    errors?: RichIntl<
-      | 'exchangeRateError'
-      | 'aaveCollateralizationError.issue'
-      | 'aaveCollateralizationError.recommendation'
-      | 'aaveCollateralizationError.moreInfo'
-      | 'formErrors.notEnoughTokens'
-      | 'formErrors.invalidNumber'
-      | 'formErrors.negativeNumber'
-      | 'formErrors.tooManyDecimals'
-    >
+    errors?: RichIntl<'formErrors.invalidAddress'>
   }
 }
 
 export const DelegateModal = (props: DelegateModalProps) => {
-  const {
-    onGoToAccount,
-    openConnectModal,
-    openChainModal,
-    addRecentTransaction,
-    refetchUserBalances,
-    onSuccessfulDelegation,
-    intl
-  } = props
+  const { openConnectModal, openChainModal, addRecentTransaction, onSuccessfulDelegation, intl } =
+    props
 
   const { vault } = useSelectedVault()
 
@@ -102,9 +76,7 @@ export const DelegateModal = (props: DelegateModalProps) => {
       createDelegateTxToast({
         vault: vault,
         txHash: delegateTxHash,
-        formattedAmount: '0',
         addRecentTransaction: addRecentTransaction,
-        refetchUserBalances: refetchUserBalances,
         intl: intl?.txToast
       })
     }
@@ -119,34 +91,28 @@ export const DelegateModal = (props: DelegateModalProps) => {
   if (isModalOpen && !!vault) {
     const modalViews: Record<DelegateModalView, ReactNode> = {
       main: <MainView vault={vault} intl={intl} />,
-      review: <ReviewView vault={vault} intl={intl} />,
-      waiting: <WaitingView vault={vault} closeModal={handleClose} intl={intl} />,
-      confirming: (
-        <ConfirmingView
-          vault={vault}
-          txHash={delegateTxHash}
-          closeModal={handleClose}
-          intl={intl}
-        />
-      ),
-      success: (
-        <SuccessView
-          vault={vault}
-          txHash={delegateTxHash}
-          closeModal={handleClose}
-          goToAccount={onGoToAccount}
-          intl={intl}
-        />
-      ),
-      error: <ErrorView setModalView={setView} intl={intl?.base} />
+      waiting: null,
+      // waiting: <WaitingView vault={vault} closeModal={handleClose} intl={intl} />,
+      confirming: null,
+      // confirming: (
+      //   <ConfirmingView vault={vault} txHash={depositTxHash} closeModal={handleClose} intl={intl} />
+      // ),
+      success: null,
+      // success: (
+      //   <SuccessView
+      //     vault={vault}
+      //     txHash={depositTxHash}
+      //     closeModal={handleClose}
+      //     goToAccount={onGoToAccount}
+      //     intl={intl}
+      //   />
+      // ),
+      error: null
+      // error: <ErrorView setModalView={setView} intl={intl?.base} />
     }
 
     const modalFooterContent = (
-      <div
-        className={classNames('flex flex-col items-center gap-6', {
-          hidden: view !== 'main' && view !== 'review'
-        })}
-      >
+      <div className={'flex flex-col items-center gap-6'}>
         {!!twabController && (
           <DelegateTxButton
             twabController={twabController}
@@ -157,7 +123,6 @@ export const DelegateModal = (props: DelegateModalProps) => {
             openConnectModal={openConnectModal}
             openChainModal={openChainModal}
             addRecentTransaction={addRecentTransaction}
-            refetchUserBalances={refetchUserBalances}
             onSuccessfulDelegation={onSuccessfulDelegation}
             intl={intl}
           />

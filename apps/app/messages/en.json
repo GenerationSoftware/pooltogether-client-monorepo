@@ -206,6 +206,7 @@
     "shareWarpcast": "Share on Warpcast",
     "shareHey": "Share on Hey",
     "viewAccount": "View Account",
+    "waiting": "Waiting for Transaction",
     "uhOh": "Uh oh!",
     "failedTx": "Something went wrong....",
     "tryAgain": "Try Again",
@@ -285,7 +286,7 @@
       "success": "Success!",
       "deposited": "You deposited {tokens} on {network}",
       "withdrew": "You withdrew {tokens} on {network}",
-      "delegated": "You delegated {tokens} on {network}",
+      "delegated": "You delegated {tokenSymbol} on {network}",
       "uhOh": "Uh oh!",
       "failedTx": "Something went wrong....",
       "tryAgain": "Try Again"

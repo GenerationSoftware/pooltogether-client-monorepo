@@ -25,10 +25,10 @@ import { SuccessPooly } from '../Graphics/SuccessPooly'
 export interface DelegateTxToastProps {
   vault: Vault
   txHash: string
-  formattedAmount: string
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
   intl?: Intl<
+    | 'delegated'
     | 'withdrawal'
     | 'withdrawing'
     | 'viewOn'
@@ -50,7 +50,7 @@ export const createDelegateTxToast = (data: DelegateTxToastProps) => {
 }
 
 export const DelegateTxToast = (props: DelegateTxToastProps) => {
-  const { vault, txHash, formattedAmount, addRecentTransaction, refetchUserBalances, intl } = props
+  const { vault, txHash, addRecentTransaction, refetchUserBalances, intl } = props
 
   const { data: tokenData } = useVaultTokenData(vault)
 
@@ -79,11 +79,17 @@ export const DelegateTxToast = (props: DelegateTxToastProps) => {
     userAddress as Address
   )
 
+  const tokenSymbol = `${tokenData?.symbol}`
+  const network = getNiceNetworkNameByChainId(vault.chainId)
+
   useEffect(() => {
     if (isSuccess && !!txHash) {
       if (!!addRecentTransaction) {
         const networkName = getNiceNetworkNameByChainId(vault.chainId)
-        const txDescription = `${tokenData?.symbol} ${intl?.('delegated') ?? 'Delegated'}`
+        const txDescription = `${tokenData?.symbol} ${
+          intl?.('delegated', { tokenSymbol, network }) ??
+          'You delegated {tokenSymbol} on {network}'
+        }`
 
         addRecentTransaction({
           hash: txHash,
@@ -91,18 +97,14 @@ export const DelegateTxToast = (props: DelegateTxToastProps) => {
         })
       }
 
-      refetchTokenBalance()
-      refetchVaultBalance()
-      refetchUserVaultShareBalance()
-      refetchUserVaultTokenBalance()
-      refetchUserBalances?.()
+      refetchUserVaultDelegate()
     }
   }, [isSuccess, txHash])
 
   if (!isLoading && isSuccess) {
     toast(
       <ToastLayout id={txHash}>
-        <SuccessView vault={vault} txHash={txHash} formattedAmount={formattedAmount} intl={intl} />
+        <SuccessView vault={vault} txHash={txHash} intl={intl} />
       </ToastLayout>,
       { id: txHash }
     )
@@ -119,7 +121,7 @@ export const DelegateTxToast = (props: DelegateTxToastProps) => {
 
   return (
     <ToastLayout id={txHash}>
-      <ConfirmingView vault={vault} txHash={txHash} formattedAmount={formattedAmount} intl={intl} />
+      <ConfirmingView vault={vault} txHash={txHash} intl={intl} />
     </ToastLayout>
   )
 }
@@ -146,16 +148,15 @@ const ToastLayout = (props: ToastLayoutProps) => {
 interface ConfirmingViewProps {
   vault: Vault
   txHash: string
-  formattedAmount: string
   intl?: Intl<'withdrawing' | 'viewOn'>
 }
 
 const ConfirmingView = (props: ConfirmingViewProps) => {
-  const { vault, txHash, formattedAmount, intl } = props
+  const { vault, txHash, intl } = props
 
   const { data: tokenData } = useVaultTokenData(vault)
 
-  const tokens = `${formattedAmount} ${tokenData?.symbol}`
+  const tokens = `${tokenData?.symbol}`
   const name = getBlockExplorerName(vault.chainId)
 
   return (
@@ -178,16 +179,15 @@ const ConfirmingView = (props: ConfirmingViewProps) => {
 interface SuccessViewProps {
   vault: Vault
   txHash: string
-  formattedAmount: string
   intl?: Intl<'success' | 'withdrew' | 'viewOn'>
 }
 
 const SuccessView = (props: SuccessViewProps) => {
-  const { vault, txHash, formattedAmount, intl } = props
+  const { vault, txHash, intl } = props
 
   const { data: tokenData } = useVaultTokenData(vault)
 
-  const tokens = `${formattedAmount} ${tokenData?.symbol}`
+  const tokens = `${tokenData?.symbol}`
   const network = getNiceNetworkNameByChainId(vault.chainId)
   const name = getBlockExplorerName(vault.chainId)
 
