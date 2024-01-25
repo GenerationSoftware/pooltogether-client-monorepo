@@ -25,6 +25,9 @@
       "esm"
     ]
   },
+  "dependencies": {
+    "viem": "^1.19.1"
+  },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230518.0",
     "@types/node": "^17.0.45",

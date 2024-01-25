@@ -11,3 +11,6 @@ kv_namespaces = [
 
 [triggers]
 crons = ["0 */12 * * *"]
+
+[vars]
+OPTIMISM_RPC_URL = "<YOUR_RPC_URL_HERE>"
