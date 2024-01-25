@@ -21,7 +21,7 @@ export interface DelegateFormProps {
   modalView: DelegateModalView
   intl?: {
     base?: Intl<'changeDelegateAddress' | 'delegatedAddress'>
-    errors?: Intl<'formErrors.invalidAddress'>
+    errors?: Intl<'formErrors.invalidAddress' | 'formErrors.sameAsDelegate'>
   }
 }
 
@@ -49,8 +49,6 @@ export const DelegateForm = (props: DelegateFormProps) => {
     setFormNewDelegateAddressAtom(newDelegateAddress)
   }, [newDelegateAddress])
 
-  console.log('modalView')
-  console.log(modalView)
   const disabled = modalView === 'confirming' || modalView === 'waiting'
 
   return (
@@ -63,7 +61,11 @@ export const DelegateForm = (props: DelegateFormProps) => {
           validate={{
             isValidAddress: (v: string) =>
               isAddress(v?.trim()) ||
-              (intl?.errors?.('formErrors.invalidAddress') ?? `Enter a valid EVM address`)
+              (intl?.errors?.('formErrors.invalidAddress') ?? `Enter a valid EVM address`),
+            isSameAsDelegate: (v: string) =>
+              v?.trim() !== delegate ||
+              (intl?.errors?.('formErrors.sameAsDelegate') ??
+                `Address entered is same as current delegate`)
           }}
           placeholder={delegate}
           label={intl?.base?.('delegatedAddress') ?? `Delegated Address`}

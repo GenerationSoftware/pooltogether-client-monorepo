@@ -6,7 +6,7 @@ import {
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Intl, RichIntl } from '@shared/types'
 import { Modal } from '@shared/ui'
-import { ReactNode, useState } from 'react'
+import { useState } from 'react'
 import { Address } from 'viem'
 import { createDelegateTxToast, DelegateTxToastProps } from '../../Toasts/DelegateTxToast'
 import { NetworkFeesProps } from '../NetworkFees'
@@ -43,7 +43,7 @@ export interface DelegateModalProps {
     common?: Intl<'prizePool' | 'connectWallet' | 'close' | 'viewOn' | 'warning'>
     fees?: NetworkFeesProps['intl']
     txToast?: DelegateTxToastProps['intl']
-    errors?: RichIntl<'formErrors.invalidAddress'>
+    errors?: RichIntl<'formErrors.invalidAddress' | 'formErrors.sameAsDelegate'>
   }
 }
 
@@ -81,29 +81,6 @@ export const DelegateModal = (props: DelegateModalProps) => {
   }
 
   if (isModalOpen && !!vault) {
-    // const modalViews: Record<DelegateModalView, ReactNode> = {
-    //   main: <MainView vault={vault} intl={intl} />,
-    //   waiting: null,
-    //   // waiting: <WaitingView vault={vault} closeModal={handleClose} intl={intl} />,
-    //   confirming: null,
-    //   // confirming: (
-    //   //   <ConfirmingView vault={vault} txHash={depositTxHash} closeModal={handleClose} intl={intl} />
-    //   // ),
-    //   success: null,
-    //   // success: (
-    //   //   <SuccessView
-    //   //     vault={vault}
-    //   //     txHash={depositTxHash}
-    //   //     closeModal={handleClose}
-    //   //     goToAccount={onGoToAccount}
-    //   //     intl={intl}
-    //   //   />
-    //   // ),
-    //   error: null
-    //   // error: <ErrorView setModalView={setView} intl={intl?.base} />
-    // }
-    console.log('view')
-    console.log(view)
     const modalBodyContent = <DelegateModalBody modalView={view} vault={vault} intl={intl} />
 
     const modalFooterContent = (

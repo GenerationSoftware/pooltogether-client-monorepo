@@ -60,8 +60,6 @@ export const SimpleInput = (props: SimpleInputProps) => {
     onOverride?.(true)
   }
 
-  console.log('formValues')
-  console.log(formValues)
   const handleBlur = () => {
     if ((needsOverride && !formValues[formKey]) || formValues[formKey] === defaultValue) {
       setValue(formKey, defaultValue, { shouldValidate: true })

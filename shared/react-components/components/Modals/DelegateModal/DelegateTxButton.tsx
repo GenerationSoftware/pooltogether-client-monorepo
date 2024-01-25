@@ -32,6 +32,7 @@ interface DelegateTxButtonProps {
       | 'switchNetwork'
       | 'switchingNetwork'
       | 'confirmNotice'
+      | 'waiting'
     >
     common?: Intl<'connectWallet'>
   }
@@ -72,14 +73,15 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
     sendDelegateTransaction
   } = useSendDelegateTransaction(twabController, newDelegateAddress, vault, {
     onSend: () => {
-      setModalView('waiting')
+      setModalView('confirming')
     },
     onSuccess: () => {
       refetchUserVaultDelegate()
       onSuccessfulDelegation?.()
-      setModalView('success')
+      setModalView('main')
     },
     onError: () => {
+      console.log('onError')
       setModalView('main')
     }
   })
@@ -97,6 +99,8 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
       !isWaitingDelegation &&
       !isSuccessfulDelegation
     ) {
+      console.log('')
+      console.log('isConfirmingDelegation and txHash')
       setDelegateTxHash(delegateTxHash)
       setModalView('confirming')
     }
@@ -109,10 +113,12 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
     !!userAddress &&
     !!newDelegateAddress &&
     isAddress(newDelegateAddress) &&
+    !isWaitingDelegation &&
+    !isConfirmingDelegation &&
     delegateAddressHasChanged &&
     !!sendDelegateTransaction
 
-  if (!!delegateTxHash || isWaitingDelegation) {
+  if (isWaitingDelegation) {
     return (
       <Button color='transparent' fullSized={true} disabled={true}>
         <Spinner />{' '}
@@ -121,13 +127,16 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
         </span>
       </Button>
     )
-  } else if (!!delegateTxHash || isConfirmingDelegation) {
+  } else if (isConfirmingDelegation) {
     return (
       <Button color='transparent' fullSized={true} disabled={true}>
-        <Spinner /> Waiting for transaction
+        <Spinner />
+        <span className='inline-block ml-2'>
+          {intl?.base?.('waiting') ?? 'Waiting for Transaction'}
+        </span>
       </Button>
     )
-  } else if (!isDisconnected && chain?.id === vault.chainId && modalView === 'main') {
+  } else if (!isDisconnected) {
     return (
       <TransactionButton
         chainId={vault.chainId}
@@ -141,7 +150,7 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
         }
         fullSized={true}
         disabled={!delegateEnabled}
-        color={!delegateEnabled ? 'transparent' : 'teal'}
+        color={!delegateEnabled && chain?.id === vault.chainId ? 'transparent' : 'teal'}
         openConnectModal={openConnectModal}
         openChainModal={openChainModal}
         addRecentTransaction={addRecentTransaction}

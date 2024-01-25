@@ -323,6 +323,7 @@
       "notEnoughTokens": "Not enough {symbol} in wallet",
       "invalidNumber": "Enter a valid number",
       "invalidAddress": "Enter a valid EVM address",
+      "sameAsDelegate": "Entered address is same as current delegate",
       "negativeNumber": "Enter a positive number",
       "tooManyDecimals": "Too many decimals"
     }

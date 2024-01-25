@@ -20,7 +20,7 @@ interface DelegateModalBodyProps {
     >
     common?: Intl<'prizePool' | 'warning'>
     fees?: NetworkFeesProps['intl']
-    errors?: RichIntl<'formErrors.invalidAddress'>
+    errors?: RichIntl<'formErrors.invalidAddress' | 'formErrors.sameAsDelegate'>
   }
 }
 
