@@ -9,7 +9,9 @@ import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 interface MainViewProps {
   vault: Vault
   intl?: {
-    base?: Intl<'delegateFrom' | 'delegateFromShort' | 'delegateDescription'>
+    base?: Intl<
+      'delegateFrom' | 'delegateFromShort' | 'delegateDescription' | 'changeDelegateAddress'
+    >
     common?: Intl<'prizePool' | 'warning'>
     fees?: NetworkFeesProps['intl']
     errors?: RichIntl<'formErrors.invalidAddress'>

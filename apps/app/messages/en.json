@@ -165,6 +165,7 @@
     "delegateFrom": "Delegate your {name} on {network}",
     "delegateFromShort": "Delegate your {name}",
     "delegateDescription": "The delegated address receives any prizes your {tokenSymbol} deposit wins.",
+    "changeDelegateAddress": "Change Delegate Address",
     "updateDelegatedAddress": "Update delegated address",
     "fees": {
       "title": "Estimated Network Fees",

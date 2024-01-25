@@ -21,7 +21,7 @@ interface DelegateFormValues {
 export interface DelegateFormProps {
   vault: Vault
   intl?: {
-    base?: Intl<'balance'>
+    base?: Intl<'changeDelegateAddress'>
     errors?: Intl<'formErrors.invalidAddress'>
   }
 }
@@ -45,19 +45,30 @@ export const DelegateForm = (props: DelegateFormProps) => {
     const twabController = await vault.getTWABController()
   }
 
-  const formMethods = useForm<DelegateFormValues>({
-    mode: 'on',
-    defaultValues: { address: '' }
-  })
+  const formMethods = useForm<DelegateFormValues>({ mode: 'onChange' })
 
   const setFormNewDelegateAddress = useSetAtom(delegateFormNewDelegateAddressAtom)
 
+  const { newDelegateAddress } = formMethods.watch()
+
   useEffect(() => {
-    setFormNewDelegateAddress('0x')
-  }, [])
+    !!delegate &&
+      !newDelegateAddress &&
+      formMethods.setValue('newDelegateAddress', delegate, { shouldValidate: true })
+
+    // setFormNewDelegateAddress('0x')
+  }, [delegate])
+
+  useEffect(() => {
+    // onChange(isAddress(recipientAddress) ? recipientAddress : undefined)
+    if (isAddress(newDelegateAddress?.trim())) {
+      setFormNewDelegateAddress('0x')
+    }
+  }, [newDelegateAddress])
 
   const handleNewDelegateAddress = (newDelegateAddress: Address) => {
-    if (isValidFormInput(newDelegateAddress)) {
+    if (isAddress(newDelegateAddress?.trim())) {
+      console.log('in here')
       // prob don't need both of these:
       setFormNewDelegateAddress(newDelegateAddress)
 
@@ -71,6 +82,7 @@ export const DelegateForm = (props: DelegateFormProps) => {
   }
 
   const setFormToErroredState = () => {
+    console.log('setting form to error state')
     setFormNewDelegateAddress('0x')
   }
 
@@ -80,11 +92,14 @@ export const DelegateForm = (props: DelegateFormProps) => {
         <SimpleInput
           formKey='recipientAddress'
           validate={{
-            isValidAddress: (v: string) => isAddress(v?.trim()) || 'Enter a valid wallet address.'
+            isValidAddress: (v: string) =>
+              isAddress(v?.trim()) ||
+              (intl?.errors?.('formErrors.invalidAddress') ?? `Enter a valid EVM address`)
           }}
           placeholder={delegate}
           label='Delegated Address'
           needsOverride={true}
+          overrideLabel={intl?.base?.('changeDelegateAddress') ?? `Change Delegate Address`}
           keepValueOnOverride={true}
           className='w-full max-w-md'
         />

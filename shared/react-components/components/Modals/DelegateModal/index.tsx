@@ -23,7 +23,7 @@ export interface DelegateModalProps {
       | 'delegateFrom'
       | 'delegateFromShort'
       | 'delegateDescription'
-      | 'enterAnAmount'
+      | 'changeDelegateAddress'
       | 'delegateTx'
       | 'confirmDelegation'
       | 'updateDelegatedAddress'

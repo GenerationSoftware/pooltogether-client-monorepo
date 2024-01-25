@@ -14,6 +14,7 @@ interface SimpleInputProps {
   autoFocus?: boolean
   disabled?: boolean
   needsOverride?: boolean
+  overrideLabel?: string
   keepValueOnOverride?: boolean
   onOverride?: (val: boolean) => void
   className?: string
@@ -34,6 +35,7 @@ export const SimpleInput = (props: SimpleInputProps) => {
     autoFocus,
     disabled,
     needsOverride,
+    overrideLabel,
     keepValueOnOverride,
     onOverride,
     className,
@@ -73,7 +75,7 @@ export const SimpleInput = (props: SimpleInputProps) => {
         <span className='font-medium text-pt-purple-100'>{label}</span>
         {needsOverride && !isActiveOverride && (
           <span onClick={handleOverride} className='text-pt-teal-dark cursor-pointer underline'>
-            override
+            {overrideLabel ?? 'override'}
           </span>
         )}
       </label>
