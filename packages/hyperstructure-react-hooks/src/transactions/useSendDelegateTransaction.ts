@@ -48,15 +48,13 @@ export const useSendDelegateTransaction = (
     isAddress(userAddress) &&
     chain?.id === vault.chainId
 
-  console.log('enabled')
-  console.log(enabled)
   const { data: gasEstimate } = useGasAmountEstimate(
     vault?.chainId,
     {
       address: twabController,
       abi: twabControllerABI,
       functionName: 'delegate',
-      args: [address as Address, vault.id as Address],
+      args: [address as Address, vault.address as Address],
       account: userAddress as Address
     },
     { enabled }
@@ -67,7 +65,7 @@ export const useSendDelegateTransaction = (
     address: twabController,
     abi: twabControllerABI,
     functionName: 'delegate',
-    args: [address as Address, vault.id as Address],
+    args: [address as Address, vault.address as Address],
     gas: !!gasEstimate ? calculatePercentageOfBigInt(gasEstimate, 1.2) : undefined,
     enabled
   })

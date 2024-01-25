@@ -6,10 +6,8 @@ import {
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Intl, RichIntl } from '@shared/types'
 import { Modal } from '@shared/ui'
-import { useAtomValue } from 'jotai'
 import { ReactNode, useEffect, useState } from 'react'
 import { Address } from 'viem'
-import { delegateFormNewDelegateAddressAtom } from '../../Form/DelegateForm'
 import { createDelegateTxToast, DelegateTxToastProps } from '../../Toasts/DelegateTxToast'
 import { NetworkFeesProps } from '../NetworkFees'
 import { DelegateTxButton } from './DelegateTxButton'
@@ -27,10 +25,10 @@ export interface DelegateModalProps {
       | 'delegateFrom'
       | 'delegateFromShort'
       | 'delegateDescription'
+      | 'delegatedAddress'
       | 'changeDelegateAddress'
-      | 'delegateTx'
-      | 'confirmDelegation'
       | 'updateDelegatedAddress'
+      | 'delegateTx'
       | 'switchNetwork'
       | 'switchingNetwork'
       | 'confirmNotice'
@@ -61,15 +59,9 @@ export const DelegateModal = (props: DelegateModalProps) => {
 
   const [delegateTxHash, setDelegateTxHash] = useState<string>()
 
-  const newDelegateAddress: Address = useAtomValue(delegateFormNewDelegateAddressAtom)
-  console.log('newDelegateAddress')
-  console.log(newDelegateAddress)
-
   const { data: twabController, isFetched: isFetchedTwabController } = useVaultTwabController(
     vault as Vault
   )
-  console.log('twabController')
-  console.log(twabController)
 
   const createToast = () => {
     if (!!vault && !!delegateTxHash && view === 'confirming') {
@@ -114,7 +106,7 @@ export const DelegateModal = (props: DelegateModalProps) => {
     const modalFooterContent = (
       <div className={'flex flex-col items-center gap-6'}>
         <DelegateTxButton
-          twabController={twabController}
+          twabController={twabController as Address}
           vault={vault}
           modalView={view}
           setModalView={setView}

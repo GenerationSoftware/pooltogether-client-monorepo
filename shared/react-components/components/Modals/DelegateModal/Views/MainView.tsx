@@ -10,7 +10,11 @@ interface MainViewProps {
   vault: Vault
   intl?: {
     base?: Intl<
-      'delegateFrom' | 'delegateFromShort' | 'delegateDescription' | 'changeDelegateAddress'
+      | 'delegateFrom'
+      | 'delegateFromShort'
+      | 'delegateDescription'
+      | 'changeDelegateAddress'
+      | 'delegatedAddress'
     >
     common?: Intl<'prizePool' | 'warning'>
     fees?: NetworkFeesProps['intl']
@@ -43,7 +47,7 @@ export const MainView = (props: MainViewProps) => {
         )}
         {!!vaultName && (
           <span className='text-sm my-2 font-normal text-pt-purple-200 block'>
-            {intl?.base?.('delegateDescription', { tokenSymbol: vaultToken }) ??
+            {intl?.base?.('delegateDescription', { tokens: vaultToken }) ??
               `The delegated address receives any prizes your ${vaultToken} deposit wins.`}
           </span>
         )}

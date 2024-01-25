@@ -7,10 +7,7 @@ import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Address, isAddress } from 'viem'
 import { useAccount } from 'wagmi'
-// import { AddressInput, AddressInputFormValues } from './AddressInput'
 import { SimpleInput } from './SimpleInput'
-
-// import { isValidFormInput } from './TxFormInput'
 
 export const delegateFormNewDelegateAddressAtom = atom<Address>('0x')
 
@@ -21,7 +18,7 @@ interface DelegateFormValues {
 export interface DelegateFormProps {
   vault: Vault
   intl?: {
-    base?: Intl<'changeDelegateAddress'>
+    base?: Intl<'changeDelegateAddress' | 'delegatedAddress'>
     errors?: Intl<'formErrors.invalidAddress'>
   }
 }
@@ -41,83 +38,73 @@ export const DelegateForm = (props: DelegateFormProps) => {
     return <Spinner />
   }
 
-  const onSubmit = async (data: DelegateFormValues) => {
-    const twabController = await vault.getTWABController()
-  }
-
   const formMethods = useForm<DelegateFormValues>({ mode: 'onChange' })
-
-  const setFormNewDelegateAddress = useSetAtom(delegateFormNewDelegateAddressAtom)
-
   const { newDelegateAddress } = formMethods.watch()
+  console.log(formMethods.watch())
+
+  const setFormNewDelegateAddressAtom = useSetAtom(delegateFormNewDelegateAddressAtom)
+
+  // console.log('newDelegateAddress')
+  // console.log(newDelegateAddress)
 
   useEffect(() => {
-    !!delegate &&
-      !newDelegateAddress &&
-      formMethods.setValue('newDelegateAddress', delegate, { shouldValidate: true })
-
-    // setFormNewDelegateAddress('0x')
+    if (!!delegate && !newDelegateAddress) {
+      console.log('setting default')
+      console.log(delegate)
+      // formMethods.setValue('newDelegateAddress', delegate, { shouldValidate: true })
+    }
   }, [delegate])
 
   useEffect(() => {
-    // onChange(isAddress(recipientAddress) ? recipientAddress : undefined)
-    if (isAddress(newDelegateAddress?.trim())) {
-      setFormNewDelegateAddress('0x')
-    }
+    // console.log('newDelegateAddress changed!')
+    // console.log(newDelegateAddress)
+    // if (isAddress(newDelegateAddress?.trim())) {
+    //   console.log('newDelegateAddress')
+    //   console.log(newDelegateAddress)
+    //   // setFormNewDelegateAddressAtom('0x')
+    // }
+
+    console.log('aloha')
+    // if (isAddress(newDelegateAddress?.trim())) {
+    console.log('in here')
+    // prob don't need both of these:
+    setFormNewDelegateAddressAtom(newDelegateAddress)
+
+    // prob don't need both of these:
+    // formMethods.setValue('newDelegateAddress', newDelegateAddress, {
+    //   shouldValidate: true
+    // })
+    // } else {
+    // setFormToErroredState()
+    // }
   }, [newDelegateAddress])
 
-  const handleNewDelegateAddress = (newDelegateAddress: Address) => {
-    if (isAddress(newDelegateAddress?.trim())) {
-      console.log('in here')
-      // prob don't need both of these:
-      setFormNewDelegateAddress(newDelegateAddress)
-
-      // prob don't need both of these:
-      // formMethods.setValue('newDelegateAddress', newDelegateAddress, {
-      //   shouldValidate: true
-      // })
-    } else {
-      setFormToErroredState()
-    }
-  }
-
   const setFormToErroredState = () => {
-    console.log('setting form to error state')
-    setFormNewDelegateAddress('0x')
+    // console.log('setting form to error state')
+    // setFormNewDelegateAddressAtom('0x')
   }
 
   return (
     <div className='flex flex-col'>
       <FormProvider {...formMethods}>
         <SimpleInput
-          formKey='recipientAddress'
+          formKey='newDelegateAddress'
+          autoComplete='off'
           validate={{
+            // isChanged: (v: string) =>
+            //   v?.trim() !== delegate ||
+            //   (intl?.errors?.('formErrors.unchangedDelegate') ?? ``),
             isValidAddress: (v: string) =>
               isAddress(v?.trim()) ||
               (intl?.errors?.('formErrors.invalidAddress') ?? `Enter a valid EVM address`)
           }}
           placeholder={delegate}
-          label='Delegated Address'
+          label={intl?.base?.('delegatedAddress') ?? `Delegated Address`}
           needsOverride={true}
           overrideLabel={intl?.base?.('changeDelegateAddress') ?? `Change Delegate Address`}
           keepValueOnOverride={true}
           className='w-full max-w-md'
         />
-
-        {/* <AddressInput
-          label={<></>}
-          id='change-delegate-address'
-          formKey='address'
-          // on={handleAddress}
-          validate={{
-            isValidAddress: (v: string) => isAddress(v?.trim()) || 'Enter a valid wallet address.'
-          }}
-          needsOverride={true}
-          placeholder={delegate}
-          defaultValue={delegate}
-          intl={intl}
-          className='mb-0.5'
-        /> */}
       </FormProvider>
     </div>
   )

@@ -1,10 +1,7 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useSelectedVault,
-  useTokenBalance,
-  useUserVaultShareBalance,
-  useUserVaultTokenBalance,
-  useVaultBalance,
+  useUserVaultDelegate,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { XMarkIcon } from '@heroicons/react/24/outline'
@@ -27,17 +24,7 @@ export interface DelegateTxToastProps {
   txHash: string
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
-  intl?: Intl<
-    | 'delegated'
-    | 'withdrawal'
-    | 'withdrawing'
-    | 'viewOn'
-    | 'success'
-    | 'withdrew'
-    | 'uhOh'
-    | 'failedTx'
-    | 'tryAgain'
-  >
+  intl?: Intl<'delegated' | 'delegating' | 'viewOn' | 'success' | 'uhOh' | 'failedTx' | 'tryAgain'>
 }
 
 /**
@@ -61,25 +48,13 @@ export const DelegateTxToast = (props: DelegateTxToastProps) => {
 
   const { address: userAddress } = useAccount()
 
-  const { refetch: refetchTokenBalance } = useTokenBalance(
-    vault.chainId,
+  const { refetch: refetchUserVaultDelegate } = useUserVaultDelegate(
+    vault,
     userAddress as Address,
-    tokenData?.address as Address
+    { refetchOnWindowFocus: true }
   )
 
-  const { refetch: refetchVaultBalance } = useVaultBalance(vault)
-
-  const { refetch: refetchUserVaultShareBalance } = useUserVaultShareBalance(
-    vault,
-    userAddress as Address
-  )
-
-  const { refetch: refetchUserVaultTokenBalance } = useUserVaultTokenBalance(
-    vault,
-    userAddress as Address
-  )
-
-  const tokenSymbol = `${tokenData?.symbol}`
+  const tokens = `${tokenData?.symbol}`
   const network = getNiceNetworkNameByChainId(vault.chainId)
 
   useEffect(() => {
@@ -87,8 +62,7 @@ export const DelegateTxToast = (props: DelegateTxToastProps) => {
       if (!!addRecentTransaction) {
         const networkName = getNiceNetworkNameByChainId(vault.chainId)
         const txDescription = `${tokenData?.symbol} ${
-          intl?.('delegated', { tokenSymbol, network }) ??
-          'You delegated {tokenSymbol} on {network}'
+          intl?.('delegated', { tokens, network }) ?? 'You delegated {tokens} on {network}'
         }`
 
         addRecentTransaction({
@@ -148,7 +122,7 @@ const ToastLayout = (props: ToastLayoutProps) => {
 interface ConfirmingViewProps {
   vault: Vault
   txHash: string
-  intl?: Intl<'withdrawing' | 'viewOn'>
+  intl?: Intl<'delegating' | 'viewOn'>
 }
 
 const ConfirmingView = (props: ConfirmingViewProps) => {
@@ -163,7 +137,7 @@ const ConfirmingView = (props: ConfirmingViewProps) => {
     <>
       <span className='flex items-center gap-2 text-pt-purple-50'>
         <Spinner className='after:border-y-pt-teal' />{' '}
-        {intl?.('withdrawing', { tokens }) ?? `Delegateing ${tokens}...`}
+        {intl?.('delegating', { tokens }) ?? `Delegating ${tokens}...`}
       </span>
       <a
         href={getBlockExplorerUrl(vault.chainId, txHash, 'tx')}
@@ -179,7 +153,7 @@ const ConfirmingView = (props: ConfirmingViewProps) => {
 interface SuccessViewProps {
   vault: Vault
   txHash: string
-  intl?: Intl<'success' | 'withdrew' | 'viewOn'>
+  intl?: Intl<'success' | 'delegated' | 'viewOn'>
 }
 
 const SuccessView = (props: SuccessViewProps) => {
@@ -199,7 +173,7 @@ const SuccessView = (props: SuccessViewProps) => {
           {intl?.('success') ?? 'Success!'}
         </span>
         <span className='text-pt-purple-50'>
-          {intl?.('withdrew', { tokens, network }) ?? `You withdrew ${tokens} on ${network}`}
+          {intl?.('delegated', { tokens, network }) ?? `You delegated ${tokens}`}
         </span>
       </div>
       <a
@@ -224,7 +198,7 @@ const ErrorView = (props: ErrorViewProps) => {
 
   const { setSelectedVaultById } = useSelectedVault()
 
-  const { setIsModalOpen } = useIsModalOpen(MODAL_KEYS.withdraw)
+  const { setIsModalOpen } = useIsModalOpen(MODAL_KEYS.delegate)
 
   const handleRetry = () => {
     setSelectedVaultById(vault.id)

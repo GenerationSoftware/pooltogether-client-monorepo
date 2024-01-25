@@ -1,11 +1,14 @@
 import classNames from 'classnames'
 import { ReactNode, useState } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
-import { FormKey } from 'src/types'
+
+// import { FormKey } from 'src/types'
 
 interface SimpleInputProps {
   formKey: FormKey
+  // formKey: FormKey
   id?: string
+  autoComplete?: string
   validate?: { [rule: string]: (v: any) => true | string }
   placeholder?: string
   defaultValue?: string
@@ -27,6 +30,7 @@ export const SimpleInput = (props: SimpleInputProps) => {
   const {
     formKey,
     id,
+    autoComplete,
     validate,
     placeholder,
     defaultValue,
@@ -56,6 +60,8 @@ export const SimpleInput = (props: SimpleInputProps) => {
     onOverride?.(true)
   }
 
+  console.log('formValues')
+  console.log(formValues)
   const handleBlur = () => {
     if ((needsOverride && !formValues[formKey]) || formValues[formKey] === defaultValue) {
       setValue(formKey, defaultValue, { shouldValidate: true })
@@ -87,6 +93,7 @@ export const SimpleInput = (props: SimpleInputProps) => {
         autoFocus={autoFocus}
         disabled={disabled || (needsOverride && !isActiveOverride)}
         onBlur={handleBlur}
+        autoComplete={autoComplete}
         className={classNames(
           'px-3 py-2 text-sm leading-tight rounded-lg border outline outline-1',
           'md:px-4 md:py-3',

@@ -9,7 +9,7 @@ import { Spinner } from '@shared/ui'
 import { Button } from '@shared/ui'
 import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
-import { Address } from 'viem'
+import { Address, isAddress } from 'viem'
 import { useAccount, useNetwork } from 'wagmi'
 import { DelegateModalView } from '.'
 import { delegateFormNewDelegateAddressAtom } from '../../Form/DelegateForm'
@@ -18,7 +18,7 @@ import { isValidFormInput } from '../../Form/TxFormInput'
 import { TransactionButton } from '../../Transaction/TransactionButton'
 
 interface DelegateTxButtonProps {
-  twabController: Address | undefined
+  twabController: Address
   vault: Vault
   modalView: string
   setModalView: (view: DelegateModalView) => void
@@ -28,14 +28,7 @@ interface DelegateTxButtonProps {
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   onSuccessfulDelegation?: () => void
   intl?: {
-    base?: Intl<
-      | 'enterAnAmount'
-      | 'updateDelegatedAddress'
-      | 'delegateTx'
-      | 'confirmDelegation'
-      | 'switchNetwork'
-      | 'switchingNetwork'
-    >
+    base?: Intl<'updateDelegatedAddress' | 'delegateTx' | 'switchNetwork' | 'switchingNetwork'>
     common?: Intl<'connectWallet'>
   }
 }
@@ -60,11 +53,10 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
   const { data: tokenData } = useVaultTokenData(vault)
 
   const newDelegateAddress: Address = useAtomValue(delegateFormNewDelegateAddressAtom)
+  console.log('newDelegateAddress')
+  console.log(newDelegateAddress)
 
-  const isValidChangeDelegateForm = false
-  // const isValidChangeDelegateForm = isValidFormInput(formShareAmount, decimals)
-
-  const { refetch: refetchUserVaultDelegate } = useUserVaultDelegate(
+  const { data: delegate, refetch: refetchUserVaultDelegate } = useUserVaultDelegate(
     vault,
     userAddress as Address,
     { refetchOnWindowFocus: true }
@@ -102,13 +94,14 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
     }
   }, [delegateTxHash, isConfirmingDelegation])
 
-  const formIsValid = false
+  const delegateAddressHasChanged = newDelegateAddress !== delegate
 
   const delegateEnabled =
     !isDisconnected &&
     !!userAddress &&
-    formIsValid &&
     !!newDelegateAddress &&
+    isAddress(newDelegateAddress) &&
+    delegateAddressHasChanged &&
     !!sendDelegateTransaction
 
   if (!!delegateTxHash || isConfirmingDelegation) {
@@ -117,19 +110,7 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
         <Spinner /> Waiting for transaction
       </Button>
     )
-  } else if (!formIsValid) {
-    return (
-      <Button color='transparent' fullSized={true} disabled={true}>
-        {intl?.base?.('updateDelegatedAddress') ?? 'Update delegated address'}
-      </Button>
-    )
   } else if (!isDisconnected && chain?.id === vault.chainId && modalView === 'main') {
-    return (
-      <Button onClick={() => setModalView('review')} fullSized={true} disabled={!delegateEnabled}>
-        {intl?.base?.('updateDelegatedAddress') ?? 'Update delegated address'}
-      </Button>
-    )
-  } else {
     return (
       <TransactionButton
         chainId={vault.chainId}
@@ -143,12 +124,13 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
         }
         fullSized={true}
         disabled={!delegateEnabled}
+        color={!delegateEnabled ? 'transparent' : 'teal'}
         openConnectModal={openConnectModal}
         openChainModal={openChainModal}
         addRecentTransaction={addRecentTransaction}
         intl={intl}
       >
-        {intl?.base?.('confirmDelegation') ?? 'Confirm Delegation'}
+        {intl?.base?.('updateDelegatedAddress') ?? 'Update delegated address'}
       </TransactionButton>
     )
   }

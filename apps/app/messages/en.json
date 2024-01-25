@@ -164,7 +164,8 @@
     "withdrawFromShort": "Withdraw from {name}",
     "delegateFrom": "Delegate your {name} on {network}",
     "delegateFromShort": "Delegate your {name}",
-    "delegateDescription": "The delegated address receives any prizes your {tokenSymbol} deposit wins.",
+    "delegateDescription": "The delegated address receives any prizes your {tokens} deposit wins.",
+    "delegatedAddress": "Delegated Address",
     "changeDelegateAddress": "Change Delegate Address",
     "updateDelegatedAddress": "Update delegated address",
     "fees": {
@@ -187,7 +188,6 @@
     "reviewWithdrawal": "Review Withdrawal",
     "confirmDeposit": "Confirm Deposit",
     "confirmWithdrawal": "Confirm Withdrawal",
-    "confirmDelegation": "Confirm Delegation",
     "depositTx": "{symbol} Deposit",
     "withdrawTx": "{symbol} Withdrawal",
     "delegateTx": "{symbol} Delegate",
@@ -287,7 +287,7 @@
       "success": "Success!",
       "deposited": "You deposited {tokens} on {network}",
       "withdrew": "You withdrew {tokens} on {network}",
-      "delegated": "You delegated {tokenSymbol} on {network}",
+      "delegated": "You delegated {tokens} on {network}",
       "uhOh": "Uh oh!",
       "failedTx": "Something went wrong....",
       "tryAgain": "Try Again"
