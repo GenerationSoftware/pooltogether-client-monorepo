@@ -1,5 +1,16 @@
-import { NETWORK, V5_SUBGRAPH_API_URLS } from './constants'
-import { V5SubgraphPrizeData, V5SubgraphUserData, V5SubgraphVaultData } from './types'
+import {
+  NETWORK,
+  V4_PRIZE_SUBGRAPH_API_URLS,
+  V4_TWAB_SUBGRAPH_API_URLS,
+  V5_SUBGRAPH_API_URLS
+} from './constants'
+import {
+  V4SubgraphPrizeData,
+  V4SubgraphUserData,
+  V5SubgraphPrizeData,
+  V5SubgraphUserData,
+  V5SubgraphVaultData
+} from './types'
 
 export const getV5SubgraphUserData = async (
   chainId: NETWORK,
@@ -186,4 +197,90 @@ export const getPaginatedV5SubgraphPrizeData = async (
   }
 
   return data
+}
+
+export const getV4SubgraphUserData = async (
+  chainId: NETWORK,
+  options: { maxUsersPerPage: number; lastUserId?: string }
+) => {
+  if (chainId in V4_TWAB_SUBGRAPH_API_URLS) {
+    const subgraphUrl = V4_TWAB_SUBGRAPH_API_URLS[chainId as keyof typeof V4_TWAB_SUBGRAPH_API_URLS]
+
+    const result = await fetch(subgraphUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: `query($maxUsersPerPage: Int, $lastUserId: Bytes) {
+          accounts(first: $maxUsersPerPage, where: { balance_gt: 0, id_gt: $lastUserId }) {
+            id
+          }
+        }`,
+        variables: {
+          maxUsersPerPage: options.maxUsersPerPage,
+          lastUserId: options.lastUserId ?? ''
+        }
+      })
+    })
+
+    const data =
+      (await result.json<{ data?: { accounts?: V4SubgraphUserData[] } }>())?.data?.accounts ?? []
+
+    return data
+  } else {
+    return []
+  }
+}
+
+export const getPaginatedV4SubgraphUserData = async (
+  chainId: NETWORK,
+  options?: { maxPageSize?: number }
+) => {
+  const data: V4SubgraphUserData[] = []
+  let lastUserId = ''
+
+  const maxUsersPerPage = options?.maxPageSize ?? 1_000
+
+  while (true) {
+    const newPage = await getV4SubgraphUserData(chainId, { maxUsersPerPage, lastUserId })
+
+    data.push(...newPage)
+
+    if (newPage.length < maxUsersPerPage) {
+      break
+    } else {
+      lastUserId = newPage[newPage.length - 1].id
+    }
+  }
+
+  return data
+}
+
+export const getV4SubgraphPrizeData = async (chainId: NETWORK) => {
+  if (chainId in V4_PRIZE_SUBGRAPH_API_URLS) {
+    const subgraphUrl =
+      V4_PRIZE_SUBGRAPH_API_URLS[chainId as keyof typeof V4_PRIZE_SUBGRAPH_API_URLS]
+
+    const result = await fetch(subgraphUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: `query($id: Int) {
+          aggregate(id: $id) {
+            totalClaimed
+          }
+        }`,
+        variables: { id: 1 }
+      })
+    })
+
+    const data =
+      (await result.json<{ data?: { aggregate?: { totalClaimed: string } } }>())?.data?.aggregate
+        ?.totalClaimed ?? undefined
+
+    const formattedData: V4SubgraphPrizeData = { totalClaimed: !!data ? BigInt(data) : 0n }
+
+    return formattedData
+  } else {
+    return { totalClaimed: 0n }
+  }
 }

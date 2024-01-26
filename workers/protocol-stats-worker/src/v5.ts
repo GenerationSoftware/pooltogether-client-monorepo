@@ -3,6 +3,7 @@ import {
   NETWORK,
   RPC_URLS,
   USD_PRICE_REF,
+  V5_NETWORKS,
   V5_PRIZE_TOKEN_PRICE_REF,
   V5_VAULT_ABI,
   VIEM_CHAINS
@@ -16,9 +17,21 @@ import {
 import { ProtocolStats } from './types'
 
 export const getV5Stats = async (): Promise<ProtocolStats> => {
-  const users = await getUserCount(NETWORK.optimism)
-  const tvlEth = await getTvl(NETWORK.optimism)
-  const awardedEth = await getPrizesAwarded(NETWORK.optimism)
+  let users = 0
+  let tvlEth = 0
+  let awardedEth = 0
+
+  await Promise.all(
+    V5_NETWORKS.map(async (network) => {
+      const networkUsers = await getUserCount(network)
+      const networkTvlEth = await getTvl(network)
+      const networkAwardedEth = await getPrizesAwarded(network)
+
+      users += networkUsers
+      tvlEth += networkTvlEth
+      awardedEth += networkAwardedEth
+    })
+  )
 
   const usdTokenPrice = (await getTokenPrices(USD_PRICE_REF.chainId, [USD_PRICE_REF.address]))?.[
     USD_PRICE_REF.address

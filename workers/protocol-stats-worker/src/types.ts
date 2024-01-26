@@ -25,6 +25,14 @@ export interface V5SubgraphPrizeData {
   payout: bigint
 }
 
+export interface V4SubgraphUserData {
+  id: string
+}
+
+export interface V4SubgraphPrizeData {
+  totalClaimed: bigint
+}
+
 export interface TokenPricesApiResponse {
   [address: `0x${string}`]: [{ date: string; price: number }]
 }
