@@ -5,4 +5,5 @@ declare global {
   const POLYGON_RPC_URL: string
   const OPTIMISM_RPC_URL: string
   const AVALANCHE_RPC_URL: string
+  const CELO_RPC_URL: string
 }

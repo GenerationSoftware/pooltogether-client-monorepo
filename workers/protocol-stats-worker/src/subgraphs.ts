@@ -1,10 +1,13 @@
 import {
   NETWORK,
+  V3_SUBGRAPH_API_URLS,
   V4_PRIZE_SUBGRAPH_API_URLS,
   V4_TWAB_SUBGRAPH_API_URLS,
   V5_SUBGRAPH_API_URLS
 } from './constants'
 import {
+  V3SubgraphPoolData,
+  V3SubgraphUserData,
   V4SubgraphPrizeData,
   V4SubgraphUserData,
   V5SubgraphPrizeData,
@@ -283,4 +286,142 @@ export const getV4SubgraphPrizeData = async (chainId: NETWORK) => {
   } else {
     return { totalClaimed: 0n }
   }
+}
+
+export const getV3SubgraphUserData = async (
+  chainId: NETWORK,
+  options: { maxUsersPerPage: number; lastUserId?: string }
+) => {
+  if (chainId in V3_SUBGRAPH_API_URLS) {
+    const subgraphUrl = V3_SUBGRAPH_API_URLS[chainId as keyof typeof V3_SUBGRAPH_API_URLS]
+
+    const result = await fetch(subgraphUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: `query($maxUsersPerPage: Int, $lastUserId: Bytes) {
+          accounts(first: $maxUsersPerPage, where: { controlledTokenBalances_: { balance_gt: 0 }, id_gt: $lastUserId }) {
+            id
+          }
+        }`,
+        variables: {
+          maxUsersPerPage: options.maxUsersPerPage,
+          lastUserId: options.lastUserId ?? ''
+        }
+      })
+    })
+
+    const data =
+      (await result.json<{ data?: { accounts?: V5SubgraphUserData[] } }>())?.data?.accounts ?? []
+
+    return data
+  } else {
+    return []
+  }
+}
+
+export const getPaginatedV3SubgraphUserData = async (
+  chainId: NETWORK,
+  options?: { maxPageSize?: number }
+) => {
+  const data: V3SubgraphUserData[] = []
+  let lastUserId = ''
+
+  const maxUsersPerPage = options?.maxPageSize ?? 1_000
+
+  while (true) {
+    const newPage = await getV3SubgraphUserData(chainId, { maxUsersPerPage, lastUserId })
+
+    data.push(...newPage)
+
+    if (newPage.length < maxUsersPerPage) {
+      break
+    } else {
+      lastUserId = newPage[newPage.length - 1].id
+    }
+  }
+
+  return data
+}
+
+export const getV3SubgraphPoolData = async (
+  chainId: NETWORK,
+  options: { maxPoolsPerPage: number; lastPoolId?: string }
+) => {
+  if (chainId in V3_SUBGRAPH_API_URLS) {
+    const subgraphUrl = V3_SUBGRAPH_API_URLS[chainId as keyof typeof V3_SUBGRAPH_API_URLS]
+
+    const result = await fetch(subgraphUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: `query($maxPoolsPerPage: Int, $lastPoolId: Bytes) {
+          prizePools(first: $maxPoolsPerPage, where: { cumulativePrizeGross_gt: 0, id_gt: $lastPoolId }) {
+            id
+            underlyingCollateralToken
+            underlyingCollateralDecimals
+            cumulativePrizeGross
+            controlledTokens {
+              totalSupply
+            }
+          }
+        }`,
+        variables: {
+          maxPoolsPerPage: options.maxPoolsPerPage,
+          lastPoolId: options.lastPoolId ?? ''
+        }
+      })
+    })
+
+    const data =
+      (
+        await result.json<{
+          data?: {
+            prizePools?: {
+              id: string
+              underlyingCollateralToken: string
+              underlyingCollateralDecimals: string
+              cumulativePrizeGross: string
+              controlledTokens: { totalSupply: string }[]
+            }[]
+          }
+        }>()
+      )?.data?.prizePools ?? []
+
+    const formattedData: V3SubgraphPoolData[] = data.map((entry) => ({
+      id: entry.id,
+      underlyingCollateralToken: entry.underlyingCollateralToken as `0x${string}`,
+      underlyingCollateralDecimals: parseInt(entry.underlyingCollateralDecimals),
+      cumulativePrizeGross: BigInt(entry.cumulativePrizeGross),
+      controlledTokens: entry.controlledTokens.map((t) => ({ totalSupply: BigInt(t.totalSupply) }))
+    }))
+
+    return formattedData
+  } else {
+    return []
+  }
+}
+
+export const getPaginatedV3SubgraphPoolData = async (
+  chainId: NETWORK,
+  options?: { maxPageSize?: number }
+) => {
+  const data: V3SubgraphPoolData[] = []
+  let lastPoolId = ''
+
+  const maxPoolsPerPage = options?.maxPageSize ?? 100
+
+  while (true) {
+    const newPage = await getV3SubgraphPoolData(chainId, { maxPoolsPerPage, lastPoolId })
+
+    data.push(...newPage)
+
+    if (newPage.length < maxPoolsPerPage) {
+      break
+    } else {
+      lastPoolId = newPage[newPage.length - 1].id
+    }
+  }
+
+  return data
 }
