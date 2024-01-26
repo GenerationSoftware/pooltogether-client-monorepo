@@ -45,7 +45,7 @@ const getUserCount = async (chainId: (typeof V4_NETWORKS)[number]) => {
 
 const getTvl = async (chainId: (typeof V4_NETWORKS)[number]) => {
   const totalSupply = await getV4TicketTotalSupply(chainId)
-  return totalSupply ?? 0
+  return totalSupply
 }
 
 const getPrizesAwarded = async (chainId: (typeof V4_NETWORKS)[number]) => {
@@ -54,18 +54,16 @@ const getPrizesAwarded = async (chainId: (typeof V4_NETWORKS)[number]) => {
 }
 
 const getV4TicketTotalSupply = async (chainId: (typeof V4_NETWORKS)[number]) => {
-  if (!!RPC_URLS[chainId]) {
-    const publicClient = createPublicClient({
-      chain: VIEM_CHAINS[chainId],
-      transport: http(RPC_URLS[chainId])
-    })
+  const publicClient = createPublicClient({
+    chain: VIEM_CHAINS[chainId],
+    transport: http(RPC_URLS[chainId])
+  })
 
-    const totalSupply = await publicClient.readContract({
-      address: V4_TICKETS[chainId].address,
-      abi: V4_TICKET_ABI,
-      functionName: 'totalSupply'
-    })
+  const totalSupply = await publicClient.readContract({
+    address: V4_TICKETS[chainId].address,
+    abi: V4_TICKET_ABI,
+    functionName: 'totalSupply'
+  })
 
-    return parseFloat(formatUnits(totalSupply, V4_TICKETS[chainId].decimals))
-  }
+  return parseFloat(formatUnits(totalSupply, V4_TICKETS[chainId].decimals))
 }

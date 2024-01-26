@@ -1,6 +1,5 @@
 import { ContractFunctionConfig, createPublicClient, formatUnits, http } from 'viem'
 import {
-  NETWORK,
   RPC_URLS,
   USD_PRICE_REF,
   V5_NETWORKS,
@@ -43,12 +42,12 @@ export const getV5Stats = async (): Promise<ProtocolStats> => {
   return { current: { users, tvl }, awarded }
 }
 
-const getUserCount = async (chainId: NETWORK) => {
+const getUserCount = async (chainId: (typeof V5_NETWORKS)[number]) => {
   const userData = await getPaginatedV5SubgraphUserData(chainId)
   return userData.length
 }
 
-const getTvl = async (chainId: NETWORK) => {
+const getTvl = async (chainId: (typeof V5_NETWORKS)[number]) => {
   let tvl = 0
 
   const vaultData = await getPaginatedV5SubgraphVaultData(chainId)
@@ -76,7 +75,7 @@ const getTvl = async (chainId: NETWORK) => {
   return tvl
 }
 
-const getPrizesAwarded = async (chainId: NETWORK) => {
+const getPrizesAwarded = async (chainId: (typeof V5_NETWORKS)[number]) => {
   let totalPrizesAwarded = 0
 
   const prizeData = await getPaginatedV5SubgraphPrizeData(chainId)
@@ -97,11 +96,14 @@ const getPrizesAwarded = async (chainId: NETWORK) => {
   return totalPrizesAwarded
 }
 
-const getV5VaultTokenData = async (chainId: NETWORK, vaultAddresses: `0x${string}`[]) => {
+const getV5VaultTokenData = async (
+  chainId: (typeof V5_NETWORKS)[number],
+  vaultAddresses: `0x${string}`[]
+) => {
   const tokenData: ({ address: `0x${string}`; balance: bigint; decimals: number } | undefined)[] =
     []
 
-  if (!!vaultAddresses.length && !!RPC_URLS[chainId]) {
+  if (!!vaultAddresses.length) {
     const publicClient = createPublicClient({
       chain: VIEM_CHAINS[chainId],
       transport: http(RPC_URLS[chainId])

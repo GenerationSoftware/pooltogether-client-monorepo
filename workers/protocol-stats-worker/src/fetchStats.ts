@@ -23,20 +23,27 @@ export const fetchStats = async () => {
 
 const getTotalProtocolStats = (...stats: (ProtocolStats | undefined)[]) => {
   let totalCurrentUsers = 0
-  let totalCurrentTvl = 0
-  let totalAwarded = 0
+  let totalCurrentTvlEth = 0
+  let totalCurrentTvlUsd = 0
+  let totalAwardedEth = 0
+  let totalAwardedUsd = 0
 
   stats.forEach((version) => {
     if (!!version) {
       totalCurrentUsers += version.current.users
-      totalCurrentTvl += version.current.tvl
-      totalAwarded += version.awarded
+      totalCurrentTvlEth += version.current.tvl.eth
+      totalCurrentTvlUsd += version.current.tvl.usd
+      totalAwardedEth += version.awarded.eth
+      totalAwardedUsd += version.awarded.usd
     }
   })
 
   const total: ProtocolStats = {
-    current: { users: totalCurrentUsers, tvl: totalCurrentTvl },
-    awarded: totalAwarded
+    current: {
+      users: totalCurrentUsers,
+      tvl: { eth: totalCurrentTvlEth, usd: totalCurrentTvlUsd }
+    },
+    awarded: { eth: totalAwardedEth, usd: totalAwardedUsd }
   }
 
   return total
