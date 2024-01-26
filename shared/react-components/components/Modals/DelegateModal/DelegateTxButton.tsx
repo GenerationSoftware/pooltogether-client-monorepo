@@ -20,6 +20,7 @@ interface DelegateTxButtonProps {
   vault: Vault
   modalView: string
   setModalView: (view: DelegateModalView) => void
+  createToast: () => void
   setDelegateTxHash: (txHash: string) => void
   openConnectModal?: () => void
   openChainModal?: () => void
@@ -44,6 +45,7 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
     vault,
     modalView,
     setModalView,
+    createToast,
     setDelegateTxHash,
     openConnectModal,
     openChainModal,
@@ -74,6 +76,7 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
   } = useSendDelegateTransaction(twabController, newDelegateAddress, vault, {
     onSend: () => {
       setModalView('confirming')
+      createToast()
     },
     onSuccess: () => {
       refetchUserVaultDelegate()
@@ -81,7 +84,6 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
       setModalView('main')
     },
     onError: () => {
-      console.log('onError')
       setModalView('main')
     }
   })
@@ -99,8 +101,6 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
       !isWaitingDelegation &&
       !isSuccessfulDelegation
     ) {
-      console.log('')
-      console.log('isConfirmingDelegation and txHash')
       setDelegateTxHash(delegateTxHash)
       setModalView('confirming')
     }

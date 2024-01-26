@@ -51,6 +51,8 @@ export const DelegateForm = (props: DelegateFormProps) => {
 
   const disabled = modalView === 'confirming' || modalView === 'waiting'
 
+  // TODO: Put override state here so when the tx completes we can disable isActiveOverride
+
   return (
     <div className='flex flex-col'>
       <FormProvider {...formMethods}>

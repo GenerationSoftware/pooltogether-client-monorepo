@@ -64,7 +64,10 @@ export const DelegateModal = (props: DelegateModalProps) => {
   )
 
   const createToast = () => {
-    if (!!vault && !!delegateTxHash && view === 'confirming') {
+    console.log('createToast')
+    console.log('delegateTxHash')
+    console.log(delegateTxHash)
+    if (!!vault && !!delegateTxHash) {
       createDelegateTxToast({
         vault: vault,
         txHash: delegateTxHash,
@@ -75,7 +78,6 @@ export const DelegateModal = (props: DelegateModalProps) => {
   }
 
   const handleClose = () => {
-    createToast()
     setIsModalOpen(false)
     setView('main')
   }
@@ -90,6 +92,7 @@ export const DelegateModal = (props: DelegateModalProps) => {
           vault={vault}
           modalView={view}
           setModalView={setView}
+          createToast={createToast}
           setDelegateTxHash={setDelegateTxHash}
           openConnectModal={openConnectModal}
           openChainModal={openChainModal}
