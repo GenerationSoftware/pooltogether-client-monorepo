@@ -8,7 +8,7 @@ import { Intl, RichIntl } from '@shared/types'
 import { Modal } from '@shared/ui'
 import { useState } from 'react'
 import { Address } from 'viem'
-import { createDelegateTxToast, DelegateTxToastProps } from '../../Toasts/DelegateTxToast'
+import { DelegateTxToastProps } from '../../Toasts/DelegateTxToast'
 import { NetworkFeesProps } from '../NetworkFees'
 import { DelegateModalBody } from './DelegateModalBody'
 import { DelegateTxButton } from './DelegateTxButton'
@@ -57,25 +57,7 @@ export const DelegateModal = (props: DelegateModalProps) => {
 
   const [view, setView] = useState<DelegateModalView>('main')
 
-  const [delegateTxHash, setDelegateTxHash] = useState<string>()
-
-  const { data: twabController, isFetched: isFetchedTwabController } = useVaultTwabController(
-    vault as Vault
-  )
-
-  const createToast = () => {
-    console.log('createToast')
-    console.log('delegateTxHash')
-    console.log(delegateTxHash)
-    if (!!vault && !!delegateTxHash) {
-      createDelegateTxToast({
-        vault: vault,
-        txHash: delegateTxHash,
-        addRecentTransaction: addRecentTransaction,
-        intl: intl?.txToast
-      })
-    }
-  }
+  const { data: twabController } = useVaultTwabController(vault as Vault)
 
   const handleClose = () => {
     setIsModalOpen(false)
@@ -92,8 +74,6 @@ export const DelegateModal = (props: DelegateModalProps) => {
           vault={vault}
           modalView={view}
           setModalView={setView}
-          createToast={createToast}
-          setDelegateTxHash={setDelegateTxHash}
           openConnectModal={openConnectModal}
           openChainModal={openChainModal}
           addRecentTransaction={addRecentTransaction}

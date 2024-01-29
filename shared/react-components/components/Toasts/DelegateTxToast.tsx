@@ -38,9 +38,7 @@ export const createDelegateTxToast = (data: DelegateTxToastProps) => {
 export const DelegateTxToast = (props: DelegateTxToastProps) => {
   const { vault, txHash, addRecentTransaction, intl } = props
 
-  console.log('wtf toast')
-
-  // const { data: tokenData } = useVaultTokenData(vault)
+  const { data: tokenData } = useVaultTokenData(vault)
 
   const { isLoading, isSuccess, isError } = useWaitForTransaction({
     chainId: vault.chainId,
@@ -49,25 +47,22 @@ export const DelegateTxToast = (props: DelegateTxToastProps) => {
 
   const { address: userAddress } = useAccount()
 
-  console.log('i delegate toast')
+  const { refetch: refetchUserVaultDelegate } = useUserVaultDelegate(
+    vault,
+    userAddress as Address,
+    { refetchOnWindowFocus: true }
+  )
 
-  // const { refetch: refetchUserVaultDelegate } = useUserVaultDelegate(
-  //   vault,
-  //   userAddress as Address,
-  //   { refetchOnWindowFocus: true }
-  // )
-
-  // const tokens = `${tokenData?.symbol}`
+  const tokens = `${tokenData?.symbol}`
   const network = getNiceNetworkNameByChainId(vault.chainId)
 
   useEffect(() => {
     if (isSuccess && !!txHash) {
       if (!!addRecentTransaction) {
         const networkName = getNiceNetworkNameByChainId(vault.chainId)
-        // const txDescription = `${tokenData?.symbol} ${
-        //   intl?.('delegated', { tokens, network }) ?? 'You delegated {tokens} on {network}'
-        // }`
-        const txDescription = `ok`
+        const txDescription = `${tokenData?.symbol} ${
+          intl?.('delegated', { tokens, network }) ?? 'You delegated {tokens} on {network}'
+        }`
 
         addRecentTransaction({
           hash: txHash,
@@ -75,7 +70,7 @@ export const DelegateTxToast = (props: DelegateTxToastProps) => {
         })
       }
 
-      // refetchUserVaultDelegate()
+      refetchUserVaultDelegate()
     }
   }, [isSuccess, txHash])
 
@@ -132,16 +127,16 @@ interface ConfirmingViewProps {
 const ConfirmingView = (props: ConfirmingViewProps) => {
   const { vault, txHash, intl } = props
 
-  // const { data: tokenData } = useVaultTokenData(vault)
+  const { data: tokenData } = useVaultTokenData(vault)
 
-  // const tokens = `${tokenData?.symbol}`
+  const tokens = `${tokenData?.symbol}`
   const name = getBlockExplorerName(vault.chainId)
 
   return (
     <>
       <span className='flex items-center gap-2 text-pt-purple-50'>
-        <Spinner className='after:border-y-pt-teal' /> delegat
-        {/* {intl?.('delegating', { tokens }) ?? `Delegating ${tokens}...`} */}
+        <Spinner className='after:border-y-pt-teal' />
+        {intl?.('delegating', { tokens }) ?? `Delegating ${tokens}...`}
       </span>
       <a
         href={getBlockExplorerUrl(vault.chainId, txHash, 'tx')}
@@ -163,9 +158,9 @@ interface SuccessViewProps {
 const SuccessView = (props: SuccessViewProps) => {
   const { vault, txHash, intl } = props
 
-  // const { data: tokenData } = useVaultTokenData(vault)
+  const { data: tokenData } = useVaultTokenData(vault)
 
-  // const tokens = `${tokenData?.symbol}`
+  const tokens = `${tokenData?.symbol}`
   const network = getNiceNetworkNameByChainId(vault.chainId)
   const name = getBlockExplorerName(vault.chainId)
 
@@ -177,8 +172,7 @@ const SuccessView = (props: SuccessViewProps) => {
           {intl?.('success') ?? 'Success!'}
         </span>
         <span className='text-pt-purple-50'>
-          succ
-          {/* {intl?.('delegated', { tokens, network }) ?? `You delegated ${tokens}`} */}
+          {intl?.('delegated', { tokens, network }) ?? `You delegated ${tokens}`}
         </span>
       </div>
       <a
@@ -201,12 +195,12 @@ interface ErrorViewProps {
 const ErrorView = (props: ErrorViewProps) => {
   const { vault, txHash, intl } = props
 
-  // const { setSelectedVaultById } = useSelectedVault()
+  const { setSelectedVaultById } = useSelectedVault()
 
   const { setIsModalOpen } = useIsModalOpen(MODAL_KEYS.delegate)
 
   const handleRetry = () => {
-    // setSelectedVaultById(vault.id)
+    setSelectedVaultById(vault.id)
     setIsModalOpen(true)
   }
 

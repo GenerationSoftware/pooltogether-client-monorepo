@@ -13,6 +13,7 @@ import { Address, isAddress } from 'viem'
 import { useAccount, useNetwork } from 'wagmi'
 import { DelegateModalView } from '.'
 import { delegateFormNewDelegateAddressAtom } from '../../Form/DelegateForm'
+import { createDelegateTxToast, DelegateTxToastProps } from '../../Toasts/DelegateTxToast'
 import { TransactionButton } from '../../Transaction/TransactionButton'
 
 interface DelegateTxButtonProps {
@@ -20,8 +21,6 @@ interface DelegateTxButtonProps {
   vault: Vault
   modalView: string
   setModalView: (view: DelegateModalView) => void
-  createToast: () => void
-  setDelegateTxHash: (txHash: string) => void
   openConnectModal?: () => void
   openChainModal?: () => void
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
@@ -35,6 +34,7 @@ interface DelegateTxButtonProps {
       | 'confirmNotice'
       | 'waiting'
     >
+    txToast?: DelegateTxToastProps['intl']
     common?: Intl<'connectWallet'>
   }
 }
@@ -45,8 +45,6 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
     vault,
     modalView,
     setModalView,
-    createToast,
-    setDelegateTxHash,
     openConnectModal,
     openChainModal,
     addRecentTransaction,
@@ -67,6 +65,17 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
     { refetchOnWindowFocus: true }
   )
 
+  const createToast = (delegateTxHash: Address) => {
+    if (!!vault && !!delegateTxHash) {
+      createDelegateTxToast({
+        vault: vault,
+        txHash: delegateTxHash,
+        addRecentTransaction: addRecentTransaction,
+        intl: intl?.txToast
+      })
+    }
+  }
+
   const {
     isWaiting: isWaitingDelegation,
     isConfirming: isConfirmingDelegation,
@@ -76,7 +85,6 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
   } = useSendDelegateTransaction(twabController, newDelegateAddress, vault, {
     onSend: () => {
       setModalView('confirming')
-      createToast()
     },
     onSuccess: () => {
       refetchUserVaultDelegate()
@@ -101,7 +109,9 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
       !isWaitingDelegation &&
       !isSuccessfulDelegation
     ) {
-      setDelegateTxHash(delegateTxHash)
+      if (delegateTxHash) {
+        createToast(delegateTxHash)
+      }
       setModalView('confirming')
     }
   }, [delegateTxHash, isConfirmingDelegation])
