@@ -4,16 +4,17 @@ import { Intl } from '@shared/types'
 import { Spinner } from '@shared/ui'
 import { atom, useSetAtom } from 'jotai'
 import { useEffect } from 'react'
+import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Address, isAddress } from 'viem'
 import { useAccount } from 'wagmi'
 import { DelegateModalView } from '../Modals/DelegateModal'
 import { SimpleInput } from './SimpleInput'
 
-export const delegateFormNewDelegateAddressAtom = atom<Address>('0x')
+export const delegateFormNewDelegateAddressAtom = atom<Address | undefined>('0x')
 
 interface DelegateFormValues {
-  newDelegateAddress: Address
+  newDelegateAddress: Address | undefined
 }
 
 export interface DelegateFormProps {
@@ -42,16 +43,22 @@ export const DelegateForm = (props: DelegateFormProps) => {
 
   const formMethods = useForm<DelegateFormValues>({ mode: 'onChange' })
   const { newDelegateAddress } = formMethods.watch()
+  const { setValue } = formMethods
 
   const setFormNewDelegateAddressAtom = useSetAtom(delegateFormNewDelegateAddressAtom)
+
+  const disabled = modalView === 'confirming' || modalView === 'waiting'
+
+  const [isActiveOverride, setIsActiveOverride] = useState<boolean>(false)
+
+  useEffect(() => {
+    setIsActiveOverride(false)
+    setValue('newDelegateAddress', undefined)
+  }, [delegate])
 
   useEffect(() => {
     setFormNewDelegateAddressAtom(newDelegateAddress)
   }, [newDelegateAddress])
-
-  const disabled = modalView === 'confirming' || modalView === 'waiting'
-
-  // TODO: Put override state here so when the tx completes we can disable isActiveOverride
 
   return (
     <div className='flex flex-col'>
@@ -71,6 +78,8 @@ export const DelegateForm = (props: DelegateFormProps) => {
           }}
           placeholder={delegate}
           label={intl?.base?.('delegatedAddress') ?? `Delegated Address`}
+          isActiveOverride={isActiveOverride}
+          setIsActiveOverride={setIsActiveOverride}
           needsOverride={true}
           overrideLabel={intl?.base?.('changeDelegateAddress') ?? `Change Delegate Address`}
           keepValueOnOverride={true}

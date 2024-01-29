@@ -1,12 +1,12 @@
 import classNames from 'classnames'
-import { ReactNode, useState } from 'react'
+import { ReactNode } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
-// import { FormKey } from 'src/types'
+// TODO: Discuss how we can put this in apps/app/src/types (instead of shared/react-components...)
+export type FormKey = 'newDelegateAddress'
 
 interface SimpleInputProps {
-  formKey: FormKey
-  // formKey: FormKey
+  formKey: any
   id?: string
   autoComplete?: string
   validate?: { [rule: string]: (v: any) => true | string }
@@ -17,6 +17,8 @@ interface SimpleInputProps {
   autoFocus?: boolean
   disabled?: boolean
   needsOverride?: boolean
+  isActiveOverride?: boolean
+  setIsActiveOverride?: (val: boolean) => void
   overrideLabel?: string
   keepValueOnOverride?: boolean
   onOverride?: (val: boolean) => void
@@ -39,6 +41,8 @@ export const SimpleInput = (props: SimpleInputProps) => {
     autoFocus,
     disabled,
     needsOverride,
+    setIsActiveOverride,
+    isActiveOverride,
     overrideLabel,
     keepValueOnOverride,
     onOverride,
@@ -52,18 +56,16 @@ export const SimpleInput = (props: SimpleInputProps) => {
 
   const formValues = useWatch()
 
-  const [isActiveOverride, setIsActiveOverride] = useState<boolean>(false)
-
   const handleOverride = () => {
     !keepValueOnOverride && setValue(formKey, '')
-    setIsActiveOverride(true)
+    setIsActiveOverride?.(true)
     onOverride?.(true)
   }
 
   const handleBlur = () => {
     if ((needsOverride && !formValues[formKey]) || formValues[formKey] === defaultValue) {
       setValue(formKey, defaultValue, { shouldValidate: true })
-      setIsActiveOverride(false)
+      setIsActiveOverride?.(false)
       onOverride?.(false)
     }
   }
@@ -78,7 +80,7 @@ export const SimpleInput = (props: SimpleInputProps) => {
       >
         <span className='font-medium text-pt-purple-100'>{label}</span>
         {needsOverride && !isActiveOverride && (
-          <span onClick={handleOverride} className='text-pt-teal-dark cursor-pointer underline'>
+          <span onClick={handleOverride} className='text-pt-teal cursor-pointer underline'>
             {overrideLabel ?? 'override'}
           </span>
         )}
@@ -98,7 +100,7 @@ export const SimpleInput = (props: SimpleInputProps) => {
           {
             'bg-pt-purple-50 text-gray-700 border-gray-300':
               !needsOverride || (needsOverride && isActiveOverride),
-            'bg-transparent text-pt-teal-dark border-pt-teal': needsOverride && !isActiveOverride,
+            'bg-transparent text-pt-teal border-pt-teal': needsOverride && !isActiveOverride,
             'brightness-75': disabled,
             [`outline-red-600 ${errorClassName}`]: !!error,
             'outline-transparent': !error
