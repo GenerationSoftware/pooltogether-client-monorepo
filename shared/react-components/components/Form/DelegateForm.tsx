@@ -37,10 +37,6 @@ export const DelegateForm = (props: DelegateFormProps) => {
     { refetchOnWindowFocus: true }
   )
 
-  if (!isFetchedDelegate) {
-    return <Spinner />
-  }
-
   const formMethods = useForm<DelegateFormValues>({ mode: 'onChange' })
   const { newDelegateAddress } = formMethods.watch()
   const { setValue } = formMethods
@@ -59,6 +55,10 @@ export const DelegateForm = (props: DelegateFormProps) => {
   useEffect(() => {
     setFormNewDelegateAddressAtom(newDelegateAddress)
   }, [newDelegateAddress])
+
+  if (!isFetchedDelegate) {
+    return <Spinner />
+  }
 
   return (
     <div className='flex flex-col'>

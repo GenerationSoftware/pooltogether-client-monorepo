@@ -20,7 +20,7 @@ import { useGasAmountEstimate, useUserVaultShareBalance } from '..'
  */
 export const useSendDelegateTransaction = (
   twabController: Address,
-  address: Address,
+  address: Address | undefined,
   vault: Vault,
   options?: {
     onSend?: (txHash: `0x${string}`) => void

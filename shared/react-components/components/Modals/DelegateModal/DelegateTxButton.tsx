@@ -57,7 +57,7 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
 
   const { data: tokenData } = useVaultTokenData(vault)
 
-  const newDelegateAddress: Address = useAtomValue(delegateFormNewDelegateAddressAtom)
+  const newDelegateAddress: Address | undefined = useAtomValue(delegateFormNewDelegateAddressAtom)
 
   const { data: delegate, refetch: refetchUserVaultDelegate } = useUserVaultDelegate(
     vault,
@@ -128,7 +128,9 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
     delegateAddressHasChanged &&
     !!sendDelegateTransaction
 
-  if (isWaitingDelegation) {
+  if (isDisconnected) {
+    return null
+  } else if (isWaitingDelegation) {
     return (
       <Button color='transparent' fullSized={true} disabled={true}>
         <Spinner />{' '}
@@ -146,7 +148,7 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
         </span>
       </Button>
     )
-  } else if (!isDisconnected) {
+  } else {
     return (
       <TransactionButton
         chainId={vault.chainId}
