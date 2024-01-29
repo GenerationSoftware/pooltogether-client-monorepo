@@ -87,7 +87,12 @@ export const VaultCard = (props: VaultCardProps) => {
           </span>
         </div>
       </div>
-      <VaultButtons vault={vault} fullSized={true} className='w-full justify-center' />
+      <VaultButtons
+        vault={vault}
+        fullSized={true}
+        className='w-full justify-center'
+        isVaultPage={true}
+      />
     </div>
   )
 }

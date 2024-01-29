@@ -14,13 +14,14 @@ import { useAccount } from 'wagmi'
 
 interface VaultButtonsProps {
   vault: Vault
+  isVaultPage?: boolean
   fullSized?: boolean
   inverseOrder?: boolean
   className?: string
 }
 
 export const VaultButtons = (props: VaultButtonsProps) => {
-  const { vault, fullSized, inverseOrder, className } = props
+  const { vault, isVaultPage, fullSized, inverseOrder, className } = props
 
   const t_common = useTranslations('Common')
   const t_tooltips = useTranslations('Tooltips')
@@ -28,14 +29,14 @@ export const VaultButtons = (props: VaultButtonsProps) => {
   const { address: userAddress } = useAccount()
 
   const { data: vaultBalance } = useUserVaultShareBalance(vault, userAddress as Address)
-
+  console.log(isVaultPage)
   const shareBalance = vaultBalance?.amount ?? 0n
 
   const isDeprecated = vault.tags?.includes('deprecated')
 
   return (
     <div className={classNames('flex items-center gap-2', className)}>
-      {shareBalance > 0n && (
+      {shareBalance > 0n && !isVaultPage && (
         <DelegateButton vault={vault} color='transparent'>
           <Image
             src='/icons/gift.svg'
