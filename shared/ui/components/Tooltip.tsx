@@ -10,7 +10,7 @@ export const Tooltip = (props: TooltipProps) => {
   return (
     <FlowbiteTooltip
       theme={{
-        target: `${fullSized ? 'w-full' : 'w-fit'}`,
+        target: `${fullSized ? 'xs:w-fit' : 'w-fit'}`,
         style: {
           dark: 'bg-pt-purple-100 text-gray-600 text-center'
         },

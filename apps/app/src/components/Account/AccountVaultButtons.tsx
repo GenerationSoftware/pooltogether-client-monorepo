@@ -29,7 +29,7 @@ export const AccountVaultButtons = (props: AccountVaultButtonsProps) => {
           width={32}
           height={32}
           priority={true}
-          className='hidden w-4 h-4 my-1 md:block'
+          className='w-4 h-4 my-1 block'
         />
       </DelegateButton>
       <WithdrawButton vault={vault} color='transparent'>

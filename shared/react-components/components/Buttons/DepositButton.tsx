@@ -25,7 +25,7 @@ export const DepositButton = (props: DepositButtonProps) => {
   return (
     <Button
       onClick={handleClick}
-      className={classNames('w-24', className)}
+      className={classNames('w-fit', className)}
       disabled={isDeprecated || disabled}
       {...rest}
     >

@@ -20,7 +20,7 @@ export const DelegateButton = (props: DelegateButtonProps) => {
   }
 
   return (
-    <Button size='sm' onClick={handleClick} {...rest}>
+    <Button size='sm' onClick={handleClick} className='w-28 md:w-24 lg:w-12' {...rest}>
       {children ?? 'Delegate'}
     </Button>
   )
