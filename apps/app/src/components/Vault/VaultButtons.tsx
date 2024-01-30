@@ -29,7 +29,6 @@ export const VaultButtons = (props: VaultButtonsProps) => {
   const { address: userAddress } = useAccount()
 
   const { data: vaultBalance } = useUserVaultShareBalance(vault, userAddress as Address)
-  console.log(isVaultPage)
   const shareBalance = vaultBalance?.amount ?? 0n
 
   const isDeprecated = vault.tags?.includes('deprecated')

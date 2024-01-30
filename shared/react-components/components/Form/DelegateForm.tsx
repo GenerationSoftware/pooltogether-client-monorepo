@@ -1,5 +1,6 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useUserVaultDelegate } from '@generationsoftware/hyperstructure-react-hooks'
+import { PencilIcon } from '@heroicons/react/24/outline'
 import { Intl } from '@shared/types'
 import { Spinner } from '@shared/ui'
 import { atom, useSetAtom } from 'jotai'
@@ -9,6 +10,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { Address, isAddress } from 'viem'
 import { useAccount } from 'wagmi'
 import { DelegateModalView } from '../Modals/DelegateModal'
+import { DelegationDescriptionTooltip } from '../Tooltips/DelegationDescriptionTooltip'
 import { SimpleInput } from './SimpleInput'
 
 export const delegateFormNewDelegateAddressAtom = atom<Address | undefined>('0x')
@@ -21,7 +23,9 @@ export interface DelegateFormProps {
   vault: Vault
   modalView: DelegateModalView
   intl?: {
-    base?: Intl<'changeDelegateAddress' | 'delegatedAddress'>
+    tooltip?: Intl<'delegateDescription'>
+    common?: Intl<'learnMore'>
+    base?: Intl<'changeDelegateAddress' | 'changeDelegateAddressShort' | 'delegatedAddress'>
     errors?: Intl<'formErrors.invalidAddress' | 'formErrors.sameAsDelegate'>
   }
 }
@@ -77,11 +81,28 @@ export const DelegateForm = (props: DelegateFormProps) => {
                 `Address entered is same as current delegate`)
           }}
           placeholder={delegate}
-          label={intl?.base?.('delegatedAddress') ?? `Delegated Address`}
+          label={
+            <div className='flex items-center text-xs sm:text-sm'>
+              <span className='mr-1'>
+                {intl?.base?.('delegatedAddress') ?? `Delegated Address`}
+              </span>
+              <DelegationDescriptionTooltip intl={intl} className='whitespace-normal' />
+            </div>
+          }
           isActiveOverride={isActiveOverride}
           setIsActiveOverride={setIsActiveOverride}
           needsOverride={true}
-          overrideLabel={intl?.base?.('changeDelegateAddress') ?? `Change Delegate Address`}
+          overrideLabel={
+            <div className='flex items-center text-xs sm:text-sm'>
+              <PencilIcon className='w-3 h-3 sm:w-4 sm:h-4 mr-1' />
+              <span className='hidden sm:inline-block'>
+                {intl?.base?.('changeDelegateAddress') ?? `Change Delegate Address`}
+              </span>
+              <span className='sm:hidden'>
+                {intl?.base?.('changeDelegateAddressShort') ?? `Edit Delegate`}
+              </span>
+            </div>
+          }
           keepValueOnOverride={true}
           className='w-full max-w-md'
         />

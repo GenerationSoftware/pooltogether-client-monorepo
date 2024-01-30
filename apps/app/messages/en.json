@@ -164,9 +164,11 @@
     "withdrawFromShort": "Withdraw from {name}",
     "delegateFrom": "Delegate your {name} on {network}",
     "delegateFromShort": "Delegate your {name}",
+    "delegateSelfDescription": "You are delegating to yourself. Any prize your {tokens} deposit wins will go to your wallet.",
     "delegateDescription": "The delegated address receives any prizes your {tokens} deposit wins.",
     "delegatedAddress": "Delegated Address",
     "changeDelegateAddress": "Change Delegate Address",
+    "changeDelegateAddressShort": "Edit Delegate",
     "updateDelegatedAddress": "Update delegated address",
     "fees": {
       "title": "Estimated Network Fees",
@@ -273,7 +275,8 @@
     "vaultFee": "A percentage of yield that does not go towards prizes, and is determined by the vault owner",
     "importedVault": "This vault is from the following imported list(s):",
     "vaultContribution": "The amount of {symbol} contributed to the prize pool over the last {days} days",
-    "deprecatedVault": "This vault has been deprecated. It may still be eligible to win prizes, but we encourage users to migrate to other vaults."
+    "deprecatedVault": "This vault has been deprecated. It may still be eligible to win prizes, but we encourage users to migrate to other vaults.",
+    "delegateDescription": "By default the prize token holder is the delegated address. That can be overridden with delegation."
   },
   "Toasts": {
     "transactions": {

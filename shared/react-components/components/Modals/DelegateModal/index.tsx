@@ -25,8 +25,10 @@ export interface DelegateModalProps {
       | 'delegateFrom'
       | 'delegateFromShort'
       | 'delegateDescription'
+      | 'delegateSelfDescription'
       | 'delegatedAddress'
       | 'changeDelegateAddress'
+      | 'changeDelegateAddressShort'
       | 'updateDelegatedAddress'
       | 'delegateTx'
       | 'switchNetwork'
@@ -40,7 +42,8 @@ export interface DelegateModalProps {
       | 'failedTx'
       | 'tryAgain'
     >
-    common?: Intl<'prizePool' | 'connectWallet' | 'close' | 'viewOn' | 'warning'>
+    tooltip?: Intl<'delegateDescription'>
+    common?: Intl<'prizePool' | 'connectWallet' | 'close' | 'viewOn' | 'warning' | 'learnMore'>
     fees?: NetworkFeesProps['intl']
     txToast?: DelegateTxToastProps['intl']
     errors?: RichIntl<'formErrors.invalidAddress' | 'formErrors.sameAsDelegate'>

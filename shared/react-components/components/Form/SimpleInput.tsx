@@ -19,7 +19,7 @@ interface SimpleInputProps {
   needsOverride?: boolean
   isActiveOverride?: boolean
   setIsActiveOverride?: (val: boolean) => void
-  overrideLabel?: string
+  overrideLabel?: JSX.Element | string
   keepValueOnOverride?: boolean
   onOverride?: (val: boolean) => void
   className?: string
@@ -91,16 +91,17 @@ export const SimpleInput = (props: SimpleInputProps) => {
         placeholder={placeholder}
         defaultValue={defaultValue}
         autoFocus={autoFocus}
-        disabled={disabled || (needsOverride && !isActiveOverride)}
         onBlur={handleBlur}
         autoComplete={autoComplete}
+        onClick={handleOverride}
         className={classNames(
           'px-3 py-2 text-sm leading-tight rounded-lg border outline outline-1',
           'md:px-4 md:py-3',
           {
             'bg-pt-purple-50 text-gray-700 border-gray-300':
               !needsOverride || (needsOverride && isActiveOverride),
-            'bg-transparent text-pt-teal border-pt-teal': needsOverride && !isActiveOverride,
+            'bg-transparent text-pt-teal border-pt-teal cursor-pointer':
+              needsOverride && !isActiveOverride,
             'brightness-75': disabled,
             [`outline-red-600 ${errorClassName}`]: !!error,
             'outline-transparent': !error
