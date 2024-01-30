@@ -84,7 +84,6 @@ export const NetworkFees = (props: NetworkFeesProps) => {
                 abi: twabControllerABI,
                 functionName: 'delegate',
                 args: [vault.address, vault.address]
-                // args: [vault.address, to.address] // TODO: fill in input address
               }}
             />
           )}
