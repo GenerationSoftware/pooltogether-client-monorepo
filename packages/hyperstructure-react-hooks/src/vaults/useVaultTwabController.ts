@@ -5,7 +5,7 @@ import { Address } from 'viem'
 import { QUERY_KEYS } from '../constants'
 
 /**
- * Returns a vault's underlying token data
+ * Returns a vault's corresponding TwabController address
  * @param vault instance of the `Vault` class
  * @returns
  */

@@ -95,8 +95,8 @@ export const DelegateForm = (props: DelegateFormProps) => {
           overrideLabel={
             <div className='flex items-center text-xs sm:text-sm'>
               <PencilIcon className='w-3 h-3 sm:w-4 sm:h-4 mr-1' />
-              <span className='hidden sm:inline-block'>
-                {intl?.base?.('changeDelegateAddress') ?? `Change Delegate Address`}
+              <span className='hidden sm:inline-block capitalize'>
+                {intl?.base?.('changeDelegateAddress') ?? `Change delegate address`}
               </span>
               <span className='sm:hidden'>
                 {intl?.base?.('changeDelegateAddressShort') ?? `Edit Delegate`}

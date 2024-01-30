@@ -14,8 +14,8 @@ import { CurrencyValue } from '../Currency/CurrencyValue'
 
 export interface NetworkFeesProps {
   vault: Vault
-  show?: ('approve' | 'deposit' | 'depositWithPermit' | 'withdraw' | 'delegate')[]
-  intl?: Intl<'title' | 'approval' | 'deposit' | 'withdrawal' | 'delegate'>
+  show?: ('approve' | 'deposit' | 'depositWithPermit' | 'withdraw' | 'delegation')[]
+  intl?: Intl<'title' | 'approval' | 'deposit' | 'withdrawal' | 'delegation'>
 }
 
 export const NetworkFees = (props: NetworkFeesProps) => {
@@ -75,9 +75,9 @@ export const NetworkFees = (props: NetworkFeesProps) => {
               }}
             />
           )}
-          {(!show || show.includes('delegate')) && (
+          {(!show || show.includes('delegation')) && (
             <TXFeeEstimate
-              name={intl?.('delegate') ?? 'Delegate'}
+              name={intl?.('delegation') ?? 'Delegation'}
               chainId={vault.chainId}
               gasAmount={TX_GAS_ESTIMATES.withdraw}
               tx={{

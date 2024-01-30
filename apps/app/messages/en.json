@@ -167,7 +167,7 @@
     "delegateSelfDescription": "You are delegating to yourself. Any prize your {tokens} deposit wins will go to your wallet.",
     "delegateDescription": "The delegated address receives any prizes your {tokens} deposit wins.",
     "delegatedAddress": "Delegated Address",
-    "changeDelegateAddress": "Change Delegate Address",
+    "changeDelegateAddress": "Change delegate address",
     "changeDelegateAddressShort": "Edit Delegate",
     "updateDelegatedAddress": "Update delegated address",
     "fees": {
@@ -175,7 +175,7 @@
       "approval": "Approval",
       "deposit": "Deposit",
       "withdrawal": "Withdrawal",
-      "delegate": "Delegate"
+      "delegation": "Delegation"
     },
     "dailyChances": "Daily Chance of Winning",
     "weeklyChances": "Weekly Chance of Winning",
@@ -192,7 +192,7 @@
     "confirmWithdrawal": "Confirm Withdrawal",
     "depositTx": "{symbol} Deposit",
     "withdrawTx": "{symbol} Withdrawal",
-    "delegateTx": "{symbol} Delegate",
+    "delegateTx": "{symbol} Delegation",
     "switchNetwork": "Switch to {network}",
     "switchingNetwork": "Switching to {network}...",
     "confirmNotice": "Confirm Transaction in Wallet",

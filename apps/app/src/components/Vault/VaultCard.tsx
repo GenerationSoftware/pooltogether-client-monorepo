@@ -91,7 +91,7 @@ export const VaultCard = (props: VaultCardProps) => {
         vault={vault}
         fullSized={true}
         className='w-full justify-center'
-        isVaultPage={true}
+        hideDelegateButton={true}
       />
     </div>
   )

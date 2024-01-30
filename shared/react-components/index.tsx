@@ -9,11 +9,11 @@ export * from './components/Badges/VaultBadge'
 /**
  * Buttons
  */
+export * from './components/Buttons/DelegateButton'
 export * from './components/Buttons/DepositButton'
 export * from './components/Buttons/HeyShareButton'
 export * from './components/Buttons/TwitterShareButton'
 export * from './components/Buttons/WithdrawButton'
-export * from './components/Buttons/DelegateButton'
 
 /**
  * Currency
@@ -51,11 +51,11 @@ export * from './components/Icons/TokenIcon'
  */
 export * from './components/Modals/CaptchaModal'
 export * from './components/Modals/CheckPrizesModal'
+export * from './components/Modals/DelegateModal'
 export * from './components/Modals/DepositModal'
 export * from './components/Modals/DrawModal'
 export * from './components/Modals/SettingsModal'
 export * from './components/Modals/WithdrawModal'
-export * from './components/Modals/DelegateModal'
 
 /**
  * Prize Pool

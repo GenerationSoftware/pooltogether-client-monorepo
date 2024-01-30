@@ -27,11 +27,11 @@ A React componponent library utilizing some simpler components from the internal
 
 ### Button Components
 
+- `DelegateButton`
 - `DepositButton`
 - `HeyShareButton`
 - `TwitterShareButton`
 - `WithdrawButton`
-- `DelegateButton`
 
 ### Currency Components
 

@@ -130,24 +130,6 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
 
   if (isDisconnected) {
     return null
-  } else if (isWaitingDelegation) {
-    return (
-      <Button color='transparent' fullSized={true} disabled={true}>
-        <Spinner />{' '}
-        <span className='inline-block ml-2'>
-          {intl?.base?.('confirmNotice') ?? 'Confirm Transaction in Wallet'}
-        </span>
-      </Button>
-    )
-  } else if (isConfirmingDelegation) {
-    return (
-      <Button color='transparent' fullSized={true} disabled={true}>
-        <Spinner />
-        <span className='inline-block ml-2'>
-          {intl?.base?.('waiting') ?? 'Waiting for Transaction'}
-        </span>
-      </Button>
-    )
   } else {
     return (
       <TransactionButton
