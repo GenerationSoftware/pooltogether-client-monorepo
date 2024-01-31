@@ -2,14 +2,20 @@ import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useGasCostEstimates } from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
 import { Spinner } from '@shared/ui'
-import { erc20ABI, getSecondsSinceEpoch, sToMs, vaultABI } from '@shared/utilities'
+import {
+  erc20ABI,
+  getSecondsSinceEpoch,
+  sToMs,
+  twabControllerABI,
+  vaultABI
+} from '@shared/utilities'
 import { TX_GAS_ESTIMATES } from '../../constants'
 import { CurrencyValue } from '../Currency/CurrencyValue'
 
 export interface NetworkFeesProps {
   vault: Vault
-  show?: ('approve' | 'deposit' | 'depositWithPermit' | 'withdraw')[]
-  intl?: Intl<'title' | 'approval' | 'deposit' | 'withdrawal'>
+  show?: ('approve' | 'deposit' | 'depositWithPermit' | 'withdraw' | 'delegation')[]
+  intl?: Intl<'title' | 'approval' | 'deposit' | 'withdrawal' | 'delegation'>
 }
 
 export const NetworkFees = (props: NetworkFeesProps) => {
@@ -66,6 +72,18 @@ export const NetworkFees = (props: NetworkFeesProps) => {
                 abi: vaultABI,
                 functionName: 'redeem',
                 args: [1n, vault.address, vault.address]
+              }}
+            />
+          )}
+          {(!show || show.includes('delegation')) && (
+            <TXFeeEstimate
+              name={intl?.('delegation') ?? 'Delegation'}
+              chainId={vault.chainId}
+              gasAmount={TX_GAS_ESTIMATES.withdraw}
+              tx={{
+                abi: twabControllerABI,
+                functionName: 'delegate',
+                args: [vault.address, vault.address]
               }}
             />
           )}

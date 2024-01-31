@@ -1,6 +1,13 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { DepositButton, DeprecatedVaultTooltip, WithdrawButton } from '@shared/react-components'
+import { GiftIcon } from '@heroicons/react/24/solid'
+import {
+  DelegateButton,
+  DepositButton,
+  DeprecatedVaultTooltip,
+  WithdrawButton
+} from '@shared/react-components'
 import { useTranslations } from 'next-intl'
+import Image from 'next/image'
 
 interface AccountVaultButtonsProps {
   vault: Vault
@@ -16,6 +23,9 @@ export const AccountVaultButtons = (props: AccountVaultButtonsProps) => {
 
   return (
     <div className='flex justify-end gap-2'>
+      <DelegateButton vault={vault} color='transparent'>
+        <GiftIcon className='w-4 h-4 my-0.5 block' />
+      </DelegateButton>
       <WithdrawButton vault={vault} color='transparent'>
         {t_common('withdraw')}
       </WithdrawButton>

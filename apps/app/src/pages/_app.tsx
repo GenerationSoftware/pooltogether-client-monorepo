@@ -1,6 +1,5 @@
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
-import { Toaster } from '@shared/ui'
 import type { AppProps } from 'next/app'
 import { WagmiConfig } from 'wagmi'
 import { AppContainer } from '@components/AppContainer'
@@ -25,7 +24,6 @@ export default function MyApp(props: AppProps) {
         coolMode={true}
         appInfo={{ appName: 'Cabana' }}
       >
-        <Toaster />
         <AppContainer {...props} />
       </RainbowKitProvider>
     </WagmiConfig>

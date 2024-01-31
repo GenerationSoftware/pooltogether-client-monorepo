@@ -209,7 +209,10 @@ export const VaultsTable = (props: VaultsTableProps) => {
             content: <AccountVaultBalance vault={vault} />,
             position: 'center'
           },
-          manage: { content: <VaultButtons vault={vault} inverseOrder={true} />, position: 'right' }
+          manage: {
+            content: <VaultButtons vault={vault} inverseOrder={true} hideDelegateButton={true} />,
+            position: 'right'
+          }
         }
       }
     })
