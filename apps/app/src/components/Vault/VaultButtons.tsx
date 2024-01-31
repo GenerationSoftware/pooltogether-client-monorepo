@@ -1,5 +1,6 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useUserVaultShareBalance } from '@generationsoftware/hyperstructure-react-hooks'
+import { GiftIcon } from '@heroicons/react/24/solid'
 import {
   DelegateButton,
   DepositButton,
@@ -37,14 +38,7 @@ export const VaultButtons = (props: VaultButtonsProps) => {
     <div className={classNames('flex items-center gap-2', className)}>
       {shareBalance > 0n && !hideDelegateButton && (
         <DelegateButton vault={vault} color='transparent'>
-          <Image
-            src='/icons/gift.svg'
-            alt='Gift box'
-            width={32}
-            height={32}
-            priority={true}
-            className='w-4 h-4 my-1'
-          />
+          <GiftIcon className='w-4 h-4 my-0.5' />{' '}
         </DelegateButton>
       )}
       {isDeprecated ? (
