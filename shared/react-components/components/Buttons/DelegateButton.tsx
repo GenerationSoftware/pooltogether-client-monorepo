@@ -3,6 +3,7 @@ import { useSelectedVault } from '@generationsoftware/hyperstructure-react-hooks
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Button, ButtonProps } from '@shared/ui'
 import classNames from 'classnames'
+import { ReactNode } from 'react'
 
 interface DelegateButtonProps extends Omit<ButtonProps, 'onClick'> {
   vault: Vault
