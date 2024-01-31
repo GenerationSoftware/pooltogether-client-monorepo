@@ -19,7 +19,7 @@ interface SimpleInputProps {
   needsOverride?: boolean
   isActiveOverride?: boolean
   setIsActiveOverride?: (val: boolean) => void
-  overrideLabel?: ReactNode | string
+  overrideLabel?: ReactNode
   keepValueOnOverride?: boolean
   onOverride?: (val: boolean) => void
   className?: string

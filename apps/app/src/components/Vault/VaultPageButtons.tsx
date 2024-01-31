@@ -1,20 +1,16 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { GiftIcon } from '@heroicons/react/24/solid'
 import { DelegateButton, DepositButton, WithdrawButton } from '@shared/react-components'
-import { Intl } from '@shared/types'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 
 interface VaultPageButtonsProps {
   vault: Vault
   className?: string
-  intl?: {
-    common?: Intl<'delegate'>
-  }
 }
 
 export const VaultPageButtons = (props: VaultPageButtonsProps) => {
-  const { vault, className, intl } = props
+  const { vault, className } = props
 
   const t = useTranslations('Common')
 
