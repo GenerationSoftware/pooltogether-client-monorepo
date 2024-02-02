@@ -1,4 +1,4 @@
-import { useLocalStorageLanguage, useSelectedLanguage } from '@shared/generic-react-hooks'
+import { useSelectedLanguage } from '@shared/generic-react-hooks'
 import { Flowbite } from '@shared/ui'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { NextIntlProvider } from 'next-intl'
@@ -19,15 +19,11 @@ export const AppContainer = (props: AppProps) => {
   useSelectedLanguage({
     onLanguageChange: (locale) => {
       const { pathname, query, asPath } = router
-      router.push({ pathname, query }, asPath, { locale })
-    }
-  })
 
-  useLocalStorageLanguage((lang: string | undefined) => {
-    console.log('lang')
-    console.log(lang)
-    if (!ready && lang) {
-      setReady(true)
+      router.push({ pathname, query }, asPath, { locale })
+      setTimeout(() => {
+        setReady(true)
+      }, 100)
     }
   })
 
