@@ -115,30 +115,20 @@ export const USD_PRICE_REF = {
 
 export const TOKEN_PRICES_API_URL = 'https://token-prices.api.cabana.fi'
 
-// TODO: add fallback prices in ETH for these tokens (some polygon tokens may not be necessary if the network is added to the token prices api)
 export const V3_TOKEN_PRICE_FALLBACKS: Record<
   (typeof V3_NETWORKS)[number],
   { [tokenAddress: Lowercase<`0x${string}`>]: number }
 > = {
   [NETWORK.mainnet]: {
-    '0xf047ee812b21050186f86106f6cabdfec35366c6': 0, // UNI-v2 (EYE/SCX)
-    '0x04906695d6d12cf5459975d7c3c03356e4ccd460': 0, // sOHM V3
-    '0x04f2694c8fcee23e8fd0dfea1d4f5bb8c352111f': 0 // sOHM V2
+    '0x04906695d6d12cf5459975d7c3c03356e4ccd460': 0.005746, // sOHM V3
+    '0x04f2694c8fcee23e8fd0dfea1d4f5bb8c352111f': 0.03374 // sOHM V2
   },
   [NETWORK.polygon]: {
-    '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270': 0, // WMATIC
-    '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063': 0, // DAI
-    '0x25788a1a171ec66da6502f9975a15b609ff54cf6': 0, // POOL
-    '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619': 0, // WETH
-    '0xc2132d05d31c914a87c6611c10748aeb04b58e8f': 0, // USDT
-    '0x2791bca1f2de4661ed88a30c99a7a9449aa84174': 0, // USDC.e
-    '0xb0c22d8d350c67420f06f48936654f567c73e8c8': 0, // sKLIMA
-    '0xe20b9e246db5a0d21bf9209e4858bc9a3ff7a034': 0, // wBAN
-    '0xb44cf912e9d0341e92f64f4a0642393b7f3526c4': 0 // PULL
+    '0xb0c22d8d350c67420f06f48936654f567c73e8c8': 0.0002964 // sKLIMA
   },
   [NETWORK.celo]: {
-    '0x765de816845861e75a25fca122bb6898b8b1282a': 0, // cUSD
-    '0xd8763cba276a3738e6de85b4b3bf5fded6d6ca73': 0 // cEUR
+    '0x765de816845861e75a25fca122bb6898b8b1282a': 0.0004348, // cUSD
+    '0xd8763cba276a3738e6de85b4b3bf5fded6d6ca73': 0.0004675 // cEUR
   }
 }
 
