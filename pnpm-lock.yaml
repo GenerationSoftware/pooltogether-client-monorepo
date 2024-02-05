@@ -823,6 +823,10 @@ importers:
         version: 1.4.7(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0)(typescript@5.0.4)(viem@1.19.1)
 
   workers/protocol-stats-worker:
+    dependencies:
+      viem:
+        specifier: ^1.19.1
+        version: 1.19.1(typescript@5.0.4)
     devDependencies:
       '@cloudflare/workers-types':
         specifier: ^4.20230518.0

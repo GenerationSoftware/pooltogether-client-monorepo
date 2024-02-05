@@ -1,23 +1,50 @@
+export type AggregatedProtocolStats = {
+  total: ProtocolStats
+  v3?: ProtocolStats
+  v4?: ProtocolStats
+  v5?: ProtocolStats
+}
+
 export interface ProtocolStats {
-  uniqueWallets: number
-  poolPrice: number
-  tvl: number
-  uniqueWinners: number
-  totalPrizes: number
+  current: { users: number; tvl: { eth: number; usd: number } }
+  awarded: { eth: number; usd: number }
 }
 
-export interface PoolExplorerApiStats {
-  totalPlayers: number
-  pool: number
-  tvl: { total: number }
-  historicalWinners: number
+export interface V5SubgraphUserData {
+  id: string
 }
 
-export interface PoolExplorerApiHistory {
-  i: number // Draw ID
-  w: number // Winner Count
-  p: number // Claimable Prize Count
-  c: string // Claimable Prize Amount
-  d: string // Dropped Prize Amount
-  t: string // Total Prize Amount
+export interface V5SubgraphVaultData {
+  id: string
+  address: `0x${string}`
+  balance: bigint
+}
+
+export interface V5SubgraphPrizeData {
+  id: string
+  payout: bigint
+}
+
+export interface V4SubgraphUserData {
+  id: string
+}
+
+export interface V4SubgraphPrizeData {
+  totalClaimed: bigint
+}
+
+export interface V3SubgraphUserData {
+  id: string
+}
+
+export interface V3SubgraphPoolData {
+  id: string
+  underlyingCollateralToken: `0x${string}`
+  underlyingCollateralDecimals: number
+  cumulativePrizeGross: bigint
+  controlledTokens: { totalSupply: bigint }[]
+}
+
+export interface TokenPricesApiResponse {
+  [address: `0x${string}`]: [{ date: string; price: number }]
 }

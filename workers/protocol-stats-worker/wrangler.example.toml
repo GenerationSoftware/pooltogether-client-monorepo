@@ -3,11 +3,22 @@ main = "./src/index.ts"
 compatibility_date = "2023-05-18"
 
 account_id = "<YOUR_ACCOUNT_ID_HERE>"
-route = "<YOUR_URL_HERE>/*"
+route = { pattern = "<YOUR_URL_HERE>", zone_id = "<YOUR_ZONE_ID_HERE>", custom_domain = true }
 
 kv_namespaces = [
   { binding = "PROTOCOL_STATS", id = "<YOUR_KV_ID_HERE>", preview_id = "<YOUR_PREVIEW_KV_ID_HERE>" }
 ]
 
+services = [
+  { binding = "TOKEN_PRICES", service = "<YOUR_TOKEN_PRICES_WORKER_NAME_HERE>" }
+]
+
 [triggers]
 crons = ["0 */12 * * *"]
+
+[vars]
+MAINNET_RPC_URL = "<YOUR_RPC_URL_HERE>"
+POLYGON_RPC_URL = "<YOUR_RPC_URL_HERE>"
+OPTIMISM_RPC_URL = "<YOUR_RPC_URL_HERE>"
+AVALANCHE_RPC_URL = "<YOUR_RPC_URL_HERE>"
+CELO_RPC_URL = "<YOUR_RPC_URL_HERE>"

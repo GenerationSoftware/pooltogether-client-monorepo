@@ -1,18 +1,17 @@
-import { POOL_EXPLORER_URL } from './constants'
-import { PoolExplorerApiHistory, PoolExplorerApiStats } from './types'
 import { updateHandler } from './updateHandler'
+import { getV3Stats } from './v3'
+import { getV4Stats } from './v4'
+import { getV5Stats } from './v5'
 
-// TODO: this should include past V3 stats for prizes awarded
 export const updateStats = async (event: FetchEvent | ScheduledEvent) => {
   try {
-    const basicStatsResponse = await fetch(`${POOL_EXPLORER_URL}/stats`)
-    const prizeHistoryResponse = await fetch(`${POOL_EXPLORER_URL}/history`)
+    const v3 = await getV3Stats()
+    const v4 = await getV4Stats()
+    const v5 = await getV5Stats()
 
-    const basicStatsData = await basicStatsResponse.json<PoolExplorerApiStats>()
-    const prizeHistoryData = await prizeHistoryResponse.json<PoolExplorerApiHistory[]>()
-
-    return updateHandler(event, basicStatsData, prizeHistoryData)
+    return updateHandler(event, v3, v4, v5)
   } catch (e) {
+    console.error(e)
     return undefined
   }
 }
