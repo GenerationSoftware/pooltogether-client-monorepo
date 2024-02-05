@@ -11,6 +11,7 @@ export const updateStats = async (event: FetchEvent | ScheduledEvent) => {
 
     return updateHandler(event, v3, v4, v5)
   } catch (e) {
+    console.error(e)
     return undefined
   }
 }
