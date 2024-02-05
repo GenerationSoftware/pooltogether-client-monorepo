@@ -12,17 +12,19 @@ const queryClient = new QueryClient()
 export const AppContainer = (props: AppProps) => {
   const { Component, pageProps } = props
 
-  const [ready, setReady] = useState<boolean>(false)
-
   const router = useRouter()
+
+  const [isReady, setIsReady] = useState<boolean>(false)
 
   useSelectedLanguage({
     onLanguageChange: (locale) => {
       const { pathname, query, asPath } = router
 
       router.push({ pathname, query }, asPath, { locale })
+
+      // Tiny delay to avoid flickering on differing language selection to locale default
       setTimeout(() => {
-        setReady(true)
+        setIsReady(true)
       }, 100)
     }
   })
@@ -38,7 +40,7 @@ export const AppContainer = (props: AppProps) => {
       <QueryClientProvider client={queryClient}>
         <NextIntlProvider messages={pageProps.messages}>
           <div id='modal-root' />
-          {ready ? <Component {...pageProps} /> : null}
+          {isReady && <Component {...pageProps} />}
         </NextIntlProvider>
       </QueryClientProvider>
     </Flowbite>
