@@ -1,5 +1,6 @@
 import { Intl } from '@shared/types'
 import { Button, ButtonProps } from '@shared/ui'
+import { SocialIcon } from '@shared/ui'
 
 interface HeyShareButtonProps extends Omit<ButtonProps, 'onClick' | 'href' | 'target'> {
   text?: string
@@ -23,9 +24,11 @@ export const HeyShareButton = (props: HeyShareButtonProps) => {
       href={href.toString()}
       target='_blank'
       disabled={text === undefined || disabled}
+      color='transparent'
       {...rest}
     >
-      {children ?? intl?.('shareHey') ?? 'Share on Hey'}
+      <SocialIcon platform='hey' className='w-4 h-auto shrink-0 mr-1' />
+      {children ?? 'Hey'}
     </Button>
   )
 }

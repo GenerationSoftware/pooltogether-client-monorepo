@@ -87,7 +87,11 @@ export const TransactionButton = (props: TransactionButtonProps) => {
 
   return (
     <Button onClick={write} disabled={!write || isTxLoading || disabled} {...rest}>
-      <span className={classNames('whitespace-nowrap', innerClassName)}>
+      <span
+        className={classNames('whitespace-nowrap', innerClassName, {
+          'leading-none': isTxLoading
+        })}
+      >
         {isTxLoading && <Spinner />}
         {!isTxLoading && children}
       </span>

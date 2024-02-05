@@ -1,7 +1,7 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useVaultTokenData } from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
-import { Button, ExternalLink, LINKS } from '@shared/ui'
+import { ExternalLink, LINKS } from '@shared/ui'
 import {
   formatNumberForDisplay,
   getBlockExplorerName,
@@ -27,6 +27,7 @@ interface SuccessViewProps {
       | 'success'
       | 'deposited'
       | 'nowEligible'
+      | 'shareOn'
       | 'shareTwitter'
       | 'shareWarpcast'
       | 'shareHey'
@@ -74,25 +75,13 @@ export const SuccessView = (props: SuccessViewProps) => {
         </ExternalLink>
       )}
       <ShareButtons vault={vault} intl={intl?.base} />
-      {!!goToAccount && (
-        <Button
-          fullSized={true}
-          color='transparent'
-          onClick={() => {
-            goToAccount()
-            closeModal()
-          }}
-        >
-          {intl?.base?.('viewAccount') ?? 'View Account'}
-        </Button>
-      )}
     </div>
   )
 }
 
 interface ShareButtonsProps {
   vault: Vault
-  intl?: Intl<'shareTwitter' | 'shareWarpcast' | 'shareHey'>
+  intl?: Intl<'shareTwitter' | 'shareWarpcast' | 'shareHey' | 'shareOn'>
 }
 
 const ShareButtons = (props: ShareButtonsProps) => {
@@ -116,23 +105,34 @@ const ShareButtons = (props: ShareButtonsProps) => {
   }, [tokenData])
 
   return (
-    <>
-      <TwitterShareButton
-        text={text.twitter}
-        hashTags={hashTags}
-        url={LINKS.app}
-        fullSized={true}
-        intl={intl}
-      />
-      <WarpcastShareButton text={text.warpcast} url={LINKS.app} fullSized={true} intl={intl} />
-      <HeyShareButton
-        text={text.hey}
-        hashTags={hashTags}
-        url={LINKS.app}
-        fullSized={true}
-        intl={intl}
-      />
-    </>
+    <div className='flex flex-col items-center'>
+      <h1 className='py-1 text-sm sm:text-md font-medium'>{intl?.('shareOn') ?? 'Share on'}:</h1>
+      <div className='flex flex-col sm:flex-row gap-2'>
+        <TwitterShareButton
+          text={text.twitter}
+          hashTags={hashTags}
+          url={LINKS.app}
+          fullSized={true}
+          intl={intl}
+          size='sm'
+        />
+        <WarpcastShareButton
+          text={text.warpcast}
+          url={LINKS.app}
+          fullSized={true}
+          intl={intl}
+          size='sm'
+        />
+        <HeyShareButton
+          text={text.hey}
+          hashTags={hashTags}
+          url={LINKS.app}
+          fullSized={true}
+          intl={intl}
+          size='sm'
+        />
+      </div>
+    </div>
   )
 }
 

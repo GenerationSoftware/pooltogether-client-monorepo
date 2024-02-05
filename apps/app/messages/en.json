@@ -205,6 +205,7 @@
     "withdrew": "You withdrew {tokens}",
     "delegated": "You delegated {tokens}",
     "nowEligible": "You are now eligible for all future draws in this pool.",
+    "shareOn": "Share on",
     "shareTwitter": "Share on Twitter",
     "shareWarpcast": "Share on Warpcast",
     "shareHey": "Share on Hey",
