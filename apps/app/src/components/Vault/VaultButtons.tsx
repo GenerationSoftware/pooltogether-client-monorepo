@@ -9,7 +9,6 @@ import {
 } from '@shared/react-components'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import Image from 'next/image'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 
@@ -38,7 +37,7 @@ export const VaultButtons = (props: VaultButtonsProps) => {
     <div className={classNames('flex items-center gap-2', className)}>
       {shareBalance > 0n && !hideDelegateButton && (
         <DelegateButton vault={vault} color='transparent'>
-          <GiftIcon className='w-4 h-4 my-0.5' />{' '}
+          <GiftIcon className='w-4 h-4 my-0.5' />
         </DelegateButton>
       )}
       {isDeprecated ? (

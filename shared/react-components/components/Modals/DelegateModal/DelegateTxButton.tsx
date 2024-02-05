@@ -5,8 +5,6 @@ import {
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
-import { Spinner } from '@shared/ui'
-import { Button } from '@shared/ui'
 import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
 import { Address, isAddress } from 'viem'
@@ -26,14 +24,7 @@ interface DelegateTxButtonProps {
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   onSuccessfulDelegation?: () => void
   intl?: {
-    base?: Intl<
-      | 'updateDelegatedAddress'
-      | 'delegateTx'
-      | 'switchNetwork'
-      | 'switchingNetwork'
-      | 'confirmNotice'
-      | 'waiting'
-    >
+    base?: Intl<'updateDelegatedAddress' | 'delegateTx' | 'switchNetwork' | 'switchingNetwork'>
     txToast?: DelegateTxToastProps['intl']
     common?: Intl<'connectWallet'>
   }
@@ -129,29 +120,29 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
     !!sendDelegateTransaction
 
   if (isDisconnected) {
-    return null
-  } else {
-    return (
-      <TransactionButton
-        chainId={vault.chainId}
-        isTxLoading={isWaitingDelegation || isConfirmingDelegation}
-        isTxSuccess={isSuccessfulDelegation}
-        write={sendDelegateTransaction}
-        txHash={delegateTxHash}
-        txDescription={
-          intl?.base?.('delegateTx', { symbol: tokenData?.symbol ?? '?' }) ??
-          `${tokenData?.symbol} Delegation`
-        }
-        fullSized={true}
-        disabled={!delegateEnabled}
-        color={!delegateEnabled && chain?.id === vault.chainId ? 'transparent' : 'teal'}
-        openConnectModal={openConnectModal}
-        openChainModal={openChainModal}
-        addRecentTransaction={addRecentTransaction}
-        intl={intl}
-      >
-        {intl?.base?.('updateDelegatedAddress') ?? 'Update delegated address'}
-      </TransactionButton>
-    )
+    return <></>
   }
+
+  return (
+    <TransactionButton
+      chainId={vault.chainId}
+      isTxLoading={isWaitingDelegation || isConfirmingDelegation}
+      isTxSuccess={isSuccessfulDelegation}
+      write={sendDelegateTransaction}
+      txHash={delegateTxHash}
+      txDescription={
+        intl?.base?.('delegateTx', { symbol: tokenData?.symbol ?? '?' }) ??
+        `${tokenData?.symbol} Delegation`
+      }
+      fullSized={true}
+      disabled={!delegateEnabled}
+      color={!delegateEnabled && chain?.id === vault.chainId ? 'transparent' : 'teal'}
+      openConnectModal={openConnectModal}
+      openChainModal={openChainModal}
+      addRecentTransaction={addRecentTransaction}
+      intl={intl}
+    >
+      {intl?.base?.('updateDelegatedAddress') ?? 'Update delegated address'}
+    </TransactionButton>
+  )
 }

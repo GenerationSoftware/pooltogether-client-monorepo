@@ -2,11 +2,8 @@ import classNames from 'classnames'
 import { ReactNode } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
-// TODO: Discuss how we can put this in apps/app/src/types (instead of shared/react-components...)
-export type FormKey = 'newDelegateAddress'
-
 interface SimpleInputProps {
-  formKey: any
+  formKey: string
   id?: string
   autoComplete?: string
   validate?: { [rule: string]: (v: any) => true | string }
