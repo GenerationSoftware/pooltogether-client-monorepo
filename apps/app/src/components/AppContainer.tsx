@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { NextIntlProvider } from 'next-intl'
 import { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 // React Query Client:
 const queryClient = new QueryClient()
@@ -15,10 +15,18 @@ export const AppContainer = (props: AppProps) => {
 
   const router = useRouter()
 
+  const [isReady, setIsReady] = useState<boolean>(false)
+
   useSelectedLanguage({
     onLanguageChange: (locale) => {
       const { pathname, query, asPath } = router
+
       router.push({ pathname, query }, asPath, { locale })
+
+      // Tiny delay to avoid flickering on differing language selection to locale default
+      setTimeout(() => {
+        setIsReady(true)
+      }, 100)
     }
   })
 
@@ -35,7 +43,7 @@ export const AppContainer = (props: AppProps) => {
 
         <NextIntlProvider messages={pageProps.messages}>
           <div id='modal-root' />
-          <Component {...pageProps} />
+          {isReady && <Component {...pageProps} />}
         </NextIntlProvider>
       </QueryClientProvider>
     </Flowbite>
