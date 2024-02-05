@@ -54,7 +54,6 @@ export interface WithdrawModalProps {
     >
     common?: Intl<'prizePool' | 'connectWallet' | 'close' | 'viewOn' | 'warning'>
     fees?: NetworkFeesProps['intl']
-    tooltips?: Intl<'exactApproval' | 'infiniteApproval'>
     txToast?: WithdrawTxToastProps['intl']
     errors?: RichIntl<
       | 'exchangeRateError'

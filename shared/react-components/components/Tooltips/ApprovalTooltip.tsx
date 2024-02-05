@@ -3,15 +3,15 @@ import { Intl } from '@shared/types'
 import { Tooltip } from '@shared/ui'
 import classNames from 'classnames'
 
-export interface ExactApprovalTooltipProps {
+export interface ApprovalTooltipProps {
   tokenSymbol: string
   iconSize?: 'sm' | 'md' | 'lg'
-  intl?: Intl<'exactApproval'>
+  intl?: Intl<'approval'>
   className?: string
   iconClassName?: string
 }
 
-export const ExactApprovalTooltip = (props: ExactApprovalTooltipProps) => {
+export const ApprovalTooltip = (props: ApprovalTooltipProps) => {
   const { tokenSymbol, iconSize, intl, className, iconClassName } = props
 
   return (
@@ -19,7 +19,7 @@ export const ExactApprovalTooltip = (props: ExactApprovalTooltipProps) => {
       content={
         <div className={classNames('max-w-[16ch] text-center', className)}>
           <span>
-            {intl?.('exactApproval', { symbol: tokenSymbol }) ??
+            {intl?.('approval', { symbol: tokenSymbol }) ??
               `You'll give your approval to deposit a specific amount of ${tokenSymbol}`}
           </span>
         </div>

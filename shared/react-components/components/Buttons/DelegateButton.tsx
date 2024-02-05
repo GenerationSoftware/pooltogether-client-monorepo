@@ -3,15 +3,19 @@ import { useSelectedVault } from '@generationsoftware/hyperstructure-react-hooks
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Button, ButtonProps } from '@shared/ui'
 import classNames from 'classnames'
+import { ReactNode } from 'react'
 
-interface DepositButtonProps extends Omit<ButtonProps, 'onClick'> {
+interface DelegateButtonProps extends Omit<ButtonProps, 'onClick'> {
   vault: Vault
+  children?: ReactNode
+  className?: string
+  size?: string
 }
 
-export const DepositButton = (props: DepositButtonProps) => {
-  const { vault, children, className, disabled, ...rest } = props
+export const DelegateButton = (props: DelegateButtonProps) => {
+  const { vault, children, className, size, ...rest } = props
 
-  const { setIsModalOpen } = useIsModalOpen(MODAL_KEYS.deposit)
+  const { setIsModalOpen } = useIsModalOpen(MODAL_KEYS.delegate)
 
   const { setSelectedVaultById } = useSelectedVault()
 
@@ -20,16 +24,16 @@ export const DepositButton = (props: DepositButtonProps) => {
     setIsModalOpen(true)
   }
 
-  const isDeprecated = vault.tags?.includes('deprecated')
-
   return (
     <Button
+      size={size}
       onClick={handleClick}
-      className={classNames('w-fit', className)}
-      disabled={isDeprecated || disabled}
+      className={classNames({
+        'w-28 md:w-24 lg:w-12': size === 'sm'
+      })}
       {...rest}
     >
-      {children ?? 'Deposit'}
+      {children ?? 'Delegate'}
     </Button>
   )
 }

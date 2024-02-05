@@ -12,7 +12,7 @@ import { getBlockExplorerUrl, getSimpleDate, isTestnet, shorten } from '@shared/
 import classNames from 'classnames'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Promotion } from 'src/types'
 import { Address, zeroAddress } from 'viem'
 import { useAccount } from 'wagmi'
@@ -59,6 +59,9 @@ export const DeployedPromotionsTable = (props: DeployedPromotionsTableProps) => 
     return array.sort((a, b) => Number(b.startTimestamp - a.startTimestamp))
   }, [allPromotions])
 
+  const baseNumPromotions = 10
+  const [numPromotions, setNumPromotions] = useState<number>(baseNumPromotions)
+
   const { width: screenWidth } = useScreenSize()
   const isMobile = !!screenWidth && screenWidth < 1024
 
@@ -70,7 +73,7 @@ export const DeployedPromotionsTable = (props: DeployedPromotionsTableProps) => 
       status: { content: 'Status', position: 'center' },
       actions: { content: 'Actions', position: 'center' }
     },
-    rows: promotionsArray.map((promotion) => ({
+    rows: promotionsArray.slice(0, numPromotions).map((promotion) => ({
       id: `${promotion.chainId}-${promotion.id}`,
       cells: {
         vault: {
@@ -109,26 +112,44 @@ export const DeployedPromotionsTable = (props: DeployedPromotionsTableProps) => 
   if (isMobile) {
     return (
       <div className='w-full flex flex-col gap-4 items-center'>
-        {promotionsArray.map((promotion) => (
+        {promotionsArray.slice(0, numPromotions).map((promotion) => (
           <DeployedPromotionCard
             key={`deployedPromotion-${promotion.chainId}-${promotion.id}`}
             promotion={promotion}
           />
         ))}
+        {promotionsArray.length > numPromotions && (
+          <span
+            className='w-full flex pb-4 justify-center text-pt-purple-300 cursor-pointer'
+            onClick={() => setNumPromotions(numPromotions + baseNumPromotions)}
+          >
+            Show More
+          </span>
+        )}
       </div>
     )
   }
 
   return (
-    <Table
-      keyPrefix='deployedPromotionsTable'
-      data={tableData}
-      className={classNames('w-full px-6 pb-6 bg-pt-transparent/20 rounded-3xl', className)}
-      innerClassName='overflow-y-auto'
-      headerClassName='text-center font-medium text-pt-purple-300 whitespace-nowrap'
-      rowClassName='text-sm font-medium rounded-lg overflow-hidden'
-      gridColsClassName={`grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)]`}
-    />
+    <div className={classNames('w-full flex flex-col bg-pt-transparent/20 rounded-3xl', className)}>
+      <Table
+        keyPrefix='deployedPromotionsTable'
+        data={tableData}
+        className='w-full px-6 pb-6 bg-transparent'
+        innerClassName='overflow-y-auto'
+        headerClassName='text-center font-medium text-pt-purple-300 whitespace-nowrap'
+        rowClassName='text-sm font-medium rounded-lg overflow-hidden'
+        gridColsClassName={`grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)]`}
+      />
+      {promotionsArray.length > numPromotions && (
+        <span
+          className='w-full flex pb-6 justify-center text-pt-purple-300 cursor-pointer'
+          onClick={() => setNumPromotions(numPromotions + baseNumPromotions)}
+        >
+          Show More
+        </span>
+      )}
+    </div>
   )
 }
 
@@ -236,7 +257,7 @@ const ActionsItem = (props: { promotion: Promotion }) => {
             <SquaresPlusIcon
               onClick={isPromotionOwner ? onClickExtend : undefined}
               className={classNames(iconClassName, {
-                'cursor-default opacity-50': !isPromotionOwner
+                '!cursor-not-allowed opacity-50': !isPromotionOwner
               })}
             />
           </Tooltip>
@@ -244,7 +265,7 @@ const ActionsItem = (props: { promotion: Promotion }) => {
             <ArrowRightOnRectangleIcon
               onClick={isPromotionOwner ? onClickEnd : undefined}
               className={classNames(iconClassName, {
-                'cursor-default opacity-50': !isPromotionOwner
+                '!cursor-not-allowed opacity-50': !isPromotionOwner
               })}
             />
           </Tooltip>
@@ -255,7 +276,7 @@ const ActionsItem = (props: { promotion: Promotion }) => {
           <ArchiveBoxXMarkIcon
             onClick={isPromotionOwner && canDestroy ? onClickDestroy : undefined}
             className={classNames(iconClassName, {
-              'cursor-default opacity-50': !isPromotionOwner || !canDestroy
+              '!cursor-not-allowed opacity-50': !isPromotionOwner || !canDestroy
             })}
           />
         </Tooltip>

@@ -388,7 +388,8 @@ export const OP_GAS_ORACLE_ADDRESS = '0x420000000000000000000000000000000000000f
 export const TOKEN_PRICE_API_SUPPORTED_NETWORKS: NETWORK[] = [
   NETWORK.mainnet,
   NETWORK.optimism,
-  NETWORK.arbitrum
+  NETWORK.arbitrum,
+  NETWORK.polygon
 ]
 
 /**
@@ -411,7 +412,13 @@ export const TOKEN_PRICE_REDIRECTS: {
       address: '0x1a7e4e63778b4f12a199c062f3efdd288afcbce8'
     }
   },
-
+  [NETWORK.polygon]: {
+    /* MATIC */
+    [DOLPHIN_ADDRESS]: {
+      chainId: NETWORK.polygon,
+      address: '0x0000000000000000000000000000000000001010'
+    }
+  },
   [NETWORK.optimism_sepolia]: {
     /* ETH */
     [DOLPHIN_ADDRESS]: {

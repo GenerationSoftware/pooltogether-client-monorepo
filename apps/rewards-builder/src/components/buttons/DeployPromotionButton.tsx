@@ -17,6 +17,7 @@ import {
   promotionChainIdAtom,
   promotionEpochLengthAtom,
   promotionEpochsAtom,
+  promotionStartTimestampAtom,
   promotionTokenAddressAtom,
   promotionTokenAmountAtom,
   promotionVaultAddressAtom
@@ -41,6 +42,7 @@ export const DeployPromotionButton = (props: DeployPromotionButtonProps) => {
 
   const chainId = useAtomValue(promotionChainIdAtom)
   const vaultAddress = useAtomValue(promotionVaultAddressAtom)
+  const startTimestamp = useAtomValue(promotionStartTimestampAtom)
   const numEpochs = useAtomValue(promotionEpochsAtom)
   const epochDuration = useAtomValue(promotionEpochLengthAtom)
   const rewardTokenAddress = useAtomValue(promotionTokenAddressAtom)
@@ -101,6 +103,7 @@ export const DeployPromotionButton = (props: DeployPromotionButtonProps) => {
       numEpochs as number,
       rewardTokensPerEpoch as bigint,
       {
+        startTimestamp,
         epochDuration,
         onSend: () => {
           // TODO: create tx toast
@@ -136,7 +139,7 @@ export const DeployPromotionButton = (props: DeployPromotionButtonProps) => {
         isTxSuccess={isSuccessfulApproval}
         write={sendApproveTransaction}
         txHash={approvalTxHash}
-        txDescription={`Exact ${rewardToken?.symbol} Approval`}
+        txDescription={`${rewardToken?.symbol} Approval`}
         disabled={!approvalEnabled}
         openConnectModal={openConnectModal}
         openChainModal={openChainModal}

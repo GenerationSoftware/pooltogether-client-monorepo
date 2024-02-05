@@ -9,6 +9,7 @@ export * from './components/Badges/VaultBadge'
 /**
  * Buttons
  */
+export * from './components/Buttons/DelegateButton'
 export * from './components/Buttons/DepositButton'
 export * from './components/Buttons/HeyShareButton'
 export * from './components/Buttons/TwitterShareButton'
@@ -50,6 +51,7 @@ export * from './components/Icons/TokenIcon'
  */
 export * from './components/Modals/CaptchaModal'
 export * from './components/Modals/CheckPrizesModal'
+export * from './components/Modals/DelegateModal'
 export * from './components/Modals/DepositModal'
 export * from './components/Modals/DrawModal'
 export * from './components/Modals/SettingsModal'
@@ -75,11 +77,10 @@ export * from './components/Toasts/WithdrawTxToast'
 /**
  * Tooltips
  */
+export * from './components/Tooltips/ApprovalTooltip'
 export * from './components/Tooltips/BonusRewardsTooltip'
 export * from './components/Tooltips/DeprecatedVaultTooltip'
-export * from './components/Tooltips/ExactApprovalTooltip'
 export * from './components/Tooltips/ImportedVaultTooltip'
-export * from './components/Tooltips/InfiniteApprovalTooltip'
 export * from './components/Tooltips/PrizeYieldTooltip'
 export * from './components/Tooltips/VaultContributionsTooltip'
 export * from './components/Tooltips/VaultFeeTooltip'

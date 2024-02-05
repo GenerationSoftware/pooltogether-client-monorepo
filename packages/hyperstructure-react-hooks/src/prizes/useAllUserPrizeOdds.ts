@@ -16,33 +16,51 @@ import { QUERY_KEYS } from '../constants'
  * Return the odds of a user winning any prize within one draw for any given prize pools
  * @param prizePools array of instances of the `PrizePool` class
  * @param userAddress the user's wallet address
+ * @param options optional settings
  * @returns
  */
 export const useAllUserPrizeOdds = (
   prizePools: PrizePool[],
-  userAddress: string
-): { data: { [prizePoolId: string]: number }; isFetched: boolean } => {
+  userAddress: string,
+  options?: { refetchOnWindowFocus?: boolean }
+): { data: { [prizePoolId: string]: number }; isFetched: boolean; isRefetching: boolean } => {
   const { vaults } = useSelectedVaults()
 
   const {
     data: shareData,
     isFetched: isFetchedShareData,
-    refetch: refetchShareData
-  } = useAllVaultShareData(vaults)
+    refetch: refetchShareData,
+    isRefetching: isRefetchingShareData
+  } = useAllVaultShareData(vaults, { refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false })
 
-  const { refetch: refetchShareBalances } = useAllUserVaultBalances(vaults, userAddress)
+  const { refetch: refetchShareBalances, isRefetching: isRefetchingShareBalances } =
+    useAllUserVaultBalances(vaults, userAddress, {
+      refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
+    })
 
   const {
     data: delegationBalances,
     isFetched: isFetchedDelegationBalances,
-    refetch: refetchDelegationBalances
-  } = useAllUserVaultDelegationBalances(vaults, userAddress)
+    refetch: refetchDelegationBalances,
+    isRefetching: isRefetchingDelegationBalances
+  } = useAllUserVaultDelegationBalances(vaults, userAddress, {
+    refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
+  })
 
   const {
     data: vaultContributions,
     isFetched: isFetchedVaultContributions,
-    refetch: refetchVaultContributions
-  } = useAllVaultPercentageContributions(prizePools, vaults)
+    refetch: refetchVaultContributions,
+    isRefetching: isRefetchingVaultContributions
+  } = useAllVaultPercentageContributions(prizePools, vaults, {
+    refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
+  })
+
+  const isRefetchingUserPrizeOdds =
+    isRefetchingShareData ||
+    isRefetchingShareBalances ||
+    isRefetchingDelegationBalances ||
+    isRefetchingVaultContributions
 
   const results = useQueries({
     queries: prizePools.map((prizePool) => {
@@ -85,13 +103,15 @@ export const useAllUserPrizeOdds = (
           return { prizePoolId, odds }
         },
         enabled,
-        ...NO_REFETCH
+        ...NO_REFETCH,
+        refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
       }
     })
   })
 
   return useMemo(() => {
     const isFetched = results?.every((result) => result.isFetched)
+    const isRefetching = isRefetchingUserPrizeOdds || results?.some((result) => result.isRefetching)
 
     const refetch = () => {
       refetchShareData()
@@ -110,6 +130,6 @@ export const useAllUserPrizeOdds = (
       }
     })
 
-    return { isFetched, refetch, data }
+    return { isFetched, refetch, isRefetching, data }
   }, [results])
 }

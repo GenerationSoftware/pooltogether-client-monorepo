@@ -31,12 +31,14 @@ export const AccountVaultOdds = (props: AccountVaultOddsProps) => {
 
   const { data: shareBalance, isFetched: isFetchedShareBalance } = useUserVaultShareBalance(
     vault,
-    userAddress as Address
+    userAddress as Address,
+    { refetchOnWindowFocus: true }
   )
 
   const { data: delegate, isFetched: isFetchedDelegate } = useUserVaultDelegate(
     vault,
-    userAddress as Address
+    userAddress as Address,
+    { refetchOnWindowFocus: true }
   )
 
   const { data: ensName } = useEnsName({ chainId: NETWORK.mainnet, address: delegate })

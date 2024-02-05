@@ -63,6 +63,7 @@ export const QUERY_KEYS = Object.freeze({
   vaultTokenAddresses: 'vaultTokenAddresses',
   vaultTokenData: 'vaultTokenData',
   vaultTotalSupplyTwabs: 'vaultTotalSupplyTwabs',
+  vaultTwabController: 'vaultTwabController',
   vaultYieldSources: 'vaultYieldSources'
 })
 

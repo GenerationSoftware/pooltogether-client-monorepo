@@ -15,6 +15,7 @@
 ![version](https://img.shields.io/github/package-json/v/GenerationSoftware/pooltogether-client-monorepo?filename=apps%2Fapp%2Fpackage.json&color=brightgreen)
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/0009543e-3942-40fb-83dd-49a69ec899cf/deploy-status)](https://app.netlify.com/sites/cabana-app/deploys)
+[![Crowdin](https://badges.crowdin.net/e/b3a9bbf1e212af6e8b9d1b215c5f84ca/localized.svg)](https://g9software.crowdin.com/cabana)
 
 # 🏆 &nbsp; Overview
 

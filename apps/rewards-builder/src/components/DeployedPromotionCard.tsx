@@ -167,7 +167,7 @@ const ActionsItem = (props: { promotion: Promotion }) => {
               <SquaresPlusIcon
                 onClick={onClickExtend}
                 className={classNames(iconClassName, {
-                  'cursor-default opacity-50': !isPromotionOwner
+                  '!cursor-not-allowed opacity-50': !isPromotionOwner
                 })}
               />
             </Tooltip>
@@ -175,7 +175,7 @@ const ActionsItem = (props: { promotion: Promotion }) => {
               <ArrowRightOnRectangleIcon
                 onClick={onClickEnd}
                 className={classNames(iconClassName, {
-                  'cursor-default opacity-50': !isPromotionOwner
+                  '!cursor-not-allowed opacity-50': !isPromotionOwner
                 })}
               />
             </Tooltip>
@@ -186,7 +186,7 @@ const ActionsItem = (props: { promotion: Promotion }) => {
             <ArchiveBoxXMarkIcon
               onClick={onClickDestroy}
               className={classNames(iconClassName, {
-                'cursor-default opacity-50': !isPromotionOwner || !canDestroy
+                '!cursor-not-allowed opacity-50': !isPromotionOwner || !canDestroy
               })}
             />
           </Tooltip>

@@ -8,16 +8,21 @@ import { QUERY_KEYS } from '../constants'
  * Returns a user's delegate for a vault
  * @param vault instance of the `Vault` class
  * @param userAddress user address to get delegate for
+ * @param options optional settings
  * @returns
  */
 export const useUserVaultDelegate = (
   vault: Vault,
-  userAddress: Address
+  userAddress: Address,
+  options?: {
+    refetchOnWindowFocus?: boolean
+  }
 ): UseQueryResult<Address, unknown> => {
   const queryKey = [QUERY_KEYS.userVaultDelegate, userAddress, vault?.id]
 
   return useQuery(queryKey, async () => await vault.getUserDelegate(userAddress), {
     enabled: !!vault && !!userAddress,
-    ...NO_REFETCH
+    ...NO_REFETCH,
+    refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
   })
 }

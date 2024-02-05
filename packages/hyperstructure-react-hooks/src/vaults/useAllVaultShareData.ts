@@ -10,10 +10,14 @@ import { QUERY_KEYS } from '../constants'
  *
  * Stores queried share data in cache
  * @param vaults instance of the `Vaults` class
+ * @param options optional settings
  * @returns
  */
 export const useAllVaultShareData = (
-  vaults: Vaults
+  vaults: Vaults,
+  options?: {
+    refetchOnWindowFocus?: boolean
+  }
 ): UseQueryResult<{ [vaultId: string]: TokenWithSupply }, unknown> => {
   const queryClient = useQueryClient()
 
@@ -23,6 +27,7 @@ export const useAllVaultShareData = (
   return useQuery(getQueryKey(vaultIds), async () => await vaults.getShareData(), {
     enabled: !!vaults,
     ...NO_REFETCH,
+    refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false,
     onSuccess: (data) => populateCachePerId(queryClient, getQueryKey, data)
   })
 }
