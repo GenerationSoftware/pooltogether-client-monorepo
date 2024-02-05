@@ -114,6 +114,7 @@ export const USD_PRICE_REF = {
 } as const satisfies { chainId: NETWORK; address: Lowercase<`0x${string}`> }
 
 export const TOKEN_PRICES_API_URL = 'https://token-prices.api.cabana.fi'
+export const USE_TOKEN_PRICES_BOUND_WORKER = true
 
 export const V3_TOKEN_PRICE_FALLBACKS: Record<
   (typeof V3_NETWORKS)[number],

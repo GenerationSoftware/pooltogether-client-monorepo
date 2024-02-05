@@ -1,4 +1,4 @@
-import { NETWORK, TOKEN_PRICES_API_URL } from './constants'
+import { NETWORK, TOKEN_PRICES_API_URL, USE_TOKEN_PRICES_BOUND_WORKER } from './constants'
 import { TokenPricesApiResponse } from './types'
 
 export const getTokenPrices = async (chainId: NETWORK, tokenAddresses: `0x${string}`[]) => {
@@ -9,7 +9,9 @@ export const getTokenPrices = async (chainId: NETWORK, tokenAddresses: `0x${stri
     if (!!tokenAddresses.length) {
       url.searchParams.set('tokens', tokenAddresses.join(','))
 
-      const response = await fetch(url.toString())
+      const response = USE_TOKEN_PRICES_BOUND_WORKER
+        ? await TOKEN_PRICES.fetch(url.toString())
+        : await fetch(url.toString())
       const rawTokenPrices = await response.json<TokenPricesApiResponse>()
 
       Object.keys(rawTokenPrices).forEach((key) => {
