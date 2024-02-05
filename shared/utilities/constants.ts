@@ -210,7 +210,9 @@ export const STABLECOINS: Record<NETWORK, { [address: Address]: string }> = {
   [NETWORK.bsc]: {},
   [NETWORK.bsc_testnet]: {},
   [NETWORK.xdai]: {},
-  [NETWORK.polygon]: {},
+  [NETWORK.polygon]: {
+    '0x2791bca1f2de4661ed88a30c99a7a9449aa84174': 'usd' // USDC.e
+  },
   [NETWORK.mumbai]: {},
   [NETWORK.optimism]: {
     '0x0b2c639c533813f4aa9d7837caf62653d097ff85': 'usd', // USDC
@@ -384,7 +386,8 @@ export const OP_GAS_ORACLE_ADDRESS = '0x420000000000000000000000000000000000000f
 export const TOKEN_PRICE_API_SUPPORTED_NETWORKS: NETWORK[] = [
   NETWORK.mainnet,
   NETWORK.optimism,
-  NETWORK.arbitrum
+  NETWORK.arbitrum,
+  NETWORK.polygon
 ]
 
 /**
@@ -407,7 +410,13 @@ export const TOKEN_PRICE_REDIRECTS: {
       address: '0x1a7e4e63778b4f12a199c062f3efdd288afcbce8'
     }
   },
-
+  [NETWORK.polygon]: {
+    /* MATIC */
+    [DOLPHIN_ADDRESS]: {
+      chainId: NETWORK.polygon,
+      address: '0x0000000000000000000000000000000000001010'
+    }
+  },
   [NETWORK.optimism_sepolia]: {
     /* ETH */
     [DOLPHIN_ADDRESS]: {
