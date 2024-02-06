@@ -31,11 +31,10 @@ export const V4Migration = (props: V4MigrationProps) => {
 
   const [actionsCompleted, setActionsCompleted] = useState(0)
 
-  const {
-    data: claimable,
-    isFetched: isFetchedClaimable,
-    refetch: refetchClaimable
-  } = useUserV4ClaimableRewards(migration.token.chainId, userAddress)
+  const { data: claimable, isFetched: isFetchedClaimable } = useUserV4ClaimableRewards(
+    migration.token.chainId,
+    userAddress
+  )
 
   const isRewardsClaimable =
     isFetchedClaimable || !V4_PROMOTIONS[migration.token.chainId]
@@ -47,10 +46,7 @@ export const V4Migration = (props: V4MigrationProps) => {
       <ClaimContent
         chainId={migration.token.chainId}
         userAddress={userAddress}
-        onSuccess={() => {
-          refetchClaimable()
-          setActionsCompleted(actionsCompleted + 1)
-        }}
+        onSuccess={() => setActionsCompleted(actionsCompleted + 1)}
       />
     ),
     swap: <SwapContent migration={migration} />
@@ -125,7 +121,7 @@ const ClaimContent = (props: ClaimContentProps) => {
       <span className='text-sm font-semibold text-pt-purple-100'>Claim Your Rewards:</span>
       <SimpleBadge className='gap-2 !text-2xl font-semibold'>
         {formatBigIntForDisplay(claimable.total, claimable.token.decimals)}
-        <TokenIcon token={{ chainId, ...claimable.token }} />
+        <TokenIcon token={claimable.token} />
         <span className='text-pt-purple-200'>{claimable.token.symbol}</span>
       </SimpleBadge>
       <span className='flex gap-1 items-center text-sm font-semibold text-pt-purple-100'>

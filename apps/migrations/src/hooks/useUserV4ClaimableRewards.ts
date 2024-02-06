@@ -1,9 +1,63 @@
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { getPromotionEpochs, getSimpleMulticallResults, twabRewardsABI } from '@shared/utilities'
-import { useQuery } from '@tanstack/react-query'
+import { useQueries, useQuery } from '@tanstack/react-query'
+import { getPublicClient } from '@wagmi/core'
+import { useMemo } from 'react'
 import { Address, PublicClient } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { V4_PROMOTIONS } from '@constants/config'
+
+export const useAllUserV4ClaimableRewards = (userAddress: Address) => {
+  const tokens = Object.entries(V4_PROMOTIONS).map(([k, v]) => ({
+    chainId: parseInt(k),
+    ...v.token
+  }))
+
+  const results = useQueries({
+    queries: tokens.map((token) => {
+      return {
+        queryKey: ['userV4ClaimableRewards', token.chainId, userAddress],
+        queryFn: async () => {
+          const publicClient = getPublicClient({ chainId: token.chainId })
+
+          const rewards = await getClaimableRewards(publicClient, userAddress)
+
+          let total = 0n
+          Object.values(rewards).forEach((promotionRewards) => {
+            total += Object.values(promotionRewards).reduce((a, b) => a + b, 0n)
+          })
+
+          return { token, rewards, total }
+        },
+        enabled: !!token && !!userAddress,
+        ...NO_REFETCH
+      }
+    })
+  })
+
+  return useMemo(() => {
+    const isFetched = results?.every((result) => result.isFetched)
+
+    const data: {
+      token: {
+        chainId: number
+        address: `0x${Lowercase<string>}`
+        decimals: number
+        symbol: string
+      }
+      rewards: { [id: string]: { [epochId: number]: bigint } }
+      total: bigint
+    }[] = []
+
+    results.forEach((result) => {
+      if (!!result.data && !!result.data.total) {
+        data.push(result.data)
+      }
+    })
+
+    return { isFetched, data }
+  }, [results])
+}
 
 export const useUserV4ClaimableRewards = (chainId: number, userAddress: Address) => {
   const publicClient = usePublicClient({ chainId })
@@ -22,7 +76,7 @@ export const useUserV4ClaimableRewards = (chainId: number, userAddress: Address)
         total += Object.values(promotionRewards).reduce((a, b) => a + b, 0n)
       })
 
-      return { token, rewards, total }
+      return { token: { chainId, ...token }, rewards, total }
     },
     {
       enabled: !!chainId && !!publicClient && !!userAddress && !!token,

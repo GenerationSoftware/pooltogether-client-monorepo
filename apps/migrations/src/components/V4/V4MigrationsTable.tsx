@@ -1,17 +1,21 @@
 import { useScreenSize } from '@shared/generic-react-hooks'
 import { TokenValueAndAmount } from '@shared/react-components'
-import { TokenWithAmount } from '@shared/types'
+import { TokenWithAmount, TokenWithLogo } from '@shared/types'
 import { Button, Spinner, Table, TableData } from '@shared/ui'
 import { formatBigIntForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ReactNode } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { Address } from 'viem'
 import { TokenBadge } from '@components/TokenBadge'
 import { V4_POOLS, V4_PROMOTIONS } from '@constants/config'
 import { useUserV4Balances, V4BalanceToMigrate } from '@hooks/useUserV4Balances'
-import { useUserV4ClaimableRewards } from '@hooks/useUserV4ClaimableRewards'
+import {
+  useAllUserV4ClaimableRewards,
+  useUserV4ClaimableRewards
+} from '@hooks/useUserV4ClaimableRewards'
+import { ClaimRewardsButton } from './ClaimRewardsButton'
 import { WithdrawButton } from './WithdrawButton'
 
 export interface V4MigrationsTableProps {
@@ -24,25 +28,16 @@ export const V4MigrationsTable = (props: V4MigrationsTableProps) => {
   const { userAddress, showPooly, className } = props
 
   const { data: userV4Balances } = useUserV4Balances(userAddress)
+  const { data: userV4Rewards } = useAllUserV4ClaimableRewards(userAddress)
 
   const { isMobile } = useScreenSize()
 
-  const tableData: TableData = {
-    headers: {
-      token: { content: 'Token' },
-      status: { content: 'Status', position: 'center' },
-      rewards: { content: 'Unclaimed Rewards', position: 'center' },
-      balance: { content: 'Your Balance', position: 'center' },
-      manage: { content: 'Manage', position: 'right' }
-    },
-    rows: userV4Balances.map((migration) => ({
+  const tableRows = useMemo(() => {
+    const rows: TableData['rows'] = userV4Balances.map((migration) => ({
       id: `v4Migration-${migration.token.chainId}-${migration.contractAddress}`,
       cells: {
         token: { content: <TokenBadge token={migration.token} /> },
-        status: {
-          content: <StatusItem />,
-          position: 'center'
-        },
+        status: { content: <StatusItem />, position: 'center' },
         rewards: {
           content: <RewardsItem chainId={migration.token.chainId} userAddress={userAddress} />,
           position: 'center'
@@ -54,9 +49,55 @@ export const V4MigrationsTable = (props: V4MigrationsTableProps) => {
         }
       }
     }))
+
+    userV4Rewards.forEach((entry) => {
+      const foundNetworkEntry = userV4Balances.find((e) => e.token.chainId === entry.token.chainId)
+
+      if (!foundNetworkEntry) {
+        const pool = V4_POOLS[entry.token.chainId]
+        const token: TokenWithAmount & TokenWithLogo = { ...pool.ticket, amount: 0n }
+
+        rows.push({
+          id: `v4Migration-${token.chainId}-${token.address}-rewards`,
+          cells: {
+            token: { content: <TokenBadge token={token} /> },
+            status: { content: <StatusItem />, position: 'center' },
+            rewards: {
+              content: <RewardsItem chainId={token.chainId} userAddress={userAddress} />,
+              position: 'center'
+            },
+            balance: { content: <BalanceItem token={token} />, position: 'center' },
+            manage: {
+              content: (
+                <ManageItem
+                  userAddress={userAddress}
+                  migration={{ token, contractAddress: pool.address, destination: pool.migrateTo }}
+                />
+              ),
+              position: 'right'
+            }
+          }
+        })
+      }
+    })
+
+    return rows
+  }, [userV4Balances, userV4Rewards, userAddress])
+
+  const tableData: TableData = {
+    headers: {
+      token: { content: 'Token' },
+      status: { content: 'Status', position: 'center' },
+      rewards: { content: 'Unclaimed Rewards', position: 'center' },
+      balance: { content: 'Your Balance', position: 'center' },
+      manage: { content: 'Manage', position: 'right' }
+    },
+    rows: tableRows
   }
 
   if (isMobile) {
+    const networksWithBalance = userV4Balances.map((e) => e.destination.chainId)
+
     return (
       <div className='w-full flex flex-col gap-4 items-center'>
         {userV4Balances.map((migration) => (
@@ -67,6 +108,21 @@ export const V4MigrationsTable = (props: V4MigrationsTableProps) => {
             className='w-full max-w-md'
           />
         ))}
+        {userV4Rewards
+          .filter((e) => !networksWithBalance.includes(e.token.chainId))
+          .map((entry) => {
+            const pool = V4_POOLS[entry.token.chainId]
+            const token: TokenWithAmount & TokenWithLogo = { ...pool.ticket, amount: 0n }
+
+            return (
+              <V4MigrationCard
+                key={`v4Migration-${token.chainId}-${token.address}-rewards`}
+                userAddress={userAddress}
+                migration={{ token, contractAddress: pool.address, destination: pool.migrateTo }}
+                className='w-full max-w-md'
+              />
+            )
+          })}
       </div>
     )
   }
@@ -202,6 +258,10 @@ const BalanceItem = (props: BalanceItemProps) => {
 
   const underlyingTokenAddress = V4_POOLS[token.chainId]?.underlyingTokenAddress
 
+  if (!token.amount) {
+    return <span className={className}>-</span>
+  }
+
   return (
     <TokenValueAndAmount
       token={{ ...token, address: underlyingTokenAddress ?? token.address }}
@@ -227,17 +287,28 @@ const ManageItem = (props: ManageItemProps) => {
 
   return (
     <div className={classNames('flex gap-2 items-center', className)}>
-      <WithdrawButton
-        migration={migration}
-        txOptions={{ onSuccess: refetchUserV4Balances }}
-        hideWrongNetworkState={true}
-        color='transparent'
-        fullSized={fullSized}
-        className='md:min-w-[6rem]'
-      />
-      <Link href={migrationURL} passHref={true} className='w-full'>
-        <Button fullSized={fullSized}>Migrate</Button>
-      </Link>
+      {!!migration.token.amount ? (
+        <>
+          <WithdrawButton
+            migration={migration}
+            txOptions={{ onSuccess: refetchUserV4Balances }}
+            hideWrongNetworkState={true}
+            color='transparent'
+            fullSized={fullSized}
+            className='md:min-w-[6rem]'
+          />
+          <Link href={migrationURL} passHref={true} className='w-full'>
+            <Button fullSized={fullSized}>Migrate</Button>
+          </Link>
+        </>
+      ) : (
+        <ClaimRewardsButton
+          chainId={migration.token.chainId}
+          userAddress={userAddress}
+          fullSized={fullSized}
+          className='md:min-w-[6rem]'
+        />
+      )}
     </div>
   )
 }

@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { Address } from 'viem'
 import { useUserV3Balances } from '@hooks/useUserV3Balances'
 import { useUserV4Balances } from '@hooks/useUserV4Balances'
+import { useAllUserV4ClaimableRewards } from '@hooks/useUserV4ClaimableRewards'
 import { useUserV5Balances } from '@hooks/useUserV5Balances'
 import { FaqSection } from './FaqSection'
 import { MigrationsHeader } from './MigrationsHeader'
@@ -26,9 +27,20 @@ export const Migrations = (props: MigrationsProps) => {
   const { data: userV3Balances, isFetched: isFetchedUserV3Balances } =
     useUserV3Balances(userAddress)
 
-  const isFetched = isFetchedUserV5Balances && isFetchedUserV4Balances && isFetchedUserV3Balances
+  const { data: userV4Rewards, isFetched: isFetchedUserV4Rewards } =
+    useAllUserV4ClaimableRewards(userAddress)
+
+  const isFetched =
+    isFetchedUserV5Balances &&
+    isFetchedUserV4Balances &&
+    isFetchedUserV3Balances &&
+    isFetchedUserV4Rewards
   const isEmpty =
-    isFetched && !userV5Balances.length && !userV4Balances.length && !userV3Balances.length
+    isFetched &&
+    !userV5Balances.length &&
+    !userV4Balances.length &&
+    !userV3Balances.length &&
+    !userV4Rewards.length
 
   return (
     <div className={classNames('w-full flex flex-col gap-8 items-center', className)}>
@@ -37,7 +49,7 @@ export const Migrations = (props: MigrationsProps) => {
       {isFetched && !isEmpty && (
         <>
           {!!userV5Balances.length && <V5Migrations userAddress={userAddress} showPooly={true} />}
-          {!!userV4Balances.length && (
+          {(!!userV4Balances.length || !!userV4Rewards.length) && (
             <V4Migrations userAddress={userAddress} showPooly={!userV5Balances.length} />
           )}
           {!!userV3Balances.length && (
