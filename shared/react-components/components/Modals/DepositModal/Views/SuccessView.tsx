@@ -1,7 +1,7 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useVaultTokenData } from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl } from '@shared/types'
-import { ExternalLink, LINKS } from '@shared/ui'
+import { ExternalLink } from '@shared/ui'
 import {
   formatNumberForDisplay,
   getBlockExplorerName,
@@ -11,9 +11,7 @@ import {
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
-import { HeyShareButton } from '../../../Buttons/HeyShareButton'
-import { TwitterShareButton } from '../../../Buttons/TwitterShareButton'
-import { WarpcastShareButton } from '../../../Buttons/WarpcastShareButton'
+import { SocialShareButton } from '../../../Buttons/SocialShareButton'
 import { depositFormTokenAmountAtom } from '../../../Form/DepositForm'
 import { SuccessPooly } from '../../../Graphics/SuccessPooly'
 
@@ -23,22 +21,13 @@ interface SuccessViewProps {
   txHash?: string
   goToAccount?: () => void
   intl?: {
-    base?: Intl<
-      | 'success'
-      | 'deposited'
-      | 'nowEligible'
-      | 'shareOn'
-      | 'shareTwitter'
-      | 'shareWarpcast'
-      | 'shareHey'
-      | 'viewAccount'
-    >
+    base?: Intl<'success' | 'deposited' | 'nowEligible' | 'shareOn' | 'viewAccount'>
     common?: Intl<'prizePool' | 'viewOn'>
   }
 }
 
 export const SuccessView = (props: SuccessViewProps) => {
-  const { vault, txHash, closeModal, goToAccount, intl } = props
+  const { vault, txHash, intl } = props
 
   const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
 
@@ -81,7 +70,7 @@ export const SuccessView = (props: SuccessViewProps) => {
 
 interface ShareButtonsProps {
   vault: Vault
-  intl?: Intl<'shareTwitter' | 'shareWarpcast' | 'shareHey' | 'shareOn'>
+  intl?: Intl<'shareOn'>
 }
 
 const ShareButtons = (props: ShareButtonsProps) => {
@@ -108,29 +97,9 @@ const ShareButtons = (props: ShareButtonsProps) => {
     <div className='flex flex-col items-center'>
       <h1 className='py-1 text-sm sm:text-md font-medium'>{intl?.('shareOn') ?? 'Share on'}:</h1>
       <div className='flex flex-col sm:flex-row gap-2'>
-        <TwitterShareButton
-          text={text.twitter}
-          hashTags={hashTags}
-          url={LINKS.app}
-          fullSized={true}
-          intl={intl}
-          size='sm'
-        />
-        <WarpcastShareButton
-          text={text.warpcast}
-          url={LINKS.app}
-          fullSized={true}
-          intl={intl}
-          size='sm'
-        />
-        <HeyShareButton
-          text={text.hey}
-          hashTags={hashTags}
-          url={LINKS.app}
-          fullSized={true}
-          intl={intl}
-          size='sm'
-        />
+        <SocialShareButton platform='twitter' text={text.twitter} hashTags={hashTags} />
+        <SocialShareButton platform='warpcast' text={text.warpcast} />
+        <SocialShareButton platform='hey' text={text.hey} hashTags={hashTags} />
       </div>
     </div>
   )
