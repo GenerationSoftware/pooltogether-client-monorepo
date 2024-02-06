@@ -204,6 +204,10 @@ const ModalContent = (props: ModalContentProps) => {
   return (
     <>
       {mobileStyle === 'tab' && <ModalTabHandle />}
+      <XMarkIcon
+        className='hidden sm:inline-block absolute top-5 end-4 ms-auto h-6 w-6 ml-auto cursor-pointer hover:bg-pt-purple-600 hover:text-pt-purple-200 rounded-lg transition duration-100'
+        onClick={onClose}
+      />
       {!hideHeader && (
         <ModalHeader className={headerClassName} onClose={onClose} mobileStyle={mobileStyle}>
           {headerContent}
@@ -234,7 +238,6 @@ const ModalHeader = (props: ModalHeaderProps) => {
       )}
     >
       {children}
-      <XMarkIcon className='h-6 w-6 ml-auto cursor-pointer' onClick={onClose} />
     </div>
   )
 }
