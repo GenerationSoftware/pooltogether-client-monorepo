@@ -5,6 +5,7 @@ import { Address } from 'viem'
 import { useUserV3Balances } from '@hooks/useUserV3Balances'
 import { useUserV4Balances } from '@hooks/useUserV4Balances'
 import { useUserV5Balances } from '@hooks/useUserV5Balances'
+import { FaqSection } from './FaqSection'
 import { MigrationsHeader } from './MigrationsHeader'
 import { V3Migrations } from './V3/V3Migrations'
 import { V4Migrations } from './V4/V4Migrations'
@@ -42,6 +43,7 @@ export const Migrations = (props: MigrationsProps) => {
           {!!userV3Balances.length && (
             <V3Migrations userAddress={userAddress} showPooly={!userV4Balances.length} />
           )}
+          <FaqSection className='mt-36' />
         </>
       )}
       {isFetched && isEmpty && <NoMigrationsAvailable />}
