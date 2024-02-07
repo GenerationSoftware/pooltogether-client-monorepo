@@ -63,6 +63,13 @@ export const MenuView = (props: MenuViewProps) => {
             onClick: () => setView('vaultLists'),
             disabled: disable?.includes('vaultLists'),
             hidden: hide?.includes('vaultLists')
+          },
+          {
+            iconContent: '?', // TODO: set rpcs icon
+            title: 'Set Custom RPCs', // TODO: intl
+            onClick: () => setView('customRPCs'),
+            disabled: disable?.includes('customRPCs'),
+            hidden: hide?.includes('customRPCs')
           }
         ]}
       />

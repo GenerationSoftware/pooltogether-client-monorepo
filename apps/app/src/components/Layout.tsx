@@ -34,6 +34,7 @@ import { ReactNode, useEffect, useState } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { DEFAULT_VAULT_LISTS, FATHOM_EVENTS } from '@constants/config'
+import { useNetworks } from '@hooks/useNetworks'
 import { useSelectedPrizePool } from '@hooks/useSelectedPrizePool'
 import { useSettingsModalView } from '@hooks/useSettingsModalView'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
@@ -67,6 +68,7 @@ export const Layout = (props: LayoutProps) => {
 
   const { setIsModalOpen: setIsCaptchaModalOpen } = useIsModalOpen(MODAL_KEYS.captcha)
 
+  const supportedNetworks = useNetworks()
   const { isTestnets, setIsTestnets } = useIsTestnets()
 
   const { openConnectModal } = useConnectModal()
@@ -226,6 +228,7 @@ export const Layout = (props: LayoutProps) => {
         setView={setSettingsModalView}
         locales={['en', 'de', 'ru', 'ko', 'uk', 'hi', 'es']}
         localVaultLists={DEFAULT_VAULT_LISTS}
+        supportedNetworks={supportedNetworks}
         onCurrencyChange={() => fathom.trackEvent(FATHOM_EVENTS.changedCurrency)}
         onLanguageChange={() => fathom.trackEvent(FATHOM_EVENTS.changedLanguage)}
         onVaultListImport={() => fathom.trackEvent(FATHOM_EVENTS.importedVaultList)}
