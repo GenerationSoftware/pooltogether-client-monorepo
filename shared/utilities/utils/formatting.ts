@@ -109,6 +109,12 @@ export const formatCurrencyNumberForDisplay = (
       style: 'currency',
       currency: 'USD'
     }).slice(1)}`
+  } else if (currency.toLowerCase() === 'pool') {
+    return `${formatNumberForDisplay(val, {
+      ...options,
+      style: 'currency',
+      currency: 'USD'
+    }).slice(1)} POOL`
   }
 
   return formatNumberForDisplay(val, { ...options, style: 'currency', currency })

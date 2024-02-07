@@ -36,6 +36,7 @@ export type CURRENCY_ID =
   | 'php'
   | 'pkr'
   | 'pln'
+  | 'pool'
   | 'rub'
   | 'sar'
   | 'sek'
@@ -88,6 +89,7 @@ export const SUPPORTED_CURRENCIES: Record<CURRENCY_ID, { name: string; symbol: s
     php: { name: 'Philippine Peso', symbol: '₱' },
     pkr: { name: 'Pakistani Rupee', symbol: '₨' },
     pln: { name: 'Polish Zloty', symbol: 'zł' },
+    pool: { name: 'POOL Token', symbol: 'POOL' },
     rub: { name: 'Russian Ruble', symbol: '₽' },
     sar: { name: 'Saudi Riyal', symbol: 'SR' },
     sek: { name: 'Swedish Krona', symbol: 'kr' },

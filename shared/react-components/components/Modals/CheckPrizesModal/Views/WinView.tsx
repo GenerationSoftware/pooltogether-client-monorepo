@@ -3,10 +3,16 @@ import {
   useLastCheckedPrizesTimestamps,
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { useSelectedCurrency } from '@shared/generic-react-hooks'
 import { DrawWithTimestamps, SubgraphPrize, TokenWithAmount, Win } from '@shared/types'
 import { Intl } from '@shared/types'
 import { Button } from '@shared/ui'
-import { getSimpleDate } from '@shared/utilities'
+import {
+  getSimpleDate,
+  NETWORK,
+  POOL_TOKEN_ADDRESSES,
+  WRAPPED_NATIVE_ASSETS
+} from '@shared/utilities'
 import classNames from 'classnames'
 import Lottie from 'lottie-react'
 import { useMemo, useState } from 'react'
@@ -120,14 +126,37 @@ interface HeaderProps {
 const Header = (props: HeaderProps) => {
   const { token, className, intl } = props
 
+  const { selectedCurrency } = useSelectedCurrency()
+
+  const isTokenEquivalentHidden = useMemo(() => {
+    const poolTokenAddress = POOL_TOKEN_ADDRESSES[
+      token.chainId as keyof typeof POOL_TOKEN_ADDRESSES
+    ]?.toLowerCase() as Lowercase<Address> | undefined
+
+    const wethTokenAddress =
+      token.chainId === NETWORK.mainnet ||
+      token.chainId === NETWORK.optimism ||
+      token.chainId === NETWORK.arbitrum ||
+      token.chainId === NETWORK.base
+        ? (WRAPPED_NATIVE_ASSETS[token.chainId]?.toLowerCase() as Lowercase<Address>)
+        : undefined
+
+    return (
+      (selectedCurrency === 'pool' && token.address.toLowerCase() === poolTokenAddress) ||
+      (selectedCurrency === 'eth' && token.address.toLowerCase() === wethTokenAddress)
+    )
+  }, [token, selectedCurrency])
+
   return (
     <div className={classNames('flex flex-col items-center text-center', className)}>
       <span className='text-3xl font-grotesk font-medium text-gray-100'>
         {intl?.('youWonX') ?? `You won`} <TokenValue token={token} hideZeroes={true} />!
       </span>
-      <span className='text-pt-purple-100'>
-        (<TokenAmount token={token} hideZeroes={true} />)
-      </span>
+      {!isTokenEquivalentHidden && (
+        <span className='text-pt-purple-100'>
+          (<TokenAmount token={token} hideZeroes={true} />)
+        </span>
+      )}
     </div>
   )
 }

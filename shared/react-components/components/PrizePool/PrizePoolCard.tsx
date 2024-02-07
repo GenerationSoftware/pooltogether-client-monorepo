@@ -1,7 +1,11 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { useGrandPrize } from '@generationsoftware/hyperstructure-react-hooks'
+import { useSelectedCurrency } from '@shared/generic-react-hooks'
 import { Intl } from '@shared/types'
 import { Card, Spinner } from '@shared/ui'
+import { NETWORK, POOL_TOKEN_ADDRESSES, WRAPPED_NATIVE_ASSETS } from '@shared/utilities'
+import { useMemo } from 'react'
+import { Address } from 'viem'
 import { PrizePoolBadge } from '../Badges/PrizePoolBadge'
 import { TokenAmount } from '../Currency/TokenAmount'
 import { TokenValue } from '../Currency/TokenValue'
@@ -17,6 +21,27 @@ export const PrizePoolCard = (props: PrizePoolCardProps) => {
   const { data: grandPrize, isFetched: isFetchedGrandPrize } = useGrandPrize(prizePool, {
     useCurrentPrizeSizes: true
   })
+
+  const { selectedCurrency } = useSelectedCurrency()
+
+  const isTokenEquivalentHidden = useMemo(() => {
+    const poolTokenAddress = POOL_TOKEN_ADDRESSES[
+      prizePool.chainId as keyof typeof POOL_TOKEN_ADDRESSES
+    ]?.toLowerCase() as Lowercase<Address> | undefined
+
+    const wethTokenAddress =
+      prizePool.chainId === NETWORK.mainnet ||
+      prizePool.chainId === NETWORK.optimism ||
+      prizePool.chainId === NETWORK.arbitrum ||
+      prizePool.chainId === NETWORK.base
+        ? (WRAPPED_NATIVE_ASSETS[prizePool.chainId]?.toLowerCase() as Lowercase<Address>)
+        : undefined
+
+    return (
+      (selectedCurrency === 'pool' && grandPrize?.address.toLowerCase() === poolTokenAddress) ||
+      (selectedCurrency === 'eth' && grandPrize?.address.toLowerCase() === wethTokenAddress)
+    )
+  }, [prizePool, selectedCurrency])
 
   return (
     <Card
@@ -41,9 +66,11 @@ export const PrizePoolCard = (props: PrizePoolCardProps) => {
               <span className='text-2xl text-pt-teal md:text-4xl'>
                 <TokenValue token={grandPrize} hideZeroes={true} fallback={<></>} />
               </span>
-              <span className='hidden font-light md:block'>
-                ≈ <TokenAmount token={grandPrize} hideZeroes={true} />
-              </span>
+              {!isTokenEquivalentHidden && (
+                <span className='hidden font-light md:block'>
+                  ≈ <TokenAmount token={grandPrize} hideZeroes={true} />
+                </span>
+              )}
             </>
           ) : (
             '?'
