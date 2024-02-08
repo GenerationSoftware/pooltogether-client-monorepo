@@ -1,4 +1,4 @@
-import { SparklesIcon } from '@heroicons/react/24/outline'
+import { CubeTransparentIcon, SparklesIcon } from '@heroicons/react/24/outline'
 import {
   SUPPORTED_CURRENCIES,
   useSelectedCurrency,
@@ -65,7 +65,7 @@ export const MenuView = (props: MenuViewProps) => {
             hidden: hide?.includes('vaultLists')
           },
           {
-            iconContent: '?', // TODO: set rpcs icon
+            iconContent: <CubeTransparentIcon className='h-6 w-6 text-pt-purple-100' />,
             title: 'Set Custom RPCs', // TODO: intl
             onClick: () => setView('customRPCs'),
             disabled: disable?.includes('customRPCs'),
