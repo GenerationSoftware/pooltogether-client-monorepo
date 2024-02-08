@@ -109,7 +109,7 @@ const CustomRPCInput = (props: CustomRPCInputProps) => {
     <FormProvider {...formMethods}>
       <form
         onSubmit={formMethods.handleSubmit(onSubmit)}
-        className={classNames('inline-flex flex-col gap-x-4 gap-y-2 sm:flex-row', className)}
+        className={classNames('inline-flex flex-col gap-2 sm:flex-row', className)}
       >
         {/* TODO: use intl for `overrideLabel` */}
         <SimpleInput
@@ -125,25 +125,33 @@ const CustomRPCInput = (props: CustomRPCInputProps) => {
           className='w-full'
           innerClassName={classNames({ 'brightness-75': isCheckingRPC })}
         />
-        <SetCustomRpcButton
-          formRpcUrl={formRpcUrl}
-          checkedRpcUrl={checkedRpcUrl}
-          isCheckingRPC={isCheckingRPC}
-          isFormValid={formMethods.formState.isValid && !formMethods.formState.isValidating}
-        />
-        <TrashIcon
-          onClick={() => {
-            remove(chainId)
-            formMethods.setValue('rpc', '')
-            setCheckedRpcUrl('')
-          }}
-          className='h-5 w-5 text-pt-purple-200 cursor-pointer'
-        />
+        <div
+          className={classNames('flex gap-2 items-center sm:mt-5', {
+            'sm:mt-1': !formMethods.formState.isValid
+          })}
+        >
+          <SetCustomRpcButton
+            formRpcUrl={formRpcUrl}
+            checkedRpcUrl={checkedRpcUrl}
+            isCheckingRPC={isCheckingRPC}
+            isFormValid={formMethods.formState.isValid && !formMethods.formState.isValidating}
+            className='flex-grow'
+          />
+          <TrashIcon
+            onClick={() => {
+              remove(chainId)
+              formMethods.setValue('rpc', '')
+              setCheckedRpcUrl('')
+            }}
+            className='h-6 w-auto text-pt-purple-200 cursor-pointer'
+          />
+        </div>
       </form>
     </FormProvider>
   )
 }
 
+// TODO: intl
 interface SetCustomRpcButtonProps {
   formRpcUrl: string | undefined
   checkedRpcUrl: string
@@ -163,7 +171,7 @@ const SetCustomRpcButton = (props: SetCustomRpcButtonProps) => {
 
   const isSubmitted = !!formRpcUrl && isFormRpcUrlChecked
 
-  const iconClassName = 'absolute inset-x-0 text-pt-purple-50 opacity-0'
+  const iconClassName = 'absolute inset-x-0 max-h-12 mx-auto text-pt-purple-50 opacity-0'
 
   return (
     <Button
