@@ -43,7 +43,7 @@ const Header = (props: HeaderProps) => {
     <div className='flex flex-col items-center gap-2 text-center'>
       <span className='text-lg font-semibold md:text-xl'>Set Custom RPCs</span>
       <span className='text-sm text-pt-purple-50 md:text-base'>
-        Cabana's default RPCs will be used if custom RPCs aren't provided for any network.
+        Want to route the app's onchain queries to an RPC of your choice? Feel free to do so here!
       </span>
     </div>
   )
@@ -125,31 +125,12 @@ const CustomRPCInput = (props: CustomRPCInputProps) => {
           className='w-full'
           innerClassName={classNames({ 'brightness-75': isCheckingRPC })}
         />
-        <Button
-          type='submit'
-          color='purple'
-          className='relative bg-pt-purple-600 border-pt-purple-600 hover:bg-pt-purple-500 focus:outline-transparent'
-          disabled={
-            isCheckingRPC ||
-            !formMethods.formState.isValid ||
-            formMethods.formState.isValidating ||
-            checkedRpcUrl === formRpcUrl?.trim()
-          }
-        >
-          <span
-            className={classNames('py-[1px] text-pt-purple-50 whitespace-nowrap', {
-              'opacity-0': !!formRpcUrl && (isCheckingRPC || checkedRpcUrl === formRpcUrl.trim())
-            })}
-          >
-            Check
-          </span>
-          {/* TODO: use check and X images */}
-          {!!formRpcUrl &&
-            !isCheckingRPC &&
-            checkedRpcUrl === formRpcUrl.trim() &&
-            (formMethods.formState.isValid ? <>YES</> : <>NO</>)}
-          {isCheckingRPC && <Spinner className='absolute left-0 right-0 mx-auto' />}
-        </Button>
+        <SetCustomRpcButton
+          formRpcUrl={formRpcUrl}
+          checkedRpcUrl={checkedRpcUrl}
+          isCheckingRPC={isCheckingRPC}
+          isFormValid={formMethods.formState.isValid && !formMethods.formState.isValidating}
+        />
         <TrashIcon
           onClick={() => {
             remove(chainId)
@@ -162,3 +143,83 @@ const CustomRPCInput = (props: CustomRPCInputProps) => {
     </FormProvider>
   )
 }
+
+interface SetCustomRpcButtonProps {
+  formRpcUrl: string | undefined
+  checkedRpcUrl: string
+  isCheckingRPC: boolean
+  isFormValid: boolean
+  className?: string
+}
+
+const SetCustomRpcButton = (props: SetCustomRpcButtonProps) => {
+  const { formRpcUrl, checkedRpcUrl, isCheckingRPC, isFormValid, className } = props
+
+  const isFormRpcUrlChecked = !isCheckingRPC && checkedRpcUrl === formRpcUrl?.trim()
+  const isDefaultRpcUrl = !formRpcUrl && !checkedRpcUrl
+
+  const isButtonDisabled = isCheckingRPC || isFormRpcUrlChecked || !isFormValid || isDefaultRpcUrl
+  const isButtonTextHidden = !!formRpcUrl && (isCheckingRPC || isFormRpcUrlChecked)
+
+  const isSubmitted = !!formRpcUrl && isFormRpcUrlChecked
+
+  const iconClassName = 'absolute inset-x-0 text-pt-purple-50 opacity-0'
+
+  return (
+    <Button
+      type='submit'
+      color='purple'
+      className={classNames(
+        'relative bg-pt-purple-600 border-pt-purple-600 hover:bg-pt-purple-500 focus:outline-transparent',
+        className
+      )}
+      disabled={isButtonDisabled}
+    >
+      <div className='py-[1px] text-pt-purple-50'>
+        <span className={classNames({ 'opacity-0': isButtonTextHidden || !isDefaultRpcUrl })}>
+          Default
+        </span>
+        {!isButtonTextHidden && !isDefaultRpcUrl && <span className='absolute inset-x-0'>Set</span>}
+      </div>
+      <CheckIcon
+        className={classNames(iconClassName, { 'opacity-100': isSubmitted && isFormValid })}
+      />
+      <XIcon
+        className={classNames(iconClassName, { 'opacity-100': isSubmitted && !isFormValid })}
+      />
+      {isCheckingRPC && <Spinner className='absolute left-0 right-0 mx-auto' />}
+    </Button>
+  )
+}
+
+const CheckIcon = (props: { className?: string }) => (
+  <svg
+    fill='none'
+    stroke='currentColor'
+    strokeWidth={1.5}
+    viewBox='0 0 24 24'
+    xmlns='http://www.w3.org/2000/svg'
+    aria-hidden='true'
+    className={props.className}
+  >
+    <path strokeLinecap='round' strokeLinejoin='round' d='M 9 12.75 L 11.25 15 15 9.75' />
+  </svg>
+)
+
+const XIcon = (props: { className?: string }) => (
+  <svg
+    fill='none'
+    stroke='currentColor'
+    strokeWidth={1.5}
+    viewBox='0 0 24 24'
+    xmlns='http://www.w3.org/2000/svg'
+    aria-hidden='true'
+    className={props.className}
+  >
+    <path
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      d='M 9.75 9.75 l 4.5 4.5 m 0 -4.5 l -4.5 4.5'
+    />
+  </svg>
+)
