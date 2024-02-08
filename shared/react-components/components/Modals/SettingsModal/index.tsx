@@ -35,6 +35,7 @@ export interface SettingsModalProps {
       | 'changeLanguage'
       | 'viewEcosystem'
       | 'manageVaultLists'
+      | 'setCustomRPCs'
       | 'getHelp'
       | 'getHelpWithCabana'
       | 'vaultListsDescription'
@@ -44,8 +45,19 @@ export interface SettingsModalProps {
       | 'clearImportedVaultLists'
       | 'numTokens'
       | 'imported'
+      | 'customRpcDescription'
+      | 'customNetworkRpc'
+      | 'override'
+      | 'default'
+      | 'set'
+      | 'refreshToUpdateRPCs'
     >
-    errors?: Intl<'formErrors.invalidSrc' | 'formErrors.invalidVaultList'>
+    errors?: Intl<
+      | 'formErrors.invalidSrc'
+      | 'formErrors.invalidVaultList'
+      | 'formErrors.invalidRpcNetwork'
+      | 'formErrors.invalidRpcUrl'
+    >
   }
 }
 
@@ -83,7 +95,9 @@ export const SettingsModal = (props: SettingsModalProps) => {
     vaultLists: (
       <VaultListView localVaultLists={localVaultLists} onSuccess={onVaultListImport} intl={intl} />
     ),
-    customRPCs: <RPCsView chainIds={supportedNetworks ?? []} onClickPageReload={reloadPage} />
+    customRPCs: (
+      <RPCsView chainIds={supportedNetworks ?? []} onClickPageReload={reloadPage} intl={intl} />
+    )
   }
 
   if (isModalOpen) {

@@ -21,6 +21,7 @@ interface MenuViewProps {
     | 'changeLanguage'
     | 'viewEcosystem'
     | 'manageVaultLists'
+    | 'setCustomRPCs'
     | 'getHelp'
     | 'getHelpWithCabana'
   >
@@ -66,7 +67,7 @@ export const MenuView = (props: MenuViewProps) => {
           },
           {
             iconContent: <CubeTransparentIcon className='h-6 w-6 text-pt-purple-100' />,
-            title: 'Set Custom RPCs', // TODO: intl
+            title: intl?.('setCustomRPCs') ?? 'Set Custom RPCs',
             onClick: () => setView('customRPCs'),
             disabled: disable?.includes('customRPCs'),
             hidden: hide?.includes('customRPCs')

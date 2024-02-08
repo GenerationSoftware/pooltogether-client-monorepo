@@ -9,21 +9,31 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { createPublicClient, http } from 'viem'
 import { SimpleInput } from '../../../Form/SimpleInput'
 
-// TODO: intl
 interface RPCsViewProps {
   chainIds: NETWORK[]
   onClickPageReload: () => void
+  intl?: {
+    base?: Intl<
+      | 'setCustomRPCs'
+      | 'customRpcDescription'
+      | 'customNetworkRpc'
+      | 'override'
+      | 'default'
+      | 'set'
+      | 'refreshToUpdateRPCs'
+    >
+    errors?: Intl<'formErrors.invalidRpcNetwork' | 'formErrors.invalidRpcUrl'>
+  }
 }
 
-// TODO: empty state for when chainIds is an empty array
 export const RPCsView = (props: RPCsViewProps) => {
-  const { chainIds, onClickPageReload } = props
+  const { chainIds, onClickPageReload, intl } = props
 
   const [isChangesMade, setIsChangesMade] = useState<boolean>(false)
 
   return (
     <div className='flex flex-col gap-4 md:gap-8'>
-      <Header />
+      <Header intl={intl?.base} />
 
       <div className='flex flex-col gap-2'>
         {chainIds.map((chainId) => (
@@ -31,6 +41,7 @@ export const RPCsView = (props: RPCsViewProps) => {
             key={`customRPC-${chainId}`}
             chainId={chainId}
             onUpdate={() => setIsChangesMade(true)}
+            intl={intl}
           />
         ))}
       </div>
@@ -41,39 +52,45 @@ export const RPCsView = (props: RPCsViewProps) => {
           className='inline-flex gap-2 items-center justify-center text-center text-sm text-pt-purple-200 cursor-pointer'
         >
           <ArrowPathRoundedSquareIcon className='h-6 w-6' />
-          <span>Refresh the page to see changes</span>
+          <span>{intl?.base?.('refreshToUpdateRPCs') ?? 'Refresh the page to see changes'}</span>
         </span>
       )}
     </div>
   )
 }
 
-// TODO: intl
-interface HeaderProps {}
+interface HeaderProps {
+  intl?: Intl<'setCustomRPCs' | 'customRpcDescription'>
+}
 
 const Header = (props: HeaderProps) => {
-  const {} = props
+  const { intl } = props
 
   return (
     <div className='flex flex-col items-center gap-2 text-center'>
-      <span className='text-lg font-semibold md:text-xl'>Set Custom RPCs</span>
+      <span className='text-lg font-semibold md:text-xl'>
+        {intl?.('setCustomRPCs') ?? 'Set Custom RPCs'}
+      </span>
       <span className='text-sm text-pt-purple-50 md:text-base'>
-        Route the app's onchain queries through RPCs of your choosing. These are stored locally on
-        your browser.
+        {intl?.('customRpcDescription') ??
+          `Route the app's onchain queries through RPCs of your choosing. These are stored locally on your browser.`}
       </span>
     </div>
   )
 }
 
-// TODO: intl
 interface CustomRPCInputProps {
   chainId: NETWORK
   onUpdate?: (rpcUrl: string) => void
   className?: string
+  intl?: {
+    base?: Intl<'customNetworkRpc' | 'override' | 'default' | 'set'>
+    errors?: Intl<'formErrors.invalidRpcNetwork' | 'formErrors.invalidRpcUrl'>
+  }
 }
 
 const CustomRPCInput = (props: CustomRPCInputProps) => {
-  const { chainId, onUpdate, className } = props
+  const { chainId, onUpdate, className, intl } = props
 
   const { customRPCs, set, remove } = useCustomRPCs()
 
@@ -106,7 +123,9 @@ const CustomRPCInput = (props: CustomRPCInputProps) => {
           onUpdate?.(cleanRpcUrl)
         } else {
           formMethods.setError('rpc', {
-            message: `This RPC doesn't seem to be for the ${networkName} network`
+            message:
+              intl?.errors?.('formErrors.invalidRpcNetwork', { network: networkName }) ??
+              `This RPC doesn't seem to be for the ${networkName} network`
           })
         }
       } else {
@@ -116,7 +135,7 @@ const CustomRPCInput = (props: CustomRPCInputProps) => {
       }
     } catch (err) {
       formMethods.setError('rpc', {
-        message: 'Not a valid RPC URL'
+        message: intl?.errors?.('formErrors.invalidRpcUrl') ?? 'Not a valid RPC URL'
       })
     } finally {
       setCheckedRpcUrl(cleanRpcUrl ?? '')
@@ -130,15 +149,21 @@ const CustomRPCInput = (props: CustomRPCInputProps) => {
         onSubmit={formMethods.handleSubmit(onSubmit)}
         className={classNames('inline-flex flex-col gap-2 sm:flex-row', className)}
       >
-        {/* TODO: use intl for `overrideLabel` */}
         <SimpleInput
           formKey='rpc'
           needsOverride={true}
           keepValueOnOverride={true}
-          label={`Custom ${networkName} RPC`}
+          label={
+            intl?.base?.('customNetworkRpc', { network: networkName }) ??
+            `Custom ${networkName} RPC`
+          }
+          overrideLabel={intl?.base?.('override') ?? 'override'}
           validate={{
             isValidURL: (v) =>
-              !v || v.startsWith('http://') || v.startsWith('https://') || 'Not a valid RPC URL'
+              !v ||
+              v.startsWith('http://') ||
+              v.startsWith('https://') ||
+              (intl?.errors?.('formErrors.invalidRpcUrl') ?? 'Not a valid RPC URL')
           }}
           placeholder='https://...'
           className='w-full'
@@ -155,6 +180,7 @@ const CustomRPCInput = (props: CustomRPCInputProps) => {
             isCheckingRPC={isCheckingRPC}
             isFormValid={formMethods.formState.isValid && !formMethods.formState.isValidating}
             className='flex-grow'
+            intl={intl?.base}
           />
           <TrashIcon
             onClick={
@@ -178,17 +204,17 @@ const CustomRPCInput = (props: CustomRPCInputProps) => {
   )
 }
 
-// TODO: intl
 interface SetCustomRpcButtonProps {
   formRpcUrl: string | undefined
   checkedRpcUrl: string
   isCheckingRPC: boolean
   isFormValid: boolean
   className?: string
+  intl?: Intl<'default' | 'set'>
 }
 
 const SetCustomRpcButton = (props: SetCustomRpcButtonProps) => {
-  const { formRpcUrl, checkedRpcUrl, isCheckingRPC, isFormValid, className } = props
+  const { formRpcUrl, checkedRpcUrl, isCheckingRPC, isFormValid, className, intl } = props
 
   const isFormRpcUrlChecked = !isCheckingRPC && checkedRpcUrl === formRpcUrl?.trim()
   const isDefaultRpcUrl = !formRpcUrl && !checkedRpcUrl
@@ -212,9 +238,11 @@ const SetCustomRpcButton = (props: SetCustomRpcButtonProps) => {
     >
       <div className='py-[1px] text-pt-purple-50'>
         <span className={classNames({ 'opacity-0': isButtonTextHidden || !isDefaultRpcUrl })}>
-          Default
+          {intl?.('default') ?? 'Default'}
         </span>
-        {!isButtonTextHidden && !isDefaultRpcUrl && <span className='absolute inset-x-0'>Set</span>}
+        {!isButtonTextHidden && !isDefaultRpcUrl && (
+          <span className='absolute inset-x-0'>{intl?.('set') ?? 'Set'}</span>
+        )}
       </div>
       <CheckIcon
         className={classNames(iconClassName, { 'opacity-100': isSubmitted && isFormValid })}
