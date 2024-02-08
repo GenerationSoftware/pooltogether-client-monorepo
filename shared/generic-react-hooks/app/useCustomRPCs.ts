@@ -2,7 +2,7 @@ import { atom, useAtom } from 'jotai'
 import { useEffect } from 'react'
 import { LOCAL_STORAGE_KEYS } from '../constants/keys'
 
-const getInitialCustomRPCs = (): { [chainId: number]: string | undefined } => {
+export const getInitialCustomRPCs = (): { [chainId: number]: string | undefined } => {
   if (typeof window === 'undefined') return {}
   const cachedCustomRPCs = localStorage.getItem(LOCAL_STORAGE_KEYS.customRPCs)
   return JSON.parse(cachedCustomRPCs ?? '{}')
