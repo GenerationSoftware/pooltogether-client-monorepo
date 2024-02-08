@@ -1,4 +1,4 @@
-import { TrashIcon } from '@heroicons/react/24/outline'
+import { ArrowPathRoundedSquareIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { useCustomRPCs } from '@shared/generic-react-hooks'
 import { Intl } from '@shared/types'
 import { Button, Spinner } from '@shared/ui'
@@ -12,11 +12,14 @@ import { SimpleInput } from '../../../Form/SimpleInput'
 // TODO: intl
 interface RPCsViewProps {
   chainIds: NETWORK[]
+  onClickPageReload: () => void
 }
 
 // TODO: empty state for when chainIds is an empty array
 export const RPCsView = (props: RPCsViewProps) => {
-  const { chainIds } = props
+  const { chainIds, onClickPageReload } = props
+
+  const [isChangesMade, setIsChangesMade] = useState<boolean>(false)
 
   return (
     <div className='flex flex-col gap-4 md:gap-8'>
@@ -24,11 +27,22 @@ export const RPCsView = (props: RPCsViewProps) => {
 
       <div className='flex flex-col gap-2'>
         {chainIds.map((chainId) => (
-          <CustomRPCInput key={`customRPC-${chainId}`} chainId={chainId} />
+          <CustomRPCInput
+            key={`customRPC-${chainId}`}
+            chainId={chainId}
+            onUpdate={() => setIsChangesMade(true)}
+          />
         ))}
       </div>
 
-      {/* TODO: add button to prompt for app refesh (if necessary) */}
+      {isChangesMade && (
+        <span
+          onClick={onClickPageReload}
+          className='inline-flex gap-2 items-center justify-center text-center text-sm text-pt-purple-200 cursor-pointer'
+        >
+          <ArrowPathRoundedSquareIcon className='h-6 w-6' /> Refresh the page to see changes
+        </span>
+      )}
     </div>
   )
 }
@@ -52,11 +66,12 @@ const Header = (props: HeaderProps) => {
 // TODO: intl
 interface CustomRPCInputProps {
   chainId: NETWORK
+  onUpdate?: (rpcUrl: string) => void
   className?: string
 }
 
 const CustomRPCInput = (props: CustomRPCInputProps) => {
-  const { chainId, className } = props
+  const { chainId, onUpdate, className } = props
 
   const { customRPCs, set, remove } = useCustomRPCs()
 
@@ -86,6 +101,7 @@ const CustomRPCInput = (props: CustomRPCInputProps) => {
         if (rpcChainId === chainId) {
           set(chainId, cleanRpcUrl)
           formMethods.clearErrors('rpc')
+          onUpdate?.(cleanRpcUrl)
         } else {
           formMethods.setError('rpc', {
             message: `This RPC doesn't seem to be for the ${networkName} network`
@@ -94,6 +110,7 @@ const CustomRPCInput = (props: CustomRPCInputProps) => {
       } else {
         remove(chainId)
         formMethods.clearErrors('rpc')
+        onUpdate?.('')
       }
     } catch (err) {
       formMethods.setError('rpc', {
@@ -138,12 +155,20 @@ const CustomRPCInput = (props: CustomRPCInputProps) => {
             className='flex-grow'
           />
           <TrashIcon
-            onClick={() => {
-              remove(chainId)
-              formMethods.setValue('rpc', '')
-              setCheckedRpcUrl('')
-            }}
-            className='h-6 w-auto text-pt-purple-200 cursor-pointer'
+            onClick={
+              !!customRPCs[chainId]
+                ? () => {
+                    remove(chainId)
+                    formMethods.setValue('rpc', '')
+                    setCheckedRpcUrl('')
+                    onUpdate?.('')
+                  }
+                : undefined
+            }
+            className={classNames('h-6 w-auto text-pt-purple-200', {
+              'cursor-pointer': !!customRPCs[chainId],
+              'opacity-50': !customRPCs[chainId]
+            })}
           />
         </div>
       </form>

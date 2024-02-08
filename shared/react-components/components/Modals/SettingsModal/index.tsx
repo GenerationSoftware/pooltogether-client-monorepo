@@ -17,6 +17,7 @@ export type SettingsModalView = 'menu' | SettingsModalOption
 export interface SettingsModalProps {
   view: SettingsModalView
   setView: (view: SettingsModalView) => void
+  reloadPage: () => void
   locales?: LANGUAGE_ID[]
   localVaultLists: { [id: string]: VaultList }
   supportedNetworks?: NETWORK[]
@@ -52,6 +53,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
   const {
     view,
     setView,
+    reloadPage,
     locales,
     localVaultLists,
     supportedNetworks,
@@ -81,7 +83,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
     vaultLists: (
       <VaultListView localVaultLists={localVaultLists} onSuccess={onVaultListImport} intl={intl} />
     ),
-    customRPCs: <RPCsView chainIds={supportedNetworks ?? []} />
+    customRPCs: <RPCsView chainIds={supportedNetworks ?? []} onClickPageReload={reloadPage} />
   }
 
   if (isModalOpen) {

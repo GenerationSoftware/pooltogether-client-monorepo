@@ -226,6 +226,7 @@ export const Layout = (props: LayoutProps) => {
       <SettingsModal
         view={settingsModalView}
         setView={setSettingsModalView}
+        reloadPage={() => router.reload()}
         locales={['en', 'de', 'ru', 'ko', 'uk', 'hi', 'es']}
         localVaultLists={DEFAULT_VAULT_LISTS}
         supportedNetworks={supportedNetworks}
