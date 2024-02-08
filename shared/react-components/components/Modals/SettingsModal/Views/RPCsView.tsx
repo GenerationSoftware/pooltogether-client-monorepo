@@ -40,7 +40,8 @@ export const RPCsView = (props: RPCsViewProps) => {
           onClick={onClickPageReload}
           className='inline-flex gap-2 items-center justify-center text-center text-sm text-pt-purple-200 cursor-pointer'
         >
-          <ArrowPathRoundedSquareIcon className='h-6 w-6' /> Refresh the page to see changes
+          <ArrowPathRoundedSquareIcon className='h-6 w-6' />
+          <span>Refresh the page to see changes</span>
         </span>
       )}
     </div>
@@ -57,7 +58,8 @@ const Header = (props: HeaderProps) => {
     <div className='flex flex-col items-center gap-2 text-center'>
       <span className='text-lg font-semibold md:text-xl'>Set Custom RPCs</span>
       <span className='text-sm text-pt-purple-50 md:text-base'>
-        Want to route the app's onchain queries to an RPC of your choice? Feel free to do so here!
+        Route the app's onchain queries through RPCs of your choosing. These are stored locally on
+        your browser.
       </span>
     </div>
   )
@@ -144,7 +146,7 @@ const CustomRPCInput = (props: CustomRPCInputProps) => {
         />
         <div
           className={classNames('flex gap-2 items-center sm:mt-5', {
-            'sm:mt-1': !formMethods.formState.isValid
+            'sm:!mt-1': !formMethods.formState.isValid
           })}
         >
           <SetCustomRpcButton
