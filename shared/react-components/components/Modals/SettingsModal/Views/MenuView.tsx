@@ -1,4 +1,4 @@
-import { SparklesIcon } from '@heroicons/react/24/outline'
+import { CubeTransparentIcon, SparklesIcon } from '@heroicons/react/24/outline'
 import {
   SUPPORTED_CURRENCIES,
   useSelectedCurrency,
@@ -21,6 +21,7 @@ interface MenuViewProps {
     | 'changeLanguage'
     | 'viewEcosystem'
     | 'manageVaultLists'
+    | 'setCustomRPCs'
     | 'getHelp'
     | 'getHelpWithCabana'
   >
@@ -63,6 +64,13 @@ export const MenuView = (props: MenuViewProps) => {
             onClick: () => setView('vaultLists'),
             disabled: disable?.includes('vaultLists'),
             hidden: hide?.includes('vaultLists')
+          },
+          {
+            iconContent: <CubeTransparentIcon className='h-6 w-6 text-pt-purple-100' />,
+            title: intl?.('setCustomRPCs') ?? 'Set Custom RPCs',
+            onClick: () => setView('customRPCs'),
+            disabled: disable?.includes('customRPCs'),
+            hidden: hide?.includes('customRPCs')
           }
         ]}
       />

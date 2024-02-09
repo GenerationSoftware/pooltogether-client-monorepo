@@ -1,4 +1,5 @@
 import { connectorsForWallets, Wallet } from '@rainbow-me/rainbowkit'
+import { getInitialCustomRPCs } from '@shared/generic-react-hooks'
 import { NETWORK, parseQueryParam } from '@shared/utilities'
 import deepmerge from 'deepmerge'
 import { FallbackTransport, PublicClient } from 'viem'
@@ -17,18 +18,29 @@ import { RPC_URLS, WAGMI_CHAINS, WALLETS } from '@constants/config'
 /**
  * Returns a Wagmi config with the given networks and RPCs
  * @param networks the networks to support throughout the app
+ * @param options optional settings
  * @returns
  */
 export const createCustomWagmiConfig = (
-  networks: NETWORK[]
+  networks: NETWORK[],
+  options?: { useCustomRPCs?: boolean }
 ): Config<PublicClient<FallbackTransport, Chain>, WebSocketPublicClient> => {
   const supportedNetworks = Object.values(WAGMI_CHAINS).filter(
     (chain) => networks.includes(chain.id) && !!RPC_URLS[chain.id]
   )
 
+  const customRPCs = !!options?.useCustomRPCs ? getInitialCustomRPCs() : {}
+
   const { chains, publicClient } = configureChains(supportedNetworks, [
     jsonRpcProvider({
-      rpc: (chain) => ({ http: RPC_URLS[chain.id as keyof typeof WAGMI_CHAINS] as string })
+      rpc: (chain) => {
+        const chainId = chain.id as keyof typeof WAGMI_CHAINS
+
+        const defaultRpcUrl = RPC_URLS[chainId] as string
+        const customRpcUrl = customRPCs[chainId]
+
+        return { http: customRpcUrl ?? defaultRpcUrl }
+      }
     }),
     publicProvider()
   ])

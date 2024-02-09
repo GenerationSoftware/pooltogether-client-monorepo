@@ -238,6 +238,7 @@
     "changeLanguage": "Change Language",
     "viewEcosystem": "View Ecosystem",
     "manageVaultLists": "Manage Vault Lists",
+    "setCustomRPCs": "Set Custom RPCs",
     "getHelp": "Get Help",
     "getHelpWithCabana": "Get Help w/ Using Cabana",
     "vaultListsDescription": "Vault lists determine what prize vaults are displayed throughout the app. Use caution when interacting with imported lists.",
@@ -246,7 +247,13 @@
     "addVaultList": "Add Vault List",
     "clearImportedVaultLists": "Clear all imported vault lists",
     "numTokens": "{number, plural, one {# Token} other {# Tokens}}",
-    "imported": "Imported"
+    "imported": "Imported",
+    "customRpcDescription": "Route the app's onchain queries through RPCs of your choosing. These are stored locally on your browser.",
+    "customNetworkRpc": "Custom {network} RPC",
+    "override": "override",
+    "default": "Default",
+    "set": "Set",
+    "refreshToUpdateRPCs": "Refresh the page to see changes"
   },
   "Abbreviations": {
     "days": "days",
@@ -326,7 +333,9 @@
       "invalidAddress": "Enter a valid EVM address",
       "sameAsDelegate": "Entered address is same as current delegate",
       "negativeNumber": "Enter a positive number",
-      "tooManyDecimals": "Too many decimals"
+      "tooManyDecimals": "Too many decimals",
+      "invalidRpcNetwork": "This RPC doesn't seem to be for the {network} network",
+      "invalidRpcUrl": "Not a valid RPC URL"
     }
   }
 }

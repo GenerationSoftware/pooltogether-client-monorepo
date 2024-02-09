@@ -1,21 +1,19 @@
 import classNames from 'classnames'
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
 interface SimpleInputProps {
   formKey: string
   id?: string
-  autoComplete?: string
   validate?: { [rule: string]: (v: any) => true | string }
   placeholder?: string
   defaultValue?: string
   label?: ReactNode
   hideErrorMsgs?: boolean
   autoFocus?: boolean
+  autoComplete?: string
   disabled?: boolean
   needsOverride?: boolean
-  isActiveOverride?: boolean
-  setIsActiveOverride?: (val: boolean) => void
   overrideLabel?: ReactNode
   keepValueOnOverride?: boolean
   onOverride?: (val: boolean) => void
@@ -29,17 +27,15 @@ export const SimpleInput = (props: SimpleInputProps) => {
   const {
     formKey,
     id,
-    autoComplete,
     validate,
     placeholder,
     defaultValue,
     label,
     hideErrorMsgs,
     autoFocus,
+    autoComplete,
     disabled,
     needsOverride,
-    setIsActiveOverride,
-    isActiveOverride,
     overrideLabel,
     keepValueOnOverride,
     onOverride,
@@ -53,16 +49,18 @@ export const SimpleInput = (props: SimpleInputProps) => {
 
   const formValues = useWatch()
 
+  const [isActiveOverride, setIsActiveOverride] = useState<boolean>(false)
+
   const handleOverride = () => {
     !keepValueOnOverride && setValue(formKey, '')
-    setIsActiveOverride?.(true)
+    setIsActiveOverride(true)
     onOverride?.(true)
   }
 
   const handleBlur = () => {
     if ((needsOverride && !formValues[formKey]) || formValues[formKey] === defaultValue) {
       setValue(formKey, defaultValue, { shouldValidate: true })
-      setIsActiveOverride?.(false)
+      setIsActiveOverride(false)
       onOverride?.(false)
     }
   }
@@ -88,17 +86,16 @@ export const SimpleInput = (props: SimpleInputProps) => {
         placeholder={placeholder}
         defaultValue={defaultValue}
         autoFocus={autoFocus}
-        onBlur={handleBlur}
         autoComplete={autoComplete}
-        onClick={handleOverride}
+        disabled={disabled || (needsOverride && !isActiveOverride)}
+        onBlur={handleBlur}
         className={classNames(
           'px-3 py-2 text-sm leading-tight rounded-lg border outline outline-1',
           'md:px-4 md:py-3',
           {
             'bg-pt-purple-50 text-gray-700 border-gray-300':
               !needsOverride || (needsOverride && isActiveOverride),
-            'bg-transparent text-pt-teal border-pt-teal cursor-pointer':
-              needsOverride && !isActiveOverride,
+            'bg-transparent text-pt-teal border-pt-teal': needsOverride && !isActiveOverride,
             'brightness-75': disabled,
             [`outline-red-600 ${errorClassName}`]: !!error,
             'outline-transparent': !error

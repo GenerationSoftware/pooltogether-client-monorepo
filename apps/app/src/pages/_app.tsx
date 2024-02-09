@@ -10,7 +10,7 @@ import '../styles/globals.css'
 import { createCustomWagmiConfig } from '../utils'
 
 const networks = [...SUPPORTED_NETWORKS.mainnets, ...SUPPORTED_NETWORKS.testnets]
-const wagmiConfig = createCustomWagmiConfig(networks)
+const wagmiConfig = createCustomWagmiConfig(networks, { useCustomRPCs: true })
 
 export default function MyApp(props: AppProps) {
   useFathom()
