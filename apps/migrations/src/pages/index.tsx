@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
+import { FaqSection } from '@components/FaqSection'
 import { Intro } from '@components/Intro'
 import { Layout } from '@components/Layout'
 import { Migrations } from '@components/Migrations'
+import { MigrationsHeader } from '@components/MigrationsHeader'
 
 export default function HomePage() {
   const { address: userAddress } = useAccount()
@@ -13,7 +15,9 @@ export default function HomePage() {
 
   return (
     <Layout>
+      <MigrationsHeader className='mb-8' />
       {isBrowser ? !!userAddress ? <Migrations userAddress={userAddress} /> : <Intro /> : <></>}
+      <FaqSection className='mt-40' />
     </Layout>
   )
 }
