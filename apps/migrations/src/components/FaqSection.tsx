@@ -60,7 +60,7 @@ export const FaqSection = (props: FaqSectionProps) => {
         }))}
         className='w-full'
         titleClassName='mt-11 text-xl font-averta !font-bold text-pt-purple-300 bg-transparent md:justify-center'
-        contentClassName='text-center text-pt-purple-100 bg-transparent md:max-w-[75%] md:mx-auto'
+        contentClassName='text-pt-purple-100 bg-transparent md:max-w-[75%] md:mx-auto md:text-center'
       />
     </section>
   )

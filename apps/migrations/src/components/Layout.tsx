@@ -18,7 +18,16 @@ export const Layout = (props: LayoutProps) => {
   const { children, className } = props
 
   return (
-    <div className='flex flex-col min-h-screen'>
+    <div className='relative flex flex-col min-h-screen overflow-hidden'>
+      <Image
+        src='/bg.svg'
+        alt='PT Background'
+        width={1440}
+        height={2048}
+        className='absolute inset-0 mx-auto min-w-[1440px] shadow-2xl'
+        priority={true}
+      />
+
       <Head>
         <title>PoolTogether Migrations</title>
       </Head>
