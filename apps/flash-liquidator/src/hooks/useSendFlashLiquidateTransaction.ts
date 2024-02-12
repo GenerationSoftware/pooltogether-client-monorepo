@@ -131,7 +131,7 @@ export const useSendFlashLiquidateTransaction = (
 
   const {
     data: txReceipt,
-    isLoading: isConfirming,
+    isFetching: isConfirming,
     isSuccess,
     isError: isConfirmingError
   } = useWaitForTransactionReceipt({ chainId: liquidationPair.chainId, hash: txHash })
