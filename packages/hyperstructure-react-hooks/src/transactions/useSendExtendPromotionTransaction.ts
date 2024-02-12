@@ -94,7 +94,7 @@ export const useSendExtendPromotionTransaction = (
 
   const {
     data: txReceipt,
-    isLoading: isConfirming,
+    isFetching: isConfirming,
     isSuccess,
     isError: isConfirmingError
   } = useWaitForTransactionReceipt({ chainId, hash: txHash })

@@ -54,7 +54,7 @@ export const WithdrawTxToast = (props: WithdrawTxToastProps) => {
 
   const { data: tokenData } = useVaultTokenData(vault)
 
-  const { isLoading, isSuccess, isError } = useWaitForTransactionReceipt({
+  const { isFetching, isSuccess, isError } = useWaitForTransactionReceipt({
     chainId: vault.chainId,
     hash: txHash as Address
   })
@@ -99,7 +99,7 @@ export const WithdrawTxToast = (props: WithdrawTxToastProps) => {
     }
   }, [isSuccess, txHash])
 
-  if (!isLoading && isSuccess) {
+  if (!isFetching && isSuccess) {
     toast(
       <ToastLayout id={txHash}>
         <SuccessView vault={vault} txHash={txHash} formattedAmount={formattedAmount} intl={intl} />
@@ -108,7 +108,7 @@ export const WithdrawTxToast = (props: WithdrawTxToastProps) => {
     )
   }
 
-  if (!isLoading && !isSuccess && isError) {
+  if (!isFetching && !isSuccess && isError) {
     toast(
       <ToastLayout id={txHash}>
         <ErrorView vault={vault} txHash={txHash} intl={intl} />

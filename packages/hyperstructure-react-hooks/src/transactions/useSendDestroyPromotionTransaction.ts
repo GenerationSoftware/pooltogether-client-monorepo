@@ -76,7 +76,7 @@ export const useSendDestroyPromotionTransaction = (
 
   const {
     data: txReceipt,
-    isLoading: isConfirming,
+    isFetching: isConfirming,
     isSuccess,
     isError: isConfirmingError
   } = useWaitForTransactionReceipt({ chainId, hash: txHash })

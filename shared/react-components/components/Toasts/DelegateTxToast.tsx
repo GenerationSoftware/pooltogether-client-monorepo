@@ -40,7 +40,7 @@ export const DelegateTxToast = (props: DelegateTxToastProps) => {
 
   const { data: tokenData } = useVaultTokenData(vault)
 
-  const { isLoading, isSuccess, isError } = useWaitForTransactionReceipt({
+  const { isFetching, isSuccess, isError } = useWaitForTransactionReceipt({
     chainId: vault.chainId,
     hash: txHash as Address
   })
@@ -74,7 +74,7 @@ export const DelegateTxToast = (props: DelegateTxToastProps) => {
     }
   }, [isSuccess, txHash])
 
-  if (!isLoading && isSuccess) {
+  if (!isFetching && isSuccess) {
     toast(
       <ToastLayout id={txHash}>
         <SuccessView vault={vault} txHash={txHash} intl={intl} />
@@ -83,7 +83,7 @@ export const DelegateTxToast = (props: DelegateTxToastProps) => {
     )
   }
 
-  if (!isLoading && !isSuccess && isError) {
+  if (!isFetching && !isSuccess && isError) {
     toast(
       <ToastLayout id={txHash}>
         <ErrorView vault={vault} txHash={txHash} intl={intl} />

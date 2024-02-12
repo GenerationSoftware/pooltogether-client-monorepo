@@ -90,7 +90,7 @@ export const useSendRedeemTransaction = (
 
   const {
     data: txReceipt,
-    isLoading: isConfirming,
+    isFetching: isConfirming,
     isSuccess,
     isError: isConfirmingError
   } = useWaitForTransactionReceipt({ chainId: vault?.chainId, hash: txHash })
