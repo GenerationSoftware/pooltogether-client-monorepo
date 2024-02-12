@@ -32,14 +32,14 @@ export const createCustomWagmiConfig = (
 }
 
 /**
- * Returns a function to get wallet connectors for Wagmi & RainbowKit
+ * Returns wallet connectors for Wagmi & RainbowKit
  * @param chains array of `Chain` objects
  * @returns
  */
 const getWalletConnectors = () => {
   const walletGroups: WalletList = []
 
-  const defaultWallets = ['metamask', 'walletconnect', 'rainbow', 'injected', 'coinbase']
+  const defaultWallets = ['injected', 'walletconnect', 'rainbow', 'metamask', 'coinbase']
   const otherWallets = [
     'argent',
     'brave',
@@ -76,7 +76,7 @@ const getWalletConnectors = () => {
     })
   } else {
     walletGroups.push({
-      groupName: 'Recommended',
+      groupName: 'Default',
       wallets: defaultWallets.map((wallet) => WALLETS[wallet])
     })
     walletGroups.push({
@@ -91,6 +91,12 @@ const getWalletConnectors = () => {
   })
 }
 
+/**
+ * Returns network transports for Wagmi & RainbowKit
+ * @param networks the networks to get transports for
+ * @param options optional settings
+ * @returns
+ */
 const getNetworkTransports = (
   networks: (keyof typeof RPC_URLS)[],
   options?: { useCustomRPCs?: boolean }
