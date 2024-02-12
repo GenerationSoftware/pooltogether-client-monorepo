@@ -1,4 +1,4 @@
-import { ContractFunctionConfig, createPublicClient, formatUnits, http } from 'viem'
+import { ContractFunctionParameters, createPublicClient, formatUnits, http } from 'viem'
 import {
   RPC_URLS,
   USD_PRICE_REF,
@@ -109,7 +109,7 @@ const getV5VaultTokenData = async (
       transport: http(RPC_URLS[chainId])
     })
 
-    const contracts: ContractFunctionConfig<typeof V5_VAULT_ABI>[] = []
+    const contracts: ContractFunctionParameters<typeof V5_VAULT_ABI>[] = []
     vaultAddresses.forEach((address) =>
       contracts.push(
         { address, abi: V5_VAULT_ABI, functionName: 'asset' },
