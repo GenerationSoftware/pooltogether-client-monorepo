@@ -48,6 +48,15 @@ All apps above are [Next.js](https://nextjs.org/) apps with [Tailwind CSS](https
 - `hyperstructure-client-js`: Protocol-specific functions to easily interact with onchain Hyperstructure data, using [Viem](https://viem.sh/).
 - `hyperstructure-react-hooks`: Shared React hooks specific to Hyperstructure functionality, using [WAGMI](https://wagmi.sh/).
 
+Prize pool and auxiliary contract addresses are included in the `hyperstructure-client-js` package. If you'd like to use older protocol deployments, refer to the versions below:
+
+- Current Optimism Deployment:
+  - `hyperstructure-client-js@latest`
+  - `hyperstructure-react-hooks@latest`
+- Beta Optimism Deployment:
+  - `hyperstructure-client-js@1.2.8`
+  - `hyperstructure-react-hooks@1.4.10`
+
 **Repo Links:** [Hyperstructure Client JS](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/packages/hyperstructure-client-js) | [Hyperstructure React Hooks](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/packages/hyperstructure-react-hooks)
 
 ---
