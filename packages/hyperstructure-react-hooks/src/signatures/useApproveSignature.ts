@@ -108,24 +108,22 @@ export const useApproveSignature = (
     isLoading: isWaiting,
     isSuccess: isSigningSuccess,
     isError: isSigningError,
-    signTypedData
-  } = useSignTypedData({
-    domain: tokenDomain,
-    message,
-    types,
-    primaryType: 'Permit',
-    onSuccess: verifySignature,
-    onError: options?.onError
-  })
+    signTypedData: _signTypedData
+  } = useSignTypedData()
 
-  const _signTypedData = () => {
-    if (tokenPermitSupport === 'eip2612') {
-      setDeadline(message.deadline as bigint)
-    } else if (tokenPermitSupport === 'daiPermit') {
-      setDeadline(message.expiry as bigint)
-    }
-    signTypedData()
-  }
+  const signTypedData = !!_signTypedData
+    ? () => {
+        if (tokenPermitSupport === 'eip2612') {
+          setDeadline(message.deadline as bigint)
+        } else if (tokenPermitSupport === 'daiPermit') {
+          setDeadline(message.expiry as bigint)
+        }
+        _signTypedData(
+          { domain: tokenDomain, message, types, primaryType: 'Permit' },
+          { onSuccess: verifySignature, onError: options?.onError }
+        )
+      }
+    : undefined
 
   const enabled =
     !!userAddress &&
@@ -135,9 +133,10 @@ export const useApproveSignature = (
     !!tokenDomain &&
     nonces !== undefined &&
     nonces !== -1n &&
-    !!message.value
+    !!message.value &&
+    !!signTypedData
 
-  const signApprove = enabled ? _signTypedData : undefined
+  const signApprove = enabled ? signTypedData : undefined
 
   const isError = isSigningError || isInvalidSignature
   const isSuccess = isSigningSuccess && !isError
