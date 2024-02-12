@@ -20,18 +20,17 @@ export const useBestLiquidation = (liquidationPair: LiquidationPair) => {
   const queryKey = ['liquidationQuote', chainId, lpAddress]
 
   const {
-    data: quote,
+    data,
     isFetched,
     refetch: refetchQuote,
     isRefetching
   } = useQuery(
     queryKey,
     async () => {
-      if (!!swapPath) {
-        const quote = await publicClient.readContract({
+      if (!!publicClient && !!swapPath) {
+        const quote = await publicClient.simulateContract({
           address: FLASH_LIQUIDATORS[liquidationPair.chainId],
           abi: flashLiquidatorABI,
-          // @ts-ignore
           functionName: 'findBestQuoteStatic',
           args: [lpAddress, swapPath]
         })
@@ -51,5 +50,5 @@ export const useBestLiquidation = (liquidationPair: LiquidationPair) => {
     }
   }
 
-  return { data: quote, isFetched, refetch }
+  return { data: data?.result, isFetched, refetch }
 }

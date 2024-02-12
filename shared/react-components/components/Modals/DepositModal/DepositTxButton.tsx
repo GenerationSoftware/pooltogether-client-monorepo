@@ -14,7 +14,7 @@ import { Button } from '@shared/ui'
 import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
 import { Address, parseUnits } from 'viem'
-import { useAccount, useNetwork } from 'wagmi'
+import { useAccount } from 'wagmi'
 import { DepositModalView } from '.'
 import { depositFormTokenAmountAtom } from '../../Form/DepositForm'
 import { isValidFormInput } from '../../Form/TxFormInput'
@@ -63,8 +63,7 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
     intl
   } = props
 
-  const { address: userAddress, isDisconnected } = useAccount()
-  const { chain } = useNetwork()
+  const { address: userAddress, chain, isDisconnected } = useAccount()
 
   const { data: tokenData } = useVaultTokenData(vault)
   const decimals = vault.decimals ?? tokenData?.decimals

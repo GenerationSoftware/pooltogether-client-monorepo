@@ -5,7 +5,7 @@ import { shorten } from '@shared/utilities'
 import classNames from 'classnames'
 import { useEffect, useState } from 'react'
 import { LiquidationPair } from 'src/types'
-import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi'
+import { useAccount, useSwitchChain } from 'wagmi'
 import { useBestLiquidation } from '@hooks/useBestLiquidation'
 import { useBestLiquidationProfit } from '@hooks/useBestLiquidationProfit'
 import { useSendFlashLiquidateTransaction } from '@hooks/useSendFlashLiquidateTransaction'
@@ -18,12 +18,11 @@ interface LiquidateButtonProps {
 export const LiquidateButton = (props: LiquidateButtonProps) => {
   const { liquidationPair, className } = props
 
-  const { chain } = useNetwork()
-  const { isDisconnected } = useAccount()
+  const { chainId, isDisconnected } = useAccount()
 
   const { openConnectModal } = useConnectModal()
   const { openChainModal } = useChainModal()
-  const { switchNetworkAsync } = useSwitchNetwork()
+  const { switchChainAsync } = useSwitchChain()
   const addRecentTransaction = useAddRecentTransaction()
 
   const { data: bestLiquidation, isFetched: isFetchedBestLiquidation } =
@@ -41,10 +40,10 @@ export const LiquidateButton = (props: LiquidateButtonProps) => {
     if (isDisconnected) {
       openConnectModal?.()
       return false
-    } else if (chain?.id !== liquidationPair.chainId) {
-      if (!!switchNetworkAsync) {
+    } else if (chainId !== liquidationPair.chainId) {
+      if (!!switchChainAsync) {
         try {
-          const result = await switchNetworkAsync(liquidationPair.chainId)
+          const result = await switchChainAsync({ chainId: liquidationPair.chainId })
           return result.id === liquidationPair.chainId
         } catch {
           console.warn(`Could not switch wallet to chain ID ${liquidationPair.chainId}`)
@@ -70,7 +69,7 @@ export const LiquidateButton = (props: LiquidateButtonProps) => {
   const isEnabled =
     !!liquidationPair && isFetchedBestLiquidation && !!bestLiquidation && bestLiquidation.success
 
-  if (!isBrowser || isDisconnected || chain?.id !== liquidationPair.chainId) {
+  if (!isBrowser || isDisconnected || chainId !== liquidationPair.chainId) {
     return (
       <Button onClick={onClick} disabled={!isEnabled} color='transparent' className={className}>
         <span className='whitespace-nowrap'>

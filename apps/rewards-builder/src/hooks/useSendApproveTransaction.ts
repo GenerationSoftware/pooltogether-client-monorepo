@@ -1,7 +1,12 @@
 import { erc20ABI, TWAB_REWARDS_ADDRESSES } from '@shared/utilities'
 import { useEffect } from 'react'
 import { Address, TransactionReceipt } from 'viem'
-import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
+import {
+  useAccount,
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract
+} from 'wagmi'
 
 /**
  * Prepares and submits an `approve` transaction for a token to the TWAB rewards contract
@@ -26,31 +31,32 @@ export const useSendApproveTransaction = (
   txReceipt?: TransactionReceipt
   sendApproveTransaction?: () => void
 } => {
-  const { chain } = useNetwork()
+  const { chain } = useAccount()
 
   const twabRewardsAddress = !!chainId ? TWAB_REWARDS_ADDRESSES[chainId] : undefined
 
   const enabled =
     !!chainId && chain?.id === chainId && !!tokenAddress && !!amount && !!twabRewardsAddress
 
-  const { config } = usePrepareContractWrite({
+  const { data } = useSimulateContract({
     chainId,
     address: tokenAddress,
     abi: erc20ABI,
     functionName: 'approve',
     args: [twabRewardsAddress as Address, amount],
-    enabled
+    query: { enabled }
   })
 
   const {
-    data: txSendData,
+    data: txHash,
     isLoading: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
-    write: sendApproveTransaction
-  } = useContractWrite(config)
+    writeContract: _sendApproveTransaction
+  } = useWriteContract()
 
-  const txHash = txSendData?.hash
+  const sendApproveTransaction =
+    !!data && !!_sendApproveTransaction ? () => _sendApproveTransaction(data.request) : undefined
 
   useEffect(() => {
     if (!!txHash && isSendingSuccess) {
@@ -63,7 +69,7 @@ export const useSendApproveTransaction = (
     isLoading: isConfirming,
     isSuccess,
     isError: isConfirmingError
-  } = useWaitForTransaction({ chainId, hash: txHash })
+  } = useWaitForTransactionReceipt({ chainId, hash: txHash })
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {

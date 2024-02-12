@@ -18,7 +18,7 @@ import {
 } from '@shared/utilities'
 import { ReactNode, useEffect } from 'react'
 import { Address } from 'viem'
-import { useAccount, useWaitForTransaction } from 'wagmi'
+import { useAccount, useWaitForTransactionReceipt } from 'wagmi'
 import { ErrorPooly } from '../Graphics/ErrorPooly'
 import { SuccessPooly } from '../Graphics/SuccessPooly'
 
@@ -54,7 +54,7 @@ export const WithdrawTxToast = (props: WithdrawTxToastProps) => {
 
   const { data: tokenData } = useVaultTokenData(vault)
 
-  const { isLoading, isSuccess, isError } = useWaitForTransaction({
+  const { isLoading, isSuccess, isError } = useWaitForTransactionReceipt({
     chainId: vault.chainId,
     hash: txHash as Address
   })

@@ -34,7 +34,7 @@ export const useBestLiquidationGasEstimate = (
       address: FLASH_LIQUIDATORS[liquidationPair.chainId],
       abi: flashLiquidatorABI,
       functionName: 'flashLiquidate',
-      args,
+      args: args as NonNullable<ReturnType<typeof useBestLiquidationArgs>>,
       account: userAddress ?? zeroAddress
     },
     { enabled: !!args && bestLiquidation?.success }

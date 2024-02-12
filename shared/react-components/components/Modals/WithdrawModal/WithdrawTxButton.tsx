@@ -14,7 +14,7 @@ import { Button } from '@shared/ui'
 import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
 import { Address, formatUnits, parseUnits } from 'viem'
-import { useAccount, useNetwork } from 'wagmi'
+import { useAccount } from 'wagmi'
 import { WithdrawModalView } from '.'
 import { isValidFormInput } from '../../Form/TxFormInput'
 import { withdrawFormShareAmountAtom } from '../../Form/WithdrawForm'
@@ -57,8 +57,7 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
     intl
   } = props
 
-  const { address: userAddress, isDisconnected } = useAccount()
-  const { chain } = useNetwork()
+  const { address: userAddress, chain, isDisconnected } = useAccount()
 
   const { data: tokenData } = useVaultTokenData(vault)
   const decimals = vault.decimals ?? tokenData?.decimals

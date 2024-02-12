@@ -7,7 +7,7 @@ import {
   NETWORK
 } from '@shared/utilities'
 import { ReactNode, useEffect } from 'react'
-import { useWaitForTransaction } from 'wagmi'
+import { useWaitForTransactionReceipt } from 'wagmi'
 
 export interface SetLiquidationPairTxToastProps {
   chainId: NETWORK
@@ -27,7 +27,7 @@ export const createSetLiquidationPairTxToast = (data: SetLiquidationPairTxToastP
 export const SetLiquidationPairTxToast = (props: SetLiquidationPairTxToastProps) => {
   const { chainId, txHash, addRecentTransaction } = props
 
-  const { isLoading, isSuccess, isError } = useWaitForTransaction({
+  const { isLoading, isSuccess, isError } = useWaitForTransactionReceipt({
     chainId,
     hash: txHash
   })
