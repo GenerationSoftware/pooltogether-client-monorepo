@@ -119,11 +119,11 @@ export const useSendClaimRewardsTransaction = (
   const isWaiting = isMulticall ? isWaitingMulticall : _isWaiting
   const isSendingError = isMulticall ? isSendingMulticallError : _isSendingError
   const sendClaimRewardsTransaction = isMulticall
-    ? !!data && !!sendMulticallTransaction
-      ? () => sendMulticallTransaction(data.request)
+    ? !!multicallData && !!sendMulticallTransaction
+      ? () => sendMulticallTransaction(multicallData.request)
       : undefined
-    : !!multicallData && !!_sendClaimRewardsTransaction
-    ? () => _sendClaimRewardsTransaction(multicallData.request)
+    : !!data && !!_sendClaimRewardsTransaction
+    ? () => _sendClaimRewardsTransaction(data.request)
     : undefined
 
   useEffect(() => {
