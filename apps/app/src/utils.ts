@@ -33,7 +33,6 @@ export const createCustomWagmiConfig = (
 
 /**
  * Returns wallet connectors for Wagmi & RainbowKit
- * @param chains array of `Chain` objects
  * @returns
  */
 const getWalletConnectors = () => {

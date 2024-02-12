@@ -1,16 +1,7 @@
-import { connectorsForWallets, Wallet } from '@rainbow-me/rainbowkit'
+import { connectorsForWallets, WalletList } from '@rainbow-me/rainbowkit'
 import { NETWORK, parseQueryParam } from '@shared/utilities'
-import { encodePacked, FallbackTransport, PublicClient } from 'viem'
-import {
-  Chain,
-  Config,
-  configureChains,
-  Connector,
-  createConfig,
-  WebSocketPublicClient
-} from 'wagmi'
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
-import { publicProvider } from 'wagmi/providers/public'
+import { Chain, encodePacked, fallback, http, Transport } from 'viem'
+import { createConfig } from 'wagmi'
 import { RPC_URLS, SUPPORTED_NETWORKS, WAGMI_CHAINS, WALLETS } from '@constants/config'
 import { SwapPath } from './types'
 
@@ -18,40 +9,29 @@ import { SwapPath } from './types'
  * Returns a Wagmi config with supported networks and RPCs
  * @returns
  */
-export const createCustomWagmiConfig = (): Config<
-  PublicClient<FallbackTransport, Chain>,
-  WebSocketPublicClient
-> => {
+export const createCustomWagmiConfig = () => {
   const networks = Object.values(WAGMI_CHAINS).filter(
     (chain) =>
       chain.id === NETWORK.mainnet ||
       (SUPPORTED_NETWORKS.includes(chain.id as number) && !!RPC_URLS[chain.id])
-  )
+  ) as any as [Chain, ...Chain[]]
 
-  const { chains, publicClient } = configureChains(networks, [
-    jsonRpcProvider({
-      rpc: (chain) => ({ http: RPC_URLS[chain.id as keyof typeof WAGMI_CHAINS] as string })
-    }),
-    publicProvider()
-  ])
-
-  const connectors = getWalletConnectors(chains)
-
-  return createConfig({ autoConnect: true, connectors, publicClient })
+  return createConfig({
+    chains: networks,
+    connectors: getWalletConnectors(),
+    transports: getNetworkTransports(networks.map((network) => network.id)),
+    ssr: true
+  })
 }
 
 /**
- * Returns a function to get wallet connectors for Wagmi & RainbowKit
- * @param chains array of `Chain` objects
+ * Returns wallet connectors for Wagmi & RainbowKit
  * @returns
  */
-const getWalletConnectors = (chains: Chain[]): (() => Connector[]) => {
-  const appName = 'Cabana Flash Liquidator'
-  const projectId = '3eb812d6ed9689e2ced204df2b9e6c76'
+const getWalletConnectors = () => {
+  const walletGroups: WalletList = []
 
-  const walletGroups: { groupName: string; wallets: Wallet[] }[] = []
-
-  const defaultWallets = ['metamask', 'walletconnect', 'rainbow', 'injected', 'coinbase']
+  const defaultWallets = ['injected', 'walletconnect', 'rainbow', 'metamask', 'coinbase']
   const otherWallets = [
     'argent',
     'brave',
@@ -72,32 +52,50 @@ const getWalletConnectors = (chains: Chain[]): (() => Connector[]) => {
   if (!!highlightedWallet && highlightedWallet !== 'injected') {
     walletGroups.push({
       groupName: 'Recommended',
-      wallets: [WALLETS[highlightedWallet]({ appName, chains, projectId })]
+      wallets: [WALLETS[highlightedWallet]]
     })
     walletGroups.push({
       groupName: 'Default',
       wallets: defaultWallets
         .filter((wallet) => wallet !== highlightedWallet)
-        .map((wallet) => WALLETS[wallet]({ appName, chains, projectId }))
+        .map((wallet) => WALLETS[wallet])
     })
     walletGroups.push({
       groupName: 'Other',
       wallets: otherWallets
         .filter((wallet) => wallet !== highlightedWallet)
-        .map((wallet) => WALLETS[wallet]({ appName, chains, projectId }))
+        .map((wallet) => WALLETS[wallet])
     })
   } else {
     walletGroups.push({
-      groupName: 'Recommended',
-      wallets: defaultWallets.map((wallet) => WALLETS[wallet]({ appName, chains, projectId }))
+      groupName: 'Default',
+      wallets: defaultWallets.map((wallet) => WALLETS[wallet])
     })
     walletGroups.push({
       groupName: 'Other',
-      wallets: otherWallets.map((wallet) => WALLETS[wallet]({ appName, chains, projectId }))
+      wallets: otherWallets.map((wallet) => WALLETS[wallet])
     })
   }
 
-  return connectorsForWallets(walletGroups)
+  return connectorsForWallets(walletGroups, {
+    appName: 'Cabana Flash Liquidator',
+    projectId: '3eb812d6ed9689e2ced204df2b9e6c76'
+  })
+}
+
+/**
+ * Returns network transports for Wagmi & RainbowKit
+ * @param networks the networks to get transports for
+ * @returns
+ */
+const getNetworkTransports = (networks: (keyof typeof RPC_URLS)[]) => {
+  const transports: { [chainId: number]: Transport } = {}
+
+  networks.forEach((network) => {
+    transports[network] = fallback([http(RPC_URLS[network]), http()])
+  })
+
+  return transports
 }
 
 /**
