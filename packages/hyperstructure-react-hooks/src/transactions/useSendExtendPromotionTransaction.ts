@@ -3,10 +3,9 @@ import { useEffect } from 'react'
 import { Address, isAddress, TransactionReceipt } from 'viem'
 import {
   useAccount,
-  useContractWrite,
-  useNetwork,
-  usePrepareContractWrite,
-  useWaitForTransaction
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract
 } from 'wagmi'
 import { useTokenAllowance } from '..'
 
@@ -40,8 +39,7 @@ export const useSendExtendPromotionTransaction = (
   txReceipt?: TransactionReceipt
   sendExtendPromotionTransaction?: () => void
 } => {
-  const { address: userAddress } = useAccount()
-  const { chain } = useNetwork()
+  const { address: userAddress, chain } = useAccount()
 
   const twabRewardsAddress = !!chainId ? TWAB_REWARDS_ADDRESSES[chainId] : undefined
   const totalTokens =
@@ -66,24 +64,27 @@ export const useSendExtendPromotionTransaction = (
     !!allowance &&
     allowance >= totalTokens
 
-  const { config } = usePrepareContractWrite({
+  const { data } = useSimulateContract({
     chainId,
     address: twabRewardsAddress,
     abi: twabRewardsABI,
     functionName: 'extendPromotion',
     args: [BigInt(promotionId), numberOfEpochs],
-    enabled
+    query: { enabled }
   })
 
   const {
-    data: txSendData,
+    data: txHash,
     isLoading: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
-    write: sendExtendPromotionTransaction
-  } = useContractWrite(config)
+    writeContract: _sendExtendPromotionTransaction
+  } = useWriteContract()
 
-  const txHash = txSendData?.hash
+  const sendExtendPromotionTransaction =
+    !!data && !!_sendExtendPromotionTransaction
+      ? () => _sendExtendPromotionTransaction(data.request)
+      : undefined
 
   useEffect(() => {
     if (!!txHash && isSendingSuccess) {
@@ -96,7 +97,7 @@ export const useSendExtendPromotionTransaction = (
     isLoading: isConfirming,
     isSuccess,
     isError: isConfirmingError
-  } = useWaitForTransaction({ chainId, hash: txHash })
+  } = useWaitForTransactionReceipt({ chainId, hash: txHash })
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {

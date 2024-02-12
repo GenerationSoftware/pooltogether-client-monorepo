@@ -2,7 +2,12 @@ import { PairCreateInfo } from '@shared/types'
 import { LIQUIDATION_PAIR_FACTORY_ADDRESSES, liquidationPairFactoryABI } from '@shared/utilities'
 import { useEffect } from 'react'
 import { Address, TransactionReceipt } from 'viem'
-import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
+import {
+  useAccount,
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract
+} from 'wagmi'
 
 /**
  * Prepares and submits a `createPair` transaction to the liquidation pair factory
@@ -26,7 +31,7 @@ export const useSendDeployLiquidationPairTransaction = (
   txReceipt?: TransactionReceipt
   sendDeployLiquidationPairTransaction?: () => void
 } => {
-  const { chain } = useNetwork()
+  const { chain } = useAccount()
 
   const {
     chainId,
@@ -64,7 +69,7 @@ export const useSendDeployLiquidationPairTransaction = (
     minimumAuctionAmount !== undefined &&
     chain?.id === chainId
 
-  const { config } = usePrepareContractWrite({
+  const { data } = useSimulateContract({
     chainId,
     address: liquidationPairFactoryAddress,
     abi: liquidationPairFactoryABI,
@@ -81,18 +86,21 @@ export const useSendDeployLiquidationPairTransaction = (
       initialAmountOut,
       minimumAuctionAmount
     ],
-    enabled
+    query: { enabled }
   })
 
   const {
-    data: txSendData,
+    data: txHash,
     isLoading: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
-    write: sendDeployLiquidationPairTransaction
-  } = useContractWrite(config)
+    writeContract: _sendDeployLiquidationPairTransaction
+  } = useWriteContract()
 
-  const txHash = txSendData?.hash
+  const sendDeployLiquidationPairTransaction =
+    !!data && !!_sendDeployLiquidationPairTransaction
+      ? () => _sendDeployLiquidationPairTransaction(data.request)
+      : undefined
 
   useEffect(() => {
     if (!!txHash && isSendingSuccess) {
@@ -105,7 +113,7 @@ export const useSendDeployLiquidationPairTransaction = (
     isLoading: isConfirming,
     isSuccess,
     isError: isConfirmingError
-  } = useWaitForTransaction({ chainId, hash: txHash })
+  } = useWaitForTransactionReceipt({ chainId, hash: txHash })
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {

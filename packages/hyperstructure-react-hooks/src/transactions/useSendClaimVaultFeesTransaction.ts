@@ -4,10 +4,9 @@ import { useEffect } from 'react'
 import { Address, isAddress, TransactionReceipt } from 'viem'
 import {
   useAccount,
-  useContractWrite,
-  useNetwork,
-  usePrepareContractWrite,
-  useWaitForTransaction
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract
 } from 'wagmi'
 
 /**
@@ -34,30 +33,32 @@ export const useSendClaimVaultFeesTransaction = (
   txReceipt?: TransactionReceipt
   sendClaimVaultFeesTransaction?: () => void
 } => {
-  const { address: userAddress } = useAccount()
-  const { chain } = useNetwork()
+  const { address: userAddress, chain } = useAccount()
 
   const enabled =
     !!amount && !!vault && !!userAddress && isAddress(userAddress) && chain?.id === vault.chainId
 
-  const { config } = usePrepareContractWrite({
+  const { data } = useSimulateContract({
     chainId: vault?.chainId,
     address: vault?.address,
     abi: vaultABI,
     functionName: 'mintYieldFee',
     args: [amount],
-    enabled
+    query: { enabled }
   })
 
   const {
-    data: txSendData,
+    data: txHash,
     isLoading: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
-    write: sendClaimVaultFeesTransaction
-  } = useContractWrite(config)
+    writeContract: _sendClaimVaultFeesTransaction
+  } = useWriteContract()
 
-  const txHash = txSendData?.hash
+  const sendClaimVaultFeesTransaction =
+    !!data && !!_sendClaimVaultFeesTransaction
+      ? () => _sendClaimVaultFeesTransaction(data.request)
+      : undefined
 
   useEffect(() => {
     if (!!txHash && isSendingSuccess) {
@@ -70,7 +71,7 @@ export const useSendClaimVaultFeesTransaction = (
     isLoading: isConfirming,
     isSuccess,
     isError: isConfirmingError
-  } = useWaitForTransaction({ chainId: vault?.chainId, hash: txHash })
+  } = useWaitForTransactionReceipt({ chainId: vault?.chainId, hash: txHash })
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {

@@ -1,7 +1,12 @@
 import { TWAB_REWARDS_ADDRESSES, twabRewardsABI } from '@shared/utilities'
 import { useEffect } from 'react'
 import { Address, isAddress, TransactionReceipt } from 'viem'
-import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
+import {
+  useAccount,
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract
+} from 'wagmi'
 
 /**
  * Prepares and submits an `endPromotion` transaction to a TWAB rewards contract
@@ -29,7 +34,7 @@ export const useSendEndPromotionTransaction = (
   txReceipt?: TransactionReceipt
   sendEndPromotionTransaction?: () => void
 } => {
-  const { chain } = useNetwork()
+  const { chain } = useAccount()
 
   const twabRewardsAddress = !!chainId ? TWAB_REWARDS_ADDRESSES[chainId] : undefined
 
@@ -41,24 +46,27 @@ export const useSendEndPromotionTransaction = (
     isAddress(recipient) &&
     !!twabRewardsAddress
 
-  const { config } = usePrepareContractWrite({
+  const { data } = useSimulateContract({
     chainId,
     address: twabRewardsAddress,
     abi: twabRewardsABI,
     functionName: 'endPromotion',
     args: [BigInt(promotionId), recipient],
-    enabled
+    query: { enabled }
   })
 
   const {
-    data: txSendData,
+    data: txHash,
     isLoading: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
-    write: sendEndPromotionTransaction
-  } = useContractWrite(config)
+    writeContract: _sendEndPromotionTransaction
+  } = useWriteContract()
 
-  const txHash = txSendData?.hash
+  const sendEndPromotionTransaction =
+    !!data && !!_sendEndPromotionTransaction
+      ? () => _sendEndPromotionTransaction(data.request)
+      : undefined
 
   useEffect(() => {
     if (!!txHash && isSendingSuccess) {
@@ -71,7 +79,7 @@ export const useSendEndPromotionTransaction = (
     isLoading: isConfirming,
     isSuccess,
     isError: isConfirmingError
-  } = useWaitForTransaction({ chainId, hash: txHash })
+  } = useWaitForTransactionReceipt({ chainId, hash: txHash })
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {

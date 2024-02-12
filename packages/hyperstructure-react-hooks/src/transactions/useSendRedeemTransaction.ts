@@ -4,10 +4,9 @@ import { useEffect } from 'react'
 import { Address, isAddress, TransactionReceipt } from 'viem'
 import {
   useAccount,
-  useContractWrite,
-  useNetwork,
-  usePrepareContractWrite,
-  useWaitForTransaction
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract
 } from 'wagmi'
 import { useGasAmountEstimate, useUserVaultShareBalance } from '..'
 
@@ -35,8 +34,7 @@ export const useSendRedeemTransaction = (
   txReceipt?: TransactionReceipt
   sendRedeemTransaction?: () => void
 } => {
-  const { address: userAddress } = useAccount()
-  const { chain } = useNetwork()
+  const { address: userAddress, chain } = useAccount()
 
   const { data: vaultShareBalance, isFetched: isFetchedVaultShareBalance } =
     useUserVaultShareBalance(vault, userAddress as Address)
@@ -63,25 +61,26 @@ export const useSendRedeemTransaction = (
     { enabled }
   )
 
-  const { config } = usePrepareContractWrite({
+  const { data } = useSimulateContract({
     chainId: vault?.chainId,
     address: vault?.address,
     abi: vaultABI,
     functionName: 'redeem',
     args: [amount, userAddress as Address, userAddress as Address],
     gas: !!gasEstimate ? calculatePercentageOfBigInt(gasEstimate, 1.2) : undefined,
-    enabled
+    query: { enabled }
   })
 
   const {
-    data: txSendData,
+    data: txHash,
     isLoading: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
-    write: sendRedeemTransaction
-  } = useContractWrite(config)
+    writeContract: _sendRedeemTransaction
+  } = useWriteContract()
 
-  const txHash = txSendData?.hash
+  const sendRedeemTransaction =
+    !!data && !!_sendRedeemTransaction ? () => _sendRedeemTransaction(data.request) : undefined
 
   useEffect(() => {
     if (!!txHash && isSendingSuccess) {
@@ -94,7 +93,7 @@ export const useSendRedeemTransaction = (
     isLoading: isConfirming,
     isSuccess,
     isError: isConfirmingError
-  } = useWaitForTransaction({ chainId: vault?.chainId, hash: txHash })
+  } = useWaitForTransactionReceipt({ chainId: vault?.chainId, hash: txHash })
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {

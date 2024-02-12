@@ -4,10 +4,9 @@ import { useEffect } from 'react'
 import { Address, isAddress, TransactionReceipt } from 'viem'
 import {
   useAccount,
-  useContractWrite,
-  useNetwork,
-  usePrepareContractWrite,
-  useWaitForTransaction
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract
 } from 'wagmi'
 import { useGasAmountEstimate, useTokenAllowance, useVaultTokenAddress } from '..'
 
@@ -35,8 +34,7 @@ export const useSendDepositTransaction = (
   txReceipt?: TransactionReceipt
   sendDepositTransaction?: () => void
 } => {
-  const { address: userAddress } = useAccount()
-  const { chain } = useNetwork()
+  const { address: userAddress, chain } = useAccount()
 
   const { data: tokenAddress, isFetched: isFetchedTokenAddress } = useVaultTokenAddress(vault)
 
@@ -71,25 +69,26 @@ export const useSendDepositTransaction = (
     { enabled }
   )
 
-  const { config } = usePrepareContractWrite({
+  const { data } = useSimulateContract({
     chainId: vault?.chainId,
     address: vault?.address,
     abi: vaultABI,
     functionName: 'deposit',
     args: [amount, userAddress as Address],
     gas: !!gasEstimate ? calculatePercentageOfBigInt(gasEstimate, 1.2) : undefined,
-    enabled
+    query: { enabled }
   })
 
   const {
-    data: txSendData,
+    data: txHash,
     isLoading: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
-    write: sendDepositTransaction
-  } = useContractWrite(config)
+    writeContract: _sendDepositTransaction
+  } = useWriteContract()
 
-  const txHash = txSendData?.hash
+  const sendDepositTransaction =
+    !!data && !!_sendDepositTransaction ? () => _sendDepositTransaction(data.request) : undefined
 
   useEffect(() => {
     if (!!txHash && isSendingSuccess) {
@@ -102,7 +101,7 @@ export const useSendDepositTransaction = (
     isLoading: isConfirming,
     isSuccess,
     isError: isConfirmingError
-  } = useWaitForTransaction({ chainId: vault?.chainId, hash: txHash })
+  } = useWaitForTransactionReceipt({ chainId: vault?.chainId, hash: txHash })
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {

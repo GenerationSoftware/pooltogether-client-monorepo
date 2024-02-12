@@ -2,7 +2,12 @@ import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { vaultABI } from '@shared/utilities'
 import { useEffect } from 'react'
 import { Address, TransactionReceipt } from 'viem'
-import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
+import {
+  useAccount,
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract
+} from 'wagmi'
 
 /**
  * Prepares and submits a `setLiquidationPair` transaction to a vault
@@ -28,28 +33,32 @@ export const useSendSetLiquidationPairTransaction = (
   txReceipt?: TransactionReceipt
   sendSetLiquidationPairTransaction?: () => void
 } => {
-  const { chain } = useNetwork()
+  const { chain } = useAccount()
 
   const enabled = !!address && !!vault && chain?.id === vault.chainId
 
-  const { config } = usePrepareContractWrite({
+  const { data } = useSimulateContract({
     chainId: vault?.chainId,
     address: vault?.address,
     abi: vaultABI,
     functionName: 'setLiquidationPair',
     args: [address],
-    enabled
+    query: { enabled }
   })
 
   const {
-    data: txSendData,
+    data: txHash,
     isLoading: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
-    write: sendSetLiquidationPairTransaction
-  } = useContractWrite(config)
+    writeContract: _sendSetLiquidationPairTransaction
+  } = useWriteContract()
 
-  const txHash = txSendData?.hash
+  const sendSetLiquidationPairTransaction =
+    !!data && !!_sendSetLiquidationPairTransaction
+      ? () => _sendSetLiquidationPairTransaction(data.request)
+      : undefined
+
   useEffect(() => {
     if (!!txHash && isSendingSuccess) {
       options?.onSend?.(txHash)
@@ -61,7 +70,7 @@ export const useSendSetLiquidationPairTransaction = (
     isLoading: isConfirming,
     isSuccess,
     isError: isConfirmingError
-  } = useWaitForTransaction({ chainId: vault?.chainId, hash: txHash })
+  } = useWaitForTransactionReceipt({ chainId: vault?.chainId, hash: txHash })
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {
