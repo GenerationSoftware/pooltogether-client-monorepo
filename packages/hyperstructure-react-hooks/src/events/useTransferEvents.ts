@@ -31,7 +31,11 @@ export const useTransferEvents = (
 
   return useQuery(
     queryKey,
-    async () => await getTokenTransferEvents(publicClient, tokenAddress, options),
+    async () => {
+      if (!!publicClient) {
+        return await getTokenTransferEvents(publicClient, tokenAddress, options)
+      }
+    },
     {
       enabled: !!chainId && !!publicClient && !!tokenAddress,
       ...NO_REFETCH

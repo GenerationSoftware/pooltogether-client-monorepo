@@ -18,8 +18,16 @@ export const useTxReceipt = (
 
   const queryKey = [QUERY_KEYS.txReceipt, chainId, hash]
 
-  return useQuery(queryKey, async () => await publicClient.getTransactionReceipt({ hash }), {
-    enabled: !!chainId && !!publicClient && !!hash,
-    ...NO_REFETCH
-  })
+  return useQuery(
+    queryKey,
+    async () => {
+      if (!!publicClient) {
+        return await publicClient.getTransactionReceipt({ hash })
+      }
+    },
+    {
+      enabled: !!chainId && !!publicClient && !!hash,
+      ...NO_REFETCH
+    }
+  )
 }

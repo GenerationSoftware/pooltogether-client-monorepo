@@ -26,7 +26,11 @@ export const useDrawAwardedEvents = (
 
   return useQuery(
     queryKey,
-    async () => await getDrawAwardedEvents(publicClient, prizePool.address, options),
+    async () => {
+      if (!!publicClient) {
+        return await getDrawAwardedEvents(publicClient, prizePool.address, options)
+      }
+    },
     {
       enabled: !!prizePool && !!publicClient,
       ...NO_REFETCH

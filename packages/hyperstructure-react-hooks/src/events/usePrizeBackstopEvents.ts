@@ -26,7 +26,11 @@ export const usePrizeBackstopEvents = (
 
   return useQuery(
     queryKey,
-    async () => await getPrizeBackstopEvents(publicClient, prizePool.address, options),
+    async () => {
+      if (!!publicClient) {
+        return await getPrizeBackstopEvents(publicClient, prizePool.address, options)
+      }
+    },
     {
       enabled: !!prizePool && !!publicClient,
       ...NO_REFETCH

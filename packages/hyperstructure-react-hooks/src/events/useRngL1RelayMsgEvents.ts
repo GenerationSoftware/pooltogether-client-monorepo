@@ -28,7 +28,11 @@ export const useRngL1RelayMsgEvents = (
 
   return useQuery(
     queryKey,
-    async () => await getRngL1RelayMsgEvents(publicClient, destinationChainId, options),
+    async () => {
+      if (!!publicClient) {
+        return await getRngL1RelayMsgEvents(publicClient, destinationChainId, options)
+      }
+    },
     {
       enabled: !!chainId && !!destinationChainId && !!publicClient,
       ...NO_REFETCH

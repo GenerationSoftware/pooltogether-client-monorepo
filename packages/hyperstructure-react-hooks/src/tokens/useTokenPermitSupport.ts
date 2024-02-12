@@ -21,8 +21,16 @@ export const useTokenPermitSupport = (
 
   const queryKey = [QUERY_KEYS.tokenPermitSupport, chainId, tokenAddress]
 
-  return useQuery(queryKey, async () => await getTokenPermitSupport(publicClient, tokenAddress), {
-    enabled,
-    ...NO_REFETCH
-  })
+  return useQuery(
+    queryKey,
+    async () => {
+      if (!!publicClient) {
+        return await getTokenPermitSupport(publicClient, tokenAddress)
+      }
+    },
+    {
+      enabled,
+      ...NO_REFETCH
+    }
+  )
 }
