@@ -37,7 +37,7 @@ export const AppContainer = (props: AppProps) => {
   }, [])
 
   return (
-    <Flowbite theme={{ dark: true }}>
+    <Flowbite>
       <QueryClientProvider client={queryClient}>
         <Toaster expand={false} />
 

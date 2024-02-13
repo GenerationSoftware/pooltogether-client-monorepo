@@ -167,7 +167,7 @@ export const VaultFilters = (props: VaultFiltersProps) => {
         <div
           className={classNames(
             'w-screen max-w-[36rem] flex justify-between items-center -mx-4 px-4 rounded-lg overflow-x-auto no-scrollbar',
-            'lg:w-full lg:max-w-none lg:dark:bg-pt-bg-purple-dark lg:mx-0 lg:px-6 lg:py-5',
+            'lg:w-full lg:max-w-none lg:bg-pt-bg-purple-dark lg:mx-0 lg:px-6 lg:py-5',
             className
           )}
         >

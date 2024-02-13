@@ -9,7 +9,7 @@ export const AppContainer = (props: AppProps) => {
   const { Component, pageProps } = props
 
   return (
-    <Flowbite theme={{ dark: true }}>
+    <Flowbite>
       <QueryClientProvider client={queryClient}>
         <div id='modal-root' />
         <Component {...pageProps} />

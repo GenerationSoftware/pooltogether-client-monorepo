@@ -49,7 +49,9 @@ export const Navbar = (props: NavbarProps) => {
       <FlowbiteNavbar
         fluid={true}
         theme={{
-          base: 'bg-pt-bg-purple-darker text-pt-purple-50 px-8 py-4 border-b-2 border-b-pt-purple-700 border-opacity-0 isolate z-50'
+          root: {
+            base: 'bg-pt-bg-purple-darker text-pt-purple-50 px-8 py-4 border-b-2 border-b-pt-purple-700 border-opacity-0 isolate z-50'
+          }
         }}
         className={classNames({ 'fixed w-full border-opacity-100': sticky }, className)}
       >
