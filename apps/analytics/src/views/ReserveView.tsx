@@ -14,7 +14,7 @@ import classNames from 'classnames'
 import { useSetAtom } from 'jotai'
 import { useEffect, useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
-import { Address } from 'viem'
+import { Address, PublicClient } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { ReserveChart } from '@components/Charts/ReserveChart'
 import { ReserveHeader } from '@components/Reserve/ReserveHeader'
@@ -48,10 +48,10 @@ export const ReserveView = (props: ReserveViewProps) => {
     return new PrizePool(
       prizePoolInfo.chainId,
       prizePoolInfo.address,
-      publicClient,
+      publicClient as PublicClient,
       prizePoolInfo.options
     )
-  }, [chainId])
+  }, [chainId, publicClient])
 
   const originChainId = !!prizePool
     ? RNG_RELAY_ADDRESSES[prizePool.chainId].from.chainId

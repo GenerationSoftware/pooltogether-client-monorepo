@@ -21,8 +21,16 @@ export const useTokenDomain = (
 
   const queryKey = [QUERY_KEYS.tokenDomain, chainId, tokenAddress]
 
-  return useQuery(queryKey, async () => await getTokenDomain(publicClient, tokenAddress), {
-    enabled,
-    ...NO_REFETCH
-  })
+  return useQuery(
+    queryKey,
+    async () => {
+      if (!!publicClient) {
+        return await getTokenDomain(publicClient, tokenAddress)
+      }
+    },
+    {
+      enabled,
+      ...NO_REFETCH
+    }
+  )
 }

@@ -21,9 +21,11 @@ export const useBlock = (
   return useQuery(
     queryKey,
     async () => {
-      const args: GetBlockParameters =
-        blockNumber === 'latest' ? { blockTag: 'latest' } : { blockNumber }
-      return await publicClient.getBlock(args)
+      if (!!publicClient) {
+        const args: GetBlockParameters =
+          blockNumber === 'latest' ? { blockTag: 'latest' } : { blockNumber }
+        return await publicClient.getBlock(args)
+      }
     },
     {
       enabled: !!chainId && !!blockNumber && !!publicClient,

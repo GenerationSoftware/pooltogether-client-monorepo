@@ -28,10 +28,18 @@ export const useTokenNonces = (
 
   const queryKey = [QUERY_KEYS.tokenNonces, chainId, address, tokenAddress]
 
-  return useQuery(queryKey, async () => await getTokenNonces(publicClient, address, tokenAddress), {
-    enabled,
-    ...NO_REFETCH,
-    refetchInterval: options?.refetchInterval ?? false,
-    refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
-  })
+  return useQuery(
+    queryKey,
+    async () => {
+      if (!!publicClient) {
+        return await getTokenNonces(publicClient, address, tokenAddress)
+      }
+    },
+    {
+      enabled,
+      ...NO_REFETCH,
+      refetchInterval: options?.refetchInterval ?? false,
+      refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
+    }
+  )
 }

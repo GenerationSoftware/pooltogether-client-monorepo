@@ -1,5 +1,5 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { Address } from 'viem'
+import { Address, PublicClient } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { usePublicClientsByChain } from '..'
 
@@ -52,5 +52,5 @@ export const usePrizePool = (
 ): PrizePool => {
   const publicClient = usePublicClient({ chainId })
 
-  return new PrizePool(chainId, address, publicClient, options)
+  return new PrizePool(chainId, address, publicClient as PublicClient, options)
 }

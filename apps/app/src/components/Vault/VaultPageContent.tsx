@@ -33,10 +33,11 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
 
   const rawChainId =
     !!queryParams.chainId && typeof queryParams.chainId === 'string'
-      ? (parseInt(queryParams.chainId) as NETWORK)
+      ? parseInt(queryParams.chainId)
       : undefined
 
-  const chainId = !!rawChainId && networks.includes(rawChainId) ? rawChainId : undefined
+  const chainId =
+    !!rawChainId && networks.includes(rawChainId) ? (rawChainId as NETWORK) : undefined
 
   const address =
     !!queryParams.vaultAddress &&
@@ -82,7 +83,7 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
 }
 
 interface ErrorStateProps {
-  chainId?: NETWORK
+  chainId?: number
   tokenAddress?: Address
 }
 

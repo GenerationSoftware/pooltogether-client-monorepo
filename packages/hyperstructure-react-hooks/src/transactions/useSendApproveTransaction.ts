@@ -2,7 +2,12 @@ import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { erc20ABI } from '@shared/utilities'
 import { useEffect } from 'react'
 import { Address, TransactionReceipt } from 'viem'
-import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
+import {
+  useAccount,
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract
+} from 'wagmi'
 import { useVaultTokenAddress } from '..'
 
 /**
@@ -29,30 +34,31 @@ export const useSendApproveTransaction = (
   txReceipt?: TransactionReceipt
   sendApproveTransaction?: () => void
 } => {
-  const { chain } = useNetwork()
+  const { chain } = useAccount()
 
   const { data: tokenAddress, isFetched: isFetchedTokenAddress } = useVaultTokenAddress(vault)
 
   const enabled = !!vault && chain?.id === vault.chainId && isFetchedTokenAddress && !!tokenAddress
 
-  const { config } = usePrepareContractWrite({
+  const { data } = useSimulateContract({
     chainId: vault?.chainId,
     address: tokenAddress,
     abi: erc20ABI,
     functionName: 'approve',
     args: [vault?.address, amount],
-    enabled
+    query: { enabled }
   })
 
   const {
-    data: txSendData,
+    data: txHash,
     isLoading: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
-    write: sendApproveTransaction
-  } = useContractWrite(config)
+    writeContract: _sendApproveTransaction
+  } = useWriteContract()
 
-  const txHash = txSendData?.hash
+  const sendApproveTransaction =
+    !!data && !!_sendApproveTransaction ? () => _sendApproveTransaction(data.request) : undefined
 
   useEffect(() => {
     if (!!txHash && isSendingSuccess) {
@@ -62,10 +68,10 @@ export const useSendApproveTransaction = (
 
   const {
     data: txReceipt,
-    isLoading: isConfirming,
+    isFetching: isConfirming,
     isSuccess,
     isError: isConfirmingError
-  } = useWaitForTransaction({ chainId: vault?.chainId, hash: txHash })
+  } = useWaitForTransactionReceipt({ chainId: vault?.chainId, hash: txHash })
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {

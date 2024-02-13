@@ -1,7 +1,12 @@
 import { TWAB_REWARDS_ADDRESSES, twabRewardsABI } from '@shared/utilities'
 import { useEffect } from 'react'
 import { Address, isAddress, TransactionReceipt } from 'viem'
-import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
+import {
+  useAccount,
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract
+} from 'wagmi'
 
 /**
  * Prepares and submits a `destroyPromotion` transaction to a TWAB rewards contract
@@ -29,7 +34,7 @@ export const useSendDestroyPromotionTransaction = (
   txReceipt?: TransactionReceipt
   sendDestroyPromotionTransaction?: () => void
 } => {
-  const { chain } = useNetwork()
+  const { chain } = useAccount()
 
   const twabRewardsAddress = !!chainId ? TWAB_REWARDS_ADDRESSES[chainId] : undefined
 
@@ -41,24 +46,27 @@ export const useSendDestroyPromotionTransaction = (
     isAddress(recipient) &&
     !!twabRewardsAddress
 
-  const { config } = usePrepareContractWrite({
+  const { data } = useSimulateContract({
     chainId,
     address: twabRewardsAddress,
     abi: twabRewardsABI,
     functionName: 'destroyPromotion',
     args: [BigInt(promotionId), recipient],
-    enabled
+    query: { enabled }
   })
 
   const {
-    data: txSendData,
+    data: txHash,
     isLoading: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
-    write: sendDestroyPromotionTransaction
-  } = useContractWrite(config)
+    writeContract: _sendDestroyPromotionTransaction
+  } = useWriteContract()
 
-  const txHash = txSendData?.hash
+  const sendDestroyPromotionTransaction =
+    !!data && !!_sendDestroyPromotionTransaction
+      ? () => _sendDestroyPromotionTransaction(data.request)
+      : undefined
 
   useEffect(() => {
     if (!!txHash && isSendingSuccess) {
@@ -68,10 +76,10 @@ export const useSendDestroyPromotionTransaction = (
 
   const {
     data: txReceipt,
-    isLoading: isConfirming,
+    isFetching: isConfirming,
     isSuccess,
     isError: isConfirmingError
-  } = useWaitForTransaction({ chainId, hash: txHash })
+  } = useWaitForTransactionReceipt({ chainId, hash: txHash })
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {

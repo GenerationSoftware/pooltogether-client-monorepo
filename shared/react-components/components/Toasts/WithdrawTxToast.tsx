@@ -18,7 +18,7 @@ import {
 } from '@shared/utilities'
 import { ReactNode, useEffect } from 'react'
 import { Address } from 'viem'
-import { useAccount, useWaitForTransaction } from 'wagmi'
+import { useAccount, useWaitForTransactionReceipt } from 'wagmi'
 import { ErrorPooly } from '../Graphics/ErrorPooly'
 import { SuccessPooly } from '../Graphics/SuccessPooly'
 
@@ -54,7 +54,7 @@ export const WithdrawTxToast = (props: WithdrawTxToastProps) => {
 
   const { data: tokenData } = useVaultTokenData(vault)
 
-  const { isLoading, isSuccess, isError } = useWaitForTransaction({
+  const { isFetching, isSuccess, isError } = useWaitForTransactionReceipt({
     chainId: vault.chainId,
     hash: txHash as Address
   })
@@ -99,7 +99,7 @@ export const WithdrawTxToast = (props: WithdrawTxToastProps) => {
     }
   }, [isSuccess, txHash])
 
-  if (!isLoading && isSuccess) {
+  if (!isFetching && isSuccess) {
     toast(
       <ToastLayout id={txHash}>
         <SuccessView vault={vault} txHash={txHash} formattedAmount={formattedAmount} intl={intl} />
@@ -108,7 +108,7 @@ export const WithdrawTxToast = (props: WithdrawTxToastProps) => {
     )
   }
 
-  if (!isLoading && !isSuccess && isError) {
+  if (!isFetching && !isSuccess && isError) {
     toast(
       <ToastLayout id={txHash}>
         <ErrorView vault={vault} txHash={txHash} intl={intl} />

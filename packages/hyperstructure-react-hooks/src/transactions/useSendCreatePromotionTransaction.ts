@@ -10,12 +10,11 @@ import { useEffect, useMemo } from 'react'
 import { Address, isAddress, TransactionReceipt } from 'viem'
 import {
   useAccount,
-  useContractRead,
-  useContractReads,
-  useContractWrite,
-  useNetwork,
-  usePrepareContractWrite,
-  useWaitForTransaction
+  useReadContract,
+  useReadContracts,
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract
 } from 'wagmi'
 import { useTokenAllowance } from '..'
 
@@ -53,8 +52,7 @@ export const useSendCreatePromotionTransaction = (
   txReceipt?: TransactionReceipt
   sendCreatePromotionTransaction?: () => void
 } => {
-  const { address: userAddress } = useAccount()
-  const { chain } = useNetwork()
+  const { address: userAddress, chain } = useAccount()
 
   const twabRewardsAddress = !!vault ? TWAB_REWARDS_ADDRESSES[vault.chainId] : undefined
   const totalTokens =
@@ -67,15 +65,15 @@ export const useSendCreatePromotionTransaction = (
     tokenAddress
   )
 
-  const { data: twabControllerAddress } = useContractRead({
+  const { data: twabControllerAddress } = useReadContract({
     chainId: vault?.chainId,
     address: twabRewardsAddress,
     abi: twabRewardsABI,
     functionName: 'twabController',
-    enabled: !!vault && !!twabRewardsAddress
+    query: { enabled: !!vault && !!twabRewardsAddress }
   })
 
-  const { data: twabControllerInfo } = useContractReads({
+  const { data: twabControllerInfo } = useReadContracts({
     contracts: [
       {
         chainId: vault?.chainId,
@@ -131,7 +129,7 @@ export const useSendCreatePromotionTransaction = (
     !!allowance &&
     allowance >= totalTokens
 
-  const { config } = usePrepareContractWrite({
+  const { data } = useSimulateContract({
     chainId: vault?.chainId,
     address: twabRewardsAddress,
     abi: twabRewardsABI,
@@ -144,18 +142,21 @@ export const useSendCreatePromotionTransaction = (
       epochDuration,
       numberOfEpochs
     ],
-    enabled
+    query: { enabled }
   })
 
   const {
-    data: txSendData,
+    data: txHash,
     isLoading: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
-    write: sendCreatePromotionTransaction
-  } = useContractWrite(config)
+    writeContract: _sendCreatePromotionTransaction
+  } = useWriteContract()
 
-  const txHash = txSendData?.hash
+  const sendCreatePromotionTransaction =
+    !!data && !!_sendCreatePromotionTransaction
+      ? () => _sendCreatePromotionTransaction(data.request)
+      : undefined
 
   useEffect(() => {
     if (!!txHash && isSendingSuccess) {
@@ -165,10 +166,10 @@ export const useSendCreatePromotionTransaction = (
 
   const {
     data: txReceipt,
-    isLoading: isConfirming,
+    isFetching: isConfirming,
     isSuccess,
     isError: isConfirmingError
-  } = useWaitForTransaction({ chainId: vault?.chainId, hash: txHash })
+  } = useWaitForTransactionReceipt({ chainId: vault?.chainId, hash: txHash })
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {

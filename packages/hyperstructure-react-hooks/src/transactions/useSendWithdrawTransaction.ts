@@ -4,10 +4,9 @@ import { useEffect } from 'react'
 import { Address, isAddress, TransactionReceipt } from 'viem'
 import {
   useAccount,
-  useContractWrite,
-  useNetwork,
-  usePrepareContractWrite,
-  useWaitForTransaction
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract
 } from 'wagmi'
 import { useGasAmountEstimate, useUserVaultTokenBalance } from '..'
 
@@ -35,8 +34,7 @@ export const useSendWithdrawTransaction = (
   txReceipt?: TransactionReceipt
   sendWithdrawTransaction?: () => void
 } => {
-  const { address: userAddress } = useAccount()
-  const { chain } = useNetwork()
+  const { address: userAddress, chain } = useAccount()
 
   const { data: vaultTokenBalance, isFetched: isFetchedVaultTokenBalance } =
     useUserVaultTokenBalance(vault, userAddress as Address)
@@ -63,25 +61,26 @@ export const useSendWithdrawTransaction = (
     { enabled }
   )
 
-  const { config } = usePrepareContractWrite({
+  const { data } = useSimulateContract({
     chainId: vault?.chainId,
     address: vault?.address,
     abi: vaultABI,
     functionName: 'withdraw',
     args: [amount, userAddress as Address, userAddress as Address],
     gas: !!gasEstimate ? calculatePercentageOfBigInt(gasEstimate, 1.2) : undefined,
-    enabled
+    query: { enabled }
   })
 
   const {
-    data: txSendData,
+    data: txHash,
     isLoading: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
-    write: sendWithdrawTransaction
-  } = useContractWrite(config)
+    writeContract: _sendWithdrawTransaction
+  } = useWriteContract()
 
-  const txHash = txSendData?.hash
+  const sendWithdrawTransaction =
+    !!data && !!_sendWithdrawTransaction ? () => _sendWithdrawTransaction(data.request) : undefined
 
   useEffect(() => {
     if (!!txHash && isSendingSuccess) {
@@ -91,10 +90,10 @@ export const useSendWithdrawTransaction = (
 
   const {
     data: txReceipt,
-    isLoading: isConfirming,
+    isFetching: isConfirming,
     isSuccess,
     isError: isConfirmingError
-  } = useWaitForTransaction({ chainId: vault?.chainId, hash: txHash })
+  } = useWaitForTransactionReceipt({ chainId: vault?.chainId, hash: txHash })
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {

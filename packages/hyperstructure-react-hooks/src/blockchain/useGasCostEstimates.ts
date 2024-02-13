@@ -51,7 +51,7 @@ export const useGasCostEstimates = (
   const { data: txL1GasCost, isFetched: isFetchedTxL1GasCost } = useQuery(
     queryKey,
     async () => {
-      if (!!txData) {
+      if (!!publicClient && !!txData) {
         if (chainId === NETWORK.optimism || chainId === NETWORK.optimism_sepolia) {
           return await getOpL1GasAmount(publicClient, txData)
         }
@@ -60,7 +60,7 @@ export const useGasCostEstimates = (
       return 0n
     },
     {
-      enabled: !!chainId && !!txData,
+      enabled: !!chainId && !!publicClient && !!txData,
       ...NO_REFETCH
     }
   )

@@ -1,4 +1,4 @@
-import { Wallet } from '@rainbow-me/rainbowkit'
+import { CreateWalletFn } from '@rainbow-me/rainbowkit/dist/wallets/Wallet'
 import {
   argentWallet,
   braveWallet,
@@ -19,7 +19,7 @@ import {
 } from '@rainbow-me/rainbowkit/wallets'
 import { NETWORK } from '@shared/utilities'
 import { Address } from 'viem'
-import { arbitrum, arbitrumSepolia, Chain, mainnet, optimism, optimismSepolia } from 'viem/chains'
+import { arbitrum, arbitrumSepolia, mainnet, optimism, optimismSepolia } from 'viem/chains'
 
 /**
  * Supported networks
@@ -44,9 +44,7 @@ export const WAGMI_CHAINS = {
 /**
  * Wallets
  */
-export const WALLETS: {
-  [wallet: string]: (data: { appName: string; chains: Chain[]; projectId: string }) => Wallet
-} = {
+export const WALLETS: { [wallet: string]: CreateWalletFn } = {
   metamask: metaMaskWallet,
   walletconnect: walletConnectWallet,
   rainbow: rainbowWallet,
@@ -63,7 +61,7 @@ export const WALLETS: {
   uniswap: uniswapWallet,
   coin98: coin98Wallet,
   imtoken: imTokenWallet
-} as const
+}
 
 /**
  * RPCs

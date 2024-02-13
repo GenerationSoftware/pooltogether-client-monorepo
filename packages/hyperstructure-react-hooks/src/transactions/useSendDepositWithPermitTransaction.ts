@@ -4,10 +4,9 @@ import { useEffect } from 'react'
 import { Address, hexToSignature, isAddress, Signature, TransactionReceipt } from 'viem'
 import {
   useAccount,
-  useContractWrite,
-  useNetwork,
-  usePrepareContractWrite,
-  useWaitForTransaction
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract
 } from 'wagmi'
 import { useGasAmountEstimate, useVaultTokenAddress } from '..'
 
@@ -39,8 +38,7 @@ export const useSendDepositWithPermitTransaction = (
   txReceipt?: TransactionReceipt
   sendDepositWithPermitTransaction?: () => void
 } => {
-  const { address: userAddress } = useAccount()
-  const { chain } = useNetwork()
+  const { address: userAddress, chain } = useAccount()
 
   const { data: tokenAddress, isFetched: isFetchedTokenAddress } = useVaultTokenAddress(vault)
 
@@ -69,25 +67,28 @@ export const useSendDepositWithPermitTransaction = (
     { enabled }
   )
 
-  const { config } = usePrepareContractWrite({
+  const { data } = useSimulateContract({
     chainId: vault?.chainId,
     address: vault?.address,
     abi: vaultABI,
     functionName: 'depositWithPermit',
     args: [amount, userAddress as Address, deadline, Number(sig.v), sig.r, sig.s],
     gas: !!gasEstimate ? calculatePercentageOfBigInt(gasEstimate, 1.2) : undefined,
-    enabled
+    query: { enabled }
   })
 
   const {
-    data: txSendData,
+    data: txHash,
     isLoading: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
-    write: sendDepositWithPermitTransaction
-  } = useContractWrite(config)
+    writeContract: _sendDepositWithPermitTransaction
+  } = useWriteContract()
 
-  const txHash = txSendData?.hash
+  const sendDepositWithPermitTransaction =
+    !!data && !!_sendDepositWithPermitTransaction
+      ? () => _sendDepositWithPermitTransaction(data.request)
+      : undefined
 
   useEffect(() => {
     if (!!txHash && isSendingSuccess) {
@@ -97,10 +98,10 @@ export const useSendDepositWithPermitTransaction = (
 
   const {
     data: txReceipt,
-    isLoading: isConfirming,
+    isFetching: isConfirming,
     isSuccess,
     isError: isConfirmingError
-  } = useWaitForTransaction({ chainId: vault?.chainId, hash: txHash })
+  } = useWaitForTransactionReceipt({ chainId: vault?.chainId, hash: txHash })
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {

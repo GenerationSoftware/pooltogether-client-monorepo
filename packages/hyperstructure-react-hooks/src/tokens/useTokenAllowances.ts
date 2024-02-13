@@ -48,7 +48,11 @@ export const useTokenAllowances = (
 
   return useQuery(
     getQueryKey(tokenAddresses),
-    async () => await getTokenAllowances(publicClient, address, spenderAddress, tokenAddresses),
+    async () => {
+      if (!!publicClient) {
+        return await getTokenAllowances(publicClient, address, spenderAddress, tokenAddresses)
+      }
+    },
     {
       enabled,
       ...NO_REFETCH,

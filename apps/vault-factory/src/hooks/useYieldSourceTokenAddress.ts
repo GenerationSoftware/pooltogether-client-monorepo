@@ -25,13 +25,16 @@ export const useYieldSourceTokenAddress = (
   return useQuery(
     queryKey,
     async () => {
-      const yieldSource = new Vault(chainId, address, publicClient)
-      try {
-        const tokenAddress = await yieldSource.getTokenAddress()
-        return tokenAddress
-      } catch (e) {
-        console.warn(e)
-        return zeroAddress
+      if (!!publicClient) {
+        const yieldSource = new Vault(chainId, address, publicClient)
+
+        try {
+          const tokenAddress = await yieldSource.getTokenAddress()
+          return tokenAddress
+        } catch (e) {
+          console.warn(e)
+          return zeroAddress
+        }
       }
     },
     {

@@ -34,11 +34,15 @@ export const useUserClaimableRewards = (
 
   return useQuery(
     getQueryKey(promotionIds),
-    async () => await getClaimableRewards(publicClient, userAddress, promotions),
+    async () => {
+      if (!!publicClient) {
+        return await getClaimableRewards(publicClient, userAddress, promotions)
+      }
+    },
     {
       enabled: !!chainId && !!publicClient && !!userAddress && !!promotions,
       ...NO_REFETCH,
-      onSuccess: (data) => populateCachePerId(queryClient, getQueryKey, data)
+      onSuccess: (data) => !!data && populateCachePerId(queryClient, getQueryKey, data)
     }
   )
 }

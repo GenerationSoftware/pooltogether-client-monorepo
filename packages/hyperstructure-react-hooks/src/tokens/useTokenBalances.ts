@@ -49,7 +49,11 @@ export const useTokenBalances = (
 
   return useQuery(
     getQueryKey(tokenAddresses),
-    async () => await getTokenBalances(publicClient, address, tokenAddresses),
+    async () => {
+      if (!!publicClient) {
+        return await getTokenBalances(publicClient, address, tokenAddresses)
+      }
+    },
     {
       enabled,
       ...NO_REFETCH,

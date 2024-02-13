@@ -3,7 +3,7 @@ import { NETWORK, POOL_TOKEN_ADDRESSES } from '@shared/utilities'
 /**
  * Token Logo URLs
  */
-const tokenLogoUrls = Object.freeze({
+const tokenLogoUrls = {
   pool: 'https://etherscan.io/token/images/pooltogether_32.png',
   usdc: 'https://etherscan.io/token/images/centre-usdc_28.png',
   dai: 'https://assets.coingecko.com/coins/images/9956/small/4943.png?1636636734',
@@ -13,7 +13,7 @@ const tokenLogoUrls = Object.freeze({
   lusd: 'https://etherscan.io/token/images/liquitylusd_32.png',
   ageur: 'https://etherscan.io/token/images/ageur_32.png?=v982',
   op: 'https://optimistic.etherscan.io/token/images/optimism_32.png'
-})
+} as const
 
 /**
  * Token Logo Overrides
@@ -83,9 +83,9 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
 /**
  * TX Gas Amount Estimates
  */
-export const TX_GAS_ESTIMATES = Object.freeze({
+export const TX_GAS_ESTIMATES = {
   approve: 50_000n,
   deposit: 400_000n,
   depositWithPermit: 450_000n,
   withdraw: 350_000n
-})
+} as const

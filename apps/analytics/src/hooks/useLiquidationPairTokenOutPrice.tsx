@@ -29,7 +29,7 @@ export const useLiquidationPairTokenOutPrice = (
     useIsLiquidationPairTokenOutAVault(chainId, lpAddress)
 
   const vault = useMemo(() => {
-    if (!!tokenOutAddress && isFetchedIsValidVault && isValidVault) {
+    if (!!tokenOutAddress && isFetchedIsValidVault && isValidVault && !!publicClient) {
       return new Vault(chainId, tokenOutAddress, publicClient)
     }
   }, [chainId, publicClient, tokenOutAddress, isFetchedIsValidVault, isValidVault])
