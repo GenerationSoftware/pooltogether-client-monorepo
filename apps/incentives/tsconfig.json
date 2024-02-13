@@ -1,0 +1,14 @@
+{
+  "extends": "../../shared/config/nextjs.tsconfig.json",
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "tailwind.config.js", "postcss.config.js"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["./src/components/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@shared/types": ["../../shared/types"],
+      "@shared/ui": ["../../shared/ui"],
+      "@shared/utilities": ["../../shared/utilities"]
+    }
+  }
+}

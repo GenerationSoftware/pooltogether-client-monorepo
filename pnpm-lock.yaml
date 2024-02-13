@@ -356,6 +356,76 @@ importers:
         specifier: ^5.0.4
         version: 5.0.4
 
+  apps/incentives:
+    dependencies:
+      '@heroicons/react':
+        specifier: ^2.0.16
+        version: 2.0.17(react@18.2.0)
+      '@tanstack/react-query':
+        specifier: ^4.24.10
+        version: 4.29.5(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)
+      axios:
+        specifier: ^1.4.0
+        version: 1.4.0
+      classnames:
+        specifier: ^2.3.2
+        version: 2.3.2
+      flowbite:
+        specifier: 1.6.5
+        version: 1.6.5
+      flowbite-react:
+        specifier: 0.4.7
+        version: 0.4.7(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.1)
+      framer-motion:
+        specifier: ^10.12.16
+        version: 10.12.16(react-dom@18.2.0)(react@18.2.0)
+      jotai:
+        specifier: ^1.13.1
+        version: 1.13.1(@babel/core@7.23.9)(react@18.2.0)
+      next:
+        specifier: 13.3.0
+        version: 13.3.0(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+      react-hook-form:
+        specifier: ^7.43.2
+        version: 7.44.3(react@18.2.0)
+      sonner:
+        specifier: ^0.4.0
+        version: 0.4.0(react-dom@18.2.0)(react@18.2.0)
+      viem:
+        specifier: ^2.7.8
+        version: 2.7.8(typescript@5.0.4)
+    devDependencies:
+      '@types/node':
+        specifier: ^17.0.45
+        version: 17.0.45
+      '@types/react':
+        specifier: ^18.2.0
+        version: 18.2.8
+      '@types/react-dom':
+        specifier: ^18.2.0
+        version: 18.2.4
+      autoprefixer:
+        specifier: ^10.4.13
+        version: 10.4.14(postcss@8.4.23)
+      postcss:
+        specifier: ^8.4.21
+        version: 8.4.23
+      tailwindcss:
+        specifier: ^3.3.1
+        version: 3.3.1(postcss@8.4.23)
+      tslib:
+        specifier: ^2.5.0
+        version: 2.5.0
+      typescript:
+        specifier: ^5.0.4
+        version: 5.0.4
+
   apps/landing-page:
     dependencies:
       '@heroicons/react':
@@ -1048,6 +1118,7 @@ packages:
         integrity: sha512-3r/aACDJ3fhQ/EVgFy0hpj8oHyHpQc+LPtJoY9SzTThAsStm4Ptegq92vqKoE3vD706ZVFWITnMnxucw+S9Ipg==
       }
     engines: { node: '>=6.9.0' }
+    dev: true
 
   /@babel/helper-environment-visitor@7.22.20:
     resolution:
@@ -1217,6 +1288,7 @@ packages:
         integrity: sha512-nHtDoQcuqFmwYNYPz3Rah5ph2p8PFeFCsZk9A/48dPc/rGocJ5J3hAAZ7pb76VWX3fZKu+uEr/FhH5jLx7umrw==
       }
     engines: { node: '>=6.9.0' }
+    dev: true
 
   /@babel/helper-string-parser@7.23.4:
     resolution:
@@ -1301,6 +1373,7 @@ packages:
     hasBin: true
     dependencies:
       '@babel/types': 7.21.4
+    dev: true
 
   /@babel/parser@7.23.9:
     resolution:
@@ -1362,7 +1435,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.23.9
-      '@babel/helper-environment-visitor': 7.18.9
+      '@babel/helper-environment-visitor': 7.22.20
       '@babel/helper-plugin-utils': 7.22.5
       '@babel/helper-remap-async-to-generator': 7.22.20(@babel/core@7.23.9)
       '@babel/plugin-syntax-async-generators': 7.8.4(@babel/core@7.23.9)
@@ -2576,7 +2649,7 @@ packages:
     dependencies:
       '@babel/core': 7.23.9
       '@babel/helper-plugin-utils': 7.22.5
-      '@babel/types': 7.21.4
+      '@babel/types': 7.23.9
       esutils: 2.0.3
 
   /@babel/preset-typescript@7.23.3(@babel/core@7.23.9):
@@ -2645,6 +2718,7 @@ packages:
       '@babel/code-frame': 7.21.4
       '@babel/parser': 7.21.4
       '@babel/types': 7.21.4
+    dev: true
 
   /@babel/template@7.23.9:
     resolution:
@@ -2719,6 +2793,7 @@ packages:
       '@babel/helper-string-parser': 7.19.4
       '@babel/helper-validator-identifier': 7.19.1
       to-fast-properties: 2.0.0
+    dev: true
 
   /@babel/types@7.23.9:
     resolution:
@@ -4108,6 +4183,7 @@ packages:
     dependencies:
       is-glob: 4.0.3
       micromatch: 4.0.5
+      napi-wasm: 1.1.0
     bundledDependencies:
       - napi-wasm
 
@@ -4357,7 +4433,7 @@ packages:
       chalk: 4.1.2
       find-up: 5.0.0
       mime: 2.6.0
-      node-fetch: 2.6.9
+      node-fetch: 2.7.0
       open: 6.4.0
       ora: 5.4.1
       semver: 7.6.0
@@ -4472,7 +4548,7 @@ packages:
       '@babel/plugin-transform-sticky-regex': 7.23.3(@babel/core@7.23.9)
       '@babel/plugin-transform-typescript': 7.23.6(@babel/core@7.23.9)
       '@babel/plugin-transform-unicode-regex': 7.23.3(@babel/core@7.23.9)
-      '@babel/template': 7.20.7
+      '@babel/template': 7.23.9
       '@react-native/babel-plugin-codegen': 0.73.4(@babel/preset-env@7.23.9)
       babel-plugin-transform-flow-enums: 0.0.2(@babel/core@7.23.9)
       react-refresh: 0.14.0
@@ -4489,7 +4565,7 @@ packages:
     peerDependencies:
       '@babel/preset-env': ^7.1.6
     dependencies:
-      '@babel/parser': 7.21.4
+      '@babel/parser': 7.23.9
       '@babel/preset-env': 7.23.9(@babel/core@7.23.9)
       flow-parser: 0.206.0
       glob: 7.1.6
@@ -4516,7 +4592,7 @@ packages:
       metro: 0.80.5
       metro-config: 0.80.5
       metro-core: 0.80.5
-      node-fetch: 2.6.9
+      node-fetch: 2.7.0
       readline: 1.3.0
     transitivePeerDependencies:
       - '@babel/core'
@@ -4546,7 +4622,7 @@ packages:
       chromium-edge-launcher: 1.0.0
       connect: 3.7.0
       debug: 2.6.9
-      node-fetch: 2.6.9
+      node-fetch: 2.7.0
       open: 7.4.2
       serve-static: 1.15.0
       temp-dir: 2.0.0
@@ -6287,6 +6363,7 @@ packages:
       {
         integrity: sha512-KCqHwRnaa1InZBtqXzP98LPg0ajCVujMKjqKDhZEthIpAsJl/YEIa3YvXjGXPVqzZVguccuu7ga9KOE1J9rKPQ==
       }
+    dev: true
 
   /caniuse-lite@1.0.30001587:
     resolution:
@@ -8449,7 +8526,7 @@ packages:
       }
     engines: { node: ^14.15.0 || ^16.10.0 || >=18.0.0 }
     dependencies:
-      '@babel/code-frame': 7.21.4
+      '@babel/code-frame': 7.23.5
       '@jest/types': 29.6.3
       '@types/stack-utils': 2.0.3
       chalk: 4.1.2
@@ -8628,7 +8705,7 @@ packages:
       '@babel/preset-env': ^7.1.6
     dependencies:
       '@babel/core': 7.23.9
-      '@babel/parser': 7.21.4
+      '@babel/parser': 7.23.9
       '@babel/plugin-proposal-class-properties': 7.18.6(@babel/core@7.23.9)
       '@babel/plugin-proposal-nullish-coalescing-operator': 7.18.6(@babel/core@7.23.9)
       '@babel/plugin-proposal-optional-chaining': 7.21.0(@babel/core@7.23.9)
@@ -9161,7 +9238,7 @@ packages:
       }
     engines: { node: '>=18' }
     dependencies:
-      '@babel/runtime': 7.21.0
+      '@babel/runtime': 7.23.9
 
   /metro-source-map@0.80.5:
     resolution:
@@ -9171,7 +9248,7 @@ packages:
     engines: { node: '>=18' }
     dependencies:
       '@babel/traverse': 7.23.9
-      '@babel/types': 7.21.4
+      '@babel/types': 7.23.9
       invariant: 2.2.4
       metro-symbolicate: 0.80.5
       nullthrows: 1.1.1
@@ -9207,7 +9284,7 @@ packages:
     dependencies:
       '@babel/core': 7.23.9
       '@babel/generator': 7.23.6
-      '@babel/template': 7.20.7
+      '@babel/template': 7.23.9
       '@babel/traverse': 7.23.9
       nullthrows: 1.1.1
     transitivePeerDependencies:
@@ -9222,8 +9299,8 @@ packages:
     dependencies:
       '@babel/core': 7.23.9
       '@babel/generator': 7.23.6
-      '@babel/parser': 7.21.4
-      '@babel/types': 7.21.4
+      '@babel/parser': 7.23.9
+      '@babel/types': 7.23.9
       metro: 0.80.5
       metro-babel-transformer: 0.80.5
       metro-cache: 0.80.5
@@ -9246,13 +9323,13 @@ packages:
     engines: { node: '>=18' }
     hasBin: true
     dependencies:
-      '@babel/code-frame': 7.21.4
+      '@babel/code-frame': 7.23.5
       '@babel/core': 7.23.9
       '@babel/generator': 7.23.6
-      '@babel/parser': 7.21.4
-      '@babel/template': 7.20.7
+      '@babel/parser': 7.23.9
+      '@babel/template': 7.23.9
       '@babel/traverse': 7.23.9
-      '@babel/types': 7.21.4
+      '@babel/types': 7.23.9
       accepts: 1.3.8
       chalk: 4.1.2
       ci-info: 2.0.0
@@ -9280,7 +9357,7 @@ packages:
       metro-transform-plugins: 0.80.5
       metro-transform-worker: 0.80.5
       mime-types: 2.1.35
-      node-fetch: 2.6.9
+      node-fetch: 2.7.0
       nullthrows: 1.1.1
       rimraf: 3.0.2
       serialize-error: 2.1.0
@@ -9513,6 +9590,12 @@ packages:
     engines: { node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1 }
     hasBin: true
 
+  /napi-wasm@1.1.0:
+    resolution:
+      {
+        integrity: sha512-lHwIAJbmLSjF9VDRm9GoVOy9AGp3aIvkjv+Kvz9h16QR3uSVYH78PNQUnT2U4X53mhlnV2M7wrhibQ3GHicDmg==
+      }
+
   /negotiator@0.6.3:
     resolution:
       {
@@ -9570,7 +9653,7 @@ packages:
       '@next/env': 13.3.0
       '@swc/helpers': 0.4.14
       busboy: 1.6.0
-      caniuse-lite: 1.0.30001481
+      caniuse-lite: 1.0.30001587
       postcss: 8.4.14
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -10795,7 +10878,7 @@ packages:
     dependencies:
       object-assign: 4.1.1
       react: 18.2.0
-      react-is: 16.13.1
+      react-is: 18.2.0
 
   /react-smooth@2.0.4(prop-types@15.8.1)(react-dom@18.2.0)(react@18.2.0):
     resolution:
@@ -11034,7 +11117,7 @@ packages:
         integrity: sha512-hfMp2BoF0qOk3uc5V20ALGDS2ddjQaLrdl7xrGXvAIow7qeWRM2VA2HuCHkUKk9slq3VwEwLNK3DFBqDfPGYtg==
       }
     dependencies:
-      '@babel/runtime': 7.21.0
+      '@babel/runtime': 7.23.9
 
   /regexpu-core@5.3.2:
     resolution:

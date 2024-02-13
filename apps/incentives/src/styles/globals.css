@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: 'Grotesk';
+    font-weight: 400;
+    src: url('/fonts/grotesk/founders-grotesk-regular.woff2') format('woff2');
+  }
+
+  @font-face {
+    font-family: 'Grotesk';
+    font-weight: 500;
+    src: url('/fonts/grotesk/founders-grotesk-medium.woff2') format('woff2');
+  }
+
+  @font-face {
+    font-family: 'Grotesk';
+    font-weight: 700;
+    src: url('/fonts/grotesk/founders-grotesk-bold.woff2') format('woff2');
+  }
+
+  html {
+    font-family: 'Grotesk';
+    font-feature-settings: 'calt' off;
+  }
+}
