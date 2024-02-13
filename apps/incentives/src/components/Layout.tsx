@@ -12,7 +12,7 @@ export const Layout = (props: LayoutProps) => {
   const { children, className } = props
 
   return (
-    <div className='flex flex-col min-h-screen overflow-x-hidden'>
+    <div className='min-h-screen flex flex-col gap-14 overflow-x-hidden'>
       <Head>
         <title>PoolTogether Incentives</title>
       </Head>
