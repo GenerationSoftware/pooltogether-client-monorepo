@@ -39,7 +39,7 @@ export const RecentBurnStats = (props: RecentBurnStatsProps) => {
     return (
       <div className={classNames('flex gap-2 items-center', className)}>
         <span>{label}:</span>
-        <span className='flex gap-1 items-center text-pt-purple-500'>
+        <span className='flex gap-1 items-center text-pt-purple-300'>
           <span className='text-lg font-medium'>{formattedBurnedAmount}</span>
           <span className='text-sm'>{prizeToken.symbol}</span>
         </span>

@@ -31,7 +31,7 @@ export const PrizesTableRow = (props: PrizesTableRowProps) => {
   return (
     <div
       className={classNames(
-        'text-center py-6 text-sm bg-pt-purple-100/50 rounded-xl md:text-start md:py-3',
+        'text-center py-6 text-sm bg-pt-transparent rounded-xl md:text-start md:py-3',
         className
       )}
     >
@@ -54,7 +54,7 @@ const PrizeTier = (props: PrizeTierProps) => {
   const { tier, numTiers, className } = props
 
   return (
-    <span className={classNames('text-xl font-semibold text-pt-purple-400', className)}>
+    <span className={classNames('text-xl font-semibold text-pt-purple-200', className)}>
       {tier === 0 ? (
         'GP'
       ) : tier === numTiers - 1 ? (
@@ -90,8 +90,8 @@ const PrizeSize = (props: PrizeSizeProps) => {
 
   return (
     <div className={classNames('flex flex-col gap-2', className)}>
-      <span className='text-pt-purple-500 md:hidden'>{prizesHeaders.size}</span>
-      <span>
+      <span className='text-pt-purple-300 md:hidden'>{prizesHeaders.size}</span>
+      <span className='text-pt-purple-200'>
         {!!prizeSize ? (
           <>
             <span className='text-xl font-semibold'>
@@ -126,11 +126,11 @@ const PrizesClaimed = (props: PrizesClaimedProps) => {
   const numTierWins = wins.filter((win) => win.tier === tier).length
   const numTierPrizes = prizes?.filter((prize) => prize.tier === tier).length ?? 0
 
-  const highlightClassName = 'text-xl font-semibold'
+  const highlightClassName = 'text-xl font-semibold text-pt-purple-200'
 
   return (
     <div className={classNames('flex flex-col gap-2', className)}>
-      <span className='text-pt-purple-500 md:hidden'>{prizesHeaders.claimed}</span>
+      <span className='text-pt-purple-300 md:hidden'>{prizesHeaders.claimed}</span>
       <span>
         {!!numTierWins && !!numTierPrizes ? (
           <span className={highlightClassName}>
@@ -158,7 +158,7 @@ const PrizeFees = (props: PrizeFeesProps) => {
 
   return (
     <div className={classNames('flex flex-col gap-2', className)}>
-      <span className='text-pt-purple-500 md:hidden'>{prizesHeaders.fees}</span>
+      <span className='text-pt-purple-300 md:hidden'>{prizesHeaders.fees}</span>
       <ClaimFees
         prizePool={prizePool}
         drawId={drawId}
@@ -204,7 +204,7 @@ const PrizeClaimTime = (props: PrizeClaimTimeProps) => {
 
   return (
     <div className={classNames('flex flex-col gap-2 items-center md:items-start', className)}>
-      <span className='text-pt-purple-500 md:hidden'>{prizesHeaders.time}</span>
+      <span className='text-pt-purple-300 md:hidden'>{prizesHeaders.time}</span>
       {!!claimTimeStats ? (
         <div className='flex flex-col gap-1'>
           <ClaimTimeStat type='avg' seconds={claimTimeStats.avg} />
@@ -234,14 +234,14 @@ const ClaimTimeStat = (props: ClaimTimeStatProps) => {
       className={classNames(
         'flex items-center text-sm',
         {
-          'text-pt-purple-700': type === 'avg',
-          'text-green-600': type === 'high',
-          'text-red-600': type === 'low'
+          'text-pt-purple-200': type === 'avg',
+          'text-green-200': type === 'high',
+          'text-red-400': type === 'low'
         },
         className
       )}
     >
-      <span className='w-10 border-r border-r-pt-purple-100'>{type.toUpperCase()}</span>
+      <span className='w-10 border-r border-r-pt-purple-600'>{type.toUpperCase()}</span>
       <div className='flex gap-1 items-center pl-2'>
         {!!hours && (
           <span className='flex items-center'>

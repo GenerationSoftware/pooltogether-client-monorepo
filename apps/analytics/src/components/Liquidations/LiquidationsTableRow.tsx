@@ -42,7 +42,7 @@ export const LiquidationsTableRow = (props: LiquidationsTableRowProps) => {
   return (
     <div
       className={classNames(
-        'w-full flex flex-col gap-4 text-sm bg-pt-purple-100/50 rounded-xl',
+        'w-full flex flex-col gap-4 text-sm bg-pt-transparent rounded-xl',
         className
       )}
     >
@@ -102,14 +102,14 @@ const LiquidationPairLink = (props: LiquidationPairLinkProps) => {
   const { data: lpToken } = useLiquidationPairTokenOutData(chainId, lpAddress)
 
   if (!lpToken) {
-    return <Spinner className='after:border-y-pt-purple-800' />
+    return <Spinner className='after:border-y-pt-purple-300' />
   }
 
   return (
     <ExternalLink
       href={getBlockExplorerUrl(chainId, lpAddress)}
-      className={classNames('h-min text-xl font-semibold', className)}
-      iconClassName='text-pt-purple-400'
+      className={classNames('text-pt-purple-200 h-min text-xl font-semibold', className)}
+      iconClassName='text-blue-300 hover:text-blue-200 transition'
     >
       {lpToken.symbol ?? '?'}/{prizeToken.symbol}
     </ExternalLink>
@@ -129,7 +129,7 @@ const YieldAuctioned = (props: YieldAuctionedProps) => {
   const { data: lpToken } = useLiquidationPairTokenOutData(chainId, lpAddress)
 
   if (!lpToken) {
-    return <Spinner className='after:border-y-pt-purple-800' />
+    return <Spinner className='after:border-y-pt-purple-300' />
   }
 
   const totalYieldAuctioned = liquidations.reduce((a, b) => a + b.args.amountOut, 0n)
@@ -137,7 +137,7 @@ const YieldAuctioned = (props: YieldAuctionedProps) => {
   return (
     <div className={classNames('flex flex-col gap-3 text-sm', className)}>
       <span className='text-pt-purple-500 md:hidden'>{liquidationHeaders.auctioned}</span>
-      <span>
+      <span className='text-pt-purple-200'>
         <span className='text-xl font-semibold'>
           {formatBigIntForDisplay(totalYieldAuctioned, lpToken.decimals, { hideZeroes: true })}
         </span>{' '}
@@ -184,7 +184,7 @@ const AvgLiquidationPrice = (props: AvgLiquidationPriceProps) => {
   return (
     <div className={classNames('flex flex-col gap-3 text-sm', className)}>
       <span className='text-pt-purple-500 md:hidden'>{liquidationHeaders.price}</span>
-      <span className='whitespace-nowrap'>
+      <span className='whitespace-nowrap text-pt-purple-200'>
         {!!lpToken && !!avgPrice ? (
           <>
             <span className='text-xl font-semibold'>1</span> {lpToken.symbol} ={' '}
@@ -197,7 +197,7 @@ const AvgLiquidationPrice = (props: AvgLiquidationPriceProps) => {
             {prizeToken.symbol}
           </>
         ) : (
-          <Spinner className='after:border-y-pt-purple-800' />
+          <Spinner className='after:border-y-pt-purple-200' />
         )}
       </span>
     </div>
@@ -218,13 +218,13 @@ const CurrentAvailableYield = (props: CurrentAvailableYieldProps) => {
   const { data: lpToken } = useLiquidationPairTokenOutData(chainId, lpAddress)
 
   if (liquidatableBalance === undefined || !lpToken) {
-    return <Spinner className='after:border-y-pt-purple-800' />
+    return <Spinner className='after:border-y-pt-purple-200' />
   }
 
   return (
     <div className={classNames('flex flex-col gap-3 text-sm', className)}>
       <span className='text-pt-purple-500 md:hidden'>{liquidationHeaders.available}</span>
-      <span>
+      <span className='text-pt-purple-200'>
         <span className='text-xl font-semibold'>
           {formatBigIntForDisplay(liquidatableBalance, lpToken.decimals, { hideZeroes: true })}
         </span>{' '}
@@ -235,9 +235,9 @@ const CurrentAvailableYield = (props: CurrentAvailableYieldProps) => {
 }
 
 enum EfficiencyColor {
-  green = 'bg-green-600',
-  yellow = 'bg-yellow-200',
-  red = 'bg-red-600'
+  green = 'bg-green-200',
+  yellow = 'bg-yellow-300',
+  red = 'bg-red-500'
 }
 
 interface AvgEfficiencyProps {
@@ -281,7 +281,7 @@ const AvgEfficiency = (props: AvgEfficiencyProps) => {
   }, [liquidations, prizeToken, lpToken, liquidationTxReceipts, nativeTokenPrice])
 
   if (!efficiency) {
-    return <Spinner className='after:border-y-pt-purple-800' />
+    return <Spinner className='after:border-y-pt-purple-300' />
   }
 
   return (
@@ -343,7 +343,12 @@ const AvgEfficiencyItem = (props: AvgEfficiencyItemProps) => {
   const { efficiency, label, color, className } = props
 
   return (
-    <div className={classNames('w-full flex gap-1 items-center whitespace-nowrap', className)}>
+    <div
+      className={classNames(
+        'w-full flex gap-1 items-center whitespace-nowrap text-pt-purple-200',
+        className
+      )}
+    >
       <div className={classNames('w-3 h-3 rounded mr-1', color)} />
       <span>
         {formatNumberForDisplay(efficiency, { hideZeroes: true, maximumFractionDigits: 1 })}%

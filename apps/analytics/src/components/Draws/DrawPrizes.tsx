@@ -56,7 +56,7 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
       <DrawCardItemTitle>Prizes</DrawCardItemTitle>
-      <div className='flex flex-col gap-1 text-sm text-pt-purple-700 whitespace-nowrap'>
+      <div className='flex flex-col gap-1 text-sm text-pt-purple-200 whitespace-nowrap'>
         {isFetchedDrawAwardedEvents ? (
           !!numTiers ? (
             <span>
@@ -66,7 +66,7 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
             <span>-</span>
           )
         ) : (
-          <Spinner className='after:border-y-pt-purple-800' />
+          <Spinner className='after:border-y-pt-purple-300' />
         )}
         {!!nonCanaryPrizesAvailable.length && (
           <span>

@@ -35,7 +35,7 @@ export const DrawTimer = (props: DrawTimerProps) => {
       {!!status && status !== 'finalized' && !isSkipped && (
         <>
           <DrawCardItemTitle>Time since {status}</DrawCardItemTitle>
-          <div className='flex gap-1 items-center text-sm text-pt-purple-700'>
+          <div className='flex gap-1 items-center text-sm text-pt-purple-200'>
             {!!_hours && (
               <span className='flex items-center'>
                 <span className='text-xl font-semibold'>{_hours}</span>Hr{_hours > 1 ? 's' : ''}

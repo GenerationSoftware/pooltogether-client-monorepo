@@ -66,7 +66,7 @@ const BurnCardItem = (props: BurnCardItemProps) => {
         <span className={nameClassName}>{name}</span>
         <span className={classNames('flex gap-1 items-center', valueClassName)}>
           {!!change && formattedChange !== '0' && (
-            <span className='text-green-600'>(+{formattedChange})</span>
+            <span className='text-green-500'>(+{formattedChange})</span>
           )}
           <span>{formattedTotal}</span>
           <span>{token.symbol}</span>

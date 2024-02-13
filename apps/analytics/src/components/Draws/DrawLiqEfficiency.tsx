@@ -136,7 +136,7 @@ export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
       <DrawCardItemTitle>Liq. Efficiency</DrawCardItemTitle>
-      <div className='flex flex-col gap-1 text-sm text-pt-purple-700'>
+      <div className='flex flex-col gap-1 text-sm text-pt-purple-300'>
         {isFetched && !!liqEfficiencyStats ? (
           <>
             <LiqEffiencyStat type='avg' percentage={liqEfficiencyStats.avg} />
@@ -156,7 +156,7 @@ export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
         ) : isFetched ? (
           <span>-</span>
         ) : (
-          <Spinner className='after:border-y-pt-purple-800' />
+          <Spinner className='after:border-y-pt-purple-300' />
         )}
       </div>
     </div>
@@ -188,14 +188,14 @@ const LiqEffiencyStat = (props: LiqEffiencyStatProps) => {
       className={classNames(
         'flex items-center text-sm',
         {
-          'text-pt-purple-700': type === 'avg',
-          'text-green-600': type === 'high',
-          'text-red-600': type === 'low'
+          'text-pt-purple-200': type === 'avg',
+          'text-green-200': type === 'high',
+          'text-red-400': type === 'low'
         },
         className
       )}
     >
-      <span className='w-10 border-r border-r-pt-purple-100'>{type.toUpperCase()}</span>
+      <span className='w-10 border-r border-r-pt-purple-600'>{type.toUpperCase()}</span>
       {!!chainId && !!txHash ? (
         <ExternalLink href={getBlockExplorerUrl(chainId, txHash, 'tx')} size='sm'>
           {formattedPercentage}

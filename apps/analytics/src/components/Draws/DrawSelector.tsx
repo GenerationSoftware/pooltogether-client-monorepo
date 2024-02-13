@@ -59,11 +59,11 @@ export const DrawSelector = (props: DrawSelectorProps) => {
   }, [drawIdSelected, drawIds])
 
   if (!drawIdSelected || !firstDrawId || !lastDrawId) {
-    return <Spinner className='after:border-y-pt-purple-800' />
+    return <Spinner className='after:border-y-pt-purple-300' />
   }
 
   return (
-    <div className={classNames('flex gap-2 items-center text-xl text-pt-purple-500', className)}>
+    <div className={classNames('flex gap-2 items-center text-xl text-pt-purple-300', className)}>
       <DrawId
         id={firstDrawId}
         content={<>&lt;&lt;</>}

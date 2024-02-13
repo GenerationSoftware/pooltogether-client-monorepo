@@ -27,9 +27,9 @@ export const BurnHeader = (props: BurnHeaderProps) => {
   }, [burnTxs])
 
   return (
-    <div className={classNames('flex flex-col items-center', className)}>
+    <div className={classNames('flex flex-col items-center text-pt-purple-300', className)}>
       <span>Total {prizeToken.symbol} Burned:</span>
-      <span className='flex gap-1 items-center text-pt-purple-500'>
+      <span className='flex gap-1 items-center text-pt-purple-100'>
         {totalBurned !== undefined ? (
           <>
             <span className='text-2xl'>🔥</span>
@@ -42,7 +42,7 @@ export const BurnHeader = (props: BurnHeaderProps) => {
             <span className='text-2xl'>🔥</span>
           </>
         ) : (
-          <Spinner className='after:border-y-pt-purple-800' />
+          <Spinner className='after:border-y-pt-purple-300' />
         )}
       </span>
     </div>

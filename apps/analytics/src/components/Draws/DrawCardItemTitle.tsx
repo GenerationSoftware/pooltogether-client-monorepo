@@ -10,7 +10,7 @@ export const DrawCardItemTitle = (props: DrawCardItemTitleProps) => {
   const { children, className } = props
 
   return (
-    <span className={classNames('text-sm text-pt-purple-500 whitespace-nowrap', className)}>
+    <span className={classNames('text-sm text-pt-purple-400 whitespace-nowrap', className)}>
       {children}
     </span>
   )

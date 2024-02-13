@@ -47,7 +47,7 @@ export const DrawRelayFee = (props: DrawRelayFeeProps) => {
         {canBeRelayed ? 'Current ' : ''}
         Relay Fee
       </DrawCardItemTitle>
-      <div className='flex flex-col gap-1 text-sm text-pt-purple-700 whitespace-nowrap'>
+      <div className='flex flex-col gap-1 text-sm text-pt-purple-200 whitespace-nowrap'>
         {isFetchedAllRngTxs && !!prizeToken ? (
           <>
             <span>
@@ -93,11 +93,15 @@ export const DrawRelayFee = (props: DrawRelayFeeProps) => {
                       relayMsgTx.hash,
                       'tx'
                     )}
+                    className='text-blue-400 hover:text-blue-300 transition'
                   >
                     {shorten(relayMsgTx.hash, { short: true })}
                   </ExternalLink>
                 )}
-                <ExternalLink href={getBlockExplorerUrl(prizePool.chainId, relayTx.hash, 'tx')}>
+                <ExternalLink
+                  href={getBlockExplorerUrl(prizePool.chainId, relayTx.hash, 'tx')}
+                  className='text-blue-400 hover:text-blue-300 transition'
+                >
                   {shorten(relayTx.hash, { short: true })}
                 </ExternalLink>
               </>
@@ -106,7 +110,7 @@ export const DrawRelayFee = (props: DrawRelayFeeProps) => {
             )}
           </>
         ) : (
-          <Spinner className='after:border-y-pt-purple-800' />
+          <Spinner className='after:border-y-pt-purple-300' />
         )}
       </div>
     </div>

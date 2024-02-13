@@ -22,7 +22,7 @@ class MyDocument extends Document {
       'prize savings win save protocol blockchain vault ethereum stats analytics draws liquidations bots'
 
     return (
-      <Html className='bg-pt-purple-50 text-pt-purple-700 overflow-x-hidden dark'>
+      <Html className='bg-pt-bg-purple-darker text-pt-purple-50 overflow-x-hidden dark'>
         <Head>
           <link rel='icon' href='/favicon.png' type='image/x-icon' />
           <link rel='apple-touch-icon' href='/apple-touch-icon.png' />
