@@ -19,7 +19,9 @@ export const Layout = (props: LayoutProps) => {
 
       <Navbar />
 
-      <main className={classNames('w-full relative flex flex-col items-center mx-auto', className)}>
+      <main
+        className={classNames('w-full relative flex flex-col items-center mx-auto px-6', className)}
+      >
         {children}
       </main>
     </div>
