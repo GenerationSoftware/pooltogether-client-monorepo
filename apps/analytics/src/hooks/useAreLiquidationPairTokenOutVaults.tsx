@@ -15,15 +15,17 @@ export const useAreLiquidationPairTokenOutVaults = (chainId: number, lpAddresses
     queries: Object.entries(tokenOutAddresses).map(([lpAddress, tokenOutAddress]) => ({
       queryKey: ['isLpTokenOutAVault', chainId, lpAddress],
       queryFn: async () => {
-        try {
-          const asset = await publicClient.readContract({
-            address: tokenOutAddress,
-            abi: vaultABI,
-            functionName: 'asset'
-          })
-          return !!asset ? isAddress(asset) : false
-        } catch {
-          return false
+        if (!!publicClient) {
+          try {
+            const asset = await publicClient.readContract({
+              address: tokenOutAddress,
+              abi: vaultABI,
+              functionName: 'asset'
+            })
+            return !!asset ? isAddress(asset) : false
+          } catch {
+            return false
+          }
         }
       },
       enabled: !!publicClient && !!lpAddress && !!tokenOutAddress,

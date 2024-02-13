@@ -16,7 +16,7 @@ export const useLiquidationPairTokenOutData = (
     useLiquidationPairTokenOutAddress(chainId, lpAddress)
 
   const vault = useMemo(() => {
-    if (tokenOutAddress) {
+    if (!!tokenOutAddress && !!publicClient) {
       return new Vault(chainId, tokenOutAddress, publicClient)
     }
   }, [chainId, publicClient, tokenOutAddress])
