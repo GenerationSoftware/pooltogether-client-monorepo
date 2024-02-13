@@ -22,7 +22,7 @@ export const createCustomWagmiConfig = () => {
 }
 
 /**
- * Returns network transports for Wagmi & RainbowKit
+ * Returns network transports for Wagmi
  * @param networks the networks to get transports for
  * @returns
  */
