@@ -1,4 +1,4 @@
-import { Wallet } from '@rainbow-me/rainbowkit'
+import { CreateWalletFn } from '@rainbow-me/rainbowkit/dist/wallets/Wallet'
 import {
   argentWallet,
   braveWallet,
@@ -20,7 +20,7 @@ import {
 import { DEFAULT_CLAIMER_ADDRESSES, NETWORK } from '@shared/utilities'
 import { SupportedNetwork } from 'src/types'
 import { Address } from 'viem'
-import { arbitrum, arbitrumSepolia, Chain, mainnet, optimism, optimismSepolia } from 'viem/chains'
+import { arbitrum, arbitrumSepolia, mainnet, optimism, optimismSepolia } from 'viem/chains'
 
 /**
  * Supported networks
@@ -45,9 +45,7 @@ export const WAGMI_CHAINS = {
 /**
  * Wallets
  */
-export const WALLETS: {
-  [wallet: string]: (data: { appName: string; chains: Chain[]; projectId: string }) => Wallet
-} = {
+export const WALLETS: { [wallet: string]: CreateWalletFn } = {
   metamask: metaMaskWallet,
   walletconnect: walletConnectWallet,
   rainbow: rainbowWallet,
@@ -64,7 +62,7 @@ export const WALLETS: {
   uniswap: uniswapWallet,
   coin98: coin98Wallet,
   imtoken: imTokenWallet
-} as const
+}
 
 /**
  * RPCs
@@ -93,14 +91,14 @@ export const CONTRACTS: Record<SupportedNetwork, { prizePool: Address; claimer: 
     prizePool: '0x6Fd1dF849DFC4F76F0B15ba0c8D3e99FF84817f1',
     claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.arbitrum_sepolia]
   }
-} as const
+}
 
 /**
  * Local storage keys
  */
 export const LOCAL_STORAGE_KEYS = {
   vaultIds: 'vaultIds'
-}
+} as const
 
 /**
  * Default liquidation pair config
