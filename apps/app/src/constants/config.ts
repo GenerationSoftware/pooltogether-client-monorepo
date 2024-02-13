@@ -1,4 +1,4 @@
-import { Wallet } from '@rainbow-me/rainbowkit'
+import { CreateWalletFn } from '@rainbow-me/rainbowkit/dist/wallets/Wallet'
 import {
   argentWallet,
   braveWallet,
@@ -20,33 +20,31 @@ import {
 import { NETWORK, POOL_TOKEN_ADDRESSES, USDC_TOKEN_ADDRESSES } from '@shared/utilities'
 import defaultVaultList from '@vaultLists/default'
 import { Address } from 'viem'
-import { arbitrum, arbitrumSepolia, Chain, mainnet, optimism, optimismSepolia } from 'viem/chains'
+import { arbitrum, arbitrumSepolia, mainnet, optimism, optimismSepolia } from 'viem/chains'
 
 /**
  * Supported networks
  */
-export const SUPPORTED_NETWORKS = Object.freeze({
+export const SUPPORTED_NETWORKS = {
   mainnets: [NETWORK.mainnet, NETWORK.optimism, NETWORK.arbitrum],
   testnets: [NETWORK.optimism_sepolia, NETWORK.arbitrum_sepolia]
-})
+} as const
 
 /**
  * Wagmi networks
  */
-export const WAGMI_CHAINS = Object.freeze({
+export const WAGMI_CHAINS = {
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism,
   [NETWORK.arbitrum]: arbitrum,
   [NETWORK.optimism_sepolia]: optimismSepolia,
   [NETWORK.arbitrum_sepolia]: arbitrumSepolia
-})
+} as const
 
 /**
  * Wallets
  */
-export const WALLETS: {
-  [wallet: string]: (data: { appName: string; chains: Chain[]; projectId: string }) => Wallet
-} = Object.freeze({
+export const WALLETS: { [wallet: string]: CreateWalletFn } = {
   metamask: metaMaskWallet,
   walletconnect: walletConnectWallet,
   rainbow: rainbowWallet,
@@ -63,7 +61,7 @@ export const WALLETS: {
   uniswap: uniswapWallet,
   coin98: coin98Wallet,
   imtoken: imTokenWallet
-})
+}
 
 /**
  * RPCs
@@ -74,14 +72,14 @@ export const RPC_URLS = {
   [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
   [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL
-}
+} as const
 
 /**
  * Default vault lists
  */
-export const DEFAULT_VAULT_LISTS = Object.freeze({
+export const DEFAULT_VAULT_LISTS = {
   default: defaultVaultList
-})
+} as const
 
 /**
  * TWAB rewards settings
@@ -131,4 +129,4 @@ export const FATHOM_EVENTS = {
   changedLanguage: 'ChangedLanguage',
   importedVaultList: 'ImportedVaultList',
   delegated: 'Delegated'
-}
+} as const

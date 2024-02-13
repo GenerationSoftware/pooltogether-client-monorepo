@@ -1,15 +1,14 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { calculatePercentageOfBigInt, twabControllerABI, vaultABI } from '@shared/utilities'
+import { calculatePercentageOfBigInt, twabControllerABI } from '@shared/utilities'
 import { useEffect } from 'react'
 import { Address, isAddress, TransactionReceipt } from 'viem'
 import {
   useAccount,
-  useContractWrite,
-  useNetwork,
-  usePrepareContractWrite,
-  useWaitForTransaction
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract
 } from 'wagmi'
-import { useGasAmountEstimate, useUserVaultShareBalance } from '..'
+import { useGasAmountEstimate } from '..'
 
 /**
  * Prepares and submits a `delegate` transaction to a TwabController
@@ -36,8 +35,7 @@ export const useSendDelegateTransaction = (
   txReceipt?: TransactionReceipt
   sendDelegateTransaction?: () => void
 } => {
-  const { address: userAddress } = useAccount()
-  const { chain } = useNetwork()
+  const { address: userAddress, chain } = useAccount()
 
   const enabled =
     !!twabController &&
@@ -60,25 +58,26 @@ export const useSendDelegateTransaction = (
     { enabled }
   )
 
-  const { config } = usePrepareContractWrite({
+  const { data } = useSimulateContract({
     chainId: vault?.chainId,
     address: twabController,
     abi: twabControllerABI,
     functionName: 'delegate',
     args: [vault.address as Address, address as Address],
     gas: !!gasEstimate ? calculatePercentageOfBigInt(gasEstimate, 1.2) : undefined,
-    enabled
+    query: { enabled }
   })
 
   const {
-    data: txSendData,
+    data: txHash,
     isLoading: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
-    write: sendDelegateTransaction
-  } = useContractWrite(config)
+    writeContract: _sendDelegateTransaction
+  } = useWriteContract()
 
-  const txHash = txSendData?.hash
+  const sendDelegateTransaction =
+    !!data && !!_sendDelegateTransaction ? () => _sendDelegateTransaction(data.request) : undefined
 
   useEffect(() => {
     if (!!txHash && isSendingSuccess) {
@@ -88,10 +87,10 @@ export const useSendDelegateTransaction = (
 
   const {
     data: txReceipt,
-    isLoading: isConfirming,
+    isFetching: isConfirming,
     isSuccess,
     isError: isConfirmingError
-  } = useWaitForTransaction({ chainId: vault?.chainId, hash: txHash })
+  } = useWaitForTransactionReceipt({ chainId: vault?.chainId, hash: txHash })
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {

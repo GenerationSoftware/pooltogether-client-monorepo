@@ -8,7 +8,7 @@ import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
-import { Address } from 'viem'
+import { Address, PublicClient } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { BurnHeader } from '@components/Burn/BurnHeader'
 import { RecentBurnStats } from '@components/Burn/RecentBurnStats'
@@ -41,10 +41,10 @@ export const BurnView = (props: BurnViewProps) => {
     return new PrizePool(
       prizePoolInfo.chainId,
       prizePoolInfo.address,
-      publicClient,
+      publicClient as PublicClient,
       prizePoolInfo.options
     )
-  }, [chainId])
+  }, [chainId, publicClient])
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 

@@ -23,7 +23,11 @@ export const useBlocks = (
     queries: blockNumbers.map((blockNumber) => {
       return {
         queryKey: getQueryKey(blockNumber),
-        queryFn: async () => await publicClient.getBlock({ blockNumber }),
+        queryFn: async () => {
+          if (!!publicClient) {
+            return await publicClient.getBlock({ blockNumber })
+          }
+        },
         enabled: !!chainId && !!blockNumber && !!publicClient,
         ...NO_REFETCH
       }

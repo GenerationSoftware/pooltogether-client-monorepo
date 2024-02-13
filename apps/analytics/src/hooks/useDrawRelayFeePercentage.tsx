@@ -16,14 +16,16 @@ export const useDrawRelayFeePercentage = (prizePool: PrizePool) => {
   return useQuery(
     queryKey,
     async () => {
-      const rewardFraction = await publicClient.readContract({
-        address: RNG_RELAY_ADDRESSES[prizePool.chainId].address,
-        abi: rngRelayABI,
-        functionName: 'computeRewardFraction',
-        args: [elapsedTime as bigint]
-      })
+      if (!!publicClient) {
+        const rewardFraction = await publicClient.readContract({
+          address: RNG_RELAY_ADDRESSES[prizePool.chainId].address,
+          abi: rngRelayABI,
+          functionName: 'computeRewardFraction',
+          args: [elapsedTime as bigint]
+        })
 
-      return parseFloat(formatUnits(rewardFraction, 18)) * 100
+        return parseFloat(formatUnits(rewardFraction, 18)) * 100
+      }
     },
     {
       enabled:

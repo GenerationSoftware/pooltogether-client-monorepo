@@ -35,7 +35,11 @@ export const usePromotionRewardsClaimedEvents = (
 
   return useQuery(
     queryKey,
-    async () => await getPromotionRewardsClaimedEvents(publicClient, options),
+    async () => {
+      if (!!publicClient) {
+        return await getPromotionRewardsClaimedEvents(publicClient, options)
+      }
+    },
     {
       enabled: !!chainId && !!publicClient,
       ...NO_REFETCH

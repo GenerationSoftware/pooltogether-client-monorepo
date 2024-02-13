@@ -2,7 +2,12 @@ import { VaultDeployInfo } from '@shared/types'
 import { VAULT_FACTORY_ADDRESSES, vaultFactoryABI } from '@shared/utilities'
 import { useEffect } from 'react'
 import { Address, TransactionReceipt } from 'viem'
-import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
+import {
+  useAccount,
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract
+} from 'wagmi'
 
 /**
  * Prepares and submits a `deployVault` transaction to the vault factory
@@ -26,7 +31,7 @@ export const useSendDeployVaultTransaction = (
   txReceipt?: TransactionReceipt
   sendDeployVaultTransaction?: () => void
 } => {
-  const { chain } = useNetwork()
+  const { chain } = useAccount()
 
   const {
     chainId,
@@ -62,7 +67,7 @@ export const useSendDeployVaultTransaction = (
     !!vaultFactoryAddress &&
     chain?.id === chainId
 
-  const { config } = usePrepareContractWrite({
+  const { data } = useSimulateContract({
     chainId,
     address: vaultFactoryAddress,
     abi: vaultFactoryABI,
@@ -78,18 +83,21 @@ export const useSendDeployVaultTransaction = (
       feePercentage,
       owner
     ],
-    enabled
+    query: { enabled }
   })
 
   const {
-    data: txSendData,
+    data: txHash,
     isLoading: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
-    write: sendDeployVaultTransaction
-  } = useContractWrite(config)
+    writeContract: _sendDeployVaultTransaction
+  } = useWriteContract()
 
-  const txHash = txSendData?.hash
+  const sendDeployVaultTransaction =
+    !!data && !!_sendDeployVaultTransaction
+      ? () => _sendDeployVaultTransaction(data.request)
+      : undefined
 
   useEffect(() => {
     if (!!txHash && isSendingSuccess) {
@@ -99,10 +107,10 @@ export const useSendDeployVaultTransaction = (
 
   const {
     data: txReceipt,
-    isLoading: isConfirming,
+    isFetching: isConfirming,
     isSuccess,
     isError: isConfirmingError
-  } = useWaitForTransaction({ chainId, hash: txHash })
+  } = useWaitForTransactionReceipt({ chainId, hash: txHash })
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {

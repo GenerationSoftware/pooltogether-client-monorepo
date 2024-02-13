@@ -8,7 +8,7 @@ import { Intl } from '@shared/types'
 import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
 import { Address, isAddress } from 'viem'
-import { useAccount, useNetwork } from 'wagmi'
+import { useAccount } from 'wagmi'
 import { DelegateModalView } from '.'
 import { delegateFormNewDelegateAddressAtom } from '../../Form/DelegateForm'
 import { createDelegateTxToast, DelegateTxToastProps } from '../../Toasts/DelegateTxToast'
@@ -43,8 +43,7 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
     intl
   } = props
 
-  const { address: userAddress, isDisconnected } = useAccount()
-  const { chain } = useNetwork()
+  const { address: userAddress, chain, isDisconnected } = useAccount()
 
   const { data: tokenData } = useVaultTokenData(vault)
 

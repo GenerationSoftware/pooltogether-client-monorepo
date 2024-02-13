@@ -5,18 +5,18 @@ import { mainnet, optimism } from 'viem/chains'
 /**
  * Supported networks
  */
-export const SUPPORTED_NETWORKS = Object.freeze({
+export const SUPPORTED_NETWORKS = {
   mainnets: [NETWORK.mainnet, NETWORK.optimism],
   testnets: []
-})
+} as const
 
 /**
  * Wagmi networks
  */
-export const WAGMI_CHAINS = Object.freeze({
+export const WAGMI_CHAINS = {
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism
-})
+} as const
 
 /**
  * RPCs
@@ -24,7 +24,7 @@ export const WAGMI_CHAINS = Object.freeze({
 export const RPC_URLS = {
   [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL
-}
+} as const
 
 /**
  * Vaults to display

@@ -11,7 +11,10 @@ import { usePublicClient } from 'wagmi'
 export const usePublicClients = (options?: { useAll?: boolean }): PublicClient[] => {
   const { isTestnets } = useIsTestnets()
 
-  const publicClients: { mainnets: PublicClient[]; testnets: PublicClient[] } = {
+  const publicClients: {
+    mainnets: (PublicClient | undefined)[]
+    testnets: (PublicClient | undefined)[]
+  } = {
     mainnets: [
       usePublicClient({ chainId: NETWORK.mainnet }),
       usePublicClient({ chainId: NETWORK.optimism }),
@@ -23,15 +26,19 @@ export const usePublicClients = (options?: { useAll?: boolean }): PublicClient[]
     ]
   }
 
+  const filterClients = (clients: (PublicClient | undefined)[]) => {
+    return clients.filter((client): client is PublicClient => !!client)
+  }
+
   if (options?.useAll) {
-    return [...publicClients.mainnets, ...publicClients.testnets]
+    return filterClients([...publicClients.mainnets, ...publicClients.testnets])
   }
 
   if (isTestnets) {
-    return publicClients.testnets
+    return filterClients(publicClients.testnets)
   }
 
-  return publicClients.mainnets
+  return filterClients(publicClients.mainnets)
 }
 
 /**
@@ -45,8 +52,8 @@ export const usePublicClientsByChain = (options?: {
   const { isTestnets } = useIsTestnets()
 
   const publicClients: {
-    mainnets: { [chainId: number]: PublicClient }
-    testnets: { [chainId: number]: PublicClient }
+    mainnets: { [chainId: number]: PublicClient | undefined }
+    testnets: { [chainId: number]: PublicClient | undefined }
   } = {
     mainnets: {
       [NETWORK.mainnet]: usePublicClient({ chainId: NETWORK.mainnet }),
@@ -59,13 +66,27 @@ export const usePublicClientsByChain = (options?: {
     }
   }
 
+  const filterClients = (clients: { [chainId: number]: PublicClient | undefined }) => {
+    const filteredClients: { [chainId: number]: PublicClient } = {}
+
+    Object.entries(clients).forEach(([strChainId, client]) => {
+      const isClient = (item: PublicClient | undefined): item is PublicClient => !!item
+
+      if (isClient(client)) {
+        filteredClients[parseInt(strChainId)] = client
+      }
+    })
+
+    return filteredClients
+  }
+
   if (options?.useAll) {
-    return { ...publicClients.mainnets, ...publicClients.testnets }
+    return filterClients({ ...publicClients.mainnets, ...publicClients.testnets })
   }
 
   if (isTestnets) {
-    return publicClients.testnets
+    return filterClients(publicClients.testnets)
   }
 
-  return publicClients.mainnets
+  return filterClients(publicClients.mainnets)
 }

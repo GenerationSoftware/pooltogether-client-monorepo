@@ -3,7 +3,7 @@ import { LOCAL_STORAGE_KEYS as GENERIC_LOCAL_STORAGE_KEYS } from '@shared/generi
 /**
  * Query keys for various hooks
  */
-export const QUERY_KEYS = Object.freeze({
+export const QUERY_KEYS = {
   block: 'block',
   blockAtTimestamp: 'blockAtTimestamp',
   clientChainId: 'clientChainId',
@@ -65,15 +65,15 @@ export const QUERY_KEYS = Object.freeze({
   vaultTotalSupplyTwabs: 'vaultTotalSupplyTwabs',
   vaultTwabController: 'vaultTwabController',
   vaultYieldSources: 'vaultYieldSources'
-})
+} as const
 
 /**
  * Local storage keys
  */
-export const LOCAL_STORAGE_KEYS = Object.freeze({
+export const LOCAL_STORAGE_KEYS = {
   ...GENERIC_LOCAL_STORAGE_KEYS,
   cachedVaultLists: 'cachedVaultLists',
   localVaultListIds: 'localVaultListIds',
   importedVaultListIds: 'importedVaultListIds',
   lastCheckedPrizesTimestamps: 'lastCheckedPrizesTimestamps'
-})
+} as const

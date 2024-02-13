@@ -17,7 +17,11 @@ export const useBlockAtTimestamp = (chainId: number, timestamp: number) => {
 
   return useQuery(
     queryKey,
-    async () => await getBlockAtTimestamp(publicClient, BigInt(Math.floor(timestamp))),
+    async () => {
+      if (!!publicClient) {
+        return await getBlockAtTimestamp(publicClient, BigInt(Math.floor(timestamp)))
+      }
+    },
     {
       enabled: !!chainId && !!timestamp && !!publicClient,
       ...NO_REFETCH

@@ -1,14 +1,10 @@
 import { useSelectedLanguage } from '@shared/generic-react-hooks'
 import { Flowbite } from '@shared/ui'
 import { Toaster } from '@shared/ui'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { NextIntlProvider } from 'next-intl'
 import { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-
-// React Query Client:
-const queryClient = new QueryClient()
 
 export const AppContainer = (props: AppProps) => {
   const { Component, pageProps } = props
@@ -38,14 +34,11 @@ export const AppContainer = (props: AppProps) => {
 
   return (
     <Flowbite>
-      <QueryClientProvider client={queryClient}>
-        <Toaster expand={false} />
-
-        <NextIntlProvider messages={pageProps.messages}>
-          <div id='modal-root' />
-          {isReady && <Component {...pageProps} />}
-        </NextIntlProvider>
-      </QueryClientProvider>
+      <Toaster expand={false} />
+      <NextIntlProvider messages={pageProps.messages}>
+        <div id='modal-root' />
+        {isReady && <Component {...pageProps} />}
+      </NextIntlProvider>
     </Flowbite>
   )
 }

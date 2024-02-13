@@ -25,14 +25,16 @@ export const useGasPrice = (chainId: number, refetchInterval?: number) => {
   return useQuery(
     [QUERY_KEYS.gasPrices, _chainId],
     async () => {
-      const gasPrices = await publicClient.estimateFeesPerGas()
+      if (!!publicClient) {
+        const gasPrices = await publicClient.estimateFeesPerGas()
 
-      if (!!gasPrices.maxFeePerGas) {
-        return gasPrices.maxFeePerGas + gasPrices.maxPriorityFeePerGas
-      } else if (!!gasPrices.gasPrice) {
-        return gasPrices.gasPrice
-      } else {
-        return 0n
+        if (!!gasPrices.maxFeePerGas) {
+          return gasPrices.maxFeePerGas + gasPrices.maxPriorityFeePerGas
+        } else if (!!gasPrices.gasPrice) {
+          return gasPrices.gasPrice
+        } else {
+          return 0n
+        }
       }
     },
     {

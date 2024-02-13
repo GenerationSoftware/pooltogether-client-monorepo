@@ -37,7 +37,7 @@ export const useHistoricalLiquidationPairTokenOutPrices = (
         allValidVaultInfo.push({ chainId, address: tokenOutAddress })
       }
     })
-    return !!allValidVaultInfo.length
+    return !!allValidVaultInfo.length && !!publicClient
       ? new Vaults(allValidVaultInfo, { [chainId]: publicClient })
       : undefined
   }, [chainId, publicClient, tokenOutAddresses, isFetchedIsValidVaults, isValidVaults])

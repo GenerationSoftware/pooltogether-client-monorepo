@@ -22,24 +22,26 @@ export const useRelayAuctionElapsedTime = (
   return useQuery(
     ['relayAuctionElapsedTime'],
     async () => {
-      const lastAuction = await publicClient.readContract({
-        address: RNG_AUCTION[originChainId as number].address,
-        abi: rngAuctionABI,
-        functionName: 'getLastAuction'
-      })
+      if (!!publicClient) {
+        const lastAuction = await publicClient.readContract({
+          address: RNG_AUCTION[originChainId as number].address,
+          abi: rngAuctionABI,
+          functionName: 'getLastAuction'
+        })
 
-      if (!lastAuction.rngRequestId) {
-        return 0n
+        if (!lastAuction.rngRequestId) {
+          return 0n
+        }
+
+        const completedAt = await publicClient.readContract({
+          address: lastAuction.rng,
+          abi: chainlinkVrfABI,
+          functionName: 'completedAt',
+          args: [lastAuction.rngRequestId]
+        })
+
+        return BigInt(getSecondsSinceEpoch()) - completedAt
       }
-
-      const completedAt = await publicClient.readContract({
-        address: lastAuction.rng,
-        abi: chainlinkVrfABI,
-        functionName: 'completedAt',
-        args: [lastAuction.rngRequestId]
-      })
-
-      return BigInt(getSecondsSinceEpoch()) - completedAt
     },
     {
       enabled: !!originChainId && !!publicClient,

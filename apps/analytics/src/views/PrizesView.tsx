@@ -11,7 +11,7 @@ import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useEffect, useMemo } from 'react'
 import { selectedDrawIdAtom } from 'src/atoms'
-import { Address } from 'viem'
+import { Address, PublicClient } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { DrawAvgClaimFeesChart } from '@components/Charts/DrawAvgClaimFeesChart'
 import { DrawSelector } from '@components/Draws/DrawSelector'
@@ -44,10 +44,10 @@ export const PrizesView = (props: PrizesViewProps) => {
     return new PrizePool(
       prizePoolInfo.chainId,
       prizePoolInfo.address,
-      publicClient,
+      publicClient as PublicClient,
       prizePoolInfo.options
     )
-  }, [chainId])
+  }, [chainId, publicClient])
 
   const originChainId = !!prizePool
     ? RNG_RELAY_ADDRESSES[prizePool.chainId].from.chainId

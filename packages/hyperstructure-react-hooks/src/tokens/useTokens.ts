@@ -37,7 +37,11 @@ export const useTokens = (
 
   return useQuery(
     getQueryKey(tokenAddresses),
-    async () => await getTokenInfo(publicClient, tokenAddresses),
+    async () => {
+      if (!!publicClient) {
+        return await getTokenInfo(publicClient, tokenAddresses)
+      }
+    },
     {
       enabled,
       ...NO_REFETCH,
