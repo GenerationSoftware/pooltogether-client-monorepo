@@ -58,7 +58,7 @@ const SimpleNavbar = (props: { className?: string }) => {
         className='w-52 h-auto cursor-pointer'
       />
       <a href={LINKS.listDocs} target='_blank' className='flex items-center'>
-        <DocsSvg className='w-5 h-5' />
+        <DocsSvg className='w-5 h-5 mr-0.5' />
         <span className='text-pt-purple-300'>Docs</span>
       </a>
     </div>

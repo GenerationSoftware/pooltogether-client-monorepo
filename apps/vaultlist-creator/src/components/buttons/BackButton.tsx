@@ -19,7 +19,7 @@ export const BackButton = (props: BackButtonProps) => {
   return (
     <Button
       onClick={() => setView(toView)}
-      color='white'
+      color='teal'
       outline={true}
       className={classNames('self-start', className)}
     >

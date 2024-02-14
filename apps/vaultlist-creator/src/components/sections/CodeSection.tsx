@@ -36,8 +36,8 @@ export const CodeSection = (props: CodeSectionProps) => {
             str={JSON.stringify(vaultList)}
             text='Copy Raw JSON'
             className={classNames('absolute', {
-              'bottom-4': !isYOverflowing,
-              'bottom-4 lg:bottom-8': isYOverflowing,
+              'top-4': !isYOverflowing,
+              'top-4 lg:top-8': isYOverflowing,
               'right-4': !isXOverflowing,
               'right-4 lg:right-8': isXOverflowing
             })}
