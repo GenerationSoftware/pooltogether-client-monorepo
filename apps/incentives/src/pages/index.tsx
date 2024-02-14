@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 import { Layout } from '@components/Layout'
+import { ResourceLink } from '@components/ResourceLink'
 
 export default function HomePage() {
   return (
@@ -140,10 +141,50 @@ const FaqSection = (props: SectionProps) => {
     <section className={classNames('w-full flex flex-col gap-6', className)}>
       <h3 className='text-5xl text-pt-purple-300 sm:text-6xl'>FAQs</h3>
       <div className='flex flex-col gap-12'>
-        {/* TODO: add proper responses */}
-        <FAQ q='Where can I learn more about PoolTogether V5 bots?' a={'WIP'} />
-        <FAQ q='How much can I earn by running bots?' a={'WIP'} />
-        <FAQ q='Who administers these incentives programs?' a={'WIP'} />
+        <FAQ
+          q='Where can I learn more about PoolTogether V5 bots?'
+          a={
+            <p>
+              Check out some of{' '}
+              <ResourceLink href='https://mirror.xyz/0x49ca801A80e31B1ef929eAB13Ab3FBbAe7A55e8F'>
+                G9's bot creation tutorials on Mirror
+              </ResourceLink>
+              , read the{' '}
+              <ResourceLink href='https://dev.pooltogether.com/protocol/design/'>
+                dev docs
+              </ResourceLink>{' '}
+              to learn more about the protocol's design, or come chat with us on{' '}
+              <ResourceLink href={LINKS.discord}>Discord</ResourceLink>.
+            </p>
+          }
+        />
+        <FAQ
+          q='How much can I earn by running bots?'
+          a={
+            <>
+              <p>
+                This can vary greatly between different types of bots, and their efficiency. Since
+                these incentives are built into the protocol, there can be substantial competition
+                between bots. As the protocol grows and more yield flows through the hyperstructure,
+                there are more incentives and more room for additional bots to compete. Check each
+                type of bot above for an estimate of what is up for grabs.
+              </p>
+            </>
+          }
+        />
+        <FAQ
+          q='Who administers these incentives programs?'
+          a={
+            <>
+              <p>
+                Bot incentives are built into the protocol, either through the prize pool directly
+                or through the many vaults connected to it. There can be, however, additional
+                incentives managed offchain from third parties contributing to the protocol's
+                growth. See more details in each type of incentive's' pages above.
+              </p>
+            </>
+          }
+        />
       </div>
     </section>
   )
@@ -159,9 +200,9 @@ const FAQ = (props: FaqProps) => {
   const { q, a, className } = props
 
   return (
-    <div className={classNames('flex flex-col gap-6 text-2xl', className)}>
-      <span className='text-pt-purple-300'>{q}</span>
-      {a}
+    <div className={classNames('flex flex-col gap-6', className)}>
+      <span className='text-2xl text-pt-purple-300'>{q}</span>
+      <span className='flex flex-col gap-2 text-xl'>{a}</span>
     </div>
   )
 }
