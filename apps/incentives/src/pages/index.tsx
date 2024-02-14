@@ -45,8 +45,7 @@ const HeroSection = (props: SectionProps) => {
       </h2>
       <div className='flex gap-6 items-center'>
         <span className='text-xl'>Have questions or want to learn more?</span>
-        {/* TODO: add custom button color (bg-pt-purple-400) */}
-        <Button href={LINKS.discord} target='_blank'>
+        <Button href={LINKS.discord} target='_blank' color='darkPurple'>
           Chat with us in #incentives
         </Button>
       </div>
@@ -90,14 +89,14 @@ const IncentivesSection = (props: SectionProps) => {
           subtitle='Attract deposits, apply for bonus rewards'
           description='Launch vaults and get them listed on front ends, aggregators and vault lists'
           href='/vaults'
-          img={{ src: '/vaults.svg', width: 213, height: 139 }}
+          img={{ src: '/vaults.svg', width: 339, height: 133 }}
         />
         <IncentiveCard
           title='Run a Frontend'
           subtitle='Earn $500/mo'
           description='Host a frontend to the PoolTogether protocol - build your own or fork one'
           href='/front-ends'
-          img={{ src: '/frontends.svg', width: 213, height: 139 }}
+          img={{ src: '/frontends.svg', width: 339, height: 133 }}
         />
       </div>
     </section>
@@ -125,7 +124,7 @@ const IncentiveCard = (props: IncentiveCardProps) => {
           className
         )}
       >
-        <Image {...img} alt={title} className='w-auto h-32 mr-auto' />
+        <Image {...img} alt={title} className='w-full h-auto' />
         <span className='text-2xl line-clamp-1'>{title}</span>
         <span className='text-pt-purple-300 line-clamp-1'>{subtitle}</span>
         <p className='line-clamp-2'>{description}</p>
