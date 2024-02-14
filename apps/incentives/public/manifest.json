@@ -1,0 +1,17 @@
+{
+  "short_name": "PT Incentives",
+  "name": "PoolTogether Incentives",
+  "description": "Want to contribute to the global prize savings hyperstructure? View all the tools and incentives at your disposal.",
+  "start_url": "/",
+  "scope": "/",
+  "theme_color": "#4C249F",
+  "background_color": "#2D0C66",
+  "display": "fullscreen",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ]
+}
