@@ -11,7 +11,7 @@ export default function HomePage() {
     <Layout>
       <HeroSection />
       <IncentivesSection className='mt-24' />
-      <FaqSection className='mt-48 mb-40' />
+      <FaqSection className='mt-48' />
     </Layout>
   )
 }
