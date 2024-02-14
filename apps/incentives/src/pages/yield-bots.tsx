@@ -37,12 +37,18 @@ export default function YieldBotsPage() {
         <Section
           title='Resources'
           content={
-            <div className='flex flex-col gap-4'>
+            <div className='flex flex-col gap-4 items-start'>
               <ResourceLink href='https://mirror.xyz/0x49ca801A80e31B1ef929eAB13Ab3FBbAe7A55e8F/ES-IJduktYPb0X_sBikfqL-PVFRweNpoPrlr01zcVX8'>
-                Tutorial: Building a yield liquidator bot
+                Tutorial: Building a yield liquidating bot
               </ResourceLink>
               <ResourceLink href='https://github.com/GenerationSoftware/pt-v5-autotasks-monorepo'>
                 Example: G9 Bots Monorepo
+              </ResourceLink>
+              <ResourceLink href='https://analytics.cabana.fi/liquidations'>
+                Analytics: Liquidations (Cabanalytics)
+              </ResourceLink>
+              <ResourceLink href='https://pooltime.app/contributions'>
+                Analytics: Liquidations (PoolTime)
               </ResourceLink>
             </div>
           }
