@@ -12,7 +12,7 @@ export const StartBuildingSection = (props: StartBuildingSectionProps) => {
 
   return (
     <section className={classNames('w-full flex flex-col gap-4 items-center md:gap-12', className)}>
-      <span className='text-pt-teal-dark md:text-xl'>Start Building Today</span>
+      <span className='text-pt-teal md:text-xl'>Start Building Today</span>
       <div className='flex flex-col gap-10 md:flex-row md:flex-wrap md:justify-center'>
         <StartBuildingItem
           href={LINKS.vaultFactory}

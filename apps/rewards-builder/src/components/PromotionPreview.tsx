@@ -69,7 +69,7 @@ export const PromotionPreview = (props: PromotionPreviewProps) => {
   return (
     <div
       className={classNames(
-        'w-full flex flex-col gap-3 items-center px-8 py-5 border border-pt-purple-100 rounded-2xl',
+        'w-full flex flex-col gap-3 items-center px-8 py-5 border border-pt-purple-500 rounded-2xl bg-pt-transparent',
         className
       )}
     >
