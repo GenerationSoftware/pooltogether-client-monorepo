@@ -49,8 +49,14 @@ export default function FrontEndsPage() {
                 the incentive is still available. You can also follow any discussion in the
                 #incentives channel.
               </li>
-              {/* TODO: finalize requirements */}
-              <li>WIP</li>
+              <li>
+                Build your own frontend, or fork and edit an existing open source interface (e.g.
+                Cabana).
+              </li>
+              <li>
+                The frontend must, at least, display the grand prize, prize vaults, users' deposits
+                in such vaults and offer the ability to deposit and withdraw from them.
+              </li>
             </BasicList>
           }
         />
