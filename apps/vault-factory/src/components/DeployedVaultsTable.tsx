@@ -105,7 +105,7 @@ export const DeployedVaultsTable = (props: DeployedVaultsTableProps) => {
     <Table
       keyPrefix='deployedVaultsTable'
       data={tableData}
-      className={classNames('px-6 pb-6 bg-pt-transparent/20 rounded-3xl', className)}
+      className={classNames('w-full px-6 pb-6 bg-pt-transparent/20 rounded-3xl', className)}
       innerClassName='overflow-y-auto'
       headerClassName='text-center font-medium text-pt-purple-300 whitespace-nowrap'
       rowClassName='text-sm font-medium rounded-lg overflow-hidden'

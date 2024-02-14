@@ -76,8 +76,8 @@ export const AddDeployedVaultForm = (props: AddDeployedVaultFormProps) => {
             </PurpleButton>
           </>
         ) : (
-          <Button type='button' onClick={() => setIsFormVisible(true)} color='white' outline={true}>
-            Re-Enter Vault Details
+          <Button type='button' onClick={() => setIsFormVisible(true)} color='teal' outline={true}>
+            Re-enter Vault Details
           </Button>
         )}
       </form>
