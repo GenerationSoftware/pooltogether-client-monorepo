@@ -1,18 +1,52 @@
 import classNames from 'classnames'
 import { ReactNode } from 'react'
 import { Layout } from '@components/Layout'
+import { ResourceLink } from '@components/ResourceLink'
 
-// TODO: add content
-// TODO: fix scaling on mobile/desktop
 export default function YieldBotsPage() {
   return (
     <Layout className='gap-6'>
       <h1 className='w-full text-5xl'>Yield Liquidation Bot Incentives</h1>
       <hr className='w-full border-pt-purple-300' />
-      <div className='w-full flex gap-x-4 gap-y-6 flex-wrap'>
-        <Section title='What needs to be done?' content={'TODO'} />
-        <Section title='What is the incentive?' content={'TODO'} />
-        <Section title='Resources' content={'TODO'} />
+      <div className='w-full grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2'>
+        <Section
+          title='What needs to be done?'
+          content={
+            <>
+              <p>
+                Yield liquidation bots use PoolTogether's liquidation contracts to swap yield for
+                the prize pool's prize token, and make them available to be won by users.
+              </p>
+              <p>
+                The reward for liquidating yield is the arbitrage on that swap, created via a
+                variable rate gradual dutch auction (VRGDA).
+              </p>
+            </>
+          }
+        />
+        <Section
+          title='What is the incentive?'
+          content={
+            <div className='flex flex-col'>
+              <span>Bot runners compete for</span>
+              <span className='text-5xl'>up to $200/mo*</span>
+              <span className='text-pt-purple-300'>*approximation based on current yield</span>
+            </div>
+          }
+        />
+        <Section
+          title='Resources'
+          content={
+            <div className='flex flex-col gap-4'>
+              <ResourceLink href='https://mirror.xyz/0x49ca801A80e31B1ef929eAB13Ab3FBbAe7A55e8F/ES-IJduktYPb0X_sBikfqL-PVFRweNpoPrlr01zcVX8'>
+                Tutorial: Building a yield liquidator bot
+              </ResourceLink>
+              <ResourceLink href='https://github.com/GenerationSoftware/pt-v5-autotasks-monorepo'>
+                Example: G9 Bots Monorepo
+              </ResourceLink>
+            </div>
+          }
+        />
       </div>
     </Layout>
   )

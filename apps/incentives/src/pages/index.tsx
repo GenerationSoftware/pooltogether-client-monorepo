@@ -66,21 +66,21 @@ const IncentivesSection = (props: SectionProps) => {
           subtitle='Earn liquidation fees'
           description='Swap yield at a discount and build up the prize pool'
           href='/yield-bots'
-          img={{ src: '/yieldBots.svg', width: 213, height: 139 }}
+          img={{ src: '/yieldBots.svg', width: 213, height: 133 }}
         />
         <IncentiveCard
           title='Prize Claimer Bot'
           subtitle='Earn claim fees'
           description='Claim prizes for winners and earn a claim fee'
           href='/claimer-bots'
-          img={{ src: '/claimerBots.svg', width: 231, height: 142 }}
+          img={{ src: '/claimerBots.svg', width: 213, height: 133 }}
         />
         <IncentiveCard
           title='Draw Auction Bot'
           subtitle='Earn reserve rewards'
           description='Generate a random # and trigger prize draws'
           href='/draw-bots'
-          img={{ src: '/drawBots.svg', width: 213, height: 139 }}
+          img={{ src: '/drawBots.svg', width: 213, height: 133 }}
         />
       </div>
       <div className='w-full grid grid-cols-1 gap-4 mt-6 md:grid-cols-2'>
@@ -141,9 +141,9 @@ const FaqSection = (props: SectionProps) => {
       <h3 className='text-5xl text-pt-purple-300 sm:text-6xl'>FAQs</h3>
       <div className='flex flex-col gap-12'>
         {/* TODO: add proper responses */}
-        <FAQ q='Where can I learn more about PoolTogether V5 bots?' a={'TODO'} />
-        <FAQ q='How much can I earn by running bots?' a={'TODO'} />
-        <FAQ q='Who administers these incentives programs?' a={'TODO'} />
+        <FAQ q='Where can I learn more about PoolTogether V5 bots?' a={'WIP'} />
+        <FAQ q='How much can I earn by running bots?' a={'WIP'} />
+        <FAQ q='Who administers these incentives programs?' a={'WIP'} />
       </div>
     </section>
   )
