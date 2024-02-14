@@ -39,6 +39,12 @@ export default function ClaimerBotsPage() {
           title='Resources'
           content={
             <div className='flex flex-col gap-4 items-start'>
+              <ResourceLink href='https://dev.pooltogether.com/protocol/design/prize-claimer'>
+                Dev Docs: Prize Claimer Design
+              </ResourceLink>
+              <ResourceLink href='https://dev.pooltogether.com/protocol/guides/claiming-prizes'>
+                Dev Docs: Claiming Prizes Guide
+              </ResourceLink>
               <ResourceLink href='https://mirror.xyz/0x49ca801A80e31B1ef929eAB13Ab3FBbAe7A55e8F/xPSEh1pfjV2IT1yswcsjN2gBBrVf548V8q9W23xxA8U'>
                 Tutorial: Building a prize claiming bot
               </ResourceLink>

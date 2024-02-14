@@ -38,6 +38,9 @@ export default function YieldBotsPage() {
           title='Resources'
           content={
             <div className='flex flex-col gap-4 items-start'>
+              <ResourceLink href='https://dev.pooltogether.com/protocol/guides/liquidating-yield'>
+                Dev Docs: Liquidating Yield Guide
+              </ResourceLink>
               <ResourceLink href='https://mirror.xyz/0x49ca801A80e31B1ef929eAB13Ab3FBbAe7A55e8F/ES-IJduktYPb0X_sBikfqL-PVFRweNpoPrlr01zcVX8'>
                 Tutorial: Building a yield liquidating bot
               </ResourceLink>
@@ -49,6 +52,9 @@ export default function YieldBotsPage() {
               </ResourceLink>
               <ResourceLink href='https://pooltime.app/contributions'>
                 Analytics: Liquidations (PoolTime)
+              </ResourceLink>
+              <ResourceLink href='https://flash.cabana.fi/'>
+                Interface: Flash Liquidations
               </ResourceLink>
             </div>
           }
