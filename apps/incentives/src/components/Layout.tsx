@@ -17,10 +17,13 @@ export const Layout = (props: LayoutProps) => {
         <title>PoolTogether Incentives</title>
       </Head>
 
-      <Navbar />
+      <Navbar className='max-w-7xl mx-auto' />
 
       <main
-        className={classNames('w-full relative flex flex-col items-center mx-auto px-6', className)}
+        className={classNames(
+          'w-full max-w-7xl relative flex flex-col items-center mx-auto px-6',
+          className
+        )}
       >
         {children}
       </main>

@@ -14,7 +14,10 @@ export const Navbar = (props: NavbarProps) => {
 
   return (
     <div
-      className={classNames('flex items-center justify-between px-9 pt-14 pb-4 z-30', className)}
+      className={classNames(
+        'w-full flex items-center justify-between px-9 pt-14 pb-4 z-30',
+        className
+      )}
     >
       <Link href='/'>
         <Image
