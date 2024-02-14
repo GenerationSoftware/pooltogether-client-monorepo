@@ -6,6 +6,7 @@
     "paths": {
       "@components/*": ["./src/components/*"],
       "@pages/*": ["./src/pages/*"],
+      "@shared/generic-react-hooks": ["../../shared/generic-react-hooks"],
       "@shared/types": ["../../shared/types"],
       "@shared/ui": ["../../shared/ui"],
       "@shared/utilities": ["../../shared/utilities"]

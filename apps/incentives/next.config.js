@@ -1,6 +1,7 @@
 module.exports = {
   reactStrictMode: true,
   transpilePackages: [
+    'file:../../shared/generic-react-hooks',
     'file:../../shared/types',
     'file:../../shared/ui',
     'file:../../shared/utilities'
