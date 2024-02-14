@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { ReactNode } from 'react'
 import { Layout } from '@components/Layout'
 
-// TODO: mobile design
 export default function HomePage() {
   return (
     <Layout>
@@ -27,7 +26,7 @@ const HeroSection = (props: SectionProps) => {
     <section
       className={classNames('w-full flex flex-col gap-6 items-center text-center', className)}
     >
-      <h1 className='text-6xl'>
+      <h1 className='text-5xl sm:text-6xl'>
         Help <span className='text-pt-purple-300'>Run</span> The{' '}
         <span className='text-pt-purple-300'>Hyperstructure</span>
       </h1>
@@ -44,7 +43,7 @@ const HeroSection = (props: SectionProps) => {
         <span className='font-semibold text-pt-purple-300'>incentives</span>. You run the
         hyperstructure.
       </h2>
-      <div className='flex gap-6 items-center'>
+      <div className='flex flex-col gap-6 items-center sm:flex-row'>
         <span className='text-xl'>Have questions or want to learn more?</span>
         <Button href={LINKS.discord} target='_blank' color='darkPurple'>
           Chat with us in #incentives
@@ -60,8 +59,8 @@ const IncentivesSection = (props: SectionProps) => {
   return (
     <section className={classNames('w-full flex flex-col items-center text-center', className)}>
       <span className='text-2xl text-pt-purple-300'>PoolTogether V5 has</span>
-      <h3 className='text-6xl'>5 ways to earn incentives</h3>
-      <div className='grid grid-cols-3 gap-4 mt-6'>
+      <h3 className='text-5xl sm:text-6xl'>5 ways to earn incentives</h3>
+      <div className='w-full grid grid-cols-1 gap-4 mt-6 md:grid-cols-3'>
         <IncentiveCard
           title='Yield Liquidation Bot'
           subtitle='Earn liquidation fees'
@@ -84,7 +83,7 @@ const IncentivesSection = (props: SectionProps) => {
           img={{ src: '/drawBots.svg', width: 213, height: 139 }}
         />
       </div>
-      <div className='grid grid-cols-2 gap-4 mt-6'>
+      <div className='w-full grid grid-cols-1 gap-4 mt-6 md:grid-cols-2'>
         <IncentiveCard
           title='Launch a Vault'
           subtitle='Attract deposits, apply for bonus rewards'
@@ -128,7 +127,7 @@ const IncentiveCard = (props: IncentiveCardProps) => {
         <Image {...img} alt={title} className='w-full h-auto' />
         <span className='text-2xl line-clamp-1'>{title}</span>
         <span className='text-pt-purple-300 line-clamp-1'>{subtitle}</span>
-        <p className='line-clamp-2'>{description}</p>
+        <p className='line-clamp-3 md:line-clamp-2'>{description}</p>
       </div>
     </Link>
   )
@@ -139,7 +138,7 @@ const FaqSection = (props: SectionProps) => {
 
   return (
     <section className={classNames('w-full flex flex-col gap-6', className)}>
-      <h3 className='text-6xl text-pt-purple-300'>FAQs</h3>
+      <h3 className='text-5xl text-pt-purple-300 sm:text-6xl'>FAQs</h3>
       <div className='flex flex-col gap-12'>
         {/* TODO: add proper responses */}
         <FAQ q='Where can I learn more about PoolTogether V5 bots?' a={'TODO'} />
