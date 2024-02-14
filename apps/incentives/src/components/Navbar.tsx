@@ -25,6 +25,7 @@ export const Navbar = (props: NavbarProps) => {
           alt='PoolTogether'
           width={183}
           height={72}
+          priority={true}
           className='w-24 h-auto md:w-36'
         />
       </Link>

@@ -36,6 +36,7 @@ const HeroSection = (props: SectionProps) => {
         alt='Fancy Hero Image'
         width={761}
         height={340}
+        priority={true}
         className='w-full h-auto'
       />
       <h2 className='text-2xl'>
