@@ -60,8 +60,8 @@ export default function FrontEndsPage() {
             <BasicList>
               <li>Incentives are retroactive, paid once a month.</li>
               <li>
-                This 6-month incentive is run and managed by G9 Software, who will thereafter work
-                with the host to apply for future ongoing funding from the PoolTogether treasury.
+                This 6-month incentive is offered by G9 Software, who will thereafter work with the
+                host to apply for future ongoing funding from the PoolTogether treasury.
               </li>
             </BasicList>
           }
@@ -80,6 +80,9 @@ export default function FrontEndsPage() {
               </ResourceLink>
               <ResourceLink href='https://www.npmjs.com/package/@generationsoftware/hyperstructure-react-hooks'>
                 Package: PoolTogether V5 React Hooks Library
+              </ResourceLink>
+              <ResourceLink href='https://app.cabana.fi/api/vaultList/default'>
+                Vault List: Cabana Vault List
               </ResourceLink>
             </div>
           }
