@@ -1,4 +1,4 @@
-import { Wallet } from '@rainbow-me/rainbowkit'
+import { CreateWalletFn } from '@rainbow-me/rainbowkit/dist/wallets/Wallet'
 import {
   argentWallet,
   braveWallet,
@@ -20,7 +20,7 @@ import {
 import { TokenWithLogo, VaultInfo } from '@shared/types'
 import { NETWORK } from '@shared/utilities'
 import { Address } from 'viem'
-import { arbitrum, avalanche, celo, Chain, mainnet, optimism, polygon } from 'viem/chains'
+import { arbitrum, avalanche, celo, mainnet, optimism, polygon } from 'viem/chains'
 
 /**
  * Supported networks
@@ -49,9 +49,7 @@ export const WAGMI_CHAINS = {
 /**
  * Wallets
  */
-export const WALLETS: {
-  [wallet: string]: (data: { appName: string; chains: Chain[]; projectId: string }) => Wallet
-} = Object.freeze({
+export const WALLETS: { [wallet: string]: CreateWalletFn } = {
   metamask: metaMaskWallet,
   walletconnect: walletConnectWallet,
   rainbow: rainbowWallet,
@@ -68,7 +66,7 @@ export const WALLETS: {
   uniswap: uniswapWallet,
   coin98: coin98Wallet,
   imtoken: imTokenWallet
-})
+}
 
 /**
  * RPCs
@@ -80,7 +78,7 @@ export const RPC_URLS = {
   [NETWORK.polygon]: process.env.NEXT_PUBLIC_POLYGON_RPC_URL,
   [NETWORK.avalanche]: process.env.NEXT_PUBLIC_AVALANCHE_RPC_URL,
   [NETWORK.celo]: process.env.NEXT_PUBLIC_CELO_RPC_URL
-}
+} as const
 
 /**
  * Migration Destinations
