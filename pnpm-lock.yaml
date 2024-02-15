@@ -89,8 +89,8 @@ importers:
         specifier: ^2.7.9
         version: 2.7.9(typescript@5.0.4)
       wagmi:
-        specifier: ^2.5.6
-        version: 2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+        specifier: 2.5.6
+        version: 2.5.6(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
 
   apps/analytics:
     dependencies:
@@ -149,8 +149,8 @@ importers:
         specifier: ^2.7.9
         version: 2.7.9(typescript@5.0.4)
       wagmi:
-        specifier: ^2.5.6
-        version: 2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+        specifier: 2.5.6
+        version: 2.5.6(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
     devDependencies:
       '@types/node':
         specifier: ^17.0.45
@@ -190,7 +190,7 @@ importers:
         version: 2.0.17(react@18.2.0)
       '@rainbow-me/rainbowkit':
         specifier: ^2.0.0
-        version: 2.0.0(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0)(viem@2.7.9)(wagmi@2.5.7)
+        version: 2.0.0(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0)(viem@2.7.9)(wagmi@2.5.6)
       '@tanstack/react-query':
         specifier: ^5.20.5
         version: 5.20.5(react@18.2.0)
@@ -243,8 +243,8 @@ importers:
         specifier: ^2.7.9
         version: 2.7.9(typescript@5.0.4)
       wagmi:
-        specifier: ^2.5.6
-        version: 2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+        specifier: 2.5.6
+        version: 2.5.6(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
     devDependencies:
       '@types/node':
         specifier: ^17.0.45
@@ -284,7 +284,7 @@ importers:
         version: 2.0.17(react@18.2.0)
       '@rainbow-me/rainbowkit':
         specifier: ^2.0.0
-        version: 2.0.0(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0)(viem@2.7.9)(wagmi@2.5.7)
+        version: 2.0.0(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0)(viem@2.7.9)(wagmi@2.5.6)
       '@tanstack/react-query':
         specifier: ^5.20.5
         version: 5.20.5(react@18.2.0)
@@ -328,8 +328,8 @@ importers:
         specifier: ^2.7.9
         version: 2.7.9(typescript@5.0.4)
       wagmi:
-        specifier: ^2.5.6
-        version: 2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+        specifier: 2.5.6
+        version: 2.5.6(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
     devDependencies:
       '@types/node':
         specifier: ^17.0.45
@@ -559,7 +559,7 @@ importers:
         specifier: ^2.7.9
         version: 2.7.9(typescript@5.0.4)
       wagmi:
-        specifier: ^2.5.6
+        specifier: 2.5.6
         version: 2.5.6(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
     devDependencies:
       '@types/node':
@@ -600,7 +600,7 @@ importers:
         version: 2.0.17(react@18.2.0)
       '@rainbow-me/rainbowkit':
         specifier: ^2.0.0
-        version: 2.0.0(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0)(viem@2.7.9)(wagmi@2.5.7)
+        version: 2.0.0(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0)(viem@2.7.9)(wagmi@2.5.6)
       '@tanstack/react-query':
         specifier: ^5.20.5
         version: 5.20.5(react@18.2.0)
@@ -644,8 +644,8 @@ importers:
         specifier: ^2.7.9
         version: 2.7.9(typescript@5.0.4)
       wagmi:
-        specifier: ^2.5.6
-        version: 2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+        specifier: 2.5.6
+        version: 2.5.6(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
     devDependencies:
       '@types/node':
         specifier: ^17.0.45
@@ -726,8 +726,8 @@ importers:
         specifier: ^2.7.9
         version: 2.7.9(typescript@5.0.4)
       wagmi:
-        specifier: ^2.5.6
-        version: 2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+        specifier: 2.5.6
+        version: 2.5.6(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
     devDependencies:
       '@types/node':
         specifier: ^17.0.45
@@ -767,7 +767,7 @@ importers:
         version: 2.0.17(react@18.2.0)
       '@rainbow-me/rainbowkit':
         specifier: ^2.0.0
-        version: 2.0.0(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0)(viem@2.7.9)(wagmi@2.5.7)
+        version: 2.0.0(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0)(viem@2.7.9)(wagmi@2.5.6)
       '@tanstack/react-query':
         specifier: ^5.20.5
         version: 5.20.5(react@18.2.0)
@@ -811,8 +811,8 @@ importers:
         specifier: ^2.7.9
         version: 2.7.9(typescript@5.0.4)
       wagmi:
-        specifier: ^2.5.6
-        version: 2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+        specifier: 2.5.6
+        version: 2.5.6(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
     devDependencies:
       '@types/node':
         specifier: ^17.0.45
@@ -893,8 +893,8 @@ importers:
         specifier: ^2.7.9
         version: 2.7.9(typescript@5.0.4)
       wagmi:
-        specifier: ^2.5.6
-        version: 2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+        specifier: 2.5.6
+        version: 2.5.6(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
     devDependencies:
       '@types/node':
         specifier: ^17.0.45
@@ -980,8 +980,8 @@ importers:
         specifier: ^2.7.9
         version: 2.7.9(typescript@5.0.4)
       wagmi:
-        specifier: ^2.5.6
-        version: 2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+        specifier: 2.5.6
+        version: 2.5.6(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
 
   workers/protocol-stats-worker:
     dependencies:
@@ -5189,33 +5189,6 @@ packages:
       - '@types/react'
     dev: false
 
-  /@rainbow-me/rainbowkit@2.0.0(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0)(viem@2.7.9)(wagmi@2.5.7):
-    resolution:
-      {
-        integrity: sha512-M25y8twG7iL5P5I5Zml/dyl9ISZQYjODpxdstyMxb5pOl7qPg+sl4f/b18ZEPjdcgJ7751HMSirt25WtfPFSMQ==
-      }
-    engines: { node: '>=12.4' }
-    peerDependencies:
-      react: '>=17'
-      react-dom: '>=17'
-      viem: 2.x
-      wagmi: 2.x
-    dependencies:
-      '@vanilla-extract/css': 1.14.0
-      '@vanilla-extract/dynamic': 2.1.0
-      '@vanilla-extract/sprinkles': 1.6.1(@vanilla-extract/css@1.14.0)
-      clsx: 2.1.0
-      qrcode: 1.5.3
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-remove-scroll: 2.5.7(@types/react@18.2.8)(react@18.2.0)
-      ua-parser-js: 1.0.37
-      viem: 2.7.9(typescript@5.0.4)
-      wagmi: 2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
-    transitivePeerDependencies:
-      - '@types/react'
-    dev: false
-
   /@react-native-async-storage/async-storage@1.21.0(react-native@0.73.4):
     resolution:
       {
@@ -7790,7 +7763,6 @@ packages:
       - supports-color
       - utf-8-validate
       - zod
-    dev: false
 
   /@wagmi/connectors@4.1.14(@types/react@18.2.8)(@wagmi/core@2.6.5)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9):
     resolution:
@@ -7837,6 +7809,7 @@ packages:
       - supports-color
       - utf-8-validate
       - zod
+    dev: false
 
   /@wagmi/core@2.6.4(@types/react@18.2.8)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9):
     resolution:
@@ -7865,7 +7838,6 @@ packages:
       - react
       - utf-8-validate
       - zod
-    dev: false
 
   /@wagmi/core@2.6.5(@types/react@18.2.8)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9):
     resolution:
@@ -7894,6 +7866,7 @@ packages:
       - react
       - utf-8-validate
       - zod
+    dev: false
 
   /@wallet-standard/app@1.0.1:
     resolution:
@@ -16928,7 +16901,6 @@ packages:
       - supports-color
       - utf-8-validate
       - zod
-    dev: false
 
   /wagmi@2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9):
     resolution:
@@ -16975,6 +16947,7 @@ packages:
       - supports-color
       - utf-8-validate
       - zod
+    dev: false
 
   /walker@1.0.8:
     resolution:
