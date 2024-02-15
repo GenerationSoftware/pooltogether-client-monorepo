@@ -25,7 +25,7 @@
     "react-hook-form": "^7.43.2",
     "recharts": "^2.8.0",
     "sonner": "^0.4.0",
-    "viem": "^2.7.8",
+    "viem": "^2.7.9",
     "wagmi": "^2.5.6"
   },
   "devDependencies": {
