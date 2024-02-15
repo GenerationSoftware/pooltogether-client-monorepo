@@ -17,23 +17,25 @@ export const useDrawRngFeePercentage = (
   return useQuery(
     ['drawRngFeePercentage'],
     async () => {
-      const isAuctionOpen = await publicClient.readContract({
-        address: RNG_AUCTION[originChainId as number].address,
-        abi: rngAuctionABI,
-        functionName: 'isAuctionOpen'
-      })
-
-      if (isAuctionOpen) {
-        const rewardFraction = await publicClient.readContract({
+      if (!!publicClient) {
+        const isAuctionOpen = await publicClient.readContract({
           address: RNG_AUCTION[originChainId as number].address,
           abi: rngAuctionABI,
-          functionName: 'currentFractionalReward'
+          functionName: 'isAuctionOpen'
         })
 
-        return parseFloat(formatUnits(rewardFraction, 18)) * 100
-      }
+        if (isAuctionOpen) {
+          const rewardFraction = await publicClient.readContract({
+            address: RNG_AUCTION[originChainId as number].address,
+            abi: rngAuctionABI,
+            functionName: 'currentFractionalReward'
+          })
 
-      return 0
+          return parseFloat(formatUnits(rewardFraction, 18)) * 100
+        }
+
+        return 0
+      }
     },
     {
       enabled: !!originChainId && !!publicClient,

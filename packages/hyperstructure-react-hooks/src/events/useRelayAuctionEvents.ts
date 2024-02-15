@@ -23,8 +23,16 @@ export const useRelayAuctionEvents = (
     options?.toBlock?.toString() ?? 'latest'
   ]
 
-  return useQuery(queryKey, async () => await getRelayAuctionEvents(publicClient, options), {
-    enabled: !!chainId && !!publicClient,
-    ...NO_REFETCH
-  })
+  return useQuery(
+    queryKey,
+    async () => {
+      if (!!publicClient) {
+        return await getRelayAuctionEvents(publicClient, options)
+      }
+    },
+    {
+      enabled: !!chainId && !!publicClient,
+      ...NO_REFETCH
+    }
+  )
 }

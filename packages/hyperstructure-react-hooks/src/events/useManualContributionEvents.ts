@@ -26,7 +26,11 @@ export const useManualContributionEvents = (
 
   return useQuery(
     queryKey,
-    async () => await getManualContributionEvents(publicClient, prizePool.address, options),
+    async () => {
+      if (!!publicClient) {
+        return await getManualContributionEvents(publicClient, prizePool.address, options)
+      }
+    },
     {
       enabled: !!prizePool && !!publicClient,
       ...NO_REFETCH

@@ -12,12 +12,15 @@ export const useLiquidationPairTokenOutAddresses = (chainId: number, lpAddresses
     queries: lpAddresses.map((lpAddress) => {
       return {
         queryKey: ['lpTokenOutAddress', chainId, lpAddress],
-        queryFn: async () =>
-          await publicClient.readContract({
-            address: lpAddress,
-            abi: liquidationPairABI,
-            functionName: 'tokenOut'
-          }),
+        queryFn: async () => {
+          if (!!publicClient) {
+            return await publicClient.readContract({
+              address: lpAddress,
+              abi: liquidationPairABI,
+              functionName: 'tokenOut'
+            })
+          }
+        },
         enabled: !!publicClient && !!lpAddress,
         ...NO_REFETCH
       }

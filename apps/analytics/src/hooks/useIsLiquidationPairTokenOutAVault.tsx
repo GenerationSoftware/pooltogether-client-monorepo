@@ -16,15 +16,17 @@ export const useIsLiquidationPairTokenOutAVault = (chainId: number, lpAddress: A
   return useQuery(
     queryKey,
     async () => {
-      try {
-        const asset = await publicClient.readContract({
-          address: tokenOutAddress as Address,
-          abi: vaultABI,
-          functionName: 'asset'
-        })
-        return !!asset ? isAddress(asset) : false
-      } catch {
-        return false
+      if (!!publicClient) {
+        try {
+          const asset = await publicClient.readContract({
+            address: tokenOutAddress as Address,
+            abi: vaultABI,
+            functionName: 'asset'
+          })
+          return !!asset ? isAddress(asset) : false
+        } catch {
+          return false
+        }
       }
     },
     {

@@ -2,21 +2,25 @@ import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { CURRENCY_ID, LANGUAGE_ID, MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Intl, VaultList } from '@shared/types'
 import { Modal } from '@shared/ui'
+import { NETWORK } from '@shared/utilities'
 import { ReactNode } from 'react'
 import { CurrencyView } from './Views/CurrencyView'
 import { LanguageView } from './Views/LanguageView'
 import { MenuView } from './Views/MenuView'
+import { RPCsView } from './Views/RPCsView'
 import { VaultListView } from './Views/VaultListView'
 
-export type SettingsModalOption = 'currency' | 'language' | 'vaultLists'
+export type SettingsModalOption = 'currency' | 'language' | 'vaultLists' | 'customRPCs'
 
 export type SettingsModalView = 'menu' | SettingsModalOption
 
 export interface SettingsModalProps {
   view: SettingsModalView
   setView: (view: SettingsModalView) => void
+  reloadPage: () => void
   locales?: LANGUAGE_ID[]
   localVaultLists: { [id: string]: VaultList }
+  supportedNetworks?: NETWORK[]
   disable?: SettingsModalOption[]
   hide?: SettingsModalOption[]
   onCurrencyChange?: (id: CURRENCY_ID) => void
@@ -31,6 +35,7 @@ export interface SettingsModalProps {
       | 'changeLanguage'
       | 'viewEcosystem'
       | 'manageVaultLists'
+      | 'setCustomRPCs'
       | 'getHelp'
       | 'getHelpWithCabana'
       | 'vaultListsDescription'
@@ -40,8 +45,19 @@ export interface SettingsModalProps {
       | 'clearImportedVaultLists'
       | 'numTokens'
       | 'imported'
+      | 'customRpcDescription'
+      | 'customNetworkRpc'
+      | 'override'
+      | 'default'
+      | 'set'
+      | 'refreshToUpdateRPCs'
     >
-    errors?: Intl<'formErrors.invalidSrc' | 'formErrors.invalidVaultList'>
+    errors?: Intl<
+      | 'formErrors.invalidSrc'
+      | 'formErrors.invalidVaultList'
+      | 'formErrors.invalidRpcNetwork'
+      | 'formErrors.invalidRpcUrl'
+    >
   }
 }
 
@@ -49,8 +65,10 @@ export const SettingsModal = (props: SettingsModalProps) => {
   const {
     view,
     setView,
+    reloadPage,
     locales,
     localVaultLists,
+    supportedNetworks,
     disable,
     hide,
     onCurrencyChange,
@@ -76,6 +94,9 @@ export const SettingsModal = (props: SettingsModalProps) => {
     ),
     vaultLists: (
       <VaultListView localVaultLists={localVaultLists} onSuccess={onVaultListImport} intl={intl} />
+    ),
+    customRPCs: (
+      <RPCsView chainIds={supportedNetworks ?? []} onClickPageReload={reloadPage} intl={intl} />
     )
   }
 

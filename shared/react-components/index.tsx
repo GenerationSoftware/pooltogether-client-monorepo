@@ -11,8 +11,7 @@ export * from './components/Badges/VaultBadge'
  */
 export * from './components/Buttons/DelegateButton'
 export * from './components/Buttons/DepositButton'
-export * from './components/Buttons/HeyShareButton'
-export * from './components/Buttons/TwitterShareButton'
+export * from './components/Buttons/SocialShareButton'
 export * from './components/Buttons/WithdrawButton'
 
 /**

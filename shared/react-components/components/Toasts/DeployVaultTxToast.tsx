@@ -7,7 +7,7 @@ import {
   NETWORK
 } from '@shared/utilities'
 import { ReactNode, useEffect } from 'react'
-import { useWaitForTransaction } from 'wagmi'
+import { useWaitForTransactionReceipt } from 'wagmi'
 
 export interface DeployVaultTxToastProps {
   chainId: NETWORK
@@ -27,7 +27,7 @@ export const createDeployVaultTxToast = (data: DeployVaultTxToastProps) => {
 export const DeployVaultTxToast = (props: DeployVaultTxToastProps) => {
   const { chainId, txHash, addRecentTransaction } = props
 
-  const { isLoading, isSuccess, isError } = useWaitForTransaction({
+  const { isFetching, isSuccess, isError } = useWaitForTransactionReceipt({
     chainId,
     hash: txHash
   })
@@ -46,7 +46,7 @@ export const DeployVaultTxToast = (props: DeployVaultTxToastProps) => {
     }
   }, [isSuccess, txHash])
 
-  if (!isLoading && isSuccess) {
+  if (!isFetching && isSuccess) {
     toast(
       <ToastLayout id={txHash}>
         <SuccessView chainId={chainId} txHash={txHash} />
@@ -55,7 +55,7 @@ export const DeployVaultTxToast = (props: DeployVaultTxToastProps) => {
     )
   }
 
-  if (!isLoading && !isSuccess && isError) {
+  if (!isFetching && !isSuccess && isError) {
     toast(
       <ToastLayout id={txHash}>
         <ErrorView chainId={chainId} txHash={txHash} />

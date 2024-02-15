@@ -37,10 +37,11 @@ Each app is already setup with its own port through its `package.json` dev scrip
 - `rewards-builder`: App to create and manage TWAB reward promotions for any prize vault.
 - `flash-liquidator`: App to flash liquidate yield from any PoolTogether liquidation pair linked to a prize vault.
 - `migrations`: App to facilitate migrations from old protocol versions.
+- `incentives`: App to present the protocol's many onchain and offchain incentives for contributors.
 
 All apps above are [Next.js](https://nextjs.org/) apps with [Tailwind CSS](https://tailwindcss.com/) support, written in [TypeScript](https://www.typescriptlang.org/).
 
-**Repo Links:** [App](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/app) | [Landing Page](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/landing-page) | [Vault Factory](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/vault-factory) | [VaultList Creator](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/vaultlist-creator) | [Analytics](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/analytics) | [Swaps](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/swaps) | [Rewards Builder](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/rewards-builder) | [Flash Liquidator](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/flash-liquidator) | [Migrations](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/migrations)
+**Repo Links:** [App](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/app) | [Landing Page](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/landing-page) | [Vault Factory](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/vault-factory) | [VaultList Creator](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/vaultlist-creator) | [Analytics](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/analytics) | [Swaps](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/swaps) | [Rewards Builder](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/rewards-builder) | [Flash Liquidator](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/flash-liquidator) | [Migrations](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/migrations) | [Incentives](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/apps/incentives)
 
 ---
 
@@ -48,6 +49,15 @@ All apps above are [Next.js](https://nextjs.org/) apps with [Tailwind CSS](https
 
 - `hyperstructure-client-js`: Protocol-specific functions to easily interact with onchain Hyperstructure data, using [Viem](https://viem.sh/).
 - `hyperstructure-react-hooks`: Shared React hooks specific to Hyperstructure functionality, using [WAGMI](https://wagmi.sh/).
+
+Prize pool and auxiliary contract addresses are included in the `hyperstructure-client-js` package. If you'd like to use older protocol deployments, refer to the versions below:
+
+- Current Optimism Deployment:
+  - `hyperstructure-client-js@latest`
+  - `hyperstructure-react-hooks@latest`
+- Beta Optimism Deployment:
+  - `hyperstructure-client-js@1.2.8`
+  - `hyperstructure-react-hooks@1.4.10`
 
 **Repo Links:** [Hyperstructure Client JS](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/packages/hyperstructure-client-js) | [Hyperstructure React Hooks](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/packages/hyperstructure-react-hooks)
 

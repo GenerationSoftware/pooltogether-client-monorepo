@@ -23,8 +23,16 @@ export const useRngAuctionEvents = (
     options?.toBlock?.toString() ?? 'latest'
   ]
 
-  return useQuery(queryKey, async () => await getRngAuctionEvents(publicClient, options), {
-    enabled: !!chainId && !!publicClient,
-    ...NO_REFETCH
-  })
+  return useQuery(
+    queryKey,
+    async () => {
+      if (!!publicClient) {
+        return await getRngAuctionEvents(publicClient, options)
+      }
+    },
+    {
+      enabled: !!chainId && !!publicClient,
+      ...NO_REFETCH
+    }
+  )
 }

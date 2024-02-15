@@ -199,7 +199,7 @@ export const getPrizePoolAllPrizeInfo = async (
   const prizePoolContract = getContract({
     address: prizePoolAddress,
     abi: prizePoolABI,
-    publicClient
+    client: { public: publicClient }
   })
   const totalContributions = (await prizePoolContract.read.getTotalContributedBetween([
     startDrawId,

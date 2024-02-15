@@ -22,7 +22,7 @@ import {
   WithdrawModal
 } from '@shared/react-components'
 import { Footer, FooterItem, LINKS, Navbar, SocialIcon, toast } from '@shared/ui'
-import { getDiscordInvite } from '@shared/utilities'
+import { getDiscordInvite, NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
 import * as fathom from 'fathom-client'
 import { useAtomValue } from 'jotai'
@@ -30,10 +30,11 @@ import { useTranslations } from 'next-intl'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { DEFAULT_VAULT_LISTS, FATHOM_EVENTS } from '@constants/config'
+import { useNetworks } from '@hooks/useNetworks'
 import { useSelectedPrizePool } from '@hooks/useSelectedPrizePool'
 import { useSettingsModalView } from '@hooks/useSettingsModalView'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
@@ -67,7 +68,12 @@ export const Layout = (props: LayoutProps) => {
 
   const { setIsModalOpen: setIsCaptchaModalOpen } = useIsModalOpen(MODAL_KEYS.captcha)
 
+  const supportedNetworks = useNetworks()
   const { isTestnets, setIsTestnets } = useIsTestnets()
+
+  const customRpcNetworks = useMemo(() => {
+    return [...new Set([NETWORK.mainnet, ...supportedNetworks])]
+  }, [supportedNetworks])
 
   const { openConnectModal } = useConnectModal()
   const { openChainModal } = useChainModal()
@@ -224,8 +230,10 @@ export const Layout = (props: LayoutProps) => {
       <SettingsModal
         view={settingsModalView}
         setView={setSettingsModalView}
+        reloadPage={() => router.reload()}
         locales={['en', 'de', 'ru', 'ko', 'uk', 'hi', 'es']}
         localVaultLists={DEFAULT_VAULT_LISTS}
+        supportedNetworks={customRpcNetworks}
         onCurrencyChange={() => fathom.trackEvent(FATHOM_EVENTS.changedCurrency)}
         onLanguageChange={() => fathom.trackEvent(FATHOM_EVENTS.changedLanguage)}
         onVaultListImport={() => fathom.trackEvent(FATHOM_EVENTS.importedVaultList)}

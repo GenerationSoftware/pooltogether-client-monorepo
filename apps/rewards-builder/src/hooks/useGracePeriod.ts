@@ -17,11 +17,13 @@ export const useGracePeriod = (chainId: number) => {
   return useQuery(
     queryKey,
     async () => {
-      return publicClient.readContract({
-        address: twabRewardsAddress,
-        abi: twabRewardsABI,
-        functionName: 'GRACE_PERIOD'
-      })
+      if (!!publicClient) {
+        return publicClient.readContract({
+          address: twabRewardsAddress,
+          abi: twabRewardsABI,
+          functionName: 'GRACE_PERIOD'
+        })
+      }
     },
     {
       enabled: !!chainId && !!publicClient && !!twabRewardsAddress,

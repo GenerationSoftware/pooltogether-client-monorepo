@@ -9,7 +9,7 @@ import {
 import { PRIZE_POOLS, RNG_RELAY_ADDRESSES, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import { useEffect, useMemo } from 'react'
-import { Address } from 'viem'
+import { Address, PublicClient } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { DrawsAvgClaimFeesChart } from '@components/Charts/DrawsAvgClaimFeesChart'
 import { DrawsAvgLiqEfficiencyChart } from '@components/Charts/DrawsAvgLiqEfficiencyChart'
@@ -43,10 +43,10 @@ export const DrawsView = (props: DrawsViewProps) => {
     return new PrizePool(
       prizePoolInfo.chainId,
       prizePoolInfo.address,
-      publicClient,
+      publicClient as PublicClient,
       prizePoolInfo.options
     )
-  }, [chainId])
+  }, [chainId, publicClient])
 
   const originChainId = !!prizePool
     ? RNG_RELAY_ADDRESSES[prizePool.chainId].from.chainId

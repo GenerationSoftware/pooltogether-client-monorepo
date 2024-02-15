@@ -5,11 +5,10 @@ import { getFallbackGasAmount } from 'src/utils'
 import { Address, TransactionReceipt } from 'viem'
 import {
   useAccount,
-  useContractWrite,
-  useNetwork,
-  usePrepareContractWrite,
   usePublicClient,
-  useWaitForTransaction
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract
 } from 'wagmi'
 import { FLASH_LIQUIDATORS } from '@constants/config'
 import { flashLiquidatorABI } from '@constants/flashLiquidatorABI'
@@ -38,14 +37,11 @@ export const useSendFlashLiquidateTransaction = (
   txReceipt?: TransactionReceipt
   sendFlashLiquidateTransaction?: () => void
 } => {
-  const chainId = liquidationPair.chainId
-  const address = FLASH_LIQUIDATORS[chainId]
+  const address = FLASH_LIQUIDATORS[liquidationPair.chainId]
 
-  const { chain } = useNetwork()
+  const publicClient = usePublicClient({ chainId: liquidationPair.chainId })
 
-  const publicClient = usePublicClient({ chainId })
-
-  const { address: userAddress } = useAccount()
+  const { address: userAddress, chain } = useAccount()
 
   const {
     data: bestLiquidation,
@@ -57,19 +53,19 @@ export const useSendFlashLiquidateTransaction = (
 
   const enabled =
     !!liquidationPair &&
-    chain?.id === chainId &&
+    chain?.id === liquidationPair.chainId &&
     isFetchedBestLiquidation &&
     !!bestLiquidation &&
     !!bestLiquidation.success &&
     !!args
 
   const { data: gasEstimate } = useGasAmountEstimate(
-    chainId,
+    liquidationPair.chainId,
     {
       address,
       abi: flashLiquidatorABI,
       functionName: 'flashLiquidate',
-      args,
+      args: args as NonNullable<ReturnType<typeof useBestLiquidationArgs>>,
       account: userAddress as Address
     },
     { enabled }
@@ -77,8 +73,8 @@ export const useSendFlashLiquidateTransaction = (
 
   const fallbackGasEstimate = getFallbackGasAmount(liquidationPair.swapPath)
 
-  const { config } = usePrepareContractWrite({
-    chainId,
+  const { data } = useSimulateContract({
+    chainId: liquidationPair.chainId,
     address,
     abi: flashLiquidatorABI,
     functionName: 'flashLiquidate',
@@ -88,19 +84,19 @@ export const useSendFlashLiquidateTransaction = (
         ? gasEstimate
         : fallbackGasEstimate
       : undefined,
-    enabled
+    query: { enabled }
   })
 
   const {
-    data: txSendData,
+    data: txHash,
     isLoading: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
-    write: _sendFlashLiquidateTransaction
-  } = useContractWrite(config)
+    writeContract: _sendFlashLiquidateTransaction
+  } = useWriteContract()
 
   const sendFlashLiquidateTransaction =
-    !!args && !!_sendFlashLiquidateTransaction
+    !!publicClient && !!args && !!data
       ? () => {
           try {
             publicClient
@@ -112,8 +108,8 @@ export const useSendFlashLiquidateTransaction = (
                 args
               })
               .then(({ result }) => {
-                if (typeof result === 'bigint' && result >= config.result) {
-                  _sendFlashLiquidateTransaction()
+                if (typeof result === 'bigint' && result >= data.result) {
+                  _sendFlashLiquidateTransaction(data.request)
                 } else {
                   options?.onError?.()
                 }
@@ -127,8 +123,6 @@ export const useSendFlashLiquidateTransaction = (
         }
       : undefined
 
-  const txHash = txSendData?.hash
-
   useEffect(() => {
     if (!!txHash && isSendingSuccess) {
       options?.onSend?.(txHash)
@@ -137,10 +131,10 @@ export const useSendFlashLiquidateTransaction = (
 
   const {
     data: txReceipt,
-    isLoading: isConfirming,
+    isFetching: isConfirming,
     isSuccess,
     isError: isConfirmingError
-  } = useWaitForTransaction({ chainId: liquidationPair.chainId, hash: txHash })
+  } = useWaitForTransactionReceipt({ chainId: liquidationPair.chainId, hash: txHash })
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {

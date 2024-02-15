@@ -21,7 +21,11 @@ export const useGasAmountEstimate = <TAbi extends Abi>(
   const publicClient = usePublicClient({ chainId })
 
   const _enabled =
-    !!chainId && !!tx && !!tx.account && (options?.enabled || options?.enabled === undefined)
+    !!chainId &&
+    !!publicClient &&
+    !!tx &&
+    !!tx.account &&
+    (options?.enabled || options?.enabled === undefined)
 
   const formattedArgs = ((tx?.args as any[] | undefined)
     ?.filter((a) => typeof a === 'string' || typeof a === 'number' || typeof a === 'bigint')
@@ -35,8 +39,16 @@ export const useGasAmountEstimate = <TAbi extends Abi>(
     formattedArgs
   ]
 
-  return useQuery(queryKey, async () => await publicClient.estimateContractGas(tx), {
-    enabled: _enabled,
-    ...NO_REFETCH
-  })
+  return useQuery(
+    queryKey,
+    async () => {
+      if (!!publicClient) {
+        return await publicClient.estimateContractGas(tx)
+      }
+    },
+    {
+      enabled: _enabled,
+      ...NO_REFETCH
+    }
+  )
 }

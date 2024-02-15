@@ -3,7 +3,7 @@ import { Button, ButtonProps, Spinner } from '@shared/ui'
 import { getNiceNetworkNameByChainId } from '@shared/utilities'
 import classNames from 'classnames'
 import { useEffect } from 'react'
-import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi'
+import { useAccount, useSwitchChain } from 'wagmi'
 
 export interface TransactionButtonProps extends Omit<ButtonProps, 'onClick'> {
   chainId: number
@@ -37,10 +37,9 @@ export const TransactionButton = (props: TransactionButtonProps) => {
     ...rest
   } = props
 
-  const { isDisconnected } = useAccount()
-  const { chain } = useNetwork()
+  const { chain, isDisconnected } = useAccount()
 
-  const { isLoading: isSwitchingNetwork, switchNetwork } = useSwitchNetwork()
+  const { switchChain, isLoading: isSwitchingChain } = useSwitchChain()
 
   const networkName = getNiceNetworkNameByChainId(chainId)
 
@@ -65,18 +64,18 @@ export const TransactionButton = (props: TransactionButtonProps) => {
     return (
       <Button
         onClick={() =>
-          !!switchNetwork ? switchNetwork(chainId) : !!openChainModal ? openChainModal() : undefined
+          !!switchChain ? switchChain({ chainId }) : !!openChainModal ? openChainModal() : undefined
         }
-        disabled={isSwitchingNetwork}
+        disabled={isSwitchingChain}
         {...rest}
       >
-        {isSwitchingNetwork && (
+        {isSwitchingChain && (
           <span className={classNames('whitespace-nowrap', innerClassName)}>
             {intl?.base?.('switchingNetwork', { network: networkName }) ??
               `Switching to ${networkName}...`}
           </span>
         )}
-        {!isSwitchingNetwork && (
+        {!isSwitchingChain && (
           <span className={classNames('whitespace-nowrap', innerClassName)}>
             {intl?.base?.('switchNetwork', { network: networkName }) ?? `Switch to ${networkName}`}
           </span>
@@ -87,7 +86,11 @@ export const TransactionButton = (props: TransactionButtonProps) => {
 
   return (
     <Button onClick={write} disabled={!write || isTxLoading || disabled} {...rest}>
-      <span className={classNames('whitespace-nowrap', innerClassName)}>
+      <span
+        className={classNames('whitespace-nowrap', innerClassName, {
+          'leading-none': isTxLoading
+        })}
+      >
         {isTxLoading && <Spinner />}
         {!isTxLoading && children}
       </span>

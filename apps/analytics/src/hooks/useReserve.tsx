@@ -23,7 +23,7 @@ export const useReserve = (prizePool: PrizePool, options?: { refetchInterval?: n
   return useQuery(
     queryKey,
     async () => {
-      if (!!lastAwardedDrawId && !!lastDrawStatus) {
+      if (!!publicClient && !!lastAwardedDrawId && !!lastDrawStatus) {
         const multicallResults = await getSimpleMulticallResults(
           publicClient,
           prizePool.address,

@@ -10,9 +10,11 @@ import {
   calculateCurrencyValue,
   formatCurrencyNumberForDisplay,
   NETWORK,
+  POOL_TOKEN_ADDRESSES,
   USDC_TOKEN_ADDRESSES
 } from '@shared/utilities'
 import { useMemo, useState } from 'react'
+import { Address } from 'viem'
 
 export interface CurrencyValueProps extends Omit<Intl.NumberFormatOptions, 'style' | 'currency'> {
   baseValue: number | string
@@ -43,26 +45,37 @@ export const CurrencyValue = (props: CurrencyValueProps) => {
     useCoingeckoExchangeRates()
   const { selectedCurrency } = useSelectedCurrency()
 
-  const { data: stablecoinPrices, isFetched: isFetchedStablecoinPrices } = useTokenPrices(
+  const { data: extraTokenPrices, isFetched: isFetchedExtraTokenPrices } = useTokenPrices(
     NETWORK.mainnet,
-    [USDC_TOKEN_ADDRESSES[NETWORK.mainnet]]
+    [USDC_TOKEN_ADDRESSES[NETWORK.mainnet], POOL_TOKEN_ADDRESSES[NETWORK.mainnet]]
   )
 
   const exchangeRates = useMemo(() => {
     const rates = { ...coingeckoExchangeRates }
 
-    if (!!rates.eth && !!stablecoinPrices) {
-      const usdcPrice = stablecoinPrices[USDC_TOKEN_ADDRESSES[NETWORK.mainnet]]
+    if (!!rates.eth && !!extraTokenPrices) {
+      const usdcPrice = extraTokenPrices[USDC_TOKEN_ADDRESSES[NETWORK.mainnet]]
+      const poolPrice =
+        extraTokenPrices[POOL_TOKEN_ADDRESSES[NETWORK.mainnet].toLowerCase() as Lowercase<Address>]
 
-      if (!!rates.usd && usdcPrice) {
-        rates.usd.value = (1 / usdcPrice) * rates.eth.value
+      if (!!rates.usd && !!usdcPrice) {
+        rates.usd.value = rates.eth.value / usdcPrice
+      }
+
+      if (!!poolPrice) {
+        rates.pool = {
+          name: SUPPORTED_CURRENCIES.pool.name,
+          unit: SUPPORTED_CURRENCIES.pool.symbol,
+          value: rates.eth.value / poolPrice,
+          type: 'crypto'
+        }
       }
     }
 
     return rates
-  }, [coingeckoExchangeRates, stablecoinPrices])
+  }, [coingeckoExchangeRates, extraTokenPrices])
 
-  const isFetchedExchangeRates = isFetchedCoingeckoExchangeRates && isFetchedStablecoinPrices
+  const isFetchedExchangeRates = isFetchedCoingeckoExchangeRates && isFetchedExtraTokenPrices
 
   const [isFallbackUsdCurrency, setIsFallbackUsdCurrency] = useState<boolean>(false)
 
@@ -75,6 +88,10 @@ export const CurrencyValue = (props: CurrencyValueProps) => {
 
     if (selectedCurrency === 'eth' && (baseCurrency === 'eth' || baseCurrency === undefined)) {
       return Number(baseValue)
+    }
+
+    if (Object.keys(exchangeRates).length === 0) {
+      return undefined
     }
 
     const value = calculateCurrencyValue(baseValue, selectedCurrency, exchangeRates, {
@@ -114,17 +131,18 @@ export const CurrencyValue = (props: CurrencyValueProps) => {
       </>
     )
   } else if (countUp) {
+    const symbol = SUPPORTED_CURRENCIES[!isFallbackUsdCurrency ? selectedCurrency : 'usd']?.symbol
     const fractionDigits = decimals ?? currencyValue > 10_000 ? 0 : 2
     return (
       <>
-        {!hideCountUpSymbol &&
-          SUPPORTED_CURRENCIES[!isFallbackUsdCurrency ? selectedCurrency : 'usd']?.symbol}
+        {!hideCountUpSymbol && symbol !== 'POOL' && symbol}
         <CountUp
           countTo={currencyValue}
           minimumFractionDigits={fractionDigits}
           maximumFractionDigits={fractionDigits}
           {...rest}
         />
+        {!hideCountUpSymbol && symbol === 'POOL' && ` ${symbol}`}
       </>
     )
   } else {

@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { ParsedUrlQuery } from 'querystring'
 import { useEffect } from 'react'
 import { Address, isAddress } from 'viem'
+import { normalize } from 'viem/ens'
 import { useEnsAddress } from 'wagmi'
 import { AccountDelegations } from './AccountDelegations'
 import { AccountDeposits } from './AccountDeposits'
@@ -30,8 +31,8 @@ export const ExternalAccountPageContent = (props: ExternalAccountPageContentProp
 
   const { data: addressFromEns, isFetched: isFetchedAddressFromEns } = useEnsAddress({
     chainId: NETWORK.mainnet,
-    name: user,
-    enabled: isEnsUser
+    name: !!user ? normalize(user) : undefined,
+    query: { enabled: isEnsUser }
   })
 
   const userAddress = (isEnsUser ? addressFromEns : user) as Address | undefined

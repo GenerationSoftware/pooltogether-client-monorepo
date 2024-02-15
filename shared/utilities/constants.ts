@@ -123,18 +123,18 @@ export const PRIZE_POOLS: {
 /**
  * Subgraph API URLs
  */
-export const SUBGRAPH_API_URLS = Object.freeze({
+export const SUBGRAPH_API_URLS = {
   [NETWORK.optimism]: 'https://api.studio.thegraph.com/query/50959/pt-v5-op/version/latest',
   [NETWORK.optimism_sepolia]:
     'https://api.studio.thegraph.com/query/63100/pt-v5-op-sepolia/version/latest',
   [NETWORK.arbitrum_sepolia]:
     'https://api.thegraph.com/subgraphs/name/chuckbergeron/pt-v5-arb-sepolia' // TODO: switch to proper version once available
-})
+} as const
 
 /**
  * CoinGecko platform IDs
  */
-export const COINGECKO_PLATFORMS = Object.freeze({
+export const COINGECKO_PLATFORMS = {
   [NETWORK.mainnet]: 'ethereum',
   [NETWORK.bsc]: 'binance-smart-chain',
   [NETWORK.xdai]: 'xdai',
@@ -143,13 +143,13 @@ export const COINGECKO_PLATFORMS = Object.freeze({
   [NETWORK.avalanche]: 'avalanche',
   [NETWORK.celo]: 'celo',
   [NETWORK.arbitrum]: 'arbitrum-one'
-})
+} as const
 export type COINGECKO_PLATFORM = keyof typeof COINGECKO_PLATFORMS
 
 /**
  * CoinGecko native token IDs
  */
-export const COINGECKO_NATIVE_TOKEN_IDS: Record<NETWORK, string> = Object.freeze({
+export const COINGECKO_NATIVE_TOKEN_IDS: Record<NETWORK, string> = {
   [NETWORK.mainnet]: 'ethereum',
   [NETWORK.sepolia]: 'ethereum',
   [NETWORK.bsc]: 'binancecoin',
@@ -167,12 +167,12 @@ export const COINGECKO_NATIVE_TOKEN_IDS: Record<NETWORK, string> = Object.freeze
   [NETWORK.arbitrum_sepolia]: 'ethereum',
   [NETWORK.base]: 'ethereum',
   [NETWORK.base_sepolia]: 'ethereum'
-})
+}
 
 /**
  * Block explorer mapping
  */
-export const BLOCK_EXPLORERS: Record<NETWORK, { name: string; url: string }> = Object.freeze({
+export const BLOCK_EXPLORERS: Record<NETWORK, { name: string; url: string }> = {
   [NETWORK.mainnet]: { name: 'Etherscan', url: 'https://etherscan.io/' },
   [NETWORK.sepolia]: { name: 'Etherscan', url: 'https://sepolia.etherscan.io/' },
   [NETWORK.bsc]: { name: 'Bscscan', url: 'https://bscscan.com/' },
@@ -193,7 +193,7 @@ export const BLOCK_EXPLORERS: Record<NETWORK, { name: string; url: string }> = O
   [NETWORK.arbitrum_sepolia]: { name: 'Arbiscan', url: 'https://sepolia.arbiscan.io/' },
   [NETWORK.base]: { name: 'Basescan', url: 'https://basescan.org/' },
   [NETWORK.base_sepolia]: { name: 'Blockscout', url: 'https://base-sepolia.blockscout.com/' } // TODO: update to basescan when available
-})
+}
 
 /**
  * Stablecoin addresses and their corresponding fiat currency

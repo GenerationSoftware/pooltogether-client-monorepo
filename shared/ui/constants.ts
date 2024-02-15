@@ -1,7 +1,7 @@
 /**
  * Domains
  */
-export const DOMAINS = Object.freeze({
+export const DOMAINS = {
   app: 'https://app.cabana.fi',
   app_v4: 'https://app.pooltogether.com',
   landingPage: 'https://cabana.fi',
@@ -19,13 +19,14 @@ export const DOMAINS = Object.freeze({
   swaps: 'https://swap.cabana.fi',
   rewardsBuilder: 'https://rewards.cabana.fi',
   flashLiquidator: 'https://flash.cabana.fi',
-  migrations: 'https://migrate.pooltogether.com'
-})
+  migrations: 'https://migrate.pooltogether.com',
+  incentives: 'https://incentives.cabana.fi'
+} as const
 
 /**
  * Links
  */
-export const LINKS = Object.freeze({
+export const LINKS = {
   ...DOMAINS,
   termsOfService: `${DOMAINS.landingPage}/terms`,
   privacyPolicy: `${DOMAINS.landingPage}/privacy`,
@@ -68,4 +69,4 @@ export const LINKS = Object.freeze({
   clientJs: `https://www.npmjs.com/package/@generationsoftware/hyperstructure-client-js`,
   clientJs_v4: `https://www.npmjs.com/package/@pooltogether/v4-client-js`,
   reactHooks: `https://www.npmjs.com/package/@generationsoftware/hyperstructure-react-hooks`
-})
+} as const

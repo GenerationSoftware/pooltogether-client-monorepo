@@ -60,9 +60,7 @@ export interface DepositModalProps {
       | 'success'
       | 'deposited'
       | 'nowEligible'
-      | 'shareTwitter'
-      | 'shareWarpcast'
-      | 'shareHey'
+      | 'shareOn'
       | 'viewAccount'
       | 'uhOh'
       | 'failedTx'
@@ -208,7 +206,6 @@ export const DepositModal = (props: DepositModalProps) => {
         footerContent={modalFooterContent}
         onClose={handleClose}
         label='deposit-flow'
-        hideHeader={true}
         mobileStyle='tab'
       />
     )

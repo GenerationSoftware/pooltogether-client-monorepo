@@ -8,7 +8,7 @@ import classNames from 'classnames'
 import { useAtom } from 'jotai'
 import { useEffect, useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
-import { Address } from 'viem'
+import { Address, PublicClient } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { LiquidationsTable } from '@components/Liquidations/LiquidationsTable'
 import { QUERY_START_BLOCK } from '@constants/config'
@@ -40,10 +40,10 @@ export const LiquidationsView = (props: LiquidationsViewProps) => {
     return new PrizePool(
       prizePoolInfo.chainId,
       prizePoolInfo.address,
-      publicClient,
+      publicClient as PublicClient,
       prizePoolInfo.options
     )
-  }, [chainId])
+  }, [chainId, publicClient])
 
   const { data: minBlock } = useBlockAtTimestamp(
     prizePool.chainId,

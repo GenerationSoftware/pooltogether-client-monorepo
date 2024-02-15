@@ -4,21 +4,21 @@ import { arbitrum, arbitrumSepolia, mainnet, optimism, optimismSepolia } from 'v
 /**
  * Supported networks
  */
-export const SUPPORTED_NETWORKS = Object.freeze({
+export const SUPPORTED_NETWORKS = {
   mainnets: [NETWORK.mainnet, NETWORK.optimism, NETWORK.arbitrum],
   testnets: [NETWORK.optimism_sepolia, NETWORK.arbitrum_sepolia]
-})
+} as const
 
 /**
  * Wagmi networks
  */
-export const WAGMI_CHAINS = Object.freeze({
+export const WAGMI_CHAINS = {
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism,
   [NETWORK.optimism_sepolia]: optimismSepolia,
   [NETWORK.arbitrum]: arbitrum,
   [NETWORK.arbitrum_sepolia]: arbitrumSepolia
-})
+} as const
 
 /**
  * RPCs
@@ -29,4 +29,4 @@ export const RPC_URLS = {
   [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
   [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL
-}
+} as const

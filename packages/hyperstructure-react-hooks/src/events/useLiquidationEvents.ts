@@ -23,8 +23,16 @@ export const useLiquidationEvents = (
     options?.toBlock?.toString() ?? 'latest'
   ]
 
-  return useQuery(queryKey, async () => await getLiquidationEvents(publicClient, options), {
-    enabled: !!chainId && !!publicClient,
-    ...NO_REFETCH
-  })
+  return useQuery(
+    queryKey,
+    async () => {
+      if (!!publicClient) {
+        return await getLiquidationEvents(publicClient, options)
+      }
+    },
+    {
+      enabled: !!chainId && !!publicClient,
+      ...NO_REFETCH
+    }
+  )
 }
