@@ -66,8 +66,10 @@ export default function FrontEndsPage() {
             <BasicList>
               <li>Incentives are retroactive, paid once a month.</li>
               <li>
-                This 6-month incentive is offered by G9 Software, who will thereafter work with the
-                host to apply for future ongoing funding from the PoolTogether treasury.
+                This 6-month incentive is offered by{' '}
+                <ResourceLink href='https://www.g9software.xyz/'>G9 Software</ResourceLink>, who
+                will thereafter work with the host to apply for future ongoing funding from the
+                PoolTogether treasury.
               </li>
             </BasicList>
           }

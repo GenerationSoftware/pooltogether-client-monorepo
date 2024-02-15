@@ -20,8 +20,8 @@ export default function VaultsPage() {
                 sources need due diligence and auditing.
               </p>
               <p>
-                We are seeking developers and auditors to create and audit 8-10 additional vaults
-                and/or wrappers.
+                We are seeking developers and auditors to create, audit and/or verify that these new
+                yield sources and wrappers work as intended.
               </p>
             </>
           }
@@ -30,14 +30,11 @@ export default function VaultsPage() {
           title='What is the incentive?'
           content={
             <div className='flex flex-col'>
-              <span className='text-pt-purple-300'>
-                The community is currently identifying vaults it seeks to integrate. Incentives will
-                begin...
-              </span>
+              <span className='text-pt-purple-300'>Incentives begin...</span>
               <span className='text-5xl'>
                 Soon<sup className='text-2xl'>TM</sup>
               </span>
-              <span className='text-pt-purple-300'>check the #incentives channel for updates</span>
+              <span className='text-pt-purple-300'>Visit #incentives on Discord to learn more</span>
             </div>
           }
         />
@@ -45,7 +42,10 @@ export default function VaultsPage() {
           title='Requirements'
           content={
             <BasicList>
-              <li>Coming soon...</li>
+              <li>
+                Details on this incentives program will be coming soon. The community is currently
+                identifying yield sources it seeks to integrate.
+              </li>
             </BasicList>
           }
         />
@@ -53,6 +53,12 @@ export default function VaultsPage() {
           title='Details'
           content={
             <BasicList>
+              <li>
+                G9 Software's vault factory contract accepts native or wrapped ERC-4626 vaults.
+                Before being added to the interface and promoted to PoolTogether users and
+                contributors, the vault or wrapper must be audited.
+              </li>
+              <li>Prize vault deployers may choose to add a yield fee if they wish.</li>
               <li>
                 Join the discussion on yield sources on the{' '}
                 <ResourceLink href={DOMAINS.governance}>Governance Forum</ResourceLink>.
