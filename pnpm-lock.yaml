@@ -77,8 +77,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(postcss@8.4.23)
       tslib:
-        specifier: ^2.5.0
-        version: 2.5.0
+        specifier: ^2.6.0
+        version: 2.6.2
       turbo:
         specifier: latest
         version: 1.11.1
@@ -171,8 +171,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(postcss@8.4.23)
       tslib:
-        specifier: ^2.5.0
-        version: 2.5.0
+        specifier: ^2.6.0
+        version: 2.6.2
       typescript:
         specifier: ^5.0.4
         version: 5.0.4
@@ -265,8 +265,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(postcss@8.4.23)
       tslib:
-        specifier: ^2.5.0
-        version: 2.5.0
+        specifier: ^2.6.0
+        version: 2.6.2
       typescript:
         specifier: ^5.0.4
         version: 5.0.4
@@ -350,8 +350,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(postcss@8.4.23)
       tslib:
-        specifier: ^2.5.0
-        version: 2.5.0
+        specifier: ^2.6.0
+        version: 2.6.2
       typescript:
         specifier: ^5.0.4
         version: 5.0.4
@@ -420,8 +420,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(postcss@8.4.23)
       tslib:
-        specifier: ^2.5.0
-        version: 2.5.0
+        specifier: ^2.6.0
+        version: 2.6.2
       typescript:
         specifier: ^5.0.4
         version: 5.0.4
@@ -490,8 +490,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(postcss@8.4.23)
       tslib:
-        specifier: ^2.5.0
-        version: 2.5.0
+        specifier: ^2.6.0
+        version: 2.6.2
       typescript:
         specifier: ^5.0.4
         version: 5.0.4
@@ -509,7 +509,7 @@ importers:
         version: 2.0.17(react@18.2.0)
       '@lifi/widget':
         specifier: 3.0.0-alpha.29
-        version: 3.0.0-alpha.29(@babel/runtime@7.23.9)(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(bs58@4.0.1)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(tslib@2.5.0)(typescript@5.0.4)(wagmi@2.5.6)
+        version: 3.0.0-alpha.29(@babel/runtime@7.23.9)(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(bs58@4.0.1)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(tslib@2.6.2)(typescript@5.0.4)(wagmi@2.5.6)
       '@rainbow-me/rainbowkit':
         specifier: ^2.0.0
         version: 2.0.0(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0)(viem@2.7.9)(wagmi@2.5.6)
@@ -581,8 +581,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(postcss@8.4.23)
       tslib:
-        specifier: ^2.5.0
-        version: 2.5.0
+        specifier: ^2.6.0
+        version: 2.6.2
       typescript:
         specifier: ^5.0.4
         version: 5.0.4
@@ -666,8 +666,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(postcss@8.4.23)
       tslib:
-        specifier: ^2.5.0
-        version: 2.5.0
+        specifier: ^2.6.0
+        version: 2.6.2
       typescript:
         specifier: ^5.0.4
         version: 5.0.4
@@ -748,8 +748,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(postcss@8.4.23)
       tslib:
-        specifier: ^2.5.0
-        version: 2.5.0
+        specifier: ^2.6.0
+        version: 2.6.2
       typescript:
         specifier: ^5.0.4
         version: 5.0.4
@@ -833,8 +833,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(postcss@8.4.23)
       tslib:
-        specifier: ^2.5.0
-        version: 2.5.0
+        specifier: ^2.6.0
+        version: 2.6.2
       typescript:
         specifier: ^5.0.4
         version: 5.0.4
@@ -915,8 +915,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(postcss@8.4.23)
       tslib:
-        specifier: ^2.5.0
-        version: 2.5.0
+        specifier: ^2.6.0
+        version: 2.6.2
       typescript:
         specifier: ^5.0.4
         version: 5.0.4
@@ -931,8 +931,8 @@ importers:
         specifier: ^17.0.45
         version: 17.0.45
       tslib:
-        specifier: ^2.5.0
-        version: 2.5.0
+        specifier: ^2.6.0
+        version: 2.6.2
       tsup:
         specifier: ^6.6.3
         version: 6.7.0(postcss@8.4.23)(typescript@5.0.4)
@@ -996,8 +996,8 @@ importers:
         specifier: ^17.0.45
         version: 17.0.45
       tslib:
-        specifier: ^2.5.0
-        version: 2.5.0
+        specifier: ^2.6.0
+        version: 2.6.2
       tsup:
         specifier: ^6.6.3
         version: 6.7.0(postcss@8.4.23)(typescript@5.0.4)
@@ -1014,8 +1014,8 @@ importers:
         specifier: ^17.0.45
         version: 17.0.45
       tslib:
-        specifier: ^2.5.0
-        version: 2.5.0
+        specifier: ^2.6.0
+        version: 2.6.2
       tsup:
         specifier: ^6.6.3
         version: 6.7.0(postcss@8.4.23)(typescript@5.0.4)
@@ -3530,7 +3530,7 @@ packages:
       }
     dependencies:
       '@formatjs/intl-localematcher': 0.2.25
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /@formatjs/ecma402-abstract@1.17.0:
@@ -3540,7 +3540,7 @@ packages:
       }
     dependencies:
       '@formatjs/intl-localematcher': 0.4.0
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /@formatjs/fast-memoize@1.2.1:
@@ -3549,7 +3549,7 @@ packages:
         integrity: sha512-Rg0e76nomkz3vF9IPlKeV+Qynok0r7YZjL6syLz4/urSg0IbjPZCB/iYUMNsYA643gh4mgrX3T7KEIFIxJBQeg==
       }
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /@formatjs/icu-messageformat-parser@2.1.0:
@@ -3560,7 +3560,7 @@ packages:
     dependencies:
       '@formatjs/ecma402-abstract': 1.11.4
       '@formatjs/icu-skeleton-parser': 1.3.6
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /@formatjs/icu-skeleton-parser@1.3.6:
@@ -3570,7 +3570,7 @@ packages:
       }
     dependencies:
       '@formatjs/ecma402-abstract': 1.11.4
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /@formatjs/intl-localematcher@0.2.25:
@@ -3579,7 +3579,7 @@ packages:
         integrity: sha512-YmLcX70BxoSopLFdLr1Ds99NdlTI2oWoLbaUW2M406lxOIPzE1KQhRz2fPUkq34xVZQaihCoU29h0KK7An3bhA==
       }
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /@formatjs/intl-localematcher@0.2.32:
@@ -3588,7 +3588,7 @@ packages:
         integrity: sha512-k/MEBstff4sttohyEpXxCmC3MqbUn9VvHGlZ8fauLzkbwXmVrEeyzS+4uhrvAk9DWU9/7otYWxyDox4nT/KVLQ==
       }
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /@formatjs/intl-localematcher@0.4.0:
@@ -3597,7 +3597,7 @@ packages:
         integrity: sha512-bRTd+rKomvfdS4QDlVJ6TA/Jx1F2h/TBVO5LjvhQ7QPPHp19oPNMIum7W2CMEReq/zPxpmCeB31F9+5gl/qtvw==
       }
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /@fractalwagmi/popup-connection@1.1.1(react-dom@18.2.0)(react@18.2.0):
@@ -3856,7 +3856,7 @@ packages:
     dependencies:
       '@ngraveio/bc-ur': 1.1.6
       bs58check: 2.1.2
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /@keystonehq/sdk@0.13.1:
@@ -4011,7 +4011,7 @@ packages:
       - zod
     dev: false
 
-  /@lifi/widget@3.0.0-alpha.29(@babel/runtime@7.23.9)(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(bs58@4.0.1)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(tslib@2.5.0)(typescript@5.0.4)(wagmi@2.5.6):
+  /@lifi/widget@3.0.0-alpha.29(@babel/runtime@7.23.9)(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(bs58@4.0.1)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(tslib@2.6.2)(typescript@5.0.4)(wagmi@2.5.6):
     resolution:
       {
         integrity: sha512-9Yh13BkgpIfrMxSiRcme8h3Znts37RIL62FJLGEK9aMZ/oeihZoMMGHMY79zZzX+//wovhOrkNiLXDR82FE9ww==
@@ -4035,7 +4035,7 @@ packages:
       '@mui/material': 5.15.10(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0)
       '@solana/wallet-adapter-base': 0.9.23(@solana/web3.js@1.90.0)
       '@solana/wallet-adapter-react': 0.15.35(@solana/web3.js@1.90.0)(bs58@4.0.1)(react-native@0.73.4)(react@18.2.0)
-      '@solana/wallet-adapter-wallets': 0.19.26(@babel/runtime@7.23.9)(@solana/web3.js@1.90.0)(bs58@4.0.1)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(tslib@2.5.0)
+      '@solana/wallet-adapter-wallets': 0.19.26(@babel/runtime@7.23.9)(@solana/web3.js@1.90.0)(bs58@4.0.1)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(tslib@2.6.2)
       '@solana/web3.js': 1.90.0
       '@tanstack/react-query': 5.20.5(react@18.2.0)
       '@tanstack/react-virtual': 3.0.4(react-dom@18.2.0)(react@18.2.0)
@@ -4348,7 +4348,7 @@ packages:
       '@motionone/easing': 10.15.1
       '@motionone/types': 10.15.1
       '@motionone/utils': 10.15.1
-      tslib: 2.5.0
+      tslib: 2.6.2
 
   /@motionone/dom@10.16.2:
     resolution:
@@ -4361,7 +4361,7 @@ packages:
       '@motionone/types': 10.15.1
       '@motionone/utils': 10.15.1
       hey-listen: 1.0.8
-      tslib: 2.5.0
+      tslib: 2.6.2
 
   /@motionone/easing@10.15.1:
     resolution:
@@ -4370,7 +4370,7 @@ packages:
       }
     dependencies:
       '@motionone/utils': 10.15.1
-      tslib: 2.5.0
+      tslib: 2.6.2
 
   /@motionone/generators@10.15.1:
     resolution:
@@ -4380,7 +4380,7 @@ packages:
     dependencies:
       '@motionone/types': 10.15.1
       '@motionone/utils': 10.15.1
-      tslib: 2.5.0
+      tslib: 2.6.2
 
   /@motionone/svelte@10.16.2:
     resolution:
@@ -4389,7 +4389,7 @@ packages:
       }
     dependencies:
       '@motionone/dom': 10.16.2
-      tslib: 2.5.0
+      tslib: 2.6.2
 
   /@motionone/types@10.15.1:
     resolution:
@@ -4405,7 +4405,7 @@ packages:
     dependencies:
       '@motionone/types': 10.15.1
       hey-listen: 1.0.8
-      tslib: 2.5.0
+      tslib: 2.6.2
 
   /@motionone/vue@10.16.2:
     resolution:
@@ -4415,7 +4415,7 @@ packages:
     deprecated: Motion One for Vue is deprecated. Use Oku Motion instead https://oku-ui.com/motion
     dependencies:
       '@motionone/dom': 10.16.2
-      tslib: 2.5.0
+      tslib: 2.6.2
 
   /@mui/base@5.0.0-beta.36(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0):
     resolution:
@@ -6307,7 +6307,7 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@solana/wallet-adapter-trezor@0.1.0(@solana/web3.js@1.90.0)(react-native@0.73.4)(tslib@2.5.0):
+  /@solana/wallet-adapter-trezor@0.1.0(@solana/web3.js@1.90.0)(react-native@0.73.4)(tslib@2.6.2):
     resolution:
       {
         integrity: sha512-iJe57srLXad86PVBNZaNfV+6KnYM5CJ/cmumxWVbagb9QnpizrsTK+T/WnQZOQZVpbKIOVf5oIzyKbX3g05kiA==
@@ -6318,7 +6318,7 @@ packages:
     dependencies:
       '@solana/wallet-adapter-base': 0.9.23(@solana/web3.js@1.90.0)
       '@solana/web3.js': 1.90.0
-      '@trezor/connect-web': 9.1.12(react-native@0.73.4)(tslib@2.5.0)
+      '@trezor/connect-web': 9.1.12(react-native@0.73.4)(tslib@2.6.2)
       buffer: 6.0.3
     transitivePeerDependencies:
       - bufferutil
@@ -6391,7 +6391,7 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@solana/wallet-adapter-wallets@0.19.26(@babel/runtime@7.23.9)(@solana/web3.js@1.90.0)(bs58@4.0.1)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(tslib@2.5.0):
+  /@solana/wallet-adapter-wallets@0.19.26(@babel/runtime@7.23.9)(@solana/web3.js@1.90.0)(bs58@4.0.1)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(tslib@2.6.2):
     resolution:
       {
         integrity: sha512-sOHQNX5YArh2dOHtosSUEfEc/xSzXDZN3h1CCgetJW4Dd3Lpj4RqzCmjVb3oslAH+IBZ5L9o5NKkvjN5R68R7g==
@@ -6431,7 +6431,7 @@ packages:
       '@solana/wallet-adapter-tokenary': 0.1.12(@solana/web3.js@1.90.0)
       '@solana/wallet-adapter-tokenpocket': 0.4.19(@solana/web3.js@1.90.0)
       '@solana/wallet-adapter-torus': 0.11.28(@babel/runtime@7.23.9)(@solana/web3.js@1.90.0)
-      '@solana/wallet-adapter-trezor': 0.1.0(@solana/web3.js@1.90.0)(react-native@0.73.4)(tslib@2.5.0)
+      '@solana/wallet-adapter-trezor': 0.1.0(@solana/web3.js@1.90.0)(react-native@0.73.4)(tslib@2.6.2)
       '@solana/wallet-adapter-trust': 0.1.13(@solana/web3.js@1.90.0)
       '@solana/wallet-adapter-unsafe-burner': 0.1.7(@solana/web3.js@1.90.0)
       '@solana/wallet-adapter-walletconnect': 0.1.16(@solana/web3.js@1.90.0)
@@ -6854,7 +6854,7 @@ packages:
         integrity: sha512-4C7nX/dvpzB7za4Ql9K81xK3HPxCpHMgwTZVyf+9JQ6VUbn9jjZVN7/Nkdz/Ugzs2CSjqnL/UPXroiVBVHUWUw==
       }
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /@tanstack/query-core@5.20.5:
@@ -7087,7 +7087,7 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@trezor/analytics@1.0.14(react-native@0.73.4)(tslib@2.5.0):
+  /@trezor/analytics@1.0.14(react-native@0.73.4)(tslib@2.6.2):
     resolution:
       {
         integrity: sha512-cnW7AADKrSCnrIAV9Bcylmfwv9RUnMfc/ljTCNGvy+MTnTPnnP9mCFiHuzM0aKWAtREhPnH5rgIwsGIZqqDM5g==
@@ -7095,15 +7095,15 @@ packages:
     peerDependencies:
       tslib: ^2.6.2
     dependencies:
-      '@trezor/env-utils': 1.0.13(react-native@0.73.4)(tslib@2.5.0)
-      '@trezor/utils': 9.0.21(tslib@2.5.0)
-      tslib: 2.5.0
+      '@trezor/env-utils': 1.0.13(react-native@0.73.4)(tslib@2.6.2)
+      '@trezor/utils': 9.0.21(tslib@2.6.2)
+      tslib: 2.6.2
     transitivePeerDependencies:
       - expo-localization
       - react-native
     dev: false
 
-  /@trezor/blockchain-link-types@1.0.13(tslib@2.5.0):
+  /@trezor/blockchain-link-types@1.0.13(tslib@2.6.2):
     resolution:
       {
         integrity: sha512-DAob3rFfc6H7BcniArTo3A7VPgfoYe6js1Ffi6xsemnnsKcyS9qhFQWMaj4lcf2OTYYJHuEwEj74KEQw1H1lDQ==
@@ -7111,7 +7111,7 @@ packages:
     dependencies:
       '@solana/web3.js': 1.90.0
       '@trezor/type-utils': 1.0.4
-      '@trezor/utxo-lib': 2.0.6(tslib@2.5.0)
+      '@trezor/utxo-lib': 2.0.6(tslib@2.6.2)
       socks-proxy-agent: 6.1.1
     transitivePeerDependencies:
       - bufferutil
@@ -7121,7 +7121,7 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@trezor/blockchain-link-utils@1.0.14(tslib@2.5.0):
+  /@trezor/blockchain-link-utils@1.0.14(tslib@2.6.2):
     resolution:
       {
         integrity: sha512-E/tDDdjBWWNt4ck2wMRfC/RqiF4cQ0mUfOPvgVgEnAsTJl0zTtu615JyzJwSrfhIRO4sFIebJyFYyImVDFennA==
@@ -7131,16 +7131,16 @@ packages:
     dependencies:
       '@mobily/ts-belt': 3.13.1
       '@solana/web3.js': 1.90.0
-      '@trezor/utils': 9.0.21(tslib@2.5.0)
+      '@trezor/utils': 9.0.21(tslib@2.6.2)
       bignumber.js: 9.1.2
-      tslib: 2.5.0
+      tslib: 2.6.2
     transitivePeerDependencies:
       - bufferutil
       - encoding
       - utf-8-validate
     dev: false
 
-  /@trezor/blockchain-link@2.1.25(tslib@2.5.0):
+  /@trezor/blockchain-link@2.1.25(tslib@2.6.2):
     resolution:
       {
         integrity: sha512-cTtOw4B8u4//sNhi5BmplC7X45kKFhGY+Mc/R/5LhgiLDx84S5Kx/0Xa5YF0TPFD63KqX2JXxhtLU60JZU5yeg==
@@ -7150,16 +7150,16 @@ packages:
     dependencies:
       '@solana/buffer-layout': 4.0.1
       '@solana/web3.js': 1.90.0
-      '@trezor/blockchain-link-types': 1.0.13(tslib@2.5.0)
-      '@trezor/blockchain-link-utils': 1.0.14(tslib@2.5.0)
-      '@trezor/utils': 9.0.21(tslib@2.5.0)
-      '@trezor/utxo-lib': 2.0.6(tslib@2.5.0)
+      '@trezor/blockchain-link-types': 1.0.13(tslib@2.6.2)
+      '@trezor/blockchain-link-utils': 1.0.14(tslib@2.6.2)
+      '@trezor/utils': 9.0.21(tslib@2.6.2)
+      '@trezor/utxo-lib': 2.0.6(tslib@2.6.2)
       '@types/web': 0.0.119
       bignumber.js: 9.1.2
       events: 3.3.0
       ripple-lib: 1.10.1
       socks-proxy-agent: 6.1.1
-      tslib: 2.5.0
+      tslib: 2.6.2
       ws: 8.16.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
@@ -7168,7 +7168,7 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@trezor/connect-analytics@1.0.12(react-native@0.73.4)(tslib@2.5.0):
+  /@trezor/connect-analytics@1.0.12(react-native@0.73.4)(tslib@2.6.2):
     resolution:
       {
         integrity: sha512-S+dVfk6BZ1E9AQap7O8jpTC4OT8uNnCbEMzYufy976l9+BP5nd2UcLqTiZU6vMHnKfqKJ35oKk6H9zb3J0IYNg==
@@ -7176,14 +7176,14 @@ packages:
     peerDependencies:
       tslib: ^2.6.2
     dependencies:
-      '@trezor/analytics': 1.0.14(react-native@0.73.4)(tslib@2.5.0)
-      tslib: 2.5.0
+      '@trezor/analytics': 1.0.14(react-native@0.73.4)(tslib@2.6.2)
+      tslib: 2.6.2
     transitivePeerDependencies:
       - expo-localization
       - react-native
     dev: false
 
-  /@trezor/connect-common@0.0.28(react-native@0.73.4)(tslib@2.5.0):
+  /@trezor/connect-common@0.0.28(react-native@0.73.4)(tslib@2.6.2):
     resolution:
       {
         integrity: sha512-AknDt57o+FhdbP1gYf+3YBgjryES8p3C0qVMmSDPPVTUr7W0lDPWyf3sfgmOx+d8kBMD7VsLFE7FkPYBBaaRAQ==
@@ -7191,15 +7191,15 @@ packages:
     peerDependencies:
       tslib: ^2.6.2
     dependencies:
-      '@trezor/env-utils': 1.0.13(react-native@0.73.4)(tslib@2.5.0)
-      '@trezor/utils': 9.0.21(tslib@2.5.0)
-      tslib: 2.5.0
+      '@trezor/env-utils': 1.0.13(react-native@0.73.4)(tslib@2.6.2)
+      '@trezor/utils': 9.0.21(tslib@2.6.2)
+      tslib: 2.6.2
     transitivePeerDependencies:
       - expo-localization
       - react-native
     dev: false
 
-  /@trezor/connect-web@9.1.12(react-native@0.73.4)(tslib@2.5.0):
+  /@trezor/connect-web@9.1.12(react-native@0.73.4)(tslib@2.6.2):
     resolution:
       {
         integrity: sha512-wkIoZwvc+lk3pN5TEMesyCrNX+aHHnXc97rodFvPwR9CUDskoDIiKIx+3I8hVsosslaD6lCde1mIqW9pyt+mzw==
@@ -7207,10 +7207,10 @@ packages:
     peerDependencies:
       tslib: ^2.6.2
     dependencies:
-      '@trezor/connect': 9.1.12(react-native@0.73.4)(tslib@2.5.0)
-      '@trezor/utils': 9.0.21(tslib@2.5.0)
+      '@trezor/connect': 9.1.12(react-native@0.73.4)(tslib@2.6.2)
+      '@trezor/utils': 9.0.21(tslib@2.6.2)
       events: 3.3.0
-      tslib: 2.5.0
+      tslib: 2.6.2
     transitivePeerDependencies:
       - bufferutil
       - c-kzg
@@ -7221,7 +7221,7 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@trezor/connect@9.1.12(react-native@0.73.4)(tslib@2.5.0):
+  /@trezor/connect@9.1.12(react-native@0.73.4)(tslib@2.6.2):
     resolution:
       {
         integrity: sha512-llCQSADHx7pzrWmziWhAaLhZRTOHTetieDrYnsybz+aMSB/OYJGzk2HiGnF8eYAIB6gKR25uQwWTjn/G4FZGZg==
@@ -7232,23 +7232,23 @@ packages:
       '@ethereumjs/common': 4.2.0
       '@ethereumjs/tx': 5.2.1
       '@fivebinaries/coin-selection': 2.2.1
-      '@trezor/blockchain-link': 2.1.25(tslib@2.5.0)
-      '@trezor/blockchain-link-types': 1.0.13(tslib@2.5.0)
-      '@trezor/connect-analytics': 1.0.12(react-native@0.73.4)(tslib@2.5.0)
-      '@trezor/connect-common': 0.0.28(react-native@0.73.4)(tslib@2.5.0)
-      '@trezor/protobuf': 1.0.8(tslib@2.5.0)
-      '@trezor/protocol': 1.0.5(tslib@2.5.0)
+      '@trezor/blockchain-link': 2.1.25(tslib@2.6.2)
+      '@trezor/blockchain-link-types': 1.0.13(tslib@2.6.2)
+      '@trezor/connect-analytics': 1.0.12(react-native@0.73.4)(tslib@2.6.2)
+      '@trezor/connect-common': 0.0.28(react-native@0.73.4)(tslib@2.6.2)
+      '@trezor/protobuf': 1.0.8(tslib@2.6.2)
+      '@trezor/protocol': 1.0.5(tslib@2.6.2)
       '@trezor/schema-utils': 1.0.1
-      '@trezor/transport': 1.1.24(tslib@2.5.0)
-      '@trezor/utils': 9.0.21(tslib@2.5.0)
-      '@trezor/utxo-lib': 2.0.6(tslib@2.5.0)
+      '@trezor/transport': 1.1.24(tslib@2.6.2)
+      '@trezor/utils': 9.0.21(tslib@2.6.2)
+      '@trezor/utxo-lib': 2.0.6(tslib@2.6.2)
       bignumber.js: 9.1.2
       blakejs: 1.2.1
       bs58: 5.0.0
       bs58check: 3.0.1
       cross-fetch: 4.0.0
       events: 3.3.0
-      tslib: 2.5.0
+      tslib: 2.6.2
     transitivePeerDependencies:
       - bufferutil
       - c-kzg
@@ -7259,7 +7259,7 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@trezor/env-utils@1.0.13(react-native@0.73.4)(tslib@2.5.0):
+  /@trezor/env-utils@1.0.13(react-native@0.73.4)(tslib@2.6.2):
     resolution:
       {
         integrity: sha512-oJn102PUKEu14OxwlBWUqFGBfp04xFcuSqLH4qVEguJ1Qt+iLTN0IysIDrLFI7CcuznKk9bIrkjOAF2MT255+A==
@@ -7275,11 +7275,11 @@ packages:
         optional: true
     dependencies:
       react-native: 0.73.4(@babel/core@7.23.9)(@babel/preset-env@7.23.9)(react@18.2.0)
-      tslib: 2.5.0
+      tslib: 2.6.2
       ua-parser-js: 1.0.37
     dev: false
 
-  /@trezor/protobuf@1.0.8(tslib@2.5.0):
+  /@trezor/protobuf@1.0.8(tslib@2.6.2):
     resolution:
       {
         integrity: sha512-zibOuhAuFdZhtpxHEyWaw39EouVJrXrZVGVHiajvkp8GhbzxpbtvV0/rx6qkGnsc1nLHmILydQsS1bDGRUSFGw==
@@ -7290,10 +7290,10 @@ packages:
       '@trezor/schema-utils': 1.0.1
       long: 4.0.0
       protobufjs: 7.2.5
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
-  /@trezor/protocol@1.0.5(tslib@2.5.0):
+  /@trezor/protocol@1.0.5(tslib@2.6.2):
     resolution:
       {
         integrity: sha512-xRqn6k4Rn9pvDlGu7aBuoDL4fG+BN1dj+nBV2ULt03+evKmrcC0ya6bZ74cWqoaGtWrNSo6opONr1VF7tN2fKg==
@@ -7301,7 +7301,7 @@ packages:
     peerDependencies:
       tslib: ^2.6.2
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /@trezor/schema-utils@1.0.1:
@@ -7314,7 +7314,7 @@ packages:
       ts-mixer: 6.0.3
     dev: false
 
-  /@trezor/transport@1.1.24(tslib@2.5.0):
+  /@trezor/transport@1.1.24(tslib@2.6.2):
     resolution:
       {
         integrity: sha512-vFMMQ1hrSe9WFdA6EKdzTXqvIyjO5msQJsSnyAC9r08e/V7wqWGS9Jh5fMtKahI16nrSHOilYiJT2fe8G9HF2g==
@@ -7322,14 +7322,14 @@ packages:
     peerDependencies:
       tslib: ^2.6.2
     dependencies:
-      '@trezor/protobuf': 1.0.8(tslib@2.5.0)
-      '@trezor/protocol': 1.0.5(tslib@2.5.0)
-      '@trezor/utils': 9.0.21(tslib@2.5.0)
+      '@trezor/protobuf': 1.0.8(tslib@2.6.2)
+      '@trezor/protocol': 1.0.5(tslib@2.6.2)
+      '@trezor/utils': 9.0.21(tslib@2.6.2)
       cross-fetch: 4.0.0
       json-stable-stringify: 1.1.1
       long: 4.0.0
       protobufjs: 7.2.5
-      tslib: 2.5.0
+      tslib: 2.6.2
       usb: 2.11.0
     transitivePeerDependencies:
       - encoding
@@ -7342,7 +7342,7 @@ packages:
       }
     dev: false
 
-  /@trezor/utils@9.0.21(tslib@2.5.0):
+  /@trezor/utils@9.0.21(tslib@2.6.2):
     resolution:
       {
         integrity: sha512-Qdff78pC+O/YG05f33/v5x2tL1TW/Xkqr2GNUJZ7FBFzWS/6wTyHiLLnk3h1H1jj/bTaMsv77aNbS8ctBpGl7Q==
@@ -7350,10 +7350,10 @@ packages:
     peerDependencies:
       tslib: ^2.6.2
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
-  /@trezor/utxo-lib@2.0.6(tslib@2.5.0):
+  /@trezor/utxo-lib@2.0.6(tslib@2.6.2):
     resolution:
       {
         integrity: sha512-aVsTNJuHKoEkEme/pMFZagZ9ko1rA8etNji+UvatzPDD8Pfxreq4USxk38se9GDg2y8TY8lcSGhOhtxU2b3SfQ==
@@ -7361,7 +7361,7 @@ packages:
     peerDependencies:
       tslib: ^2.6.2
     dependencies:
-      '@trezor/utils': 9.0.21(tslib@2.5.0)
+      '@trezor/utils': 9.0.21(tslib@2.6.2)
       bchaddrjs: 0.5.2
       bech32: 2.0.0
       bip66: 1.1.5
@@ -7376,7 +7376,7 @@ packages:
       int64-buffer: 1.0.1
       pushdata-bitcoin: 1.0.1
       tiny-secp256k1: 1.1.6
-      tslib: 2.5.0
+      tslib: 2.6.2
       typeforce: 1.18.0
       varuint-bitcoin: 1.1.2
       wif: 4.0.0
@@ -8620,7 +8620,7 @@ packages:
       }
     engines: { node: '>=10' }
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.2
 
   /array-union@2.1.0:
     resolution:
@@ -8668,7 +8668,7 @@ packages:
       }
     engines: { node: '>=4' }
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.2
 
   /astral-regex@1.0.0:
     resolution:
@@ -8689,7 +8689,7 @@ packages:
         integrity: sha512-Hs4R+4SPgamu6rSGW8C7cV9gaWUKEHykfzCCvIRuaVv636Ju10ZdeUbvb4TBEW0INuq2DHZqXbK4Nd3yG4RaRw==
       }
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.2
 
   /async-mutex@0.4.1:
     resolution:
@@ -8697,7 +8697,7 @@ packages:
         integrity: sha512-WfoBo4E/TbCX1G95XTjbWTE3X2XLG0m1Xbv2cwOtuPdyH9CZvnaA5nCt1ucjaKEgW2A5IF71hxrRhr83Je5xjA==
       }
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /asynckit@0.4.0:
@@ -11043,7 +11043,7 @@ packages:
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      tslib: 2.5.0
+      tslib: 2.6.2
     optionalDependencies:
       '@emotion/is-prop-valid': 0.8.8
 
@@ -11591,7 +11591,7 @@ packages:
       '@formatjs/ecma402-abstract': 1.11.4
       '@formatjs/fast-memoize': 1.2.1
       '@formatjs/icu-messageformat-parser': 2.1.0
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /invariant@2.2.4:
@@ -14708,7 +14708,7 @@ packages:
       '@types/react': 18.2.8
       react: 18.2.0
       react-style-singleton: 2.2.1(@types/react@18.2.8)(react@18.2.0)
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /react-remove-scroll@2.5.7(@types/react@18.2.8)(react@18.2.0):
@@ -14728,7 +14728,7 @@ packages:
       react: 18.2.0
       react-remove-scroll-bar: 2.3.4(@types/react@18.2.8)(react@18.2.0)
       react-style-singleton: 2.2.1(@types/react@18.2.8)(react@18.2.0)
-      tslib: 2.5.0
+      tslib: 2.6.2
       use-callback-ref: 1.3.0(@types/react@18.2.8)(react@18.2.0)
       use-sidecar: 1.1.2(@types/react@18.2.8)(react@18.2.0)
     dev: false
@@ -14822,7 +14822,7 @@ packages:
       get-nonce: 1.0.1
       invariant: 2.2.4
       react: 18.2.0
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /react-timer-hook@3.0.7(react@18.2.0):
@@ -14984,7 +14984,7 @@ packages:
       ast-types: 0.15.2
       esprima: 4.0.1
       source-map: 0.6.1
-      tslib: 2.5.0
+      tslib: 2.6.2
 
   /recharts-scale@0.4.5:
     resolution:
@@ -16243,10 +16243,10 @@ packages:
         integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
       }
 
-  /tslib@2.5.0:
+  /tslib@2.6.2:
     resolution:
       {
-        integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==
+        integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==
       }
 
   /tsup@6.7.0(postcss@8.4.23)(typescript@5.0.4):
@@ -16645,7 +16645,7 @@ packages:
     dependencies:
       '@types/react': 18.2.8
       react: 18.2.0
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /use-intl@2.17.5(react@18.2.0):
@@ -16678,7 +16678,7 @@ packages:
       '@types/react': 18.2.8
       detect-node-es: 1.1.0
       react: 18.2.0
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /use-sync-external-store@1.2.0(react@18.2.0):
