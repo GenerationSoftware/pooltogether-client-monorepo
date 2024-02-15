@@ -66,6 +66,7 @@ export const useV4ClaimRewardsGasEstimate = (
     address: V4_PROMOTIONS[chainId]?.twabRewardsAddress,
     abi: twabRewardsABI,
     functionName: isMulticall ? 'multicall' : 'claimRewards',
+    // @ts-ignore
     args: isMulticall ? multicallArgs : claimRewardsArgs,
     account: userAddress
   })

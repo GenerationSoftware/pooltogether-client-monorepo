@@ -4,22 +4,17 @@ import { CurrencyValue, NetworkBadge, TokenIcon } from '@shared/react-components
 import { Button, Spinner } from '@shared/ui'
 import { formatBigIntForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
-import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { ReactNode, useMemo, useState } from 'react'
 import { Address, formatUnits } from 'viem'
 import { SimpleBadge } from '@components/SimpleBadge'
+import { SwapWidget } from '@components/SwapWidget'
 import { SupportedNetwork, V3_POOLS } from '@constants/config'
 import { useUserV3Balances, V3BalanceToMigrate } from '@hooks/useUserV3Balances'
 import { useV3WithdrawGasEstimate } from '@hooks/useV3WithdrawGasEstimate'
 import { V3MigrationHeader } from './V3MigrationHeader'
 import { WithdrawPodButton } from './WithdrawPodButton'
 import { WithdrawPoolButton } from './WithdrawPoolButton'
-
-const SwapWidget = dynamic(() => import('../SwapWidget').then((module) => module.SwapWidget), {
-  ssr: false,
-  loading: () => <Spinner />
-})
 
 export interface V3MigrationProps {
   userAddress: Address

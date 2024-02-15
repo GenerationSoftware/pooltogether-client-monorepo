@@ -8,20 +8,15 @@ import { CurrencyValue, NetworkBadge, TokenIcon } from '@shared/react-components
 import { Button, Spinner } from '@shared/ui'
 import { formatBigIntForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
-import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { ReactNode, useMemo, useState } from 'react'
 import { Address, formatUnits } from 'viem'
 import { SimpleBadge } from '@components/SimpleBadge'
+import { SwapWidget } from '@components/SwapWidget'
 import { useUserV5Balances, V5BalanceToMigrate } from '@hooks/useUserV5Balances'
 import { useV5WithdrawGasEstimate } from '@hooks/useV5WithdrawGasEstimate'
 import { V5MigrationHeader } from './V5MigrationHeader'
 import { WithdrawButton } from './WithdrawButton'
-
-const SwapWidget = dynamic(() => import('../SwapWidget').then((module) => module.SwapWidget), {
-  ssr: false,
-  loading: () => <Spinner />
-})
 
 export interface V5MigrationProps {
   userAddress: Address

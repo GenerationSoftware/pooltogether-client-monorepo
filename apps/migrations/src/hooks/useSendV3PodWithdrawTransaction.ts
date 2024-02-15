@@ -2,10 +2,9 @@ import { useEffect } from 'react'
 import { Address, isAddress, TransactionReceipt } from 'viem'
 import {
   useAccount,
-  useContractWrite,
-  useNetwork,
-  usePrepareContractWrite,
-  useWaitForTransaction
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract
 } from 'wagmi'
 import { SupportedNetwork, V3_POOLS } from '@constants/config'
 import { v3PodABI } from '@constants/v3PodABI'
@@ -28,8 +27,7 @@ export const useSendV3PodWithdrawTransaction = (
   txReceipt?: TransactionReceipt
   sendV3PodWithdrawTransaction?: () => void
 } => {
-  const { address: userAddress } = useAccount()
-  const { chain } = useNetwork()
+  const { address: userAddress, chain } = useAccount()
 
   const podAddress =
     !!chainId && !!tokenAddress
@@ -47,25 +45,28 @@ export const useSendV3PodWithdrawTransaction = (
     isAddress(userAddress) &&
     chain?.id === chainId
 
-  const { config } = usePrepareContractWrite({
+  const { data } = useSimulateContract({
     account: userAddress as Address,
     chainId,
     address: podAddress,
     abi: v3PodABI,
     functionName: 'withdraw',
     args: [amount, 0n],
-    enabled
+    query: { enabled }
   })
 
   const {
-    data: txSendData,
+    data: txHash,
     isLoading: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
-    write: sendV3PodWithdrawTransaction
-  } = useContractWrite(config)
+    writeContract: _sendV3PodWithdrawTransaction
+  } = useWriteContract()
 
-  const txHash = txSendData?.hash
+  const sendV3PodWithdrawTransaction =
+    !!data && !!_sendV3PodWithdrawTransaction
+      ? () => _sendV3PodWithdrawTransaction(data.request)
+      : undefined
 
   useEffect(() => {
     if (!!txHash && isSendingSuccess) {
@@ -78,7 +79,7 @@ export const useSendV3PodWithdrawTransaction = (
     isLoading: isConfirming,
     isSuccess,
     isError: isConfirmingError
-  } = useWaitForTransaction({ chainId, hash: txHash })
+  } = useWaitForTransactionReceipt({ chainId, hash: txHash })
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {

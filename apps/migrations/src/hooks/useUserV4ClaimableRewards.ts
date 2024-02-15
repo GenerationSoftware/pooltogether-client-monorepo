@@ -1,13 +1,15 @@
+import { usePublicClientsByChain } from '@generationsoftware/hyperstructure-react-hooks'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { getPromotionEpochs, getSimpleMulticallResults, twabRewardsABI } from '@shared/utilities'
 import { useQueries, useQuery } from '@tanstack/react-query'
-import { getPublicClient } from '@wagmi/core'
 import { useMemo } from 'react'
 import { Address, PublicClient } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { V4_PROMOTIONS } from '@constants/config'
 
 export const useAllUserV4ClaimableRewards = (userAddress: Address) => {
+  const publicClients = usePublicClientsByChain()
+
   const tokens = Object.entries(V4_PROMOTIONS).map(([k, v]) => ({
     chainId: parseInt(k),
     ...v.token
@@ -18,9 +20,7 @@ export const useAllUserV4ClaimableRewards = (userAddress: Address) => {
       return {
         queryKey: ['userV4ClaimableRewards', token.chainId, userAddress],
         queryFn: async () => {
-          const publicClient = getPublicClient({ chainId: token.chainId })
-
-          const rewards = await getClaimableRewards(publicClient, userAddress)
+          const rewards = await getClaimableRewards(publicClients[token.chainId], userAddress)
 
           let total = 0n
           Object.values(rewards).forEach((promotionRewards) => {
@@ -66,23 +66,23 @@ export const useUserV4ClaimableRewards = (chainId: number, userAddress: Address)
 
   const queryKey = ['userV4ClaimableRewards', chainId, userAddress]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
-      const rewards = await getClaimableRewards(publicClient, userAddress)
+    queryFn: async () => {
+      if (!!publicClient) {
+        const rewards = await getClaimableRewards(publicClient, userAddress)
 
-      let total = 0n
-      Object.values(rewards).forEach((promotionRewards) => {
-        total += Object.values(promotionRewards).reduce((a, b) => a + b, 0n)
-      })
+        let total = 0n
+        Object.values(rewards).forEach((promotionRewards) => {
+          total += Object.values(promotionRewards).reduce((a, b) => a + b, 0n)
+        })
 
-      return { token: { chainId, ...token }, rewards, total }
+        return { token: { chainId, ...token }, rewards, total }
+      }
     },
-    {
-      enabled: !!chainId && !!publicClient && !!userAddress && !!token,
-      ...NO_REFETCH
-    }
-  )
+    enabled: !!chainId && !!publicClient && !!userAddress && !!token,
+    ...NO_REFETCH
+  })
 }
 
 export const getClaimableRewards = async (publicClient: PublicClient, userAddress: Address) => {

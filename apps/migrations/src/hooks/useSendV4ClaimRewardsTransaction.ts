@@ -1,7 +1,12 @@
 import { twabRewardsABI } from '@shared/utilities'
 import { useEffect, useMemo } from 'react'
 import { Address, encodeFunctionData, isAddress, TransactionReceipt } from 'viem'
-import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
+import {
+  useAccount,
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract
+} from 'wagmi'
 import { V4_PROMOTIONS } from '@constants/config'
 import { useUserV4ClaimableRewards } from './useUserV4ClaimableRewards'
 
@@ -22,7 +27,7 @@ export const useSendV4ClaimRewardsTransaction = (
   txReceipt?: TransactionReceipt
   sendV4ClaimRewardsTransaction?: () => void
 } => {
-  const { chain } = useNetwork()
+  const { chain } = useAccount()
 
   const {
     data: claimable,
@@ -62,22 +67,27 @@ export const useSendV4ClaimRewardsTransaction = (
     }
   }, [userAddress, epochsToClaim])
 
-  const { config } = usePrepareContractWrite({
+  const { data } = useSimulateContract({
     chainId,
     address: V4_PROMOTIONS[chainId]?.twabRewardsAddress,
     abi: twabRewardsABI,
     functionName: 'claimRewards',
     args: claimRewardsArgs,
-    enabled
+    query: { enabled }
   })
 
   const {
-    data: txSendData,
+    data: _txHash,
     isLoading: _isWaiting,
     isError: _isSendingError,
     isSuccess: _isSendingSuccess,
-    write: _sendClaimRewardsTransaction
-  } = useContractWrite(config)
+    writeContract: _sendClaimRewardsTransaction
+  } = useWriteContract()
+
+  const sendClaimRewardsTransaction =
+    !!data && !!_sendClaimRewardsTransaction
+      ? () => _sendClaimRewardsTransaction(data.request)
+      : undefined
 
   const isMulticall = useMemo(() => {
     const numValidPromotions = Object.values(epochsToClaim).filter(
@@ -103,29 +113,34 @@ export const useSendV4ClaimRewardsTransaction = (
     }
   }, [userAddress, epochsToClaim])
 
-  const { config: multicallConfig } = usePrepareContractWrite({
+  const { data: multicallData } = useSimulateContract({
     chainId,
     address: V4_PROMOTIONS[chainId]?.twabRewardsAddress,
     abi: twabRewardsABI,
     functionName: 'multicall',
     args: multicallArgs,
-    enabled: enabled && isMulticall
+    query: { enabled: enabled && isMulticall }
   })
 
   const {
-    data: multicallTxSendData,
+    data: multicallTxHash,
     isLoading: isWaitingMulticall,
     isError: isSendingMulticallError,
     isSuccess: isSendingMulticallSuccess,
-    write: sendMulticallTransaction
-  } = useContractWrite(multicallConfig)
+    writeContract: _sendMulticallTransaction
+  } = useWriteContract()
 
-  const txHash = isMulticall ? multicallTxSendData?.hash : txSendData?.hash
+  const sendMulticallTransaction =
+    !!multicallData && !!_sendMulticallTransaction
+      ? () => _sendMulticallTransaction(multicallData.request)
+      : undefined
+
+  const txHash = isMulticall ? multicallTxHash : _txHash
   const isWaiting = isMulticall ? isWaitingMulticall : _isWaiting
   const isSendingError = isMulticall ? isSendingMulticallError : _isSendingError
   const sendV4ClaimRewardsTransaction = isMulticall
     ? sendMulticallTransaction
-    : _sendClaimRewardsTransaction
+    : sendClaimRewardsTransaction
 
   useEffect(() => {
     if (!!txHash && (_isSendingSuccess || isSendingMulticallSuccess)) {
@@ -138,7 +153,7 @@ export const useSendV4ClaimRewardsTransaction = (
     isLoading: isConfirming,
     isSuccess,
     isError: isConfirmingError
-  } = useWaitForTransaction({ chainId, hash: txHash })
+  } = useWaitForTransactionReceipt({ chainId, hash: txHash })
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {

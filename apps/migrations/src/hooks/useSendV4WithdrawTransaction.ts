@@ -2,10 +2,9 @@ import { useEffect } from 'react'
 import { Address, isAddress, TransactionReceipt } from 'viem'
 import {
   useAccount,
-  useContractWrite,
-  useNetwork,
-  usePrepareContractWrite,
-  useWaitForTransaction
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract
 } from 'wagmi'
 import { V4_POOLS } from '@constants/config'
 import { v4PrizePoolABI } from '@constants/v4PrizePoolABI'
@@ -27,8 +26,7 @@ export const useSendV4WithdrawTransaction = (
   txReceipt?: TransactionReceipt
   sendV4WithdrawTransaction?: () => void
 } => {
-  const { address: userAddress } = useAccount()
-  const { chain } = useNetwork()
+  const { address: userAddress, chain } = useAccount()
 
   const prizePoolAddress = !!chainId ? V4_POOLS[chainId]?.address : undefined
 
@@ -40,25 +38,28 @@ export const useSendV4WithdrawTransaction = (
     isAddress(userAddress) &&
     chain?.id === chainId
 
-  const { config } = usePrepareContractWrite({
+  const { data } = useSimulateContract({
     account: userAddress as Address,
     chainId,
     address: prizePoolAddress,
     abi: v4PrizePoolABI,
     functionName: 'withdrawFrom',
     args: [userAddress as Address, amount],
-    enabled
+    query: { enabled }
   })
 
   const {
-    data: txSendData,
+    data: txHash,
     isLoading: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
-    write: sendV4WithdrawTransaction
-  } = useContractWrite(config)
+    writeContract: _sendV4WithdrawTransaction
+  } = useWriteContract()
 
-  const txHash = txSendData?.hash
+  const sendV4WithdrawTransaction =
+    !!data && !!_sendV4WithdrawTransaction
+      ? () => _sendV4WithdrawTransaction(data.request)
+      : undefined
 
   useEffect(() => {
     if (!!txHash && isSendingSuccess) {
@@ -71,7 +72,7 @@ export const useSendV4WithdrawTransaction = (
     isLoading: isConfirming,
     isSuccess,
     isError: isConfirmingError
-  } = useWaitForTransaction({ chainId, hash: txHash })
+  } = useWaitForTransactionReceipt({ chainId, hash: txHash })
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {

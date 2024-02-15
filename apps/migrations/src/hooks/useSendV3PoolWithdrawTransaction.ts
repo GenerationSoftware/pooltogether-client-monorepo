@@ -2,10 +2,9 @@ import { useEffect } from 'react'
 import { Address, isAddress, TransactionReceipt } from 'viem'
 import {
   useAccount,
-  useContractWrite,
-  useNetwork,
-  usePrepareContractWrite,
-  useWaitForTransaction
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract
 } from 'wagmi'
 import { SupportedNetwork, V3_POOLS } from '@constants/config'
 import { v3PoolABI } from '@constants/v3PoolABI'
@@ -28,8 +27,7 @@ export const useSendV3PoolWithdrawTransaction = (
   txReceipt?: TransactionReceipt
   sendV3PoolWithdrawTransaction?: () => void
 } => {
-  const { address: userAddress } = useAccount()
-  const { chain } = useNetwork()
+  const { address: userAddress, chain } = useAccount()
 
   const poolAddress =
     !!chainId && !!tokenAddress
@@ -47,25 +45,28 @@ export const useSendV3PoolWithdrawTransaction = (
     isAddress(userAddress) &&
     chain?.id === chainId
 
-  const { config } = usePrepareContractWrite({
+  const { data } = useSimulateContract({
     account: userAddress as Address,
     chainId,
     address: poolAddress,
     abi: v3PoolABI,
     functionName: 'withdrawInstantlyFrom',
     args: [userAddress as Address, amount, tokenAddress, 0n],
-    enabled
+    query: { enabled }
   })
 
   const {
-    data: txSendData,
+    data: txHash,
     isLoading: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
-    write: sendV3PoolWithdrawTransaction
-  } = useContractWrite(config)
+    writeContract: _sendV3PoolWithdrawTransaction
+  } = useWriteContract()
 
-  const txHash = txSendData?.hash
+  const sendV3PoolWithdrawTransaction =
+    !!data && !!_sendV3PoolWithdrawTransaction
+      ? () => _sendV3PoolWithdrawTransaction(data.request)
+      : undefined
 
   useEffect(() => {
     if (!!txHash && isSendingSuccess) {
@@ -78,7 +79,7 @@ export const useSendV3PoolWithdrawTransaction = (
     isLoading: isConfirming,
     isSuccess,
     isError: isConfirmingError
-  } = useWaitForTransaction({ chainId, hash: txHash })
+  } = useWaitForTransactionReceipt({ chainId, hash: txHash })
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {

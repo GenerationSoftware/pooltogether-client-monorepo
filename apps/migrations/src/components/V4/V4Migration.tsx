@@ -3,22 +3,17 @@ import { CurrencyValue, NetworkBadge, TokenIcon } from '@shared/react-components
 import { Button, Spinner } from '@shared/ui'
 import { formatBigIntForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
-import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { ReactNode, useMemo, useState } from 'react'
 import { Address, formatUnits } from 'viem'
 import { SimpleBadge } from '@components/SimpleBadge'
+import { SwapWidget } from '@components/SwapWidget'
 import { V4_PROMOTIONS } from '@constants/config'
 import { V4BalanceToMigrate } from '@hooks/useUserV4Balances'
 import { useUserV4ClaimableRewards } from '@hooks/useUserV4ClaimableRewards'
 import { useV4ClaimRewardsGasEstimate } from '@hooks/useV4ClaimRewardsGasEstimate'
 import { ClaimRewardsButton } from './ClaimRewardsButton'
 import { V4MigrationHeader } from './V4MigrationHeader'
-
-const SwapWidget = dynamic(() => import('../SwapWidget').then((module) => module.SwapWidget), {
-  ssr: false,
-  loading: () => <Spinner />
-})
 
 export interface V4MigrationProps {
   userAddress: Address
