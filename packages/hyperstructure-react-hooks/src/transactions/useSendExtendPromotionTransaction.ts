@@ -75,7 +75,7 @@ export const useSendExtendPromotionTransaction = (
 
   const {
     data: txHash,
-    isLoading: isWaiting,
+    isPending: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
     writeContract: _sendExtendPromotionTransaction

@@ -18,16 +18,23 @@ export const useAllVaultShareData = (
   options?: {
     refetchOnWindowFocus?: boolean
   }
-): UseQueryResult<{ [vaultId: string]: TokenWithSupply }, unknown> => {
+): UseQueryResult<{ [vaultId: string]: TokenWithSupply }> => {
   const queryClient = useQueryClient()
 
   const vaultIds = !!vaults ? Object.keys(vaults.vaults) : []
   const getQueryKey = (val: (string | number)[]) => [QUERY_KEYS.vaultShareData, val]
 
-  return useQuery(getQueryKey(vaultIds), async () => await vaults.getShareData(), {
+  return useQuery({
+    queryKey: getQueryKey(vaultIds),
+    queryFn: async () => {
+      const shareData = await vaults.getShareData()
+
+      populateCachePerId(queryClient, getQueryKey, shareData)
+
+      return shareData
+    },
     enabled: !!vaults,
     ...NO_REFETCH,
-    refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false,
-    onSuccess: (data) => populateCachePerId(queryClient, getQueryKey, data)
+    refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
   })
 }

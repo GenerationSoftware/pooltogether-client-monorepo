@@ -13,9 +13,9 @@ export const useIsLiquidationPairTokenOutAVault = (chainId: number, lpAddress: A
 
   const queryKey = ['isLpTokenOutAVault', chainId, lpAddress]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       if (!!publicClient) {
         try {
           const asset = await publicClient.readContract({
@@ -29,9 +29,7 @@ export const useIsLiquidationPairTokenOutAVault = (chainId: number, lpAddress: A
         }
       }
     },
-    {
-      enabled: !!publicClient && !!lpAddress && isFetchedTokenOutAddress && !!tokenOutAddress,
-      ...NO_REFETCH
-    }
-  )
+    enabled: !!publicClient && !!lpAddress && isFetchedTokenOutAddress && !!tokenOutAddress,
+    ...NO_REFETCH
+  })
 }

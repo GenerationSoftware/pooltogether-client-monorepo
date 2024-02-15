@@ -9,10 +9,12 @@ import { QUERY_KEYS } from '../constants'
  * @param vault instance of the `Vault` class
  * @returns
  */
-export const useVaultShareData = (vault: Vault): UseQueryResult<TokenWithSupply, unknown> => {
+export const useVaultShareData = (vault: Vault): UseQueryResult<TokenWithSupply> => {
   const queryKey = [QUERY_KEYS.vaultShareData, vault?.id]
 
-  return useQuery(queryKey, async () => await vault.getShareData(), {
+  return useQuery({
+    queryKey,
+    queryFn: async () => await vault.getShareData(),
     enabled: !!vault,
     ...NO_REFETCH
   })

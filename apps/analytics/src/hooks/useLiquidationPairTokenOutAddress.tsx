@@ -9,9 +9,9 @@ export const useLiquidationPairTokenOutAddress = (chainId: number, lpAddress: Ad
 
   const queryKey = ['lpTokenOutAddress', chainId, lpAddress]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       if (!!publicClient) {
         return await publicClient.readContract({
           address: lpAddress,
@@ -20,9 +20,7 @@ export const useLiquidationPairTokenOutAddress = (chainId: number, lpAddress: Ad
         })
       }
     },
-    {
-      enabled: !!publicClient && !!lpAddress,
-      ...NO_REFETCH
-    }
-  )
+    enabled: !!publicClient && !!lpAddress,
+    ...NO_REFETCH
+  })
 }

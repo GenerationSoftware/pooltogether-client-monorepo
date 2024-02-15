@@ -9,7 +9,13 @@ import { useTokenPrices, useVaultTokenData } from '..'
  * @param vault instance of the `Vault` class
  * @returns
  */
-export const useVaultTokenPrice = (vault: Vault) => {
+export const useVaultTokenPrice = (
+  vault: Vault
+): {
+  data: (TokenWithSupply & TokenWithPrice) | undefined
+  isFetched: boolean
+  refetch: () => void
+} => {
   const { data: tokenData, isFetched: isFetchedTokenData } = useVaultTokenData(vault)
 
   const {

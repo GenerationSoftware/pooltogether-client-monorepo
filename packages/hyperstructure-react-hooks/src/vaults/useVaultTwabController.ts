@@ -9,10 +9,12 @@ import { QUERY_KEYS } from '../constants'
  * @param vault instance of the `Vault` class
  * @returns
  */
-export const useVaultTwabController = (vault: Vault): UseQueryResult<Address, unknown> => {
+export const useVaultTwabController = (vault: Vault): UseQueryResult<Address> => {
   const queryKey = [QUERY_KEYS.vaultTwabController, vault?.id]
 
-  return useQuery(queryKey, async () => await vault.getTWABController(), {
+  return useQuery({
+    queryKey,
+    queryFn: async () => await vault.getTWABController(),
     enabled: !!vault,
     ...NO_REFETCH
   })

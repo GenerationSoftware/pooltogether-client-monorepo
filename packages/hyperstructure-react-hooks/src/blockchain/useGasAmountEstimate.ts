@@ -17,7 +17,7 @@ export const useGasAmountEstimate = <TAbi extends Abi>(
   options?: {
     enabled?: boolean
   }
-): UseQueryResult<bigint, unknown> => {
+): UseQueryResult<bigint> => {
   const publicClient = usePublicClient({ chainId })
 
   const _enabled =
@@ -39,16 +39,14 @@ export const useGasAmountEstimate = <TAbi extends Abi>(
     formattedArgs
   ]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       if (!!publicClient) {
         return await publicClient.estimateContractGas(tx)
       }
     },
-    {
-      enabled: _enabled,
-      ...NO_REFETCH
-    }
-  )
+    enabled: _enabled,
+    ...NO_REFETCH
+  })
 }

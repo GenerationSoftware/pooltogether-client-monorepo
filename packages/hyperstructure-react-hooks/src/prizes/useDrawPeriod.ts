@@ -8,10 +8,12 @@ import { QUERY_KEYS } from '../constants'
  * @param prizePool instance of the `PrizePool` class
  * @returns
  */
-export const useDrawPeriod = (prizePool: PrizePool): UseQueryResult<number, unknown> => {
+export const useDrawPeriod = (prizePool: PrizePool): UseQueryResult<number> => {
   const queryKey = [QUERY_KEYS.drawPeriod, prizePool?.id]
 
-  return useQuery(queryKey, async () => await prizePool.getDrawPeriodInSeconds(), {
+  return useQuery({
+    queryKey,
+    queryFn: async () => await prizePool.getDrawPeriodInSeconds(),
     enabled: !!prizePool,
     ...NO_REFETCH
   })

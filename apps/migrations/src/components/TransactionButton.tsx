@@ -37,7 +37,7 @@ export const TransactionButton = (props: TransactionButtonProps) => {
   const { openChainModal } = useChainModal()
   const addRecentTransaction = useAddRecentTransaction()
 
-  const { switchChain, isLoading: isSwitchingChain } = useSwitchChain()
+  const { switchChain, isPending: isSwitchingChain } = useSwitchChain()
 
   const networkName = getNiceNetworkNameByChainId(chainId)
 

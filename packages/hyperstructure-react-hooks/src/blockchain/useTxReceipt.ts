@@ -13,21 +13,19 @@ import { QUERY_KEYS } from '../constants'
 export const useTxReceipt = (
   chainId: number,
   hash: `0x${string}`
-): UseQueryResult<GetTransactionReceiptReturnType, unknown> => {
+): UseQueryResult<GetTransactionReceiptReturnType> => {
   const publicClient = usePublicClient({ chainId })
 
   const queryKey = [QUERY_KEYS.txReceipt, chainId, hash]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       if (!!publicClient) {
         return await publicClient.getTransactionReceipt({ hash })
       }
     },
-    {
-      enabled: !!chainId && !!publicClient && !!hash,
-      ...NO_REFETCH
-    }
-  )
+    enabled: !!chainId && !!publicClient && !!hash,
+    ...NO_REFETCH
+  })
 }

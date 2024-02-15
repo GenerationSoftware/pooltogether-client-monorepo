@@ -16,7 +16,7 @@ export const useCoingeckoTokenPrices = (
   chainId: number,
   tokenAddresses: string[],
   currencies?: CURRENCY_ID[]
-): UseQueryResult<CoingeckoTokenPrices, unknown> => {
+): UseQueryResult<CoingeckoTokenPrices> => {
   const enabled =
     !!tokenAddresses &&
     tokenAddresses.every((tokenAddress) => !!tokenAddress && typeof tokenAddress === 'string') &&
@@ -26,14 +26,12 @@ export const useCoingeckoTokenPrices = (
     chainId in COINGECKO_PLATFORMS &&
     (currencies === undefined || currencies.length > 0)
 
-  return useQuery(
-    [QUERY_KEYS.coingeckoTokenPrices, chainId, tokenAddresses, currencies],
-    async () =>
+  return useQuery({
+    queryKey: [QUERY_KEYS.coingeckoTokenPrices, chainId, tokenAddresses, currencies],
+    queryFn: async () =>
       await getCoingeckoTokenPrices(chainId as COINGECKO_PLATFORM, tokenAddresses, currencies),
-    {
-      staleTime: Infinity,
-      enabled,
-      ...NO_REFETCH
-    }
-  )
+    staleTime: Infinity,
+    enabled,
+    ...NO_REFETCH
+  })
 }

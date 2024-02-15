@@ -105,7 +105,7 @@ export const useApproveSignature = (
 
   const {
     data: signature,
-    isLoading: isWaiting,
+    isPending: isWaiting,
     isSuccess: isSigningSuccess,
     isError: isSigningError,
     signTypedData: _signTypedData

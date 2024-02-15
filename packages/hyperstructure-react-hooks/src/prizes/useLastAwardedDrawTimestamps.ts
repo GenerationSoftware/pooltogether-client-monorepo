@@ -13,24 +13,22 @@ import { QUERY_KEYS } from '../constants'
 export const useLastAwardedDrawTimestamps = (
   prizePool: PrizePool,
   refetchInterval?: number
-): UseQueryResult<{ openedAt: number; closedAt: number }, unknown> => {
+): UseQueryResult<{ openedAt: number; closedAt: number }> => {
   const { data: drawPeriod, isFetched: isFetchedDrawPeriod } = useDrawPeriod(prizePool)
 
   const enabled = !!prizePool && isFetchedDrawPeriod && drawPeriod !== undefined
 
   const queryKey = [QUERY_KEYS.lastAwardedDrawTimestamps, prizePool?.id]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       const openedAt = await prizePool.getLastAwardedDrawOpenedAt()
       const closedAt = openedAt + (drawPeriod as number)
       return { openedAt, closedAt }
     },
-    {
-      enabled,
-      ...NO_REFETCH,
-      refetchInterval: refetchInterval ?? false
-    }
-  )
+    enabled,
+    ...NO_REFETCH,
+    refetchInterval: refetchInterval ?? false
+  })
 }

@@ -17,9 +17,9 @@ export const useVaultContributionAmount = (
 ) => {
   const queryKey = [QUERY_KEYS.vaultContributionAmounts, prizePool?.id, vault?.id, numDraws]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       const lastDrawId = (await prizePool.getLastAwardedDrawId()) || 1
       const startDrawId = numDraws > lastDrawId ? 1 : lastDrawId - Math.floor(numDraws) + 1
 
@@ -32,9 +32,7 @@ export const useVaultContributionAmount = (
       const contributionAmount = contributionAmounts[vault.id]
       return contributionAmount
     },
-    {
-      enabled: !!prizePool && !!vault,
-      ...NO_REFETCH
-    }
-  )
+    enabled: !!prizePool && !!vault,
+    ...NO_REFETCH
+  })
 }

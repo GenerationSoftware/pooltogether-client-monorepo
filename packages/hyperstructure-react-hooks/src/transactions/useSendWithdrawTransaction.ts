@@ -73,7 +73,7 @@ export const useSendWithdrawTransaction = (
 
   const {
     data: txHash,
-    isLoading: isWaiting,
+    isPending: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
     writeContract: _sendWithdrawTransaction

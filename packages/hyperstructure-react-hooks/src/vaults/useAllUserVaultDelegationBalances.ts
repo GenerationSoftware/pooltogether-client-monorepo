@@ -22,7 +22,7 @@ export const useAllUserVaultDelegationBalances = (
     refetchInterval?: number
     refetchOnWindowFocus?: boolean
   }
-): UseQueryResult<{ [vaultId: string]: bigint }, unknown> => {
+): UseQueryResult<{ [vaultId: string]: bigint }> => {
   const queryClient = useQueryClient()
 
   const vaultIds = !!vaults ? Object.keys(vaults.vaults) : []
@@ -32,15 +32,18 @@ export const useAllUserVaultDelegationBalances = (
     val
   ]
 
-  return useQuery(
-    getQueryKey(vaultIds),
-    async () => await vaults.getUserDelegateBalances(userAddress),
-    {
-      enabled: !!vaults && !!userAddress,
-      ...NO_REFETCH,
-      refetchInterval: options?.refetchInterval ?? false,
-      refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false,
-      onSuccess: (data) => populateCachePerId(queryClient, getQueryKey, data)
-    }
-  )
+  return useQuery({
+    queryKey: getQueryKey(vaultIds),
+    queryFn: async () => {
+      const userDelegateBalances = await vaults.getUserDelegateBalances(userAddress)
+
+      populateCachePerId(queryClient, getQueryKey, userDelegateBalances)
+
+      return userDelegateBalances
+    },
+    enabled: !!vaults && !!userAddress,
+    ...NO_REFETCH,
+    refetchInterval: options?.refetchInterval ?? false,
+    refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
+  })
 }

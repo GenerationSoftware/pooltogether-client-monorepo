@@ -48,9 +48,9 @@ export const useGasCostEstimates = (
   const queryKey = [QUERY_KEYS.gasCostRollup, chainId, txData]
 
   // TODO: include Arbitrum logic for L1 fee (should be similar to OP)
-  const { data: txL1GasCost, isFetched: isFetchedTxL1GasCost } = useQuery(
+  const { data: txL1GasCost, isFetched: isFetchedTxL1GasCost } = useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       if (!!publicClient && !!txData) {
         if (chainId === NETWORK.optimism || chainId === NETWORK.optimism_sepolia) {
           return await getOpL1GasAmount(publicClient, txData)
@@ -59,11 +59,9 @@ export const useGasCostEstimates = (
 
       return 0n
     },
-    {
-      enabled: !!chainId && !!publicClient && !!txData,
-      ...NO_REFETCH
-    }
-  )
+    enabled: !!chainId && !!publicClient && !!txData,
+    ...NO_REFETCH
+  })
 
   const isFetched =
     isFetchedTokenPrices && isFetchedGasPrice && (!options?.tx || isFetchedTxL1GasCost)

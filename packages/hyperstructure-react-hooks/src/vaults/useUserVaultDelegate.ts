@@ -17,10 +17,12 @@ export const useUserVaultDelegate = (
   options?: {
     refetchOnWindowFocus?: boolean
   }
-): UseQueryResult<Address, unknown> => {
+): UseQueryResult<Address> => {
   const queryKey = [QUERY_KEYS.userVaultDelegate, userAddress, vault?.id]
 
-  return useQuery(queryKey, async () => await vault.getUserDelegate(userAddress), {
+  return useQuery({
+    queryKey,
+    queryFn: async () => await vault.getUserDelegate(userAddress),
     enabled: !!vault && !!userAddress,
     ...NO_REFETCH,
     refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false

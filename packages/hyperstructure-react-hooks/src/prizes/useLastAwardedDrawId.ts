@@ -12,10 +12,12 @@ import { QUERY_KEYS } from '../constants'
 export const useLastAwardedDrawId = (
   prizePool: PrizePool,
   options?: { refetchInterval?: number }
-): UseQueryResult<number, unknown> => {
+): UseQueryResult<number> => {
   const queryKey = [QUERY_KEYS.lastAwardedDrawId, prizePool?.id]
 
-  return useQuery(queryKey, async () => await prizePool.getLastAwardedDrawId(), {
+  return useQuery({
+    queryKey,
+    queryFn: async () => await prizePool.getLastAwardedDrawId(),
     enabled: !!prizePool,
     ...NO_REFETCH,
     refetchInterval: options?.refetchInterval ?? false

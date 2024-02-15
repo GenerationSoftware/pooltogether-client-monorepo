@@ -8,14 +8,12 @@ import { NO_REFETCH } from '../constants/query'
  * Returns exchange rates from CoinGecko
  * @returns
  */
-export const useCoingeckoExchangeRates = (): UseQueryResult<CoingeckoExchangeRates, unknown> => {
-  return useQuery(
-    [QUERY_KEYS.coingeckoExchangeRates],
-    async () => await getCoingeckoExchangeRates(),
-    {
-      staleTime: Infinity,
-      enabled: true,
-      ...NO_REFETCH
-    }
-  )
+export const useCoingeckoExchangeRates = (): UseQueryResult<CoingeckoExchangeRates> => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.coingeckoExchangeRates],
+    queryFn: async () => await getCoingeckoExchangeRates(),
+    staleTime: Infinity,
+    enabled: true,
+    ...NO_REFETCH
+  })
 }

@@ -50,7 +50,7 @@ export const useSendV4WithdrawTransaction = (
 
   const {
     data: txHash,
-    isLoading: isWaiting,
+    isPending: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
     writeContract: _sendV4WithdrawTransaction

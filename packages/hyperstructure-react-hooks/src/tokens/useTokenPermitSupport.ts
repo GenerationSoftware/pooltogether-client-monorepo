@@ -14,23 +14,21 @@ import { QUERY_KEYS } from '../constants'
 export const useTokenPermitSupport = (
   chainId: number,
   tokenAddress: Address
-): UseQueryResult<Awaited<ReturnType<typeof getTokenPermitSupport>>, unknown> => {
+): UseQueryResult<Awaited<ReturnType<typeof getTokenPermitSupport>>> => {
   const publicClient = usePublicClient({ chainId })
 
   const enabled = !!chainId && !!tokenAddress && !!publicClient
 
   const queryKey = [QUERY_KEYS.tokenPermitSupport, chainId, tokenAddress]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       if (!!publicClient) {
         return await getTokenPermitSupport(publicClient, tokenAddress)
       }
     },
-    {
-      enabled,
-      ...NO_REFETCH
-    }
-  )
+    enabled,
+    ...NO_REFETCH
+  })
 }

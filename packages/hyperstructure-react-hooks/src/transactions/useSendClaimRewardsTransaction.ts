@@ -68,7 +68,7 @@ export const useSendClaimRewardsTransaction = (
 
   const {
     data: _txHash,
-    isLoading: _isWaiting,
+    isPending: _isWaiting,
     isError: _isSendingError,
     isSuccess: _isSendingSuccess,
     writeContract: _sendClaimRewardsTransaction
@@ -109,7 +109,7 @@ export const useSendClaimRewardsTransaction = (
 
   const {
     data: multicallTxHash,
-    isLoading: isWaitingMulticall,
+    isPending: isWaitingMulticall,
     isError: isSendingMulticallError,
     isSuccess: isSendingMulticallSuccess,
     writeContract: sendMulticallTransaction

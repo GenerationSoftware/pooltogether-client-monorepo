@@ -16,15 +16,15 @@ import { usePublicClient } from 'wagmi'
 export const useYieldSourceTokenAddress = (
   chainId: number,
   address: Address
-): UseQueryResult<Address, unknown> => {
+): UseQueryResult<Address> => {
   const publicClient = usePublicClient({ chainId })
 
   const id = !!chainId && !!address ? getVaultId({ chainId, address }) : undefined
   const queryKey = [QUERY_KEYS.vaultTokenAddresses, id]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       if (!!publicClient) {
         const yieldSource = new Vault(chainId, address, publicClient)
 
@@ -37,9 +37,7 @@ export const useYieldSourceTokenAddress = (
         }
       }
     },
-    {
-      enabled: !!chainId && !!address && !!publicClient,
-      ...NO_REFETCH
-    }
-  )
+    enabled: !!chainId && !!address && !!publicClient,
+    ...NO_REFETCH
+  })
 }

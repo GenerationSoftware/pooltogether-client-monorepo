@@ -7,13 +7,13 @@ import { useMemo } from 'react'
 import { SUPPORTED_NETWORKS } from '@constants/config'
 
 export const useV5Tokens = () => {
-  const { data: cabanaVaultList, isFetched: isFetchedCabanaVaultList } = useQuery(
-    ['cabanaVaultList'],
-    async () => {
+  const { data: cabanaVaultList, isFetched: isFetchedCabanaVaultList } = useQuery({
+    queryKey: ['cabanaVaultList'],
+    queryFn: async () => {
       return await getVaultList(`${DOMAINS.app}/api/vaultList/default`)
     },
-    { ...NO_REFETCH }
-  )
+    ...NO_REFETCH
+  })
 
   const data = useMemo(() => {
     const tokens: TokenWithLogo[] = []

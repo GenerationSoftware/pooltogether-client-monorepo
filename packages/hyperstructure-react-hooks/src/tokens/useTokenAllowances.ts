@@ -24,7 +24,7 @@ export const useTokenAllowances = (
   spenderAddress: Address,
   tokenAddresses: Address[],
   refetchInterval?: number
-): UseQueryResult<{ [tokenAddress: Address]: bigint }, unknown> => {
+): UseQueryResult<{ [tokenAddress: Address]: bigint }> => {
   const queryClient = useQueryClient()
 
   const publicClient = usePublicClient({ chainId })
@@ -46,20 +46,26 @@ export const useTokenAllowances = (
     val
   ]
 
-  return useQuery(
-    getQueryKey(tokenAddresses),
-    async () => {
+  return useQuery({
+    queryKey: getQueryKey(tokenAddresses),
+    queryFn: async () => {
       if (!!publicClient) {
-        return await getTokenAllowances(publicClient, address, spenderAddress, tokenAddresses)
+        const tokenAllowances = await getTokenAllowances(
+          publicClient,
+          address,
+          spenderAddress,
+          tokenAddresses
+        )
+
+        populateCachePerId(queryClient, getQueryKey, tokenAllowances)
+
+        return tokenAllowances
       }
     },
-    {
-      enabled,
-      ...NO_REFETCH,
-      refetchInterval: refetchInterval ?? false,
-      onSuccess: (data) => populateCachePerId(queryClient, getQueryKey, data)
-    }
-  )
+    enabled,
+    ...NO_REFETCH,
+    refetchInterval: refetchInterval ?? false
+  })
 }
 
 /**

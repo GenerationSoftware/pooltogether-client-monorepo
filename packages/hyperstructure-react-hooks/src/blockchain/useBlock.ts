@@ -13,23 +13,21 @@ import { QUERY_KEYS } from '../constants'
 export const useBlock = (
   chainId: number,
   blockNumber: bigint | 'latest'
-): UseQueryResult<GetBlockReturnType, unknown> => {
+): UseQueryResult<GetBlockReturnType> => {
   const publicClient = usePublicClient({ chainId })
 
   const queryKey = [QUERY_KEYS.block, chainId, blockNumber?.toString() ?? 'latest']
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       if (!!publicClient) {
         const args: GetBlockParameters =
           blockNumber === 'latest' ? { blockTag: 'latest' } : { blockNumber }
         return await publicClient.getBlock(args)
       }
     },
-    {
-      enabled: !!chainId && !!blockNumber && !!publicClient,
-      ...NO_REFETCH
-    }
-  )
+    enabled: !!chainId && !!blockNumber && !!publicClient,
+    ...NO_REFETCH
+  })
 }

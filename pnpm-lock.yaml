@@ -20,8 +20,8 @@ importers:
         specifier: ^2.0.16
         version: 2.0.17(react@18.2.0)
       '@tanstack/react-query':
-        specifier: ^4.24.10
-        version: 4.29.5(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)
+        specifier: ^5.20.5
+        version: 5.20.5(react@18.2.0)
       '@trivago/prettier-plugin-sort-imports':
         specifier: ^4.1.0
         version: 4.1.1(prettier@2.8.8)
@@ -90,7 +90,7 @@ importers:
         version: 2.7.9(typescript@5.0.4)
       wagmi:
         specifier: ^2.5.6
-        version: 2.5.7(@tanstack/react-query@4.29.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+        version: 2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
 
   apps/analytics:
     dependencies:
@@ -104,8 +104,8 @@ importers:
         specifier: ^2.0.16
         version: 2.0.17(react@18.2.0)
       '@tanstack/react-query':
-        specifier: ^4.24.10
-        version: 4.29.5(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)
+        specifier: ^5.20.5
+        version: 5.20.5(react@18.2.0)
       axios:
         specifier: ^1.4.0
         version: 1.4.0
@@ -150,7 +150,7 @@ importers:
         version: 2.7.9(typescript@5.0.4)
       wagmi:
         specifier: ^2.5.6
-        version: 2.5.7(@tanstack/react-query@4.29.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+        version: 2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
     devDependencies:
       '@types/node':
         specifier: ^17.0.45
@@ -192,8 +192,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0)(viem@2.7.9)(wagmi@2.5.7)
       '@tanstack/react-query':
-        specifier: ^4.24.10
-        version: 4.29.5(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)
+        specifier: ^5.20.5
+        version: 5.20.5(react@18.2.0)
       axios:
         specifier: ^1.4.0
         version: 1.4.0
@@ -244,7 +244,7 @@ importers:
         version: 2.7.9(typescript@5.0.4)
       wagmi:
         specifier: ^2.5.6
-        version: 2.5.7(@tanstack/react-query@4.29.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+        version: 2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
     devDependencies:
       '@types/node':
         specifier: ^17.0.45
@@ -286,8 +286,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0)(viem@2.7.9)(wagmi@2.5.7)
       '@tanstack/react-query':
-        specifier: ^4.24.10
-        version: 4.29.5(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)
+        specifier: ^5.20.5
+        version: 5.20.5(react@18.2.0)
       axios:
         specifier: ^1.4.0
         version: 1.4.0
@@ -329,7 +329,7 @@ importers:
         version: 2.7.9(typescript@5.0.4)
       wagmi:
         specifier: ^2.5.6
-        version: 2.5.7(@tanstack/react-query@4.29.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+        version: 2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
     devDependencies:
       '@types/node':
         specifier: ^17.0.45
@@ -362,8 +362,8 @@ importers:
         specifier: ^2.0.16
         version: 2.0.17(react@18.2.0)
       '@tanstack/react-query':
-        specifier: ^4.24.10
-        version: 4.29.5(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)
+        specifier: ^5.20.5
+        version: 5.20.5(react@18.2.0)
       axios:
         specifier: ^1.4.0
         version: 1.4.0
@@ -432,8 +432,8 @@ importers:
         specifier: ^2.0.16
         version: 2.0.17(react@18.2.0)
       '@tanstack/react-query':
-        specifier: ^4.24.10
-        version: 4.29.5(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)
+        specifier: ^5.20.5
+        version: 5.20.5(react@18.2.0)
       axios:
         specifier: ^1.4.0
         version: 1.4.0
@@ -498,9 +498,6 @@ importers:
 
   apps/migrations:
     dependencies:
-      '@ethersproject/providers':
-        specifier: ^5.7.2
-        version: 5.7.2
       '@generationsoftware/hyperstructure-client-js':
         specifier: workspace:*
         version: link:../../packages/hyperstructure-client-js
@@ -512,16 +509,13 @@ importers:
         version: 2.0.17(react@18.2.0)
       '@lifi/widget':
         specifier: 3.0.0-alpha.29
-        version: 3.0.0-alpha.29(@babel/runtime@7.23.9)(@tanstack/react-query@4.29.5)(@types/react@18.2.8)(bs58@4.0.1)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(tslib@2.5.0)(typescript@5.0.4)(wagmi@2.5.6)
+        version: 3.0.0-alpha.29(@babel/runtime@7.23.9)(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(bs58@4.0.1)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(tslib@2.5.0)(typescript@5.0.4)(wagmi@2.5.6)
       '@rainbow-me/rainbowkit':
         specifier: ^2.0.0
         version: 2.0.0(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0)(viem@2.7.9)(wagmi@2.5.6)
       '@tanstack/react-query':
-        specifier: ^4.24.10
-        version: 4.29.5(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)
-      '@wagmi/core':
-        specifier: ^2.6.5
-        version: 2.6.5(@types/react@18.2.8)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+        specifier: ^5.20.5
+        version: 5.20.5(react@18.2.0)
       axios:
         specifier: ^1.4.0
         version: 1.4.0
@@ -566,7 +560,7 @@ importers:
         version: 2.7.9(typescript@5.0.4)
       wagmi:
         specifier: ^2.5.6
-        version: 2.5.6(@tanstack/react-query@4.29.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+        version: 2.5.6(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
     devDependencies:
       '@types/node':
         specifier: ^17.0.45
@@ -608,8 +602,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0)(viem@2.7.9)(wagmi@2.5.7)
       '@tanstack/react-query':
-        specifier: ^4.24.10
-        version: 4.29.5(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)
+        specifier: ^5.20.5
+        version: 5.20.5(react@18.2.0)
       axios:
         specifier: ^1.4.0
         version: 1.4.0
@@ -651,7 +645,7 @@ importers:
         version: 2.7.9(typescript@5.0.4)
       wagmi:
         specifier: ^2.5.6
-        version: 2.5.7(@tanstack/react-query@4.29.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+        version: 2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
     devDependencies:
       '@types/node':
         specifier: ^17.0.45
@@ -690,8 +684,8 @@ importers:
         specifier: ^2.0.16
         version: 2.0.17(react@18.2.0)
       '@tanstack/react-query':
-        specifier: ^4.24.10
-        version: 4.29.5(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)
+        specifier: ^5.20.5
+        version: 5.20.5(react@18.2.0)
       axios:
         specifier: ^1.4.0
         version: 1.4.0
@@ -733,7 +727,7 @@ importers:
         version: 2.7.9(typescript@5.0.4)
       wagmi:
         specifier: ^2.5.6
-        version: 2.5.7(@tanstack/react-query@4.29.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+        version: 2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
     devDependencies:
       '@types/node':
         specifier: ^17.0.45
@@ -775,8 +769,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0)(viem@2.7.9)(wagmi@2.5.7)
       '@tanstack/react-query':
-        specifier: ^4.24.10
-        version: 4.29.5(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)
+        specifier: ^5.20.5
+        version: 5.20.5(react@18.2.0)
       axios:
         specifier: ^1.4.0
         version: 1.4.0
@@ -818,7 +812,7 @@ importers:
         version: 2.7.9(typescript@5.0.4)
       wagmi:
         specifier: ^2.5.6
-        version: 2.5.7(@tanstack/react-query@4.29.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+        version: 2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
     devDependencies:
       '@types/node':
         specifier: ^17.0.45
@@ -857,8 +851,8 @@ importers:
         specifier: ^2.0.16
         version: 2.0.17(react@18.2.0)
       '@tanstack/react-query':
-        specifier: ^4.24.10
-        version: 4.29.5(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)
+        specifier: ^5.20.5
+        version: 5.20.5(react@18.2.0)
       axios:
         specifier: ^1.4.0
         version: 1.4.0
@@ -900,7 +894,7 @@ importers:
         version: 2.7.9(typescript@5.0.4)
       wagmi:
         specifier: ^2.5.6
-        version: 2.5.7(@tanstack/react-query@4.29.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+        version: 2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
     devDependencies:
       '@types/node':
         specifier: ^17.0.45
@@ -956,8 +950,8 @@ importers:
         version: link:../hyperstructure-client-js
     devDependencies:
       '@tanstack/react-query':
-        specifier: ^4.24.10
-        version: 4.29.5(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)
+        specifier: ^5.20.5
+        version: 5.20.5(react@18.2.0)
       '@types/node':
         specifier: ^17.0.45
         version: 17.0.45
@@ -987,7 +981,7 @@ importers:
         version: 2.7.9(typescript@5.0.4)
       wagmi:
         specifier: ^2.5.6
-        version: 2.5.7(@tanstack/react-query@4.29.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+        version: 2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
 
   workers/protocol-stats-worker:
     dependencies:
@@ -3470,264 +3464,6 @@ packages:
       ethereum-cryptography: 2.1.3
     dev: false
 
-  /@ethersproject/abstract-provider@5.7.0:
-    resolution:
-      {
-        integrity: sha512-R41c9UkchKCpAqStMYUpdunjo3pkEvZC3FAwZn5S5MGbXoMQOHIdHItezTETxAO5bevtMApSyEhn9+CHcDsWBw==
-      }
-    dependencies:
-      '@ethersproject/bignumber': 5.7.0
-      '@ethersproject/bytes': 5.7.0
-      '@ethersproject/logger': 5.7.0
-      '@ethersproject/networks': 5.7.1
-      '@ethersproject/properties': 5.7.0
-      '@ethersproject/transactions': 5.7.0
-      '@ethersproject/web': 5.7.1
-    dev: false
-
-  /@ethersproject/abstract-signer@5.7.0:
-    resolution:
-      {
-        integrity: sha512-a16V8bq1/Cz+TGCkE2OPMTOUDLS3grCpdjoJCYNnVBbdYEMSgKrU0+B90s8b6H+ByYTBZN7a3g76jdIJi7UfKQ==
-      }
-    dependencies:
-      '@ethersproject/abstract-provider': 5.7.0
-      '@ethersproject/bignumber': 5.7.0
-      '@ethersproject/bytes': 5.7.0
-      '@ethersproject/logger': 5.7.0
-      '@ethersproject/properties': 5.7.0
-    dev: false
-
-  /@ethersproject/address@5.7.0:
-    resolution:
-      {
-        integrity: sha512-9wYhYt7aghVGo758POM5nqcOMaE168Q6aRLJZwUmiqSrAungkG74gSSeKEIR7ukixesdRZGPgVqme6vmxs1fkA==
-      }
-    dependencies:
-      '@ethersproject/bignumber': 5.7.0
-      '@ethersproject/bytes': 5.7.0
-      '@ethersproject/keccak256': 5.7.0
-      '@ethersproject/logger': 5.7.0
-      '@ethersproject/rlp': 5.7.0
-    dev: false
-
-  /@ethersproject/base64@5.7.0:
-    resolution:
-      {
-        integrity: sha512-Dr8tcHt2mEbsZr/mwTPIQAf3Ai0Bks/7gTw9dSqk1mQvhW3XvRlmDJr/4n+wg1JmCl16NZue17CDh8xb/vZ0sQ==
-      }
-    dependencies:
-      '@ethersproject/bytes': 5.7.0
-    dev: false
-
-  /@ethersproject/basex@5.7.0:
-    resolution:
-      {
-        integrity: sha512-ywlh43GwZLv2Voc2gQVTKBoVQ1mti3d8HK5aMxsfu/nRDnMmNqaSJ3r3n85HBByT8OpoY96SXM1FogC533T4zw==
-      }
-    dependencies:
-      '@ethersproject/bytes': 5.7.0
-      '@ethersproject/properties': 5.7.0
-    dev: false
-
-  /@ethersproject/bignumber@5.7.0:
-    resolution:
-      {
-        integrity: sha512-n1CAdIHRWjSucQO3MC1zPSVgV/6dy/fjL9pMrPP9peL+QxEg9wOsVqwD4+818B6LUEtaXzVHQiuivzRoxPxUGw==
-      }
-    dependencies:
-      '@ethersproject/bytes': 5.7.0
-      '@ethersproject/logger': 5.7.0
-      bn.js: 5.2.1
-    dev: false
-
-  /@ethersproject/bytes@5.7.0:
-    resolution:
-      {
-        integrity: sha512-nsbxwgFXWh9NyYWo+U8atvmMsSdKJprTcICAkvbBffT75qDocbuggBU0SJiVK2MuTrp0q+xvLkTnGMPK1+uA9A==
-      }
-    dependencies:
-      '@ethersproject/logger': 5.7.0
-    dev: false
-
-  /@ethersproject/constants@5.7.0:
-    resolution:
-      {
-        integrity: sha512-DHI+y5dBNvkpYUMiRQyxRBYBefZkJfo70VUkUAsRjcPs47muV9evftfZ0PJVCXYbAiCgght0DtcF9srFQmIgWA==
-      }
-    dependencies:
-      '@ethersproject/bignumber': 5.7.0
-    dev: false
-
-  /@ethersproject/hash@5.7.0:
-    resolution:
-      {
-        integrity: sha512-qX5WrQfnah1EFnO5zJv1v46a8HW0+E5xuBBDTwMFZLuVTx0tbU2kkx15NqdjxecrLGatQN9FGQKpb1FKdHCt+g==
-      }
-    dependencies:
-      '@ethersproject/abstract-signer': 5.7.0
-      '@ethersproject/address': 5.7.0
-      '@ethersproject/base64': 5.7.0
-      '@ethersproject/bignumber': 5.7.0
-      '@ethersproject/bytes': 5.7.0
-      '@ethersproject/keccak256': 5.7.0
-      '@ethersproject/logger': 5.7.0
-      '@ethersproject/properties': 5.7.0
-      '@ethersproject/strings': 5.7.0
-    dev: false
-
-  /@ethersproject/keccak256@5.7.0:
-    resolution:
-      {
-        integrity: sha512-2UcPboeL/iW+pSg6vZ6ydF8tCnv3Iu/8tUmLLzWWGzxWKFFqOBQFLo6uLUv6BDrLgCDfN28RJ/wtByx+jZ4KBg==
-      }
-    dependencies:
-      '@ethersproject/bytes': 5.7.0
-      js-sha3: 0.8.0
-    dev: false
-
-  /@ethersproject/logger@5.7.0:
-    resolution:
-      {
-        integrity: sha512-0odtFdXu/XHtjQXJYA3u9G0G8btm0ND5Cu8M7i5vhEcE8/HmF4Lbdqanwyv4uQTr2tx6b7fQRmgLrsnpQlmnig==
-      }
-    dev: false
-
-  /@ethersproject/networks@5.7.1:
-    resolution:
-      {
-        integrity: sha512-n/MufjFYv3yFcUyfhnXotyDlNdFb7onmkSy8aQERi2PjNcnWQ66xXxa3XlS8nCcA8aJKJjIIMNJTC7tu80GwpQ==
-      }
-    dependencies:
-      '@ethersproject/logger': 5.7.0
-    dev: false
-
-  /@ethersproject/properties@5.7.0:
-    resolution:
-      {
-        integrity: sha512-J87jy8suntrAkIZtecpxEPxY//szqr1mlBaYlQ0r4RCaiD2hjheqF9s1LVE8vVuJCXisjIP+JgtK/Do54ej4Sw==
-      }
-    dependencies:
-      '@ethersproject/logger': 5.7.0
-    dev: false
-
-  /@ethersproject/providers@5.7.2:
-    resolution:
-      {
-        integrity: sha512-g34EWZ1WWAVgr4aptGlVBF8mhl3VWjv+8hoAnzStu8Ah22VHBsuGzP17eb6xDVRzw895G4W7vvx60lFFur/1Rg==
-      }
-    dependencies:
-      '@ethersproject/abstract-provider': 5.7.0
-      '@ethersproject/abstract-signer': 5.7.0
-      '@ethersproject/address': 5.7.0
-      '@ethersproject/base64': 5.7.0
-      '@ethersproject/basex': 5.7.0
-      '@ethersproject/bignumber': 5.7.0
-      '@ethersproject/bytes': 5.7.0
-      '@ethersproject/constants': 5.7.0
-      '@ethersproject/hash': 5.7.0
-      '@ethersproject/logger': 5.7.0
-      '@ethersproject/networks': 5.7.1
-      '@ethersproject/properties': 5.7.0
-      '@ethersproject/random': 5.7.0
-      '@ethersproject/rlp': 5.7.0
-      '@ethersproject/sha2': 5.7.0
-      '@ethersproject/strings': 5.7.0
-      '@ethersproject/transactions': 5.7.0
-      '@ethersproject/web': 5.7.1
-      bech32: 1.1.4
-      ws: 7.4.6
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-    dev: false
-
-  /@ethersproject/random@5.7.0:
-    resolution:
-      {
-        integrity: sha512-19WjScqRA8IIeWclFme75VMXSBvi4e6InrUNuaR4s5pTF2qNhcGdCUwdxUVGtDDqC00sDLCO93jPQoDUH4HVmQ==
-      }
-    dependencies:
-      '@ethersproject/bytes': 5.7.0
-      '@ethersproject/logger': 5.7.0
-    dev: false
-
-  /@ethersproject/rlp@5.7.0:
-    resolution:
-      {
-        integrity: sha512-rBxzX2vK8mVF7b0Tol44t5Tb8gomOHkj5guL+HhzQ1yBh/ydjGnpw6at+X6Iw0Kp3OzzzkcKp8N9r0W4kYSs9w==
-      }
-    dependencies:
-      '@ethersproject/bytes': 5.7.0
-      '@ethersproject/logger': 5.7.0
-    dev: false
-
-  /@ethersproject/sha2@5.7.0:
-    resolution:
-      {
-        integrity: sha512-gKlH42riwb3KYp0reLsFTokByAKoJdgFCwI+CCiX/k+Jm2mbNs6oOaCjYQSlI1+XBVejwH2KrmCbMAT/GnRDQw==
-      }
-    dependencies:
-      '@ethersproject/bytes': 5.7.0
-      '@ethersproject/logger': 5.7.0
-      hash.js: 1.1.7
-    dev: false
-
-  /@ethersproject/signing-key@5.7.0:
-    resolution:
-      {
-        integrity: sha512-MZdy2nL3wO0u7gkB4nA/pEf8lu1TlFswPNmy8AiYkfKTdO6eXBJyUdmHO/ehm/htHw9K/qF8ujnTyUAD+Ry54Q==
-      }
-    dependencies:
-      '@ethersproject/bytes': 5.7.0
-      '@ethersproject/logger': 5.7.0
-      '@ethersproject/properties': 5.7.0
-      bn.js: 5.2.1
-      elliptic: 6.5.4
-      hash.js: 1.1.7
-    dev: false
-
-  /@ethersproject/strings@5.7.0:
-    resolution:
-      {
-        integrity: sha512-/9nu+lj0YswRNSH0NXYqrh8775XNyEdUQAuf3f+SmOrnVewcJ5SBNAjF7lpgehKi4abvNNXyf+HX86czCdJ8Mg==
-      }
-    dependencies:
-      '@ethersproject/bytes': 5.7.0
-      '@ethersproject/constants': 5.7.0
-      '@ethersproject/logger': 5.7.0
-    dev: false
-
-  /@ethersproject/transactions@5.7.0:
-    resolution:
-      {
-        integrity: sha512-kmcNicCp1lp8qanMTC3RIikGgoJ80ztTyvtsFvCYpSCfkjhD0jZ2LOrnbcuxuToLIUYYf+4XwD1rP+B/erDIhQ==
-      }
-    dependencies:
-      '@ethersproject/address': 5.7.0
-      '@ethersproject/bignumber': 5.7.0
-      '@ethersproject/bytes': 5.7.0
-      '@ethersproject/constants': 5.7.0
-      '@ethersproject/keccak256': 5.7.0
-      '@ethersproject/logger': 5.7.0
-      '@ethersproject/properties': 5.7.0
-      '@ethersproject/rlp': 5.7.0
-      '@ethersproject/signing-key': 5.7.0
-    dev: false
-
-  /@ethersproject/web@5.7.1:
-    resolution:
-      {
-        integrity: sha512-Gueu8lSvyjBWL4cYsWsjh6MtMwM0+H4HvqFPZfB6dV8ctbP9zFAO73VG1cMWae0FLPCtz0peKPpZY8/ugJJX2w==
-      }
-    dependencies:
-      '@ethersproject/base64': 5.7.0
-      '@ethersproject/bytes': 5.7.0
-      '@ethersproject/logger': 5.7.0
-      '@ethersproject/properties': 5.7.0
-      '@ethersproject/strings': 5.7.0
-    dev: false
-
   /@fivebinaries/coin-selection@2.2.1:
     resolution:
       {
@@ -4232,7 +3968,7 @@ packages:
       }
     dev: false
 
-  /@lifi/wallet-management@3.0.0-alpha.20(@solana/web3.js@1.90.0)(@tanstack/react-query@4.29.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(typescript@5.0.4)(viem@2.7.9):
+  /@lifi/wallet-management@3.0.0-alpha.20(@solana/web3.js@1.90.0)(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(typescript@5.0.4)(viem@2.7.9):
     resolution:
       {
         integrity: sha512-FlXniqWQ44HbIN9Z95fGsTSzhKFvDteduzt7RtIVtYXY6IamGKuGjK7+hdev4dxGMxkOdsQtHlRQpbSVGJgagQ==
@@ -4243,10 +3979,10 @@ packages:
     dependencies:
       '@lifi/sdk': 3.0.0-alpha.56(typescript@5.0.4)
       '@solana/wallet-adapter-base': 0.9.23(@solana/web3.js@1.90.0)
-      '@tanstack/react-query': 4.29.5(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)
+      '@tanstack/react-query': 5.20.5(react@18.2.0)
       react: 18.2.0
       viem: 2.7.9(typescript@5.0.4)
-      wagmi: 2.5.7(@tanstack/react-query@4.29.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+      wagmi: 2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -4275,7 +4011,7 @@ packages:
       - zod
     dev: false
 
-  /@lifi/widget@3.0.0-alpha.29(@babel/runtime@7.23.9)(@tanstack/react-query@4.29.5)(@types/react@18.2.8)(bs58@4.0.1)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(tslib@2.5.0)(typescript@5.0.4)(wagmi@2.5.6):
+  /@lifi/widget@3.0.0-alpha.29(@babel/runtime@7.23.9)(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(bs58@4.0.1)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(tslib@2.5.0)(typescript@5.0.4)(wagmi@2.5.6):
     resolution:
       {
         integrity: sha512-9Yh13BkgpIfrMxSiRcme8h3Znts37RIL62FJLGEK9aMZ/oeihZoMMGHMY79zZzX+//wovhOrkNiLXDR82FE9ww==
@@ -4293,7 +4029,7 @@ packages:
       '@emotion/react': 11.11.3(@types/react@18.2.8)(react@18.2.0)
       '@emotion/styled': 11.11.0(@emotion/react@11.11.3)(@types/react@18.2.8)(react@18.2.0)
       '@lifi/sdk': 3.0.0-alpha.56(typescript@5.0.4)
-      '@lifi/wallet-management': 3.0.0-alpha.20(@solana/web3.js@1.90.0)(@tanstack/react-query@4.29.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(typescript@5.0.4)(viem@2.7.9)
+      '@lifi/wallet-management': 3.0.0-alpha.20(@solana/web3.js@1.90.0)(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(typescript@5.0.4)(viem@2.7.9)
       '@mui/icons-material': 5.15.10(@mui/material@5.15.10)(@types/react@18.2.8)(react@18.2.0)
       '@mui/lab': 5.0.0-alpha.165(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@mui/material@5.15.10)(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0)
       '@mui/material': 5.15.10(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0)
@@ -4301,7 +4037,7 @@ packages:
       '@solana/wallet-adapter-react': 0.15.35(@solana/web3.js@1.90.0)(bs58@4.0.1)(react-native@0.73.4)(react@18.2.0)
       '@solana/wallet-adapter-wallets': 0.19.26(@babel/runtime@7.23.9)(@solana/web3.js@1.90.0)(bs58@4.0.1)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(tslib@2.5.0)
       '@solana/web3.js': 1.90.0
-      '@tanstack/react-query': 4.29.5(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)
+      '@tanstack/react-query': 5.20.5(react@18.2.0)
       '@tanstack/react-virtual': 3.0.4(react-dom@18.2.0)(react@18.2.0)
       '@types/react': 18.2.8
       i18next: 23.8.2
@@ -4315,7 +4051,7 @@ packages:
       react-timer-hook: 3.0.7(react@18.2.0)
       uuid: 9.0.1
       viem: 2.7.9(typescript@5.0.4)
-      wagmi: 2.5.6(@tanstack/react-query@4.29.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+      wagmi: 2.5.6(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
       zustand: 4.5.0(@types/react@18.2.8)(react@18.2.0)
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -5448,7 +5184,7 @@ packages:
       react-remove-scroll: 2.5.7(@types/react@18.2.8)(react@18.2.0)
       ua-parser-js: 1.0.37
       viem: 2.7.9(typescript@5.0.4)
-      wagmi: 2.5.6(@tanstack/react-query@4.29.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+      wagmi: 2.5.6(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
     transitivePeerDependencies:
       - '@types/react'
     dev: false
@@ -5475,7 +5211,7 @@ packages:
       react-remove-scroll: 2.5.7(@types/react@18.2.8)(react@18.2.0)
       ua-parser-js: 1.0.37
       viem: 2.7.9(typescript@5.0.4)
-      wagmi: 2.5.7(@tanstack/react-query@4.29.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
+      wagmi: 2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
     transitivePeerDependencies:
       - '@types/react'
     dev: false
@@ -7121,32 +6857,22 @@ packages:
       tslib: 2.5.0
     dev: false
 
-  /@tanstack/query-core@4.29.5:
+  /@tanstack/query-core@5.20.5:
     resolution:
       {
-        integrity: sha512-xXIiyQ/4r9KfaJ3k6kejqcaqFXXBTzN2aOJ5H1J6aTJE9hl/nbgAdfF6oiIu0CD5xowejJEJ6bBg8TO7BN4NuQ==
+        integrity: sha512-T1W28gGgWn0A++tH3lxj3ZuUVZZorsiKcv+R50RwmPYz62YoDEkG4/aXHZELGkRp4DfrW07dyq2K5dvJ4Wl1aA==
       }
 
-  /@tanstack/react-query@4.29.5(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0):
+  /@tanstack/react-query@5.20.5(react@18.2.0):
     resolution:
       {
-        integrity: sha512-F87cibC3s3eG0Q90g2O+hqntpCrudKFnR8P24qkH9uccEhXErnJxBC/AAI4cJRV2bfMO8IeGZQYf3WyYgmSg0w==
+        integrity: sha512-6MHwJ8G9cnOC/XKrwt56QMc91vN7hLlAQNUA0ubP7h9Jj3a/CmkUwT6ALdFbnVP+PsYdhW3WONa8WQ4VcTaSLQ==
       }
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-native: '*'
-    peerDependenciesMeta:
-      react-dom:
-        optional: true
-      react-native:
-        optional: true
+      react: ^18.0.0
     dependencies:
-      '@tanstack/query-core': 4.29.5
+      '@tanstack/query-core': 5.20.5
       react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-native: 0.73.4(@babel/core@7.23.9)(@babel/preset-env@7.23.9)(react@18.2.0)
-      use-sync-external-store: 1.2.0(react@18.2.0)
 
   /@tanstack/react-virtual@3.0.4(react-dom@18.2.0)(react@18.2.0):
     resolution:
@@ -9145,13 +8871,6 @@ packages:
       buffer: 6.0.3
       cashaddrjs: 0.4.4
       stream-browserify: 3.0.0
-    dev: false
-
-  /bech32@1.1.4:
-    resolution:
-      {
-        integrity: sha512-s0IrSOzLlbvX7yp4WBfPITzpAU8sqQcpsmwXDiKwrG4r491vwCO/XpejasRNl0piBMe/DvP4Tz0mIS/X1DPJBQ==
-      }
     dev: false
 
   /bech32@2.0.0:
@@ -12409,13 +12128,6 @@ packages:
     resolution:
       {
         integrity: sha512-NPrWuHFxFUknr1KqJRDgUQPexQF0uIJWjeT+2KjEePhitQxQEx5EJBG1lVn5/hc8aLycTpXrDOgPQ6Zq+EDiTA==
-      }
-    dev: false
-
-  /js-sha3@0.8.0:
-    resolution:
-      {
-        integrity: sha512-gF1cRrHhIzNfToc802P800N8PpXS+evLLXfsVpowqmAFR9uwbi89WvXg2QspOmXL8QL86J4T1EpFu+yUkwJY3Q==
       }
     dev: false
 
@@ -17171,7 +16883,7 @@ packages:
       }
     engines: { node: '>=0.10.0' }
 
-  /wagmi@2.5.6(@tanstack/react-query@4.29.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9):
+  /wagmi@2.5.6(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9):
     resolution:
       {
         integrity: sha512-Fi5Ju7N0Pd4EOxSBiyl/sVd2Iquf3w2ED4USalfIm0v1DbyEEIIT90AX2Mhzn/Ty9UnB3MTSO2/wFjj5VzZFTw==
@@ -17185,7 +16897,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@tanstack/react-query': 4.29.5(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)
+      '@tanstack/react-query': 5.20.5(react@18.2.0)
       '@wagmi/connectors': 4.1.13(@types/react@18.2.8)(@wagmi/core@2.6.4)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
       '@wagmi/core': 2.6.4(@types/react@18.2.8)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
       react: 18.2.0
@@ -17218,7 +16930,7 @@ packages:
       - zod
     dev: false
 
-  /wagmi@2.5.7(@tanstack/react-query@4.29.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9):
+  /wagmi@2.5.7(@tanstack/react-query@5.20.5)(@types/react@18.2.8)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9):
     resolution:
       {
         integrity: sha512-xSuteMXFKvra4xDddqZbZv/gQlcg3X+To5AoZW7WoAm0iVlF8/vEGpQzCWy6KZs2z1szxPrr0YnH3Zr1Qj4E/A==
@@ -17232,7 +16944,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@tanstack/react-query': 4.29.5(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)
+      '@tanstack/react-query': 5.20.5(react@18.2.0)
       '@wagmi/connectors': 4.1.14(@types/react@18.2.8)(@wagmi/core@2.6.5)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
       '@wagmi/core': 2.6.5(@types/react@18.2.8)(react@18.2.0)(typescript@5.0.4)(viem@2.7.9)
       react: 18.2.0
@@ -17464,22 +17176,6 @@ packages:
         optional: true
     dependencies:
       async-limiter: 1.0.1
-
-  /ws@7.4.6:
-    resolution:
-      {
-        integrity: sha512-YmhHDO4MzaDLB+M9ym/mDA5z0naX8j7SIlT8f8z+I0VtzsRbekxEutHSme7NPS2qE8StCYQNUnfWdXta/Yu85A==
-      }
-    engines: { node: '>=8.3.0' }
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: ^5.0.2
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-    dev: false
 
   /ws@7.5.9:
     resolution:

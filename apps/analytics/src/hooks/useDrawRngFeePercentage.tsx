@@ -14,9 +14,9 @@ export const useDrawRngFeePercentage = (
     : undefined
   const publicClient = usePublicClient({ chainId: originChainId })
 
-  return useQuery(
-    ['drawRngFeePercentage'],
-    async () => {
+  return useQuery({
+    queryKey: ['drawRngFeePercentage'],
+    queryFn: async () => {
       if (!!publicClient) {
         const isAuctionOpen = await publicClient.readContract({
           address: RNG_AUCTION[originChainId as number].address,
@@ -37,10 +37,8 @@ export const useDrawRngFeePercentage = (
         return 0
       }
     },
-    {
-      enabled: !!originChainId && !!publicClient,
-      ...NO_REFETCH,
-      refetchInterval: options?.refetchInterval ?? false
-    }
-  )
+    enabled: !!originChainId && !!publicClient,
+    ...NO_REFETCH,
+    refetchInterval: options?.refetchInterval ?? false
+  })
 }

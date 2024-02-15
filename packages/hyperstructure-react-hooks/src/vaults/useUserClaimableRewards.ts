@@ -32,17 +32,18 @@ export const useUserClaimableRewards = (
     val
   ]
 
-  return useQuery(
-    getQueryKey(promotionIds),
-    async () => {
+  return useQuery({
+    queryKey: getQueryKey(promotionIds),
+    queryFn: async () => {
       if (!!publicClient) {
-        return await getClaimableRewards(publicClient, userAddress, promotions)
+        const claimableRewards = await getClaimableRewards(publicClient, userAddress, promotions)
+
+        populateCachePerId(queryClient, getQueryKey, claimableRewards)
+
+        return claimableRewards
       }
     },
-    {
-      enabled: !!chainId && !!publicClient && !!userAddress && !!promotions,
-      ...NO_REFETCH,
-      onSuccess: (data) => !!data && populateCachePerId(queryClient, getQueryKey, data)
-    }
-  )
+    enabled: !!chainId && !!publicClient && !!userAddress && !!promotions,
+    ...NO_REFETCH
+  })
 }

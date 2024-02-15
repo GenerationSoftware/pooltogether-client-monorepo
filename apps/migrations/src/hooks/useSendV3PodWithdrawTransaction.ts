@@ -57,7 +57,7 @@ export const useSendV3PodWithdrawTransaction = (
 
   const {
     data: txHash,
-    isLoading: isWaiting,
+    isPending: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
     writeContract: _sendV3PodWithdrawTransaction

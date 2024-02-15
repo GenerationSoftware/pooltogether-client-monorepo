@@ -13,16 +13,14 @@ import { QUERY_KEYS } from '../constants'
 export const useTokenPrices = (
   chainId: number,
   tokenAddresses: string[]
-): UseQueryResult<{ [address: Address]: number }, unknown> => {
+): UseQueryResult<{ [address: Address]: number }> => {
   const enabled = !!chainId && !!tokenAddresses && tokenAddresses.length > 0
 
-  return useQuery(
-    [QUERY_KEYS.tokenPrices, chainId, tokenAddresses],
-    async () => await getTokenPrices(chainId, tokenAddresses),
-    {
-      staleTime: Infinity,
-      enabled,
-      ...NO_REFETCH
-    }
-  )
+  return useQuery({
+    queryKey: [QUERY_KEYS.tokenPrices, chainId, tokenAddresses],
+    queryFn: async () => await getTokenPrices(chainId, tokenAddresses),
+    staleTime: Infinity,
+    enabled,
+    ...NO_REFETCH
+  })
 }
