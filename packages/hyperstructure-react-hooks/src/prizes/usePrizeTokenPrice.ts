@@ -9,7 +9,13 @@ import { usePrizeTokenData, useTokenPrices } from '..'
  * @param prizePool instance of the `PrizePool` class
  * @returns
  */
-export const usePrizeTokenPrice = (prizePool: PrizePool) => {
+export const usePrizeTokenPrice = (
+  prizePool: PrizePool
+): {
+  data: (TokenWithSupply & TokenWithPrice) | undefined
+  isFetched: boolean
+  refetch: () => void
+} => {
   const { data: prizeToken, isFetched: isFetchedPrizeToken } = usePrizeTokenData(prizePool)
 
   const {

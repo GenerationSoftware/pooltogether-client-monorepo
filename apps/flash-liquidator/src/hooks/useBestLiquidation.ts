@@ -24,9 +24,9 @@ export const useBestLiquidation = (liquidationPair: LiquidationPair) => {
     isFetched,
     refetch: refetchQuote,
     isRefetching
-  } = useQuery(
+  } = useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       if (!!publicClient && !!swapPath) {
         const quote = await publicClient.simulateContract({
           address: FLASH_LIQUIDATORS[liquidationPair.chainId],
@@ -37,12 +37,11 @@ export const useBestLiquidation = (liquidationPair: LiquidationPair) => {
         return quote
       }
     },
-    {
-      enabled: !!chainId && !!lpAddress && !!swapPath && !!publicClient,
-      ...NO_REFETCH,
-      refetchInterval: sToMs(30)
-    }
-  )
+
+    enabled: !!chainId && !!lpAddress && !!swapPath && !!publicClient,
+    ...NO_REFETCH,
+    refetchInterval: sToMs(30)
+  })
 
   const refetch = () => {
     if (!isRefetching) {

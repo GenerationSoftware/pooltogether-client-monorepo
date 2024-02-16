@@ -17,17 +17,15 @@ export const useVaultTotalSupplyTwab = (
 ) => {
   const queryKey = [QUERY_KEYS.vaultTotalSupplyTwabs, prizePool?.id, vault?.id, numDraws]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       const totalSupplyTwabs = await prizePool.getVaultTotalSupplyTwabs([vault.address], numDraws)
 
       const totalSupplyTwab = totalSupplyTwabs[vault.id]
       return totalSupplyTwab
     },
-    {
-      enabled: !!prizePool && !!vault,
-      ...NO_REFETCH
-    }
-  )
+    enabled: !!prizePool && !!vault,
+    ...NO_REFETCH
+  })
 }

@@ -9,12 +9,12 @@ import { QUERY_KEYS } from '../constants'
  * @param prizePool instance of the `PrizePool` class
  * @returns
  */
-export const usePrizeTokenData = (
-  prizePool: PrizePool
-): UseQueryResult<TokenWithSupply, unknown> => {
+export const usePrizeTokenData = (prizePool: PrizePool): UseQueryResult<TokenWithSupply> => {
   const queryKey = [QUERY_KEYS.prizeTokenData, prizePool?.id]
 
-  return useQuery(queryKey, async () => await prizePool.getPrizeTokenData(), {
+  return useQuery({
+    queryKey,
+    queryFn: async () => await prizePool.getPrizeTokenData(),
     enabled: !!prizePool,
     ...NO_REFETCH
   })

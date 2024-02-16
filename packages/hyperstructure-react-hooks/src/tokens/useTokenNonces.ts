@@ -21,25 +21,23 @@ export const useTokenNonces = (
     refetchInterval?: number
     refetchOnWindowFocus?: boolean
   }
-): UseQueryResult<bigint, unknown> => {
+): UseQueryResult<bigint> => {
   const publicClient = usePublicClient({ chainId })
 
   const enabled = !!chainId && !!address && !!tokenAddress && !!publicClient
 
   const queryKey = [QUERY_KEYS.tokenNonces, chainId, address, tokenAddress]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       if (!!publicClient) {
         return await getTokenNonces(publicClient, address, tokenAddress)
       }
     },
-    {
-      enabled,
-      ...NO_REFETCH,
-      refetchInterval: options?.refetchInterval ?? false,
-      refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
-    }
-  )
+    enabled,
+    ...NO_REFETCH,
+    refetchInterval: options?.refetchInterval ?? false,
+    refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
+  })
 }

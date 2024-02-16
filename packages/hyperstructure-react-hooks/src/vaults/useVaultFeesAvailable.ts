@@ -8,19 +8,14 @@ import { QUERY_KEYS } from '../constants'
  * @param vault instance of the `Vault` class
  * @returns
  */
-export const useVaultFeesAvailable = (vault: Vault): UseQueryResult<bigint, unknown> => {
+export const useVaultFeesAvailable = (vault: Vault): UseQueryResult<bigint> => {
   const vaultId = !!vault ? [vault.id] : []
   const queryKey = [QUERY_KEYS.vaultFeesAvailable, vaultId]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
-      const vaultFees = await vault.getFeesAvailable()
-      return vaultFees
-    },
-    {
-      enabled: !!vault,
-      ...NO_REFETCH
-    }
-  )
+    queryFn: async () => await vault.getFeesAvailable(),
+    enabled: !!vault,
+    ...NO_REFETCH
+  })
 }

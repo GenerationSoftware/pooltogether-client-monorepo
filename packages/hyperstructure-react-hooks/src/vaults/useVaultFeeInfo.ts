@@ -11,19 +11,17 @@ import { QUERY_KEYS } from '../constants'
  */
 export const useVaultFeeInfo = (
   vault: Vault
-): UseQueryResult<{ percent: number; recipient: Address }, unknown> => {
+): UseQueryResult<{ percent: number; recipient: Address }> => {
   const vaultId = !!vault ? [vault.id] : []
   const queryKey = [QUERY_KEYS.vaultFeeInfo, vaultId]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       const feeInfo = await vault.getFeeInfo()
       return feeInfo
     },
-    {
-      enabled: !!vault,
-      ...NO_REFETCH
-    }
-  )
+    enabled: !!vault,
+    ...NO_REFETCH
+  })
 }

@@ -12,7 +12,9 @@ import { QUERY_KEYS } from '../constants'
 export const useVaultExchangeRate = (vault: Vault, refetchInterval?: number) => {
   const queryKey = [QUERY_KEYS.vaultExchangeRates, vault?.id]
 
-  return useQuery(queryKey, async () => await vault.getExchangeRate(), {
+  return useQuery({
+    queryKey,
+    queryFn: async () => await vault.getExchangeRate(),
     enabled: !!vault,
     ...NO_REFETCH,
     refetchInterval: refetchInterval ?? false

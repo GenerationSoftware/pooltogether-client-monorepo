@@ -20,9 +20,9 @@ export const useReserve = (prizePool: PrizePool, options?: { refetchInterval?: n
 
   const queryKey = ['reserve', prizePool?.chainId, lastAwardedDrawId, lastDrawStatus]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       if (!!publicClient && !!lastAwardedDrawId && !!lastDrawStatus) {
         const multicallResults = await getSimpleMulticallResults(
           publicClient,
@@ -55,12 +55,10 @@ export const useReserve = (prizePool: PrizePool, options?: { refetchInterval?: n
         }
       }
     },
-    {
-      enabled: !!prizePool && !!publicClient && !!lastAwardedDrawId && !!lastDrawStatus,
-      ...NO_REFETCH,
-      refetchInterval: options?.refetchInterval ?? false
-    }
-  )
+    enabled: !!prizePool && !!publicClient && !!lastAwardedDrawId && !!lastDrawStatus,
+    ...NO_REFETCH,
+    refetchInterval: options?.refetchInterval ?? false
+  })
 }
 
 const calculateFallbackPendingReserve = (

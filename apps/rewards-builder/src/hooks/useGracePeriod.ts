@@ -14,9 +14,9 @@ export const useGracePeriod = (chainId: number) => {
 
   const twabRewardsAddress = TWAB_REWARDS_ADDRESSES[chainId]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       if (!!publicClient) {
         return publicClient.readContract({
           address: twabRewardsAddress,
@@ -25,9 +25,7 @@ export const useGracePeriod = (chainId: number) => {
         })
       }
     },
-    {
-      enabled: !!chainId && !!publicClient && !!twabRewardsAddress,
-      ...NO_REFETCH
-    }
-  )
+    enabled: !!chainId && !!publicClient && !!twabRewardsAddress,
+    ...NO_REFETCH
+  })
 }

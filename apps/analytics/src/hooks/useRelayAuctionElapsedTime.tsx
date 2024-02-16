@@ -19,9 +19,9 @@ export const useRelayAuctionElapsedTime = (
     : undefined
   const publicClient = usePublicClient({ chainId: originChainId })
 
-  return useQuery(
-    ['relayAuctionElapsedTime'],
-    async () => {
+  return useQuery({
+    queryKey: ['relayAuctionElapsedTime'],
+    queryFn: async () => {
       if (!!publicClient) {
         const lastAuction = await publicClient.readContract({
           address: RNG_AUCTION[originChainId as number].address,
@@ -43,10 +43,8 @@ export const useRelayAuctionElapsedTime = (
         return BigInt(getSecondsSinceEpoch()) - completedAt
       }
     },
-    {
-      enabled: !!originChainId && !!publicClient,
-      ...NO_REFETCH,
-      refetchInterval: options?.refetchInterval ?? false
-    }
-  )
+    enabled: !!originChainId && !!publicClient,
+    ...NO_REFETCH,
+    refetchInterval: options?.refetchInterval ?? false
+  })
 }

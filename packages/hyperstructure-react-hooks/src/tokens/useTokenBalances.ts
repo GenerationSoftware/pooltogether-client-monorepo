@@ -26,7 +26,7 @@ export const useTokenBalances = (
     refetchInterval?: number
     refetchOnWindowFocus?: boolean
   }
-): UseQueryResult<{ [tokenAddress: Address]: TokenWithAmount }, unknown> => {
+): UseQueryResult<{ [tokenAddress: Address]: TokenWithAmount }> => {
   const queryClient = useQueryClient()
 
   const publicClient = usePublicClient({ chainId })
@@ -47,21 +47,22 @@ export const useTokenBalances = (
     val
   ]
 
-  return useQuery(
-    getQueryKey(tokenAddresses),
-    async () => {
+  return useQuery({
+    queryKey: getQueryKey(tokenAddresses),
+    queryFn: async () => {
       if (!!publicClient) {
-        return await getTokenBalances(publicClient, address, tokenAddresses)
+        const tokenBalances = await getTokenBalances(publicClient, address, tokenAddresses)
+
+        populateCachePerId(queryClient, getQueryKey, tokenBalances)
+
+        return tokenBalances
       }
     },
-    {
-      enabled,
-      ...NO_REFETCH,
-      refetchInterval: options?.refetchInterval ?? false,
-      refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false,
-      onSuccess: (data) => populateCachePerId(queryClient, getQueryKey, data)
-    }
-  )
+    enabled,
+    ...NO_REFETCH,
+    refetchInterval: options?.refetchInterval ?? false,
+    refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
+  })
 }
 
 /**

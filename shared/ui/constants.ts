@@ -19,6 +19,7 @@ export const DOMAINS = {
   swaps: 'https://swap.cabana.fi',
   rewardsBuilder: 'https://rewards.cabana.fi',
   flashLiquidator: 'https://flash.cabana.fi',
+  migrations: 'https://migrate.pooltogether.com',
   incentives: 'https://incentives.cabana.fi'
 } as const
 

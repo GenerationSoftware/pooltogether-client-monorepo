@@ -35,7 +35,7 @@ export const AppContainer = (props: AppProps) => {
   return (
     <Flowbite theme={{ dark: true }}>
       <Toaster expand={false} />
-      <NextIntlProvider messages={pageProps.messages}>
+      <NextIntlProvider locale={router.locale} messages={pageProps.messages}>
         <div id='modal-root' />
         {isReady && <Component {...pageProps} />}
       </NextIntlProvider>

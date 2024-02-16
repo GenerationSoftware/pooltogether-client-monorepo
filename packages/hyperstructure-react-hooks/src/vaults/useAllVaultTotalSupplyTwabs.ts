@@ -33,21 +33,20 @@ export const useAllVaultTotalSupplyTwabs = (
     numDraws
   ]
 
-  return useQuery(
-    getQueryKey(vaultIds),
-    async () => {
+  return useQuery({
+    queryKey: getQueryKey(vaultIds),
+    queryFn: async () => {
       const vaultAddresses = Object.values(vaults.vaults)
         .filter((vault) => vaultIds.includes(vault.id))
         .map((vault) => vault.address)
 
       const totalSupplyTwabs = await prizePool.getVaultTotalSupplyTwabs(vaultAddresses, numDraws)
 
+      populateCachePerId(queryClient, getQueryKey, totalSupplyTwabs)
+
       return totalSupplyTwabs
     },
-    {
-      enabled: !!prizePool && !!vaults,
-      ...NO_REFETCH,
-      onSuccess: (data) => populateCachePerId(queryClient, getQueryKey, data)
-    }
-  )
+    enabled: !!prizePool && !!vaults,
+    ...NO_REFETCH
+  })
 }

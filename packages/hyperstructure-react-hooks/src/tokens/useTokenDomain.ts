@@ -14,23 +14,21 @@ import { QUERY_KEYS } from '../constants'
 export const useTokenDomain = (
   chainId: number,
   tokenAddress: Address
-): UseQueryResult<TypedDataDomain, unknown> => {
+): UseQueryResult<TypedDataDomain> => {
   const publicClient = usePublicClient({ chainId })
 
   const enabled = !!chainId && !!tokenAddress && !!publicClient
 
   const queryKey = [QUERY_KEYS.tokenDomain, chainId, tokenAddress]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       if (!!publicClient) {
         return await getTokenDomain(publicClient, tokenAddress)
       }
     },
-    {
-      enabled,
-      ...NO_REFETCH
-    }
-  )
+    enabled,
+    ...NO_REFETCH
+  })
 }

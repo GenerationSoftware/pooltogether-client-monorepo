@@ -21,21 +21,24 @@ export const useAllUserVaultBalances = (
     refetchInterval?: number
     refetchOnWindowFocus?: boolean
   }
-): UseQueryResult<{ [vaultId: string]: TokenWithAmount }, unknown> => {
+): UseQueryResult<{ [vaultId: string]: TokenWithAmount }> => {
   const queryClient = useQueryClient()
 
   const vaultIds = !!vaults ? Object.keys(vaults.vaults) : []
   const getQueryKey = (val: (string | number)[]) => [QUERY_KEYS.userVaultBalances, userAddress, val]
 
-  return useQuery(
-    getQueryKey(vaultIds),
-    async () => await vaults.getUserShareBalances(userAddress),
-    {
-      enabled: !!vaults && !!userAddress,
-      ...NO_REFETCH,
-      refetchInterval: options?.refetchInterval ?? false,
-      refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false,
-      onSuccess: (data) => populateCachePerId(queryClient, getQueryKey, data)
-    }
-  )
+  return useQuery({
+    queryKey: getQueryKey(vaultIds),
+    queryFn: async () => {
+      const userShareBalances = await vaults.getUserShareBalances(userAddress)
+
+      populateCachePerId(queryClient, getQueryKey, userShareBalances)
+
+      return userShareBalances
+    },
+    enabled: !!vaults && !!userAddress,
+    ...NO_REFETCH,
+    refetchInterval: options?.refetchInterval ?? false,
+    refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
+  })
 }

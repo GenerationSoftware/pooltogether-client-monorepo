@@ -8,12 +8,12 @@ import { QUERY_KEYS } from '../constants'
  * @param client a Viem client to get the chain ID from
  * @returns
  */
-export const useClientChainId = (
-  client: PublicClient | WalletClient
-): UseQueryResult<number, unknown> => {
+export const useClientChainId = (client: PublicClient | WalletClient): UseQueryResult<number> => {
   const queryKey = [QUERY_KEYS.clientChainId, client.key]
 
-  return useQuery(queryKey, async () => await client.getChainId(), {
+  return useQuery({
+    queryKey,
+    queryFn: async () => await client.getChainId(),
     ...NO_REFETCH
   })
 }

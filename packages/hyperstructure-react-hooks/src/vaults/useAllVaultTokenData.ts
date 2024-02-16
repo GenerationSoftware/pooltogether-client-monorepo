@@ -14,15 +14,22 @@ import { QUERY_KEYS } from '../constants'
  */
 export const useAllVaultTokenData = (
   vaults: Vaults
-): UseQueryResult<{ [vaultId: string]: TokenWithSupply }, unknown> => {
+): UseQueryResult<{ [vaultId: string]: TokenWithSupply }> => {
   const queryClient = useQueryClient()
 
   const vaultIds = !!vaults ? Object.keys(vaults.vaults) : []
   const getQueryKey = (val: (string | number)[]) => [QUERY_KEYS.vaultTokenData, val]
 
-  return useQuery(getQueryKey(vaultIds), async () => await vaults.getTokenData(), {
+  return useQuery({
+    queryKey: getQueryKey(vaultIds),
+    queryFn: async () => {
+      const tokenData = await vaults.getTokenData()
+
+      populateCachePerId(queryClient, getQueryKey, tokenData)
+
+      return tokenData
+    },
     enabled: !!vaults,
-    ...NO_REFETCH,
-    onSuccess: (data) => populateCachePerId(queryClient, getQueryKey, data)
+    ...NO_REFETCH
   })
 }

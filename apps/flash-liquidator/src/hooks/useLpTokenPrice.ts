@@ -28,9 +28,9 @@ export const useLpTokenPrice = (
 
   const { data: token, isFetched: isFetchedToken } = useToken(chainId, tokenAddress as Address)
 
-  const { data: isVault, isFetched: isFetchedIsVault } = useQuery(
-    ['isLpTokenAVault', chainId, tokenAddress],
-    async () => {
+  const { data: isVault, isFetched: isFetchedIsVault } = useQuery({
+    queryKey: ['isLpTokenAVault', chainId, tokenAddress],
+    queryFn: async () => {
       if (!!publicClient) {
         try {
           const asset = await publicClient.readContract({
@@ -44,11 +44,9 @@ export const useLpTokenPrice = (
         }
       }
     },
-    {
-      enabled: !!publicClient && !!tokenAddress,
-      ...NO_REFETCH
-    }
-  )
+    enabled: !!publicClient && !!tokenAddress,
+    ...NO_REFETCH
+  })
 
   const vault = useMemo(() => {
     if (!!publicClient && !!tokenAddress && isFetchedIsVault && isVault) {

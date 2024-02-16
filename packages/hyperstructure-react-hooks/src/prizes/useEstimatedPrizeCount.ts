@@ -8,10 +8,12 @@ import { QUERY_KEYS } from '../constants'
  * @param prizePool instance of the `PrizePool` class
  * @returns
  */
-export const useEstimatedPrizeCount = (prizePool: PrizePool): UseQueryResult<number, unknown> => {
+export const useEstimatedPrizeCount = (prizePool: PrizePool): UseQueryResult<number> => {
   const queryKey = [QUERY_KEYS.estimatedPrizeCount, prizePool?.id]
 
-  return useQuery(queryKey, async () => await prizePool.getEstimatedPrizeCount(), {
+  return useQuery({
+    queryKey,
+    queryFn: async () => await prizePool.getEstimatedPrizeCount(),
     enabled: !!prizePool,
     ...NO_REFETCH
   })

@@ -16,16 +16,23 @@ import { QUERY_KEYS } from '../constants'
 export const useAllVaultBalances = (
   vaults: Vaults,
   refetchInterval?: number
-): UseQueryResult<{ [vaultId: string]: TokenWithAmount }, unknown> => {
+): UseQueryResult<{ [vaultId: string]: TokenWithAmount }> => {
   const queryClient = useQueryClient()
 
   const vaultIds = !!vaults ? Object.keys(vaults.vaults) : []
   const getQueryKey = (val: (string | number)[]) => [QUERY_KEYS.vaultBalances, val]
 
-  return useQuery(getQueryKey(vaultIds), async () => await vaults.getTotalTokenBalances(), {
+  return useQuery({
+    queryKey: getQueryKey(vaultIds),
+    queryFn: async () => {
+      const totalTokenBalances = await vaults.getTotalTokenBalances()
+
+      populateCachePerId(queryClient, getQueryKey, totalTokenBalances)
+
+      return totalTokenBalances
+    },
     enabled: !!vaults,
     ...NO_REFETCH,
-    refetchInterval: refetchInterval ?? false,
-    onSuccess: (data) => populateCachePerId(queryClient, getQueryKey, data)
+    refetchInterval: refetchInterval ?? false
   })
 }
