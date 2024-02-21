@@ -34,8 +34,10 @@ export default function DrawBotsPage() {
           content={
             <div className='flex flex-col'>
               <span>Bot runners compete for</span>
-              <span className='text-5xl'>up to $150/mo*</span>
-              <span className='text-pt-purple-300'>*approximation based on current yield</span>
+              <span className='text-5xl'>up to $50/mo*</span>
+              <span className='text-pt-purple-300'>
+                *approximation based on current bot(s) performance
+              </span>
             </div>
           }
         />
