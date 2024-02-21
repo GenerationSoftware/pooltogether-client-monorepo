@@ -13,6 +13,11 @@ export const useVault = (vaultInfo: VaultInfo): Vault => {
 
   return new Vault(vaultInfo.chainId, vaultInfo.address, publicClient as PublicClient, {
     decimals: vaultInfo.decimals,
-    tokenAddress: vaultInfo.extensions?.underlyingAsset?.address
+    tokenAddress: vaultInfo.extensions?.underlyingAsset?.address,
+    name: vaultInfo.name,
+    logoURI: vaultInfo.logoURI,
+    tags: vaultInfo.tags,
+    tokenLogoURI: vaultInfo.extensions?.underlyingAsset?.logoURI,
+    yieldSourceURI: vaultInfo.yieldSourceURI
   })
 }
