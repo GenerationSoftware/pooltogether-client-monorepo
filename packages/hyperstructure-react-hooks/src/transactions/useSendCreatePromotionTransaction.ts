@@ -147,7 +147,7 @@ export const useSendCreatePromotionTransaction = (
 
   const {
     data: txHash,
-    isLoading: isWaiting,
+    isPending: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
     writeContract: _sendCreatePromotionTransaction

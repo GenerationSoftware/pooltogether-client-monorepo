@@ -31,9 +31,9 @@ export const useVaultPromotions = (
 
   const queryKey = [QUERY_KEYS.promotionInfo, vault?.chainId, promotionIds.map(String)]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       const promotions: { [id: string]: PartialPromotionInfo } = {}
 
       const allPromotionInfo = await getPromotions(vault.publicClient, promotionIds)
@@ -53,9 +53,7 @@ export const useVaultPromotions = (
 
       return promotions
     },
-    {
-      enabled: !!vault && isFetchedPromotionCreatedEvents,
-      ...NO_REFETCH
-    }
-  )
+    enabled: !!vault && isFetchedPromotionCreatedEvents,
+    ...NO_REFETCH
+  })
 }

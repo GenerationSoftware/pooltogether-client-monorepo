@@ -19,7 +19,7 @@ import { QUERY_KEYS } from '../constants'
 export const useTokens = (
   chainId: number,
   tokenAddresses: Address[]
-): UseQueryResult<{ [tokenAddress: Address]: TokenWithSupply }, unknown> => {
+): UseQueryResult<{ [tokenAddress: Address]: TokenWithSupply }> => {
   const queryClient = useQueryClient()
 
   const publicClient = usePublicClient({ chainId })
@@ -35,19 +35,20 @@ export const useTokens = (
 
   const getQueryKey = (val: (string | number)[]) => [QUERY_KEYS.tokens, chainId, val]
 
-  return useQuery(
-    getQueryKey(tokenAddresses),
-    async () => {
+  return useQuery({
+    queryKey: getQueryKey(tokenAddresses),
+    queryFn: async () => {
       if (!!publicClient) {
-        return await getTokenInfo(publicClient, tokenAddresses)
+        const tokenInfo = await getTokenInfo(publicClient, tokenAddresses)
+
+        populateCachePerId(queryClient, getQueryKey, tokenInfo)
+
+        return tokenInfo
       }
     },
-    {
-      enabled,
-      ...NO_REFETCH,
-      onSuccess: (data) => populateCachePerId(queryClient, getQueryKey, data)
-    }
-  )
+    enabled,
+    ...NO_REFETCH
+  })
 }
 
 /**

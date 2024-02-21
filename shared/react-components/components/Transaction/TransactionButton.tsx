@@ -39,7 +39,7 @@ export const TransactionButton = (props: TransactionButtonProps) => {
 
   const { chain, isDisconnected } = useAccount()
 
-  const { switchChain, isLoading: isSwitchingChain } = useSwitchChain()
+  const { switchChain, isPending: isSwitchingChain } = useSwitchChain()
 
   const networkName = getNiceNetworkNameByChainId(chainId)
 

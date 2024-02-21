@@ -9,19 +9,14 @@ import { QUERY_KEYS } from '../constants'
  * @param vault instance of the `Vault` class
  * @returns
  */
-export const useVaultYieldSource = (vault: Vault): UseQueryResult<Address, unknown> => {
+export const useVaultYieldSource = (vault: Vault): UseQueryResult<Address> => {
   const vaultId = !!vault ? [vault.id] : []
   const queryKey = [QUERY_KEYS.vaultYieldSources, vaultId]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
-      const yieldSource = await vault.getYieldSource()
-      return yieldSource
-    },
-    {
-      enabled: !!vault,
-      ...NO_REFETCH
-    }
-  )
+    queryFn: async () => await vault.getYieldSource(),
+    enabled: !!vault,
+    ...NO_REFETCH
+  })
 }

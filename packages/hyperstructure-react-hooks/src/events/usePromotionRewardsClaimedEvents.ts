@@ -33,18 +33,16 @@ export const usePromotionRewardsClaimedEvents = (
     options?.toBlock?.toString() ?? 'latest'
   ]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       if (!!publicClient) {
         return await getPromotionRewardsClaimedEvents(publicClient, options)
       }
     },
-    {
-      enabled: !!chainId && !!publicClient,
-      ...NO_REFETCH
-    }
-  )
+    enabled: !!chainId && !!publicClient,
+    ...NO_REFETCH
+  })
 }
 
 /**

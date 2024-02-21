@@ -26,16 +26,14 @@ export const useRngL1RelayMsgEvents = (
     options?.toBlock?.toString() ?? 'latest'
   ]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       if (!!publicClient) {
         return await getRngL1RelayMsgEvents(publicClient, destinationChainId, options)
       }
     },
-    {
-      enabled: !!chainId && !!destinationChainId && !!publicClient,
-      ...NO_REFETCH
-    }
-  )
+    enabled: !!chainId && !!destinationChainId && !!publicClient,
+    ...NO_REFETCH
+  })
 }

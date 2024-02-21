@@ -13,7 +13,8 @@ module.exports = {
   theme: {
     fontFamily: {
       grotesk: 'Grotesk',
-      inter: 'Inter'
+      inter: 'Inter',
+      averta: 'Averta'
     },
     extend: {
       colors: {

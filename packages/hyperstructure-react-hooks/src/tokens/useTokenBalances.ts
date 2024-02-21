@@ -26,7 +26,7 @@ export const useTokenBalances = (
     refetchInterval?: number
     refetchOnWindowFocus?: boolean
   }
-): UseQueryResult<{ [tokenAddress: Address]: TokenWithAmount }, unknown> => {
+): UseQueryResult<{ [tokenAddress: Address]: TokenWithAmount }> => {
   const queryClient = useQueryClient()
 
   const publicClient = usePublicClient({ chainId })
@@ -47,21 +47,22 @@ export const useTokenBalances = (
     val
   ]
 
-  return useQuery(
-    getQueryKey(tokenAddresses),
-    async () => {
+  return useQuery({
+    queryKey: getQueryKey(tokenAddresses),
+    queryFn: async () => {
       if (!!publicClient) {
-        return await getTokenBalances(publicClient, address, tokenAddresses)
+        const tokenBalances = await getTokenBalances(publicClient, address, tokenAddresses)
+
+        populateCachePerId(queryClient, getQueryKey, tokenBalances)
+
+        return tokenBalances
       }
     },
-    {
-      enabled,
-      ...NO_REFETCH,
-      refetchInterval: options?.refetchInterval ?? false,
-      refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false,
-      onSuccess: (data) => populateCachePerId(queryClient, getQueryKey, data)
-    }
-  )
+    enabled,
+    ...NO_REFETCH,
+    refetchInterval: options?.refetchInterval ?? false,
+    refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
+  })
 }
 
 /**
@@ -150,6 +151,7 @@ export const useTokenBalancesAcrossChains = (
 
   return useMemo(() => {
     const isFetched = results?.every((result) => result.isFetched)
+    const isFetching = results?.some((result) => result.isFetching)
     const refetch = () => results?.forEach((result) => result.refetch())
 
     const formattedData: { [chainId: number]: { [tokenAddress: string]: TokenWithAmount } } = {}
@@ -158,6 +160,7 @@ export const useTokenBalancesAcrossChains = (
         formattedData[result.data.chainId] = result.data.tokenBalances
       }
     })
-    return { isFetched, refetch, data: formattedData }
+
+    return { isFetched, isFetching, refetch, data: formattedData }
   }, [results])
 }

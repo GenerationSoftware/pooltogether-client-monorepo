@@ -24,16 +24,14 @@ export const useDrawAwardedEvents = (
     options?.toBlock?.toString() ?? 'latest'
   ]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       if (!!publicClient) {
         return await getDrawAwardedEvents(publicClient, prizePool.address, options)
       }
     },
-    {
-      enabled: !!prizePool && !!publicClient,
-      ...NO_REFETCH
-    }
-  )
+    enabled: !!prizePool && !!publicClient,
+    ...NO_REFETCH
+  })
 }

@@ -13,16 +13,14 @@ import { NO_REFETCH } from '../constants/query'
 export const useCoingeckoTokenData = (
   chainId: number,
   tokenAddress: string
-): UseQueryResult<CoingeckoTokenData | undefined, unknown> => {
+): UseQueryResult<CoingeckoTokenData | undefined> => {
   const enabled = !!tokenAddress && !!chainId && chainId in COINGECKO_PLATFORMS
 
-  return useQuery(
-    [QUERY_KEYS.coingeckoTokenData, chainId, tokenAddress],
-    async () => await getCoingeckoTokenData(chainId as COINGECKO_PLATFORM, tokenAddress),
-    {
-      staleTime: Infinity,
-      enabled,
-      ...NO_REFETCH
-    }
-  )
+  return useQuery({
+    queryKey: [QUERY_KEYS.coingeckoTokenData, chainId, tokenAddress],
+    queryFn: async () => await getCoingeckoTokenData(chainId as COINGECKO_PLATFORM, tokenAddress),
+    staleTime: Infinity,
+    enabled,
+    ...NO_REFETCH
+  })
 }

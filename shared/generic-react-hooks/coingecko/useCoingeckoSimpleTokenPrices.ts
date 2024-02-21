@@ -12,16 +12,14 @@ import { NO_REFETCH } from '../constants/query'
  */
 export const useCoingeckoSimpleTokenPrices = (
   currencies?: CURRENCY_ID[]
-): UseQueryResult<CoingeckoTokenPrices, unknown> => {
+): UseQueryResult<CoingeckoTokenPrices> => {
   const enabled = currencies === undefined || currencies.length > 0
 
-  return useQuery(
-    [QUERY_KEYS.coingeckoSimpleTokenPrices, currencies],
-    async () => await getCoingeckoSimpleTokenPrices(currencies),
-    {
-      staleTime: Infinity,
-      enabled,
-      ...NO_REFETCH
-    }
-  )
+  return useQuery({
+    queryKey: [QUERY_KEYS.coingeckoSimpleTokenPrices, currencies],
+    queryFn: async () => await getCoingeckoSimpleTokenPrices(currencies),
+    staleTime: Infinity,
+    enabled,
+    ...NO_REFETCH
+  })
 }

@@ -21,17 +21,24 @@ export const useAllUserVaultDelegates = (
     refetchInterval?: number
     refetchOnWindowFocus?: boolean
   }
-): UseQueryResult<{ [vaultId: string]: Address }, unknown> => {
+): UseQueryResult<{ [vaultId: string]: Address }> => {
   const queryClient = useQueryClient()
 
   const vaultIds = !!vaults ? Object.keys(vaults.vaults) : []
   const getQueryKey = (val: (string | number)[]) => [QUERY_KEYS.userVaultDelegate, userAddress, val]
 
-  return useQuery(getQueryKey(vaultIds), async () => await vaults.getUserDelegates(userAddress), {
+  return useQuery({
+    queryKey: getQueryKey(vaultIds),
+    queryFn: async () => {
+      const userDelegates = await vaults.getUserDelegates(userAddress)
+
+      populateCachePerId(queryClient, getQueryKey, userDelegates)
+
+      return userDelegates
+    },
     enabled: !!vaults && !!userAddress,
     ...NO_REFETCH,
     refetchInterval: options?.refetchInterval ?? false,
-    refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false,
-    onSuccess: (data) => populateCachePerId(queryClient, getQueryKey, data)
+    refetchOnWindowFocus: options?.refetchOnWindowFocus ?? false
   })
 }

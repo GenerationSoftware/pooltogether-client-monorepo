@@ -13,17 +13,16 @@ import { QUERY_KEYS } from '../constants'
  */
 export const useAllVaultTokenAddresses = (
   vaults: Vaults
-): UseQueryResult<
-  {
-    byChain: { [chainId: number]: Address[] }
-    byVault: { [vaultId: string]: Address }
-  },
-  unknown
-> => {
+): UseQueryResult<{
+  byChain: { [chainId: number]: Address[] }
+  byVault: { [vaultId: string]: Address }
+}> => {
   const vaultIds = !!vaults ? Object.keys(vaults.vaults) : []
   const queryKey = [QUERY_KEYS.vaultTokenAddresses, vaultIds]
 
-  return useQuery(queryKey, async () => await vaults.getUnderlyingTokenAddresses(), {
+  return useQuery({
+    queryKey,
+    queryFn: async () => await vaults.getUnderlyingTokenAddresses(),
     enabled: !!vaults,
     ...NO_REFETCH
   })

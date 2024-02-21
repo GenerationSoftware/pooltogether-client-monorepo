@@ -13,10 +13,12 @@ import { QUERY_KEYS } from '../constants'
 export const useVaultBalance = (
   vault: Vault,
   refetchInterval?: number
-): UseQueryResult<TokenWithAmount, unknown> => {
+): UseQueryResult<TokenWithAmount> => {
   const queryKey = [QUERY_KEYS.vaultBalances, vault?.id]
 
-  return useQuery(queryKey, async () => await vault.getTotalTokenBalance(), {
+  return useQuery({
+    queryKey,
+    queryFn: async () => await vault.getTotalTokenBalance(),
     enabled: !!vault,
     ...NO_REFETCH,
     refetchInterval: refetchInterval ?? false

@@ -12,9 +12,9 @@ export const useLiquidationPairLiquidatableBalance = (chainId: number, lpAddress
 
   const queryKey = ['lpLiquidatableBalance', chainId, lpAddress]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       if (!!publicClient) {
         const source = await publicClient.readContract({
           address: lpAddress,
@@ -32,9 +32,7 @@ export const useLiquidationPairLiquidatableBalance = (chainId: number, lpAddress
         return liquidatableBalance
       }
     },
-    {
-      enabled: !!publicClient && !!lpAddress && !!lpTokenOutAddress,
-      ...NO_REFETCH
-    }
-  )
+    enabled: !!publicClient && !!lpAddress && !!lpTokenOutAddress,
+    ...NO_REFETCH
+  })
 }

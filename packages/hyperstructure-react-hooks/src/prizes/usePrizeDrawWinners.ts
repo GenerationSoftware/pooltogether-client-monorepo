@@ -16,10 +16,12 @@ export const usePrizeDrawWinners = (
   options?: {
     refetchInterval?: number
   }
-): UseQueryResult<SubgraphDraw[], unknown> => {
+): UseQueryResult<SubgraphDraw[]> => {
   const queryKey = [QUERY_KEYS.drawWinners, prizePool?.chainId]
 
-  return useQuery(queryKey, async () => await getPaginatedSubgraphDraws(prizePool?.chainId), {
+  return useQuery({
+    queryKey,
+    queryFn: async () => await getPaginatedSubgraphDraws(prizePool?.chainId),
     enabled: !!prizePool,
     ...NO_REFETCH,
     refetchInterval: options?.refetchInterval ?? false

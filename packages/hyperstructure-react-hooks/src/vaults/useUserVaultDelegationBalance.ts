@@ -17,10 +17,12 @@ export const useUserVaultDelegationBalance = (
   vault: Vault,
   userAddress: Address,
   refetchInterval?: number
-): UseQueryResult<bigint, unknown> => {
+): UseQueryResult<bigint> => {
   const queryKey = [QUERY_KEYS.userVaultDelegationBalances, userAddress, vault?.id]
 
-  return useQuery(queryKey, async () => await vault.getUserDelegateBalance(userAddress), {
+  return useQuery({
+    queryKey,
+    queryFn: async () => await vault.getUserDelegateBalance(userAddress),
     enabled: !!vault && !!userAddress,
     ...NO_REFETCH,
     refetchInterval: refetchInterval ?? false

@@ -10,19 +10,17 @@ import { QUERY_KEYS } from '../constants'
  */
 export const useClientChainIds = (
   clients: (PublicClient | WalletClient)[]
-): UseQueryResult<number[], unknown> => {
+): UseQueryResult<number[]> => {
   const queryKey = [QUERY_KEYS.clientChainId, clients.map((client) => client.key)]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () =>
+    queryFn: async () =>
       await Promise.all(
         clients.map(async (client) => {
           return await client.getChainId()
         })
       ),
-    {
-      ...NO_REFETCH
-    }
-  )
+    ...NO_REFETCH
+  })
 }

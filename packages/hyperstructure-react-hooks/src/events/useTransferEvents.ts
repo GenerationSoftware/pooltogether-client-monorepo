@@ -29,16 +29,14 @@ export const useTransferEvents = (
     options?.toBlock?.toString() ?? 'latest'
   ]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       if (!!publicClient) {
         return await getTokenTransferEvents(publicClient, tokenAddress, options)
       }
     },
-    {
-      enabled: !!chainId && !!publicClient && !!tokenAddress,
-      ...NO_REFETCH
-    }
-  )
+    enabled: !!chainId && !!publicClient && !!tokenAddress,
+    ...NO_REFETCH
+  })
 }

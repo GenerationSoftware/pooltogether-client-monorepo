@@ -15,16 +15,23 @@ import { QUERY_KEYS } from '../constants'
 export const useAllVaultExchangeRates = (
   vaults: Vaults,
   refetchInterval?: number
-): UseQueryResult<{ [vaultId: string]: bigint }, unknown> => {
+): UseQueryResult<{ [vaultId: string]: bigint }> => {
   const queryClient = useQueryClient()
 
   const vaultIds = !!vaults ? Object.keys(vaults.vaults) : []
   const getQueryKey = (val: (string | number)[]) => [QUERY_KEYS.vaultExchangeRates, val]
 
-  return useQuery(getQueryKey(vaultIds), async () => await vaults.getExchangeRates(), {
+  return useQuery({
+    queryKey: getQueryKey(vaultIds),
+    queryFn: async () => {
+      const exchangeRates = await vaults.getExchangeRates()
+
+      populateCachePerId(queryClient, getQueryKey, exchangeRates)
+
+      return exchangeRates
+    },
     enabled: !!vaults,
     ...NO_REFETCH,
-    refetchInterval: refetchInterval ?? false,
-    onSuccess: (data) => populateCachePerId(queryClient, getQueryKey, data)
+    refetchInterval: refetchInterval ?? false
   })
 }

@@ -24,16 +24,14 @@ export const usePrizeBackstopEvents = (
     options?.toBlock?.toString() ?? 'latest'
   ]
 
-  return useQuery(
+  return useQuery({
     queryKey,
-    async () => {
+    queryFn: async () => {
       if (!!publicClient) {
         return await getPrizeBackstopEvents(publicClient, prizePool.address, options)
       }
     },
-    {
-      enabled: !!prizePool && !!publicClient,
-      ...NO_REFETCH
-    }
-  )
+    enabled: !!prizePool && !!publicClient,
+    ...NO_REFETCH
+  })
 }
