@@ -25,7 +25,7 @@ export const useDrawStatus = (prizePool: PrizePool, drawId: number) => {
       const finalizedAt = closedAt + drawPeriod
 
       const currentTime = getSecondsSinceEpoch()
-      const isClosed = currentTime >= closedAt
+      const isClosed = isFetchedAllRngTxs && currentTime >= closedAt
       const isAwarded = !!awardedAt
       const isFinalized = isAwarded && currentTime >= finalizedAt
 

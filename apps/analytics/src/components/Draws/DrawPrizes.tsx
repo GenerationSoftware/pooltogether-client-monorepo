@@ -27,9 +27,13 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
   const drawAwardedEvent = drawAwardedEvents?.find((e) => e.args.drawId === drawId)
   const numTiers = drawAwardedEvent?.args.numTiers
 
-  const { data: prizesAvailable } = useDrawResults(prizePool, drawId, {
-    refetchInterval: sToMs(300)
-  })
+  const { data: prizesAvailable, isFetched: isFetchedDrawResults } = useDrawResults(
+    prizePool,
+    drawId,
+    {
+      refetchInterval: sToMs(300)
+    }
+  )
   const nonCanaryPrizesAvailable =
     !!prizesAvailable && !!numTiers
       ? prizesAvailable.filter((prize) => prize.tier !== numTiers - 1)
@@ -39,7 +43,7 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
       ? prizesAvailable.filter((prize) => prize.tier === numTiers - 1)
       : []
 
-  const { data: allDraws } = usePrizeDrawWinners(prizePool)
+  const { data: allDraws, isFetched: isFetchedPrizeDrawWinners } = usePrizeDrawWinners(prizePool)
   const draw = allDraws?.find((d) => d.id === drawId)
   const nonCanaryPrizeClaims =
     !!draw && !!numTiers ? draw.prizeClaims.filter((prize) => prize.tier !== numTiers - 1) : []
@@ -53,35 +57,43 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
         })
       : undefined
 
+  const isMainlyFetched = isFetchedDrawAwardedEvents && isFetchedPrizeDrawWinners
+
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
       <DrawCardItemTitle>Prizes</DrawCardItemTitle>
       <div className='flex flex-col gap-1 text-sm text-pt-purple-200 whitespace-nowrap'>
-        {isFetchedDrawAwardedEvents ? (
-          !!numTiers ? (
-            <span>
-              <BigText>{numTiers}</BigText> tiers
-            </span>
-          ) : (
-            <span>-</span>
-          )
+        {isMainlyFetched ? (
+          <>
+            {isFetchedDrawAwardedEvents ? (
+              !!numTiers ? (
+                <span>
+                  <BigText>{numTiers}</BigText> tiers
+                </span>
+              ) : (
+                <span>-</span>
+              )
+            ) : (
+              <Spinner className='after:border-y-pt-purple-300' />
+            )}
+            {!!nonCanaryPrizesAvailable.length && (
+              <span>
+                <BigText>{nonCanaryPrizesAvailable.length}</BigText> prizes
+              </span>
+            )}
+            {!!nonCanaryPrizeClaims.length && (
+              <span>
+                <BigText>{nonCanaryPrizeClaims.length}</BigText> claimed
+              </span>
+            )}
+            {!!formattedCanaryPercentage && (
+              <span>
+                <BigText>+{formattedCanaryPercentage}%</BigText> canary
+              </span>
+            )}
+          </>
         ) : (
           <Spinner className='after:border-y-pt-purple-300' />
-        )}
-        {!!nonCanaryPrizesAvailable.length && (
-          <span>
-            <BigText>{nonCanaryPrizesAvailable.length}</BigText> prizes
-          </span>
-        )}
-        {!!nonCanaryPrizeClaims.length && (
-          <span>
-            <BigText>{nonCanaryPrizeClaims.length}</BigText> claimed
-          </span>
-        )}
-        {!!formattedCanaryPercentage && (
-          <span>
-            <BigText>+{formattedCanaryPercentage}%</BigText> canary
-          </span>
         )}
       </div>
     </div>
