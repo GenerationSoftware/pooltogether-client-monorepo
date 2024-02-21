@@ -96,7 +96,7 @@ export const V4MigrationsTable = (props: V4MigrationsTableProps) => {
   }
 
   if (isMobile) {
-    const networksWithBalance = userV4Balances.map((e) => e.destination.chainId)
+    const networksWithBalance = userV4Balances.map((e) => e.token.chainId)
 
     return (
       <div className='w-full flex flex-col gap-4 items-center'>

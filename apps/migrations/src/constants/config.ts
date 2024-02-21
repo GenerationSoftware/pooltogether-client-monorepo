@@ -98,7 +98,15 @@ export type V5_TAG = 'beta' | 'replaced' | 'old-prize-pool'
  */
 export const OLD_V5_VAULTS: {
   [network: number]: {
-    vault: VaultInfo & { tags?: V5_TAG[] }
+    vault: {
+      chainId: number
+      address: Lowercase<Address>
+      name: string
+      decimals: number
+      symbol: string
+      tags?: V5_TAG[]
+      logoURI: string
+    }
     migrateTo: { chainId: SupportedNetwork; address: Lowercase<Address> }
   }[]
 } = {
@@ -108,6 +116,8 @@ export const OLD_V5_VAULTS: {
         chainId: NETWORK.optimism,
         address: '0x31515cfc4550d9c83e2d86e8a352886d1364e2d9',
         name: 'Beta Prize USDC',
+        decimals: 6,
+        symbol: 'PTUSDC',
         tags: ['beta'],
         logoURI: 'https://etherscan.io/token/images/centre-usdc_28.png'
       },
@@ -118,6 +128,8 @@ export const OLD_V5_VAULTS: {
         chainId: NETWORK.optimism,
         address: '0x1732ce5486ea47f607550ccbe499cd0f894e0494',
         name: 'Beta Prize WETH',
+        decimals: 18,
+        symbol: 'PTWETH',
         tags: ['beta'],
         logoURI: 'https://etherscan.io/token/images/weth_28.png'
       },
@@ -128,12 +140,33 @@ export const OLD_V5_VAULTS: {
         chainId: NETWORK.optimism,
         address: '0x29cb69d4780b53c1e5cd4d2b817142d2e9890715',
         name: 'Prize WETH',
+        decimals: 18,
+        symbol: 'pWETH',
         tags: ['replaced'],
         logoURI: 'https://etherscan.io/token/images/weth_28.png'
       },
       migrateTo: MIGRATION_DESTINATIONS.wethVault
     }
   ]
+}
+
+/**
+ * V5 TWAB Promotion Settings
+ */
+export const V5_PROMOTION_SETTINGS: {
+  [network: number]: { tokenAddresses?: `0x${string}`[]; fromBlock?: bigint; toBlock?: bigint }
+} = {
+  [NETWORK.optimism]: {
+    tokenAddresses: [
+      '0x4200000000000000000000000000000000000042', // OP
+      '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85', // USDC
+      '0x7F5c764cBc14f9669B88837ca1490cCa17c31607', // USDC.e
+      '0x4200000000000000000000000000000000000006', // WETH
+      '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1', // DAI
+      '0x395Ae52bB17aef68C2888d941736A71dC6d4e125' // POOL
+    ],
+    fromBlock: 112_933_000n
+  }
 }
 
 /**

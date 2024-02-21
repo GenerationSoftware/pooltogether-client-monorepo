@@ -1,15 +1,25 @@
-import { useUserVaultTokenBalance, useVault } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useTokens,
+  useUserVaultTokenBalance,
+  useVault
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { useScreenSize } from '@shared/generic-react-hooks'
 import { TokenValueAndAmount } from '@shared/react-components'
+import { TokenWithAmount, TokenWithLogo } from '@shared/types'
 import { Button, Spinner, Table, TableData } from '@shared/ui'
+import { formatBigIntForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ReactNode, useMemo } from 'react'
 import { Address } from 'viem'
 import { TokenBadge } from '@components/TokenBadge'
-import { V5_TAG } from '@constants/config'
+import { OLD_V5_VAULTS, SUPPORTED_NETWORKS, V5_TAG } from '@constants/config'
 import { useUserV5Balances, V5BalanceToMigrate } from '@hooks/useUserV5Balances'
+import {
+  useAllUserV5ClaimableRewards,
+  useUserV5ClaimableRewards
+} from '@hooks/useUserV5ClaimableRewards'
 import { WithdrawButton } from './WithdrawButton'
 
 export interface V5MigrationsTableProps {
@@ -22,18 +32,12 @@ export const V5MigrationsTable = (props: V5MigrationsTableProps) => {
   const { userAddress, showPooly, className } = props
 
   const { data: userV5Balances } = useUserV5Balances(userAddress)
+  const { data: userV5Rewards } = useAllUserV5ClaimableRewards(userAddress)
 
   const { isMobile } = useScreenSize()
 
-  const tableData: TableData = {
-    headers: {
-      token: { content: 'Token' },
-      status: { content: 'Status', position: 'center' },
-      rewards: { content: 'Unclaimed Rewards', position: 'center' },
-      balance: { content: 'Your Balance', position: 'center' },
-      manage: { content: 'Manage', position: 'right' }
-    },
-    rows: userV5Balances.map((migration) => ({
+  const tableRows = useMemo(() => {
+    const rows: TableData['rows'] = userV5Balances.map((migration) => ({
       id: `v5Migration-${migration.token.chainId}-${migration.token.address}`,
       cells: {
         token: {
@@ -57,6 +61,69 @@ export const V5MigrationsTable = (props: V5MigrationsTableProps) => {
         }
       }
     }))
+
+    SUPPORTED_NETWORKS.forEach((network) => {
+      OLD_V5_VAULTS[network]?.forEach((_vault) => {
+        const vaultInfo = _vault.vault
+
+        const foundVaultRewards = userV5Rewards.find(
+          (e) => e.chainId === vaultInfo.chainId && e.vaultAddress === vaultInfo.address
+        )
+
+        if (!!foundVaultRewards) {
+          const foundVaultBalance = userV5Balances.find(
+            (e) =>
+              e.token.chainId === vaultInfo.chainId &&
+              e.token.address.toLowerCase() === vaultInfo.address
+          )
+
+          if (!foundVaultBalance) {
+            const token: TokenWithAmount & TokenWithLogo = { ...vaultInfo, amount: 0n }
+            const migration: V5BalanceToMigrate = {
+              token,
+              vaultInfo,
+              destination: _vault.migrateTo
+            }
+
+            rows.push({
+              id: `v5Migration-${token.chainId}-${token.address}`,
+              cells: {
+                token: { content: <TokenBadge token={{ ...token, ...vaultInfo }} /> },
+                status: {
+                  content: <StatusItem tags={migration.vaultInfo.tags} />,
+                  position: 'center'
+                },
+                rewards: {
+                  content: <RewardsItem userAddress={userAddress} migration={migration} />,
+                  position: 'center'
+                },
+                balance: {
+                  content: <BalanceItem userAddress={userAddress} migration={migration} />,
+                  position: 'center'
+                },
+                manage: {
+                  content: <ManageItem userAddress={userAddress} migration={migration} />,
+                  position: 'right'
+                }
+              }
+            })
+          }
+        }
+      })
+    })
+
+    return rows
+  }, [userV5Balances, userV5Rewards, userAddress])
+
+  const tableData: TableData = {
+    headers: {
+      token: { content: 'Token' },
+      status: { content: 'Status', position: 'center' },
+      rewards: { content: 'Unclaimed Rewards', position: 'center' },
+      balance: { content: 'Your Balance', position: 'center' },
+      manage: { content: 'Manage', position: 'right' }
+    },
+    rows: tableRows
   }
 
   if (isMobile) {
@@ -70,6 +137,31 @@ export const V5MigrationsTable = (props: V5MigrationsTableProps) => {
             className='w-full max-w-md'
           />
         ))}
+        {SUPPORTED_NETWORKS.map((network) => {
+          const vaultAddressesWithBalance = userV5Balances
+            .filter((e) => e.token.chainId === network)
+            .map((e) => e.token.address.toLowerCase() as Lowercase<Address>)
+
+          return Object.values(OLD_V5_VAULTS[network])
+            .filter((e) => !vaultAddressesWithBalance.includes(e.vault.address))
+            .map((entry) => {
+              const token: TokenWithAmount & TokenWithLogo = { ...entry.vault, amount: 0n }
+              const migration: V5BalanceToMigrate = {
+                token,
+                vaultInfo: entry.vault,
+                destination: entry.migrateTo
+              }
+
+              return (
+                <V5MigrationCard
+                  key={`v5Migration-${token.chainId}-${token.address}`}
+                  userAddress={userAddress}
+                  migration={migration}
+                  className='w-full max-w-md'
+                />
+              )
+            })
+        })}
       </div>
     )
   }
@@ -194,9 +286,58 @@ interface RewardsItemProps {
 const RewardsItem = (props: RewardsItemProps) => {
   const { userAddress, migration, className } = props
 
-  // TODO: query rewards from known twab rewards contracts (get address from vault info? extensions?)
+  const { data: claimable, isFetched: isFetchedClaimable } = useUserV5ClaimableRewards(
+    migration.vaultInfo.chainId,
+    migration.vaultInfo.address,
+    userAddress
+  )
 
-  return <>-</>
+  const claimableTokenAddresses = new Set(
+    claimable.map((entry) => entry.tokenAddress.toLowerCase() as Lowercase<Address>)
+  )
+  const { data: tokenData, isFetched: isFetchedTokenData } = useTokens(
+    migration.vaultInfo.chainId,
+    [...claimableTokenAddresses]
+  )
+
+  if (
+    !isFetchedClaimable ||
+    (!!claimableTokenAddresses.size && (!isFetchedTokenData || !tokenData))
+  ) {
+    return <Spinner />
+  }
+
+  if (!claimableTokenAddresses.size) {
+    return <>-</>
+  }
+
+  const firstTokenAddress = [...claimableTokenAddresses][0]
+  const firstToken = tokenData?.[firstTokenAddress]
+  const firstTokenAmount = claimable.reduce(
+    (a, b) => a + (b.tokenAddress === firstTokenAddress ? b.total : 0n),
+    0n
+  )
+
+  return (
+    <div className={className}>
+      {!!firstTokenAmount && !!firstToken ? (
+        <div className='flex flex-col gap-1 items-center'>
+          <span className='flex gap-1 items-center'>
+            <span className='text-xl font-medium text-pt-purple-100'>
+              {formatBigIntForDisplay(firstTokenAmount, firstToken.decimals)}
+            </span>
+            <span className='text-sm text-pt-purple-400'>{firstToken.symbol}</span>
+          </span>
+          {/* TODO: style this */}
+          {claimableTokenAddresses.size > 1 && (
+            <span>+ {claimableTokenAddresses.size - 1} other tokens</span>
+          )}
+        </div>
+      ) : (
+        <>-</>
+      )}
+    </div>
+  )
 }
 
 interface BalanceItemProps {
@@ -218,6 +359,10 @@ const BalanceItem = (props: BalanceItemProps) => {
 
   if (!underlyingToken) {
     return <>?</>
+  }
+
+  if (!underlyingToken.amount) {
+    return <span className={className}>-</span>
   }
 
   return (
@@ -245,17 +390,24 @@ const ManageItem = (props: ManageItemProps) => {
 
   return (
     <div className={classNames('flex gap-2 items-center', className)}>
-      <WithdrawButton
-        migration={migration}
-        txOptions={{ onSuccess: refetchUserV5Balances }}
-        hideWrongNetworkState={true}
-        color='transparent'
-        fullSized={fullSized}
-        className='md:min-w-[6rem]'
-      />
-      <Link href={migrationURL} passHref={true} className='w-full'>
-        <Button fullSized={fullSized}>Migrate</Button>
-      </Link>
+      {!!migration.token.amount ? (
+        <>
+          <WithdrawButton
+            migration={migration}
+            txOptions={{ onSuccess: refetchUserV5Balances }}
+            hideWrongNetworkState={true}
+            color='transparent'
+            fullSized={fullSized}
+            className='md:min-w-[6rem]'
+          />
+          <Link href={migrationURL} passHref={true} className='w-full'>
+            <Button fullSized={fullSized}>Migrate</Button>
+          </Link>
+        </>
+      ) : (
+        // TODO: claim rewards button linking to claim step(s)
+        <></>
+      )}
     </div>
   )
 }
