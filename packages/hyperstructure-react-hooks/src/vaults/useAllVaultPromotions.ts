@@ -90,6 +90,7 @@ export const useAllVaultPromotions = (
 
   return useMemo(() => {
     const isFetched = results?.every((result) => result.isFetched)
+    const isFetching = results?.some((result) => result.isFetching)
     const refetch = () => results?.forEach((result) => result.refetch())
 
     const data: { [chainId: number]: { [id: string]: PartialPromotionInfo } } = {}
@@ -99,6 +100,6 @@ export const useAllVaultPromotions = (
       }
     })
 
-    return { isFetched, refetch, data }
+    return { isFetched, isFetching, refetch, data }
   }, [results])
 }
