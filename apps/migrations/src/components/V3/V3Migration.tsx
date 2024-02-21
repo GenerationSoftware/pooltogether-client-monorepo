@@ -27,20 +27,21 @@ export const V3Migration = (props: V3MigrationProps) => {
 
   const [actionsCompleted, setActionsCompleted] = useState(0)
 
-  const { refetch: refetchUserV3Balances } = useUserV3Balances(userAddress)
-
   const allMigrationActions = {
     withdraw: (
       <WithdrawContent
         userAddress={userAddress}
         migration={migration}
-        onSuccess={() => {
-          refetchUserV3Balances()
-          setActionsCompleted(actionsCompleted + 1)
-        }}
+        onSuccess={() => setActionsCompleted(actionsCompleted + 1)}
       />
     ),
-    swap: <SwapContent userAddress={userAddress} migration={migration} />
+    swap: (
+      <SwapContent
+        userAddress={userAddress}
+        migration={migration}
+        onSuccess={() => setActionsCompleted(actionsCompleted + 1)}
+      />
+    )
   } as const satisfies { [name: string]: ReactNode }
 
   const migrationActions: (keyof typeof allMigrationActions)[] = ['withdraw', 'swap']
@@ -142,15 +143,13 @@ interface SwapContentProps {
   className?: string
 }
 
-// TODO: need to trigger onSuccess when a swap is completed and the destination is the expected destination token
 const SwapContent = (props: SwapContentProps) => {
   const { userAddress, migration, onSuccess, className } = props
 
   const { data: underlyingToken } = useTokenBalance(
     migration.token.chainId,
     userAddress,
-    migration.underlyingTokenAddress,
-    { refetchOnWindowFocus: true }
+    migration.underlyingTokenAddress
   )
 
   const swapWidgetConfig = useMemo(() => {
@@ -165,5 +164,5 @@ const SwapContent = (props: SwapContentProps) => {
     }
   }, [migration, underlyingToken])
 
-  return <SwapWidget config={swapWidgetConfig} className={className} />
+  return <SwapWidget config={swapWidgetConfig} onSuccess={onSuccess} className={className} />
 }

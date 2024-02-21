@@ -45,7 +45,12 @@ export const V4Migration = (props: V4MigrationProps) => {
         onSuccess={() => setActionsCompleted(actionsCompleted + 1)}
       />
     ),
-    swap: <SwapContent migration={migration} />
+    swap: (
+      <SwapContent
+        migration={migration}
+        onSuccess={() => setActionsCompleted(actionsCompleted + 1)}
+      />
+    )
   } as const satisfies { [name: string]: ReactNode }
 
   const migrationActions = useMemo((): (keyof typeof allMigrationActions)[] => {
@@ -152,7 +157,6 @@ interface SwapContentProps {
   className?: string
 }
 
-// TODO: need to trigger onSuccess when a swap is completed and the destination is the expected destination token
 const SwapContent = (props: SwapContentProps) => {
   const { migration, onSuccess, className } = props
 
@@ -166,5 +170,5 @@ const SwapContent = (props: SwapContentProps) => {
     }
   }, [migration])
 
-  return <SwapWidget config={swapWidgetConfig} className={className} />
+  return <SwapWidget config={swapWidgetConfig} onSuccess={onSuccess} className={className} />
 }

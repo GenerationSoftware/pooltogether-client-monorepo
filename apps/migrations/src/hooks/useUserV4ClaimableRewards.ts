@@ -37,6 +37,8 @@ export const useAllUserV4ClaimableRewards = (userAddress: Address) => {
 
   return useMemo(() => {
     const isFetched = results?.every((result) => result.isFetched)
+    const isFetching = results?.some((result) => result.isFetching)
+    const refetch = () => results?.forEach((result) => result.refetch())
 
     const data: {
       token: {
@@ -55,7 +57,7 @@ export const useAllUserV4ClaimableRewards = (userAddress: Address) => {
       }
     })
 
-    return { isFetched, data }
+    return { data, isFetched, isFetching, refetch }
   }, [results])
 }
 

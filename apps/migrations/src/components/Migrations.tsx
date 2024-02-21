@@ -1,6 +1,7 @@
 import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
 import Image from 'next/image'
+import { useEffect } from 'react'
 import { Address } from 'viem'
 import { useUserV3Balances } from '@hooks/useUserV3Balances'
 import { useUserV4Balances } from '@hooks/useUserV4Balances'
@@ -18,15 +19,31 @@ export interface MigrationsProps {
 export const Migrations = (props: MigrationsProps) => {
   const { userAddress, className } = props
 
-  const { data: userV5Balances, isFetched: isFetchedUserV5Balances } =
-    useUserV5Balances(userAddress)
-  const { data: userV4Balances, isFetched: isFetchedUserV4Balances } =
-    useUserV4Balances(userAddress)
-  const { data: userV3Balances, isFetched: isFetchedUserV3Balances } =
-    useUserV3Balances(userAddress)
+  const {
+    data: userV5Balances,
+    isFetched: isFetchedUserV5Balances,
+    isFetching: isFetchingUserV5Balances,
+    refetch: refetchUserV5Balances
+  } = useUserV5Balances(userAddress)
+  const {
+    data: userV4Balances,
+    isFetched: isFetchedUserV4Balances,
+    isFetching: isFetchingUserV4Balances,
+    refetch: refetchUserV4Balances
+  } = useUserV4Balances(userAddress)
+  const {
+    data: userV3Balances,
+    isFetched: isFetchedUserV3Balances,
+    isFetching: isFetchingUserV3Balances,
+    refetch: refetchUserV3Balances
+  } = useUserV3Balances(userAddress)
 
-  const { data: userV4Rewards, isFetched: isFetchedUserV4Rewards } =
-    useAllUserV4ClaimableRewards(userAddress)
+  const {
+    data: userV4Rewards,
+    isFetched: isFetchedUserV4Rewards,
+    isFetching: isFetchingUserV4Rewards,
+    refetch: refetchUserV4Rewards
+  } = useAllUserV4ClaimableRewards(userAddress)
 
   const isFetched =
     isFetchedUserV5Balances &&
@@ -39,6 +56,13 @@ export const Migrations = (props: MigrationsProps) => {
     !userV4Balances.length &&
     !userV3Balances.length &&
     !userV4Rewards.length
+
+  useEffect(() => {
+    if (isFetchedUserV5Balances && !isFetchingUserV5Balances) refetchUserV5Balances()
+    if (isFetchedUserV4Balances && !isFetchingUserV4Balances) refetchUserV4Balances()
+    if (isFetchedUserV3Balances && !isFetchingUserV3Balances) refetchUserV3Balances()
+    if (isFetchedUserV4Rewards && !isFetchingUserV4Rewards) refetchUserV4Rewards()
+  }, [])
 
   return (
     <div className={classNames('w-full flex flex-col gap-8 items-center', className)}>

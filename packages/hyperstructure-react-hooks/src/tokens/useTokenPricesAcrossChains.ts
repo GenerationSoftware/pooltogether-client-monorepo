@@ -29,6 +29,7 @@ export const useTokenPricesAcrossChains = (tokenAddresses: { [chainId: number]: 
 
   return useMemo(() => {
     const isFetched = results?.every((result) => result.isFetched)
+    const isFetching = results?.some((result) => result.isFetching)
     const refetch = () => results?.forEach((result) => result.refetch())
 
     const formattedData: { [chainId: number]: { [address: Address]: number } } = {}
@@ -39,6 +40,6 @@ export const useTokenPricesAcrossChains = (tokenAddresses: { [chainId: number]: 
       }
     })
 
-    return { isFetched, refetch, data: formattedData }
+    return { isFetched, isFetching, refetch, data: formattedData }
   }, [results])
 }

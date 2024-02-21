@@ -1,4 +1,11 @@
-import { LiFiWidget, WidgetConfig, WidgetWalletConfig } from '@lifi/widget'
+import {
+  LiFiWidget,
+  useWidgetEvents,
+  WidgetConfig,
+  WidgetEvent,
+  WidgetWalletConfig
+} from '@lifi/widget'
+import { Token } from '@shared/types'
 import { useEffect, useMemo, useState } from 'react'
 import { useConnect } from 'wagmi'
 import { SUPPORTED_NETWORKS } from '@constants/config'
@@ -17,11 +24,12 @@ export interface SwapWidgetProps {
     | 'containerStyle'
     | 'routePriority'
   >
+  onSuccess?: () => void
   className?: string
 }
 
 export const SwapWidget = (props: SwapWidgetProps) => {
-  const { config, className } = props
+  const { config, onSuccess, className } = props
 
   const v4Tokens = useV4Tokens()
   const { data: v5Tokens } = useV5Tokens()
@@ -45,6 +53,24 @@ export const SwapWidget = (props: SwapWidgetProps) => {
     }),
     [config, v4Tokens, v5Tokens, walletConfig]
   )
+
+  const widgetEvents = useWidgetEvents()
+
+  useEffect(() => {
+    widgetEvents.on(
+      WidgetEvent.RouteExecutionCompleted,
+      (route: { fromToken: Token; toToken: Token }) => {
+        if (
+          (!config?.toChain || route.toToken.chainId === config.toChain) &&
+          (!config?.toToken || route.toToken.address.toLowerCase() === config.toToken.toLowerCase())
+        ) {
+          onSuccess?.()
+        }
+      }
+    )
+
+    return () => widgetEvents.all.clear()
+  }, [widgetEvents])
 
   const [isMounted, setIsMounted] = useState(false)
   useEffect(() => setIsMounted(true), [])

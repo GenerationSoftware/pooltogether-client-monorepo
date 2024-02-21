@@ -15,6 +15,7 @@ export const useUserV5Balances = (
 ): {
   data: V5BalanceToMigrate[]
   isFetched: boolean
+  isFetching: boolean
   refetch: () => void
 } => {
   const allVaultInfo = useMemo(() => {
@@ -30,7 +31,12 @@ export const useUserV5Balances = (
 
   const vaults = useVaults(allVaultInfo)
 
-  const { data: vaultBalances, isFetched, refetch } = useAllUserVaultBalances(vaults, userAddress)
+  const {
+    data: vaultBalances,
+    isFetched,
+    isFetching,
+    refetch
+  } = useAllUserVaultBalances(vaults, userAddress)
 
   const data = useMemo(() => {
     const balancesToMigrate: V5BalanceToMigrate[] = []
@@ -54,5 +60,5 @@ export const useUserV5Balances = (
     return balancesToMigrate
   }, [vaultBalances, isFetched])
 
-  return { data, isFetched, refetch }
+  return { data, isFetched, isFetching, refetch }
 }
