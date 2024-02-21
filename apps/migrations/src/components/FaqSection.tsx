@@ -1,4 +1,3 @@
-import { Accordion } from '@shared/ui'
 import classNames from 'classnames'
 import { ReactNode } from 'react'
 
@@ -50,18 +49,16 @@ export const FaqSection = (props: FaqSectionProps) => {
   ]
 
   return (
-    <section className={classNames('w-full flex flex-col gap-1 items-center', className)}>
+    <section className={classNames('w-full flex flex-col gap-10 items-center', className)}>
       <span className='text-xl font-averta font-bold md:text-3xl'>Frequently Asked Questions</span>
-      <Accordion
-        items={faqs.map((faq, i) => ({
-          id: `faq-${i}`,
-          title: <span className='text-pt-purple-50'>{faq.question}</span>,
-          content: faq.answer
-        }))}
-        className='w-full'
-        titleClassName='mt-11 text-xl font-averta !font-bold text-pt-purple-300 bg-transparent md:justify-center'
-        contentClassName='text-pt-purple-100 bg-transparent md:max-w-[75%] md:mx-auto md:text-center'
-      />
+      <div className='flex flex-col gap-10'>
+        {faqs.map((faq, i) => (
+          <div key={`faq-${i}`} className='w-full flex flex-col gap-3 md:items-center'>
+            <span className='font-averta font-bold text-xl'>{faq.question}</span>
+            <span className='text-pt-purple-100 md:max-w-[75%] md:text-center'>{faq.answer}</span>
+          </div>
+        ))}
+      </div>
     </section>
   )
 }
