@@ -1,4 +1,5 @@
 import { ArrowUturnLeftIcon } from '@heroicons/react/24/outline'
+import { ChevronDoubleRightIcon } from '@heroicons/react/24/outline'
 import { CurrencyValue, NetworkBadge, TokenIcon } from '@shared/react-components'
 import { Button, Spinner } from '@shared/ui'
 import { formatBigIntForDisplay } from '@shared/utilities'
@@ -113,26 +114,34 @@ const ClaimContent = (props: ClaimContentProps) => {
       )}
     >
       <NetworkBadge chainId={chainId} />
-      <span className='text-sm font-semibold text-pt-purple-100'>Claim Your Rewards:</span>
-      <SimpleBadge className='gap-2 !text-2xl font-semibold'>
-        {formatBigIntForDisplay(claimable.total, claimable.token.decimals)}
-        <TokenIcon token={claimable.token} />
-        <span className='text-pt-purple-200'>{claimable.token.symbol}</span>
-      </SimpleBadge>
-      <span className='flex gap-1 items-center text-sm font-semibold text-pt-purple-100'>
-        Estimated Network Fee:{' '}
-        {isFetchedGasEstimate && !!gasEstimate ? (
-          <CurrencyValue baseValue={gasEstimate.totalGasEth} />
-        ) : (
-          <Spinner />
-        )}
-      </span>
+      <div className='flex flex-col gap-2 items-center'>
+        <span className='text-sm font-semibold text-pt-purple-100'>Claim Your Rewards:</span>
+        <SimpleBadge className='gap-2 !text-2xl font-semibold'>
+          {formatBigIntForDisplay(claimable.total, claimable.token.decimals)}
+          <TokenIcon token={claimable.token} />
+          <span className='text-pt-purple-200'>{claimable.token.symbol}</span>
+        </SimpleBadge>
+        <span className='flex gap-1 items-center text-sm font-semibold text-pt-purple-100'>
+          Estimated Network Fee:{' '}
+          {isFetchedGasEstimate && !!gasEstimate ? (
+            <CurrencyValue baseValue={gasEstimate.totalGasEth} />
+          ) : (
+            <Spinner />
+          )}
+        </span>
+      </div>
       <ClaimRewardsButton
         chainId={chainId}
         userAddress={userAddress}
         txOptions={{ onSuccess }}
         fullSized={true}
       />
+      <button
+        onClick={onSuccess}
+        className='flex gap-1 items-center text-sm hover:text-pt-purple-100'
+      >
+        Skip claiming rewards <ChevronDoubleRightIcon className='w-4 h-4' />
+      </button>
     </div>
   )
 }
