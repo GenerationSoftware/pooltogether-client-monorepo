@@ -78,7 +78,7 @@ const getWalletConnectors = () => {
 
   return connectorsForWallets(walletGroups, {
     appName: 'PoolTogether Migrations',
-    projectId: '3eb812d6ed9689e2ced204df2b9e6c76' // TODO: update to new pooltogether-specific project ID (not Cabana)
+    projectId: '3eb812d6ed9689e2ced204df2b9e6c76'
   })
 }
 
