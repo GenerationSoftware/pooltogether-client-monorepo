@@ -8,7 +8,14 @@ import { useV5Tokens } from '@hooks/useV5Tokens'
 export interface SwapWidgetProps {
   config?: Omit<
     WidgetConfig,
-    'integrator' | 'chains' | 'tokens' | 'walletConfig' | 'variant' | 'subvariant'
+    | 'integrator'
+    | 'chains'
+    | 'tokens'
+    | 'walletConfig'
+    | 'variant'
+    | 'subvariant'
+    | 'containerStyle'
+    | 'routePriority'
   >
   className?: string
 }
@@ -29,6 +36,11 @@ export const SwapWidget = (props: SwapWidgetProps) => {
       walletConfig,
       variant: 'expandable',
       subvariant: 'default',
+      containerStyle: {
+        borderRadius: '1rem',
+        boxShadow: '0 0 1rem rgba(250, 72, 232, 0.3)'
+      },
+      routePriority: 'CHEAPEST',
       ...config
     }),
     [config, v4Tokens, v5Tokens, walletConfig]
