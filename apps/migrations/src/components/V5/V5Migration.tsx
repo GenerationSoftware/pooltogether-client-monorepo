@@ -1,10 +1,12 @@
 import {
   useTokenBalance,
+  useTokens,
   useVault,
   useVaultTokenAddress
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { ArrowUturnLeftIcon } from '@heroicons/react/24/outline'
+import { ArrowUturnLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/outline'
 import { CurrencyValue, NetworkBadge, TokenIcon } from '@shared/react-components'
+import { TokenWithAmount } from '@shared/types'
 import { Button, Spinner } from '@shared/ui'
 import { formatBigIntForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
@@ -13,10 +15,16 @@ import { ReactNode, useMemo, useState } from 'react'
 import { Address, formatUnits } from 'viem'
 import { SimpleBadge } from '@components/SimpleBadge'
 import { SwapWidget } from '@components/SwapWidget'
+import { V5_PROMOTION_SETTINGS } from '@constants/config'
 import { V5BalanceToMigrate } from '@hooks/useUserV5Balances'
+import { useUserV5ClaimableRewards } from '@hooks/useUserV5ClaimableRewards'
+import { useV5ClaimRewardsGasEstimate } from '@hooks/useV5ClaimRewardsGasEstimate'
 import { useV5WithdrawGasEstimate } from '@hooks/useV5WithdrawGasEstimate'
+import { ClaimRewardsButton } from './ClaimRewardsButton'
 import { V5MigrationHeader } from './V5MigrationHeader'
 import { WithdrawButton } from './WithdrawButton'
+
+export type V5MigrationStep = 'claim' | 'withdraw' | 'swap'
 
 export interface V5MigrationProps {
   userAddress: Address
@@ -29,7 +37,25 @@ export const V5Migration = (props: V5MigrationProps) => {
 
   const [actionsCompleted, setActionsCompleted] = useState(0)
 
-  const allMigrationActions = {
+  const { data: claimable, isFetched: isFetchedClaimable } = useUserV5ClaimableRewards(
+    migration.token.chainId,
+    migration.vaultInfo.address,
+    userAddress
+  )
+
+  const isRewardsClaimable =
+    isFetchedClaimable || !V5_PROMOTION_SETTINGS[migration.token.chainId]
+      ? !!claimable?.length
+      : undefined
+
+  const allMigrationActions: Record<V5MigrationStep, ReactNode> = {
+    claim: (
+      <ClaimContent
+        userAddress={userAddress}
+        migration={migration}
+        onSuccess={() => setActionsCompleted(actionsCompleted + 1)}
+      />
+    ),
     withdraw: (
       <WithdrawContent
         userAddress={userAddress}
@@ -44,9 +70,17 @@ export const V5Migration = (props: V5MigrationProps) => {
         onSuccess={() => setActionsCompleted(actionsCompleted + 1)}
       />
     )
-  } as const satisfies { [name: string]: ReactNode }
+  }
 
-  const migrationActions: (keyof typeof allMigrationActions)[] = ['withdraw', 'swap']
+  const migrationActions = useMemo((): V5MigrationStep[] => {
+    if (isRewardsClaimable) {
+      return ['claim', 'withdraw', 'swap']
+    } else if (isRewardsClaimable !== undefined) {
+      return ['withdraw', 'swap']
+    } else {
+      return []
+    }
+  }, [allMigrationActions, isRewardsClaimable])
 
   return (
     <div className={classNames('w-full flex flex-col gap-16 items-center', className)}>
@@ -71,6 +105,101 @@ export const V5Migration = (props: V5MigrationProps) => {
           </Button>
         </Link>
       )}
+    </div>
+  )
+}
+
+interface ClaimContentProps {
+  userAddress: Address
+  migration: V5BalanceToMigrate
+  onSuccess?: () => void
+  className?: string
+}
+
+const ClaimContent = (props: ClaimContentProps) => {
+  const { userAddress, migration, onSuccess, className } = props
+
+  const { data: claimable } = useUserV5ClaimableRewards(
+    migration.token.chainId,
+    migration.vaultInfo.address,
+    userAddress
+  )
+
+  const { data: gasEstimate, isFetched: isFetchedGasEstimate } = useV5ClaimRewardsGasEstimate(
+    migration.token.chainId,
+    migration.vaultInfo.address,
+    userAddress
+  )
+
+  const claimableTokenAddresses = new Set(
+    claimable.map((entry) => entry.tokenAddress.toLowerCase() as Lowercase<Address>)
+  )
+  const { data: tokenData } = useTokens(migration.vaultInfo.chainId, [...claimableTokenAddresses])
+
+  const tokensToClaim = useMemo(() => {
+    const tokens: TokenWithAmount[] = []
+
+    if (!!tokenData) {
+      Object.values(tokenData).forEach((token) => {
+        const amount = claimable
+          .filter((e) => e.tokenAddress === token.address.toLowerCase())
+          .reduce((a, b) => a + b.total, 0n)
+
+        if (!!amount) {
+          tokens.push({ ...token, amount })
+        }
+      })
+    }
+
+    return tokens
+  }, [tokenData])
+
+  if (claimable === undefined) {
+    return <Spinner />
+  }
+
+  return (
+    <div
+      className={classNames(
+        'w-full max-w-xl flex flex-col gap-6 items-center px-8 py-11 bg-pt-purple-700 rounded-md',
+        className
+      )}
+    >
+      <NetworkBadge chainId={migration.token.chainId} />
+      <div className='flex flex-col gap-2 items-center'>
+        <span className='text-sm font-semibold text-pt-purple-100'>Claim Your Rewards:</span>
+        {tokensToClaim.map((token) => (
+          <SimpleBadge
+            key={`claimable-${token.chainId}-${token.address}`}
+            className='gap-2 !text-2xl font-semibold'
+          >
+            {formatBigIntForDisplay(token.amount, token.decimals)}
+            <TokenIcon token={token} />
+            <span className='text-pt-purple-200'>{token.symbol}</span>
+          </SimpleBadge>
+        ))}
+        <span className='flex gap-1 items-center text-sm font-semibold text-pt-purple-100'>
+          Estimated Network Fee:{' '}
+          {isFetchedGasEstimate && !!gasEstimate ? (
+            <CurrencyValue baseValue={gasEstimate.totalGasEth} />
+          ) : (
+            <Spinner />
+          )}
+        </span>
+      </div>
+      <ClaimRewardsButton
+        chainId={migration.token.chainId}
+        vaultAddress={migration.vaultInfo.address}
+        userAddress={userAddress}
+        txOptions={{ onSuccess }}
+        fullSized={true}
+      />
+      <button
+        onClick={onSuccess}
+        className='flex gap-1 items-center text-sm hover:text-pt-purple-100'
+      >
+        Skip claiming rewards <ChevronDoubleRightIcon className='w-4 h-4' />
+      </button>
     </div>
   )
 }

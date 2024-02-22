@@ -1,0 +1,96 @@
+import {
+  useGasAmountEstimate,
+  useGasCostEstimates
+} from '@generationsoftware/hyperstructure-react-hooks'
+import { GasCostEstimates } from '@shared/types'
+import { sToMs, TWAB_REWARDS_ADDRESSES, twabRewardsABI } from '@shared/utilities'
+import { useMemo } from 'react'
+import { Address, encodeFunctionData } from 'viem'
+import { useUserV5ClaimableRewards } from './useUserV5ClaimableRewards'
+
+// TODO: need to be able to pass in a twab rewards address to use
+export const useV5ClaimRewardsGasEstimate = (
+  chainId: number,
+  vaultAddress: Address,
+  userAddress: Address
+): { data?: GasCostEstimates; isFetched: boolean } => {
+  const { data: claimable, isFetched: isFetchedClaimable } = useUserV5ClaimableRewards(
+    chainId,
+    vaultAddress,
+    userAddress
+  )
+
+  const epochsToClaim = useMemo(() => {
+    const epochs: { [id: string]: number[] } = {}
+
+    if (isFetchedClaimable && claimable.length > 0) {
+      claimable.forEach((promotion) => {
+        const epochIds = Object.keys(promotion.rewards).map((k) => parseInt(k))
+
+        if (!!epochIds.length) {
+          epochs[promotion.promotionId.toString()] = epochIds
+        }
+      })
+    }
+
+    return epochs
+  }, [claimable, isFetchedClaimable])
+
+  const claimRewardsArgs = useMemo((): [Address, bigint, number[]] | undefined => {
+    const promotion = Object.entries(epochsToClaim).find((entry) => !!entry[1].length)
+
+    if (!!promotion) {
+      return [userAddress, BigInt(promotion[0]), promotion[1]]
+    }
+  }, [userAddress, epochsToClaim])
+
+  const isMulticall = useMemo(() => {
+    const numValidPromotions = Object.values(epochsToClaim).filter(
+      (epochs) => !!epochs.length
+    ).length
+    return numValidPromotions > 1
+  }, [epochsToClaim])
+
+  const multicallArgs = useMemo((): [`0x${string}`[]] | undefined => {
+    if (isMulticall) {
+      const validPromotions = Object.entries(epochsToClaim).filter((entry) => !!entry[1].length)
+
+      const args = validPromotions.map((promotion) => {
+        const callData = encodeFunctionData({
+          abi: twabRewardsABI,
+          args: [userAddress, BigInt(promotion[0]), promotion[1]],
+          functionName: 'claimRewards'
+        })
+        return callData
+      })
+
+      return [args]
+    }
+  }, [userAddress, epochsToClaim, isMulticall])
+
+  const { data: gasAmount, isFetched: isFetchedGasAmount } = useGasAmountEstimate(chainId, {
+    address: TWAB_REWARDS_ADDRESSES[chainId],
+    abi: twabRewardsABI,
+    functionName: isMulticall ? 'multicall' : 'claimRewards',
+    // @ts-ignore
+    args: isMulticall ? multicallArgs : claimRewardsArgs,
+    account: userAddress
+  })
+
+  const { data: gasEstimates, isFetched: isFetchedGasEstimates } = useGasCostEstimates(
+    chainId,
+    gasAmount as bigint,
+    {
+      tx: {
+        abi: twabRewardsABI,
+        functionName: isMulticall ? 'multicall' : 'claimRewards',
+        args: isMulticall ? (multicallArgs as any[]) : (claimRewardsArgs as any[])
+      },
+      refetchInterval: sToMs(10)
+    }
+  )
+
+  const isFetched = isFetchedClaimable && isFetchedGasAmount && isFetchedGasEstimates
+
+  return { data: gasEstimates, isFetched }
+}

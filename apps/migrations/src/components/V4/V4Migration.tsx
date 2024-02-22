@@ -16,6 +16,8 @@ import { useV4ClaimRewardsGasEstimate } from '@hooks/useV4ClaimRewardsGasEstimat
 import { ClaimRewardsButton } from './ClaimRewardsButton'
 import { V4MigrationHeader } from './V4MigrationHeader'
 
+export type V4MigrationStep = 'claim' | 'swap'
+
 export interface V4MigrationProps {
   userAddress: Address
   migration: V4BalanceToMigrate
@@ -37,7 +39,7 @@ export const V4Migration = (props: V4MigrationProps) => {
       ? !!claimable && !!Object.keys(claimable.rewards).length
       : undefined
 
-  const allMigrationActions = {
+  const allMigrationActions: Record<V4MigrationStep, ReactNode> = {
     claim: (
       <ClaimContent
         chainId={migration.token.chainId}
@@ -51,9 +53,9 @@ export const V4Migration = (props: V4MigrationProps) => {
         onSuccess={() => setActionsCompleted(actionsCompleted + 1)}
       />
     )
-  } as const satisfies { [name: string]: ReactNode }
+  }
 
-  const migrationActions = useMemo((): (keyof typeof allMigrationActions)[] => {
+  const migrationActions = useMemo((): V4MigrationStep[] => {
     if (isRewardsClaimable) {
       return ['claim', 'swap']
     } else if (isRewardsClaimable !== undefined) {

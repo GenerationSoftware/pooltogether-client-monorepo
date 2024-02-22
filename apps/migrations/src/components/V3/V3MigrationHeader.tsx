@@ -1,10 +1,11 @@
 import classNames from 'classnames'
 import { MigrationSteps } from '@components/MigrationSteps'
 import { V3BalanceToMigrate } from '@hooks/useUserV3Balances'
+import { V3MigrationStep } from './V3Migration'
 
 export interface V3MigrationHeaderProps {
   migration: V3BalanceToMigrate
-  actions: ('withdraw' | 'swap')[]
+  actions: V3MigrationStep[]
   actionsCompleted: number
   className?: string
 }
@@ -12,7 +13,7 @@ export interface V3MigrationHeaderProps {
 export const V3MigrationHeader = (props: V3MigrationHeaderProps) => {
   const { migration, actions, actionsCompleted, className } = props
 
-  const actionNames = {
+  const actionNames: Record<V3MigrationStep, string> = {
     withdraw: `Withdraw ${migration.token.symbol}`,
     swap:
       migration.token.chainId !== migration.destination.chainId

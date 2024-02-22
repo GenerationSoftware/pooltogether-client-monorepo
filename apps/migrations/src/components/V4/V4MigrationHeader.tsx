@@ -1,10 +1,11 @@
 import classNames from 'classnames'
 import { MigrationSteps } from '@components/MigrationSteps'
 import { V4BalanceToMigrate } from '@hooks/useUserV4Balances'
+import { V4MigrationStep } from './V4Migration'
 
 export interface V4MigrationHeaderProps {
   migration: V4BalanceToMigrate
-  actions: ('claim' | 'swap')[]
+  actions: V4MigrationStep[]
   actionsCompleted: number
   className?: string
 }
@@ -12,7 +13,7 @@ export interface V4MigrationHeaderProps {
 export const V4MigrationHeader = (props: V4MigrationHeaderProps) => {
   const { migration, actions, actionsCompleted, className } = props
 
-  const actionNames = {
+  const actionNames: Record<V4MigrationStep, string> = {
     claim: 'Claim Rewards',
     swap:
       migration.token.chainId !== migration.destination.chainId

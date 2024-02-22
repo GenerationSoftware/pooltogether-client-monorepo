@@ -10,11 +10,13 @@ import { Address, formatUnits } from 'viem'
 import { SimpleBadge } from '@components/SimpleBadge'
 import { SwapWidget } from '@components/SwapWidget'
 import { SupportedNetwork, V3_POOLS } from '@constants/config'
-import { useUserV3Balances, V3BalanceToMigrate } from '@hooks/useUserV3Balances'
+import { V3BalanceToMigrate } from '@hooks/useUserV3Balances'
 import { useV3WithdrawGasEstimate } from '@hooks/useV3WithdrawGasEstimate'
 import { V3MigrationHeader } from './V3MigrationHeader'
 import { WithdrawPodButton } from './WithdrawPodButton'
 import { WithdrawPoolButton } from './WithdrawPoolButton'
+
+export type V3MigrationStep = 'withdraw' | 'swap'
 
 export interface V3MigrationProps {
   userAddress: Address
@@ -27,7 +29,7 @@ export const V3Migration = (props: V3MigrationProps) => {
 
   const [actionsCompleted, setActionsCompleted] = useState(0)
 
-  const allMigrationActions = {
+  const allMigrationActions: Record<V3MigrationStep, ReactNode> = {
     withdraw: (
       <WithdrawContent
         userAddress={userAddress}
@@ -42,9 +44,9 @@ export const V3Migration = (props: V3MigrationProps) => {
         onSuccess={() => setActionsCompleted(actionsCompleted + 1)}
       />
     )
-  } as const satisfies { [name: string]: ReactNode }
+  }
 
-  const migrationActions: (keyof typeof allMigrationActions)[] = ['withdraw', 'swap']
+  const migrationActions: V3MigrationStep[] = ['withdraw', 'swap']
 
   return (
     <div className={classNames('w-full flex flex-col gap-16 items-center', className)}>

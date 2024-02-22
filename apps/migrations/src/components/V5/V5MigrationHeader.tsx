@@ -1,10 +1,11 @@
 import classNames from 'classnames'
 import { MigrationSteps } from '@components/MigrationSteps'
 import { V5BalanceToMigrate } from '@hooks/useUserV5Balances'
+import { V5MigrationStep } from './V5Migration'
 
 export interface V5MigrationHeaderProps {
   migration: V5BalanceToMigrate
-  actions: ('withdraw' | 'swap')[]
+  actions: V5MigrationStep[]
   actionsCompleted: number
   className?: string
 }
@@ -12,7 +13,8 @@ export interface V5MigrationHeaderProps {
 export const V5MigrationHeader = (props: V5MigrationHeaderProps) => {
   const { migration, actions, actionsCompleted, className } = props
 
-  const actionNames = {
+  const actionNames: Record<V5MigrationStep, string> = {
+    claim: 'Claim Rewards',
     withdraw: `Withdraw ${migration.token.symbol}`,
     swap:
       migration.token.chainId !== migration.destination.chainId
