@@ -142,8 +142,20 @@ export const V5MigrationsTable = (props: V5MigrationsTableProps) => {
             .filter((e) => e.token.chainId === network)
             .map((e) => e.token.address.toLowerCase() as Lowercase<Address>)
 
-          return Object.values(OLD_V5_VAULTS[network])
-            .filter((e) => !vaultAddressesWithBalance.includes(e.vault.address))
+          const vaultAddressesWithRewards = [
+            ...new Set(
+              userV5Rewards
+                .filter((e) => e.chainId === network)
+                .map((e) => e.vaultAddress.toLowerCase() as Lowercase<Address>)
+            )
+          ]
+
+          return Object.values(OLD_V5_VAULTS[network] ?? {})
+            .filter(
+              (e) =>
+                vaultAddressesWithRewards.includes(e.vault.address) &&
+                !vaultAddressesWithBalance.includes(e.vault.address)
+            )
             .map((entry) => {
               const token: TokenWithAmount & TokenWithLogo = { ...entry.vault, amount: 0n }
               const migration: V5BalanceToMigrate = {
@@ -321,16 +333,17 @@ const RewardsItem = (props: RewardsItemProps) => {
   return (
     <div className={className}>
       {!!firstTokenAmount && !!firstToken ? (
-        <div className='flex flex-col gap-1 items-center'>
+        <div className='flex flex-col items-center'>
           <span className='flex gap-1 items-center'>
             <span className='text-xl font-medium text-pt-purple-100'>
               {formatBigIntForDisplay(firstTokenAmount, firstToken.decimals)}
             </span>
             <span className='text-sm text-pt-purple-400'>{firstToken.symbol}</span>
           </span>
-          {/* TODO: style this */}
           {claimableTokenAddresses.size > 1 && (
-            <span>+ {claimableTokenAddresses.size - 1} other tokens</span>
+            <span className='text-sm text-pt-purple-200 leading-none'>
+              + {claimableTokenAddresses.size - 1} other tokens
+            </span>
           )}
         </div>
       ) : (
