@@ -20,6 +20,7 @@ import {
   useAllUserV5ClaimableRewards,
   useUserV5ClaimableRewards
 } from '@hooks/useUserV5ClaimableRewards'
+import { ClaimRewardsButton } from './ClaimRewardsButton'
 import { WithdrawButton } from './WithdrawButton'
 
 export interface V5MigrationsTableProps {
@@ -418,8 +419,13 @@ const ManageItem = (props: ManageItemProps) => {
           </Link>
         </>
       ) : (
-        // TODO: claim rewards button linking to claim step(s)
-        <></>
+        <ClaimRewardsButton
+          chainId={migration.token.chainId}
+          vaultAddress={migration.vaultInfo.address}
+          userAddress={userAddress}
+          fullSized={fullSized}
+          className='md:min-w-[6rem]'
+        />
       )}
     </div>
   )
