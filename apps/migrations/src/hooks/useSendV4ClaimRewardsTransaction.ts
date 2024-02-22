@@ -29,11 +29,10 @@ export const useSendV4ClaimRewardsTransaction = (
 } => {
   const { chain } = useAccount()
 
-  const {
-    data: claimable,
-    isFetched: isFetchedClaimable,
-    refetch: refetchClaimable
-  } = useUserV4ClaimableRewards(chainId, userAddress)
+  const { data: claimable, isFetched: isFetchedClaimable } = useUserV4ClaimableRewards(
+    chainId,
+    userAddress
+  )
 
   const epochsToClaim = useMemo(() => {
     const epochs: { [id: string]: number[] } = {}
@@ -157,7 +156,6 @@ export const useSendV4ClaimRewardsTransaction = (
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {
-      refetchClaimable()
       options?.onSuccess?.(txReceipt)
     }
   }, [isSuccess])

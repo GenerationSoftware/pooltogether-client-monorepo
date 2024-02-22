@@ -15,11 +15,11 @@ export interface ClaimRewardsButtonProps extends Omit<ButtonProps, 'onClick'> {
 export const ClaimRewardsButton = (props: ClaimRewardsButtonProps) => {
   const { chainId, vaultAddress, userAddress, txOptions, ...rest } = props
 
-  const {
-    data: claimable,
-    isFetched: isFetchedClaimable,
-    refetch: refetchClaimable
-  } = useUserV5ClaimableRewards(chainId, vaultAddress, userAddress)
+  const { data: claimable, isFetched: isFetchedClaimable } = useUserV5ClaimableRewards(
+    chainId,
+    vaultAddress,
+    userAddress
+  )
 
   const epochsToClaim = useMemo(() => {
     const epochs: { [id: string]: number[] } = {}
@@ -39,13 +39,7 @@ export const ClaimRewardsButton = (props: ClaimRewardsButtonProps) => {
 
   // TODO: need to be able to pass a twab rewards contract address to this, for older deployments
   const { isWaiting, isConfirming, isSuccess, txHash, sendClaimRewardsTransaction } =
-    useSendClaimRewardsTransaction(chainId, userAddress, epochsToClaim, {
-      ...txOptions,
-      onSuccess: (txReceipt) => {
-        refetchClaimable()
-        txOptions?.onSuccess?.(txReceipt)
-      }
-    })
+    useSendClaimRewardsTransaction(chainId, userAddress, epochsToClaim, txOptions)
 
   return (
     <TransactionButton
