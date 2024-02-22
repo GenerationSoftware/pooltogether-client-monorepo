@@ -75,7 +75,7 @@ const LiquidationTx = (props: LiquidationTxProps) => {
   const { data: tokenPrices } = useTokenPrices(chainId, [DOLPHIN_ADDRESS])
 
   if (!lpToken || !txReceipt || !tokenPrices) {
-    return <Spinner className='after:border-y-pt-purple-800' />
+    return <Spinner className='after:border-y-pt-purple-300' />
   }
 
   const tokenInAmount = parseFloat(formatUnits(liquidation.args.amountIn, prizeToken.decimals))
@@ -103,7 +103,7 @@ const LiquidationTx = (props: LiquidationTxProps) => {
   return (
     <div
       className={classNames(
-        'flex flex-col gap-2 items-center justify-center py-1 px-4 text-center bg-pt-purple-50 rounded md:flex-row',
+        'flex flex-col gap-2 items-center justify-center py-1 px-4 text-center bg-pt-transparent rounded md:flex-row',
         className
       )}
     >
@@ -128,7 +128,7 @@ const LiquidationTx = (props: LiquidationTxProps) => {
       <ExternalLink
         href={getBlockExplorerUrl(chainId, liquidation.transactionHash, 'tx')}
         size='sm'
-        className='text-blue-600'
+        className='text-blue-400'
       >
         See TX
       </ExternalLink>

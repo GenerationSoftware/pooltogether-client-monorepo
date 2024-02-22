@@ -61,7 +61,7 @@ export const BurnView = (props: BurnViewProps) => {
   if (!!prizeToken) {
     return (
       <div className={classNames('w-full flex flex-col gap-6 items-center', className)}>
-        <div className='flex flex-col items-center'>
+        <div className='flex flex-col items-center text-pt-purple-400'>
           <BurnHeader prizeToken={prizeToken} className='mb-3' />
           {!!minBlockDay && (
             <RecentBurnStats prizeToken={prizeToken} minBlock={minBlockDay} label='Last 24 hours' />

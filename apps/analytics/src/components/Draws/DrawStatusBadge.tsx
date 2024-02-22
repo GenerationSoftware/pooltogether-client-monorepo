@@ -1,4 +1,5 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
 import { useDrawStatus } from '@hooks/useDrawStatus'
 
@@ -11,7 +12,11 @@ interface DrawStatusBadgeProps {
 export const DrawStatusBadge = (props: DrawStatusBadgeProps) => {
   const { prizePool, drawId, className } = props
 
-  const { status, isSkipped } = useDrawStatus(prizePool, drawId)
+  const { status, isSkipped, isFetched } = useDrawStatus(prizePool, drawId)
+
+  if (!isFetched) {
+    return <Spinner className='after:border-y-pt-purple-300' />
+  }
 
   return (
     <div

@@ -20,15 +20,15 @@ export const ReserveHeader = (props: ReserveHeaderProps) => {
 
   return (
     <div className={classNames('flex flex-col items-center', className)}>
-      <span>Current Reserve:</span>
-      <span className='flex gap-1 items-center text-pt-purple-500'>
+      <span className='text-pt-purple-400'>Current Reserve:</span>
+      <span className='flex gap-1 items-center text-pt-purple-200'>
         <span className='text-4xl font-semibold'>
           {!!reserve && !!prizeToken ? (
             formatBigIntForDisplay(reserve.current + reserve.pending, prizeToken.decimals, {
               hideZeroes: true
             })
           ) : (
-            <Spinner className='after:border-y-pt-purple-800' />
+            <Spinner className='after:border-y-pt-purple-300' />
           )}
         </span>{' '}
         {prizeToken?.symbol}

@@ -28,7 +28,7 @@ export const DrawCard = (props: DrawCardProps) => {
   return (
     <div
       className={classNames(
-        'w-full flex flex-wrap gap-y-6 p-4 bg-pt-purple-100/50 rounded-2xl md:grid md:gap-x-12',
+        'w-full flex flex-wrap gap-y-6 p-4 bg-pt-transparent rounded-2xl md:grid md:gap-x-12',
         gridColsClassName,
         className
       )}

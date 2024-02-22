@@ -1,3 +1,4 @@
+import { useScreenSize } from '@shared/generic-react-hooks'
 import { Button, LINKS, Logo } from '@shared/ui'
 import classNames from 'classnames'
 import Image from 'next/image'
@@ -32,7 +33,7 @@ export const Navbar = (props: NavbarProps) => {
         </div>
       </div>
       <MobileNavbar className='z-50 md:hidden'>
-        <NavbarActions innerButtonClassName='text-xs' />
+        <NavbarActions innerButtonClassName='text-sm' />
       </MobileNavbar>
     </>
   )
@@ -68,11 +69,19 @@ interface NavbarActionsProps {
 const NavbarActions = (props: NavbarActionsProps) => {
   const { linkClassName, buttonClassName, innerButtonClassName } = props
 
+  const { isMobile } = useScreenSize()
+
   return (
     <>
       <NavbarLink href={LINKS.docs} name='Docs' className={linkClassName} />
       <NavbarLink href='/tools' name='Tools' className={linkClassName} />
-      <Button href={LINKS.app} target='_blank' color='purple' className={buttonClassName}>
+      <Button
+        href={LINKS.app}
+        target='_blank'
+        color='purple'
+        className={buttonClassName}
+        size={isMobile ? 'sm' : 'md'}
+      >
         <span className={innerButtonClassName}>Launch App</span>
       </Button>
     </>

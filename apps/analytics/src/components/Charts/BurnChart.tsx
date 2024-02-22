@@ -122,7 +122,7 @@ export const BurnChart = (props: BurnChartProps) => {
 
   if (!!chartData?.length) {
     return (
-      <div className={classNames('w-full flex flex-col gap-2', className)}>
+      <div className={classNames('w-full flex flex-col gap-2 text-pt-purple-800', className)}>
         <AreaChart
           data={chartData}
           areas={[

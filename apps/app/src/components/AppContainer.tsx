@@ -33,7 +33,7 @@ export const AppContainer = (props: AppProps) => {
   }, [])
 
   return (
-    <Flowbite theme={{ dark: true }}>
+    <Flowbite>
       <Toaster expand={false} />
       <NextIntlProvider locale={router.locale} messages={pageProps.messages}>
         <div id='modal-root' />

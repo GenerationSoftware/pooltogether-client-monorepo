@@ -26,7 +26,12 @@ export const VaultListFilterSelect = (props: VaultListFilterSelectProps) => {
         field: {
           base: 'relative w-full',
           select: {
-            base: 'block w-full py-[11.5px] border-r-8 border-transparent outline outline-1 hover:bg-pt-transparent disabled:cursor-not-allowed disabled:opacity-50',
+            base: 'block w-full border-r-8 border-transparent outline outline-1 hover:bg-pt-transparent disabled:cursor-not-allowed disabled:opacity-50',
+            sizes: {
+              sm: 'px-2 py-[11.5px] sm:text-xs',
+              md: 'px-2.5 py-[11.5px] text-sm',
+              lg: 'sm:text-md px-4 py-[11.5px]'
+            },
             colors: {
               custom:
                 'bg-pt-bg-purple-dark text-pt-purple-100 outline-pt-purple-100 focus:ring-2 focus:ring-pt-purple-50'

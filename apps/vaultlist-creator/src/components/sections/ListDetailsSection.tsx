@@ -32,7 +32,7 @@ export const ListDetailsSection = (props: ListDetailsSectionProps) => {
   return (
     <section
       className={classNames(
-        'flex flex-col gap-5 px-6 py-4 border-pt-purple-400 lg:pl-4 lg:pr-16 lg:border-r',
+        'flex flex-col gap-5 px-6 py-4 border-pt-purple-600 lg:pl-4 lg:pr-16 lg:border-r',
         className
       )}
     >

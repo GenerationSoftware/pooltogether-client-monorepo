@@ -61,7 +61,7 @@ const Label = () => {
   const { chainId, isReady } = useSelectedChainId()
 
   if (!isReady) {
-    return <Spinner className='after:border-y-pt-purple-800' />
+    return <Spinner className='after:border-y-pt-purple-300' />
   }
 
   if (!chainId) {
@@ -74,7 +74,7 @@ const Label = () => {
       hideBg={true}
       className='pr-0 select-none md:pl-0'
       iconClassName='h-6 w-6'
-      textClassName='font-bold text-pt-purple-900'
+      textClassName='font-bold text-pt-purple-400'
     />
   )
 }

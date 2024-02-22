@@ -144,7 +144,7 @@ export const ReserveChart = (props: ReserveChartProps) => {
 
   if (!!chartData?.length && !!prizeToken) {
     return (
-      <div className={classNames('w-full flex flex-col gap-2', className)}>
+      <div className={classNames('w-full flex flex-col gap-2 text-pt-purple-700', className)}>
         <LineChart
           data={chartData}
           lines={[{ id: 'reserve', strokeWidth: 3 }]}

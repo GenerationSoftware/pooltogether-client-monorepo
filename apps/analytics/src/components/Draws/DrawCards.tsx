@@ -19,7 +19,7 @@ export const DrawCards = (props: DrawCardsProps) => {
   const [numDraws, setNumDraws] = useState<number>(4)
 
   if (!drawIds.length) {
-    return <Spinner className='after:border-y-pt-purple-800' />
+    return <Spinner className='after:border-y-pt-purple-300' />
   }
 
   return (
@@ -35,7 +35,10 @@ export const DrawCards = (props: DrawCardsProps) => {
           />
         ))}
       {drawIds.length > numDraws && (
-        <span onClick={() => setNumDraws(numDraws + baseNumDraws)} className='cursor-pointer'>
+        <span
+          onClick={() => setNumDraws(numDraws + baseNumDraws)}
+          className='text-pt-purple-200 cursor-pointer'
+        >
           Show More Draws
         </span>
       )}

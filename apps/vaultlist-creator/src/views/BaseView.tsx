@@ -8,7 +8,7 @@ export const BaseView = () => {
         Create and edit vault lists for PoolTogether V5
       </span>
       <div className='flex flex-col items-center grow lg:flex-row'>
-        <CreateListForm className='w-full pb-6 border-b border-pt-purple-400 lg:w-1/2 lg:pt-8 lg:pb-16 lg:border-r lg:border-b-0' />
+        <CreateListForm className='w-full pb-6 border-b border-pt-purple-600 lg:w-1/2 lg:pt-8 lg:pb-16 lg:border-r lg:border-b-0' />
         <ImportListForm className='w-full pt-6 lg:w-1/2 lg:pt-8 lg:pb-16' />
       </div>
     </div>

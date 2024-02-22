@@ -22,7 +22,7 @@ export const HomePageContent = () => {
           <span className='mx-auto text-3xl'>Your Prize Vaults</span>
           <DeployNewVaultButton className='absolute hidden right-0 lg:block' />
         </div>
-        <DeployedVaultsTable className='w-full' />
+        <DeployedVaultsTable />
         <DeployNewVaultButton className='lg:hidden' />
         <AddDeployedVaultForm className='w-full mt-8' />
       </div>

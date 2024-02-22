@@ -39,7 +39,7 @@ export const DrawRngFee = (props: DrawRngFeeProps) => {
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
       <DrawCardItemTitle>{canBeAwarded ? 'Current ' : ''}RNG Fee</DrawCardItemTitle>
-      <div className='flex flex-col gap-1 text-sm text-pt-purple-700 whitespace-nowrap'>
+      <div className='flex flex-col gap-1 text-sm text-pt-purple-200 whitespace-nowrap'>
         {isFetchedAllRngTxs && !!prizeToken ? (
           <>
             <span>
@@ -92,6 +92,7 @@ export const DrawRngFee = (props: DrawRngFeeProps) => {
                   rngTx.hash,
                   'tx'
                 )}
+                className='text-blue-400 hover:text-blue-300 transition'
               >
                 {shorten(rngTx.hash, { short: true })}
               </ExternalLink>
@@ -100,7 +101,7 @@ export const DrawRngFee = (props: DrawRngFeeProps) => {
             )}
           </>
         ) : (
-          <Spinner className='after:border-y-pt-purple-800' />
+          <Spinner className='after:border-y-pt-purple-300' />
         )}
       </div>
     </div>

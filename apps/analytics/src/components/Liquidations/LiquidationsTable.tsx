@@ -60,7 +60,7 @@ export const LiquidationsTable = (props: LiquidationsTableProps) => {
   }, [validLiquidationEvents])
 
   if (!isFetchedLiquidationEvents || !prizeToken) {
-    return <Spinner className='after:border-y-pt-purple-800' />
+    return <Spinner className='after:border-y-pt-purple-300' />
   }
 
   const minTimestamp = Number(minBlock?.timestamp ?? 0)
@@ -82,7 +82,7 @@ export const LiquidationsTable = (props: LiquidationsTableProps) => {
 
   return (
     <div className={classNames('w-full flex flex-col gap-6 items-center', className)}>
-      <span className='text-center text-3xl font-semibold text-pt-purple-500'>
+      <span className='text-center text-3xl font-semibold text-pt-purple-200'>
         {timeText} yield liquidations
       </span>
       <LiquidationsTableHeaders className={classNames('hidden px-4', gridClassName)} />
@@ -109,7 +109,7 @@ const LiquidationsTableHeaders = (props: LiquidationsTableHeadersProps) => {
   const { className } = props
 
   return (
-    <div className={classNames('text-sm text-pt-purple-400', className)}>
+    <div className={classNames('text-sm text-pt-purple-300', className)}>
       <span>{liquidationHeaders.pair}</span>
       <span>{liquidationHeaders.auctioned}</span>
       <span>{liquidationHeaders.price}</span>

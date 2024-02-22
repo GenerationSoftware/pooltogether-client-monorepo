@@ -87,8 +87,8 @@ const ReserveCardItem = (props: ReserveCardItemProps) => {
           className={classNames(
             'flex gap-1 items-center',
             {
-              'text-green-600': amount > 0 && formattedAmount !== '0',
-              'text-red-600': amount < 0 && formattedAmount !== '-0'
+              'text-green-500': amount > 0 && formattedAmount !== '0',
+              'text-red-500': amount < 0 && formattedAmount !== '-0'
             },
             amountClassName
           )}

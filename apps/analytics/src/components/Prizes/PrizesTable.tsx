@@ -55,7 +55,7 @@ export const PrizesTable = (props: PrizesTableProps) => {
     !prizeToken ||
     !isFetchedDrawAwardedEvents
   ) {
-    return <Spinner className='after:border-y-pt-purple-800' />
+    return <Spinner className='after:border-y-pt-purple-300' />
   }
 
   if (!drawWins?.length || !awardedAt) {
@@ -101,7 +101,7 @@ const PrizesTableHeaders = (props: PrizesTableHeadersProps) => {
   const { className } = props
 
   return (
-    <div className={classNames('text-sm text-pt-purple-400', className)}>
+    <div className={classNames('text-sm text-pt-purple-300', className)}>
       <span>{prizesHeaders.tier}</span>
       <span>{prizesHeaders.size}</span>
       <span>{prizesHeaders.claimed}</span>

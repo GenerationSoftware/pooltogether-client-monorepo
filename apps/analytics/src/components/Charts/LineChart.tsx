@@ -32,11 +32,11 @@ const DEFAULT: {
     animate: false
   },
   refLine: {
-    stroke: '#B18CFF',
+    stroke: '#218C2F',
     strokeWidth: 1
   },
-  xAxis: { stroke: '#9CA3AF' },
-  yAxis: { stroke: '#9CA3AF' },
+  xAxis: { stroke: '#8c63cf' },
+  yAxis: { stroke: '#8c63cf' },
   margin: { left: 5, mobileLeft: -12 }
 }
 

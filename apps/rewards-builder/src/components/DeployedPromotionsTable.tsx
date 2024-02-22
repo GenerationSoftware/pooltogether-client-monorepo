@@ -71,7 +71,7 @@ export const DeployedPromotionsTable = (props: DeployedPromotionsTableProps) => 
       token: { content: 'Token', position: 'center' },
       owner: { content: 'Owner', position: 'center' },
       status: { content: 'Status', position: 'center' },
-      actions: { content: 'Actions', position: 'center' }
+      actions: { content: 'Actions', position: 'right' }
     },
     rows: promotionsArray.slice(0, numPromotions).map((promotion) => ({
       id: `${promotion.chainId}-${promotion.id}`,
@@ -95,7 +95,7 @@ export const DeployedPromotionsTable = (props: DeployedPromotionsTableProps) => 
         },
         actions: {
           content: !!onlyUser ? <ActionsItem promotion={promotion} /> : <></>,
-          position: 'center'
+          position: 'right'
         }
       }
     }))
@@ -135,10 +135,10 @@ export const DeployedPromotionsTable = (props: DeployedPromotionsTableProps) => 
       <Table
         keyPrefix='deployedPromotionsTable'
         data={tableData}
-        className='w-full px-6 pb-6 bg-transparent'
+        className='w-full pb-6 bg-transparent'
         innerClassName='overflow-y-auto'
         headerClassName='text-center font-medium text-pt-purple-300 whitespace-nowrap'
-        rowClassName='text-sm font-medium rounded-lg overflow-hidden'
+        rowClassName='!px-4 text-sm font-medium rounded-lg overflow-hidden'
         gridColsClassName={`grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)]`}
       />
       {promotionsArray.length > numPromotions && (

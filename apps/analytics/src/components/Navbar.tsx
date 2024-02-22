@@ -32,13 +32,13 @@ export const Navbar = (props: NavbarProps) => {
       >
         <Link href={`/${networkName}`} className='flex gap-1 items-center'>
           <Image src='/cabanaLogo.svg' alt='Cabana' width={32} height={32} priority={true} />
-          <span className='-mt-[.2rem] font-grotesk font-bold text-[2rem] text-pt-purple-900'>
+          <span className='-mt-[.2rem] font-grotesk font-bold text-[2rem] text-pt-purple-100'>
             Cabanalytics
           </span>
         </Link>
         <div className='hidden gap-6 items-center md:flex'>
           <NavbarActions />
-          <NetworkDropdown />
+          <NetworkDropdown className='text-pt-purple-600' />
           <Image
             src='/pooly.svg'
             alt='Pooly'
@@ -69,7 +69,7 @@ const MobileNavbar = (props: MobileNavbarProps) => {
     <div
       className={classNames(
         'fixed bottom-0 flex w-full h-[60px] justify-center items-center gap-3 font-medium text-sm',
-        'bg-pt-purple-200 border-t-2 border-pt-purple-500',
+        'bg-pt-purple-800 border-t-2 border-pt-purple-700',
         'min-[350px]:text-base min-[400px]:gap-6',
         className
       )}
@@ -124,8 +124,8 @@ const NavbarLink = (props: NavbarLinkProps) => {
       className={classNames(
         'font-semibold border-b-2 md:border-b-4',
         {
-          'text-pt-purple-500 border-b-current': isActive,
-          'text-gray-600 border-b-transparent hover:text-pt-purple-500': !isActive
+          'text-pt-teal border-b-current': isActive,
+          'text-base border-b-transparent hover:text-pt-purple-200': !isActive
         },
         className
       )}

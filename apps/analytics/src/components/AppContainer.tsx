@@ -12,7 +12,7 @@ export const AppContainer = (props: AppProps) => {
   }, [])
 
   return (
-    <Flowbite theme={{ dark: true }}>
+    <Flowbite>
       <div id='modal-root' />
       <Component {...pageProps} />
     </Flowbite>

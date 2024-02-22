@@ -32,7 +32,7 @@ export const Dropdown = (props: DropdownProps) => {
       <FlowbiteDropdown
         theme={{
           inlineWrapper: 'flex items-center pr-3',
-          content: 'flex flex-col items-center',
+          content: 'flex flex-col',
           floating: {
             content: 'px-2 py-2',
             style: {
@@ -45,20 +45,18 @@ export const Dropdown = (props: DropdownProps) => {
         className={classNames(className)}
         {...rest}
       >
-        <>
-          {header}
-          {items.map((item) => {
-            return (
-              <FlowbiteDropdown.Item
-                key={`dd-${item.id}`}
-                theme={{ base: 'flex items-center justify-center w-full cursor-pointer' }}
-                onClick={() => item.onClick(item.id)}
-              >
-                {item.content}
-              </FlowbiteDropdown.Item>
-            )
-          })}
-        </>
+        <li>{header}</li>
+        {items.map((item) => {
+          return (
+            <FlowbiteDropdown.Item
+              key={`dd-${item.id}`}
+              theme={{ base: 'w-full flex items-center justify-center p-1 cursor-pointer' }}
+              onClick={() => item.onClick(item.id)}
+            >
+              {item.content}
+            </FlowbiteDropdown.Item>
+          )
+        })}
       </FlowbiteDropdown>
     )
   }
@@ -102,7 +100,7 @@ const DropdownModalBodyContent = (props: DropdownModalBodyContentProps) => {
 
   return (
     <>
-      {header}
+      <span className='py-2'>{header}</span>
       {items.map((item) => (
         <div
           key={`dd-modal-${item.id}`}

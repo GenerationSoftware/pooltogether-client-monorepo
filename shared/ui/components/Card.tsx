@@ -1,12 +1,13 @@
 import classNames from 'classnames'
 import { Card as FlowbiteCard, CardProps as FlowbiteCardProps } from 'flowbite-react'
 
-export interface CardProps extends FlowbiteCardProps {
+type CardProps = FlowbiteCardProps & {
+  className?: string
   wrapperClassName?: string
 }
 
 export const Card = (props: CardProps) => {
-  const { wrapperClassName, className, ...rest } = props
+  const { className, wrapperClassName, ...rest } = props
 
   return (
     <FlowbiteCard

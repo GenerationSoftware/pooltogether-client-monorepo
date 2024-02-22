@@ -62,8 +62,13 @@ export const DrawsAvgClaimFeesChart = (props: DrawsAvgClaimFeesChartProps) => {
 
   if (!!chartData?.length) {
     return (
-      <div className={classNames('w-full flex flex-col gap-2', className)}>
-        <span className='ml-2 md:ml-6'>Average Claim Fee Percentages</span>
+      <div
+        className={classNames(
+          'w-full flex flex-col gap-2 font-medium text-pt-purple-800',
+          className
+        )}
+      >
+        <span className='ml-2 text-pt-purple-200 md:ml-6'>Average Claim Fee Percentages</span>
         <LineChart
           data={chartData}
           lines={[{ id: 'percentage' }, { id: 'cumAvg', strokeDashArray: 5 }]}

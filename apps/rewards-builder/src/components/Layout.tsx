@@ -65,7 +65,7 @@ const SimpleNavbar = (props: SimpleNavbarProps) => {
           width={178}
           height={60}
           priority={true}
-          className='w-52 h-auto mx-auto'
+          className='w-52 h-auto mx-auto md:mx-0'
         />
       </Link>
       <ConnectButton
