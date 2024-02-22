@@ -121,7 +121,7 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
           className
         )}
       >
-        <span className='ml-2 md:ml-6 text-pt-purple-200'>
+        <span className='ml-2 text-pt-purple-200 md:ml-6'>
           Cumulative Average Claim Fee Percentages
         </span>
         <LineChart

@@ -68,7 +68,7 @@ export const DrawsAvgClaimFeesChart = (props: DrawsAvgClaimFeesChartProps) => {
           className
         )}
       >
-        <span className='ml-2 md:ml-6 text-pt-purple-200'>Average Claim Fee Percentages</span>
+        <span className='ml-2 text-pt-purple-200 md:ml-6'>Average Claim Fee Percentages</span>
         <LineChart
           data={chartData}
           lines={[{ id: 'percentage' }, { id: 'cumAvg', strokeDashArray: 5 }]}

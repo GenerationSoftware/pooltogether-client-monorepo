@@ -7,7 +7,7 @@ type CardProps = FlowbiteCardProps & {
 }
 
 export const Card = (props: CardProps) => {
-  const { wrapperClassName, className, ...rest } = props
+  const { className, wrapperClassName, ...rest } = props
 
   return (
     <FlowbiteCard

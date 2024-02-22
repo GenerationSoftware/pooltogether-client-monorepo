@@ -50,7 +50,7 @@ export const Dropdown = (props: DropdownProps) => {
           return (
             <FlowbiteDropdown.Item
               key={`dd-${item.id}`}
-              theme={{ base: 'flex items-center justify-center w-full cursor-pointer p-1' }}
+              theme={{ base: 'w-full flex items-center justify-center p-1 cursor-pointer' }}
               onClick={() => item.onClick(item.id)}
             >
               {item.content}

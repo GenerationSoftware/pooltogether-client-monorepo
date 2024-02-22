@@ -14,9 +14,11 @@ export const DrawStatusBadge = (props: DrawStatusBadgeProps) => {
 
   const { status, isSkipped, isFetched } = useDrawStatus(prizePool, drawId)
 
-  return !isFetched ? (
-    <Spinner className='after:border-y-pt-purple-300' />
-  ) : (
+  if (!isFetched) {
+    return <Spinner className='after:border-y-pt-purple-300' />
+  }
+
+  return (
     <div
       className={classNames(
         'w-full px-2 py-1 text-center text-xl rounded whitespace-nowrap',

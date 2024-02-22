@@ -37,7 +37,7 @@ export const DrawCards = (props: DrawCardsProps) => {
       {drawIds.length > numDraws && (
         <span
           onClick={() => setNumDraws(numDraws + baseNumDraws)}
-          className='cursor-pointer text-pt-purple-200'
+          className='text-pt-purple-200 cursor-pointer'
         >
           Show More Draws
         </span>

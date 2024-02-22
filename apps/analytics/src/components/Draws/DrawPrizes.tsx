@@ -27,13 +27,9 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
   const drawAwardedEvent = drawAwardedEvents?.find((e) => e.args.drawId === drawId)
   const numTiers = drawAwardedEvent?.args.numTiers
 
-  const { data: prizesAvailable, isFetched: isFetchedDrawResults } = useDrawResults(
-    prizePool,
-    drawId,
-    {
-      refetchInterval: sToMs(300)
-    }
-  )
+  const { data: prizesAvailable } = useDrawResults(prizePool, drawId, {
+    refetchInterval: sToMs(300)
+  })
   const nonCanaryPrizesAvailable =
     !!prizesAvailable && !!numTiers
       ? prizesAvailable.filter((prize) => prize.tier !== numTiers - 1)
@@ -57,24 +53,18 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
         })
       : undefined
 
-  const isMainlyFetched = isFetchedDrawAwardedEvents && isFetchedPrizeDrawWinners
-
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
       <DrawCardItemTitle>Prizes</DrawCardItemTitle>
       <div className='flex flex-col gap-1 text-sm text-pt-purple-200 whitespace-nowrap'>
-        {isMainlyFetched ? (
+        {isFetchedDrawAwardedEvents && isFetchedPrizeDrawWinners ? (
           <>
-            {isFetchedDrawAwardedEvents ? (
-              !!numTiers ? (
-                <span>
-                  <BigText>{numTiers}</BigText> tiers
-                </span>
-              ) : (
-                <span>-</span>
-              )
+            {!!numTiers ? (
+              <span>
+                <BigText>{numTiers}</BigText> tiers
+              </span>
             ) : (
-              <Spinner className='after:border-y-pt-purple-300' />
+              <span>-</span>
             )}
             {!!nonCanaryPrizesAvailable.length && (
               <span>
