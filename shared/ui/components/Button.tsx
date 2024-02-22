@@ -41,8 +41,8 @@ export const Button = (props: ButtonProps) => {
         },
         disabled: 'cursor-not-allowed opacity-50 pointer-events-none',
         size: {
-          sm: 'px-2 py-1',
-          md: 'px-4 py-2',
+          sm: 'text-xs px-2 py-1',
+          md: 'text-sm px-4 py-2',
           lg: 'px-5 py-2.5'
         }
       }}
