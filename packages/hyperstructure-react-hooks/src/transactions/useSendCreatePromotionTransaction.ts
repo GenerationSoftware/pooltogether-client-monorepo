@@ -39,6 +39,7 @@ export const useSendCreatePromotionTransaction = (
   options?: {
     startTimestamp?: bigint
     epochDuration?: number
+    twabRewardsAddress?: Address
     onSend?: (txHash: `0x${string}`) => void
     onSuccess?: (txReceipt: TransactionReceipt) => void
     onError?: () => void
@@ -54,7 +55,9 @@ export const useSendCreatePromotionTransaction = (
 } => {
   const { address: userAddress, chain } = useAccount()
 
-  const twabRewardsAddress = !!vault ? TWAB_REWARDS_ADDRESSES[vault.chainId] : undefined
+  const twabRewardsAddress = !!vault
+    ? options?.twabRewardsAddress ?? TWAB_REWARDS_ADDRESSES[vault.chainId]
+    : undefined
   const totalTokens =
     !!tokensPerEpoch && !!numberOfEpochs ? tokensPerEpoch * BigInt(numberOfEpochs) : 0n
 

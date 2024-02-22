@@ -9,14 +9,19 @@ import { getSecondsSinceEpoch } from './time'
  * Returns promotion info for the given promotion IDs
  * @param publicClient a public Viem client to query through
  * @param promotionIds the promotion IDs to query info for
+ * @param options optional settings
  * @returns
  */
-export const getPromotions = async (publicClient: PublicClient, promotionIds: bigint[]) => {
+export const getPromotions = async (
+  publicClient: PublicClient,
+  promotionIds: bigint[],
+  options?: { twabRewardsAddress?: Address }
+) => {
   const promotions: { [id: string]: PromotionInfo | undefined } = {}
 
   const chainId = await publicClient.getChainId()
 
-  const twabRewardsAddress = TWAB_REWARDS_ADDRESSES[chainId]
+  const twabRewardsAddress = options?.twabRewardsAddress ?? TWAB_REWARDS_ADDRESSES[chainId]
 
   if (!!twabRewardsAddress) {
     if (promotionIds.length > 0) {
@@ -50,6 +55,7 @@ export const getPromotions = async (publicClient: PublicClient, promotionIds: bi
  * @param publicClient a public Viem client to query through
  * @param userAddress the address to query rewards for
  * @param promotions info for the promotions to consider
+ * @param options optional settings
  * @returns
  */
 export const getClaimableRewards = async (
@@ -57,14 +63,15 @@ export const getClaimableRewards = async (
   userAddress: Address,
   promotions: {
     [id: string]: { startTimestamp?: bigint; numberOfEpochs?: number; epochDuration?: number }
-  }
+  },
+  options?: { twabRewardsAddress?: Address }
 ) => {
   const claimableRewards: { [id: string]: { [epochId: number]: bigint } } = {}
   const promotionEpochs: { [id: string]: number[] } = {}
 
   const chainId = await publicClient.getChainId()
 
-  const twabRewardsAddress = TWAB_REWARDS_ADDRESSES[chainId]
+  const twabRewardsAddress = options?.twabRewardsAddress ?? TWAB_REWARDS_ADDRESSES[chainId]
 
   if (!!twabRewardsAddress) {
     Object.entries(promotions).forEach(([id, info]) => {

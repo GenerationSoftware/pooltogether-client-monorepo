@@ -10,6 +10,7 @@ import { QUERY_KEYS } from '../constants'
  * Returns a user's claimable rewards for the given promotions on any network
  * @param userAddress user address to get delegate for
  * @param promotions info for the promotions to consider
+ * @param options optional settings
  * @returns
  */
 export const useAllUserClaimableRewards = (
@@ -18,7 +19,8 @@ export const useAllUserClaimableRewards = (
     [chainId: number]: {
       [id: string]: { startTimestamp?: bigint; numberOfEpochs?: number; epochDuration?: number }
     }
-  }
+  },
+  options?: { twabRewardsAddress?: Address }
 ) => {
   const publicClients = usePublicClientsByChain({ useAll: true })
 
@@ -29,12 +31,20 @@ export const useAllUserClaimableRewards = (
       const publicClient = publicClients[chainId]
 
       const promotionIds = !!promotions?.[chainId] ? Object.keys(promotions[chainId]) : []
-      const queryKey = [QUERY_KEYS.userClaimableRewards, chainId, userAddress, promotionIds]
+      const queryKey = [
+        QUERY_KEYS.userClaimableRewards,
+        chainId,
+        userAddress,
+        promotionIds,
+        options?.twabRewardsAddress
+      ]
 
       return {
         queryKey,
         queryFn: async () =>
-          await getClaimableRewards(publicClient, userAddress, promotions[chainId]),
+          await getClaimableRewards(publicClient, userAddress, promotions[chainId], {
+            twabRewardsAddress: options?.twabRewardsAddress
+          }),
         enabled: !!chainId && !!publicClient && !!userAddress,
         ...NO_REFETCH
       }

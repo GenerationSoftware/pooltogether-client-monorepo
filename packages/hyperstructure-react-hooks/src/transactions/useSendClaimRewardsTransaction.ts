@@ -13,7 +13,7 @@ import {
  * @param chainId the chain ID these rewards are to be claimed on
  * @param userAddress the user address to claim rewards for
  * @param epochsToClaim the epochs to claim for each promotion ID
- * @param options optional callbacks
+ * @param options optional settings or callbacks
  * @returns
  */
 export const useSendClaimRewardsTransaction = (
@@ -21,6 +21,7 @@ export const useSendClaimRewardsTransaction = (
   userAddress: Address,
   epochsToClaim: { [id: string]: number[] },
   options?: {
+    twabRewardsAddress?: Address
     onSend?: (txHash: `0x${string}`) => void
     onSuccess?: (txReceipt: TransactionReceipt) => void
     onError?: () => void
@@ -36,7 +37,9 @@ export const useSendClaimRewardsTransaction = (
 } => {
   const { chain } = useAccount()
 
-  const twabRewardsAddress = !!chainId ? TWAB_REWARDS_ADDRESSES[chainId] : undefined
+  const twabRewardsAddress = !!chainId
+    ? options?.twabRewardsAddress ?? TWAB_REWARDS_ADDRESSES[chainId]
+    : undefined
 
   const enabled =
     !!chainId &&

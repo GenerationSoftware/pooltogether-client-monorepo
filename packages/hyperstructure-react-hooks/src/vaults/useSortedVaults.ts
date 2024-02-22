@@ -29,7 +29,12 @@ export const useSortedVaults = (
   vaultsArray: Vault[],
   options?: {
     prizePool?: PrizePool
-    twabRewards?: { rewardTokenAddresses: Address[]; numDraws?: number; fromBlock?: bigint }
+    twabRewards?: {
+      rewardTokenAddresses: Address[]
+      numDraws?: number
+      fromBlock?: bigint
+      contractAddress?: Address
+    }
     defaultSortId?: SortId
     defaultSortDirection?: SortDirection
   }
@@ -59,7 +64,11 @@ export const useSortedVaults = (
       vaults,
       options?.prizePool as PrizePool,
       options?.twabRewards?.rewardTokenAddresses ?? [],
-      { numDraws: options?.twabRewards?.numDraws, fromBlock: options?.twabRewards?.fromBlock }
+      {
+        numDraws: options?.twabRewards?.numDraws,
+        fromBlock: options?.twabRewards?.fromBlock,
+        twabRewardsAddress: options?.twabRewards?.contractAddress
+      }
     )
 
   const isFetched =
@@ -70,7 +79,9 @@ export const useSortedVaults = (
     (isFetchedAllVaultPromotionsApr ||
       !options?.prizePool ||
       !options?.twabRewards ||
-      (!!options?.prizePool && !TWAB_REWARDS_ADDRESSES[options.prizePool.chainId]))
+      (!!options?.prizePool &&
+        !TWAB_REWARDS_ADDRESSES[options.prizePool.chainId] &&
+        !options?.twabRewards?.contractAddress))
 
   const sortedVaults = useMemo(() => {
     if (isFetched && !!allVaultShareTokens) {

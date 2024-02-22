@@ -26,6 +26,7 @@ export const useSendExtendPromotionTransaction = (
   tokensPerEpoch: bigint,
   numberOfEpochs: number,
   options?: {
+    twabRewardsAddress?: Address
     onSend?: (txHash: `0x${string}`) => void
     onSuccess?: (txReceipt: TransactionReceipt) => void
     onError?: () => void
@@ -41,7 +42,9 @@ export const useSendExtendPromotionTransaction = (
 } => {
   const { address: userAddress, chain } = useAccount()
 
-  const twabRewardsAddress = !!chainId ? TWAB_REWARDS_ADDRESSES[chainId] : undefined
+  const twabRewardsAddress = !!chainId
+    ? options?.twabRewardsAddress ?? TWAB_REWARDS_ADDRESSES[chainId]
+    : undefined
   const totalTokens =
     !!tokensPerEpoch && !!numberOfEpochs ? tokensPerEpoch * BigInt(numberOfEpochs) : 0n
 

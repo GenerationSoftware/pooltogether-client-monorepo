@@ -18,6 +18,7 @@ export const useVaultPromotions = (
     tokenAddresses?: Address[]
     fromBlock?: bigint
     toBlock?: bigint
+    twabRewardsAddress?: Address
   }
 ) => {
   const { data: promotionCreatedEvents, isFetched: isFetchedPromotionCreatedEvents } =
@@ -29,14 +30,21 @@ export const useVaultPromotions = (
     ? promotionCreatedEvents.map((e) => e.args.promotionId)
     : []
 
-  const queryKey = [QUERY_KEYS.promotionInfo, vault?.chainId, promotionIds.map(String)]
+  const queryKey = [
+    QUERY_KEYS.promotionInfo,
+    vault?.chainId,
+    promotionIds.map(String),
+    options?.twabRewardsAddress
+  ]
 
   return useQuery({
     queryKey,
     queryFn: async () => {
       const promotions: { [id: string]: PartialPromotionInfo } = {}
 
-      const allPromotionInfo = await getPromotions(vault.publicClient, promotionIds)
+      const allPromotionInfo = await getPromotions(vault.publicClient, promotionIds, {
+        twabRewardsAddress: options?.twabRewardsAddress
+      })
 
       promotionCreatedEvents?.forEach((promotionCreatedEvent) => {
         const id = promotionCreatedEvent.args.promotionId.toString()

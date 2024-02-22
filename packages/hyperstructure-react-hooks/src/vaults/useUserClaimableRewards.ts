@@ -11,6 +11,7 @@ import { populateCachePerId } from '../utils/populateCachePerId'
  * @param chainId network to query rewards in
  * @param userAddress user address to get delegate for
  * @param promotions info for the promotions to consider
+ * @param options optional settings
  * @returns
  */
 export const useUserClaimableRewards = (
@@ -18,7 +19,8 @@ export const useUserClaimableRewards = (
   userAddress: Address,
   promotions: {
     [id: string]: { startTimestamp?: bigint; numberOfEpochs?: number; epochDuration?: number }
-  }
+  },
+  options?: { twabRewardsAddress?: Address }
 ) => {
   const queryClient = useQueryClient()
 
@@ -29,6 +31,7 @@ export const useUserClaimableRewards = (
     QUERY_KEYS.userClaimableRewards,
     chainId,
     userAddress,
+    options?.twabRewardsAddress,
     val
   ]
 
@@ -36,7 +39,9 @@ export const useUserClaimableRewards = (
     queryKey: getQueryKey(promotionIds),
     queryFn: async () => {
       if (!!publicClient) {
-        const claimableRewards = await getClaimableRewards(publicClient, userAddress, promotions)
+        const claimableRewards = await getClaimableRewards(publicClient, userAddress, promotions, {
+          twabRewardsAddress: options?.twabRewardsAddress
+        })
 
         populateCachePerId(queryClient, getQueryKey, claimableRewards)
 

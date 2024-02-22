@@ -480,11 +480,12 @@ export const getPromotionCreatedEvents = async (
     tokenAddresses?: Address[]
     fromBlock?: bigint
     toBlock?: bigint
+    twabRewardsAddress?: Address
   }
 ) => {
   const chainId = await publicClient.getChainId()
 
-  const twabRewardsAddress = TWAB_REWARDS_ADDRESSES[chainId]
+  const twabRewardsAddress = options?.twabRewardsAddress ?? TWAB_REWARDS_ADDRESSES[chainId]
 
   if (!twabRewardsAddress) {
     console.warn(`No TWAB rewards contract set for chain ID ${chainId}`)
@@ -530,11 +531,12 @@ export const getPromotionRewardsClaimedEvents = async (
     userAddresses?: Address[]
     fromBlock?: bigint
     toBlock?: bigint
+    twabRewardsAddress?: Address
   }
 ) => {
   const chainId = await publicClient.getChainId()
 
-  const twabRewardsAddress = TWAB_REWARDS_ADDRESSES[chainId]
+  const twabRewardsAddress = options?.twabRewardsAddress ?? TWAB_REWARDS_ADDRESSES[chainId]
 
   if (!twabRewardsAddress) {
     console.warn(`No TWAB rewards contract set for chain ID ${chainId}`)

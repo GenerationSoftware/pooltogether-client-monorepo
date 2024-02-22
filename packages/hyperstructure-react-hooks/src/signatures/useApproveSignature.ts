@@ -9,7 +9,7 @@ import { useTokenDomain, useTokenNonces, useTokenPermitSupport, useVaultTokenDat
  * Requests an EIP-2612 signature for a vault to spend tokens
  * @param amount the amount to be approved
  * @param vault the vault to approve spending to
- * @param options optional callbacks
+ * @param options optional settings or callbacks
  * @returns
  */
 export const useApproveSignature = (

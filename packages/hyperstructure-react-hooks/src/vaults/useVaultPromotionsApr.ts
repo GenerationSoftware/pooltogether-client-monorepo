@@ -28,13 +28,18 @@ export const useVaultPromotionsApr = (
   options?: {
     numDraws?: number
     fromBlock?: bigint
+    twabRewardsAddress?: Address
   }
 ) => {
   const {
     data: vaultPromotions,
     isFetched: isFetchedVaultPromotions,
     refetch: refetchVaultPromotions
-  } = useVaultPromotions(vault, { tokenAddresses, fromBlock: options?.fromBlock })
+  } = useVaultPromotions(vault, {
+    tokenAddresses,
+    fromBlock: options?.fromBlock,
+    twabRewardsAddress: options?.twabRewardsAddress
+  })
 
   const { data: drawPeriod, isFetched: isFetchedDrawPeriod } = useDrawPeriod(prizePool)
 

@@ -20,6 +20,7 @@ export const usePromotionRewardsClaimedEvents = (
     userAddresses?: Address[]
     fromBlock?: bigint
     toBlock?: bigint
+    twabRewardsAddress?: Address
   }
 ) => {
   const publicClient = usePublicClient({ chainId })
@@ -30,7 +31,8 @@ export const usePromotionRewardsClaimedEvents = (
     options?.promotionIds?.map(String),
     options?.userAddresses,
     options?.fromBlock?.toString(),
-    options?.toBlock?.toString() ?? 'latest'
+    options?.toBlock?.toString() ?? 'latest',
+    options?.twabRewardsAddress
   ]
 
   return useQuery({
@@ -59,6 +61,7 @@ export const usePromotionRewardsClaimedEventsAcrossChains = (
       userAddresses?: Address[]
       fromBlock?: bigint
       toBlock?: bigint
+      twabRewardsAddress?: Address
     }
   }
 ) => {
@@ -74,7 +77,8 @@ export const usePromotionRewardsClaimedEventsAcrossChains = (
         options?.[chainId]?.promotionIds?.map(String),
         options?.[chainId]?.userAddresses,
         options?.[chainId]?.fromBlock?.toString(),
-        options?.[chainId]?.toBlock?.toString() ?? 'latest'
+        options?.[chainId]?.toBlock?.toString() ?? 'latest',
+        options?.[chainId]?.twabRewardsAddress
       ]
 
       return {

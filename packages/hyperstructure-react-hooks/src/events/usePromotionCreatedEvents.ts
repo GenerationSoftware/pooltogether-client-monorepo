@@ -21,6 +21,7 @@ export const usePromotionCreatedEvents = (
     tokenAddresses?: Address[]
     fromBlock?: bigint
     toBlock?: bigint
+    twabRewardsAddress?: Address
   }
 ) => {
   const publicClient = usePublicClient({ chainId })
@@ -32,7 +33,8 @@ export const usePromotionCreatedEvents = (
     options?.vaultAddresses,
     options?.tokenAddresses,
     options?.fromBlock?.toString(),
-    options?.toBlock?.toString() ?? 'latest'
+    options?.toBlock?.toString() ?? 'latest',
+    options?.twabRewardsAddress
   ]
 
   return useQuery({
@@ -62,6 +64,7 @@ export const usePromotionCreatedEventsAcrossChains = (
       tokenAddresses?: Address[]
       fromBlock?: bigint
       toBlock?: bigint
+      twabRewardsAddress?: Address
     }
   }
 ) => {
@@ -78,7 +81,8 @@ export const usePromotionCreatedEventsAcrossChains = (
         options?.[chainId]?.vaultAddresses,
         options?.[chainId]?.tokenAddresses,
         options?.[chainId]?.fromBlock?.toString(),
-        options?.[chainId]?.toBlock?.toString() ?? 'latest'
+        options?.[chainId]?.toBlock?.toString() ?? 'latest',
+        options?.[chainId]?.twabRewardsAddress
       ]
 
       return {

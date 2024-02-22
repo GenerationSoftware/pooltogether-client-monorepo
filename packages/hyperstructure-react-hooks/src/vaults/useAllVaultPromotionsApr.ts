@@ -28,10 +28,17 @@ export const useAllVaultPromotionsApr = (
   options?: {
     numDraws?: number
     fromBlock?: bigint
+    twabRewardsAddress?: Address
   }
 ) => {
   const promotionOptions = !!prizePool
-    ? { [prizePool.chainId]: { tokenAddresses, fromBlock: options?.fromBlock } }
+    ? {
+        [prizePool.chainId]: {
+          tokenAddresses,
+          fromBlock: options?.fromBlock,
+          twabRewardsAddress: options?.twabRewardsAddress
+        }
+      }
     : undefined
   const {
     data: allVaultPromotions,
