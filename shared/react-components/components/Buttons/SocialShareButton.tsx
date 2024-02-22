@@ -46,9 +46,6 @@ export const SocialShareButton = (props: SocialShareButtonProps) => {
       className='capitalize'
       fullSized={true}
       size='sm'
-      theme={{
-        base: 'text-pt-purple-100 bg-pt-transparent border-pt-transparent hover:bg-pt-purple-50/20 focus:ring-pt-purple-50'
-      }}
       {...rest}
     >
       <SocialIcon platform={platform} className='w-4 h-auto shrink-0 mr-1' />
