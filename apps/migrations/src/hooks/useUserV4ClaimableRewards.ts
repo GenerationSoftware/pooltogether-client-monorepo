@@ -43,7 +43,7 @@ export const useAllUserV4ClaimableRewards = (userAddress: Address) => {
     const data: {
       token: {
         chainId: number
-        address: `0x${Lowercase<string>}`
+        address: Lowercase<Address>
         decimals: number
         symbol: string
       }

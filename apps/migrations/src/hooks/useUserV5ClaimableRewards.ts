@@ -4,11 +4,11 @@ import {
   useVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { PartialPromotionInfo, VaultInfo } from '@shared/types'
+import { TWAB_REWARDS_ADDRESSES } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { OLD_V5_VAULTS, SUPPORTED_NETWORKS, V5_PROMOTION_SETTINGS } from '@constants/config'
 
-// TODO: need to be able to lookup different twab rewards addresses for different deployments
 export const useAllUserV5ClaimableRewards = (userAddress: Address) => {
   const allVaultInfo = useMemo(() => {
     const info: VaultInfo[] = []
@@ -80,8 +80,9 @@ export const useAllUserV5ClaimableRewards = (userAddress: Address) => {
     const entries: {
       promotionId: bigint
       chainId: number
-      tokenAddress: `0x${Lowercase<string>}`
-      vaultAddress: `0x${Lowercase<string>}`
+      tokenAddress: Lowercase<Address>
+      vaultAddress: Lowercase<Address>
+      twabRewardsAddress: Lowercase<Address>
       rewards: { [epochId: number]: bigint }
       total: bigint
     }[] = []
@@ -90,8 +91,11 @@ export const useAllUserV5ClaimableRewards = (userAddress: Address) => {
       entries.push({
         promotionId: promotion.promotionId,
         chainId: promotion.chainId,
-        tokenAddress: promotion.token.toLowerCase() as `0x${Lowercase<string>}`,
-        vaultAddress: promotion.vault.toLowerCase() as `0x${Lowercase<string>}`,
+        tokenAddress: promotion.token.toLowerCase() as Lowercase<Address>,
+        vaultAddress: promotion.vault.toLowerCase() as Lowercase<Address>,
+        twabRewardsAddress:
+          V5_PROMOTION_SETTINGS[promotion.chainId]?.twabRewardsAddress ??
+          (TWAB_REWARDS_ADDRESSES[promotion.chainId].toLowerCase() as Lowercase<Address>),
         rewards: promotion.epochRewards,
         total: Object.values(promotion.epochRewards).reduce((a, b) => a + b, 0n)
       })

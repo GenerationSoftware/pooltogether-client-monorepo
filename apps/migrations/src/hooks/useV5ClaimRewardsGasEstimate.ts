@@ -8,12 +8,14 @@ import { useMemo } from 'react'
 import { Address, encodeFunctionData } from 'viem'
 import { useUserV5ClaimableRewards } from './useUserV5ClaimableRewards'
 
-// TODO: need to be able to pass in a twab rewards address to use
 export const useV5ClaimRewardsGasEstimate = (
   chainId: number,
   vaultAddress: Address,
-  userAddress: Address
+  userAddress: Address,
+  options?: { twabRewardsAddress?: Address }
 ): { data?: GasCostEstimates; isFetched: boolean } => {
+  const twabRewardsAddress = options?.twabRewardsAddress ?? TWAB_REWARDS_ADDRESSES[chainId]
+
   const { data: claimable, isFetched: isFetchedClaimable } = useUserV5ClaimableRewards(
     chainId,
     vaultAddress,
@@ -25,10 +27,12 @@ export const useV5ClaimRewardsGasEstimate = (
 
     if (isFetchedClaimable && claimable.length > 0) {
       claimable.forEach((promotion) => {
-        const epochIds = Object.keys(promotion.rewards).map((k) => parseInt(k))
+        if (promotion.twabRewardsAddress === twabRewardsAddress.toLowerCase()) {
+          const epochIds = Object.keys(promotion.rewards).map((k) => parseInt(k))
 
-        if (!!epochIds.length) {
-          epochs[promotion.promotionId.toString()] = epochIds
+          if (!!epochIds.length) {
+            epochs[promotion.promotionId.toString()] = epochIds
+          }
         }
       })
     }
@@ -69,7 +73,7 @@ export const useV5ClaimRewardsGasEstimate = (
   }, [userAddress, epochsToClaim, isMulticall])
 
   const { data: gasAmount, isFetched: isFetchedGasAmount } = useGasAmountEstimate(chainId, {
-    address: TWAB_REWARDS_ADDRESSES[chainId],
+    address: twabRewardsAddress,
     abi: twabRewardsABI,
     functionName: isMulticall ? 'multicall' : 'claimRewards',
     // @ts-ignore

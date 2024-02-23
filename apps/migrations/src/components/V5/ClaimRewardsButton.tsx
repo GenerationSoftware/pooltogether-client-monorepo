@@ -10,10 +10,11 @@ export interface ClaimRewardsButtonProps extends Omit<ButtonProps, 'onClick'> {
   vaultAddress: Address
   userAddress: Address
   txOptions?: Parameters<typeof useSendClaimRewardsTransaction>[3]
+  buttonText?: string
 }
 
 export const ClaimRewardsButton = (props: ClaimRewardsButtonProps) => {
-  const { chainId, vaultAddress, userAddress, txOptions, ...rest } = props
+  const { chainId, vaultAddress, userAddress, txOptions, buttonText, ...rest } = props
 
   const { data: claimable, isFetched: isFetchedClaimable } = useUserV5ClaimableRewards(
     chainId,
@@ -37,7 +38,6 @@ export const ClaimRewardsButton = (props: ClaimRewardsButtonProps) => {
     return epochs
   }, [claimable, isFetchedClaimable])
 
-  // TODO: need to be able to pass a twab rewards contract address to this, for older deployments
   const { isWaiting, isConfirming, isSuccess, txHash, sendClaimRewardsTransaction } =
     useSendClaimRewardsTransaction(chainId, userAddress, epochsToClaim, txOptions)
 
@@ -51,7 +51,7 @@ export const ClaimRewardsButton = (props: ClaimRewardsButtonProps) => {
       txDescription={`V5 Rewards Claim`}
       {...rest}
     >
-      Claim Rewards
+      {buttonText ?? 'Claim Rewards'}
     </TransactionButton>
   )
 }

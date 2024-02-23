@@ -154,7 +154,12 @@ export const OLD_V5_VAULTS: {
  * V5 TWAB Promotion Settings
  */
 export const V5_PROMOTION_SETTINGS: {
-  [network: number]: { tokenAddresses?: `0x${string}`[]; fromBlock?: bigint; toBlock?: bigint }
+  [network: number]: {
+    tokenAddresses?: `0x${string}`[]
+    fromBlock?: bigint
+    toBlock?: bigint
+    twabRewardsAddress?: Lowercase<Address>
+  }
 } = {
   [NETWORK.optimism]: {
     tokenAddresses: [

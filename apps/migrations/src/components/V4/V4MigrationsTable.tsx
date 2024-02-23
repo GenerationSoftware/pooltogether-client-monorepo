@@ -282,6 +282,10 @@ const ManageItem = (props: ManageItemProps) => {
   const { userAddress, migration, fullSized, className } = props
 
   const { refetch: refetchUserV4Balances } = useUserV4Balances(userAddress)
+  const { refetch: refetchUserV4ClaimableRewards } = useUserV4ClaimableRewards(
+    migration.token.chainId,
+    userAddress
+  )
 
   const migrationURL = `/migrate/v4/${migration.token.chainId}/${migration.token.address}`
 
@@ -305,6 +309,7 @@ const ManageItem = (props: ManageItemProps) => {
         <ClaimRewardsButton
           chainId={migration.token.chainId}
           userAddress={userAddress}
+          txOptions={{ onSuccess: () => refetchUserV4ClaimableRewards() }}
           fullSized={fullSized}
           className='md:min-w-[6rem]'
         />

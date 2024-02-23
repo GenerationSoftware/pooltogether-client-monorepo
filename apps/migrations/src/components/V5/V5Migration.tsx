@@ -8,11 +8,11 @@ import { ArrowUturnLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/
 import { CurrencyValue, NetworkBadge, TokenIcon } from '@shared/react-components'
 import { TokenWithAmount } from '@shared/types'
 import { Button, Spinner } from '@shared/ui'
-import { formatBigIntForDisplay } from '@shared/utilities'
+import { formatBigIntForDisplay, TWAB_REWARDS_ADDRESSES } from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { ReactNode, useMemo, useState } from 'react'
-import { Address, formatUnits } from 'viem'
+import { Address, formatUnits, TransactionReceipt } from 'viem'
 import { SimpleBadge } from '@components/SimpleBadge'
 import { SwapWidget } from '@components/SwapWidget'
 import { V5_PROMOTION_SETTINGS } from '@constants/config'
@@ -125,10 +125,19 @@ const ClaimContent = (props: ClaimContentProps) => {
     userAddress
   )
 
+  const twabRewardsAddresses = [...new Set(claimable.map((e) => e.twabRewardsAddress))]
+  const twabRewardsAddress =
+    twabRewardsAddresses[0] ?? TWAB_REWARDS_ADDRESSES[migration.token.chainId]
+
+  const [twabRewardsAddressesClaimed, setTwabRewardsAddressesClaimed] = useState<
+    Set<Lowercase<Address>>
+  >(new Set())
+
   const { data: gasEstimate, isFetched: isFetchedGasEstimate } = useV5ClaimRewardsGasEstimate(
     migration.token.chainId,
     migration.vaultInfo.address,
-    userAddress
+    userAddress,
+    { twabRewardsAddress }
   )
 
   const claimableTokenAddresses = new Set(
@@ -156,6 +165,18 @@ const ClaimContent = (props: ClaimContentProps) => {
 
   if (claimable === undefined) {
     return <Spinner />
+  }
+
+  const onSuccessClaimTX = (txReceipt: TransactionReceipt) => {
+    if (!!onSuccess && !!txReceipt.to) {
+      const newTwabRewardsAddressesClaimed = twabRewardsAddressesClaimed.add(
+        txReceipt.to.toLowerCase() as Lowercase<Address>
+      )
+      setTwabRewardsAddressesClaimed(newTwabRewardsAddressesClaimed)
+      if (newTwabRewardsAddressesClaimed.size >= twabRewardsAddresses.length) {
+        onSuccess?.()
+      }
+    }
   }
 
   return (
@@ -191,7 +212,14 @@ const ClaimContent = (props: ClaimContentProps) => {
         chainId={migration.token.chainId}
         vaultAddress={migration.vaultInfo.address}
         userAddress={userAddress}
-        txOptions={{ onSuccess }}
+        txOptions={{ twabRewardsAddress, onSuccess: (txReceipt) => onSuccessClaimTX(txReceipt) }}
+        buttonText={
+          twabRewardsAddresses.length > 1
+            ? `Claim Rewards (${twabRewardsAddressesClaimed.size + 1} / ${
+                twabRewardsAddresses.length
+              } TXs)`
+            : undefined
+        }
         fullSized={true}
       />
       <button

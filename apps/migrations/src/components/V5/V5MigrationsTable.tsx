@@ -399,6 +399,11 @@ const ManageItem = (props: ManageItemProps) => {
   const { userAddress, migration, fullSized, className } = props
 
   const { refetch: refetchUserV5Balances } = useUserV5Balances(userAddress)
+  const { refetch: refetchUserV5ClaimableRewards } = useUserV5ClaimableRewards(
+    migration.token.chainId,
+    migration.vaultInfo.address,
+    userAddress
+  )
 
   const migrationURL = `/migrate/v5/${migration.token.chainId}/${migration.token.address}`
 
@@ -423,6 +428,7 @@ const ManageItem = (props: ManageItemProps) => {
           chainId={migration.token.chainId}
           vaultAddress={migration.vaultInfo.address}
           userAddress={userAddress}
+          txOptions={{ onSuccess: () => refetchUserV5ClaimableRewards() }}
           fullSized={fullSized}
           className='md:min-w-[6rem]'
         />
