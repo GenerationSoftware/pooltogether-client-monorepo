@@ -31,8 +31,8 @@ export const useUserClaimableRewards = (
     QUERY_KEYS.userClaimableRewards,
     chainId,
     userAddress,
-    options?.twabRewardsAddress,
-    val
+    val,
+    options?.twabRewardsAddress
   ]
 
   return useQuery({

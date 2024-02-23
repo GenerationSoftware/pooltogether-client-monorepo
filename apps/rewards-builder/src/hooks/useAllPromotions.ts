@@ -28,7 +28,7 @@ export const useAllPromotions = () => {
 
       const promotionIds = promotionCreatedEvents[chainId]?.map((e) => e.args.promotionId) ?? []
 
-      const queryKey = [QUERY_KEYS.promotionInfo, chainId, promotionIds.map(String)]
+      const queryKey = [QUERY_KEYS.promotionInfo, chainId, promotionIds.map(String), undefined]
 
       return {
         queryKey,

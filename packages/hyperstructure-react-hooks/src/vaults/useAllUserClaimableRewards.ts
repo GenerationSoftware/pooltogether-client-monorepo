@@ -20,7 +20,7 @@ export const useAllUserClaimableRewards = (
       [id: string]: { startTimestamp?: bigint; numberOfEpochs?: number; epochDuration?: number }
     }
   },
-  options?: { twabRewardsAddress?: Address }
+  options?: { [chainId: number]: { twabRewardsAddress?: Address } }
 ) => {
   const publicClients = usePublicClientsByChain({ useAll: true })
 
@@ -36,14 +36,14 @@ export const useAllUserClaimableRewards = (
         chainId,
         userAddress,
         promotionIds,
-        options?.twabRewardsAddress
+        options?.[chainId]?.twabRewardsAddress
       ]
 
       return {
         queryKey,
         queryFn: async () =>
           await getClaimableRewards(publicClient, userAddress, promotions[chainId], {
-            twabRewardsAddress: options?.twabRewardsAddress
+            twabRewardsAddress: options?.[chainId]?.twabRewardsAddress
           }),
         enabled: !!chainId && !!publicClient && !!userAddress,
         ...NO_REFETCH
