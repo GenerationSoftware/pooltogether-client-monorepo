@@ -14,7 +14,7 @@
 ![npm](https://img.shields.io/npm/v/@generationsoftware/hyperstructure-react-hooks)
 ![license](https://img.shields.io/npm/l/@generationsoftware/hyperstructure-react-hooks)
 
-[Client Monorepo](https://github.com/GenerationSoftware/pooltogether-client-monorepo) | [Documentation](https://dev.pooltogether.com/) | [Prize Pool Contract](https://github.com/pooltogether/v5-prize-pool) | [Vault Contract](https://github.com/pooltogether/v5-vault)
+[Client Monorepo](https://github.com/GenerationSoftware/pooltogether-client-monorepo) | [Documentation](https://dev.pooltogether.com/) | [Prize Pool Contract](https://github.com/GenerationSoftware/pt-v5-prize-pool) | [Vault Contract](https://github.com/GenerationSoftware/pt-v5-vault)
 
 # 🏆 &nbsp; Overview
 

@@ -13,7 +13,7 @@
 ![npm](https://img.shields.io/npm/v/@generationsoftware/hyperstructure-client-js)
 ![license](https://img.shields.io/npm/l/@generationsoftware/hyperstructure-client-js)
 
-[Client Monorepo](https://github.com/GenerationSoftware/pooltogether-client-monorepo) | [Documentation](https://dev.pooltogether.com/) | [Prize Pool Contract](https://github.com/pooltogether/v5-prize-pool) | [Vault Contract](https://github.com/pooltogether/v5-vault)
+[Client Monorepo](https://github.com/GenerationSoftware/pooltogether-client-monorepo) | [Documentation](https://dev.pooltogether.com/) | [Prize Pool Contract](https://github.com/GenerationSoftware/pt-v5-prize-pool) | [Vault Contract](https://github.com/GenerationSoftware/pt-v5-vault)
 
 # 🏆 &nbsp; Overview
 
@@ -51,7 +51,7 @@ yarn add @generationsoftware/hyperstructure-client-js
 
 ### PrizePool
 
-A `PrizePool` is an interface to interact with a [prize pool contract](https://github.com/pooltogether/v5-prize-pool), which is responsible for aggregating contributions from all vaults and awarding prizes.
+A `PrizePool` is an interface to interact with a [prize pool contract](https://github.com/GenerationSoftware/pt-v5-prize-pool), which is responsible for aggregating contributions from all vaults and awarding prizes.
 
 To create an instance of a `PrizePool`, you will need:
 
@@ -83,7 +83,7 @@ const prizePool = new PrizePool(1, '0x123...', publicClient, options)
 
 ### Vault
 
-A `Vault` is an interface to interact with a [vault contract](https://github.com/pooltogether/v5-vault), which is an [ERC 4626](https://eips.ethereum.org/EIPS/eip-4626) wrapper around any yield source, responsible for deposits and withdrawals.
+A `Vault` is an interface to interact with a [vault contract](https://github.com/GenerationSoftware/pt-v5-vault), which is an [ERC 4626](https://eips.ethereum.org/EIPS/eip-4626) wrapper around any yield source, responsible for deposits and withdrawals.
 
 To create an instance of a `Vault`, you will need:
 
@@ -117,7 +117,7 @@ const vault = new Vault(1, '0x123...', publicClient, options)
 
 ### Vaults
 
-A `Vaults` is an read-only interface for multiple [vault contracts](https://github.com/pooltogether/v5-vault). It is meant to take in all vaults in a `VaultList` and create `Vault` objects for each of them, allowing for more efficient aggregate queries.
+A `Vaults` is an read-only interface for multiple [vault contracts](https://github.com/GenerationSoftware/pt-v5-vault). It is meant to take in all vaults in a `VaultList` and create `Vault` objects for each of them, allowing for more efficient aggregate queries.
 
 To create an instance of `Vaults`, you will need:
 
