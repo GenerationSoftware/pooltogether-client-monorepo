@@ -54,7 +54,6 @@ export interface VaultListTags {
 
 export interface VaultDeployInfo {
   chainId: number
-  token: `0x${string}`
   name: string
   symbol: string
   yieldSourceName: string
@@ -63,5 +62,6 @@ export interface VaultDeployInfo {
   claimer: `0x${string}`
   feeRecipient: `0x${string}`
   feePercentage: number
+  yieldBuffer: bigint
   owner: `0x${string}`
 }
