@@ -77,6 +77,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `usePrizeBackstopEvents`
 - `usePromotionCreatedEvents`
 - `usePromotionRewardsClaimedEvents`
+- `useRngAuctionCompletedEvents`
 - `useTransferEvents`
 
 ### Prize Pool Hooks

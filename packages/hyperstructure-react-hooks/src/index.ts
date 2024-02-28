@@ -33,6 +33,7 @@ export * from './events/useManualContributionEvents'
 export * from './events/usePrizeBackstopEvents'
 export * from './events/usePromotionCreatedEvents'
 export * from './events/usePromotionRewardsClaimedEvents'
+export * from './events/useRngAuctionCompletedEvents'
 export * from './events/useTransferEvents'
 
 /**

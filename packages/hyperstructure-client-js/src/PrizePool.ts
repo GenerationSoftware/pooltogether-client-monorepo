@@ -19,6 +19,8 @@ export class PrizePool {
   readonly id: string
   walletClient: WalletClient | undefined
   prizeTokenAddress: Address | undefined
+  drawManagerAddress: Address | undefined
+  twabControllerAddress: Address | undefined
   drawPeriodInSeconds: number | undefined
   tierShares: number | undefined
   reserveShares: number | undefined
@@ -39,6 +41,8 @@ export class PrizePool {
     options?: {
       walletClient?: WalletClient
       prizeTokenAddress?: Address
+      drawManagerAddress?: Address
+      twabControllerAddress?: Address
       drawPeriodInSeconds?: number
       tierShares?: number
       reserveShares?: number
@@ -48,6 +52,8 @@ export class PrizePool {
 
     this.walletClient = options?.walletClient
     this.prizeTokenAddress = options?.prizeTokenAddress
+    this.drawManagerAddress = options?.drawManagerAddress
+    this.twabControllerAddress = options?.twabControllerAddress
     this.drawPeriodInSeconds = options?.drawPeriodInSeconds
     this.tierShares = options?.tierShares
     this.reserveShares = options?.reserveShares
@@ -73,6 +79,46 @@ export class PrizePool {
 
     this.prizeTokenAddress = prizeTokenAddress
     return this.prizeTokenAddress
+  }
+
+  /**
+   * Returns the address of prize pool's draw manager
+   * @returns
+   */
+  async getDrawManagerAddress(): Promise<Address> {
+    if (this.drawManagerAddress !== undefined) return this.drawManagerAddress
+
+    const source = 'Prize Pool [getDrawManagerAddress]'
+    await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    const drawManagerAddress = await this.publicClient.readContract({
+      address: this.address,
+      abi: prizePoolABI,
+      functionName: 'drawManager'
+    })
+
+    this.drawManagerAddress = drawManagerAddress
+    return this.drawManagerAddress
+  }
+
+  /**
+   * Returns the address of the prize pool's TWAB controller
+   * @returns
+   */
+  async getTwabControllerAddress(): Promise<Address> {
+    if (this.twabControllerAddress !== undefined) return this.twabControllerAddress
+
+    const source = 'Prize Pool [getTwabControllerAddress]'
+    await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    const twabControllerAddress = await this.publicClient.readContract({
+      address: this.address,
+      abi: prizePoolABI,
+      functionName: 'twabController'
+    })
+
+    this.twabControllerAddress = twabControllerAddress
+    return this.twabControllerAddress
   }
 
   /**

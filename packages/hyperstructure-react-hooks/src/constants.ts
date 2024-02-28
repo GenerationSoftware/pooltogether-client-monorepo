@@ -28,6 +28,7 @@ export const QUERY_KEYS = {
   promotionCreatedEvents: 'promotionCreatedEvents',
   promotionRewardsClaimedEvents: 'promotionRewardsClaimedEvents',
   promotionInfo: 'promotionInfo',
+  rngAuctionCompletedEvents: 'rngAuctionCompletedEvents',
   selectedVaults: 'selectedVaults',
   tokenAllowances: 'tokenAllowances',
   tokenBalances: 'tokenBalances',

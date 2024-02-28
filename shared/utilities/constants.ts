@@ -81,6 +81,8 @@ export const PRIZE_POOLS: {
   address: Address
   options: {
     prizeTokenAddress: Address
+    drawManagerAddress: Address
+    twabControllerAddress: Address
     drawPeriodInSeconds: number
     tierShares: number
     reserveShares: number
@@ -91,6 +93,8 @@ export const PRIZE_POOLS: {
     address: '0x6cdd88A97801aD20F2dcfd14f1F9370e54757536',
     options: {
       prizeTokenAddress: '0x0Ba5e0722797dcEa8Cec409a707cE495C33fB23D',
+      drawManagerAddress: '0x512c1421D4f6f6c01A7508E060595ee08A652f69',
+      twabControllerAddress: '0x53f5545055f3804B7fD694081f9a13b3abceB38E',
       drawPeriodInSeconds: 7200,
       tierShares: 100,
       reserveShares: 20
@@ -236,13 +240,6 @@ export const WRAPPED_NATIVE_ASSETS: Record<NETWORK, Address | null> = {
   [NETWORK.arbitrum_sepolia]: null,
   [NETWORK.base]: '0x4200000000000000000000000000000000000006',
   [NETWORK.base_sepolia]: null
-}
-
-/**
- * TWAB controller addresses
- */
-export const TWAB_CONTROLLER_ADDRESSES: { [chainId: number]: Address } = {
-  [NETWORK.optimism_goerli]: '0x499a9F249ec4c8Ea190bebbFD96f9A83bf4F6E52'
 }
 
 /**

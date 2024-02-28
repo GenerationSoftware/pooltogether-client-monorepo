@@ -64,28 +64,58 @@ export const getWithdrawEvents = async (
 }
 
 /**
+ * Returns `RngAuctionCompleted` events
+ * @param publicClient a public Viem client to query through
+ * @param drawManagerAddress the address of a prize pool's draw manager to query events for
+ * @param options optional settings
+ * @returns
+ */
+export const getRngAuctionCompletedEvents = async (
+  publicClient: PublicClient,
+  drawManagerAddress: Address,
+  options?: { fromBlock?: bigint; toBlock?: bigint }
+) => {
+  return await publicClient.getLogs({
+    address: drawManagerAddress,
+    event: {
+      inputs: [
+        { indexed: true, internalType: 'address', name: 'sender', type: 'address' },
+        { indexed: true, internalType: 'address', name: 'recipient', type: 'address' },
+        { indexed: false, internalType: 'uint24', name: 'drawId', type: 'uint24' },
+        { indexed: false, internalType: 'uint32', name: 'rngRequestId', type: 'uint32' },
+        { indexed: false, internalType: 'uint64', name: 'elapsedTime', type: 'uint64' }
+      ],
+      name: 'RngAuctionCompleted',
+      type: 'event'
+    },
+    fromBlock: options?.fromBlock,
+    toBlock: options?.toBlock ?? 'latest',
+    strict: true
+  })
+}
+
+/**
  * Returns `DrawAwarded` events
  * @param publicClient a public Viem client to query through
- * @param prizePoolAddress the address of the prize pool to query events for
+ * @param drawManagerAddress the address of a prize pool's draw manager to query events for
  * @param options optional settings
  * @returns
  */
 export const getDrawAwardedEvents = async (
   publicClient: PublicClient,
-  prizePoolAddress: Address,
+  drawManagerAddress: Address,
   options?: { fromBlock?: bigint; toBlock?: bigint }
 ) => {
   return await publicClient.getLogs({
-    address: prizePoolAddress,
+    address: drawManagerAddress,
     event: {
       inputs: [
         { indexed: true, internalType: 'uint24', name: 'drawId', type: 'uint24' },
-        { indexed: false, internalType: 'uint256', name: 'winningRandomNumber', type: 'uint256' },
-        { indexed: false, internalType: 'uint8', name: 'lastNumTiers', type: 'uint8' },
-        { indexed: false, internalType: 'uint8', name: 'numTiers', type: 'uint8' },
-        { indexed: false, internalType: 'uint104', name: 'reserve', type: 'uint104' },
-        { indexed: false, internalType: 'UD34x4', name: 'prizeTokensPerShare', type: 'uint128' },
-        { indexed: false, internalType: 'uint48', name: 'drawOpenedAt', type: 'uint48' }
+        { indexed: true, internalType: 'address', name: 'startRecipient', type: 'address' },
+        { indexed: false, internalType: 'uint256', name: 'startReward', type: 'uint256' },
+        { indexed: true, internalType: 'address', name: 'awardRecipient', type: 'address' },
+        { indexed: false, internalType: 'uint256', name: 'awardReward', type: 'uint256' },
+        { indexed: false, internalType: 'uint256', name: 'remainingReserve', type: 'uint256' }
       ],
       name: 'DrawAwarded',
       type: 'event'
