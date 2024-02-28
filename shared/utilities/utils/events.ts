@@ -220,6 +220,31 @@ export const getManualContributionEvents = async (
 }
 
 /**
+ * Returns `ReserveConsumed` events
+ * @param publicClient a public Viem client to query through
+ * @param prizePoolAddress the address of the prize pool to query events for
+ * @param options optional settings
+ * @returns
+ */
+export const getPrizeBackstopEvents = async (
+  publicClient: PublicClient,
+  prizePoolAddress: Address,
+  options?: { fromBlock?: bigint; toBlock?: bigint }
+) => {
+  return await publicClient.getLogs({
+    address: prizePoolAddress,
+    event: {
+      inputs: [{ indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }],
+      name: 'ReserveConsumed',
+      type: 'event'
+    },
+    fromBlock: options?.fromBlock,
+    toBlock: options?.toBlock ?? 'latest',
+    strict: true
+  })
+}
+
+/**
  * Returns `Transfer` events for a given token
  * @param publicClient a public Viem client to query through
  * @param tokenAddress the token address to query transfers for

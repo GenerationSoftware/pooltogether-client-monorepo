@@ -74,6 +74,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useDrawAwardedEvents`
 - `useLiquidationEvents`
 - `useManualContributionEvents`
+- `usePrizeBackstopEvents`
 - `usePromotionCreatedEvents`
 - `usePromotionRewardsClaimedEvents`
 - `useTransferEvents`
