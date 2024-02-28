@@ -50,8 +50,8 @@ export default function FrontEndsPage() {
                 #incentives channel.
               </li>
               <li>
-                Build your own frontend, or fork and edit an existing open source interface (e.g.
-                Cabana).
+                Build your own frontend (starter templates provided below), or fork and edit an
+                existing open source interface (e.g. Cabana).
               </li>
               <li>
                 The frontend must, at least, display the grand prize, prize vaults, users' deposits
@@ -88,6 +88,12 @@ export default function FrontEndsPage() {
               </ResourceLink>
               <ResourceLink href='https://www.npmjs.com/package/@generationsoftware/hyperstructure-react-hooks'>
                 Package: PoolTogether V5 React Hooks Library
+              </ResourceLink>
+              <ResourceLink href='https://github.com/GenerationSoftware/pooltogether-nextjs-template'>
+                Template: PoolTogether NextJS App Starter
+              </ResourceLink>
+              <ResourceLink href='https://github.com/GenerationSoftware/pooltogether-sveltekit-template'>
+                Template: PoolTogether SvelteKit App Starter
               </ResourceLink>
               <ResourceLink href='https://app.cabana.fi/api/vaultList/default'>
                 Vault List: Cabana Vault List
