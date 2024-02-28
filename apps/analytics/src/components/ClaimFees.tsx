@@ -1,7 +1,7 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
-  useDrawAwardedEvents,
-  usePrizeDrawWinners
+  usePrizeDrawWinners,
+  usePrizePoolDrawAwardedEvents
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { SubgraphDraw } from '@shared/types'
 import { ExternalLink, Spinner } from '@shared/ui'
@@ -26,12 +26,15 @@ export const ClaimFees = (props: ClaimFeesProps) => {
   const { data: allDraws, isFetched: isFetchedAllDraws } = usePrizeDrawWinners(prizePool)
   const draw = allDraws?.find((d) => d.id === drawId)
 
-  const { data: drawAwardedEvents, isFetched: isFetchedDrawAwardedEvents } = useDrawAwardedEvents(
-    prizePool,
-    { fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined }
-  )
-  const drawAwardedEvent = drawAwardedEvents?.find((e) => e.args.drawId === drawId)
-  const numTiers = drawAwardedEvent?.args.numTiers
+  const { data: drawAwardedEvents, isFetched: isFetchedDrawAwardedEvents } =
+    usePrizePoolDrawAwardedEvents(prizePool, {
+      fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
+    })
+
+  const numTiers = useMemo(() => {
+    const drawAwardedEvent = drawAwardedEvents?.find((e) => e.args.drawId === drawId)
+    return drawAwardedEvent?.args.numTiers
+  }, [drawId, drawAwardedEvents])
 
   const wins = useMemo(() => {
     const filteredWins: SubgraphDraw['prizeClaims'] = []
