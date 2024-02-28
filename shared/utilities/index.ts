@@ -1,7 +1,6 @@
 /**
  * ABIs
  */
-export * from './abis/chainlinkVrf'
 export * from './abis/erc20-oldPermit'
 export * from './abis/erc20'
 export * from './abis/liquidationPair'
@@ -9,8 +8,6 @@ export * from './abis/liquidationPairFactory'
 export * from './abis/liquidationRouter'
 export * from './abis/opGasOracle'
 export * from './abis/prizePool'
-export * from './abis/rngAuction'
-export * from './abis/rngRelay'
 export * from './abis/twabController'
 export * from './abis/twabRewards'
 export * from './abis/vault'
