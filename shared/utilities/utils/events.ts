@@ -95,13 +95,46 @@ export const getRngAuctionCompletedEvents = async (
 }
 
 /**
- * Returns `DrawAwarded` events
+ * Returns `DrawAwarded` events from a prize pool contract
+ * @param publicClient a public Viem client to query through
+ * @param prizePoolAddress the address of a prize pool to query events for
+ * @param options optional settings
+ * @returns
+ */
+export const getPrizePoolDrawAwardedEvents = async (
+  publicClient: PublicClient,
+  prizePoolAddress: Address,
+  options?: { fromBlock?: bigint; toBlock?: bigint }
+) => {
+  return await publicClient.getLogs({
+    address: prizePoolAddress,
+    event: {
+      inputs: [
+        { indexed: true, internalType: 'uint24', name: 'drawId', type: 'uint24' },
+        { indexed: false, internalType: 'uint256', name: 'winningRandomNumber', type: 'uint256' },
+        { indexed: false, internalType: 'uint8', name: 'lastNumTiers', type: 'uint8' },
+        { indexed: false, internalType: 'uint8', name: 'numTiers', type: 'uint8' },
+        { indexed: false, internalType: 'uint104', name: 'reserve', type: 'uint104' },
+        { indexed: false, internalType: 'UD34x4', name: 'prizeTokensPerShare', type: 'uint128' },
+        { indexed: false, internalType: 'uint48', name: 'drawOpenedAt', type: 'uint48' }
+      ],
+      name: 'DrawAwarded',
+      type: 'event'
+    },
+    fromBlock: options?.fromBlock,
+    toBlock: options?.toBlock ?? 'latest',
+    strict: true
+  })
+}
+
+/**
+ * Returns `DrawAwarded` events from a draw manager contract
  * @param publicClient a public Viem client to query through
  * @param drawManagerAddress the address of a prize pool's draw manager to query events for
  * @param options optional settings
  * @returns
  */
-export const getDrawAwardedEvents = async (
+export const getDrawManagerDrawAwardedEvents = async (
   publicClient: PublicClient,
   drawManagerAddress: Address,
   options?: { fromBlock?: bigint; toBlock?: bigint }
