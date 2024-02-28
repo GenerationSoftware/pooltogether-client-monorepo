@@ -30,13 +30,8 @@ export * from './blockchain/useTxReceipts'
 export * from './events/useDrawAwardedEvents'
 export * from './events/useLiquidationEvents'
 export * from './events/useManualContributionEvents'
-export * from './events/usePrizeBackstopEvents'
 export * from './events/usePromotionCreatedEvents'
 export * from './events/usePromotionRewardsClaimedEvents'
-export * from './events/useRelayAuctionEvents'
-export * from './events/useRngAuctionEvents'
-export * from './events/useRngL1RelayMsgEvents'
-export * from './events/useRngL2RelayMsgEvents'
 export * from './events/useTransferEvents'
 
 /**

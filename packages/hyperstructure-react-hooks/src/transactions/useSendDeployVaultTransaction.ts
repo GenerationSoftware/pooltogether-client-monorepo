@@ -35,7 +35,6 @@ export const useSendDeployVaultTransaction = (
 
   const {
     chainId,
-    token,
     name,
     symbol,
     yieldSourceAddress,
@@ -43,6 +42,7 @@ export const useSendDeployVaultTransaction = (
     claimer,
     feeRecipient,
     feePercentage,
+    yieldBuffer,
     owner
   } = vaultDeployInfo
 
@@ -55,7 +55,6 @@ export const useSendDeployVaultTransaction = (
   const enabled =
     !!vaultDeployInfo &&
     !!chainId &&
-    !!token &&
     !!name &&
     !!symbol &&
     !!yieldSourceAddress &&
@@ -63,6 +62,7 @@ export const useSendDeployVaultTransaction = (
     !!claimer &&
     !!feeRecipient &&
     feePercentage !== undefined &&
+    yieldBuffer !== undefined &&
     !!owner &&
     !!vaultFactoryAddress &&
     chain?.id === chainId
@@ -73,7 +73,6 @@ export const useSendDeployVaultTransaction = (
     abi: vaultFactoryABI,
     functionName: 'deployVault',
     args: [
-      token,
       name,
       symbol,
       yieldSourceAddress,
@@ -81,6 +80,7 @@ export const useSendDeployVaultTransaction = (
       claimer,
       feeRecipient,
       feePercentage,
+      yieldBuffer,
       owner
     ],
     query: { enabled }
