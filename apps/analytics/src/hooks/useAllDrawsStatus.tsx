@@ -1,7 +1,7 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { useDrawPeriod, useFirstDrawOpenedAt } from '@generationsoftware/hyperstructure-react-hooks'
 import { DrawStatus } from '@shared/types'
-import { getSecondsSinceEpoch, SECONDS_PER_HOUR } from '@shared/utilities'
+import { getSecondsSinceEpoch } from '@shared/utilities'
 import { useMemo } from 'react'
 import { useRngTxs } from './useRngTxs'
 
@@ -33,13 +33,13 @@ export const useAllDrawsStatus = (prizePool: PrizePool, drawIds: number[]) => {
 
         const openedAt = firstDrawOpenedAt + drawPeriod * (drawId - 1)
         const closedAt = openedAt + drawPeriod
-        const rngCompletedAt = rngTxs?.rngAuction.timestamp
+        // const rngCompletedAt = rngTxs?.rngAuction.timestamp
         const awardedAt = rngTxs?.drawAward?.timestamp
         const finalizedAt = closedAt + drawPeriod
 
         const isClosed = currentTime >= closedAt
         const isAwarded = !!awardedAt
-        const isFinalized = isAwarded && currentTime >= finalizedAt
+        const isFinalized = currentTime >= finalizedAt
 
         const status: DrawStatus = isFinalized
           ? 'finalized'
@@ -49,10 +49,14 @@ export const useAllDrawsStatus = (prizePool: PrizePool, drawIds: number[]) => {
           ? 'closed'
           : 'open'
 
-        const relayAuctionClosesAt = !!rngCompletedAt
-          ? rngCompletedAt + SECONDS_PER_HOUR * 6
-          : finalizedAt
-        const isSkipped = status === 'closed' && currentTime >= relayAuctionClosesAt
+        // TODO: check if old deployment logic still applies, and determine auction time after rng was completed
+        const relayAuctionClosesAt = finalizedAt
+        // const relayAuctionClosesAt = !!rngCompletedAt
+        //   ? rngCompletedAt + SECONDS_PER_HOUR * 6
+        //   : finalizedAt
+        const isSkipped =
+          (status === 'finalized' && !isAwarded) ||
+          (status === 'closed' && currentTime >= relayAuctionClosesAt)
 
         allDrawsStatus.push({
           id: drawId,
