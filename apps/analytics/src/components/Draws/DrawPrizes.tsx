@@ -1,12 +1,12 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
-  useDrawAwardedEvents,
-  usePrizeDrawWinners
+  usePrizeDrawWinners,
+  usePrizePoolDrawAwardedEvents
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import { formatNumberForDisplay, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
-import { ReactNode } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { QUERY_START_BLOCK } from '@constants/config'
 import { useDrawResults } from '@hooks/useDrawResults'
 import { DrawCardItemTitle } from './DrawCardItemTitle'
@@ -20,12 +20,15 @@ interface DrawPrizesProps {
 export const DrawPrizes = (props: DrawPrizesProps) => {
   const { prizePool, drawId, className } = props
 
-  const { data: drawAwardedEvents, isFetched: isFetchedDrawAwardedEvents } = useDrawAwardedEvents(
-    prizePool,
-    { fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined }
-  )
-  const drawAwardedEvent = drawAwardedEvents?.find((e) => e.args.drawId === drawId)
-  const numTiers = drawAwardedEvent?.args.numTiers
+  const { data: drawAwardedEvents, isFetched: isFetchedDrawAwardedEvents } =
+    usePrizePoolDrawAwardedEvents(prizePool, {
+      fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
+    })
+
+  const numTiers = useMemo(() => {
+    const drawAwardedEvent = drawAwardedEvents?.find((e) => e.args.drawId === drawId)
+    return drawAwardedEvent?.args.numTiers
+  }, [drawId, drawAwardedEvents])
 
   const { data: prizesAvailable } = useDrawResults(prizePool, drawId, {
     refetchInterval: sToMs(300)

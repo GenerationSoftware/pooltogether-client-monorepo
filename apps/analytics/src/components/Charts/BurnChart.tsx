@@ -16,14 +16,13 @@ import { useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
 import { Address, formatUnits } from 'viem'
 import { BurnCard } from '@components/Burn/BurnCard'
-import { BURN_ADDRESSES, QUERY_START_BLOCK, VAULT_LPS } from '@constants/config'
-import { RelayMsgTx, RelayTx, RngTx, useRngTxs } from '@hooks/useRngTxs'
+import { BURN_ADDRESSES, QUERY_START_BLOCK } from '@constants/config'
+import { DrawAwardTx, RngAuctionTx, useRngTxs } from '@hooks/useRngTxs'
 import { AreaChart } from './AreaChart'
 
 interface DataPoint {
   name: string
-  lp: { total: number; change: number }
-  manual: { total: number; change: number }
+  dead: { total: number; change: number }
   other: { total: number; change: number }
 }
 
@@ -36,11 +35,10 @@ interface BurnChartProps {
 export const BurnChart = (props: BurnChartProps) => {
   const { prizePool, prizeToken, className } = props
 
-  const lpAddresses = VAULT_LPS[prizeToken.chainId] ?? []
-  const miscBurnAddresses = BURN_ADDRESSES[prizeToken.chainId] ?? []
+  const burnAddresses = BURN_ADDRESSES[prizeToken.chainId] ?? []
 
   const { data: burnEvents } = useTransferEvents(prizeToken.chainId, prizeToken.address, {
-    to: [...lpAddresses, ...miscBurnAddresses, DEAD_ADDRESS],
+    to: [DEAD_ADDRESS, ...burnAddresses],
     fromBlock: QUERY_START_BLOCK[prizeToken.chainId]
   })
 
@@ -58,17 +56,16 @@ export const BurnChart = (props: BurnChartProps) => {
         return parseFloat(formatUnits(val, prizeToken.decimals))
       }
 
-      const validRngTxs = rngTxs.filter((txs) => !!txs.relay.l2) as {
-        rng: RngTx
-        relay: { l1?: RelayMsgTx; l2: RelayTx }
+      const validRngTxs = rngTxs.filter((txs) => !!txs.drawAward) as {
+        rngAuction: RngAuctionTx
+        drawAward: DrawAwardTx
       }[]
 
-      const firstRngBlockNumber = validRngTxs[0]?.relay.l2.blockNumber ?? MAX_UINT_256
+      const firstRngBlockNumber = validRngTxs[0]?.drawAward.blockNumber ?? MAX_UINT_256
       const lastRngBlockNumber =
-        validRngTxs[validRngTxs.length - 1]?.relay.l2.blockNumber ?? MAX_UINT_256
+        validRngTxs[validRngTxs.length - 1]?.drawAward.blockNumber ?? MAX_UINT_256
 
-      let lp = { total: 0, change: 0 }
-      let manual = { total: 0, change: 0 }
+      let dead = { total: 0, change: 0 }
       let other = { total: 0, change: 0 }
 
       const updateBurnAmounts = (entryName: string, minBlock: bigint, maxBlock: bigint) => {
@@ -77,41 +74,36 @@ export const BurnChart = (props: BurnChartProps) => {
             const toAddress = burnEvent.args.to.toLowerCase() as Lowercase<Address>
             const burnAmount = formatBurnNum(burnEvent.args.value)
 
-            if (lpAddresses.includes(toAddress)) {
-              lp.change += burnAmount
-            } else if (toAddress === DEAD_ADDRESS) {
-              manual.change += burnAmount
+            if (toAddress === DEAD_ADDRESS) {
+              dead.change += burnAmount
             } else {
               other.change += burnAmount
             }
           }
         })
 
-        lp.total += lp.change
-        manual.total += manual.change
+        dead.total += dead.change
         other.total += other.change
 
         data.push({
           name: entryName,
-          lp: { total: lp.total, change: lp.change },
-          manual: { total: manual.total, change: manual.change },
+          dead: { total: dead.total, change: dead.change },
           other: { total: other.total, change: other.change }
         })
 
-        lp.change = 0
-        manual.change = 0
+        dead.change = 0
         other.change = 0
       }
 
       updateBurnAmounts(`Start-${firstDrawOpenedAt}`, 0n, firstRngBlockNumber)
 
       validRngTxs.forEach((txs, i) => {
-        const drawId = txs.rng.drawId
-        const closedAt = txs.relay.l2.timestamp
-        const minBlock = validRngTxs[i].relay.l2.blockNumber
-        const maxBlock = validRngTxs[i + 1]?.relay.l2.blockNumber ?? 0n
+        const drawId = txs.drawAward.drawId
+        const awardedAt = txs.drawAward.timestamp
+        const minBlock = validRngTxs[i].drawAward.blockNumber
+        const maxBlock = validRngTxs[i + 1]?.drawAward.blockNumber ?? 0n
 
-        updateBurnAmounts(`${drawId}-${closedAt}`, minBlock, maxBlock)
+        updateBurnAmounts(`${drawId}-${awardedAt}`, minBlock, maxBlock)
       })
 
       updateBurnAmounts(`Now-${currentTimestamp}`, lastRngBlockNumber, MAX_UINT_256)
@@ -126,8 +118,7 @@ export const BurnChart = (props: BurnChartProps) => {
         <AreaChart
           data={chartData}
           areas={[
-            { id: 'lp.total', stackId: 1 },
-            { id: 'manual.total', stackId: 1 },
+            { id: 'dead.total', stackId: 1 },
             { id: 'other.total', stackId: 1 }
           ]}
           tooltip={{
@@ -149,10 +140,8 @@ export const BurnChart = (props: BurnChartProps) => {
           legend={{
             show: true,
             formatter: (id) => {
-              if (id === 'lp.total') {
-                return 'Prizes to LPs'
-              } else if (id === 'manual.total') {
-                return 'Manual Burns'
+              if (id === 'dead.total') {
+                return 'Sent to 0xdead'
               } else if (id === 'other.total') {
                 return 'Other'
               } else {

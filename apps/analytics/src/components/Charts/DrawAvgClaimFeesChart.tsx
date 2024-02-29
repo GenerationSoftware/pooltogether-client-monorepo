@@ -1,7 +1,7 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
-  useDrawAwardedEvents,
-  usePrizeDrawWinners
+  usePrizeDrawWinners,
+  usePrizePoolDrawAwardedEvents
 } from '@generationsoftware/hyperstructure-react-hooks'
 import {
   divideBigInts,
@@ -32,10 +32,14 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
 
   const { closedAt, awardedAt, finalizedAt } = useDrawStatus(prizePool, drawId)
 
-  const { data: drawAwardedEvents } = useDrawAwardedEvents(prizePool, {
+  const { data: drawAwardedEvents } = usePrizePoolDrawAwardedEvents(prizePool, {
     fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
   })
-  const numTiers = drawAwardedEvents?.find((e) => e.args.drawId === drawId)?.args.numTiers
+
+  const numTiers = useMemo(() => {
+    const drawAwardedEvent = drawAwardedEvents?.find((e) => e.args.drawId === drawId)
+    return drawAwardedEvent?.args.numTiers
+  }, [drawId, drawAwardedEvents])
 
   const currentTimestamp = useAtomValue(currentTimestampAtom)
 

@@ -4,7 +4,7 @@ import { Spinner } from '@shared/ui'
 import { DEAD_ADDRESS, formatBigIntForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
-import { BURN_ADDRESSES, QUERY_START_BLOCK, VAULT_LPS } from '@constants/config'
+import { BURN_ADDRESSES, QUERY_START_BLOCK } from '@constants/config'
 
 interface BurnHeaderProps {
   prizeToken: Token
@@ -14,11 +14,10 @@ interface BurnHeaderProps {
 export const BurnHeader = (props: BurnHeaderProps) => {
   const { prizeToken, className } = props
 
-  const lpAddresses = VAULT_LPS[prizeToken.chainId] ?? []
-  const miscBurnAddresses = BURN_ADDRESSES[prizeToken.chainId] ?? []
+  const burnAddresses = BURN_ADDRESSES[prizeToken.chainId] ?? []
 
   const { data: burnTxs } = useTransferEvents(prizeToken.chainId, prizeToken.address, {
-    to: [...lpAddresses, ...miscBurnAddresses, DEAD_ADDRESS],
+    to: [DEAD_ADDRESS, ...burnAddresses],
     fromBlock: QUERY_START_BLOCK[prizeToken.chainId]
   })
 

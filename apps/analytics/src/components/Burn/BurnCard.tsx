@@ -4,15 +4,14 @@ import classNames from 'classnames'
 
 interface BurnCardProps {
   name: string
-  lp: { total: number; change: number }
-  manual: { total: number; change: number }
+  dead: { total: number; change: number }
   other: { total: number; change: number }
   prizeToken: Token
   className?: string
 }
 
 export const BurnCard = (props: BurnCardProps) => {
-  const { name, lp, manual, other, prizeToken, className } = props
+  const { name, dead, other, prizeToken, className } = props
 
   return (
     <div
@@ -22,19 +21,13 @@ export const BurnCard = (props: BurnCardProps) => {
       )}
     >
       <span className='font-bold'>{name}</span>
-      <BurnCardItem name='Prizes to LPs' total={lp.total} change={lp.change} token={prizeToken} />
-      <BurnCardItem
-        name='Manual Burns'
-        total={manual.total}
-        change={manual.change}
-        token={prizeToken}
-      />
+      <BurnCardItem name='0xdead' total={dead.total} change={dead.change} token={prizeToken} />
       <BurnCardItem name='Other' total={other.total} change={other.change} token={prizeToken} />
       <hr className='w-full border-gray-400' />
       <BurnCardItem
         name='Total Burned'
-        total={lp.total + manual.total + other.total}
-        change={lp.change + manual.change + other.change}
+        total={dead.total + other.total}
+        change={dead.change + other.change}
         token={prizeToken}
         alwaysShow={true}
         nameClassName='font-bold'

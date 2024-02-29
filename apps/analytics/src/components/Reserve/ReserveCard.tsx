@@ -7,14 +7,14 @@ interface ReserveCardProps {
   reserve: number
   liquidations: number
   manual: number
-  rngFees: number
+  rewards: number
   prizeBackstops: number
   prizeToken: Token
   className?: string
 }
 
 export const ReserveCard = (props: ReserveCardProps) => {
-  const { name, reserve, liquidations, manual, rngFees, prizeBackstops, prizeToken, className } =
+  const { name, reserve, liquidations, manual, rewards, prizeBackstops, prizeToken, className } =
     props
 
   return (
@@ -31,12 +31,12 @@ export const ReserveCard = (props: ReserveCardProps) => {
         token={prizeToken}
       />
       <ReserveCardItem name='Manual Contributions' amount={manual} token={prizeToken} />
-      <ReserveCardItem name='RNG Fees' amount={0 - rngFees} token={prizeToken} />
+      <ReserveCardItem name='RNG Fees' amount={0 - rewards} token={prizeToken} />
       <ReserveCardItem name='Prize Backstops' amount={0 - prizeBackstops} token={prizeToken} />
       <hr className='w-full border-gray-400' />
       <ReserveCardItem
         name='Changes'
-        amount={liquidations + manual - rngFees - prizeBackstops}
+        amount={liquidations + manual - rewards - prizeBackstops}
         token={prizeToken}
         alwaysShow={true}
       />

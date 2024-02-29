@@ -6,7 +6,7 @@ import {
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { ExternalLink, Spinner } from '@shared/ui'
-import { getBlockExplorerUrl, NETWORK, POOL_TOKEN_ADDRESSES } from '@shared/utilities'
+import { getBlockExplorerUrl, NETWORK, WRAPPED_NATIVE_ASSETS } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
@@ -38,14 +38,14 @@ export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
   const { data: openedAtBlock } = useBlockAtTimestamp(prizePool?.chainId, openedAt as number)
   const { data: closedAtBlock } = useBlockAtTimestamp(prizePool?.chainId, closedAt as number)
 
-  // TODO: this assumes the tokenIn is always POOL (and uses mainnet pricing) - not ideal
+  // TODO: this assumes the tokenIn is always WETH (and uses mainnet pricing) - will break with burn mechanism from reserve - need fix
   const { data: prizeToken } = usePrizeTokenData(prizePool)
   const { data: tokenInPrices, isFetched: isFetchedTokenInPrices } = useHistoricalTokenPrices(
     NETWORK.mainnet,
-    [POOL_TOKEN_ADDRESSES[NETWORK.mainnet]]
+    [WRAPPED_NATIVE_ASSETS[NETWORK.mainnet] as Address]
   )
   const prizeTokenPrices =
-    tokenInPrices[POOL_TOKEN_ADDRESSES[NETWORK.mainnet].toLowerCase() as Address]
+    tokenInPrices[WRAPPED_NATIVE_ASSETS[NETWORK.mainnet]?.toLowerCase() as Address]
 
   const drawLiquidationEvents = useMemo(() => {
     if (!!liquidationEvents?.length && isFetchedDrawStatus && !!openedAtBlock && !!closedAtBlock) {

@@ -1,7 +1,7 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
-  useDrawAwardedEvents,
-  usePrizeDrawWinners
+  usePrizeDrawWinners,
+  usePrizePoolDrawAwardedEvents
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { divideBigInts, formatNumberForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
@@ -20,7 +20,7 @@ export const DrawsAvgClaimFeesChart = (props: DrawsAvgClaimFeesChartProps) => {
 
   const { data: allDraws } = usePrizeDrawWinners(prizePool)
 
-  const { data: drawAwardedEvents } = useDrawAwardedEvents(prizePool, {
+  const { data: drawAwardedEvents } = usePrizePoolDrawAwardedEvents(prizePool, {
     fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
   })
 
@@ -33,6 +33,7 @@ export const DrawsAvgClaimFeesChart = (props: DrawsAvgClaimFeesChartProps) => {
 
       allDraws.forEach((draw) => {
         const numTiers = drawAwardedEvents?.find((e) => e.args.drawId === draw.id)?.args.numTiers
+
         if (!!numTiers) {
           const wins = draw.prizeClaims.filter(
             (win) =>

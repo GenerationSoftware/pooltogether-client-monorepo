@@ -1,103 +1,83 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
 import { ExternalLink, Spinner } from '@shared/ui'
-import {
-  formatBigIntForDisplay,
-  getBlockExplorerUrl,
-  RNG_RELAY_ADDRESSES,
-  shorten,
-  sToMs
-} from '@shared/utilities'
+import { formatBigIntForDisplay, getBlockExplorerUrl, shorten } from '@shared/utilities'
 import classNames from 'classnames'
-import { useDrawRngFeePercentage } from '@hooks/useDrawRngFeePercentage'
+import { useCurrentRngAuctionReward } from '@hooks/useCurrentRngAuctionReward'
 import { useDrawStatus } from '@hooks/useDrawStatus'
 import { useRngTxs } from '@hooks/useRngTxs'
 import { DrawCardItemTitle } from './DrawCardItemTitle'
 
-interface DrawRngFeeProps {
+interface DrawRngRewardProps {
   prizePool: PrizePool
   drawId: number
   className?: string
 }
 
-export const DrawRngFee = (props: DrawRngFeeProps) => {
+export const DrawRngReward = (props: DrawRngRewardProps) => {
   const { prizePool, drawId, className } = props
 
   const { status, isSkipped } = useDrawStatus(prizePool, drawId)
 
   const { data: allRngTxs, isFetched: isFetchedAllRngTxs } = useRngTxs(prizePool)
-  const rngTx = allRngTxs?.find((txs) => txs.rng.drawId === drawId)?.rng
+  const rngAuctionTx = allRngTxs?.find((txs) => txs.rngAuction.drawId === drawId)?.rngAuction
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
-  const { data: currentFeePercentage } = useDrawRngFeePercentage(prizePool, {
-    refetchInterval: sToMs(60)
-  })
+  const { data: currentRngAuctionReward } = useCurrentRngAuctionReward(prizePool)
 
-  const canBeAwarded = status === 'closed' && !!currentFeePercentage && !isSkipped
+  const isRngCompletionPossible = status === 'closed' && !!currentRngAuctionReward && !isSkipped
 
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
-      <DrawCardItemTitle>{canBeAwarded ? 'Current ' : ''}RNG Fee</DrawCardItemTitle>
+      <DrawCardItemTitle>{isRngCompletionPossible ? 'Current ' : ''}RNG Reward</DrawCardItemTitle>
       <div className='flex flex-col gap-1 text-sm text-pt-purple-200 whitespace-nowrap'>
         {isFetchedAllRngTxs && !!prizeToken ? (
           <>
             <span>
-              {!!rngTx ? (
+              {!!rngAuctionTx ? (
                 <>
-                  {!!rngTx.fee ? (
+                  {!!rngAuctionTx.reward ? (
                     <>
                       <span className='text-xl font-semibold'>
-                        {formatBigIntForDisplay(rngTx.fee, prizeToken.decimals, {
+                        {formatBigIntForDisplay(rngAuctionTx.reward, prizeToken.decimals, {
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 2
                         })}
                       </span>{' '}
-                      {prizeToken.symbol} (
-                      {formatBigIntForDisplay(rngTx.feeFraction, 16, {
-                        maximumSignificantDigits: 2
-                      })}
-                      %)
+                      {prizeToken.symbol}
                     </>
                   ) : (
                     <>
-                      <span className='text-xl font-semibold'>
-                        {formatBigIntForDisplay(rngTx.feeFraction, 16, {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2
-                        })}
-                      </span>
-                      %
+                      {/* TODO: get last rng auction reward from draw manager to display here */}
+                      <span className='text-xl font-semibold'>?</span>
                     </>
                   )}
                 </>
-              ) : canBeAwarded ? (
+              ) : isRngCompletionPossible ? (
                 <>
+                  {/* TODO: reduce opacity on this number? make it look temporary */}
                   <span className='text-xl font-semibold'>
-                    {currentFeePercentage.toLocaleString(undefined, {
+                    {formatBigIntForDisplay(currentRngAuctionReward, prizeToken.decimals, {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2
                     })}
-                  </span>
-                  %
+                  </span>{' '}
+                  {prizeToken.symbol}
                 </>
               ) : (
                 <span>-</span>
               )}
             </span>
-            {!!rngTx ? (
+            {!!rngAuctionTx ? (
               <ExternalLink
-                href={getBlockExplorerUrl(
-                  RNG_RELAY_ADDRESSES[prizePool.chainId].from.chainId,
-                  rngTx.hash,
-                  'tx'
-                )}
+                href={getBlockExplorerUrl(prizePool.chainId, rngAuctionTx.hash, 'tx')}
                 className='text-blue-400 hover:text-blue-300 transition'
               >
-                {shorten(rngTx.hash, { short: true })}
+                {shorten(rngAuctionTx.hash, { short: true })}
               </ExternalLink>
             ) : (
-              canBeAwarded && <span>Not Yet Awarded</span>
+              isRngCompletionPossible && <span>Not Yet Awarded</span>
             )}
           </>
         ) : (
