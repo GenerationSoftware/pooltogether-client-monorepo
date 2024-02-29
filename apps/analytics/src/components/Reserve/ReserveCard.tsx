@@ -9,34 +9,47 @@ interface ReserveCardProps {
   manual: number
   rewards: number
   prizeBackstops: number
+  buyback: number
   prizeToken: Token
+  burnToken: Token
   className?: string
 }
 
 export const ReserveCard = (props: ReserveCardProps) => {
-  const { name, reserve, liquidations, manual, rewards, prizeBackstops, prizeToken, className } =
-    props
+  const {
+    name,
+    reserve,
+    liquidations,
+    manual,
+    rewards,
+    prizeBackstops,
+    buyback,
+    prizeToken,
+    burnToken,
+    className
+  } = props
 
   return (
     <div
       className={classNames(
-        'w-72 flex flex-col gap-4 p-5 text-sm bg-blue-100 rounded-lg',
+        'w-80 flex flex-col gap-4 p-5 text-sm bg-blue-100 rounded-lg',
         className
       )}
     >
       <span className='font-bold'>{name}</span>
+      <ReserveCardItem name='Vault Contributions' amount={liquidations} token={prizeToken} />
+      <ReserveCardItem name='Manual Contributions' amount={manual} token={prizeToken} />
+      <ReserveCardItem name='RNG Awards' amount={0 - rewards} token={prizeToken} />
+      <ReserveCardItem name='Prize Backstops' amount={0 - prizeBackstops} token={prizeToken} />
       <ReserveCardItem
-        name='Vault Contributions'
-        amount={liquidations > 0 ? liquidations : 0}
+        name={`${burnToken.symbol} Buyback & Burn`}
+        amount={0 - buyback}
         token={prizeToken}
       />
-      <ReserveCardItem name='Manual Contributions' amount={manual} token={prizeToken} />
-      <ReserveCardItem name='RNG Fees' amount={0 - rewards} token={prizeToken} />
-      <ReserveCardItem name='Prize Backstops' amount={0 - prizeBackstops} token={prizeToken} />
       <hr className='w-full border-gray-400' />
       <ReserveCardItem
         name='Changes'
-        amount={liquidations + manual - rewards - prizeBackstops}
+        amount={liquidations + manual - rewards - prizeBackstops - buyback}
         token={prizeToken}
         alwaysShow={true}
       />
@@ -75,9 +88,7 @@ const ReserveCardItem = (props: ReserveCardItemProps) => {
     amountClassName
   } = props
 
-  const formattedAmount = formatNumberForDisplay(amount, {
-    maximumFractionDigits: 2
-  })
+  const formattedAmount = formatNumberForDisplay(amount, { maximumFractionDigits: 5 })
 
   if (!!amount || alwaysShow) {
     return (

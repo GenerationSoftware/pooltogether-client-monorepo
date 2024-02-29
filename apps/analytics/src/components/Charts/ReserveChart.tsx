@@ -5,6 +5,7 @@ import {
   usePrizeBackstopEvents,
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { Token } from '@shared/types'
 import { formatNumberForDisplay, getSimpleDate, MAX_UINT_256 } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
@@ -24,15 +25,18 @@ interface DataPoint {
   manual: number
   rewards: number
   prizeBackstops: number
+  buyback: number
 }
 
+// TODO: `burnToken` should be optional, and all logic within should function appropriately
 interface ReserveChartProps {
   prizePool: PrizePool
+  burnToken: Token
   className?: string
 }
 
 export const ReserveChart = (props: ReserveChartProps) => {
-  const { prizePool, className } = props
+  const { prizePool, burnToken, className } = props
 
   const { data: reserve } = useReserve(prizePool)
 
@@ -77,7 +81,6 @@ export const ReserveChart = (props: ReserveChartProps) => {
 
       let minBlock = 0n
       let maxBlock = validRngTxs[0]?.drawAward.blockNumber
-      let prevReserve = 0
 
       const isValidEvent = (event: Log<bigint, number, false>) => {
         return event.blockNumber >= minBlock && event.blockNumber < maxBlock
@@ -89,55 +92,58 @@ export const ReserveChart = (props: ReserveChartProps) => {
         liquidations: 0,
         manual: 0,
         rewards: 0,
-        prizeBackstops: 0
+        prizeBackstops: 0,
+        buyback: 0
       })
 
       validRngTxs.forEach((txs, i) => {
         const drawId = txs.drawAward.drawId
         const awardedAt = txs.drawAward.timestamp
         const name = `${drawId}-${awardedAt}`
-        const rewards = formatPrizeNum(txs.rngAuction.reward + txs.drawAward.reward)
-        const reserve = formatPrizeNum(txs.drawAward.reserve)
-        const reserveAfterRewards = reserve - rewards
+
+        // Inbound tokens
         const manual = formatPrizeNum(
           manualContributionEvents.reduce((a, b) => a + (isValidEvent(b) ? b.args.amount : 0n), 0n)
         )
+
+        // Outbound tokens
+        const rewards = formatPrizeNum(txs.rngAuction.reward + txs.drawAward.reward)
         const prizeBackstops = formatPrizeNum(
           prizeBackstopEvents.reduce((a, b) => a + (isValidEvent(b) ? b.args.amount : 0n), 0n)
         )
-        const liquidations = reserveAfterRewards - prevReserve - manual + rewards + prizeBackstops
+        const buyback = formatPrizeNum(txs.drawAward.remainingReserve)
+
+        // Calculated liquidation contributions
+        const liquidations = rewards + prizeBackstops + buyback - manual
 
         data.push({
           name,
-          reserve: reserveAfterRewards,
+          reserve: 0,
           liquidations,
           manual,
           rewards,
-          prizeBackstops
+          prizeBackstops,
+          buyback
         })
 
         minBlock = maxBlock
         maxBlock = validRngTxs[i + 1]?.drawAward.blockNumber ?? MAX_UINT_256
-        prevReserve = reserveAfterRewards
       })
 
-      const currentReserve = formatPrizeNum(reserve.current)
+      const currentPendingReserve = formatPrizeNum(reserve.pending)
       const currentManual = formatPrizeNum(
         manualContributionEvents.reduce((a, b) => a + (isValidEvent(b) ? b.args.amount : 0n), 0n)
       )
-      const currentPrizeBackstops = formatPrizeNum(
-        prizeBackstopEvents.reduce((a, b) => a + (isValidEvent(b) ? b.args.amount : 0n), 0n)
-      )
-      const currentLiquidations =
-        currentReserve - prevReserve - currentManual + currentPrizeBackstops
+      const currentLiquidations = currentPendingReserve - currentManual
 
       data.push({
         name: `Now-${currentTimestamp}`,
-        reserve: currentReserve,
+        reserve: currentPendingReserve,
         liquidations: currentLiquidations,
         manual: currentManual,
         rewards: 0,
-        prizeBackstops: currentPrizeBackstops
+        prizeBackstops: 0,
+        buyback: 0
       })
 
       return data
@@ -159,6 +165,7 @@ export const ReserveChart = (props: ReserveChartProps) => {
                     {...(payload[0].payload as DataPoint)}
                     name={formatTooltipLabel(label)}
                     prizeToken={prizeToken}
+                    burnToken={burnToken}
                   />
                 )
               } else {

@@ -23,6 +23,7 @@ export interface DrawAwardTx {
   reward: bigint
   rewardRecipient: Address
   reserve: bigint
+  remainingReserve: bigint
   lastNumTiers: number
   numTiers: number
   hash: `0x${string}`
@@ -101,6 +102,7 @@ export const useRngTxs = (prizePool: PrizePool) => {
                 reward: drawManagerDrawAwardedEvent.args.awardReward,
                 rewardRecipient: drawManagerDrawAwardedEvent.args.awardRecipient,
                 reserve: prizePoolDrawAwardedEvent.args.reserve,
+                remainingReserve: drawManagerDrawAwardedEvent.args.remainingReserve,
                 lastNumTiers: prizePoolDrawAwardedEvent.args.lastNumTiers,
                 numTiers: prizePoolDrawAwardedEvent.args.numTiers,
                 hash: prizePoolDrawAwardedEvent.transactionHash,

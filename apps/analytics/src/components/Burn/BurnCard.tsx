@@ -16,7 +16,7 @@ export const BurnCard = (props: BurnCardProps) => {
   return (
     <div
       className={classNames(
-        'w-72 flex flex-col gap-4 p-5 text-sm bg-blue-100 rounded-lg',
+        'w-80 flex flex-col gap-4 p-5 text-sm bg-blue-100 rounded-lg',
         className
       )}
     >

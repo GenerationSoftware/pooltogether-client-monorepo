@@ -5,9 +5,10 @@ import {
   useManualContributionEvents,
   usePrizeBackstopEvents,
   usePrizePoolDrawAwardedEvents,
-  useRngAuctionCompletedEvents
+  useRngAuctionCompletedEvents,
+  useToken
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { getSecondsSinceEpoch, PRIZE_POOLS, sToMs } from '@shared/utilities'
+import { getSecondsSinceEpoch, POOL_TOKEN_ADDRESSES, PRIZE_POOLS, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import { useSetAtom } from 'jotai'
 import { useEffect, useMemo } from 'react'
@@ -43,6 +44,11 @@ export const ReserveView = (props: ReserveViewProps) => {
       prizePoolInfo.options
     )
   }, [chainId, publicClient])
+
+  const { data: burnToken } = useToken(
+    chainId,
+    POOL_TOKEN_ADDRESSES[prizePool.chainId as keyof typeof POOL_TOKEN_ADDRESSES]
+  )
 
   const fromBlock = !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
 
@@ -84,7 +90,7 @@ export const ReserveView = (props: ReserveViewProps) => {
   return (
     <div className={classNames('w-full flex flex-col gap-6 items-center', className)}>
       <ReserveHeader prizePool={prizePool} />
-      <ReserveChart prizePool={prizePool} />
+      {!!burnToken && <ReserveChart prizePool={prizePool} burnToken={burnToken} />}
     </div>
   )
 }
