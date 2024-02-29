@@ -36,8 +36,8 @@ export const getSubgraphDraws = async (
             tier
             prizeIndex
             payout
-            fee
-            feeRecipient
+            claimReward
+            claimRewardRecipient
             timestamp
             txHash
           }
@@ -66,8 +66,8 @@ export const getSubgraphDraws = async (
         tier: number
         prizeIndex: string
         payout: string
-        fee: string
-        feeRecipient: string
+        claimReward: string
+        claimRewardRecipient: string
         timestamp: string
         txHash: string
       }[]
@@ -82,8 +82,8 @@ export const getSubgraphDraws = async (
         tier: claim.tier,
         prizeIndex: parseInt(claim.prizeIndex),
         payout: BigInt(claim.payout),
-        fee: BigInt(claim.fee),
-        feeRecipient: claim.feeRecipient as Address,
+        claimReward: BigInt(claim.claimReward),
+        claimRewardRecipient: claim.claimRewardRecipient as Address,
         timestamp: parseInt(claim.timestamp),
         txHash: claim.txHash as `0x${string}`
       }))
@@ -191,8 +191,8 @@ export const getUserSubgraphPrizes = async (
           tier
           prizeIndex
           payout
-          fee
-          feeRecipient
+          claimReward
+          claimRewardRecipient
           timestamp
           txHash
         }
@@ -214,8 +214,8 @@ export const getUserSubgraphPrizes = async (
       tier: number
       prizeIndex: string
       payout: string
-      fee: string
-      feeRecipient: string
+      claimReward: string
+      claimRewardRecipient: string
       timestamp: string
       txHash: string
     }[] = jsonData?.data?.prizeClaims ?? []
@@ -226,8 +226,8 @@ export const getUserSubgraphPrizes = async (
       tier: win.tier,
       prizeIndex: parseInt(win.prizeIndex),
       payout: BigInt(win.payout),
-      fee: BigInt(win.fee),
-      feeRecipient: win.feeRecipient as Address,
+      claimReward: BigInt(win.claimReward),
+      claimRewardRecipient: win.claimRewardRecipient as Address,
       timestamp: parseInt(win.timestamp),
       txHash: win.txHash as `0x${string}`
     }))
