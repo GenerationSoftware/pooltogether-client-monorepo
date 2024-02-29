@@ -53,13 +53,13 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': tokenLogoUrls.ageur,
     '0x4200000000000000000000000000000000000042': tokenLogoUrls.op
   },
-  [NETWORK.optimism_sepolia]: {
-    [POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia].toLowerCase()]: tokenLogoUrls.pool,
-    '0x8067f3cb6eef936256108ff19a05574b8ad99cf3': tokenLogoUrls.usdc,
-    '0xd590ec14364731b62265a5cc807164a17c6797d4': tokenLogoUrls.dai,
-    '0x1a188719711d62423abf1a4de7d8aa9014a39d73': tokenLogoUrls.gusd,
-    '0xa416ed51158c5616b997b785fa6d18f02d0458a8': tokenLogoUrls.weth,
-    '0x149e3b3bd69f1cfc1b42b6a6a152a42e38ceebf1': tokenLogoUrls.wbtc
+  [NETWORK.optimism_sepolia]: {},
+  [NETWORK.optimism_goerli]: {
+    '0x3e5bc94a341481f742f5f573d341fa2540bc0992': tokenLogoUrls.usdc,
+    '0xf6cff71208ffcab13223b31b036f2801d5de6d17': tokenLogoUrls.dai,
+    '0xabddb2c18a5d02f26a5ad5f4a361e4814dbe2175': tokenLogoUrls.gusd,
+    '0x0ba5e0722797dcea8cec409a707ce495c33fb23d': tokenLogoUrls.weth,
+    '0x3fa21c64666d1245dbc1836ded2e4b47979c6bee': tokenLogoUrls.wbtc
   },
   [NETWORK.avalanche]: {
     '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f': tokenLogoUrls.wbtc
@@ -68,14 +68,7 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   [NETWORK.celo]: {},
   [NETWORK.celo_testnet]: {},
   [NETWORK.arbitrum]: {},
-  [NETWORK.arbitrum_sepolia]: {
-    [POOL_TOKEN_ADDRESSES[NETWORK.arbitrum_sepolia].toLowerCase()]: tokenLogoUrls.pool,
-    '0x7a6dbc7ff4f1a2d864291db3aec105a8eee4a3d2': tokenLogoUrls.usdc,
-    '0x08c19fe57af150a1af975cb9a38769848c7df98e': tokenLogoUrls.dai,
-    '0xb84460d777133a4b86540d557db35952e4adfee7': tokenLogoUrls.gusd,
-    '0x779275fc1b987db24463801f3708f42f3c6f6ceb': tokenLogoUrls.weth,
-    '0x1bc266e1f397517ece9e384c55c7a5414b683639': tokenLogoUrls.wbtc
-  },
+  [NETWORK.arbitrum_sepolia]: {},
   [NETWORK.base]: {},
   [NETWORK.base_sepolia]: {}
 }
