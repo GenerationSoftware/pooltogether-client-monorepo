@@ -199,7 +199,7 @@ export class PrizePool {
   /**
    * Returns the number of prize tiers in the prize pool
    *
-   * NOTE: Includes the canary tier
+   * NOTE: Includes the canary tiers
    * @returns
    */
   async getNumberOfTiers(): Promise<number> {
@@ -461,7 +461,7 @@ export class PrizePool {
       address: this.address,
       abi: prizePoolABI,
       functionName: 'estimatedPrizeCount',
-      args: [!!options?.includeCanary ? numberOfTiers : numberOfTiers - 1]
+      args: [!!options?.includeCanary ? numberOfTiers : numberOfTiers - 2]
     })
 
     return estimatedPrizeCount

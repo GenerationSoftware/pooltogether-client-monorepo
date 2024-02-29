@@ -37,12 +37,11 @@ export const DrawRngReward = (props: DrawRngRewardProps) => {
             <span>
               {!!rngAuctionTx ? (
                 <>
-                  {!!rngAuctionTx.reward ? (
+                  {rngAuctionTx.reward !== undefined ? (
                     <>
                       <span className='text-xl font-semibold'>
                         {formatBigIntForDisplay(rngAuctionTx.reward, prizeToken.decimals, {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2
+                          maximumFractionDigits: 5
                         })}
                       </span>{' '}
                       {prizeToken.symbol}
@@ -56,11 +55,9 @@ export const DrawRngReward = (props: DrawRngRewardProps) => {
                 </>
               ) : isRngCompletionPossible ? (
                 <>
-                  {/* TODO: reduce opacity on this number? make it look temporary */}
                   <span className='text-xl font-semibold'>
                     {formatBigIntForDisplay(currentRngAuctionReward, prizeToken.decimals, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2
+                      maximumFractionDigits: 5
                     })}
                   </span>{' '}
                   {prizeToken.symbol}

@@ -3,6 +3,7 @@ import { SubgraphDraw, Token } from '@shared/types'
 import { formatBigIntForDisplay, getTimeBreakdown } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
+import { isCanaryTier } from 'src/utils'
 import { ClaimFees } from '@components/ClaimFees'
 import { prizesHeaders } from './PrizesTable'
 
@@ -38,7 +39,13 @@ export const PrizesTableRow = (props: PrizesTableRowProps) => {
       <PrizeTier tier={tier} numTiers={numTiers} className='w-full md:w-auto' />
       <PrizeSize tier={tier} prizes={prizes} prizeToken={prizeToken} className='w-1/2 md:w-auto' />
       <PrizesClaimed wins={wins} tier={tier} prizes={prizes} className='w-1/2 md:w-auto' />
-      <PrizeFees prizePool={prizePool} drawId={drawId} tier={tier} className='w-full md:w-auto' />
+      <PrizeFees
+        prizePool={prizePool}
+        drawId={drawId}
+        tier={tier}
+        numTiers={numTiers}
+        className='w-full md:w-auto'
+      />
       <PrizeClaimTime wins={wins} tier={tier} awardedAt={awardedAt} className='w-full md:w-auto' />
     </div>
   )
@@ -57,7 +64,7 @@ const PrizeTier = (props: PrizeTierProps) => {
     <span className={classNames('text-xl font-semibold text-pt-purple-200', className)}>
       {tier === 0 ? (
         'GP'
-      ) : tier === numTiers - 1 ? (
+      ) : tier >= numTiers - 2 ? (
         'Canary'
       ) : (
         <>
@@ -150,21 +157,26 @@ interface PrizeFeesProps {
   prizePool: PrizePool
   drawId: number
   tier: number
+  numTiers: number
   className?: string
 }
 
 const PrizeFees = (props: PrizeFeesProps) => {
-  const { prizePool, drawId, tier, className } = props
+  const { prizePool, drawId, tier, numTiers, className } = props
 
   return (
     <div className={classNames('flex flex-col gap-2', className)}>
       <span className='text-pt-purple-300 md:hidden'>{prizesHeaders.fees}</span>
-      <ClaimFees
-        prizePool={prizePool}
-        drawId={drawId}
-        tier={tier}
-        className='items-center text-start md:items-start'
-      />
+      {isCanaryTier(tier, numTiers) ? (
+        <span>-</span>
+      ) : (
+        <ClaimFees
+          prizePool={prizePool}
+          drawId={drawId}
+          tier={tier}
+          className='items-center text-start md:items-start'
+        />
+      )}
     </div>
   )
 }

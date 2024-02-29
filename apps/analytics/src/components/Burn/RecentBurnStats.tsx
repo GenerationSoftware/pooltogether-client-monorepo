@@ -7,20 +7,20 @@ import { Block } from 'viem'
 import { BURN_ADDRESSES, QUERY_START_BLOCK } from '@constants/config'
 
 interface RecentBurnStatsProps {
-  prizeToken: Token
+  burnToken: Token
   minBlock: Block
   label: string
   className?: string
 }
 
 export const RecentBurnStats = (props: RecentBurnStatsProps) => {
-  const { prizeToken, minBlock, label, className } = props
+  const { burnToken, minBlock, label, className } = props
 
-  const burnAddresses = BURN_ADDRESSES[prizeToken.chainId] ?? []
+  const burnAddresses = BURN_ADDRESSES[burnToken.chainId] ?? []
 
-  const { data: burnEvents } = useTransferEvents(prizeToken.chainId, prizeToken.address, {
+  const { data: burnEvents } = useTransferEvents(burnToken.chainId, burnToken.address, {
     to: [DEAD_ADDRESS, ...burnAddresses],
-    fromBlock: QUERY_START_BLOCK[prizeToken.chainId]
+    fromBlock: QUERY_START_BLOCK[burnToken.chainId]
   })
 
   const burned = useMemo(() => {
@@ -31,7 +31,7 @@ export const RecentBurnStats = (props: RecentBurnStatsProps) => {
   }, [burnEvents, minBlock])
 
   if (!!burned) {
-    const formattedBurnedAmount = formatBigIntForDisplay(burned, prizeToken.decimals, {
+    const formattedBurnedAmount = formatBigIntForDisplay(burned, burnToken.decimals, {
       hideZeroes: true
     })
 
@@ -40,7 +40,7 @@ export const RecentBurnStats = (props: RecentBurnStatsProps) => {
         <span>{label}:</span>
         <span className='flex gap-1 items-center text-pt-purple-300'>
           <span className='text-lg font-medium'>{formattedBurnedAmount}</span>
-          <span className='text-sm'>{prizeToken.symbol}</span>
+          <span className='text-sm'>{burnToken.symbol}</span>
         </span>
       </div>
     )

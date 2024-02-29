@@ -1,14 +1,11 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import {
-  useBlockAtTimestamp,
-  usePrizeTokenData
-} from '@generationsoftware/hyperstructure-react-hooks'
-import { PRIZE_POOLS, SECONDS_PER_DAY } from '@shared/utilities'
+import { useBlockAtTimestamp, useToken } from '@generationsoftware/hyperstructure-react-hooks'
+import { POOL_TOKEN_ADDRESSES, PRIZE_POOLS, SECONDS_PER_DAY } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
-import { Address, PublicClient } from 'viem'
+import { PublicClient } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { BurnHeader } from '@components/Burn/BurnHeader'
 import { RecentBurnStats } from '@components/Burn/RecentBurnStats'
@@ -27,16 +24,9 @@ export const BurnView = (props: BurnViewProps) => {
   const currentTimestamp = useAtomValue(currentTimestampAtom)
 
   const prizePool = useMemo(() => {
-    const prizePoolInfo = PRIZE_POOLS.find((pool) => pool.chainId === chainId) as {
-      chainId: number
-      address: Address
-      options: {
-        prizeTokenAddress: Address
-        drawPeriodInSeconds: number
-        tierShares: number
-        reserveShares: number
-      }
-    }
+    const prizePoolInfo = PRIZE_POOLS.find(
+      (pool) => pool.chainId === chainId
+    ) as (typeof PRIZE_POOLS)[number]
 
     return new PrizePool(
       prizePoolInfo.chainId,
@@ -45,8 +35,6 @@ export const BurnView = (props: BurnViewProps) => {
       prizePoolInfo.options
     )
   }, [chainId, publicClient])
-
-  const { data: prizeToken } = usePrizeTokenData(prizePool)
 
   const { data: minBlockDay } = useBlockAtTimestamp(
     prizePool.chainId,
@@ -58,19 +46,24 @@ export const BurnView = (props: BurnViewProps) => {
     currentTimestamp - SECONDS_PER_DAY * 7
   )
 
-  if (!!prizeToken) {
+  const { data: burnToken } = useToken(
+    chainId,
+    POOL_TOKEN_ADDRESSES[prizePool.chainId as keyof typeof POOL_TOKEN_ADDRESSES]
+  )
+
+  if (!!prizePool && !!burnToken) {
     return (
       <div className={classNames('w-full flex flex-col gap-6 items-center', className)}>
         <div className='flex flex-col items-center text-pt-purple-400'>
-          <BurnHeader prizeToken={prizeToken} className='mb-3' />
+          <BurnHeader burnToken={burnToken} className='mb-3' />
           {!!minBlockDay && (
-            <RecentBurnStats prizeToken={prizeToken} minBlock={minBlockDay} label='Last 24 hours' />
+            <RecentBurnStats burnToken={burnToken} minBlock={minBlockDay} label='Last 24 hours' />
           )}
           {!!minBlockWeek && (
-            <RecentBurnStats prizeToken={prizeToken} minBlock={minBlockWeek} label='Last week' />
+            <RecentBurnStats burnToken={burnToken} minBlock={minBlockWeek} label='Last week' />
           )}
         </div>
-        <BurnChart prizePool={prizePool} prizeToken={prizeToken} />
+        <BurnChart prizePool={prizePool} burnToken={burnToken} />
       </div>
     )
   }

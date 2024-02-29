@@ -6,12 +6,12 @@ interface BurnCardProps {
   name: string
   dead: { total: number; change: number }
   other: { total: number; change: number }
-  prizeToken: Token
+  burnToken: Token
   className?: string
 }
 
 export const BurnCard = (props: BurnCardProps) => {
-  const { name, dead, other, prizeToken, className } = props
+  const { name, dead, other, burnToken, className } = props
 
   return (
     <div
@@ -21,14 +21,14 @@ export const BurnCard = (props: BurnCardProps) => {
       )}
     >
       <span className='font-bold'>{name}</span>
-      <BurnCardItem name='0xdead' total={dead.total} change={dead.change} token={prizeToken} />
-      <BurnCardItem name='Other' total={other.total} change={other.change} token={prizeToken} />
+      <BurnCardItem name='0xdEaD' total={dead.total} change={dead.change} token={burnToken} />
+      <BurnCardItem name='Other' total={other.total} change={other.change} token={burnToken} />
       <hr className='w-full border-gray-400' />
       <BurnCardItem
         name='Total Burned'
         total={dead.total + other.total}
         change={dead.change + other.change}
-        token={prizeToken}
+        token={burnToken}
         alwaysShow={true}
         nameClassName='font-bold'
       />
@@ -50,8 +50,8 @@ interface BurnCardItemProps {
 const BurnCardItem = (props: BurnCardItemProps) => {
   const { name, total, change, token, alwaysShow, className, nameClassName, valueClassName } = props
 
-  const formattedTotal = formatNumberForDisplay(total, { maximumFractionDigits: 0 })
-  const formattedChange = formatNumberForDisplay(change, { maximumFractionDigits: 0 })
+  const formattedTotal = formatNumberForDisplay(total, { maximumFractionDigits: 2 })
+  const formattedChange = formatNumberForDisplay(change, { maximumFractionDigits: 2 })
 
   if (!!total || alwaysShow) {
     return (

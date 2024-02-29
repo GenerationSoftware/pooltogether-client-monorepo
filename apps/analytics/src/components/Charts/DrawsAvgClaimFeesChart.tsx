@@ -6,6 +6,7 @@ import {
 import { divideBigInts, formatNumberForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
+import { isCanaryTier } from 'src/utils'
 import { QUERY_START_BLOCK } from '@constants/config'
 import { LineChart } from './LineChart'
 
@@ -37,13 +38,13 @@ export const DrawsAvgClaimFeesChart = (props: DrawsAvgClaimFeesChartProps) => {
         if (!!numTiers) {
           const wins = draw.prizeClaims.filter(
             (win) =>
-              win.fee > 0n &&
-              win.feeRecipient !== win.recipient &&
-              (!hideCanary || win.tier !== numTiers - 1)
+              win.claimReward > 0n &&
+              win.claimRewardRecipient !== win.recipient &&
+              (!hideCanary || !isCanaryTier(win.tier, numTiers))
           )
 
           if (!!wins.length) {
-            const sumClaimFeeAmount = wins.reduce((a, b) => a + b.fee, 0n)
+            const sumClaimFeeAmount = wins.reduce((a, b) => a + b.claimReward, 0n)
             const sumPrizeAmount = wins.reduce((a, b) => a + b.payout, 0n)
             const percentage =
               divideBigInts(sumClaimFeeAmount, sumPrizeAmount + sumClaimFeeAmount) * 100

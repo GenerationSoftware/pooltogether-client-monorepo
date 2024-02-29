@@ -43,19 +43,16 @@ export const DrawAwardReward = (props: DrawAwardRewardProps) => {
                 <>
                   <span className='text-xl font-semibold'>
                     {formatBigIntForDisplay(drawAwardTx.reward, prizeToken.decimals, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2
+                      maximumFractionDigits: 5
                     })}
                   </span>{' '}
                   {prizeToken.symbol}
                 </>
               ) : isAwardPossible ? (
                 <>
-                  {/* TODO: reduce opacity on this number? make it look temporary */}
                   <span className='text-xl font-semibold'>
                     {formatBigIntForDisplay(currentDrawAwardReward, prizeToken.decimals, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2
+                      maximumFractionDigits: 5
                     })}
                   </span>{' '}
                   {prizeToken.symbol}

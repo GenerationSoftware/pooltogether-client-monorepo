@@ -7,18 +7,18 @@ import { useMemo } from 'react'
 import { BURN_ADDRESSES, QUERY_START_BLOCK } from '@constants/config'
 
 interface BurnHeaderProps {
-  prizeToken: Token
+  burnToken: Token
   className?: string
 }
 
 export const BurnHeader = (props: BurnHeaderProps) => {
-  const { prizeToken, className } = props
+  const { burnToken, className } = props
 
-  const burnAddresses = BURN_ADDRESSES[prizeToken.chainId] ?? []
+  const burnAddresses = BURN_ADDRESSES[burnToken.chainId] ?? []
 
-  const { data: burnTxs } = useTransferEvents(prizeToken.chainId, prizeToken.address, {
+  const { data: burnTxs } = useTransferEvents(burnToken.chainId, burnToken.address, {
     to: [DEAD_ADDRESS, ...burnAddresses],
-    fromBlock: QUERY_START_BLOCK[prizeToken.chainId]
+    fromBlock: QUERY_START_BLOCK[burnToken.chainId]
   })
 
   const totalBurned = useMemo(() => {
@@ -27,17 +27,17 @@ export const BurnHeader = (props: BurnHeaderProps) => {
 
   return (
     <div className={classNames('flex flex-col items-center text-pt-purple-300', className)}>
-      <span>Total {prizeToken.symbol} Burned:</span>
+      <span>{burnToken.symbol} Burned:</span>
       <span className='flex gap-1 items-center text-pt-purple-100'>
         {totalBurned !== undefined ? (
           <>
             <span className='text-2xl'>🔥</span>
             <span className='text-4xl font-semibold'>
-              {formatBigIntForDisplay(totalBurned, prizeToken.decimals, {
+              {formatBigIntForDisplay(totalBurned, burnToken.decimals, {
                 hideZeroes: true
               })}
             </span>
-            <span>{prizeToken.symbol}</span>
+            <span>{burnToken.symbol}</span>
             <span className='text-2xl'>🔥</span>
           </>
         ) : (

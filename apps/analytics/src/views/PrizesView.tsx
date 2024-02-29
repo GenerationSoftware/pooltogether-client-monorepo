@@ -9,7 +9,7 @@ import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useEffect, useMemo } from 'react'
 import { selectedDrawIdAtom } from 'src/atoms'
-import { Address, PublicClient } from 'viem'
+import { PublicClient } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { DrawAvgClaimFeesChart } from '@components/Charts/DrawAvgClaimFeesChart'
 import { DrawSelector } from '@components/Draws/DrawSelector'
@@ -28,16 +28,9 @@ export const PrizesView = (props: PrizesViewProps) => {
   const publicClient = usePublicClient({ chainId })
 
   const prizePool = useMemo(() => {
-    const prizePoolInfo = PRIZE_POOLS.find((pool) => pool.chainId === chainId) as {
-      chainId: number
-      address: Address
-      options: {
-        prizeTokenAddress: Address
-        drawPeriodInSeconds: number
-        tierShares: number
-        reserveShares: number
-      }
-    }
+    const prizePoolInfo = PRIZE_POOLS.find(
+      (pool) => pool.chainId === chainId
+    ) as (typeof PRIZE_POOLS)[number]
 
     return new PrizePool(
       prizePoolInfo.chainId,
@@ -81,6 +74,7 @@ export const PrizesView = (props: PrizesViewProps) => {
           <DrawAvgClaimFeesChart
             prizePool={prizePool}
             drawId={drawIdSelected}
+            hideCanary={true}
             className='max-w-4xl'
           />
           <PrizesTable prizePool={prizePool} drawId={drawIdSelected} className='md:mt-6' />

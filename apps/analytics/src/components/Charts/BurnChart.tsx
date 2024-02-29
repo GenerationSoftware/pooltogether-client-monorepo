@@ -28,18 +28,18 @@ interface DataPoint {
 
 interface BurnChartProps {
   prizePool: PrizePool
-  prizeToken: Token
+  burnToken: Token
   className?: string
 }
 
 export const BurnChart = (props: BurnChartProps) => {
-  const { prizePool, prizeToken, className } = props
+  const { prizePool, burnToken, className } = props
 
-  const burnAddresses = BURN_ADDRESSES[prizeToken.chainId] ?? []
+  const burnAddresses = BURN_ADDRESSES[burnToken.chainId] ?? []
 
-  const { data: burnEvents } = useTransferEvents(prizeToken.chainId, prizeToken.address, {
+  const { data: burnEvents } = useTransferEvents(burnToken.chainId, burnToken.address, {
     to: [DEAD_ADDRESS, ...burnAddresses],
-    fromBlock: QUERY_START_BLOCK[prizeToken.chainId]
+    fromBlock: QUERY_START_BLOCK[burnToken.chainId]
   })
 
   const { data: rngTxs, isFetched: isFetchedRngTxs } = useRngTxs(prizePool)
@@ -53,7 +53,7 @@ export const BurnChart = (props: BurnChartProps) => {
       const data: DataPoint[] = []
 
       const formatBurnNum = (val: bigint) => {
-        return parseFloat(formatUnits(val, prizeToken.decimals))
+        return parseFloat(formatUnits(val, burnToken.decimals))
       }
 
       const validRngTxs = rngTxs.filter((txs) => !!txs.drawAward) as {
@@ -129,7 +129,7 @@ export const BurnChart = (props: BurnChartProps) => {
                   <BurnCard
                     {...(payload[0].payload as DataPoint)}
                     name={formatTooltipLabel(label)}
-                    prizeToken={prizeToken}
+                    burnToken={burnToken}
                   />
                 )
               } else {
@@ -141,7 +141,7 @@ export const BurnChart = (props: BurnChartProps) => {
             show: true,
             formatter: (id) => {
               if (id === 'dead.total') {
-                return 'Sent to 0xdead'
+                return 'Sent to 0xdEaD'
               } else if (id === 'other.total') {
                 return 'Other'
               } else {

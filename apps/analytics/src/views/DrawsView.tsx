@@ -7,7 +7,7 @@ import {
 import { PRIZE_POOLS, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import { useEffect, useMemo } from 'react'
-import { Address, PublicClient } from 'viem'
+import { PublicClient } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { DrawsAvgClaimFeesChart } from '@components/Charts/DrawsAvgClaimFeesChart'
 import { DrawsAvgLiqEfficiencyChart } from '@components/Charts/DrawsAvgLiqEfficiencyChart'
@@ -27,16 +27,9 @@ export const DrawsView = (props: DrawsViewProps) => {
   const publicClient = usePublicClient({ chainId })
 
   const prizePool = useMemo(() => {
-    const prizePoolInfo = PRIZE_POOLS.find((pool) => pool.chainId === chainId) as {
-      chainId: number
-      address: Address
-      options: {
-        prizeTokenAddress: Address
-        drawPeriodInSeconds: number
-        tierShares: number
-        reserveShares: number
-      }
-    }
+    const prizePoolInfo = PRIZE_POOLS.find(
+      (pool) => pool.chainId === chainId
+    ) as (typeof PRIZE_POOLS)[number]
 
     return new PrizePool(
       prizePoolInfo.chainId,
@@ -77,7 +70,7 @@ export const DrawsView = (props: DrawsViewProps) => {
   return (
     <div className={classNames('w-full flex flex-col gap-6 items-center', className)}>
       <div className='w-full grid grid-cols-1 gap-6 md:grid-cols-2'>
-        <DrawsAvgClaimFeesChart prizePool={prizePool} />
+        <DrawsAvgClaimFeesChart prizePool={prizePool} hideCanary={true} />
         <DrawsAvgLiqEfficiencyChart prizePool={prizePool} />
       </div>
       <DrawCards prizePool={prizePool} />
