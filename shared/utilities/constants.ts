@@ -31,7 +31,8 @@ export type NETWORK_NAME = keyof typeof NETWORK
 export const POOL_TOKEN_ADDRESSES = {
   [NETWORK.mainnet]: '0x0cEC1A9154Ff802e7934Fc916Ed7Ca50bDE6844e',
   [NETWORK.polygon]: '0x25788a1a171ec66Da6502f9975a15B609fF54CF6',
-  [NETWORK.optimism]: '0x395ae52bb17aef68c2888d941736a71dc6d4e125'
+  [NETWORK.optimism]: '0x395ae52bb17aef68c2888d941736a71dc6d4e125',
+  [NETWORK.optimism_goerli]: '0x80D4D92731ae0239c536E53001FF30D07D05f65B'
 } as const
 
 /**
@@ -359,6 +360,11 @@ export const TOKEN_PRICE_REDIRECTS: {
     '0x0ba5e0722797dcea8cec409a707ce495c33fb23d': {
       chainId: NETWORK.optimism,
       address: WRAPPED_NATIVE_ASSETS[NETWORK.optimism] as Address
+    },
+    /* POOL */
+    '0x80d4d92731ae0239c536e53001ff30d07d05f65b': {
+      chainId: NETWORK.optimism,
+      address: POOL_TOKEN_ADDRESSES[NETWORK.optimism]
     }
   }
 }
