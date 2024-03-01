@@ -1,11 +1,8 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
-  useDrawManagerDrawAwardedEvents,
   useLiquidationEvents,
   useManualContributionEvents,
   usePrizeBackstopEvents,
-  usePrizePoolDrawAwardedEvents,
-  useRngAuctionCompletedEvents,
   useToken
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { getSecondsSinceEpoch, POOL_TOKEN_ADDRESSES, PRIZE_POOLS, sToMs } from '@shared/utilities'
@@ -19,6 +16,7 @@ import { ReserveChart } from '@components/Charts/ReserveChart'
 import { ReserveHeader } from '@components/Reserve/ReserveHeader'
 import { QUERY_START_BLOCK } from '@constants/config'
 import { useReserve } from '@hooks/useReserve'
+import { useRngTxs } from '@hooks/useRngTxs'
 
 interface ReserveViewProps {
   chainId: number
@@ -60,16 +58,7 @@ export const ReserveView = (props: ReserveViewProps) => {
     fromBlock
   })
   const { refetch: refetchPrizeBackstopEvents } = usePrizeBackstopEvents(prizePool, { fromBlock })
-  const { refetch: refetchRngAuctionCompletedEvents } = useRngAuctionCompletedEvents(prizePool, {
-    fromBlock
-  })
-  const { refetch: refetchPrizePoolDrawAwardedEvents } = usePrizePoolDrawAwardedEvents(prizePool, {
-    fromBlock
-  })
-  const { refetch: refetchDrawManagerDrawAwardedEvents } = useDrawManagerDrawAwardedEvents(
-    prizePool,
-    { fromBlock }
-  )
+  const { refetch: refetchRngTxs } = useRngTxs(prizePool)
 
   // Automatic data refetching
   useEffect(() => {
@@ -78,9 +67,7 @@ export const ReserveView = (props: ReserveViewProps) => {
       refetchLiquidationEvents()
       refetchManualContributionEvents()
       refetchPrizeBackstopEvents()
-      refetchRngAuctionCompletedEvents()
-      refetchPrizePoolDrawAwardedEvents()
-      refetchDrawManagerDrawAwardedEvents()
+      refetchRngTxs()
       setCurrentTimestamp(getSecondsSinceEpoch())
     }, sToMs(300))
 

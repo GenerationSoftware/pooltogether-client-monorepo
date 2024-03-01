@@ -1,9 +1,4 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import {
-  useDrawManagerDrawAwardedEvents,
-  usePrizePoolDrawAwardedEvents,
-  useRngAuctionCompletedEvents
-} from '@generationsoftware/hyperstructure-react-hooks'
 import { PRIZE_POOLS, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
@@ -15,7 +10,7 @@ import { DrawAvgClaimFeesChart } from '@components/Charts/DrawAvgClaimFeesChart'
 import { DrawSelector } from '@components/Draws/DrawSelector'
 import { DrawStatusBadge } from '@components/Draws/DrawStatusBadge'
 import { PrizesTable } from '@components/Prizes/PrizesTable'
-import { QUERY_START_BLOCK } from '@constants/config'
+import { useRngTxs } from '@hooks/useRngTxs'
 
 interface PrizesViewProps {
   chainId: number
@@ -40,25 +35,12 @@ export const PrizesView = (props: PrizesViewProps) => {
     )
   }, [chainId, publicClient])
 
-  const fromBlock = !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
-
-  const { refetch: refetchRngAuctionCompletedEvents } = useRngAuctionCompletedEvents(prizePool, {
-    fromBlock
-  })
-  const { refetch: refetchPrizePoolDrawAwardedEvents } = usePrizePoolDrawAwardedEvents(prizePool, {
-    fromBlock
-  })
-  const { refetch: refetchDrawManagerDrawAwardedEvents } = useDrawManagerDrawAwardedEvents(
-    prizePool,
-    { fromBlock }
-  )
+  const { refetch: refetchRngTxs } = useRngTxs(prizePool)
 
   // Automatic data refetching
   useEffect(() => {
     const interval = setInterval(() => {
-      refetchRngAuctionCompletedEvents()
-      refetchPrizePoolDrawAwardedEvents()
-      refetchDrawManagerDrawAwardedEvents()
+      refetchRngTxs()
     }, sToMs(300))
 
     return () => clearInterval(interval)

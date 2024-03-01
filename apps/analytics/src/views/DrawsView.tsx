@@ -1,9 +1,4 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import {
-  useDrawManagerDrawAwardedEvents,
-  usePrizePoolDrawAwardedEvents,
-  useRngAuctionCompletedEvents
-} from '@generationsoftware/hyperstructure-react-hooks'
 import { PRIZE_POOLS, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import { useEffect, useMemo } from 'react'
@@ -12,9 +7,9 @@ import { usePublicClient } from 'wagmi'
 import { DrawsAvgClaimFeesChart } from '@components/Charts/DrawsAvgClaimFeesChart'
 import { DrawsAvgLiqEfficiencyChart } from '@components/Charts/DrawsAvgLiqEfficiencyChart'
 import { DrawCards } from '@components/Draws/DrawCards'
-import { QUERY_START_BLOCK } from '@constants/config'
 import { useCurrentDrawAwardReward } from '@hooks/useCurrentDrawAwardReward'
 import { useCurrentRngAuctionReward } from '@hooks/useCurrentRngAuctionReward'
+import { useRngTxs } from '@hooks/useRngTxs'
 
 interface DrawsViewProps {
   chainId: number
@@ -39,29 +34,16 @@ export const DrawsView = (props: DrawsViewProps) => {
     )
   }, [chainId, publicClient])
 
-  const fromBlock = !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
-
   const { refetch: refetchCurrentRngAuctionReward } = useCurrentRngAuctionReward(prizePool)
   const { refetch: refetchCurrentDrawAwardReward } = useCurrentDrawAwardReward(prizePool)
-  const { refetch: refetchRngAuctionCompletedEvents } = useRngAuctionCompletedEvents(prizePool, {
-    fromBlock
-  })
-  const { refetch: refetchPrizePoolDrawAwardedEvents } = usePrizePoolDrawAwardedEvents(prizePool, {
-    fromBlock
-  })
-  const { refetch: refetchDrawManagerDrawAwardedEvents } = useDrawManagerDrawAwardedEvents(
-    prizePool,
-    { fromBlock }
-  )
+  const { refetch: refetchRngTxs } = useRngTxs(prizePool)
 
   // Automatic data refetching
   useEffect(() => {
     const interval = setInterval(() => {
       refetchCurrentRngAuctionReward()
       refetchCurrentDrawAwardReward()
-      refetchRngAuctionCompletedEvents()
-      refetchPrizePoolDrawAwardedEvents()
-      refetchDrawManagerDrawAwardedEvents()
+      refetchRngTxs()
     }, sToMs(300))
 
     return () => clearInterval(interval)
