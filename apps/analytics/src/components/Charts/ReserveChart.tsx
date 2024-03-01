@@ -28,10 +28,9 @@ interface DataPoint {
   buyback: number
 }
 
-// TODO: `burnToken` should be optional, and all logic within should function appropriately
 interface ReserveChartProps {
   prizePool: PrizePool
-  burnToken: Token
+  burnToken?: Token
   className?: string
 }
 
@@ -81,6 +80,7 @@ export const ReserveChart = (props: ReserveChartProps) => {
 
       let minBlock = 0n
       let maxBlock = validRngTxs[0]?.drawAward.blockNumber
+      let prevReserve = 0
 
       const isValidEvent = (event: Log<bigint, number, false>) => {
         return event.blockNumber >= minBlock && event.blockNumber < maxBlock
@@ -101,6 +101,8 @@ export const ReserveChart = (props: ReserveChartProps) => {
         const awardedAt = txs.drawAward.timestamp
         const name = `${drawId}-${awardedAt}`
 
+        const remainingReserve = formatPrizeNum(txs.drawAward.remainingReserve)
+
         // Inbound tokens
         const manual = formatPrizeNum(
           manualContributionEvents.reduce((a, b) => a + (isValidEvent(b) ? b.args.amount : 0n), 0n)
@@ -111,14 +113,17 @@ export const ReserveChart = (props: ReserveChartProps) => {
         const prizeBackstops = formatPrizeNum(
           prizeBackstopEvents.reduce((a, b) => a + (isValidEvent(b) ? b.args.amount : 0n), 0n)
         )
-        const buyback = formatPrizeNum(txs.drawAward.remainingReserve)
+        const buyback = !!burnToken ? remainingReserve : 0
 
         // Calculated liquidation contributions
-        const liquidations = rewards + prizeBackstops + buyback - manual
+        const liquidations = rewards + prizeBackstops + buyback - manual - prevReserve
+
+        // Resulting reserve balance
+        const reserve = remainingReserve - buyback
 
         data.push({
           name,
-          reserve: 0,
+          reserve,
           liquidations,
           manual,
           rewards,
@@ -128,21 +133,26 @@ export const ReserveChart = (props: ReserveChartProps) => {
 
         minBlock = maxBlock
         maxBlock = validRngTxs[i + 1]?.drawAward.blockNumber ?? MAX_UINT_256
+        prevReserve = reserve
       })
 
-      const currentPendingReserve = formatPrizeNum(reserve.pending)
+      const currentReserve = formatPrizeNum(reserve.current + reserve.pending)
       const currentManual = formatPrizeNum(
         manualContributionEvents.reduce((a, b) => a + (isValidEvent(b) ? b.args.amount : 0n), 0n)
       )
-      const currentLiquidations = currentPendingReserve - currentManual
+      const currentPrizeBackstops = formatPrizeNum(
+        prizeBackstopEvents.reduce((a, b) => a + (isValidEvent(b) ? b.args.amount : 0n), 0n)
+      )
+      const currentLiquidations =
+        currentReserve - prevReserve - currentManual + currentPrizeBackstops
 
       data.push({
         name: `Now-${currentTimestamp}`,
-        reserve: currentPendingReserve,
+        reserve: currentReserve,
         liquidations: currentLiquidations,
         manual: currentManual,
         rewards: 0,
-        prizeBackstops: 0,
+        prizeBackstops: currentPrizeBackstops,
         buyback: 0
       })
 

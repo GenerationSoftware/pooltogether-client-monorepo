@@ -11,7 +11,7 @@ interface ReserveCardProps {
   prizeBackstops: number
   buyback: number
   prizeToken: Token
-  burnToken: Token
+  burnToken?: Token
   className?: string
 }
 
@@ -42,7 +42,7 @@ export const ReserveCard = (props: ReserveCardProps) => {
       <ReserveCardItem name='RNG Awards' amount={0 - rewards} token={prizeToken} />
       <ReserveCardItem name='Prize Backstops' amount={0 - prizeBackstops} token={prizeToken} />
       <ReserveCardItem
-        name={`${burnToken.symbol} Buyback & Burn`}
+        name={`${burnToken?.symbol} Buyback & Burn`}
         amount={0 - buyback}
         token={prizeToken}
       />
