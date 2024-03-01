@@ -7,6 +7,7 @@ export const QUERY_KEYS = {
   block: 'block',
   blockAtTimestamp: 'blockAtTimestamp',
   clientChainId: 'clientChainId',
+  drawAuctionDuration: 'drawAuctionDuration',
   drawManagerDrawAwardedEvents: 'drawManagerDrawAwardedEvents',
   drawPeriod: 'drawPeriod',
   drawTimestamps: 'drawTimestamps',

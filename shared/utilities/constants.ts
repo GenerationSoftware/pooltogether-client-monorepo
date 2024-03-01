@@ -85,6 +85,7 @@ export const PRIZE_POOLS: {
     drawManagerAddress: Address
     twabControllerAddress: Address
     drawPeriodInSeconds: number
+    drawActionDurationInSeconds: number
     tierShares: number
     reserveShares: number
   }
@@ -96,7 +97,8 @@ export const PRIZE_POOLS: {
       prizeTokenAddress: '0x0Ba5e0722797dcEa8Cec409a707cE495C33fB23D',
       drawManagerAddress: '0x512c1421D4f6f6c01A7508E060595ee08A652f69',
       twabControllerAddress: '0x53f5545055f3804B7fD694081f9a13b3abceB38E',
-      drawPeriodInSeconds: 7200,
+      drawPeriodInSeconds: 7_200,
+      drawActionDurationInSeconds: 2_400,
       tierShares: 100,
       reserveShares: 20
     }

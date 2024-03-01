@@ -92,6 +92,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useAllUserEligibleDraws`
 - `useAllUserPrizeOdds`
 - `useAllUserPrizePoolWins`
+- `useDrawAuctionDuration`
 - `useDrawIds`
 - `useDrawPeriod`
 - `useDrawsToCheckForPrizes`

@@ -34,12 +34,21 @@ export interface DrawAwardTx {
 export const useRngTxs = (prizePool: PrizePool) => {
   const fromBlock = !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
 
-  const { data: rngAuctionCompletedEvents, isFetched: isFetchedRngAuctionCompletedEvents } =
-    useRngAuctionCompletedEvents(prizePool, { fromBlock })
-  const { data: prizePoolDrawAwardedEvents, isFetched: isFetchedPrizePoolDrawAwardedEvents } =
-    usePrizePoolDrawAwardedEvents(prizePool, { fromBlock })
-  const { data: drawManagerDrawAwardedEvents, isFetched: isFetchedDrawManagerDrawAwardedEvents } =
-    useDrawManagerDrawAwardedEvents(prizePool, { fromBlock })
+  const {
+    data: rngAuctionCompletedEvents,
+    isFetched: isFetchedRngAuctionCompletedEvents,
+    refetch: refetchRngAuctionCompletedEvents
+  } = useRngAuctionCompletedEvents(prizePool, { fromBlock })
+  const {
+    data: prizePoolDrawAwardedEvents,
+    isFetched: isFetchedPrizePoolDrawAwardedEvents,
+    refetch: refetchPrizePoolDrawAwardedEvents
+  } = usePrizePoolDrawAwardedEvents(prizePool, { fromBlock })
+  const {
+    data: drawManagerDrawAwardedEvents,
+    isFetched: isFetchedDrawManagerDrawAwardedEvents,
+    refetch: refetchDrawManagerDrawAwardedEvents
+  } = useDrawManagerDrawAwardedEvents(prizePool, { fromBlock })
 
   const rngAuctionCompletedBlockNumbers = new Set<bigint>(
     rngAuctionCompletedEvents?.map((e) => e.blockNumber) ?? []
@@ -135,5 +144,11 @@ export const useRngTxs = (prizePool: PrizePool) => {
     isFetchedRngAuctionCompletedBlocks &&
     isFetchedDrawAwardedBlocks
 
-  return { data, isFetched }
+  const refetch = () => {
+    refetchRngAuctionCompletedEvents()
+    refetchPrizePoolDrawAwardedEvents()
+    refetchDrawManagerDrawAwardedEvents()
+  }
+
+  return { data, isFetched, refetch }
 }

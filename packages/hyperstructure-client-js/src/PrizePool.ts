@@ -1,5 +1,6 @@
 import { PrizeInfo, TokenWithSupply, TxOverrides } from '@shared/types'
 import {
+  drawManagerABI,
   getPrizePoolAllPrizeInfo,
   getPrizePoolContributionAmounts,
   getPrizePoolContributionPercentages,
@@ -22,6 +23,7 @@ export class PrizePool {
   drawManagerAddress: Address | undefined
   twabControllerAddress: Address | undefined
   drawPeriodInSeconds: number | undefined
+  drawAuctionDurationInSeconds: number | undefined
   tierShares: number | undefined
   reserveShares: number | undefined
 
@@ -44,6 +46,7 @@ export class PrizePool {
       drawManagerAddress?: Address
       twabControllerAddress?: Address
       drawPeriodInSeconds?: number
+      drawAuctionDurationInSeconds?: number
       tierShares?: number
       reserveShares?: number
     }
@@ -55,6 +58,7 @@ export class PrizePool {
     this.drawManagerAddress = options?.drawManagerAddress
     this.twabControllerAddress = options?.twabControllerAddress
     this.drawPeriodInSeconds = options?.drawPeriodInSeconds
+    this.drawAuctionDurationInSeconds = options?.drawAuctionDurationInSeconds
     this.tierShares = options?.tierShares
     this.reserveShares = options?.reserveShares
   }
@@ -154,6 +158,30 @@ export class PrizePool {
 
     this.drawPeriodInSeconds = drawPeriodInSeconds
     return drawPeriodInSeconds
+  }
+
+  /**
+   * Returns the duration of a draw auction in seconds
+   * @returns
+   */
+  async getDrawAuctionDurationInSeconds(): Promise<number> {
+    if (this.drawAuctionDurationInSeconds !== undefined) return this.drawAuctionDurationInSeconds
+
+    const source = 'Prize Pool [getDrawAuctionDurationInSeconds]'
+    await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    const drawManagerAddress = await this.getDrawManagerAddress()
+
+    const drawAuctionDurationInSeconds = Number(
+      await this.publicClient.readContract({
+        address: drawManagerAddress,
+        abi: drawManagerABI,
+        functionName: 'auctionDuration'
+      })
+    )
+
+    this.drawAuctionDurationInSeconds = drawAuctionDurationInSeconds
+    return drawAuctionDurationInSeconds
   }
 
   /**

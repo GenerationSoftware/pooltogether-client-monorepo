@@ -48,7 +48,7 @@ export const DrawRngReward = (props: DrawRngRewardProps) => {
                     </>
                   ) : (
                     <>
-                      {/* TODO: get last rng auction reward from draw manager to display here */}
+                      {/* TODO: get last rng auction reward from draw manager to display here - crossed out? */}
                       <span className='text-xl font-semibold'>?</span>
                     </>
                   )}
