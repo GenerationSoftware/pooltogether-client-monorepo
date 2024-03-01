@@ -47,6 +47,9 @@ export default function YieldBotsPage() {
               <ResourceLink href='https://github.com/GenerationSoftware/pt-v5-autotasks-monorepo'>
                 Example: G9 Bots Monorepo
               </ResourceLink>
+              <ResourceLink href='https://github.com/underethsea/pooltogether-v5-node'>
+                Example: PoolTime Bots Monorepo
+              </ResourceLink>
               <ResourceLink href='https://analytics.cabana.fi/liquidations'>
                 Analytics: Liquidations (Cabanalytics)
               </ResourceLink>
