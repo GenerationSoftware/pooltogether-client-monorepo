@@ -5,19 +5,19 @@ import { useMemo } from 'react'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
 
-export const useLiquidationPairTokenOutAddresses = (chainId: number, lpAddresses: Address[]) => {
+export const useLiquidationPairTokenInAddresses = (chainId: number, lpAddresses: Address[]) => {
   const publicClient = usePublicClient({ chainId })
 
   const results = useQueries({
     queries: lpAddresses.map((lpAddress) => {
       return {
-        queryKey: ['lpTokenOutAddress', chainId, lpAddress],
+        queryKey: ['lpTokenInAddress', chainId, lpAddress],
         queryFn: async () => {
           if (!!publicClient) {
             return await publicClient.readContract({
               address: lpAddress,
               abi: liquidationPairABI,
-              functionName: 'tokenOut'
+              functionName: 'tokenIn'
             })
           }
         },
@@ -32,9 +32,9 @@ export const useLiquidationPairTokenOutAddresses = (chainId: number, lpAddresses
 
     const data: { [lpAddress: Address]: Address } = {}
     lpAddresses.forEach((lpAddress, i) => {
-      const tokenOut = results[i]?.data
-      if (!!tokenOut) {
-        data[lpAddress] = tokenOut
+      const tokenIn = results[i]?.data
+      if (!!tokenIn) {
+        data[lpAddress] = tokenIn
       }
     })
 
@@ -42,11 +42,11 @@ export const useLiquidationPairTokenOutAddresses = (chainId: number, lpAddresses
   }, [results])
 }
 
-export const useLiquidationPairTokenOutAddress = (
+export const useLiquidationPairTokenInAddress = (
   chainId: number,
   lpAddress: Address
 ): { data?: Address; isFetched: boolean } => {
-  const tokenOutAddresses = useLiquidationPairTokenOutAddresses(chainId, [lpAddress])
+  const tokenInAddresses = useLiquidationPairTokenInAddresses(chainId, [lpAddress])
 
-  return { ...tokenOutAddresses, data: tokenOutAddresses.data[lpAddress] }
+  return { ...tokenInAddresses, data: tokenInAddresses.data[lpAddress] }
 }
