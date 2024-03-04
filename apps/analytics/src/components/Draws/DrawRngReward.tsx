@@ -26,6 +26,9 @@ export const DrawRngReward = (props: DrawRngRewardProps) => {
 
   const { data: currentRngAuctionReward } = useCurrentRngAuctionReward(prizePool)
 
+  // TODO: query expected reward from draw manager if drawStartTx?.reward === undefined using `drawStartTx.elapsedTime` (not possible with current contract deployment)
+  const expectedDrawStartReward: bigint | undefined = undefined
+
   const isRngCompletionPossible = status === 'closed' && !!currentRngAuctionReward && !isSkipped
 
   return (
@@ -48,8 +51,22 @@ export const DrawRngReward = (props: DrawRngRewardProps) => {
                     </>
                   ) : (
                     <>
-                      {/* TODO: get last rng auction reward from draw manager to display here - crossed out? */}
-                      <span className='text-xl font-semibold'>?</span>
+                      {expectedDrawStartReward !== undefined ? (
+                        <>
+                          <span
+                            className={classNames('text-xl font-semibold', {
+                              'line-through': !isRngCompletionPossible
+                            })}
+                          >
+                            {formatBigIntForDisplay(expectedDrawStartReward, prizeToken.decimals, {
+                              maximumFractionDigits: 5
+                            })}
+                          </span>{' '}
+                          {prizeToken.symbol}
+                        </>
+                      ) : (
+                        <Spinner className='after:border-y-pt-purple-300' />
+                      )}
                     </>
                   )}
                 </>
