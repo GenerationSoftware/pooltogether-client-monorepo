@@ -1,7 +1,7 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
-  usePrizeDrawWinners,
-  usePrizePoolDrawAwardedEvents
+  useDrawAwardedEvents,
+  usePrizeDrawWinners
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import { formatNumberForDisplay, sToMs } from '@shared/utilities'
@@ -21,10 +21,10 @@ interface DrawPrizesProps {
 export const DrawPrizes = (props: DrawPrizesProps) => {
   const { prizePool, drawId, className } = props
 
-  const { data: drawAwardedEvents, isFetched: isFetchedDrawAwardedEvents } =
-    usePrizePoolDrawAwardedEvents(prizePool, {
-      fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
-    })
+  const { data: drawAwardedEvents, isFetched: isFetchedDrawAwardedEvents } = useDrawAwardedEvents(
+    prizePool,
+    { fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined }
+  )
 
   const numTiers = useMemo(() => {
     const drawAwardedEvent = drawAwardedEvents?.find((e) => e.args.drawId === drawId)

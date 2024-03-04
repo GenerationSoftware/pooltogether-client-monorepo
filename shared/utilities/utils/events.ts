@@ -64,13 +64,13 @@ export const getWithdrawEvents = async (
 }
 
 /**
- * Returns `RngAuctionCompleted` events
+ * Returns `DrawStarted` events from a draw manager contract
  * @param publicClient a public Viem client to query through
  * @param drawManagerAddress the address of a prize pool's draw manager to query events for
  * @param options optional settings
  * @returns
  */
-export const getRngAuctionCompletedEvents = async (
+export const getDrawStartedEvents = async (
   publicClient: PublicClient,
   drawManagerAddress: Address,
   options?: { fromBlock?: bigint; toBlock?: bigint }
@@ -83,9 +83,9 @@ export const getRngAuctionCompletedEvents = async (
         { indexed: true, internalType: 'address', name: 'recipient', type: 'address' },
         { indexed: false, internalType: 'uint24', name: 'drawId', type: 'uint24' },
         { indexed: false, internalType: 'uint32', name: 'rngRequestId', type: 'uint32' },
-        { indexed: false, internalType: 'uint64', name: 'elapsedTime', type: 'uint64' }
+        { indexed: false, internalType: 'uint48', name: 'elapsedTime', type: 'uint48' }
       ],
-      name: 'RngAuctionCompleted',
+      name: 'DrawStarted',
       type: 'event'
     },
     fromBlock: options?.fromBlock,
@@ -101,7 +101,7 @@ export const getRngAuctionCompletedEvents = async (
  * @param options optional settings
  * @returns
  */
-export const getPrizePoolDrawAwardedEvents = async (
+export const getDrawAwardedEvents = async (
   publicClient: PublicClient,
   prizePoolAddress: Address,
   options?: { fromBlock?: bigint; toBlock?: bigint }
@@ -128,13 +128,13 @@ export const getPrizePoolDrawAwardedEvents = async (
 }
 
 /**
- * Returns `DrawAwarded` events from a draw manager contract
+ * Returns `DrawFinished` events from a draw manager contract
  * @param publicClient a public Viem client to query through
  * @param drawManagerAddress the address of a prize pool's draw manager to query events for
  * @param options optional settings
  * @returns
  */
-export const getDrawManagerDrawAwardedEvents = async (
+export const getDrawFinishedEvents = async (
   publicClient: PublicClient,
   drawManagerAddress: Address,
   options?: { fromBlock?: bigint; toBlock?: bigint }
@@ -144,13 +144,14 @@ export const getDrawManagerDrawAwardedEvents = async (
     event: {
       inputs: [
         { indexed: true, internalType: 'uint24', name: 'drawId', type: 'uint24' },
+        { indexed: false, internalType: 'uint256', name: 'elapsedTime', type: 'uint256' },
         { indexed: true, internalType: 'address', name: 'startRecipient', type: 'address' },
         { indexed: false, internalType: 'uint256', name: 'startReward', type: 'uint256' },
-        { indexed: true, internalType: 'address', name: 'awardRecipient', type: 'address' },
-        { indexed: false, internalType: 'uint256', name: 'awardReward', type: 'uint256' },
+        { indexed: true, internalType: 'address', name: 'finishRecipient', type: 'address' },
+        { indexed: false, internalType: 'uint256', name: 'finishReward', type: 'uint256' },
         { indexed: false, internalType: 'uint256', name: 'remainingReserve', type: 'uint256' }
       ],
-      name: 'DrawAwarded',
+      name: 'DrawFinished',
       type: 'event'
     },
     fromBlock: options?.fromBlock,

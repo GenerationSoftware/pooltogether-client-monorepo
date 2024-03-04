@@ -15,7 +15,7 @@ import { formatUnits, Log } from 'viem'
 import { ReserveCard } from '@components/Reserve/ReserveCard'
 import { QUERY_START_BLOCK } from '@constants/config'
 import { useReserve } from '@hooks/useReserve'
-import { DrawAwardTx, RngAuctionTx, useRngTxs } from '@hooks/useRngTxs'
+import { DrawFinishTx, DrawStartTx, useRngTxs } from '@hooks/useRngTxs'
 import { LineChart } from './LineChart'
 
 interface DataPoint {
@@ -72,14 +72,14 @@ export const ReserveChart = (props: ReserveChartProps) => {
       }
 
       const validRngTxs = rngTxs.filter(
-        (txs) => txs.rngAuction.reward !== undefined && !!txs.drawAward
+        (txs) => txs.drawStart.reward !== undefined && !!txs.drawFinish
       ) as {
-        rngAuction: RngAuctionTx & { reward: bigint }
-        drawAward: DrawAwardTx
+        drawStart: DrawStartTx & { reward: bigint }
+        drawFinish: DrawFinishTx
       }[]
 
       let minBlock = 0n
-      let maxBlock = validRngTxs[0]?.drawAward.blockNumber
+      let maxBlock = validRngTxs[0]?.drawFinish.blockNumber
       let prevReserve = 0
 
       const isValidEvent = (event: Log<bigint, number, false>) => {
@@ -97,11 +97,11 @@ export const ReserveChart = (props: ReserveChartProps) => {
       })
 
       validRngTxs.forEach((txs, i) => {
-        const drawId = txs.drawAward.drawId
-        const awardedAt = txs.drawAward.timestamp
+        const drawId = txs.drawFinish.drawId
+        const awardedAt = txs.drawFinish.timestamp
         const name = `${drawId}-${awardedAt}`
 
-        const remainingReserve = formatPrizeNum(txs.drawAward.remainingReserve)
+        const remainingReserve = formatPrizeNum(txs.drawFinish.remainingReserve)
 
         // Inbound tokens
         const manual = formatPrizeNum(
@@ -109,7 +109,7 @@ export const ReserveChart = (props: ReserveChartProps) => {
         )
 
         // Outbound tokens
-        const rewards = formatPrizeNum(txs.rngAuction.reward + txs.drawAward.reward)
+        const rewards = formatPrizeNum(txs.drawStart.reward + txs.drawFinish.reward)
         const prizeBackstops = formatPrizeNum(
           prizeBackstopEvents.reduce((a, b) => a + (isValidEvent(b) ? b.args.amount : 0n), 0n)
         )
@@ -132,7 +132,7 @@ export const ReserveChart = (props: ReserveChartProps) => {
         })
 
         minBlock = maxBlock
-        maxBlock = validRngTxs[i + 1]?.drawAward.blockNumber ?? MAX_UINT_256
+        maxBlock = validRngTxs[i + 1]?.drawFinish.blockNumber ?? MAX_UINT_256
         prevReserve = reserve
       })
 

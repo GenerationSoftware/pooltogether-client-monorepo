@@ -20,8 +20,8 @@ export const DrawAwardReward = (props: DrawAwardRewardProps) => {
   const { status, isSkipped } = useDrawStatus(prizePool, drawId)
 
   const { data: allRngTxs, isFetched: isFetchedAllRngTxs } = useRngTxs(prizePool)
-  const rngTxs = allRngTxs?.find((txs) => txs.rngAuction.drawId === drawId)
-  const drawAwardTx = rngTxs?.drawAward
+  const rngTxs = allRngTxs?.find((txs) => txs.drawStart.drawId === drawId)
+  const drawFinishTx = rngTxs?.drawFinish
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
@@ -39,10 +39,10 @@ export const DrawAwardReward = (props: DrawAwardRewardProps) => {
         {isFetchedAllRngTxs && !!prizeToken ? (
           <>
             <span>
-              {!!drawAwardTx ? (
+              {!!drawFinishTx ? (
                 <>
                   <span className='text-xl font-semibold'>
-                    {formatBigIntForDisplay(drawAwardTx.reward, prizeToken.decimals, {
+                    {formatBigIntForDisplay(drawFinishTx.reward, prizeToken.decimals, {
                       maximumFractionDigits: 5
                     })}
                   </span>{' '}
@@ -61,12 +61,12 @@ export const DrawAwardReward = (props: DrawAwardRewardProps) => {
                 <span>-</span>
               )}
             </span>
-            {!!drawAwardTx ? (
+            {!!drawFinishTx ? (
               <ExternalLink
-                href={getBlockExplorerUrl(prizePool.chainId, drawAwardTx.hash, 'tx')}
+                href={getBlockExplorerUrl(prizePool.chainId, drawFinishTx.hash, 'tx')}
                 className='text-blue-400 hover:text-blue-300 transition'
               >
-                {shorten(drawAwardTx.hash, { short: true })}
+                {shorten(drawFinishTx.hash, { short: true })}
               </ExternalLink>
             ) : (
               isAwardPossible && <span>Not Yet Awarded</span>

@@ -27,14 +27,14 @@ export * from './blockchain/useTxReceipts'
 /**
  * Event Hooks
  */
-export * from './events/useDrawManagerDrawAwardedEvents'
+export * from './events/useDrawAwardedEvents'
+export * from './events/useDrawFinishedEvents'
+export * from './events/useDrawStartedEvents'
 export * from './events/useLiquidationEvents'
 export * from './events/useManualContributionEvents'
 export * from './events/usePrizeBackstopEvents'
-export * from './events/usePrizePoolDrawAwardedEvents'
 export * from './events/usePromotionCreatedEvents'
 export * from './events/usePromotionRewardsClaimedEvents'
-export * from './events/useRngAuctionCompletedEvents'
 export * from './events/useTransferEvents'
 
 /**

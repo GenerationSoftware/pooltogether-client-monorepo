@@ -17,7 +17,7 @@ import { currentTimestampAtom } from 'src/atoms'
 import { Address, formatUnits } from 'viem'
 import { BurnCard } from '@components/Burn/BurnCard'
 import { BURN_ADDRESSES, QUERY_START_BLOCK } from '@constants/config'
-import { DrawAwardTx, RngAuctionTx, useRngTxs } from '@hooks/useRngTxs'
+import { DrawFinishTx, DrawStartTx, useRngTxs } from '@hooks/useRngTxs'
 import { AreaChart } from './AreaChart'
 
 interface DataPoint {
@@ -56,14 +56,14 @@ export const BurnChart = (props: BurnChartProps) => {
         return parseFloat(formatUnits(val, burnToken.decimals))
       }
 
-      const validRngTxs = rngTxs.filter((txs) => !!txs.drawAward) as {
-        rngAuction: RngAuctionTx
-        drawAward: DrawAwardTx
+      const validRngTxs = rngTxs.filter((txs) => !!txs.drawFinish) as {
+        drawStart: DrawStartTx
+        drawFinish: DrawFinishTx
       }[]
 
-      const firstRngBlockNumber = validRngTxs[0]?.drawAward.blockNumber ?? MAX_UINT_256
+      const firstRngBlockNumber = validRngTxs[0]?.drawFinish.blockNumber ?? MAX_UINT_256
       const lastRngBlockNumber =
-        validRngTxs[validRngTxs.length - 1]?.drawAward.blockNumber ?? MAX_UINT_256
+        validRngTxs[validRngTxs.length - 1]?.drawFinish.blockNumber ?? MAX_UINT_256
 
       let dead = { total: 0, change: 0 }
       let other = { total: 0, change: 0 }
@@ -98,10 +98,10 @@ export const BurnChart = (props: BurnChartProps) => {
       updateBurnAmounts(`Start-${firstDrawOpenedAt}`, 0n, firstRngBlockNumber)
 
       validRngTxs.forEach((txs, i) => {
-        const drawId = txs.drawAward.drawId
-        const awardedAt = txs.drawAward.timestamp
-        const minBlock = validRngTxs[i].drawAward.blockNumber
-        const maxBlock = validRngTxs[i + 1]?.drawAward.blockNumber ?? 0n
+        const drawId = txs.drawFinish.drawId
+        const awardedAt = txs.drawFinish.timestamp
+        const minBlock = validRngTxs[i].drawFinish.blockNumber
+        const maxBlock = validRngTxs[i + 1]?.drawFinish.blockNumber ?? 0n
 
         updateBurnAmounts(`${drawId}-${awardedAt}`, minBlock, maxBlock)
       })

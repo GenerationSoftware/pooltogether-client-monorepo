@@ -1,24 +1,25 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
   useBlocks,
-  useDrawManagerDrawAwardedEvents,
-  usePrizePoolDrawAwardedEvents,
-  useRngAuctionCompletedEvents
+  useDrawAwardedEvents,
+  useDrawFinishedEvents,
+  useDrawStartedEvents
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { QUERY_START_BLOCK } from '@constants/config'
 
-export interface RngAuctionTx {
+export interface DrawStartTx {
   drawId: number
   reward?: bigint
   rewardRecipient: Address
+  elapsedTime: number
   hash: `0x${string}`
   blockNumber: bigint
   timestamp?: number
 }
 
-export interface DrawAwardTx {
+export interface DrawFinishTx {
   drawId: number
   reward: bigint
   rewardRecipient: Address
@@ -26,6 +27,7 @@ export interface DrawAwardTx {
   remainingReserve: bigint
   lastNumTiers: number
   numTiers: number
+  elapsedTime: number
   hash: `0x${string}`
   blockNumber: bigint
   timestamp?: number
@@ -35,30 +37,32 @@ export const useRngTxs = (prizePool: PrizePool) => {
   const fromBlock = !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
 
   const {
-    data: rngAuctionCompletedEvents,
-    isFetched: isFetchedRngAuctionCompletedEvents,
-    refetch: refetchRngAuctionCompletedEvents
-  } = useRngAuctionCompletedEvents(prizePool, { fromBlock })
+    data: drawStartedEvents,
+    isFetched: isFetchedDrawStartedEvents,
+    refetch: refetchDrawStartedEvents
+  } = useDrawStartedEvents(prizePool, { fromBlock })
   const {
-    data: prizePoolDrawAwardedEvents,
-    isFetched: isFetchedPrizePoolDrawAwardedEvents,
-    refetch: refetchPrizePoolDrawAwardedEvents
-  } = usePrizePoolDrawAwardedEvents(prizePool, { fromBlock })
+    data: drawFinishedEvents,
+    isFetched: isFetchedDrawFinishedEvents,
+    refetch: refetchDrawFinishedEvents
+  } = useDrawFinishedEvents(prizePool, { fromBlock })
   const {
-    data: drawManagerDrawAwardedEvents,
-    isFetched: isFetchedDrawManagerDrawAwardedEvents,
-    refetch: refetchDrawManagerDrawAwardedEvents
-  } = useDrawManagerDrawAwardedEvents(prizePool, { fromBlock })
+    data: drawAwardedEvents,
+    isFetched: isFetchedDrawAwardedEvents,
+    refetch: refetchDrawAwardedEvents
+  } = useDrawAwardedEvents(prizePool, { fromBlock })
 
-  const rngAuctionCompletedBlockNumbers = new Set<bigint>(
-    rngAuctionCompletedEvents?.map((e) => e.blockNumber) ?? []
+  const drawStartedBlockNumbers = new Set<bigint>(
+    drawStartedEvents?.map((e) => e.blockNumber) ?? []
   )
   const drawAwardedBlockNumbers = new Set<bigint>(
-    prizePoolDrawAwardedEvents?.map((e) => e.blockNumber) ?? []
+    drawAwardedEvents?.map((e) => e.blockNumber) ?? []
   )
 
-  const { data: rngAuctionCompletedBlocks, isFetched: isFetchedRngAuctionCompletedBlocks } =
-    useBlocks(prizePool?.chainId, [...rngAuctionCompletedBlockNumbers])
+  const { data: drawStartedBlocks, isFetched: isFetchedDrawStartedBlocks } = useBlocks(
+    prizePool?.chainId,
+    [...drawStartedBlockNumbers]
+  )
   const { data: drawAwardedBlocks, isFetched: isFetchedDrawAwardedBlocks } = useBlocks(
     prizePool?.chainId,
     [...drawAwardedBlockNumbers]
@@ -66,88 +70,84 @@ export const useRngTxs = (prizePool: PrizePool) => {
 
   const data = useMemo(() => {
     if (
-      !!rngAuctionCompletedEvents &&
-      !!prizePoolDrawAwardedEvents &&
-      !!drawManagerDrawAwardedEvents &&
-      !!rngAuctionCompletedBlocks &&
+      !!drawStartedEvents &&
+      !!drawFinishedEvents &&
+      !!drawAwardedEvents &&
+      !!drawStartedBlocks &&
       !!drawAwardedBlocks
     ) {
-      const rngTxs = rngAuctionCompletedEvents
-        .map((rngAuctionCompletedEvent) => {
-          const drawId = rngAuctionCompletedEvent.args.drawId
+      const rngTxs = drawStartedEvents
+        .map((drawStartedEvent) => {
+          const drawId = drawStartedEvent.args.drawId
 
-          const rngAuctionCompletedBlock = rngAuctionCompletedBlocks.find(
-            (block) => block.number === rngAuctionCompletedEvent.blockNumber
+          const drawStartedBlock = drawStartedBlocks.find(
+            (block) => block.number === drawStartedEvent.blockNumber
           )
 
-          const rngAuction: RngAuctionTx = {
+          const drawStart: DrawStartTx = {
             drawId,
-            rewardRecipient: rngAuctionCompletedEvent.args.recipient,
-            hash: rngAuctionCompletedEvent.transactionHash,
-            blockNumber: rngAuctionCompletedEvent.blockNumber,
-            timestamp: !!rngAuctionCompletedBlock
-              ? Number(rngAuctionCompletedBlock.timestamp)
-              : undefined
+            rewardRecipient: drawStartedEvent.args.recipient,
+            elapsedTime: drawStartedEvent.args.elapsedTime,
+            hash: drawStartedEvent.transactionHash,
+            blockNumber: drawStartedEvent.blockNumber,
+            timestamp: !!drawStartedBlock ? Number(drawStartedBlock.timestamp) : undefined
           }
 
-          let drawAward: DrawAwardTx | undefined = undefined
+          let drawFinish: DrawFinishTx | undefined = undefined
 
-          const prizePoolDrawAwardedEvent = prizePoolDrawAwardedEvents.find(
-            (e) => e.args.drawId === drawId
-          )
+          const drawAwardedEvent = drawAwardedEvents.find((e) => e.args.drawId === drawId)
 
-          if (!!prizePoolDrawAwardedEvent) {
-            const drawManagerDrawAwardedEvent = drawManagerDrawAwardedEvents.find(
-              (e) => e.args.drawId === drawId
-            )
+          if (!!drawAwardedEvent) {
+            const drawFinishedEvent = drawFinishedEvents.find((e) => e.args.drawId === drawId)
 
-            if (!!drawManagerDrawAwardedEvent) {
+            if (!!drawFinishedEvent) {
               const drawAwardedBlock = drawAwardedBlocks.find(
-                (block) => block.number === prizePoolDrawAwardedEvent.blockNumber
+                (block) => block.number === drawAwardedEvent.blockNumber
               )
 
-              drawAward = {
+              drawFinish = {
                 drawId,
-                reward: drawManagerDrawAwardedEvent.args.awardReward,
-                rewardRecipient: drawManagerDrawAwardedEvent.args.awardRecipient,
-                reserve: prizePoolDrawAwardedEvent.args.reserve,
-                remainingReserve: drawManagerDrawAwardedEvent.args.remainingReserve,
-                lastNumTiers: prizePoolDrawAwardedEvent.args.lastNumTiers,
-                numTiers: prizePoolDrawAwardedEvent.args.numTiers,
-                hash: prizePoolDrawAwardedEvent.transactionHash,
-                blockNumber: prizePoolDrawAwardedEvent.blockNumber,
+                reward: drawFinishedEvent.args.finishReward,
+                rewardRecipient: drawFinishedEvent.args.finishRecipient,
+                reserve: drawAwardedEvent.args.reserve,
+                remainingReserve: drawFinishedEvent.args.remainingReserve,
+                lastNumTiers: drawAwardedEvent.args.lastNumTiers,
+                numTiers: drawAwardedEvent.args.numTiers,
+                elapsedTime: Number(drawFinishedEvent.args.elapsedTime), // TODO: remove number cast once contract is fixed
+                hash: drawAwardedEvent.transactionHash,
+                blockNumber: drawAwardedEvent.blockNumber,
                 timestamp: !!drawAwardedBlock ? Number(drawAwardedBlock.timestamp) : undefined
               }
 
-              rngAuction.reward = drawManagerDrawAwardedEvent.args.startReward
+              drawStart.reward = drawFinishedEvent.args.startReward
             }
           }
 
-          return { rngAuction, drawAward }
+          return { drawStart, drawFinish }
         })
         .filter((tx) => !!tx)
 
       return rngTxs
     }
   }, [
-    rngAuctionCompletedEvents,
-    prizePoolDrawAwardedEvents,
-    drawManagerDrawAwardedEvents,
-    rngAuctionCompletedBlocks,
+    drawStartedEvents,
+    drawFinishedEvents,
+    drawAwardedEvents,
+    drawStartedBlocks,
     drawAwardedBlocks
   ])
 
   const isFetched =
-    isFetchedRngAuctionCompletedEvents &&
-    isFetchedPrizePoolDrawAwardedEvents &&
-    isFetchedDrawManagerDrawAwardedEvents &&
-    isFetchedRngAuctionCompletedBlocks &&
+    isFetchedDrawStartedEvents &&
+    isFetchedDrawFinishedEvents &&
+    isFetchedDrawAwardedEvents &&
+    isFetchedDrawStartedBlocks &&
     isFetchedDrawAwardedBlocks
 
   const refetch = () => {
-    refetchRngAuctionCompletedEvents()
-    refetchPrizePoolDrawAwardedEvents()
-    refetchDrawManagerDrawAwardedEvents()
+    refetchDrawStartedEvents()
+    refetchDrawFinishedEvents()
+    refetchDrawAwardedEvents()
   }
 
   return { data, isFetched, refetch }

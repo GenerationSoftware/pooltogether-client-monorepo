@@ -71,14 +71,14 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 
 ### Event Hooks
 
-- `useDrawManagerDrawAwardedEvents`
+- `useDrawAwardedEvents`
+- `useDrawFinishedEvents`
+- `useDrawStartedEvents`
 - `useLiquidationEvents`
 - `useManualContributionEvents`
 - `usePrizeBackstopEvents`
-- `usePrizePoolDrawAwardedEvents`
 - `usePromotionCreatedEvents`
 - `usePromotionRewardsClaimedEvents`
-- `useRngAuctionCompletedEvents`
 - `useTransferEvents`
 
 ### Prize Pool Hooks

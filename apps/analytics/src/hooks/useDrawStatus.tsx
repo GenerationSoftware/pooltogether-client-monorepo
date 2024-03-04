@@ -27,12 +27,12 @@ export const useDrawStatus = (prizePool: PrizePool, drawId: number) => {
 
   const data = useMemo(() => {
     if (isFetched && !!firstDrawOpenedAt && !!drawPeriod && !!drawAuctionDuration && !!allRngTxs) {
-      const rngTxs = allRngTxs.find((txs) => txs.rngAuction.drawId === drawId)
+      const rngTxs = allRngTxs.find((txs) => txs.drawStart.drawId === drawId)
 
       const openedAt = firstDrawOpenedAt + drawPeriod * (drawId - 1)
       const closedAt = openedAt + drawPeriod
-      const rngCompletedAt = rngTxs?.rngAuction.timestamp
-      const awardedAt = rngTxs?.drawAward?.timestamp
+      const rngCompletedAt = rngTxs?.drawStart.timestamp
+      const awardedAt = rngTxs?.drawFinish?.timestamp
       const finalizedAt = closedAt + drawPeriod
 
       const currentTime = getSecondsSinceEpoch()

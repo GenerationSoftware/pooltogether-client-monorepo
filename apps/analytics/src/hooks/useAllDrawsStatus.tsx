@@ -39,12 +39,12 @@ export const useAllDrawsStatus = (prizePool: PrizePool, drawIds: number[]) => {
       const currentTime = getSecondsSinceEpoch()
 
       drawIds.forEach((drawId) => {
-        const rngTxs = allRngTxs.find((txs) => txs.rngAuction.drawId === drawId)
+        const rngTxs = allRngTxs.find((txs) => txs.drawStart.drawId === drawId)
 
         const openedAt = firstDrawOpenedAt + drawPeriod * (drawId - 1)
         const closedAt = openedAt + drawPeriod
-        const rngCompletedAt = rngTxs?.rngAuction.timestamp
-        const awardedAt = rngTxs?.drawAward?.timestamp
+        const rngCompletedAt = rngTxs?.drawStart.timestamp
+        const awardedAt = rngTxs?.drawFinish?.timestamp
         const finalizedAt = closedAt + drawPeriod
 
         const isClosed = currentTime >= closedAt
