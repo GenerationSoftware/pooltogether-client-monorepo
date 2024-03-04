@@ -48,27 +48,11 @@ export const AccountVaultBalance = (props: AccountVaultBalanceProps) => {
   }
 
   if (tokenBalance.amount > 0n) {
-    // const shiftedAmount = parseFloat(formatUnits(tokenBalance.amount, tokenBalance.decimals))
+    const shiftedAmount = parseFloat(formatUnits(tokenBalance.amount, tokenBalance.decimals))
 
-    // return (
-    //   <TokenValueAndAmount
-    //     token={tokenBalance}
-    //     className={className}
-    //     valueClassName='text-sm md:text-base'
-    //     amountClassName='text-xs md:text-sm'
-    //     valueOptions={{ hideZeroes: true }}
-    //     amountOptions={shiftedAmount > 1e3 ? { hideZeroes: true } : { maximumFractionDigits: 2 }}
-    //   />
-    // )
-
-    // TODO: revert back to using token balances once exchange rate issue is fixed
-    const _tokenBalance = !!shareBalance
-      ? { ...tokenBalance, amount: shareBalance.amount }
-      : tokenBalance
-    const shiftedAmount = parseFloat(formatUnits(_tokenBalance.amount, _tokenBalance.decimals))
     return (
       <TokenValueAndAmount
-        token={_tokenBalance}
+        token={tokenBalance}
         className={className}
         valueClassName='text-sm md:text-base'
         amountClassName='text-xs md:text-sm'
