@@ -19,7 +19,7 @@ export const useCurrentDrawAwardReward = (
         return await publicClient.readContract({
           address: drawManagerAddress,
           abi: drawManagerABI,
-          functionName: 'awardDrawFee'
+          functionName: 'finishDrawReward'
         })
       }
     },

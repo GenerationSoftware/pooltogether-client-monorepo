@@ -172,13 +172,11 @@ export class PrizePool {
 
     const drawManagerAddress = await this.getDrawManagerAddress()
 
-    const drawAuctionDurationInSeconds = Number(
-      await this.publicClient.readContract({
-        address: drawManagerAddress,
-        abi: drawManagerABI,
-        functionName: 'auctionDuration'
-      })
-    )
+    const drawAuctionDurationInSeconds = await this.publicClient.readContract({
+      address: drawManagerAddress,
+      abi: drawManagerABI,
+      functionName: 'auctionDuration'
+    })
 
     this.drawAuctionDurationInSeconds = drawAuctionDurationInSeconds
     return drawAuctionDurationInSeconds

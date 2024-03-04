@@ -42,7 +42,6 @@ export const useSendDeployVaultTransaction = (
     claimer,
     feeRecipient,
     feePercentage,
-    yieldBuffer,
     owner
   } = vaultDeployInfo
 
@@ -62,7 +61,6 @@ export const useSendDeployVaultTransaction = (
     !!claimer &&
     !!feeRecipient &&
     feePercentage !== undefined &&
-    yieldBuffer !== undefined &&
     !!owner &&
     !!vaultFactoryAddress &&
     chain?.id === chainId
@@ -80,7 +78,6 @@ export const useSendDeployVaultTransaction = (
       claimer,
       feeRecipient,
       feePercentage,
-      yieldBuffer,
       owner
     ],
     query: { enabled }

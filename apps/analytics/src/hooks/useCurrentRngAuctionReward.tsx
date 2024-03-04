@@ -19,7 +19,7 @@ export const useCurrentRngAuctionReward = (
         return await publicClient.readContract({
           address: drawManagerAddress,
           abi: drawManagerABI,
-          functionName: 'startDrawFee'
+          functionName: 'startDrawReward'
         })
       }
     },
