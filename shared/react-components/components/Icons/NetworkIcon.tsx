@@ -170,7 +170,6 @@ const icons = {
   [NETWORK.mumbai]: { svgIcon: PolygonIcon, iconBgColor: '#9f71ec' },
   [NETWORK.optimism]: { svgIcon: OptimismIcon, iconBgColor: '#ff5a57' },
   [NETWORK.optimism_sepolia]: { svgIcon: OptimismIcon, iconBgColor: '#ff5a57' },
-  [NETWORK.optimism_goerli]: { svgIcon: OptimismIcon, iconBgColor: '#ff5a57' },
   [NETWORK.arbitrum]: { svgIcon: ArbitrumIcon, iconBgColor: '#96bedc' },
   [NETWORK.arbitrum_sepolia]: { svgIcon: ArbitrumIcon, iconBgColor: '#96bedc' }
 }

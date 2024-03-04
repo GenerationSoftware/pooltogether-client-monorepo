@@ -30,7 +30,14 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599': tokenLogoUrls.wbtc,
     '0x5f98805a4e8be255a32880fdec7f6728c6568ba0': tokenLogoUrls.lusd
   },
-  [NETWORK.sepolia]: {},
+  [NETWORK.sepolia]: {
+    '0x196eef5231bc8806ddfdbaaf7b5ac206bd316f45': tokenLogoUrls.pool,
+    '0xd09eb8de85d547cfbf09f972edcc6f871b192b70': tokenLogoUrls.usdc,
+    '0x50088bf4dba58145c0b873643d285626f87837c3': tokenLogoUrls.dai,
+    '0x2b8919310d8e2576e19e22794a6d3ec961cd812a': tokenLogoUrls.gusd,
+    '0x00a66c161e4c7a9daefd3df8cbbb08a3de5b5f73': tokenLogoUrls.weth,
+    '0x0364994c88f97a18740ec791a336b2d63407f8d5': tokenLogoUrls.wbtc
+  },
   [NETWORK.bsc]: {},
   [NETWORK.bsc_testnet]: {},
   [NETWORK.xdai]: {},
@@ -54,13 +61,6 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x4200000000000000000000000000000000000042': tokenLogoUrls.op
   },
   [NETWORK.optimism_sepolia]: {},
-  [NETWORK.optimism_goerli]: {
-    '0x3e5bc94a341481f742f5f573d341fa2540bc0992': tokenLogoUrls.usdc,
-    '0xf6cff71208ffcab13223b31b036f2801d5de6d17': tokenLogoUrls.dai,
-    '0xabddb2c18a5d02f26a5ad5f4a361e4814dbe2175': tokenLogoUrls.gusd,
-    '0x0ba5e0722797dcea8cec409a707ce495c33fb23d': tokenLogoUrls.weth,
-    '0x3fa21c64666d1245dbc1836ded2e4b47979c6bee': tokenLogoUrls.wbtc
-  },
   [NETWORK.avalanche]: {
     '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f': tokenLogoUrls.wbtc
   },

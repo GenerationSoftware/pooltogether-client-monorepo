@@ -1,13 +1,13 @@
 import { NETWORK } from '@shared/utilities'
 import { Address } from 'viem'
-import { mainnet, optimism, optimismGoerli } from 'viem/chains'
+import { mainnet, optimism, sepolia } from 'viem/chains'
 
 /**
  * Supported networks
  */
 export const SUPPORTED_NETWORKS = {
   mainnets: [NETWORK.mainnet, NETWORK.optimism],
-  testnets: [NETWORK.optimism_goerli]
+  testnets: [NETWORK.sepolia]
 } as const
 
 /**
@@ -16,7 +16,7 @@ export const SUPPORTED_NETWORKS = {
 export const WAGMI_CHAINS = {
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism,
-  [NETWORK.optimism_goerli]: optimismGoerli
+  [NETWORK.sepolia]: sepolia
 } as const
 
 /**
@@ -25,22 +25,21 @@ export const WAGMI_CHAINS = {
 export const RPC_URLS = {
   [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
-  [NETWORK.optimism_goerli]: process.env.NEXT_PUBLIC_OPTIMISM_GOERLI_RPC_URL
+  [NETWORK.sepolia]: process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL
 } as const
 
 /**
  * Queries' start blocks
  */
 export const QUERY_START_BLOCK: { [chainId: number]: bigint } = {
-  [NETWORK.optimism]: 108_927_000n, // TODO: update once prizepool deployed to mainnet
-  [NETWORK.optimism_goerli]: 21_785_000n
+  [NETWORK.sepolia]: 5_397_600n
 }
 
 /**
  * Draw results URL
  */
 export const DRAW_RESULTS_URL: { [chainId: number]: string } = {
-  [NETWORK.optimism_goerli]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results-testnet/main/prizes/${NETWORK.optimism_goerli}`
+  // [NETWORK.sepolia]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results-testnet/main/prizes/${NETWORK.sepolia}` // TODO: uncomment once actions are setup
 }
 
 /**

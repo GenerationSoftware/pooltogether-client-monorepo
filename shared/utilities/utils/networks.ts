@@ -31,9 +31,6 @@ export const getNiceNetworkNameByChainId = (chainId: number): string => {
     case NETWORK.optimism_sepolia: {
       return 'Optimism Sepolia'
     }
-    case NETWORK.optimism_goerli: {
-      return 'Optimism Goerli'
-    }
     case NETWORK.arbitrum_sepolia: {
       return 'Arbitrum Sepolia'
     }
@@ -66,7 +63,6 @@ export const isTestnet = (chainId: number) => {
     [NETWORK.mumbai]: true,
     [NETWORK.optimism]: false,
     [NETWORK.optimism_sepolia]: true,
-    [NETWORK.optimism_goerli]: true,
     [NETWORK.avalanche]: false,
     [NETWORK.fuji]: true,
     [NETWORK.celo]: false,
