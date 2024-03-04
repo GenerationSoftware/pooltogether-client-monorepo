@@ -80,8 +80,8 @@ export const vaultABI = [
       { internalType: 'address', name: '_winner', type: 'address' },
       { internalType: 'uint8', name: '_tier', type: 'uint8' },
       { internalType: 'uint32', name: '_prizeIndex', type: 'uint32' },
-      { internalType: 'uint96', name: '_fee', type: 'uint96' },
-      { internalType: 'address', name: '_feeRecipient', type: 'address' }
+      { internalType: 'uint96', name: '_reward', type: 'uint96' },
+      { internalType: 'address', name: '_rewardRecipient', type: 'address' }
     ],
     name: 'claimPrize',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
@@ -113,7 +113,7 @@ export const vaultABI = [
     inputs: [{ internalType: 'uint256', name: '_assets', type: 'uint256' }],
     name: 'convertToShares',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-    stateMutability: 'pure',
+    stateMutability: 'view',
     type: 'function'
   },
   {
@@ -766,16 +766,6 @@ export const vaultABI = [
   },
   { inputs: [], name: 'MintZeroShares', type: 'error' },
   { inputs: [], name: 'OwnerZeroAddress', type: 'error' },
-  {
-    inputs: [
-      { internalType: 'address', name: 'owner', type: 'address' },
-      { internalType: 'address', name: 'spender', type: 'address' },
-      { internalType: 'uint256', name: 'amount', type: 'uint256' },
-      { internalType: 'uint256', name: 'allowance', type: 'uint256' }
-    ],
-    name: 'PermitAllowanceNotSet',
-    type: 'error'
-  },
   {
     inputs: [
       { internalType: 'address', name: 'caller', type: 'address' },

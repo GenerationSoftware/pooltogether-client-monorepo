@@ -1,45 +1,21 @@
 export const drawManagerABI = [
   {
-    inputs: [
-      { internalType: 'uint256', name: '_timestamp', type: 'uint256' },
-      { internalType: 'uint256', name: '_drawClosedAt', type: 'uint256' }
-    ],
-    name: '_elapsedTimeSinceDrawClosed',
-    outputs: [{ internalType: 'uint64', name: '', type: 'uint64' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
     inputs: [],
     name: 'auctionDuration',
-    outputs: [{ internalType: 'uint64', name: '', type: 'uint64' }],
+    outputs: [{ internalType: 'uint48', name: '', type: 'uint48' }],
     stateMutability: 'view',
     type: 'function'
   },
   {
     inputs: [],
     name: 'auctionTargetTime',
-    outputs: [{ internalType: 'uint64', name: '', type: 'uint64' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [{ internalType: 'address', name: '_rewardRecipient', type: 'address' }],
-    name: 'awardDraw',
-    outputs: [{ internalType: 'uint24', name: '', type: 'uint24' }],
-    stateMutability: 'nonpayable',
-    type: 'function'
-  },
-  {
-    inputs: [],
-    name: 'awardDrawFee',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    outputs: [{ internalType: 'uint48', name: '', type: 'uint48' }],
     stateMutability: 'view',
     type: 'function'
   },
   {
     inputs: [],
-    name: 'canAwardDraw',
+    name: 'canFinishDraw',
     outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
     stateMutability: 'view',
     type: 'function'
@@ -52,15 +28,70 @@ export const drawManagerABI = [
     type: 'function'
   },
   {
+    inputs: [{ internalType: 'uint48', name: '_elapsedTime', type: 'uint48' }],
+    name: 'computeFinishDrawRewardFraction',
+    outputs: [{ internalType: 'UD2x18', name: '', type: 'uint64' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      { internalType: 'UD2x18[]', name: '_rewardFractions', type: 'uint64[]' },
+      { internalType: 'uint256', name: '_reserve', type: 'uint256' }
+    ],
+    name: 'computeRewards',
+    outputs: [{ internalType: 'uint256[]', name: 'rewardAmounts', type: 'uint256[]' }],
+    stateMutability: 'pure',
+    type: 'function'
+  },
+  {
+    inputs: [
+      { internalType: 'uint48', name: '_startDrawElapsedTime', type: 'uint48' },
+      { internalType: 'uint48', name: '_finishDrawElapsedTime', type: 'uint48' },
+      { internalType: 'uint256', name: '_totalReserve', type: 'uint256' }
+    ],
+    name: 'computeRewards',
+    outputs: [
+      { internalType: 'uint256[]', name: 'rewards', type: 'uint256[]' },
+      { internalType: 'uint256', name: 'remainingReserve', type: 'uint256' }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      { internalType: 'uint48', name: '_startDrawElapsedTime', type: 'uint48' },
+      { internalType: 'uint256', name: '_totalReserve', type: 'uint256' }
+    ],
+    name: 'computeStartDrawReward',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [{ internalType: 'uint48', name: '_elapsedTime', type: 'uint48' }],
+    name: 'computeStartDrawRewardFraction',
+    outputs: [{ internalType: 'UD2x18', name: '', type: 'uint64' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [{ internalType: 'address', name: '_rewardRecipient', type: 'address' }],
+    name: 'finishDraw',
+    outputs: [{ internalType: 'uint24', name: '', type: 'uint24' }],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
     inputs: [],
-    name: 'elapsedTimeSinceDrawClosed',
-    outputs: [{ internalType: 'uint64', name: '', type: 'uint64' }],
+    name: 'finishDrawReward',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function'
   },
   {
     inputs: [],
-    name: 'getLastAuction',
+    name: 'getLastStartDrawAuction',
     outputs: [
       {
         components: [
@@ -69,7 +100,7 @@ export const drawManagerABI = [
           { internalType: 'uint24', name: 'drawId', type: 'uint24' },
           { internalType: 'uint32', name: 'rngRequestId', type: 'uint32' }
         ],
-        internalType: 'struct StartRngRequestAuction',
+        internalType: 'struct StartDrawAuction',
         name: '',
         type: 'tuple'
       }
@@ -79,14 +110,14 @@ export const drawManagerABI = [
   },
   {
     inputs: [],
-    name: 'lastAwardDrawFraction',
+    name: 'lastFinishDrawFraction',
     outputs: [{ internalType: 'UD2x18', name: '', type: 'uint64' }],
     stateMutability: 'view',
     type: 'function'
   },
   {
     inputs: [],
-    name: 'lastStartRngRequestFraction',
+    name: 'lastStartDrawFraction',
     outputs: [{ internalType: 'UD2x18', name: '', type: 'uint64' }],
     stateMutability: 'view',
     type: 'function'
@@ -125,13 +156,13 @@ export const drawManagerABI = [
       { internalType: 'uint32', name: '_rngRequestId', type: 'uint32' }
     ],
     name: 'startDraw',
-    outputs: [],
+    outputs: [{ internalType: 'uint24', name: '', type: 'uint24' }],
     stateMutability: 'nonpayable',
     type: 'function'
   },
   {
     inputs: [],
-    name: 'startDrawFee',
+    name: 'startDrawReward',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function'
@@ -140,13 +171,14 @@ export const drawManagerABI = [
     anonymous: false,
     inputs: [
       { indexed: true, internalType: 'uint24', name: 'drawId', type: 'uint24' },
+      { indexed: false, internalType: 'uint256', name: 'elapsedTime', type: 'uint256' },
       { indexed: true, internalType: 'address', name: 'startRecipient', type: 'address' },
       { indexed: false, internalType: 'uint256', name: 'startReward', type: 'uint256' },
-      { indexed: true, internalType: 'address', name: 'awardRecipient', type: 'address' },
-      { indexed: false, internalType: 'uint256', name: 'awardReward', type: 'uint256' },
+      { indexed: true, internalType: 'address', name: 'finishRecipient', type: 'address' },
+      { indexed: false, internalType: 'uint256', name: 'finishReward', type: 'uint256' },
       { indexed: false, internalType: 'uint256', name: 'remainingReserve', type: 'uint256' }
     ],
-    name: 'DrawAwarded',
+    name: 'DrawFinished',
     type: 'event'
   },
   {
@@ -156,27 +188,28 @@ export const drawManagerABI = [
       { indexed: true, internalType: 'address', name: 'recipient', type: 'address' },
       { indexed: false, internalType: 'uint24', name: 'drawId', type: 'uint24' },
       { indexed: false, internalType: 'uint32', name: 'rngRequestId', type: 'uint32' },
-      { indexed: false, internalType: 'uint64', name: 'elapsedTime', type: 'uint64' }
+      { indexed: false, internalType: 'uint48', name: 'elapsedTime', type: 'uint48' }
     ],
-    name: 'RngAuctionCompleted',
+    name: 'DrawStarted',
     type: 'event'
   },
+  { inputs: [], name: 'AlreadyStartedDraw', type: 'error' },
   {
-    inputs: [{ internalType: 'uint64', name: 'auctionDuration', type: 'uint64' }],
+    inputs: [{ internalType: 'uint48', name: 'auctionDuration', type: 'uint48' }],
     name: 'AuctionDurationGTDrawPeriodSeconds',
     type: 'error'
   },
   { inputs: [], name: 'AuctionExpired', type: 'error' },
   {
     inputs: [
-      { internalType: 'uint64', name: 'auctionTargetTime', type: 'uint64' },
-      { internalType: 'uint64', name: 'auctionDuration', type: 'uint64' }
+      { internalType: 'uint48', name: 'auctionTargetTime', type: 'uint48' },
+      { internalType: 'uint48', name: 'auctionDuration', type: 'uint48' }
     ],
     name: 'AuctionTargetTimeExceedsDuration',
     type: 'error'
   },
-  { inputs: [], name: 'CannotStartRngRequest', type: 'error' },
-  { inputs: [], name: 'DrawHasExpired', type: 'error' },
+  { inputs: [], name: 'DrawHasFinalized', type: 'error' },
+  { inputs: [], name: 'DrawHasNotClosed', type: 'error' },
   {
     inputs: [
       { internalType: 'uint256', name: 'x', type: 'uint256' },
@@ -205,7 +238,6 @@ export const drawManagerABI = [
     type: 'error'
   },
   { inputs: [], name: 'RewardRecipientIsZero', type: 'error' },
-  { inputs: [], name: 'RewardRecipientIsZeroAddress', type: 'error' },
   { inputs: [], name: 'RngRequestNotComplete', type: 'error' },
   { inputs: [], name: 'RngRequestNotInSameBlock', type: 'error' },
   { inputs: [], name: 'TargetRewardFractionGTOne', type: 'error' }
