@@ -17,7 +17,7 @@ import {
   xdefiWallet,
   zerionWallet
 } from '@rainbow-me/rainbowkit/wallets'
-import { TokenWithLogo, VaultInfo } from '@shared/types'
+import { TokenWithLogo } from '@shared/types'
 import { NETWORK } from '@shared/utilities'
 import { Address } from 'viem'
 import { arbitrum, avalanche, celo, mainnet, optimism, polygon } from 'viem/chains'
@@ -80,6 +80,7 @@ export const RPC_URLS = {
   [NETWORK.celo]: process.env.NEXT_PUBLIC_CELO_RPC_URL
 } as const
 
+// TODO: update addresses to toucan deployment
 /**
  * Migration Destinations
  */
@@ -91,8 +92,9 @@ export const MIGRATION_DESTINATIONS = {
 /**
  * V5 Vault Tags
  */
-export type V5_TAG = 'beta' | 'replaced' | 'old-prize-pool'
+export type V5_TAG = 'beta' | 'canary' | 'replaced'
 
+// TODO: add all current canary deployment vault addresses here
 /**
  * Deprecated V5 Vaults
  */
@@ -142,7 +144,7 @@ export const OLD_V5_VAULTS: {
         name: 'Prize WETH',
         decimals: 18,
         symbol: 'pWETH',
-        tags: ['replaced'],
+        tags: ['canary'],
         logoURI: 'https://etherscan.io/token/images/weth_28.png'
       },
       migrateTo: MIGRATION_DESTINATIONS.wethVault
@@ -150,6 +152,7 @@ export const OLD_V5_VAULTS: {
   ]
 }
 
+// TODO: need to setup promotion settings for old and current deployments (pair of network and twabRewardsAddress)
 /**
  * V5 TWAB Promotion Settings
  */

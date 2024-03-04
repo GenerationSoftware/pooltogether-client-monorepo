@@ -279,7 +279,7 @@ const StatusItem = (props: StatusItemProps) => {
         return 'Beta Ended'
       } else if (tags.includes('replaced')) {
         return 'Better Vault Available'
-      } else if (tags.includes('old-prize-pool')) {
+      } else if (tags.includes('canary')) {
         return 'Old Prize Pool Deployment'
       }
     }
