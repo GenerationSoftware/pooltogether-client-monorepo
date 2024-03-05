@@ -1,10 +1,10 @@
 import { useTransferEvents } from '@generationsoftware/hyperstructure-react-hooks'
 import { Token } from '@shared/types'
-import { DEAD_ADDRESS, formatBigIntForDisplay } from '@shared/utilities'
+import { formatBigIntForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import { Block } from 'viem'
-import { BURN_ADDRESSES, QUERY_START_BLOCK } from '@constants/config'
+import { BURN_SETTINGS, QUERY_START_BLOCK } from '@constants/config'
 
 interface RecentBurnStatsProps {
   burnToken: Token
@@ -16,18 +16,15 @@ interface RecentBurnStatsProps {
 export const RecentBurnStats = (props: RecentBurnStatsProps) => {
   const { burnToken, minBlock, label, className } = props
 
-  const burnAddresses = BURN_ADDRESSES[burnToken.chainId] ?? []
-
   const { data: burnEvents } = useTransferEvents(burnToken.chainId, burnToken.address, {
-    to: [DEAD_ADDRESS, ...burnAddresses],
+    to: BURN_SETTINGS[burnToken.chainId].burnAddresses,
     fromBlock: QUERY_START_BLOCK[burnToken.chainId]
   })
 
   const burned = useMemo(() => {
     const validBurnEvents =
       burnEvents?.filter((event) => event.blockNumber >= (minBlock.number ?? 0n)) ?? []
-    const sumBurnedAmount = validBurnEvents.reduce((a, b) => a + b.args.value, 0n)
-    return sumBurnedAmount
+    return validBurnEvents.reduce((a, b) => a + b.args.value, 0n)
   }, [burnEvents, minBlock])
 
   if (!!burned) {

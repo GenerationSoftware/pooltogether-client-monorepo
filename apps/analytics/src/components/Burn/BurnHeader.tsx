@@ -1,10 +1,10 @@
 import { useTransferEvents } from '@generationsoftware/hyperstructure-react-hooks'
 import { Token } from '@shared/types'
 import { Spinner } from '@shared/ui'
-import { DEAD_ADDRESS, formatBigIntForDisplay } from '@shared/utilities'
+import { formatBigIntForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
-import { BURN_ADDRESSES, QUERY_START_BLOCK } from '@constants/config'
+import { BURN_SETTINGS, QUERY_START_BLOCK } from '@constants/config'
 
 interface BurnHeaderProps {
   burnToken: Token
@@ -14,10 +14,8 @@ interface BurnHeaderProps {
 export const BurnHeader = (props: BurnHeaderProps) => {
   const { burnToken, className } = props
 
-  const burnAddresses = BURN_ADDRESSES[burnToken.chainId] ?? []
-
   const { data: burnTxs } = useTransferEvents(burnToken.chainId, burnToken.address, {
-    to: [DEAD_ADDRESS, ...burnAddresses],
+    to: BURN_SETTINGS[burnToken.chainId].burnAddresses,
     fromBlock: QUERY_START_BLOCK[burnToken.chainId]
   })
 

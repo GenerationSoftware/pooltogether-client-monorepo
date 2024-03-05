@@ -1,4 +1,4 @@
-import { NETWORK } from '@shared/utilities'
+import { DEAD_ADDRESS, NETWORK, POOL_TOKEN_ADDRESSES } from '@shared/utilities'
 import { Address } from 'viem'
 import { mainnet, optimism, sepolia } from 'viem/chains'
 
@@ -43,15 +43,30 @@ export const DRAW_RESULTS_URL: { [chainId: number]: string } = {
 }
 
 /**
- * Extra POOL burn addresses
+ * Burn settings
  */
-export const BURN_ADDRESSES: { [chainId: number]: Lowercase<Address>[] } = {
-  [NETWORK.optimism]: [
-    '0xb1b9dcb9f3a25e390fb37f597c2bf90b16889e41',
-    '0xfbf4f89c7a9ecee48f65033097fecea257eb4049',
-    '0xf9baa3cd7b8c1f205fd3a6861dca693fed683684',
-    '0x71409285d5b324a082e761e54ea0aa413da51db9',
-    '0xf93329e78feff1145fce03a79d5b356588dea215',
-    '0x3989cbc1fb0eb278601c018ed7627b07be9de4cb'
-  ]
+export const BURN_SETTINGS: {
+  [chainId: number]: {
+    burnTokenAddress: Address
+    liquidationPairAddress?: Lowercase<Address>
+    burnAddresses: Address[]
+  }
+} = {
+  [NETWORK.optimism]: {
+    burnTokenAddress: POOL_TOKEN_ADDRESSES[NETWORK.optimism],
+    burnAddresses: [
+      DEAD_ADDRESS,
+      '0xb1b9dcb9f3a25e390fb37f597c2bf90b16889e41',
+      '0xfbf4f89c7a9ecee48f65033097fecea257eb4049',
+      '0xf9baa3cd7b8c1f205fd3a6861dca693fed683684',
+      '0x71409285d5b324a082e761e54ea0aa413da51db9',
+      '0xf93329e78feff1145fce03a79d5b356588dea215',
+      '0x3989cbc1fb0eb278601c018ed7627b07be9de4cb'
+    ]
+  },
+  [NETWORK.sepolia]: {
+    burnTokenAddress: POOL_TOKEN_ADDRESSES[NETWORK.sepolia],
+    liquidationPairAddress: '0xda8652c939643e9175a1f52d0c211b8dc55ff613',
+    burnAddresses: [DEAD_ADDRESS]
+  }
 }

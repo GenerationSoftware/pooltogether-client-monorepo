@@ -1,6 +1,7 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
   useFirstDrawOpenedAt,
+  useLiquidationEvents,
   useTransferEvents
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Token } from '@shared/types'
@@ -16,13 +17,14 @@ import { useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
 import { Address, formatUnits } from 'viem'
 import { BurnCard } from '@components/Burn/BurnCard'
-import { BURN_ADDRESSES, QUERY_START_BLOCK } from '@constants/config'
+import { BURN_SETTINGS, QUERY_START_BLOCK } from '@constants/config'
 import { DrawFinishTx, DrawStartTx, useRngTxs } from '@hooks/useRngTxs'
 import { AreaChart } from './AreaChart'
 
 interface DataPoint {
   name: string
-  dead: { total: number; change: number }
+  buyback: { total: number; change: number }
+  manual: { total: number; change: number }
   other: { total: number; change: number }
 }
 
@@ -35,11 +37,13 @@ interface BurnChartProps {
 export const BurnChart = (props: BurnChartProps) => {
   const { prizePool, burnToken, className } = props
 
-  const burnAddresses = BURN_ADDRESSES[burnToken.chainId] ?? []
-
   const { data: burnEvents } = useTransferEvents(burnToken.chainId, burnToken.address, {
-    to: [DEAD_ADDRESS, ...burnAddresses],
+    to: BURN_SETTINGS[burnToken.chainId].burnAddresses,
     fromBlock: QUERY_START_BLOCK[burnToken.chainId]
+  })
+
+  const { data: liquidationEvents } = useLiquidationEvents(prizePool.chainId, {
+    fromBlock: QUERY_START_BLOCK[prizePool.chainId]
   })
 
   const { data: rngTxs, isFetched: isFetchedRngTxs } = useRngTxs(prizePool)
@@ -49,7 +53,13 @@ export const BurnChart = (props: BurnChartProps) => {
   const currentTimestamp = useAtomValue(currentTimestampAtom)
 
   const chartData = useMemo(() => {
-    if (!!burnEvents?.length && !!rngTxs && isFetchedRngTxs && !!firstDrawOpenedAt) {
+    if (
+      !!burnEvents?.length &&
+      !!liquidationEvents &&
+      !!rngTxs &&
+      isFetchedRngTxs &&
+      !!firstDrawOpenedAt
+    ) {
       const data: DataPoint[] = []
 
       const formatBurnNum = (val: bigint) => {
@@ -65,7 +75,15 @@ export const BurnChart = (props: BurnChartProps) => {
       const lastRngBlockNumber =
         validRngTxs[validRngTxs.length - 1]?.drawFinish.blockNumber ?? MAX_UINT_256
 
-      let dead = { total: 0, change: 0 }
+      // const burnLpAddress = BURN_SETTINGS[burnToken.chainId].liquidationPairAddress
+      // const relevantLiquidationEvents = burnLpAddress
+      //   ? liquidationEvents.filter(
+      //       (event) => event.args.liquidationPair.toLowerCase() === burnLpAddress
+      //     )
+      //   : []
+
+      let buyback = { total: 0, change: 0 }
+      let manual = { total: 0, change: 0 }
       let other = { total: 0, change: 0 }
 
       const updateBurnAmounts = (entryName: string, minBlock: bigint, maxBlock: bigint) => {
@@ -74,24 +92,28 @@ export const BurnChart = (props: BurnChartProps) => {
             const toAddress = burnEvent.args.to.toLowerCase() as Lowercase<Address>
             const burnAmount = formatBurnNum(burnEvent.args.value)
 
+            // TODO: categorize buyback txs from burn lp into `buyback` category
             if (toAddress === DEAD_ADDRESS) {
-              dead.change += burnAmount
+              manual.change += burnAmount
             } else {
               other.change += burnAmount
             }
           }
         })
 
-        dead.total += dead.change
+        buyback.total += buyback.change
+        manual.total += manual.change
         other.total += other.change
 
         data.push({
           name: entryName,
-          dead: { total: dead.total, change: dead.change },
+          buyback: { total: buyback.total, change: buyback.change },
+          manual: { total: manual.total, change: manual.change },
           other: { total: other.total, change: other.change }
         })
 
-        dead.change = 0
+        buyback.change = 0
+        manual.change = 0
         other.change = 0
       }
 
@@ -110,7 +132,7 @@ export const BurnChart = (props: BurnChartProps) => {
 
       return data
     }
-  }, [burnEvents, rngTxs, firstDrawOpenedAt, currentTimestamp])
+  }, [burnEvents, liquidationEvents, rngTxs, firstDrawOpenedAt, currentTimestamp])
 
   if (!!chartData?.length) {
     return (
@@ -118,7 +140,8 @@ export const BurnChart = (props: BurnChartProps) => {
         <AreaChart
           data={chartData}
           areas={[
-            { id: 'dead.total', stackId: 1 },
+            { id: 'buyback.total', stackId: 1 },
+            { id: 'manual.total', stackId: 1 },
             { id: 'other.total', stackId: 1 }
           ]}
           tooltip={{
@@ -140,8 +163,10 @@ export const BurnChart = (props: BurnChartProps) => {
           legend={{
             show: true,
             formatter: (id) => {
-              if (id === 'dead.total') {
-                return 'Sent to 0xdEaD'
+              if (id === 'buyback.total') {
+                return 'Buyback Burns'
+              } else if (id === 'manual.total') {
+                return 'Manual Burns'
               } else if (id === 'other.total') {
                 return 'Other'
               } else {

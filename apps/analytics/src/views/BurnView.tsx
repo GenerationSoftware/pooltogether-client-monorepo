@@ -1,15 +1,20 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { useBlockAtTimestamp, useToken } from '@generationsoftware/hyperstructure-react-hooks'
-import { POOL_TOKEN_ADDRESSES, PRIZE_POOLS, SECONDS_PER_DAY } from '@shared/utilities'
+import {
+  useBlockAtTimestamp,
+  useLiquidationEvents,
+  useToken
+} from '@generationsoftware/hyperstructure-react-hooks'
+import { PRIZE_POOLS, SECONDS_PER_DAY, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
-import { useAtomValue } from 'jotai'
-import { useMemo } from 'react'
+import { useAtom } from 'jotai'
+import { useEffect, useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
 import { PublicClient } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { BurnHeader } from '@components/Burn/BurnHeader'
 import { RecentBurnStats } from '@components/Burn/RecentBurnStats'
 import { BurnChart } from '@components/Charts/BurnChart'
+import { BURN_SETTINGS, QUERY_START_BLOCK } from '@constants/config'
 
 interface BurnViewProps {
   chainId: number
@@ -21,7 +26,7 @@ export const BurnView = (props: BurnViewProps) => {
 
   const publicClient = usePublicClient({ chainId })
 
-  const currentTimestamp = useAtomValue(currentTimestampAtom)
+  const [currentTimestamp, setCurrentTimestamp] = useAtom(currentTimestampAtom)
 
   const prizePool = useMemo(() => {
     const prizePoolInfo = PRIZE_POOLS.find(
@@ -36,6 +41,8 @@ export const BurnView = (props: BurnViewProps) => {
     )
   }, [chainId, publicClient])
 
+  const fromBlock = !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
+
   const { data: minBlockDay } = useBlockAtTimestamp(
     prizePool.chainId,
     currentTimestamp - SECONDS_PER_DAY
@@ -46,10 +53,21 @@ export const BurnView = (props: BurnViewProps) => {
     currentTimestamp - SECONDS_PER_DAY * 7
   )
 
-  const { data: burnToken } = useToken(
-    chainId,
-    POOL_TOKEN_ADDRESSES[prizePool.chainId as keyof typeof POOL_TOKEN_ADDRESSES]
-  )
+  const { data: burnToken } = useToken(chainId, BURN_SETTINGS[chainId]?.burnTokenAddress)
+
+  const { refetch: refetchLiquidationEvents } = useLiquidationEvents(prizePool?.chainId, {
+    fromBlock
+  })
+
+  // Automatic data refetching
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetchLiquidationEvents()
+      setCurrentTimestamp(Math.floor(Date.now() / 1_000))
+    }, sToMs(300))
+
+    return () => clearInterval(interval)
+  }, [])
 
   if (!!prizePool && !!burnToken) {
     return (
