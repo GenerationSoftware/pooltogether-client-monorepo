@@ -75,12 +75,12 @@ export const BurnChart = (props: BurnChartProps) => {
       const lastRngBlockNumber =
         validRngTxs[validRngTxs.length - 1]?.drawFinish.blockNumber ?? MAX_UINT_256
 
-      // const burnLpAddress = BURN_SETTINGS[burnToken.chainId].liquidationPairAddress
-      // const relevantLiquidationEvents = burnLpAddress
-      //   ? liquidationEvents.filter(
-      //       (event) => event.args.liquidationPair.toLowerCase() === burnLpAddress
-      //     )
-      //   : []
+      const buybackLpAddress = BURN_SETTINGS[burnToken.chainId].liquidationPairAddress
+      const buybackTxHashes = !!buybackLpAddress
+        ? liquidationEvents
+            .filter((event) => event.args.liquidationPair.toLowerCase() === buybackLpAddress)
+            .map((e) => e.transactionHash)
+        : []
 
       let buyback = { total: 0, change: 0 }
       let manual = { total: 0, change: 0 }
@@ -92,9 +92,13 @@ export const BurnChart = (props: BurnChartProps) => {
             const toAddress = burnEvent.args.to.toLowerCase() as Lowercase<Address>
             const burnAmount = formatBurnNum(burnEvent.args.value)
 
-            // TODO: categorize buyback txs from burn lp into `buyback` category
             if (toAddress === DEAD_ADDRESS) {
-              manual.change += burnAmount
+              // TODO: it is possible to have multiple events in one tx - this could cause issues
+              if (buybackTxHashes.includes(burnEvent.transactionHash)) {
+                buyback.change += burnAmount
+              } else {
+                manual.change += burnAmount
+              }
             } else {
               other.change += burnAmount
             }
