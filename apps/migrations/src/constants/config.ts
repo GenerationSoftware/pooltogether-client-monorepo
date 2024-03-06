@@ -94,7 +94,6 @@ export const MIGRATION_DESTINATIONS = {
  */
 export type V5_TAG = 'beta' | 'canary' | 'replaced'
 
-// TODO: add all current canary deployment vault addresses here
 /**
  * Deprecated V5 Vaults
  */
@@ -106,7 +105,7 @@ export const OLD_V5_VAULTS: {
       name: string
       decimals: number
       symbol: string
-      tags?: V5_TAG[]
+      tags: V5_TAG[]
       logoURI: string
     }
     migrateTo: { chainId: SupportedNetwork; address: Lowercase<Address> }
@@ -117,7 +116,7 @@ export const OLD_V5_VAULTS: {
       vault: {
         chainId: NETWORK.optimism,
         address: '0x31515cfc4550d9c83e2d86e8a352886d1364e2d9',
-        name: 'Beta Prize USDC',
+        name: 'Prize USDC (Beta)',
         decimals: 6,
         symbol: 'PTUSDC',
         tags: ['beta'],
@@ -129,7 +128,7 @@ export const OLD_V5_VAULTS: {
       vault: {
         chainId: NETWORK.optimism,
         address: '0x1732ce5486ea47f607550ccbe499cd0f894e0494',
-        name: 'Beta Prize WETH',
+        name: 'Prize WETH (Beta)',
         decimals: 18,
         symbol: 'PTWETH',
         tags: ['beta'],
@@ -141,13 +140,85 @@ export const OLD_V5_VAULTS: {
       vault: {
         chainId: NETWORK.optimism,
         address: '0x29cb69d4780b53c1e5cd4d2b817142d2e9890715',
-        name: 'Prize WETH',
+        name: 'Prize WETH (Canary)',
         decimals: 18,
         symbol: 'pWETH',
         tags: ['canary'],
         logoURI: 'https://etherscan.io/token/images/weth_28.png'
       },
       migrateTo: MIGRATION_DESTINATIONS.wethVault
+    },
+    {
+      vault: {
+        chainId: NETWORK.optimism,
+        address: '0xf0b19f02c63d51b69563a2b675e0160e1c34397c',
+        name: 'Prize WETH V2 (Canary)',
+        decimals: 18,
+        symbol: 'pWETH',
+        tags: ['canary'],
+        logoURI: 'https://etherscan.io/token/images/weth_28.png'
+      },
+      migrateTo: MIGRATION_DESTINATIONS.wethVault
+    },
+    {
+      vault: {
+        chainId: NETWORK.optimism,
+        address: '0x77935f2c72b5eb814753a05921ae495aa283906b',
+        name: 'Prize USDC (Canary)',
+        decimals: 6,
+        symbol: 'pUSDC',
+        tags: ['canary'],
+        logoURI: 'https://etherscan.io/token/images/centre-usdc_28.png'
+      },
+      migrateTo: MIGRATION_DESTINATIONS.usdcVault
+    },
+    {
+      vault: {
+        chainId: NETWORK.optimism,
+        address: '0xe3b3a464ee575e8e25d2508918383b89c832f275',
+        name: 'Prize USDC.e (Canary)',
+        decimals: 6,
+        symbol: 'pUSDC.e',
+        tags: ['canary'],
+        logoURI: 'https://etherscan.io/token/images/centre-usdc_28.png'
+      },
+      migrateTo: MIGRATION_DESTINATIONS.usdcVault
+    },
+    {
+      vault: {
+        chainId: NETWORK.optimism,
+        address: '0xce8293f586091d48a0ce761bbf85d5bcaa1b8d2b',
+        name: 'Prize DAI (Canary)',
+        decimals: 18,
+        symbol: 'pDAI',
+        tags: ['canary'],
+        logoURI: 'https://assets.coingecko.com/coins/images/9956/small/4943.png?1636636734'
+      },
+      migrateTo: MIGRATION_DESTINATIONS.usdcVault
+    },
+    {
+      vault: {
+        chainId: NETWORK.optimism,
+        address: '0xbd8fd33e53ab4120638c34cbd454112b39f6b382',
+        name: 'Prize POOL (Canary)',
+        decimals: 18,
+        symbol: 'pPOOL',
+        tags: ['canary'],
+        logoURI: 'https://etherscan.io/token/images/pooltogether_32.png'
+      },
+      migrateTo: MIGRATION_DESTINATIONS.wethVault
+    },
+    {
+      vault: {
+        chainId: NETWORK.optimism,
+        address: '0x2ac482d67f009acfc242283b6d86bc6dd4e2ee4f',
+        name: 'Prize LUSD (Canary)',
+        decimals: 18,
+        symbol: 'pLUSD',
+        tags: ['canary'],
+        logoURI: 'https://etherscan.io/token/images/liquitylusd_32.png'
+      },
+      migrateTo: MIGRATION_DESTINATIONS.usdcVault
     }
   ]
 }
