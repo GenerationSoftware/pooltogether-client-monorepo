@@ -223,28 +223,27 @@ export const OLD_V5_VAULTS: {
   ]
 }
 
-// TODO: need to setup promotion settings for old and current deployments (pair of network and twabRewardsAddress)
 /**
  * V5 TWAB Promotion Settings
  */
 export const V5_PROMOTION_SETTINGS: {
   [network: number]: {
-    tokenAddresses?: `0x${string}`[]
-    fromBlock?: bigint
-    toBlock?: bigint
-    twabRewardsAddress?: Lowercase<Address>
+    twabRewards: { address: Lowercase<Address>; fromBlock?: bigint; toBlock?: bigint }[]
+    tokenAddresses?: Lowercase<Address>[]
   }
 } = {
   [NETWORK.optimism]: {
+    twabRewards: [
+      { address: '0x27ed5760edc0128e3043f6cc0c3428e337396a66', fromBlock: 112_933_000n }
+    ],
     tokenAddresses: [
       '0x4200000000000000000000000000000000000042', // OP
-      '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85', // USDC
-      '0x7F5c764cBc14f9669B88837ca1490cCa17c31607', // USDC.e
+      '0x0b2c639c533813f4aa9d7837caf62653d097ff85', // USDC
+      '0x7f5c764cbc14f9669b88837ca1490cca17c31607', // USDC.e
       '0x4200000000000000000000000000000000000006', // WETH
-      '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1', // DAI
-      '0x395Ae52bB17aef68C2888d941736A71dC6d4e125' // POOL
-    ],
-    fromBlock: 112_933_000n
+      '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1', // DAI
+      '0x395ae52bb17aef68c2888d941736a71dc6d4e125' // POOL
+    ]
   }
 }
 

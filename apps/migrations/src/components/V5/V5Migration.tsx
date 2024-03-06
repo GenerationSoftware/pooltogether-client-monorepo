@@ -17,7 +17,7 @@ import { SimpleBadge } from '@components/SimpleBadge'
 import { SwapWidget } from '@components/SwapWidget'
 import { V5_PROMOTION_SETTINGS } from '@constants/config'
 import { V5BalanceToMigrate } from '@hooks/useUserV5Balances'
-import { useUserV5ClaimableRewards } from '@hooks/useUserV5ClaimableRewards'
+import { useUserV5ClaimablePromotions } from '@hooks/useUserV5ClaimablePromotions'
 import { useV5ClaimRewardsGasEstimate } from '@hooks/useV5ClaimRewardsGasEstimate'
 import { useV5WithdrawGasEstimate } from '@hooks/useV5WithdrawGasEstimate'
 import { ClaimRewardsButton } from './ClaimRewardsButton'
@@ -37,7 +37,7 @@ export const V5Migration = (props: V5MigrationProps) => {
 
   const [actionsCompleted, setActionsCompleted] = useState(0)
 
-  const { data: claimable, isFetched: isFetchedClaimable } = useUserV5ClaimableRewards(
+  const { data: claimable, isFetched: isFetchedClaimable } = useUserV5ClaimablePromotions(
     migration.token.chainId,
     migration.vaultInfo.address,
     userAddress
@@ -119,7 +119,7 @@ interface ClaimContentProps {
 const ClaimContent = (props: ClaimContentProps) => {
   const { userAddress, migration, onSuccess, className } = props
 
-  const { data: claimable } = useUserV5ClaimableRewards(
+  const { data: claimable } = useUserV5ClaimablePromotions(
     migration.token.chainId,
     migration.vaultInfo.address,
     userAddress

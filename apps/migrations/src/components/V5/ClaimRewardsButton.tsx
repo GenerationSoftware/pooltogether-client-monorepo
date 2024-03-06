@@ -3,7 +3,7 @@ import { ButtonProps } from '@shared/ui'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { TransactionButton } from '@components/TransactionButton'
-import { useUserV5ClaimableRewards } from '@hooks/useUserV5ClaimableRewards'
+import { useUserV5ClaimablePromotions } from '@hooks/useUserV5ClaimablePromotions'
 
 export interface ClaimRewardsButtonProps extends Omit<ButtonProps, 'onClick'> {
   chainId: number
@@ -16,30 +16,39 @@ export interface ClaimRewardsButtonProps extends Omit<ButtonProps, 'onClick'> {
 export const ClaimRewardsButton = (props: ClaimRewardsButtonProps) => {
   const { chainId, vaultAddress, userAddress, txOptions, buttonText, ...rest } = props
 
-  const { data: claimable, isFetched: isFetchedClaimable } = useUserV5ClaimableRewards(
+  const { data: claimable, isFetched: isFetchedClaimable } = useUserV5ClaimablePromotions(
     chainId,
     vaultAddress,
     userAddress
   )
 
+  const twabRewardsAddress = useMemo(() => {
+    return txOptions?.twabRewardsAddress ?? claimable?.[0]?.twabRewardsAddress
+  }, [claimable])
+
   const epochsToClaim = useMemo(() => {
     const epochs: { [id: string]: number[] } = {}
 
     if (isFetchedClaimable && claimable.length > 0) {
-      claimable.forEach((promotion) => {
-        const epochIds = Object.keys(promotion.rewards).map((k) => parseInt(k))
+      claimable
+        .filter((e) => e.twabRewardsAddress === twabRewardsAddress)
+        .forEach((promotion) => {
+          const epochIds = Object.keys(promotion.rewards).map((k) => parseInt(k))
 
-        if (!!epochIds.length) {
-          epochs[promotion.promotionId.toString()] = epochIds
-        }
-      })
+          if (!!epochIds.length) {
+            epochs[promotion.promotionId.toString()] = epochIds
+          }
+        })
     }
 
     return epochs
-  }, [claimable, isFetchedClaimable])
+  }, [claimable, isFetchedClaimable, twabRewardsAddress])
 
   const { isWaiting, isConfirming, isSuccess, txHash, sendClaimRewardsTransaction } =
-    useSendClaimRewardsTransaction(chainId, userAddress, epochsToClaim, txOptions)
+    useSendClaimRewardsTransaction(chainId, userAddress, epochsToClaim, {
+      ...txOptions,
+      twabRewardsAddress
+    })
 
   return (
     <TransactionButton

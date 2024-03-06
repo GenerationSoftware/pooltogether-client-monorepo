@@ -6,7 +6,7 @@ import { GasCostEstimates } from '@shared/types'
 import { sToMs, TWAB_REWARDS_ADDRESSES, twabRewardsABI } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address, encodeFunctionData } from 'viem'
-import { useUserV5ClaimableRewards } from './useUserV5ClaimableRewards'
+import { useUserV5ClaimablePromotions } from './useUserV5ClaimablePromotions'
 
 export const useV5ClaimRewardsGasEstimate = (
   chainId: number,
@@ -16,7 +16,7 @@ export const useV5ClaimRewardsGasEstimate = (
 ): { data?: GasCostEstimates; isFetched: boolean } => {
   const twabRewardsAddress = options?.twabRewardsAddress ?? TWAB_REWARDS_ADDRESSES[chainId]
 
-  const { data: claimable, isFetched: isFetchedClaimable } = useUserV5ClaimableRewards(
+  const { data: claimable, isFetched: isFetchedClaimable } = useUserV5ClaimablePromotions(
     chainId,
     vaultAddress,
     userAddress
