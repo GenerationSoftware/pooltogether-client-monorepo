@@ -124,7 +124,8 @@ export const PRIZE_POOLS: {
  * Subgraph API URLs
  */
 export const SUBGRAPH_API_URLS = {
-  [NETWORK.optimism]: 'https://api.studio.thegraph.com/query/50959/pt-v5-op/version/latest',
+  [NETWORK.optimism]:
+    'https://api.studio.thegraph.com/query/50959/pt-v5-op/version/latest?source=pooltogether',
   [NETWORK.optimism_sepolia]:
     'https://api.studio.thegraph.com/query/63100/pt-v5-op-sepolia/version/latest',
   [NETWORK.arbitrum_sepolia]:
