@@ -87,5 +87,6 @@ export const TX_GAS_ESTIMATES = {
   approve: 50_000n,
   deposit: 400_000n,
   depositWithPermit: 450_000n,
-  withdraw: 350_000n
+  withdraw: 350_000n,
+  delegate: 120_000n
 } as const

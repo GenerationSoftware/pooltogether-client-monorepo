@@ -105,19 +105,22 @@ export const LOCAL_STORAGE_KEYS = {
  */
 export const LP_CONFIG: Record<
   SupportedNetwork,
-  { targetFirstSaleTimeFraction: number; liquidationGasAmount: bigint }
+  { targetFirstSaleTimeFraction: number; liquidationGasAmount: bigint; minAuctionAmountEth: number }
 > = {
   [NETWORK.optimism]: {
     targetFirstSaleTimeFraction: 0.5,
-    liquidationGasAmount: 300_000n
+    liquidationGasAmount: 300_000n,
+    minAuctionAmountEth: 0.001
   },
   [NETWORK.optimism_sepolia]: {
     targetFirstSaleTimeFraction: 0.5,
-    liquidationGasAmount: 300_000n
+    liquidationGasAmount: 300_000n,
+    minAuctionAmountEth: 0.001
   },
   [NETWORK.arbitrum_sepolia]: {
     targetFirstSaleTimeFraction: 0.5,
-    liquidationGasAmount: 300_000n
+    liquidationGasAmount: 300_000n,
+    minAuctionAmountEth: 0.001
   }
 }
 

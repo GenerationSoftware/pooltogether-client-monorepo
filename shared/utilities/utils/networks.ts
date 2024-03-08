@@ -85,3 +85,32 @@ export const isTestnet = (chainId: number) => {
 
   return values[chainId as NETWORK] ?? false
 }
+
+/**
+ * Returns a boolean representing if a network is configured as part of the OP stack or not
+ * @param chainId chain ID to check
+ * @returns
+ */
+export const isOpStack = (chainId: number) => {
+  const values: Record<NETWORK, boolean> = {
+    [NETWORK.mainnet]: false,
+    [NETWORK.sepolia]: false,
+    [NETWORK.bsc]: false,
+    [NETWORK.bsc_testnet]: false,
+    [NETWORK.xdai]: false,
+    [NETWORK.polygon]: false,
+    [NETWORK.mumbai]: false,
+    [NETWORK.optimism]: true,
+    [NETWORK.optimism_sepolia]: true,
+    [NETWORK.avalanche]: false,
+    [NETWORK.fuji]: false,
+    [NETWORK.celo]: false,
+    [NETWORK.celo_testnet]: false,
+    [NETWORK.arbitrum]: false,
+    [NETWORK.arbitrum_sepolia]: false,
+    [NETWORK.base]: true,
+    [NETWORK.base_sepolia]: true
+  }
+
+  return values[chainId as NETWORK] ?? false
+}

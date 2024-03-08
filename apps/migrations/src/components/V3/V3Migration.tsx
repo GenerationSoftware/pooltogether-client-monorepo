@@ -1,8 +1,11 @@
-import { useTokenBalance } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useGasCostEstimates,
+  useTokenBalance
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { ArrowUturnLeftIcon } from '@heroicons/react/24/outline'
 import { CurrencyValue, NetworkBadge, TokenIcon } from '@shared/react-components'
 import { Button, Spinner } from '@shared/ui'
-import { formatBigIntForDisplay } from '@shared/utilities'
+import { formatBigIntForDisplay, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { ReactNode, useMemo, useState } from 'react'
@@ -10,8 +13,9 @@ import { Address, formatUnits } from 'viem'
 import { SimpleBadge } from '@components/SimpleBadge'
 import { SwapWidget } from '@components/SwapWidget'
 import { SupportedNetwork, V3_POOLS } from '@constants/config'
+import { v3PodABI } from '@constants/v3PodABI'
+import { v3PoolABI } from '@constants/v3PoolABI'
 import { V3BalanceToMigrate } from '@hooks/useUserV3Balances'
-import { useV3WithdrawGasEstimate } from '@hooks/useV3WithdrawGasEstimate'
 import { V3MigrationHeader } from './V3MigrationHeader'
 import { WithdrawPodButton } from './WithdrawPodButton'
 import { WithdrawPoolButton } from './WithdrawPoolButton'
@@ -85,9 +89,18 @@ interface WithdrawContentProps {
 const WithdrawContent = (props: WithdrawContentProps) => {
   const { userAddress, migration, onSuccess, className } = props
 
-  const { data: gasEstimate, isFetched: isFetchedGasEstimate } = useV3WithdrawGasEstimate(
-    userAddress,
-    migration
+  const { data: gasEstimates, isFetched: isFetchedGasEstimates } = useGasCostEstimates(
+    migration?.token.chainId,
+    {
+      address: migration?.contractAddress,
+      abi: migration?.type === 'pool' ? v3PoolABI : v3PodABI,
+      functionName: migration.type === 'pool' ? 'withdrawInstantlyFrom' : 'withdraw',
+      args:
+        migration?.type === 'pool'
+          ? [userAddress, migration?.token.amount, migration?.token.address, 0n]
+          : [migration?.token.amount, 0n]
+    },
+    { refetchInterval: sToMs(10) }
   )
 
   const v3UnderlyingTokenAddress = V3_POOLS[migration.token.chainId as SupportedNetwork]?.find(
@@ -112,8 +125,8 @@ const WithdrawContent = (props: WithdrawContentProps) => {
       </SimpleBadge>
       <span className='flex gap-1 items-center text-sm font-semibold text-pt-purple-100'>
         Estimated Network Fee:{' '}
-        {isFetchedGasEstimate && !!gasEstimate ? (
-          <CurrencyValue baseValue={gasEstimate.totalGasEth} />
+        {isFetchedGasEstimates && !!gasEstimates ? (
+          <CurrencyValue baseValue={gasEstimates.totalGasEth} />
         ) : (
           <Spinner />
         )}

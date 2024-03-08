@@ -40,12 +40,16 @@ export const useBestLiquidationGasEstimate = (
     { enabled: !!args && bestLiquidation?.success }
   )
 
-  const tx = !!args ? { abi: flashLiquidatorABI, functionName: 'flashLiquidate', args } : undefined
-
   const { data: gasCost, isFetched: isFetchedGasCost } = useGasCostEstimates(
     liquidationPair.chainId,
-    gasAmount ?? getFallbackGasAmount(liquidationPair.swapPath),
-    { tx }
+    {
+      address: FLASH_LIQUIDATORS[liquidationPair.chainId],
+      abi: flashLiquidatorABI,
+      functionName: 'flashLiquidate',
+      args,
+      account: userAddress
+    },
+    { gasAmount: gasAmount ?? getFallbackGasAmount(liquidationPair.swapPath), enabled: !!args }
   )
 
   const isFetched =

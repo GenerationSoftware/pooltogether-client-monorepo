@@ -1,4 +1,5 @@
 import {
+  useGasCostEstimates,
   useTokenBalance,
   useTokens,
   useVault,
@@ -8,7 +9,7 @@ import { ArrowUturnLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/
 import { CurrencyValue, NetworkBadge, TokenIcon } from '@shared/react-components'
 import { TokenWithAmount } from '@shared/types'
 import { Button, Spinner } from '@shared/ui'
-import { formatBigIntForDisplay, TWAB_REWARDS_ADDRESSES } from '@shared/utilities'
+import { formatBigIntForDisplay, sToMs, TWAB_REWARDS_ADDRESSES, vaultABI } from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { ReactNode, useMemo, useState } from 'react'
@@ -19,7 +20,6 @@ import { V5_PROMOTION_SETTINGS } from '@constants/config'
 import { V5BalanceToMigrate } from '@hooks/useUserV5Balances'
 import { useUserV5ClaimableRewards } from '@hooks/useUserV5ClaimableRewards'
 import { useV5ClaimRewardsGasEstimate } from '@hooks/useV5ClaimRewardsGasEstimate'
-import { useV5WithdrawGasEstimate } from '@hooks/useV5WithdrawGasEstimate'
 import { ClaimRewardsButton } from './ClaimRewardsButton'
 import { V5MigrationHeader } from './V5MigrationHeader'
 import { WithdrawButton } from './WithdrawButton'
@@ -242,9 +242,16 @@ interface WithdrawContentProps {
 const WithdrawContent = (props: WithdrawContentProps) => {
   const { userAddress, migration, onSuccess, className } = props
 
-  const { data: gasEstimate, isFetched: isFetchedGasEstimate } = useV5WithdrawGasEstimate(
-    userAddress,
-    migration
+  const { data: gasEstimates, isFetched: isFetchedGasEstimates } = useGasCostEstimates(
+    migration?.token.chainId,
+    {
+      address: migration?.token.address,
+      abi: vaultABI,
+      functionName: 'redeem',
+      args: [migration?.token.amount, userAddress, userAddress],
+      account: userAddress
+    },
+    { refetchInterval: sToMs(10) }
   )
 
   return (
@@ -263,8 +270,8 @@ const WithdrawContent = (props: WithdrawContentProps) => {
       </SimpleBadge>
       <span className='flex gap-1 items-center text-sm font-semibold text-pt-purple-100'>
         Estimated Network Fee:{' '}
-        {isFetchedGasEstimate && !!gasEstimate ? (
-          <CurrencyValue baseValue={gasEstimate.totalGasEth} />
+        {isFetchedGasEstimates && !!gasEstimates ? (
+          <CurrencyValue baseValue={gasEstimates.totalGasEth} />
         ) : (
           <Spinner />
         )}
