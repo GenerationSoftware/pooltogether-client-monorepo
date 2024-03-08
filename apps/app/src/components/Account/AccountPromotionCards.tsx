@@ -5,14 +5,14 @@ import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useUserClaimablePromotions } from '@hooks/useUserClaimablePromotions'
 import { useUserClaimedPromotions } from '@hooks/useUserClaimedPromotions'
-import { AccountPromotionsCard } from './AccountPromotionsCard'
+import { AccountPromotionCard } from './AccountPromotionCard'
 
-interface AccountPromotionsCardsProps {
+interface AccountPromotionCardsProps {
   address?: Address
   className?: string
 }
 
-export const AccountPromotionsCards = (props: AccountPromotionsCardsProps) => {
+export const AccountPromotionCards = (props: AccountPromotionCardsProps) => {
   const { address, className } = props
 
   const t = useTranslations('Common')
@@ -46,7 +46,7 @@ export const AccountPromotionsCards = (props: AccountPromotionsCardsProps) => {
         const promotionId = BigInt(promotion.split('-')[1])
 
         return (
-          <AccountPromotionsCard
+          <AccountPromotionCard
             key={promotion}
             chainId={chainId}
             promotionId={promotionId}

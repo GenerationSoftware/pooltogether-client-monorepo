@@ -141,6 +141,8 @@
       "token": "Token",
       "rewardToken": "Reward Token",
       "rewardsEarned": "Rewards Earned",
+      "rewardsClaimed": "Claimed Rewards",
+      "rewardsClaimable": "Unclaimed Rewards",
       "claims": "Claims"
     },
     "prizeChecking": {

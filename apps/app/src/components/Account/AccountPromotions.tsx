@@ -3,7 +3,7 @@ import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useUserClaimablePromotions } from '@hooks/useUserClaimablePromotions'
 import { useUserClaimedPromotions } from '@hooks/useUserClaimedPromotions'
-import { AccountPromotionsCards } from './AccountPromotionsCards'
+import { AccountPromotionCards } from './AccountPromotionCards'
 import { AccountPromotionsHeader } from './AccountPromotionsHeader'
 import { AccountPromotionsTable } from './AccountPromotionsTable'
 
@@ -33,7 +33,7 @@ export const AccountPromotions = (props: AccountPromotionsProps) => {
       >
         <AccountPromotionsHeader address={userAddress} />
         <AccountPromotionsTable address={userAddress} className='hidden mt-8 lg:block' />
-        <AccountPromotionsCards address={userAddress} className='mt-2 md:mt-4 lg:hidden' />
+        <AccountPromotionCards address={userAddress} className='mt-4 lg:hidden' />
       </div>
     )
   }
