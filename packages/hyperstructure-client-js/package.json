@@ -1,6 +1,6 @@
 {
   "name": "@generationsoftware/hyperstructure-client-js",
-  "version": "1.9.0",
+  "version": "1.11.0",
   "license": "MIT",
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
