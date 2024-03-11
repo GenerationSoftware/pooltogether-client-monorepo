@@ -1,4 +1,3 @@
-import { NETWORK } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { usePublicClient } from 'wagmi'
 import { QUERY_KEYS } from '../constants'
@@ -10,20 +9,10 @@ import { QUERY_KEYS } from '../constants'
  * @returns
  */
 export const useGasPrice = (chainId: number, refetchInterval?: number) => {
-  const redirects: { [chainId: number]: number } = {
-    [NETWORK.sepolia]: NETWORK.mainnet,
-    [NETWORK.bsc_testnet]: NETWORK.bsc,
-    [NETWORK.mumbai]: NETWORK.polygon,
-    [NETWORK.fuji]: NETWORK.avalanche,
-    [NETWORK.celo_testnet]: NETWORK.celo
-  }
-
-  const _chainId = redirects[chainId] ?? chainId
-
-  const publicClient = usePublicClient({ chainId: _chainId })
+  const publicClient = usePublicClient({ chainId })
 
   return useQuery({
-    queryKey: [QUERY_KEYS.gasPrices, _chainId],
+    queryKey: [QUERY_KEYS.gasPrices, chainId],
     queryFn: async () => {
       if (!!publicClient) {
         const gasPrices = await publicClient.estimateFeesPerGas()

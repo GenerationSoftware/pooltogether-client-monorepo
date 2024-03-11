@@ -38,11 +38,10 @@ class MyDocument extends Document {
           <meta property='og:site_name' content={title} />
           <meta property='og:url' content={DOMAINS.incentives} />
           <meta property='og:type' content='website' />
-          {/* TODO: add meta image */}
-          {/* <meta
+          <meta
             property='og:image'
             content={`${DOMAINS.incentives}/facebook-share-image-1200-630.png`}
-          /> */}
+          />
           <meta property='og:rich_attachment' content='true' />
           <meta property='og:image:width' content='1200' />
           <meta property='og:image:height' content='630' />
@@ -51,11 +50,10 @@ class MyDocument extends Document {
           <meta property='twitter:description' content={description} />
           <meta property='twitter:card' content='summary_large_image' />
           <meta property='twitter:site' content={'@PoolTogether_'} />
-          {/* TODO: add meta image */}
-          {/* <meta
+          <meta
             property='twitter:image:src'
             content={`${DOMAINS.incentives}/twitter-share-image-1200-675.png`}
-          /> */}
+          />
           <meta property='twitter:url' content={DOMAINS.incentives} />
           <meta property='twitter:creator' content={'@g9software'} />
 

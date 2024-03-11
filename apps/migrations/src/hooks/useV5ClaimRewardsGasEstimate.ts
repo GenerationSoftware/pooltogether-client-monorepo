@@ -1,7 +1,4 @@
-import {
-  useGasAmountEstimate,
-  useGasCostEstimates
-} from '@generationsoftware/hyperstructure-react-hooks'
+import { useGasCostEstimates } from '@generationsoftware/hyperstructure-react-hooks'
 import { GasCostEstimates } from '@shared/types'
 import { sToMs, TWAB_REWARDS_ADDRESSES, twabRewardsABI } from '@shared/utilities'
 import { useMemo } from 'react'
@@ -72,29 +69,19 @@ export const useV5ClaimRewardsGasEstimate = (
     }
   }, [userAddress, epochsToClaim, isMulticall])
 
-  const { data: gasAmount, isFetched: isFetchedGasAmount } = useGasAmountEstimate(chainId, {
-    address: twabRewardsAddress,
-    abi: twabRewardsABI,
-    functionName: isMulticall ? 'multicall' : 'claimRewards',
-    // @ts-ignore
-    args: isMulticall ? multicallArgs : claimRewardsArgs,
-    account: userAddress
-  })
-
   const { data: gasEstimates, isFetched: isFetchedGasEstimates } = useGasCostEstimates(
     chainId,
-    gasAmount as bigint,
     {
-      tx: {
-        abi: twabRewardsABI,
-        functionName: isMulticall ? 'multicall' : 'claimRewards',
-        args: isMulticall ? (multicallArgs as any[]) : (claimRewardsArgs as any[])
-      },
-      refetchInterval: sToMs(10)
-    }
+      address: twabRewardsAddress,
+      abi: twabRewardsABI,
+      functionName: isMulticall ? 'multicall' : 'claimRewards',
+      args: isMulticall ? multicallArgs : claimRewardsArgs,
+      account: userAddress
+    },
+    { refetchInterval: sToMs(10) }
   )
 
-  const isFetched = isFetchedClaimable && isFetchedGasAmount && isFetchedGasEstimates
+  const isFetched = isFetchedClaimable && isFetchedGasEstimates
 
   return { data: gasEstimates, isFetched }
 }

@@ -7,12 +7,12 @@ import { TokenAmount, TransactionButton } from '@shared/react-components'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
-import { Address } from 'viem'
+import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { useUserClaimablePromotions } from '@hooks/useUserClaimablePromotions'
 import { useUserClaimedPromotions } from '@hooks/useUserClaimedPromotions'
 
-interface AccountPromotionsClaimActionsProps {
+interface AccountPromotionClaimActionsProps {
   chainId: number
   promotionId: bigint
   address?: Address
@@ -20,7 +20,7 @@ interface AccountPromotionsClaimActionsProps {
   className?: string
 }
 
-export const AccountPromotionsClaimActions = (props: AccountPromotionsClaimActionsProps) => {
+export const AccountPromotionClaimActions = (props: AccountPromotionClaimActionsProps) => {
   const { chainId, promotionId, address, fullSized, className } = props
 
   const { address: _userAddress } = useAccount()
@@ -96,6 +96,8 @@ const ClaimRewardsButton = (props: ClaimRewardsButtonProps) => {
     const claimableAmount = Object.values(claimable.epochRewards).reduce((a, b) => a + b, 0n)
 
     if (claimableAmount > 0n) {
+      const shiftedClaimableAmount = parseFloat(formatUnits(claimableAmount, tokenData.decimals))
+
       // TODO: display warning to claim soon if promotion has ended
       return (
         <TransactionButton
@@ -113,12 +115,13 @@ const ClaimRewardsButton = (props: ClaimRewardsButtonProps) => {
           className={classNames('min-w-[6rem]', className)}
         >
           {t_common('claim')}{' '}
-          <TokenAmount token={{ chainId, address: claimable.token, amount: claimableAmount }} />
+          <TokenAmount
+            token={{ chainId, address: claimable.token, amount: claimableAmount }}
+            hideZeroes={shiftedClaimableAmount > 1e3 ? true : undefined}
+            maximumFractionDigits={shiftedClaimableAmount <= 1e3 ? 2 : undefined}
+          />
         </TransactionButton>
       )
-    } else {
-      // TODO: return some sort of "all claimed!" or "rewards over" message?
-      return <></>
     }
   }
 

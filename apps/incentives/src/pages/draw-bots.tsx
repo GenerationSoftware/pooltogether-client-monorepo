@@ -49,6 +49,9 @@ export default function DrawBotsPage() {
               <ResourceLink href='https://github.com/GenerationSoftware/pt-v5-autotasks-monorepo'>
                 Example: G9 Bots Monorepo
               </ResourceLink>
+              <ResourceLink href='https://github.com/underethsea/pooltogether-v5-node'>
+                Example: PoolTime Bots Monorepo
+              </ResourceLink>
               <ResourceLink href='https://analytics.cabana.fi'>
                 Analytics: Draws (Cabanalytics)
               </ResourceLink>

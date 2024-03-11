@@ -89,11 +89,12 @@ export const LOCAL_STORAGE_KEYS = {
  */
 export const LP_CONFIG: Record<
   SupportedNetwork,
-  { targetFirstSaleTimeFraction: number; liquidationGasAmount: bigint }
+  { targetFirstSaleTimeFraction: number; liquidationGasAmount: bigint; minAuctionAmountEth: number }
 > = {
   [NETWORK.sepolia]: {
     targetFirstSaleTimeFraction: 0.5,
-    liquidationGasAmount: 300_000n
+    liquidationGasAmount: 300_000n,
+    minAuctionAmountEth: 0.001
   }
 }
 

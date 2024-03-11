@@ -2,30 +2,28 @@ import { GasCostEstimates } from '@shared/types'
 import {
   calculatePercentageOfBigInt,
   DOLPHIN_ADDRESS,
-  NETWORK,
-  OP_GAS_ORACLE_ADDRESS,
-  opGasOracleABI
+  getGasFeeEstimate,
+  NETWORK
 } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
-import { Abi, encodeFunctionData, formatUnits, PublicClient } from 'viem'
+import { formatUnits } from 'viem'
 import { usePublicClient } from 'wagmi'
-import { NO_REFETCH, QUERY_KEYS, useGasPrice, useTokenPrices } from '..'
+import { NO_REFETCH, QUERY_KEYS, useTokenPrices } from '..'
 
 /**
  * Returns gas cost estimates in wei and ETH
- *
- * NOTE: Include `tx` in `options` for accurate L2 gas cost estimates
- * @param chainId chain ID to get gas prices from
- * @param gasAmount the amount of gas estimated to be used
+ * @param chainId chain ID to get gas cost estimates for
+ * @param tx the transaction to estimate gas costs for
  * @param options optional settings
  * @returns
  */
 export const useGasCostEstimates = (
   chainId: NETWORK,
-  gasAmount: bigint,
+  tx: Parameters<typeof getGasFeeEstimate>[1],
   options?: {
-    tx?: { abi: Abi; functionName: string; args: any[] }
+    gasAmount?: bigint
+    enabled?: boolean
     refetchInterval?: number
   }
 ) => {
@@ -39,51 +37,39 @@ export const useGasCostEstimates = (
     return tokenPrices?.[DOLPHIN_ADDRESS]
   }, [tokenPrices])
 
-  const { data: gasPrice, isFetched: isFetchedGasPrice } = useGasPrice(
+  const queryKey = [
+    QUERY_KEYS.gasFeeEstimate,
     chainId,
-    options?.refetchInterval
-  )
+    tx?.address,
+    tx?.functionName,
+    tx?.args?.map(String),
+    tx?.account
+  ]
 
-  const txData = !!options?.tx ? encodeFunctionData(options.tx) : undefined
-  const queryKey = [QUERY_KEYS.gasCostRollup, chainId, txData]
-
-  // TODO: include Arbitrum logic for L1 fee (should be similar to OP)
-  const { data: txL1GasCost, isFetched: isFetchedTxL1GasCost } = useQuery({
+  const { data: gasFeeEstimate, isFetched: isFetchedGasFeeEstimate } = useQuery({
     queryKey,
     queryFn: async () => {
-      if (!!publicClient && !!txData) {
-        if (chainId === NETWORK.optimism || chainId === NETWORK.optimism_sepolia) {
-          return await getOpL1GasAmount(publicClient, txData)
-        }
+      if (!!publicClient) {
+        return await getGasFeeEstimate(publicClient, tx, { gasAmount: options?.gasAmount })
       }
-
-      return 0n
     },
-    enabled: !!chainId && !!publicClient && !!txData,
-    ...NO_REFETCH
+    enabled: !!chainId && !!publicClient && !!tx && options?.enabled !== false,
+    ...NO_REFETCH,
+    refetchInterval: options?.refetchInterval ?? false
   })
 
-  const isFetched =
-    isFetchedTokenPrices && isFetchedGasPrice && (!options?.tx || isFetchedTxL1GasCost)
+  const isFetched = isFetchedTokenPrices && isFetchedGasFeeEstimate
 
   const data: GasCostEstimates | undefined = useMemo(() => {
-    if (isFetched && !!gasAmount && !!tokenPrice && !!gasPrice) {
-      const totalGasWei = gasPrice * gasAmount + (txL1GasCost ?? 0n)
-      const totalGasEth = Number(
-        formatUnits(calculatePercentageOfBigInt(totalGasWei, tokenPrice), 18)
-      )
-      return { totalGasWei, totalGasEth }
+    if (isFetched && tokenPrice !== undefined && gasFeeEstimate !== undefined) {
+      return {
+        totalGasWei: gasFeeEstimate,
+        totalGasEth: parseFloat(
+          formatUnits(calculatePercentageOfBigInt(gasFeeEstimate, tokenPrice), 18)
+        )
+      }
     }
-  }, [gasAmount, tokenPrice, gasPrice, txL1GasCost])
+  }, [isFetched, tokenPrice, gasFeeEstimate])
 
   return { data, isFetched }
-}
-
-const getOpL1GasAmount = async (publicClient: PublicClient, txData: `0x${string}`) => {
-  return await publicClient.readContract({
-    address: OP_GAS_ORACLE_ADDRESS,
-    abi: opGasOracleABI,
-    functionName: 'getL1Fee',
-    args: [txData]
-  })
 }

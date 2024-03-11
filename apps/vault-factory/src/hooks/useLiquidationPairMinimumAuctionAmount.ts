@@ -1,8 +1,5 @@
-import {
-  useGasCostEstimates,
-  useVault,
-  useVaultSharePrice
-} from '@generationsoftware/hyperstructure-react-hooks'
+import { useVault, useVaultSharePrice } from '@generationsoftware/hyperstructure-react-hooks'
+import { useMemo } from 'react'
 import { SupportedNetwork } from 'src/types'
 import { Address, parseUnits } from 'viem'
 import { LP_CONFIG } from '@constants/config'
@@ -19,22 +16,16 @@ export const useLiquidationPairMinimumAuctionAmount = (
 ) => {
   const vault = useVault({ chainId, address: vaultAddress })
 
-  const { data: shareToken, isFetched: isFetchedShareToken } = useVaultSharePrice(vault)
+  const { data: shareToken, isFetched } = useVaultSharePrice(vault)
 
-  const { data: gasCostEstimates, isFetched: isFetchedGasCostEstimates } = useGasCostEstimates(
-    chainId,
-    LP_CONFIG[chainId].liquidationGasAmount
-  )
+  const data = useMemo(() => {
+    if (!!shareToken?.price) {
+      const numTokens = LP_CONFIG[chainId].minAuctionAmountEth / shareToken.price
+      return parseUnits(`${numTokens}`, shareToken.decimals)
+    } else if (isFetched) {
+      return 0n
+    }
+  }, [shareToken, isFetched])
 
-  const isFetched = isFetchedShareToken && isFetchedGasCostEstimates
-
-  const minimumAuctionAmount =
-    isFetched && !!shareToken && !!gasCostEstimates
-      ? parseUnits(
-          `${(gasCostEstimates.totalGasEth * 10) / (shareToken.price ?? 0.001)}`,
-          shareToken.decimals
-        )
-      : undefined
-
-  return { data: minimumAuctionAmount, isFetched }
+  return { data, isFetched }
 }

@@ -10,9 +10,10 @@ import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useUserClaimablePromotions } from '@hooks/useUserClaimablePromotions'
 import { useUserClaimedPromotions } from '@hooks/useUserClaimedPromotions'
-import { AccountPromotionsClaimActions } from './AccountPromotionsClaimActions'
-import { AccountPromotionsRewardsEarned } from './AccountPromotionsRewardsEarned'
-import { AccountPromotionsRewardToken } from './AccountPromotionsRewardToken'
+import { AccountPromotionClaimableRewards } from './AccountPromotionClaimableRewards'
+import { AccountPromotionClaimActions } from './AccountPromotionClaimActions'
+import { AccountPromotionClaimedRewards } from './AccountPromotionClaimedRewards'
+import { AccountPromotionToken } from './AccountPromotionToken'
 
 interface AccountPromotionsTableProps extends Omit<TableProps, 'data' | 'keyPrefix'> {
   address?: Address
@@ -46,8 +47,12 @@ export const AccountPromotionsTable = (props: AccountPromotionsTableProps) => {
         content: t_headers('rewardToken'),
         position: 'center'
       },
-      earned: {
-        content: t_headers('rewardsEarned'),
+      claimed: {
+        content: t_headers('rewardsClaimed'),
+        position: 'center'
+      },
+      claimable: {
+        content: t_headers('rewardsClaimable'),
         position: 'center'
       }
     }
@@ -96,14 +101,22 @@ export const AccountPromotionsTable = (props: AccountPromotionsTableProps) => {
             className: 'gap-2'
           },
           rewardToken: {
+            content: <AccountPromotionToken chainId={chainId} tokenAddress={promotionInfo.token} />,
+            position: 'center'
+          },
+          claimed: {
             content: (
-              <AccountPromotionsRewardToken chainId={chainId} tokenAddress={promotionInfo.token} />
+              <AccountPromotionClaimedRewards
+                chainId={chainId}
+                promotionId={promotionId}
+                address={userAddress}
+              />
             ),
             position: 'center'
           },
-          earned: {
+          claimable: {
             content: (
-              <AccountPromotionsRewardsEarned
+              <AccountPromotionClaimableRewards
                 chainId={chainId}
                 promotionId={promotionId}
                 address={userAddress}
@@ -113,7 +126,7 @@ export const AccountPromotionsTable = (props: AccountPromotionsTableProps) => {
           },
           claims: {
             content: (
-              <AccountPromotionsClaimActions
+              <AccountPromotionClaimActions
                 chainId={chainId}
                 promotionId={promotionId}
                 address={userAddress}

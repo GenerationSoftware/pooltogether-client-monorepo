@@ -4,13 +4,13 @@ import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
 import { Address } from 'viem'
 
-interface AccountPromotionsRewardTokenProps {
+interface AccountPromotionTokenProps {
   chainId: number
   tokenAddress: Address
   className?: string
 }
 
-export const AccountPromotionsRewardToken = (props: AccountPromotionsRewardTokenProps) => {
+export const AccountPromotionToken = (props: AccountPromotionTokenProps) => {
   const { chainId, tokenAddress, className } = props
 
   const { data: tokenData } = useToken(chainId, tokenAddress)
