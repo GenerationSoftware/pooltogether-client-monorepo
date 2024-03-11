@@ -1,8 +1,9 @@
 import classNames from 'classnames'
-import { useAtom } from 'jotai'
+import { useAtom, useAtomValue } from 'jotai'
 import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import {
+  isUsingCustomYieldSourceAtom,
   vaultFeePercentageAtom,
   vaultFeeRecipientAddressAtom,
   vaultOwnerAddressAtom
@@ -34,8 +35,9 @@ export const OwnerAndFeesForm = (props: OwnerAndFeesFormProps) => {
   const [vaultOwner, setVaultOwner] = useAtom(vaultOwnerAddressAtom)
   const [vaultFeePercentage, setVaultFeePercentage] = useAtom(vaultFeePercentageAtom)
   const [vaultFeeRecipient, setVaultFeeRecipient] = useAtom(vaultFeeRecipientAddressAtom)
+  const isUsingCustomYieldSource = useAtomValue(isUsingCustomYieldSourceAtom)
 
-  const { nextStep } = useVaultCreationSteps()
+  const { step, setStep, nextStep } = useVaultCreationSteps()
 
   useEffect(() => {
     formMethods.setValue('vaultOwner', vaultOwner ?? userAddress ?? '', {
@@ -99,7 +101,7 @@ export const OwnerAndFeesForm = (props: OwnerAndFeesFormProps) => {
           className='w-full max-w-md'
         />
         <div className='flex gap-2 items-center'>
-          <PrevButton />
+          <PrevButton onClick={isUsingCustomYieldSource ? () => setStep(step - 2) : undefined} />
           <NextButton disabled={!formMethods.formState.isValid} />
         </div>
       </form>

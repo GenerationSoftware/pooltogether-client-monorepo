@@ -12,7 +12,7 @@ import {
   vaultYieldSourceNameAtom
 } from 'src/atoms'
 import { Address } from 'viem'
-import { CONTRACTS } from '@constants/config'
+import { NETWORK_CONFIG } from '@constants/config'
 import { useYieldSourceTokenAddress } from './useYieldSourceTokenAddress'
 
 /**
@@ -35,7 +35,7 @@ export const useVaultInfo = (): Partial<VaultDeployInfo> => {
     yieldSourceAddress as Address
   )
 
-  const prizePool = !!chainId ? CONTRACTS[chainId].prizePool : undefined
+  const prizePool = !!chainId ? NETWORK_CONFIG[chainId].prizePool : undefined
 
   return {
     chainId,

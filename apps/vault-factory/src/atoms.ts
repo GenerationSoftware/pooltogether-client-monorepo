@@ -9,6 +9,11 @@ import { SupportedNetwork } from './types'
 export const vaultChainIdAtom = atom<SupportedNetwork | undefined>(undefined)
 
 /**
+ * Vault Yield Source ID
+ */
+export const vaultYieldSourceIdAtom = atom<string>('')
+
+/**
  * Vault Yield Source Name
  */
 export const vaultYieldSourceNameAtom = atom<string>('')
@@ -17,6 +22,11 @@ export const vaultYieldSourceNameAtom = atom<string>('')
  * Vault Yield Source Address
  */
 export const vaultYieldSourceAddressAtom = atom<Address | undefined>(undefined)
+
+/**
+ * Custom Vault Yield Source State
+ */
+export const isUsingCustomYieldSourceAtom = atom<boolean>(false)
 
 /**
  * Vault Fee Percentage

@@ -8,7 +8,7 @@ import { Address, isAddress } from 'viem'
 import { NextButton } from '@components/buttons/NextButton'
 import { PrevButton } from '@components/buttons/PrevButton'
 import { SetClaimerButton } from '@components/buttons/SetClaimerButton'
-import { CONTRACTS } from '@constants/config'
+import { NETWORK_CONFIG } from '@constants/config'
 import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
 import { SimpleInput } from './SimpleInput'
 
@@ -37,7 +37,7 @@ export const ClaimerForm = (props: ClaimerFormProps) => {
 
   useEffect(() => {
     !!vaultChainId &&
-      formMethods.setValue('vaultClaimer', vaultClaimer ?? CONTRACTS[vaultChainId].claimer, {
+      formMethods.setValue('vaultClaimer', vaultClaimer ?? NETWORK_CONFIG[vaultChainId].claimer, {
         shouldValidate: true
       })
   }, [])
@@ -58,7 +58,7 @@ export const ClaimerForm = (props: ClaimerFormProps) => {
           validate={{
             isValidAddress: (v: string) => isAddress(v?.trim()) || 'Enter a valid contract address.'
           }}
-          defaultValue={!!vaultChainId ? CONTRACTS[vaultChainId].claimer : undefined}
+          defaultValue={!!vaultChainId ? NETWORK_CONFIG[vaultChainId].claimer : undefined}
           label='Claimer Contract'
           needsOverride={true}
           className='w-full max-w-md'

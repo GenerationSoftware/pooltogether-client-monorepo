@@ -11,7 +11,7 @@ import { vaultAddressAtom, vaultChainIdAtom } from 'src/atoms'
 import { SupportedNetwork } from 'src/types'
 import { Address } from 'viem'
 import { DeployLiquidationPairButton } from '@components/buttons/DeployLiquidationPairButton'
-import { CONTRACTS } from '@constants/config'
+import { NETWORK_CONFIG } from '@constants/config'
 import { useLiquidationPairInitialAmountIn } from '@hooks/useLiquidationPairInitialAmountIn'
 import { useLiquidationPairMinimumAuctionAmount } from '@hooks/useLiquidationPairMinimumAuctionAmount'
 import { useLiquidationPairSteps } from '@hooks/useLiquidationPairSteps'
@@ -39,7 +39,7 @@ export const DeployLiquidationPairForm = (props: DeployLiquidationPairFormProps)
   const chainId = useAtomValue(vaultChainIdAtom) as SupportedNetwork
   const vaultAddress = useAtomValue(vaultAddressAtom) as Address
 
-  const prizePool = usePrizePool(chainId, CONTRACTS[chainId].prizePool)
+  const prizePool = usePrizePool(chainId, NETWORK_CONFIG[chainId].prizePool)
   const { data: prizeToken } = usePrizeTokenPrice(prizePool)
 
   const { data: shareToken } = useToken(chainId, vaultAddress)

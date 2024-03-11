@@ -13,7 +13,7 @@ import {
 } from 'src/atoms'
 import { SupportedNetwork } from 'src/types'
 import { Address, parseEther, parseUnits } from 'viem'
-import { LP_CONFIG } from '@constants/config'
+import { NETWORK_CONFIG } from '@constants/config'
 
 /**
  * Returns all info required to deploy a new liquidation pair
@@ -39,7 +39,7 @@ export const useLiquidationPairInfo = (
   const { data: periodOffset } = useFirstDrawOpenedAt(prizePool)
 
   const periodLength = prizePoolInfo.options.drawPeriodInSeconds
-  const targetFirstSaleTime = LP_CONFIG[chainId].targetFirstSaleTimeFraction * periodLength
+  const targetFirstSaleTime = NETWORK_CONFIG[chainId].lp.targetFirstSaleTimeFraction * periodLength
 
   const decayConstant = parseEther('130') / BigInt(periodLength * 50)
 

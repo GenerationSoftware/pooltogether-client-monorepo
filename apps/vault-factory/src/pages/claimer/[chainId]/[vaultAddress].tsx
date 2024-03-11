@@ -56,7 +56,7 @@ const ClaimerStepInfo = () => {
   return (
     <StepInfo
       step={0}
-      stepInfo={[allVaultStepInfo[4]]}
+      stepInfo={[allVaultStepInfo[5]]}
       setStep={() => {}}
       className='grow items-center justify-center lg:items-start'
     />
