@@ -1,25 +1,22 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
-  useDrawAwardedEvents,
   useLiquidationEvents,
   useManualContributionEvents,
   usePrizeBackstopEvents,
-  useRelayAuctionEvents,
-  useRngAuctionEvents,
-  useRngL1RelayMsgEvents,
-  useRngL2RelayMsgEvents
+  useToken
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { getSecondsSinceEpoch, PRIZE_POOLS, RNG_RELAY_ADDRESSES, sToMs } from '@shared/utilities'
+import { getSecondsSinceEpoch, POOL_TOKEN_ADDRESSES, PRIZE_POOLS, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import { useSetAtom } from 'jotai'
 import { useEffect, useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
-import { Address, PublicClient } from 'viem'
+import { PublicClient } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { ReserveChart } from '@components/Charts/ReserveChart'
 import { ReserveHeader } from '@components/Reserve/ReserveHeader'
 import { QUERY_START_BLOCK } from '@constants/config'
 import { useReserve } from '@hooks/useReserve'
+import { useRngTxs } from '@hooks/useRngTxs'
 
 interface ReserveViewProps {
   chainId: number
@@ -34,16 +31,9 @@ export const ReserveView = (props: ReserveViewProps) => {
   const setCurrentTimestamp = useSetAtom(currentTimestampAtom)
 
   const prizePool = useMemo(() => {
-    const prizePoolInfo = PRIZE_POOLS.find((pool) => pool.chainId === chainId) as {
-      chainId: number
-      address: Address
-      options: {
-        prizeTokenAddress: Address
-        drawPeriodInSeconds: number
-        tierShares: number
-        reserveShares: number
-      }
-    }
+    const prizePoolInfo = PRIZE_POOLS.find(
+      (pool) => pool.chainId === chainId
+    ) as (typeof PRIZE_POOLS)[number]
 
     return new PrizePool(
       prizePoolInfo.chainId,
@@ -53,11 +43,12 @@ export const ReserveView = (props: ReserveViewProps) => {
     )
   }, [chainId, publicClient])
 
-  const originChainId = !!prizePool
-    ? RNG_RELAY_ADDRESSES[prizePool.chainId].from.chainId
-    : undefined
+  const { data: burnToken } = useToken(
+    chainId,
+    POOL_TOKEN_ADDRESSES[prizePool.chainId as keyof typeof POOL_TOKEN_ADDRESSES]
+  )
+
   const fromBlock = !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
-  const originFromBlock = !!originChainId ? QUERY_START_BLOCK[originChainId] : undefined
 
   const { refetch: refetchReserve } = useReserve(prizePool)
   const { refetch: refetchLiquidationEvents } = useLiquidationEvents(prizePool?.chainId, {
@@ -67,21 +58,7 @@ export const ReserveView = (props: ReserveViewProps) => {
     fromBlock
   })
   const { refetch: refetchPrizeBackstopEvents } = usePrizeBackstopEvents(prizePool, { fromBlock })
-  const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents(originChainId as number, {
-    fromBlock: originFromBlock
-  })
-  const { refetch: refetchRngL1RelayMsgEvents } = useRngL1RelayMsgEvents(
-    originChainId as number,
-    prizePool?.chainId,
-    { fromBlock: originFromBlock }
-  )
-  const { refetch: refetchRelayAuctionEvents } = useRelayAuctionEvents(prizePool?.chainId, {
-    fromBlock
-  })
-  const { refetch: refetchDrawAwardedEvents } = useDrawAwardedEvents(prizePool, { fromBlock })
-  const { refetch: refetchRngL2RelayMsgEvents } = useRngL2RelayMsgEvents(prizePool?.chainId, {
-    fromBlock
-  })
+  const { refetch: refetchRngTxs } = useRngTxs(prizePool)
 
   // Automatic data refetching
   useEffect(() => {
@@ -90,11 +67,7 @@ export const ReserveView = (props: ReserveViewProps) => {
       refetchLiquidationEvents()
       refetchManualContributionEvents()
       refetchPrizeBackstopEvents()
-      refetchRngAuctionEvents()
-      refetchRngL1RelayMsgEvents()
-      refetchRelayAuctionEvents()
-      refetchDrawAwardedEvents()
-      refetchRngL2RelayMsgEvents()
+      refetchRngTxs()
       setCurrentTimestamp(getSecondsSinceEpoch())
     }, sToMs(300))
 
@@ -104,7 +77,7 @@ export const ReserveView = (props: ReserveViewProps) => {
   return (
     <div className={classNames('w-full flex flex-col gap-6 items-center', className)}>
       <ReserveHeader prizePool={prizePool} />
-      <ReserveChart prizePool={prizePool} />
+      {!!burnToken && <ReserveChart prizePool={prizePool} burnToken={burnToken} />}
     </div>
   )
 }

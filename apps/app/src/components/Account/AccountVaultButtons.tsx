@@ -7,7 +7,6 @@ import {
   WithdrawButton
 } from '@shared/react-components'
 import { useTranslations } from 'next-intl'
-import Image from 'next/image'
 
 interface AccountVaultButtonsProps {
   vault: Vault

@@ -35,7 +35,6 @@ export const useSendDeployVaultTransaction = (
 
   const {
     chainId,
-    token,
     name,
     symbol,
     yieldSourceAddress,
@@ -55,7 +54,6 @@ export const useSendDeployVaultTransaction = (
   const enabled =
     !!vaultDeployInfo &&
     !!chainId &&
-    !!token &&
     !!name &&
     !!symbol &&
     !!yieldSourceAddress &&
@@ -73,7 +71,6 @@ export const useSendDeployVaultTransaction = (
     abi: vaultFactoryABI,
     functionName: 'deployVault',
     args: [
-      token,
       name,
       symbol,
       yieldSourceAddress,

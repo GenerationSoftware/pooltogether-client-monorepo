@@ -12,11 +12,12 @@ export const useDrawResults = (
 ) => {
   const queryKey = ['drawResults', prizePool?.chainId, drawId]
 
-  const { status, isFetched: isFetchedStatus } = useDrawStatus(prizePool, drawId)
+  const { status, isSkipped, isFetched: isFetchedStatus } = useDrawStatus(prizePool, drawId)
 
-  const isValidStatus = !!status && (status === 'awarded' || status === 'finalized')
+  const isValidStatus =
+    isFetchedStatus && !!status && !isSkipped && (status === 'awarded' || status === 'finalized')
 
-  const { data, isFetched: isFetchedDrawResults } = useQuery({
+  return useQuery({
     queryKey,
     queryFn: async () => {
       try {
@@ -47,8 +48,4 @@ export const useDrawResults = (
     ...NO_REFETCH,
     refetchInterval: !!status && status !== 'finalized' ? options?.refetchInterval ?? false : false
   })
-
-  const isFetched = isFetchedStatus && (status === 'open' || isFetchedDrawResults)
-
-  return { data, isFetched }
 }

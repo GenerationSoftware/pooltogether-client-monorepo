@@ -20,14 +20,14 @@ import {
 import { NETWORK, POOL_TOKEN_ADDRESSES, USDC_TOKEN_ADDRESSES } from '@shared/utilities'
 import defaultVaultList from '@vaultLists/default'
 import { Address } from 'viem'
-import { arbitrum, arbitrumSepolia, mainnet, optimism, optimismSepolia } from 'viem/chains'
+import { mainnet, optimism, sepolia } from 'viem/chains'
 
 /**
  * Supported networks
  */
 export const SUPPORTED_NETWORKS = {
-  mainnets: [NETWORK.mainnet, NETWORK.optimism, NETWORK.arbitrum],
-  testnets: [NETWORK.optimism_sepolia, NETWORK.arbitrum_sepolia]
+  mainnets: [NETWORK.mainnet, NETWORK.optimism],
+  testnets: [NETWORK.sepolia]
 } as const
 
 /**
@@ -36,9 +36,7 @@ export const SUPPORTED_NETWORKS = {
 export const WAGMI_CHAINS = {
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism,
-  [NETWORK.arbitrum]: arbitrum,
-  [NETWORK.optimism_sepolia]: optimismSepolia,
-  [NETWORK.arbitrum_sepolia]: arbitrumSepolia
+  [NETWORK.sepolia]: sepolia
 } as const
 
 /**
@@ -69,9 +67,7 @@ export const WALLETS: { [wallet: string]: CreateWalletFn } = {
 export const RPC_URLS = {
   [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
-  [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
-  [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
-  [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL
+  [NETWORK.sepolia]: process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL
 } as const
 
 /**
@@ -99,20 +95,9 @@ export const TWAB_REWARDS_SETTINGS: {
     ],
     fromBlock: 112_933_000n
   },
-  [NETWORK.arbitrum]: { tokenAddresses: [], fromBlock: 1n },
-  [NETWORK.optimism_sepolia]: {
-    tokenAddresses: [
-      USDC_TOKEN_ADDRESSES[NETWORK.optimism_sepolia],
-      POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia]
-    ],
-    fromBlock: 4_400_000n
-  },
-  [NETWORK.arbitrum_sepolia]: {
-    tokenAddresses: [
-      USDC_TOKEN_ADDRESSES[NETWORK.arbitrum_sepolia],
-      POOL_TOKEN_ADDRESSES[NETWORK.arbitrum_sepolia]
-    ],
-    fromBlock: 1_490_000n
+  [NETWORK.sepolia]: {
+    tokenAddresses: [USDC_TOKEN_ADDRESSES[NETWORK.sepolia], POOL_TOKEN_ADDRESSES[NETWORK.sepolia]],
+    fromBlock: 5_397_600n
   }
 }
 

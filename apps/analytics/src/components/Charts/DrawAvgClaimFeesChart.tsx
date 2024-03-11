@@ -13,6 +13,7 @@ import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
+import { isCanaryTier } from 'src/utils'
 import { QUERY_START_BLOCK } from '@constants/config'
 import { useDrawStatus } from '@hooks/useDrawStatus'
 import { LineChart, LineChartProps } from './LineChart'
@@ -35,7 +36,11 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
   const { data: drawAwardedEvents } = useDrawAwardedEvents(prizePool, {
     fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
   })
-  const numTiers = drawAwardedEvents?.find((e) => e.args.drawId === drawId)?.args.numTiers
+
+  const numTiers = useMemo(() => {
+    const drawAwardedEvent = drawAwardedEvents?.find((e) => e.args.drawId === drawId)
+    return drawAwardedEvent?.args.numTiers
+  }, [drawId, drawAwardedEvents])
 
   const currentTimestamp = useAtomValue(currentTimestampAtom)
 
@@ -65,9 +70,9 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
 
       const filteredWins = drawWins.filter(
         (win) =>
-          win.fee > 0n &&
-          win.feeRecipient !== win.recipient &&
-          (!hideCanary || win.tier !== numTiers - 1)
+          win.claimReward > 0n &&
+          win.claimRewardRecipient !== win.recipient &&
+          (!hideCanary || !isCanaryTier(win.tier, numTiers))
       )
 
       const tiers = new Set(filteredWins.map((win) => win.tier))
@@ -94,7 +99,7 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
         )
 
         checkpointWins.forEach((win) => {
-          cumTierValues[win.tier].sumClaimFeeAmount += win.fee
+          cumTierValues[win.tier].sumClaimFeeAmount += win.claimReward
           cumTierValues[win.tier].sumPrizeAmount += win.payout
         })
 
@@ -132,7 +137,7 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
             show: true,
             formatter: (value, tier) => [
               `${formatNumberForDisplay(value, { maximumFractionDigits: 2 })}%`,
-              tier === 0 ? 'GP' : tier === numTiers - 1 ? 'Canary' : `Tier ${tier}`
+              tier === 0 ? 'GP' : isCanaryTier(Number(tier), numTiers) ? 'Canary' : `Tier ${tier}`
             ],
             labelFormatter: (label) => getSimpleTime(Number(label))
           }}

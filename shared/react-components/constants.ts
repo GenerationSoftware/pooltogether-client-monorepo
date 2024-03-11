@@ -30,7 +30,14 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599': tokenLogoUrls.wbtc,
     '0x5f98805a4e8be255a32880fdec7f6728c6568ba0': tokenLogoUrls.lusd
   },
-  [NETWORK.sepolia]: {},
+  [NETWORK.sepolia]: {
+    '0x196eef5231bc8806ddfdbaaf7b5ac206bd316f45': tokenLogoUrls.pool,
+    '0xd09eb8de85d547cfbf09f972edcc6f871b192b70': tokenLogoUrls.usdc,
+    '0x50088bf4dba58145c0b873643d285626f87837c3': tokenLogoUrls.dai,
+    '0x2b8919310d8e2576e19e22794a6d3ec961cd812a': tokenLogoUrls.gusd,
+    '0x00a66c161e4c7a9daefd3df8cbbb08a3de5b5f73': tokenLogoUrls.weth,
+    '0x0364994c88f97a18740ec791a336b2d63407f8d5': tokenLogoUrls.wbtc
+  },
   [NETWORK.bsc]: {},
   [NETWORK.bsc_testnet]: {},
   [NETWORK.xdai]: {},
@@ -53,14 +60,7 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': tokenLogoUrls.ageur,
     '0x4200000000000000000000000000000000000042': tokenLogoUrls.op
   },
-  [NETWORK.optimism_sepolia]: {
-    [POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia].toLowerCase()]: tokenLogoUrls.pool,
-    '0x8067f3cb6eef936256108ff19a05574b8ad99cf3': tokenLogoUrls.usdc,
-    '0xd590ec14364731b62265a5cc807164a17c6797d4': tokenLogoUrls.dai,
-    '0x1a188719711d62423abf1a4de7d8aa9014a39d73': tokenLogoUrls.gusd,
-    '0xa416ed51158c5616b997b785fa6d18f02d0458a8': tokenLogoUrls.weth,
-    '0x149e3b3bd69f1cfc1b42b6a6a152a42e38ceebf1': tokenLogoUrls.wbtc
-  },
+  [NETWORK.optimism_sepolia]: {},
   [NETWORK.avalanche]: {
     '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f': tokenLogoUrls.wbtc
   },
@@ -68,14 +68,7 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   [NETWORK.celo]: {},
   [NETWORK.celo_testnet]: {},
   [NETWORK.arbitrum]: {},
-  [NETWORK.arbitrum_sepolia]: {
-    [POOL_TOKEN_ADDRESSES[NETWORK.arbitrum_sepolia].toLowerCase()]: tokenLogoUrls.pool,
-    '0x7a6dbc7ff4f1a2d864291db3aec105a8eee4a3d2': tokenLogoUrls.usdc,
-    '0x08c19fe57af150a1af975cb9a38769848c7df98e': tokenLogoUrls.dai,
-    '0xb84460d777133a4b86540d557db35952e4adfee7': tokenLogoUrls.gusd,
-    '0x779275fc1b987db24463801f3708f42f3c6f6ceb': tokenLogoUrls.weth,
-    '0x1bc266e1f397517ece9e384c55c7a5414b683639': tokenLogoUrls.wbtc
-  },
+  [NETWORK.arbitrum_sepolia]: {},
   [NETWORK.base]: {},
   [NETWORK.base_sepolia]: {}
 }

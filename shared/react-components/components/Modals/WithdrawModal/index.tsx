@@ -57,9 +57,6 @@ export interface WithdrawModalProps {
     txToast?: WithdrawTxToastProps['intl']
     errors?: RichIntl<
       | 'exchangeRateError'
-      | 'aaveCollateralizationError.issue'
-      | 'aaveCollateralizationError.recommendation'
-      | 'aaveCollateralizationError.moreInfo'
       | 'formErrors.notEnoughTokens'
       | 'formErrors.invalidNumber'
       | 'formErrors.negativeNumber'

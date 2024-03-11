@@ -1,5 +1,6 @@
 import { PrizeInfo, TokenWithSupply, TxOverrides } from '@shared/types'
 import {
+  drawManagerABI,
   getPrizePoolAllPrizeInfo,
   getPrizePoolContributionAmounts,
   getPrizePoolContributionPercentages,
@@ -19,7 +20,10 @@ export class PrizePool {
   readonly id: string
   walletClient: WalletClient | undefined
   prizeTokenAddress: Address | undefined
+  drawManagerAddress: Address | undefined
+  twabControllerAddress: Address | undefined
   drawPeriodInSeconds: number | undefined
+  drawAuctionDurationInSeconds: number | undefined
   tierShares: number | undefined
   reserveShares: number | undefined
 
@@ -39,7 +43,10 @@ export class PrizePool {
     options?: {
       walletClient?: WalletClient
       prizeTokenAddress?: Address
+      drawManagerAddress?: Address
+      twabControllerAddress?: Address
       drawPeriodInSeconds?: number
+      drawAuctionDurationInSeconds?: number
       tierShares?: number
       reserveShares?: number
     }
@@ -48,7 +55,10 @@ export class PrizePool {
 
     this.walletClient = options?.walletClient
     this.prizeTokenAddress = options?.prizeTokenAddress
+    this.drawManagerAddress = options?.drawManagerAddress
+    this.twabControllerAddress = options?.twabControllerAddress
     this.drawPeriodInSeconds = options?.drawPeriodInSeconds
+    this.drawAuctionDurationInSeconds = options?.drawAuctionDurationInSeconds
     this.tierShares = options?.tierShares
     this.reserveShares = options?.reserveShares
   }
@@ -73,6 +83,46 @@ export class PrizePool {
 
     this.prizeTokenAddress = prizeTokenAddress
     return this.prizeTokenAddress
+  }
+
+  /**
+   * Returns the address of prize pool's draw manager
+   * @returns
+   */
+  async getDrawManagerAddress(): Promise<Address> {
+    if (this.drawManagerAddress !== undefined) return this.drawManagerAddress
+
+    const source = 'Prize Pool [getDrawManagerAddress]'
+    await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    const drawManagerAddress = await this.publicClient.readContract({
+      address: this.address,
+      abi: prizePoolABI,
+      functionName: 'drawManager'
+    })
+
+    this.drawManagerAddress = drawManagerAddress
+    return this.drawManagerAddress
+  }
+
+  /**
+   * Returns the address of the prize pool's TWAB controller
+   * @returns
+   */
+  async getTwabControllerAddress(): Promise<Address> {
+    if (this.twabControllerAddress !== undefined) return this.twabControllerAddress
+
+    const source = 'Prize Pool [getTwabControllerAddress]'
+    await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    const twabControllerAddress = await this.publicClient.readContract({
+      address: this.address,
+      abi: prizePoolABI,
+      functionName: 'twabController'
+    })
+
+    this.twabControllerAddress = twabControllerAddress
+    return this.twabControllerAddress
   }
 
   /**
@@ -108,6 +158,28 @@ export class PrizePool {
 
     this.drawPeriodInSeconds = drawPeriodInSeconds
     return drawPeriodInSeconds
+  }
+
+  /**
+   * Returns the duration of a draw auction in seconds
+   * @returns
+   */
+  async getDrawAuctionDurationInSeconds(): Promise<number> {
+    if (this.drawAuctionDurationInSeconds !== undefined) return this.drawAuctionDurationInSeconds
+
+    const source = 'Prize Pool [getDrawAuctionDurationInSeconds]'
+    await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    const drawManagerAddress = await this.getDrawManagerAddress()
+
+    const drawAuctionDurationInSeconds = await this.publicClient.readContract({
+      address: drawManagerAddress,
+      abi: drawManagerABI,
+      functionName: 'auctionDuration'
+    })
+
+    this.drawAuctionDurationInSeconds = drawAuctionDurationInSeconds
+    return drawAuctionDurationInSeconds
   }
 
   /**
@@ -153,7 +225,7 @@ export class PrizePool {
   /**
    * Returns the number of prize tiers in the prize pool
    *
-   * NOTE: Includes the canary tier
+   * NOTE: Includes the canary tiers
    * @returns
    */
   async getNumberOfTiers(): Promise<number> {
@@ -415,7 +487,7 @@ export class PrizePool {
       address: this.address,
       abi: prizePoolABI,
       functionName: 'estimatedPrizeCount',
-      args: [!!options?.includeCanary ? numberOfTiers : numberOfTiers - 1]
+      args: [!!options?.includeCanary ? numberOfTiers : numberOfTiers - 2]
     })
 
     return estimatedPrizeCount

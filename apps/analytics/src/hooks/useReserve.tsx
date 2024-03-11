@@ -23,39 +23,53 @@ export const useReserve = (prizePool: PrizePool, options?: { refetchInterval?: n
   return useQuery({
     queryKey,
     queryFn: async () => {
-      if (!!publicClient && !!lastAwardedDrawId && !!lastDrawStatus) {
-        const multicallResults = await getSimpleMulticallResults(
-          publicClient,
-          prizePool.address,
-          prizePoolABI,
-          [
-            { functionName: 'reserve' },
-            { functionName: 'pendingReserveContributions' },
-            {
-              functionName: 'getTotalContributedBetween',
-              args: [lastAwardedDrawId + 1, lastAwardedDrawId + 1]
-            },
-            { functionName: 'numberOfTiers' }
-          ]
-        )
+      if (!!publicClient) {
+        if (!!lastAwardedDrawId && !!lastDrawStatus) {
+          const multicallResults = await getSimpleMulticallResults(
+            publicClient,
+            prizePool.address,
+            prizePoolABI,
+            [
+              { functionName: 'reserve' },
+              { functionName: 'pendingReserveContributions' },
+              {
+                functionName: 'getTotalContributedBetween',
+                args: [lastAwardedDrawId + 1, lastAwardedDrawId + 1]
+              },
+              { functionName: 'numberOfTiers' }
+            ]
+          )
 
-        const current = typeof multicallResults[0] === 'bigint' ? multicallResults[0] : 0n
+          const current = typeof multicallResults[0] === 'bigint' ? multicallResults[0] : 0n
 
-        const pending = typeof multicallResults[1] === 'bigint' ? multicallResults[1] : 0n
+          const pending = typeof multicallResults[1] === 'bigint' ? multicallResults[1] : 0n
 
-        const contributions =
-          typeof multicallResults[2] === 'bigint' ? multicallResults[2] : undefined
-        const numTiers = typeof multicallResults[3] === 'number' ? multicallResults[3] : 0
-        const pendingFallback = calculateFallbackPendingReserve(prizePool, contributions, numTiers)
+          const contributions =
+            typeof multicallResults[2] === 'bigint' ? multicallResults[2] : undefined
+          const numTiers = typeof multicallResults[3] === 'number' ? multicallResults[3] : 0
+          const pendingFallback = calculateFallbackPendingReserve(
+            prizePool,
+            contributions,
+            numTiers
+          )
 
-        if ((lastDrawStatus === 'awarded' || isLastDrawSkipped) && pendingFallback !== undefined) {
-          return { current, pending: pendingFallback }
-        } else {
-          return { current, pending }
+          if (
+            (lastDrawStatus === 'awarded' || isLastDrawSkipped) &&
+            pendingFallback !== undefined
+          ) {
+            return { current, pending: pendingFallback }
+          } else {
+            return { current, pending }
+          }
+        } else if (lastAwardedDrawId === 0) {
+          return { current: 0n, pending: 0n }
         }
       }
     },
-    enabled: !!prizePool && !!publicClient && !!lastAwardedDrawId && !!lastDrawStatus,
+    enabled:
+      !!prizePool &&
+      !!publicClient &&
+      ((!!lastAwardedDrawId && !!lastDrawStatus) || lastAwardedDrawId === 0),
     ...NO_REFETCH,
     refetchInterval: options?.refetchInterval ?? false
   })

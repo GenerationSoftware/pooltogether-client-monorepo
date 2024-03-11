@@ -286,6 +286,20 @@ export const twabControllerABI = [
     type: 'function'
   },
   {
+    inputs: [{ internalType: 'uint256', name: 'timestamp', type: 'uint256' }],
+    name: 'isShutdownAt',
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'lastObservationAt',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
     inputs: [
       { internalType: 'address', name: '_to', type: 'address' },
       { internalType: 'uint96', name: '_amount', type: 'uint96' }

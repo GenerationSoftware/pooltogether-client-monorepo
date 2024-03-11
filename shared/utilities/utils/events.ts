@@ -1,11 +1,5 @@
 import { Address, PublicClient } from 'viem'
-import {
-  LIQUIDATION_ROUTER_ADDRESSES,
-  MSG_EXECUTOR_ADDRESSES,
-  RNG_AUCTION,
-  RNG_RELAY_ADDRESSES,
-  TWAB_REWARDS_ADDRESSES
-} from '../constants'
+import { LIQUIDATION_ROUTER_ADDRESSES, TWAB_REWARDS_ADDRESSES } from '../constants'
 import { getLiquidationPairAddresses } from './liquidations'
 
 /**
@@ -70,58 +64,28 @@ export const getWithdrawEvents = async (
 }
 
 /**
- * Returns `RelayedToDispatcher` events
+ * Returns `DrawStarted` events from a draw manager contract
  * @param publicClient a public Viem client to query through
- * @param destinationChainId the chain ID that the messages are to be relayed to
+ * @param drawManagerAddress the address of a prize pool's draw manager to query events for
  * @param options optional settings
  * @returns
  */
-export const getRngL1RelayMsgEvents = async (
+export const getDrawStartedEvents = async (
   publicClient: PublicClient,
-  destinationChainId: number,
+  drawManagerAddress: Address,
   options?: { fromBlock?: bigint; toBlock?: bigint }
 ) => {
-  const chainId = await publicClient.getChainId()
-
-  const rngRelayContractAddress = RNG_RELAY_ADDRESSES[destinationChainId]?.from.address
-
-  if (
-    !rngRelayContractAddress ||
-    RNG_RELAY_ADDRESSES[destinationChainId].from.chainId !== chainId
-  ) {
-    console.warn(
-      `No relay auction addresses set from chain ID ${chainId} to chain ID ${destinationChainId}`
-    )
-    return []
-  }
-
   return await publicClient.getLogs({
-    address: rngRelayContractAddress,
+    address: drawManagerAddress,
     event: {
       inputs: [
-        {
-          indexed: false,
-          internalType: 'contract IMessageDispatcher',
-          name: 'messageDispatcher',
-          type: 'address'
-        },
-        { indexed: true, internalType: 'uint256', name: 'remoteOwnerChainId', type: 'uint256' },
-        {
-          indexed: false,
-          internalType: 'contract RemoteOwner',
-          name: 'remoteOwner',
-          type: 'address'
-        },
-        {
-          indexed: false,
-          internalType: 'contract IRngAuctionRelayListener',
-          name: 'remoteRngAuctionRelayListener',
-          type: 'address'
-        },
-        { indexed: true, internalType: 'address', name: 'rewardRecipient', type: 'address' },
-        { indexed: true, internalType: 'bytes32', name: 'messageId', type: 'bytes32' }
+        { indexed: true, internalType: 'address', name: 'sender', type: 'address' },
+        { indexed: true, internalType: 'address', name: 'recipient', type: 'address' },
+        { indexed: false, internalType: 'uint24', name: 'drawId', type: 'uint24' },
+        { indexed: false, internalType: 'uint32', name: 'rngRequestId', type: 'uint32' },
+        { indexed: false, internalType: 'uint48', name: 'elapsedTime', type: 'uint48' }
       ],
-      name: 'RelayedToDispatcher',
+      name: 'DrawStarted',
       type: 'event'
     },
     fromBlock: options?.fromBlock,
@@ -131,44 +95,9 @@ export const getRngL1RelayMsgEvents = async (
 }
 
 /**
- * Returns `MessageIdExecuted` events
+ * Returns `DrawAwarded` events from a prize pool contract
  * @param publicClient a public Viem client to query through
- * @param options optional settings
- * @returns
- */
-export const getRngL2RelayMsgEvents = async (
-  publicClient: PublicClient,
-  options?: { fromBlock?: bigint; toBlock?: bigint }
-) => {
-  const chainId = await publicClient.getChainId()
-
-  const msgExecutorContractAddress = MSG_EXECUTOR_ADDRESSES[chainId]
-
-  if (!msgExecutorContractAddress) {
-    console.warn(`No message executor contract set for chain ID ${chainId}`)
-    return []
-  }
-
-  return await publicClient.getLogs({
-    address: msgExecutorContractAddress,
-    event: {
-      inputs: [
-        { indexed: true, internalType: 'uint256', name: 'fromChainId', type: 'uint256' },
-        { indexed: true, internalType: 'bytes32', name: 'messageId', type: 'bytes32' }
-      ],
-      name: 'MessageIdExecuted',
-      type: 'event'
-    },
-    fromBlock: options?.fromBlock,
-    toBlock: options?.toBlock ?? 'latest',
-    strict: true
-  })
-}
-
-/**
- * Returns `DrawAwarded` events
- * @param publicClient a public Viem client to query through
- * @param prizePoolAddress the address of the prize pool to query events for
+ * @param prizePoolAddress the address of a prize pool to query events for
  * @param options optional settings
  * @returns
  */
@@ -182,24 +111,47 @@ export const getDrawAwardedEvents = async (
     event: {
       inputs: [
         { indexed: true, internalType: 'uint24', name: 'drawId', type: 'uint24' },
-        {
-          indexed: false,
-          internalType: 'uint256',
-          name: 'winningRandomNumber',
-          type: 'uint256'
-        },
+        { indexed: false, internalType: 'uint256', name: 'winningRandomNumber', type: 'uint256' },
         { indexed: false, internalType: 'uint8', name: 'lastNumTiers', type: 'uint8' },
         { indexed: false, internalType: 'uint8', name: 'numTiers', type: 'uint8' },
         { indexed: false, internalType: 'uint104', name: 'reserve', type: 'uint104' },
-        {
-          indexed: false,
-          internalType: 'UD34x4',
-          name: 'prizeTokensPerShare',
-          type: 'uint128'
-        },
+        { indexed: false, internalType: 'UD34x4', name: 'prizeTokensPerShare', type: 'uint128' },
         { indexed: false, internalType: 'uint48', name: 'drawOpenedAt', type: 'uint48' }
       ],
       name: 'DrawAwarded',
+      type: 'event'
+    },
+    fromBlock: options?.fromBlock,
+    toBlock: options?.toBlock ?? 'latest',
+    strict: true
+  })
+}
+
+/**
+ * Returns `DrawFinished` events from a draw manager contract
+ * @param publicClient a public Viem client to query through
+ * @param drawManagerAddress the address of a prize pool's draw manager to query events for
+ * @param options optional settings
+ * @returns
+ */
+export const getDrawFinishedEvents = async (
+  publicClient: PublicClient,
+  drawManagerAddress: Address,
+  options?: { fromBlock?: bigint; toBlock?: bigint }
+) => {
+  return await publicClient.getLogs({
+    address: drawManagerAddress,
+    event: {
+      inputs: [
+        { indexed: true, internalType: 'uint24', name: 'drawId', type: 'uint24' },
+        { indexed: false, internalType: 'uint256', name: 'elapsedTime', type: 'uint256' },
+        { indexed: true, internalType: 'address', name: 'startRecipient', type: 'address' },
+        { indexed: false, internalType: 'uint256', name: 'startReward', type: 'uint256' },
+        { indexed: true, internalType: 'address', name: 'finishRecipient', type: 'address' },
+        { indexed: false, internalType: 'uint256', name: 'finishReward', type: 'uint256' },
+        { indexed: false, internalType: 'uint256', name: 'remainingReserve', type: 'uint256' }
+      ],
+      name: 'DrawFinished',
       type: 'event'
     },
     fromBlock: options?.fromBlock,
@@ -348,83 +300,6 @@ export const getPrizeBackstopEvents = async (
     event: {
       inputs: [{ indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }],
       name: 'ReserveConsumed',
-      type: 'event'
-    },
-    fromBlock: options?.fromBlock,
-    toBlock: options?.toBlock ?? 'latest',
-    strict: true
-  })
-}
-
-/**
- * Returns `AuctionRewardAllocated` events
- * @param publicClient a public Viem client to query through
- * @param options optional settings
- * @returns
- */
-export const getRelayAuctionEvents = async (
-  publicClient: PublicClient,
-  options?: { fromBlock?: bigint; toBlock?: bigint }
-) => {
-  const chainId = await publicClient.getChainId()
-
-  const rngRelayContractAddress = RNG_RELAY_ADDRESSES[chainId]?.address
-
-  if (!rngRelayContractAddress) {
-    console.warn(`No relay auction contract set for chain ID ${chainId}`)
-    return []
-  }
-
-  return await publicClient.getLogs({
-    address: rngRelayContractAddress,
-    event: {
-      inputs: [
-        { indexed: true, internalType: 'uint32', name: 'sequenceId', type: 'uint32' },
-        { indexed: true, internalType: 'address', name: 'recipient', type: 'address' },
-        { indexed: true, internalType: 'uint32', name: 'index', type: 'uint32' },
-        { indexed: false, internalType: 'uint256', name: 'reward', type: 'uint256' }
-      ],
-      name: 'AuctionRewardAllocated',
-      type: 'event'
-    },
-    fromBlock: options?.fromBlock,
-    toBlock: options?.toBlock ?? 'latest',
-    strict: true
-  })
-}
-
-/**
- * Returns `RngAuctionCompleted` events
- * @param publicClient a public Viem client to query through
- * @param options optional settings
- * @returns
- */
-export const getRngAuctionEvents = async (
-  publicClient: PublicClient,
-  options?: { fromBlock?: bigint; toBlock?: bigint }
-) => {
-  const chainId = await publicClient.getChainId()
-
-  const rngAuctionContract = RNG_AUCTION[chainId]
-
-  if (!rngAuctionContract) {
-    console.warn(`No RNG auction contract set for chain ID ${chainId}`)
-    return []
-  }
-
-  return await publicClient.getLogs({
-    address: rngAuctionContract.address,
-    event: {
-      inputs: [
-        { indexed: true, internalType: 'address', name: 'sender', type: 'address' },
-        { indexed: true, internalType: 'address', name: 'recipient', type: 'address' },
-        { indexed: true, internalType: 'uint32', name: 'sequenceId', type: 'uint32' },
-        { indexed: false, internalType: 'contract RNGInterface', name: 'rng', type: 'address' },
-        { indexed: false, internalType: 'uint32', name: 'rngRequestId', type: 'uint32' },
-        { indexed: false, internalType: 'uint64', name: 'elapsedTime', type: 'uint64' },
-        { indexed: false, internalType: 'UD2x18', name: 'rewardFraction', type: 'uint64' }
-      ],
-      name: 'RngAuctionCompleted',
       type: 'event'
     },
     fromBlock: options?.fromBlock,

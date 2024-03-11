@@ -18,7 +18,7 @@ export const StartBuildingSection = (props: StartBuildingSectionProps) => {
           href={LINKS.vaultFactory}
           imgSrc='/factoryScreenshot.png'
           title='Cabana Factory'
-          description='Launch your own prize vaults using the PoolTogether protocol alongside any ERC-4626 compatible yield source.'
+          description='Launch your own prize vaults using the PoolTogether protocol alongside ERC-4626 compatible yield sources.'
         />
         <StartBuildingItem
           href={LINKS.vaultListCreator}

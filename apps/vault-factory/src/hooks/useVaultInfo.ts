@@ -30,7 +30,7 @@ export const useVaultInfo = (): Partial<VaultDeployInfo> => {
   const symbol = useAtomValue(vaultSymbolAtom)
   const claimer = useAtomValue(vaultClaimerAddressAtom)
 
-  const { data: token } = useYieldSourceTokenAddress(
+  const { data: tokenAddress } = useYieldSourceTokenAddress(
     chainId as number,
     yieldSourceAddress as Address
   )
@@ -39,7 +39,7 @@ export const useVaultInfo = (): Partial<VaultDeployInfo> => {
 
   return {
     chainId,
-    token,
+    tokenAddress,
     name,
     symbol,
     yieldSourceName,

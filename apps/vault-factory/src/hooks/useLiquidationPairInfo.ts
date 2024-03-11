@@ -31,16 +31,9 @@ export const useLiquidationPairInfo = (
   const vault = useVault({ chainId, address: vaultAddress })
   const { data: shareToken } = useVaultShareData(vault)
 
-  const prizePoolInfo = PRIZE_POOLS.find((pool) => pool.chainId === chainId) as {
-    chainId: SupportedNetwork
-    address: Address
-    options: {
-      prizeTokenAddress: Address
-      drawPeriodInSeconds: number
-      tierShares: number
-      reserveShares: number
-    }
-  }
+  const prizePoolInfo = PRIZE_POOLS.find(
+    (pool) => pool.chainId === chainId
+  ) as (typeof PRIZE_POOLS)[number]
 
   const prizePool = usePrizePool(chainId, prizePoolInfo.address)
   const { data: periodOffset } = useFirstDrawOpenedAt(prizePool)

@@ -26,19 +26,6 @@ export const VaultTotalDeposits = (props: VaultTotalDepositsProps) => {
     return <TokenAmount token={{ ...shareData, amount: shareData.totalSupply }} hideZeroes={true} />
   }
 
-  // TODO: remove this block entirely once exchange rate issue is fixed
-  if (!!shareData) {
-    const token = { ...totalDeposits, amount: shareData.totalSupply }
-
-    return (
-      <TokenValue
-        token={token}
-        hideZeroes={true}
-        fallback={<TokenAmount token={token} hideZeroes={true} />}
-      />
-    )
-  }
-
   return (
     <TokenValue
       token={totalDeposits}

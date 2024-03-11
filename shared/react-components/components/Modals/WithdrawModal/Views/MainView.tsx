@@ -6,10 +6,8 @@ import {
 import { Intl, RichIntl } from '@shared/types'
 import { Spinner } from '@shared/ui'
 import { getNiceNetworkNameByChainId } from '@shared/utilities'
-import { formatUnits } from 'viem'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 import { WithdrawForm } from '../../../Form/WithdrawForm'
-import { AaveCollateralizationError } from '../../AaveCollateralizationError'
 import { ExchangeRateError } from '../../ExchangeRateError'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 
@@ -21,9 +19,6 @@ interface MainViewProps {
     fees?: NetworkFeesProps['intl']
     errors?: RichIntl<
       | 'exchangeRateError'
-      | 'aaveCollateralizationError.issue'
-      | 'aaveCollateralizationError.recommendation'
-      | 'aaveCollateralizationError.moreInfo'
       | 'formErrors.notEnoughTokens'
       | 'formErrors.invalidNumber'
       | 'formErrors.negativeNumber'
@@ -41,12 +36,6 @@ export const MainView = (props: MainViewProps) => {
 
   const vaultName = vault.name ?? `"${shareData?.name}"`
   const networkName = getNiceNetworkNameByChainId(vault.chainId)
-
-  const isAaveCollateralizationErrored =
-    vault.tags?.includes('aave') &&
-    !!vaultExchangeRate &&
-    vault.decimals !== undefined &&
-    parseFloat(formatUnits(vaultExchangeRate, vault.decimals)) !== 1
 
   return (
     <div className='flex flex-col gap-6'>
@@ -73,14 +62,7 @@ export const MainView = (props: MainViewProps) => {
       {!!vaultExchangeRate ? (
         <>
           <WithdrawForm vault={vault} showInputInfoRows={true} intl={intl} />
-          {isAaveCollateralizationErrored ? (
-            <AaveCollateralizationError
-              vault={vault}
-              intl={{ warning: intl?.common?.('warning'), error: intl?.errors }}
-            />
-          ) : (
-            <NetworkFees vault={vault} show={['withdraw']} intl={intl?.fees} />
-          )}
+          <NetworkFees vault={vault} show={['withdraw']} intl={intl?.fees} />
         </>
       ) : (
         <ExchangeRateError vault={vault} intl={intl?.errors} />
