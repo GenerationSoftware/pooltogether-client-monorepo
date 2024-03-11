@@ -17,7 +17,7 @@ import {
   xdefiWallet,
   zerionWallet
 } from '@rainbow-me/rainbowkit/wallets'
-import { TokenWithLogo, VaultInfo } from '@shared/types'
+import { TokenWithLogo } from '@shared/types'
 import { NETWORK } from '@shared/utilities'
 import { Address } from 'viem'
 import { arbitrum, avalanche, celo, mainnet, optimism, polygon } from 'viem/chains'
@@ -80,6 +80,7 @@ export const RPC_URLS = {
   [NETWORK.celo]: process.env.NEXT_PUBLIC_CELO_RPC_URL
 } as const
 
+// TODO: update addresses to toucan deployment
 /**
  * Migration Destinations
  */
@@ -91,7 +92,7 @@ export const MIGRATION_DESTINATIONS = {
 /**
  * V5 Vault Tags
  */
-export type V5_TAG = 'beta' | 'replaced' | 'old-prize-pool'
+export type V5_TAG = 'beta' | 'canary' | 'replaced'
 
 /**
  * Deprecated V5 Vaults
@@ -104,7 +105,7 @@ export const OLD_V5_VAULTS: {
       name: string
       decimals: number
       symbol: string
-      tags?: V5_TAG[]
+      tags: V5_TAG[]
       logoURI: string
     }
     migrateTo: { chainId: SupportedNetwork; address: Lowercase<Address> }
@@ -115,7 +116,7 @@ export const OLD_V5_VAULTS: {
       vault: {
         chainId: NETWORK.optimism,
         address: '0x31515cfc4550d9c83e2d86e8a352886d1364e2d9',
-        name: 'Beta Prize USDC',
+        name: 'Prize USDC (Beta)',
         decimals: 6,
         symbol: 'PTUSDC',
         tags: ['beta'],
@@ -127,7 +128,7 @@ export const OLD_V5_VAULTS: {
       vault: {
         chainId: NETWORK.optimism,
         address: '0x1732ce5486ea47f607550ccbe499cd0f894e0494',
-        name: 'Beta Prize WETH',
+        name: 'Prize WETH (Beta)',
         decimals: 18,
         symbol: 'PTWETH',
         tags: ['beta'],
@@ -139,13 +140,85 @@ export const OLD_V5_VAULTS: {
       vault: {
         chainId: NETWORK.optimism,
         address: '0x29cb69d4780b53c1e5cd4d2b817142d2e9890715',
-        name: 'Prize WETH',
+        name: 'Prize WETH (Canary)',
         decimals: 18,
         symbol: 'pWETH',
-        tags: ['replaced'],
+        tags: ['canary'],
         logoURI: 'https://etherscan.io/token/images/weth_28.png'
       },
       migrateTo: MIGRATION_DESTINATIONS.wethVault
+    },
+    {
+      vault: {
+        chainId: NETWORK.optimism,
+        address: '0xf0b19f02c63d51b69563a2b675e0160e1c34397c',
+        name: 'Prize WETH V2 (Canary)',
+        decimals: 18,
+        symbol: 'pWETH',
+        tags: ['canary'],
+        logoURI: 'https://etherscan.io/token/images/weth_28.png'
+      },
+      migrateTo: MIGRATION_DESTINATIONS.wethVault
+    },
+    {
+      vault: {
+        chainId: NETWORK.optimism,
+        address: '0x77935f2c72b5eb814753a05921ae495aa283906b',
+        name: 'Prize USDC (Canary)',
+        decimals: 6,
+        symbol: 'pUSDC',
+        tags: ['canary'],
+        logoURI: 'https://etherscan.io/token/images/centre-usdc_28.png'
+      },
+      migrateTo: MIGRATION_DESTINATIONS.usdcVault
+    },
+    {
+      vault: {
+        chainId: NETWORK.optimism,
+        address: '0xe3b3a464ee575e8e25d2508918383b89c832f275',
+        name: 'Prize USDC.e (Canary)',
+        decimals: 6,
+        symbol: 'pUSDC.e',
+        tags: ['canary'],
+        logoURI: 'https://etherscan.io/token/images/centre-usdc_28.png'
+      },
+      migrateTo: MIGRATION_DESTINATIONS.usdcVault
+    },
+    {
+      vault: {
+        chainId: NETWORK.optimism,
+        address: '0xce8293f586091d48a0ce761bbf85d5bcaa1b8d2b',
+        name: 'Prize DAI (Canary)',
+        decimals: 18,
+        symbol: 'pDAI',
+        tags: ['canary'],
+        logoURI: 'https://assets.coingecko.com/coins/images/9956/small/4943.png?1636636734'
+      },
+      migrateTo: MIGRATION_DESTINATIONS.usdcVault
+    },
+    {
+      vault: {
+        chainId: NETWORK.optimism,
+        address: '0xbd8fd33e53ab4120638c34cbd454112b39f6b382',
+        name: 'Prize POOL (Canary)',
+        decimals: 18,
+        symbol: 'pPOOL',
+        tags: ['canary'],
+        logoURI: 'https://etherscan.io/token/images/pooltogether_32.png'
+      },
+      migrateTo: MIGRATION_DESTINATIONS.wethVault
+    },
+    {
+      vault: {
+        chainId: NETWORK.optimism,
+        address: '0x2ac482d67f009acfc242283b6d86bc6dd4e2ee4f',
+        name: 'Prize LUSD (Canary)',
+        decimals: 18,
+        symbol: 'pLUSD',
+        tags: ['canary'],
+        logoURI: 'https://etherscan.io/token/images/liquitylusd_32.png'
+      },
+      migrateTo: MIGRATION_DESTINATIONS.usdcVault
     }
   ]
 }
@@ -155,22 +228,22 @@ export const OLD_V5_VAULTS: {
  */
 export const V5_PROMOTION_SETTINGS: {
   [network: number]: {
-    tokenAddresses?: `0x${string}`[]
-    fromBlock?: bigint
-    toBlock?: bigint
-    twabRewardsAddress?: Lowercase<Address>
+    twabRewards: { address: Lowercase<Address>; fromBlock?: bigint; toBlock?: bigint }[]
+    tokenAddresses?: Lowercase<Address>[]
   }
 } = {
   [NETWORK.optimism]: {
+    twabRewards: [
+      { address: '0x27ed5760edc0128e3043f6cc0c3428e337396a66', fromBlock: 112_933_000n }
+    ],
     tokenAddresses: [
       '0x4200000000000000000000000000000000000042', // OP
-      '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85', // USDC
-      '0x7F5c764cBc14f9669B88837ca1490cCa17c31607', // USDC.e
+      '0x0b2c639c533813f4aa9d7837caf62653d097ff85', // USDC
+      '0x7f5c764cbc14f9669b88837ca1490cca17c31607', // USDC.e
       '0x4200000000000000000000000000000000000006', // WETH
-      '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1', // DAI
-      '0x395Ae52bB17aef68C2888d941736A71dC6d4e125' // POOL
-    ],
-    fromBlock: 112_933_000n
+      '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1', // DAI
+      '0x395ae52bb17aef68c2888d941736a71dc6d4e125' // POOL
+    ]
   }
 }
 

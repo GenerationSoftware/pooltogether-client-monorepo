@@ -1,6 +1,13 @@
 export const prizePoolABI = [
   {
     inputs: [],
+    name: 'DONATOR',
+    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
     name: 'accountedBalance',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
@@ -25,8 +32,15 @@ export const prizePoolABI = [
   },
   {
     inputs: [],
+    name: 'canaryShares',
+    outputs: [{ internalType: 'uint8', name: '', type: 'uint8' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
     name: 'claimCount',
-    outputs: [{ internalType: 'uint32', name: '', type: 'uint32' }],
+    outputs: [{ internalType: 'uint24', name: '', type: 'uint24' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -36,8 +50,8 @@ export const prizePoolABI = [
       { internalType: 'uint8', name: '_tier', type: 'uint8' },
       { internalType: 'uint32', name: '_prizeIndex', type: 'uint32' },
       { internalType: 'address', name: '_prizeRecipient', type: 'address' },
-      { internalType: 'uint96', name: '_fee', type: 'uint96' },
-      { internalType: 'address', name: '_feeRecipient', type: 'address' }
+      { internalType: 'uint96', name: '_claimReward', type: 'uint96' },
+      { internalType: 'address', name: '_claimRewardRecipient', type: 'address' }
     ],
     name: 'claimPrize',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
@@ -48,6 +62,23 @@ export const prizePoolABI = [
     inputs: [{ internalType: 'uint32', name: '_claimCount', type: 'uint32' }],
     name: 'computeNextNumberOfTiers',
     outputs: [{ internalType: 'uint8', name: '', type: 'uint8' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      { internalType: 'uint24', name: '_endDrawIdInclusive', type: 'uint24' },
+      { internalType: 'uint24', name: '_rangeSize', type: 'uint24' }
+    ],
+    name: 'computeRangeStartDrawIdInclusive',
+    outputs: [{ internalType: 'uint24', name: '', type: 'uint24' }],
+    stateMutability: 'pure',
+    type: 'function'
+  },
+  {
+    inputs: [{ internalType: 'uint8', name: '_numberOfTiers', type: 'uint8' }],
+    name: 'computeTotalShares',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -69,9 +100,23 @@ export const prizePoolABI = [
     type: 'function'
   },
   {
+    inputs: [{ internalType: 'uint256', name: '_amount', type: 'uint256' }],
+    name: 'donatePrizeTokens',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
     inputs: [{ internalType: 'uint24', name: 'drawId', type: 'uint24' }],
     name: 'drawClosesAt',
     outputs: [{ internalType: 'uint48', name: '', type: 'uint48' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'drawIdPriorToShutdown',
+    outputs: [{ internalType: 'uint24', name: '', type: 'uint24' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -93,6 +138,20 @@ export const prizePoolABI = [
     inputs: [],
     name: 'drawPeriodSeconds',
     outputs: [{ internalType: 'uint48', name: '', type: 'uint48' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'drawTimeout',
+    outputs: [{ internalType: 'uint24', name: '', type: 'uint24' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'drawTimeoutAt',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -131,6 +190,16 @@ export const prizePoolABI = [
       { internalType: 'uint24', name: '_endDrawIdInclusive', type: 'uint24' }
     ],
     name: 'getContributedBetween',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      { internalType: 'uint24', name: '_startDrawIdInclusive', type: 'uint24' },
+      { internalType: 'uint24', name: '_endDrawIdInclusive', type: 'uint24' }
+    ],
+    name: 'getDonatedBetween',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function'
@@ -177,7 +246,7 @@ export const prizePoolABI = [
     inputs: [{ internalType: 'uint8', name: '_tier', type: 'uint8' }],
     name: 'getTierPrizeCount',
     outputs: [{ internalType: 'uint32', name: '', type: 'uint32' }],
-    stateMutability: 'view',
+    stateMutability: 'pure',
     type: 'function'
   },
   {
@@ -214,8 +283,8 @@ export const prizePoolABI = [
   {
     inputs: [
       { internalType: 'address', name: '_vault', type: 'address' },
-      { internalType: 'uint24', name: '_startDrawId', type: 'uint24' },
-      { internalType: 'uint24', name: '_endDrawId', type: 'uint24' }
+      { internalType: 'uint24', name: '_startDrawIdInclusive', type: 'uint24' },
+      { internalType: 'uint24', name: '_endDrawIdInclusive', type: 'uint24' }
     ],
     name: 'getVaultPortion',
     outputs: [{ internalType: 'SD59x18', name: '', type: 'int256' }],
@@ -226,12 +295,13 @@ export const prizePoolABI = [
     inputs: [
       { internalType: 'address', name: '_vault', type: 'address' },
       { internalType: 'address', name: '_user', type: 'address' },
-      { internalType: 'uint256', name: '_drawDuration', type: 'uint256' }
+      { internalType: 'uint24', name: '_startDrawIdInclusive', type: 'uint24' },
+      { internalType: 'uint24', name: '_endDrawIdInclusive', type: 'uint24' }
     ],
     name: 'getVaultUserBalanceAndTotalSupplyTwab',
     outputs: [
-      { internalType: 'uint256', name: '', type: 'uint256' },
-      { internalType: 'uint256', name: '', type: 'uint256' }
+      { internalType: 'uint256', name: 'twab', type: 'uint256' },
+      { internalType: 'uint256', name: 'twabTotalSupply', type: 'uint256' }
     ],
     stateMutability: 'view',
     type: 'function'
@@ -251,9 +321,23 @@ export const prizePoolABI = [
     type: 'function'
   },
   {
+    inputs: [{ internalType: 'uint8', name: '_tier', type: 'uint8' }],
+    name: 'isCanaryTier',
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
     inputs: [{ internalType: 'uint24', name: 'drawId', type: 'uint24' }],
     name: 'isDrawFinalized',
     outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'isShutdown',
+    outputs: [{ internalType: 'bool', name: 'shutdown', type: 'bool' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -285,13 +369,6 @@ export const prizePoolABI = [
   },
   {
     inputs: [],
-    name: 'owner',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [],
     name: 'pendingReserveContributions',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
@@ -309,13 +386,6 @@ export const prizePoolABI = [
     name: 'prizeTokenPerShare',
     outputs: [{ internalType: 'UD34x4', name: '', type: 'uint128' }],
     stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [],
-    name: 'renounceOwnership',
-    outputs: [],
-    stateMutability: 'nonpayable',
     type: 'function'
   },
   {
@@ -348,8 +418,25 @@ export const prizePoolABI = [
   },
   {
     inputs: [],
-    name: 'smoothing',
-    outputs: [{ internalType: 'SD1x18', name: '', type: 'int64' }],
+    name: 'shutdownAt',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      { internalType: 'address', name: '_vault', type: 'address' },
+      { internalType: 'address', name: '_account', type: 'address' }
+    ],
+    name: 'shutdownBalanceOf',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'tierLiquidityUtilizationRate',
+    outputs: [{ internalType: 'UD60x18', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -365,13 +452,6 @@ export const prizePoolABI = [
     name: 'totalWithdrawn',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [{ internalType: 'address', name: 'newOwner', type: 'address' }],
-    name: 'transferOwnership',
-    outputs: [],
-    stateMutability: 'nonpayable',
     type: 'function'
   },
   {
@@ -404,6 +484,16 @@ export const prizePoolABI = [
     type: 'function'
   },
   {
+    inputs: [
+      { internalType: 'address', name: '_vault', type: 'address' },
+      { internalType: 'address', name: '_recipient', type: 'address' }
+    ],
+    name: 'withdrawShutdownBalance',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
     anonymous: false,
     inputs: [
       { indexed: true, internalType: 'address', name: 'to', type: 'address' },
@@ -422,8 +512,8 @@ export const prizePoolABI = [
       { indexed: false, internalType: 'uint8', name: 'tier', type: 'uint8' },
       { indexed: false, internalType: 'uint32', name: 'prizeIndex', type: 'uint32' },
       { indexed: false, internalType: 'uint152', name: 'payout', type: 'uint152' },
-      { indexed: false, internalType: 'uint96', name: 'fee', type: 'uint96' },
-      { indexed: false, internalType: 'address', name: 'feeRecipient', type: 'address' }
+      { indexed: false, internalType: 'uint96', name: 'claimReward', type: 'uint96' },
+      { indexed: false, internalType: 'address', name: 'claimRewardRecipient', type: 'address' }
     ],
     name: 'ClaimedPrize',
     type: 'event'
@@ -463,12 +553,6 @@ export const prizePoolABI = [
   },
   {
     anonymous: false,
-    inputs: [{ indexed: true, internalType: 'address', name: 'drawManager', type: 'address' }],
-    name: 'DrawManagerSet',
-    type: 'event'
-  },
-  {
-    anonymous: false,
     inputs: [
       { indexed: true, internalType: 'address', name: 'to', type: 'address' },
       { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }
@@ -478,17 +562,14 @@ export const prizePoolABI = [
   },
   {
     anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'address', name: 'previousOwner', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'newOwner', type: 'address' }
-    ],
-    name: 'OwnershipTransferred',
+    inputs: [{ indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }],
+    name: 'ReserveConsumed',
     type: 'event'
   },
   {
     anonymous: false,
-    inputs: [{ indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }],
-    name: 'ReserveConsumed',
+    inputs: [{ indexed: true, internalType: 'address', name: 'drawManager', type: 'address' }],
+    name: 'SetDrawManager',
     type: 'event'
   },
   {
@@ -525,6 +606,7 @@ export const prizePoolABI = [
     name: 'ContributionGTDeltaBalance',
     type: 'error'
   },
+  { inputs: [], name: 'CreatorIsZeroAddress', type: 'error' },
   {
     inputs: [
       { internalType: 'address', name: 'vault', type: 'address' },
@@ -543,16 +625,9 @@ export const prizePoolABI = [
     name: 'DrawAwarded',
     type: 'error'
   },
-  { inputs: [], name: 'DrawManagerIsZeroAddress', type: 'error' },
-  { inputs: [], name: 'FeeRecipientZeroAddress', type: 'error' },
-  {
-    inputs: [
-      { internalType: 'uint256', name: 'fee', type: 'uint256' },
-      { internalType: 'uint256', name: 'maxFee', type: 'uint256' }
-    ],
-    name: 'FeeTooLarge',
-    type: 'error'
-  },
+  { inputs: [], name: 'DrawManagerAlreadySet', type: 'error' },
+  { inputs: [], name: 'DrawTimeoutGTGrandPrizePeriodDraws', type: 'error' },
+  { inputs: [], name: 'DrawTimeoutIsZero', type: 'error' },
   { inputs: [], name: 'FirstDrawOpensInPast', type: 'error' },
   { inputs: [], name: 'IncompatibleTwabPeriodLength', type: 'error' },
   { inputs: [], name: 'IncompatibleTwabPeriodOffset', type: 'error' },
@@ -613,6 +688,7 @@ export const prizePoolABI = [
     name: 'NumberOfTiersLessThanMinimum',
     type: 'error'
   },
+  { inputs: [], name: 'OnlyCreator', type: 'error' },
   {
     inputs: [
       { internalType: 'uint256', name: 'x', type: 'uint256' },
@@ -684,11 +760,20 @@ export const prizePoolABI = [
     type: 'error'
   },
   { inputs: [], name: 'PrizeIsZero', type: 'error' },
+  { inputs: [], name: 'PrizePoolNotShutdown', type: 'error' },
+  { inputs: [], name: 'PrizePoolShutdown', type: 'error' },
   { inputs: [], name: 'RandomNumberIsZero', type: 'error' },
+  { inputs: [], name: 'RangeSizeZero', type: 'error' },
+  { inputs: [], name: 'RewardRecipientZeroAddress', type: 'error' },
   {
-    inputs: [{ internalType: 'int64', name: 'smoothing', type: 'int64' }],
-    name: 'SmoothingGTEOne',
+    inputs: [
+      { internalType: 'uint256', name: 'reward', type: 'uint256' },
+      { internalType: 'uint256', name: 'maxReward', type: 'uint256' }
+    ],
+    name: 'RewardTooLarge',
     type: 'error'
   },
+  { inputs: [], name: 'TierLiquidityUtilizationRateCannotBeZero', type: 'error' },
+  { inputs: [], name: 'TierLiquidityUtilizationRateGreaterThanOne', type: 'error' },
   { inputs: [], name: 'UpperBoundGtZero', type: 'error' }
 ] as const

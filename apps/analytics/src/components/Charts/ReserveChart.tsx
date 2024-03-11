@@ -5,6 +5,7 @@ import {
   usePrizeBackstopEvents,
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { Token } from '@shared/types'
 import { formatNumberForDisplay, getSimpleDate, MAX_UINT_256 } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
@@ -14,7 +15,7 @@ import { formatUnits, Log } from 'viem'
 import { ReserveCard } from '@components/Reserve/ReserveCard'
 import { QUERY_START_BLOCK } from '@constants/config'
 import { useReserve } from '@hooks/useReserve'
-import { RelayMsgTx, RelayTx, RngTx, useRngTxs } from '@hooks/useRngTxs'
+import { DrawFinishTx, DrawStartTx, useRngTxs } from '@hooks/useRngTxs'
 import { LineChart } from './LineChart'
 
 interface DataPoint {
@@ -22,17 +23,19 @@ interface DataPoint {
   reserve: number
   liquidations: number
   manual: number
-  rngFees: number
+  rewards: number
   prizeBackstops: number
+  buyback: number
 }
 
 interface ReserveChartProps {
   prizePool: PrizePool
+  burnToken?: Token
   className?: string
 }
 
 export const ReserveChart = (props: ReserveChartProps) => {
-  const { prizePool, className } = props
+  const { prizePool, burnToken, className } = props
 
   const { data: reserve } = useReserve(prizePool)
 
@@ -68,13 +71,15 @@ export const ReserveChart = (props: ReserveChartProps) => {
         return parseFloat(formatUnits(val, prizeToken.decimals))
       }
 
-      const validRngTxs = rngTxs.filter((txs) => txs.rng.fee !== undefined && !!txs.relay.l2) as {
-        rng: Required<RngTx>
-        relay: { l1?: RelayMsgTx; l2: RelayTx }
+      const validRngTxs = rngTxs.filter(
+        (txs) => txs.drawStart.reward !== undefined && !!txs.drawFinish
+      ) as {
+        drawStart: DrawStartTx & { reward: bigint }
+        drawFinish: DrawFinishTx
       }[]
 
       let minBlock = 0n
-      let maxBlock = validRngTxs[0]?.relay.l2.blockNumber
+      let maxBlock = validRngTxs[0]?.drawFinish.blockNumber
       let prevReserve = 0
 
       const isValidEvent = (event: Log<bigint, number, false>) => {
@@ -86,40 +91,52 @@ export const ReserveChart = (props: ReserveChartProps) => {
         reserve: 0,
         liquidations: 0,
         manual: 0,
-        rngFees: 0,
-        prizeBackstops: 0
+        rewards: 0,
+        prizeBackstops: 0,
+        buyback: 0
       })
 
       validRngTxs.forEach((txs, i) => {
-        const drawId = txs.rng.drawId
-        const closedAt = txs.relay.l2.timestamp
-        const name = `${drawId}-${closedAt}`
-        const rngFees = formatPrizeNum(txs.rng.fee + txs.relay.l2.fee)
-        const reserve = formatPrizeNum(txs.relay.l2.reserve)
-        const reserveAfterFees = reserve - rngFees
+        const drawId = txs.drawFinish.drawId
+        const awardedAt = txs.drawFinish.timestamp
+        const name = `${drawId}-${awardedAt}`
+
+        const remainingReserve = formatPrizeNum(txs.drawFinish.remainingReserve)
+
+        // Inbound tokens
         const manual = formatPrizeNum(
           manualContributionEvents.reduce((a, b) => a + (isValidEvent(b) ? b.args.amount : 0n), 0n)
         )
+
+        // Outbound tokens
+        const rewards = formatPrizeNum(txs.drawStart.reward + txs.drawFinish.reward)
         const prizeBackstops = formatPrizeNum(
           prizeBackstopEvents.reduce((a, b) => a + (isValidEvent(b) ? b.args.amount : 0n), 0n)
         )
-        const liquidations = reserveAfterFees - prevReserve - manual + rngFees + prizeBackstops
+        const buyback = !!burnToken ? remainingReserve : 0
+
+        // Calculated liquidation contributions
+        const liquidations = rewards + prizeBackstops + buyback - manual - prevReserve
+
+        // Resulting reserve balance
+        const reserve = remainingReserve - buyback
 
         data.push({
           name,
-          reserve: reserveAfterFees,
+          reserve,
           liquidations,
           manual,
-          rngFees,
-          prizeBackstops
+          rewards,
+          prizeBackstops,
+          buyback
         })
 
         minBlock = maxBlock
-        maxBlock = validRngTxs[i + 1]?.relay.l2.blockNumber ?? MAX_UINT_256
-        prevReserve = reserveAfterFees
+        maxBlock = validRngTxs[i + 1]?.drawFinish.blockNumber ?? MAX_UINT_256
+        prevReserve = reserve
       })
 
-      const currentReserve = formatPrizeNum(reserve.current)
+      const currentReserve = formatPrizeNum(reserve.current + reserve.pending)
       const currentManual = formatPrizeNum(
         manualContributionEvents.reduce((a, b) => a + (isValidEvent(b) ? b.args.amount : 0n), 0n)
       )
@@ -134,8 +151,9 @@ export const ReserveChart = (props: ReserveChartProps) => {
         reserve: currentReserve,
         liquidations: currentLiquidations,
         manual: currentManual,
-        rngFees: 0,
-        prizeBackstops: currentPrizeBackstops
+        rewards: 0,
+        prizeBackstops: currentPrizeBackstops,
+        buyback: 0
       })
 
       return data
@@ -157,6 +175,7 @@ export const ReserveChart = (props: ReserveChartProps) => {
                     {...(payload[0].payload as DataPoint)}
                     name={formatTooltipLabel(label)}
                     prizeToken={prizeToken}
+                    burnToken={burnToken}
                   />
                 )
               } else {

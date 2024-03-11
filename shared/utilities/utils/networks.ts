@@ -1,16 +1,6 @@
 import { NETWORK } from '../constants'
 
 /**
- * Returns the chain ID that maps to a provided network name
- * @param networkName name that maps to a chain ID
- * @returns
- */
-export const getChainIdByName = (networkName: string): number | undefined => {
-  // @ts-ignore
-  return NETWORK[networkName]
-}
-
-/**
  * Returns the network name that maps to a provided chain ID
  * @param chainId chain ID that maps to a network name
  * @returns

@@ -1,16 +1,19 @@
-import { Spinner } from '@shared/ui'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 import { PrizesView } from 'src/views/PrizesView'
 import { Layout } from '@components/Layout'
 import { useSelectedChainId } from '@hooks/useSelectedChainId'
 
 export default function PrizesPage() {
+  const router = useRouter()
+
   const { chainId, isReady } = useSelectedChainId()
 
-  return (
-    <Layout>
-      {!isReady && <Spinner />}
-      {/* TODO: show some error message if invalid chainId */}
-      {isReady && (!!chainId ? <PrizesView chainId={chainId} /> : <></>)}
-    </Layout>
-  )
+  useEffect(() => {
+    if (isReady && !chainId) {
+      router.replace('/prizes')
+    }
+  }, [chainId, isReady])
+
+  return <Layout>{!!chainId && <PrizesView chainId={chainId} />}</Layout>
 }

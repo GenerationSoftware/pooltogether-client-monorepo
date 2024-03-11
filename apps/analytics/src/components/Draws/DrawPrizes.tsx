@@ -6,7 +6,8 @@ import {
 import { Spinner } from '@shared/ui'
 import { formatNumberForDisplay, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
-import { ReactNode } from 'react'
+import { ReactNode, useMemo } from 'react'
+import { isCanaryTier } from 'src/utils'
 import { QUERY_START_BLOCK } from '@constants/config'
 import { useDrawResults } from '@hooks/useDrawResults'
 import { DrawCardItemTitle } from './DrawCardItemTitle'
@@ -24,27 +25,34 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
     prizePool,
     { fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined }
   )
-  const drawAwardedEvent = drawAwardedEvents?.find((e) => e.args.drawId === drawId)
-  const numTiers = drawAwardedEvent?.args.numTiers
+
+  const numTiers = useMemo(() => {
+    const drawAwardedEvent = drawAwardedEvents?.find((e) => e.args.drawId === drawId)
+    return drawAwardedEvent?.args.numTiers
+  }, [drawId, drawAwardedEvents])
 
   const { data: prizesAvailable } = useDrawResults(prizePool, drawId, {
     refetchInterval: sToMs(300)
   })
   const nonCanaryPrizesAvailable =
     !!prizesAvailable && !!numTiers
-      ? prizesAvailable.filter((prize) => prize.tier !== numTiers - 1)
+      ? prizesAvailable.filter((prize) => !isCanaryTier(prize.tier, numTiers))
       : []
   const canaryPrizesAvailable =
     !!prizesAvailable && !!numTiers
-      ? prizesAvailable.filter((prize) => prize.tier === numTiers - 1)
+      ? prizesAvailable.filter((prize) => isCanaryTier(prize.tier, numTiers))
       : []
 
   const { data: allDraws, isFetched: isFetchedPrizeDrawWinners } = usePrizeDrawWinners(prizePool)
   const draw = allDraws?.find((d) => d.id === drawId)
   const nonCanaryPrizeClaims =
-    !!draw && !!numTiers ? draw.prizeClaims.filter((prize) => prize.tier !== numTiers - 1) : []
+    !!draw && !!numTiers
+      ? draw.prizeClaims.filter((prize) => !isCanaryTier(prize.tier, numTiers))
+      : []
   const canaryPrizeClaims =
-    !!draw && !!numTiers ? draw.prizeClaims.filter((prize) => prize.tier === numTiers - 1) : []
+    !!draw && !!numTiers
+      ? draw.prizeClaims.filter((prize) => isCanaryTier(prize.tier, numTiers))
+      : []
 
   const formattedCanaryPercentage =
     !!canaryPrizeClaims.length && !!canaryPrizesAvailable.length
@@ -68,7 +76,8 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
             )}
             {!!nonCanaryPrizesAvailable.length && (
               <span>
-                <BigText>{nonCanaryPrizesAvailable.length}</BigText> prizes
+                <BigText>{nonCanaryPrizesAvailable.length}</BigText> prize
+                {nonCanaryPrizesAvailable.length > 1 && 's'}
               </span>
             )}
             {!!nonCanaryPrizeClaims.length && (

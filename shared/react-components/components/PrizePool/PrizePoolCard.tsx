@@ -3,7 +3,7 @@ import { useGrandPrize } from '@generationsoftware/hyperstructure-react-hooks'
 import { useSelectedCurrency } from '@shared/generic-react-hooks'
 import { Intl } from '@shared/types'
 import { Card, Spinner } from '@shared/ui'
-import { NETWORK, POOL_TOKEN_ADDRESSES, WRAPPED_NATIVE_ASSETS } from '@shared/utilities'
+import { NETWORK, WRAPPED_NATIVE_ASSETS } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { PrizePoolBadge } from '../Badges/PrizePoolBadge'
@@ -25,10 +25,6 @@ export const PrizePoolCard = (props: PrizePoolCardProps) => {
   const { selectedCurrency } = useSelectedCurrency()
 
   const isTokenEquivalentHidden = useMemo(() => {
-    const poolTokenAddress = POOL_TOKEN_ADDRESSES[
-      prizePool.chainId as keyof typeof POOL_TOKEN_ADDRESSES
-    ]?.toLowerCase() as Lowercase<Address> | undefined
-
     const wethTokenAddress =
       prizePool.chainId === NETWORK.mainnet ||
       prizePool.chainId === NETWORK.optimism ||
@@ -37,10 +33,7 @@ export const PrizePoolCard = (props: PrizePoolCardProps) => {
         ? (WRAPPED_NATIVE_ASSETS[prizePool.chainId]?.toLowerCase() as Lowercase<Address>)
         : undefined
 
-    return (
-      (selectedCurrency === 'pool' && grandPrize?.address.toLowerCase() === poolTokenAddress) ||
-      (selectedCurrency === 'eth' && grandPrize?.address.toLowerCase() === wethTokenAddress)
-    )
+    return selectedCurrency === 'eth' && grandPrize?.address.toLowerCase() === wethTokenAddress
   }, [prizePool, selectedCurrency])
 
   return (

@@ -41,3 +41,12 @@ export const useLiquidationPairTokenOutAddresses = (chainId: number, lpAddresses
     return { isFetched, data }
   }, [results])
 }
+
+export const useLiquidationPairTokenOutAddress = (
+  chainId: number,
+  lpAddress: Address
+): { data?: Address; isFetched: boolean } => {
+  const tokenOutAddresses = useLiquidationPairTokenOutAddresses(chainId, [lpAddress])
+
+  return { ...tokenOutAddresses, data: tokenOutAddresses.data[lpAddress] }
+}

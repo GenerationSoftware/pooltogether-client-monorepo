@@ -1,38 +1,34 @@
 import { useTransferEvents } from '@generationsoftware/hyperstructure-react-hooks'
 import { Token } from '@shared/types'
-import { DEAD_ADDRESS, formatBigIntForDisplay } from '@shared/utilities'
+import { formatBigIntForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import { Block } from 'viem'
-import { BURN_ADDRESSES, QUERY_START_BLOCK, VAULT_LPS } from '@constants/config'
+import { BURN_SETTINGS, QUERY_START_BLOCK } from '@constants/config'
 
 interface RecentBurnStatsProps {
-  prizeToken: Token
+  burnToken: Token
   minBlock: Block
   label: string
   className?: string
 }
 
 export const RecentBurnStats = (props: RecentBurnStatsProps) => {
-  const { prizeToken, minBlock, label, className } = props
+  const { burnToken, minBlock, label, className } = props
 
-  const lpAddresses = VAULT_LPS[prizeToken.chainId] ?? []
-  const miscBurnAddresses = BURN_ADDRESSES[prizeToken.chainId] ?? []
-
-  const { data: burnEvents } = useTransferEvents(prizeToken.chainId, prizeToken.address, {
-    to: [...lpAddresses, ...miscBurnAddresses, DEAD_ADDRESS],
-    fromBlock: QUERY_START_BLOCK[prizeToken.chainId]
+  const { data: burnEvents } = useTransferEvents(burnToken.chainId, burnToken.address, {
+    to: BURN_SETTINGS[burnToken.chainId].burnAddresses,
+    fromBlock: QUERY_START_BLOCK[burnToken.chainId]
   })
 
   const burned = useMemo(() => {
     const validBurnEvents =
       burnEvents?.filter((event) => event.blockNumber >= (minBlock.number ?? 0n)) ?? []
-    const sumBurnedAmount = validBurnEvents.reduce((a, b) => a + b.args.value, 0n)
-    return sumBurnedAmount
+    return validBurnEvents.reduce((a, b) => a + b.args.value, 0n)
   }, [burnEvents, minBlock])
 
   if (!!burned) {
-    const formattedBurnedAmount = formatBigIntForDisplay(burned, prizeToken.decimals, {
+    const formattedBurnedAmount = formatBigIntForDisplay(burned, burnToken.decimals, {
       hideZeroes: true
     })
 
@@ -41,7 +37,7 @@ export const RecentBurnStats = (props: RecentBurnStatsProps) => {
         <span>{label}:</span>
         <span className='flex gap-1 items-center text-pt-purple-300'>
           <span className='text-lg font-medium'>{formattedBurnedAmount}</span>
-          <span className='text-sm'>{prizeToken.symbol}</span>
+          <span className='text-sm'>{burnToken.symbol}</span>
         </span>
       </div>
     )

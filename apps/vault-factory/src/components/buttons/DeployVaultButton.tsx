@@ -25,7 +25,10 @@ export const DeployVaultButton = (props: DeployVaultButtonProps) => {
 
   const vault = useVaultInfo()
 
-  const { data: tokenData } = useToken(vault.chainId as SupportedNetwork, vault.token as Address)
+  const { data: tokenData } = useToken(
+    vault.chainId as SupportedNetwork,
+    vault.tokenAddress as Address
+  )
 
   const { openConnectModal } = useConnectModal()
   const { openChainModal } = useChainModal()
