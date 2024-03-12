@@ -11,7 +11,7 @@ import { useSetAtom } from 'jotai'
 import { vaultAddressAtom } from 'src/atoms'
 import { SupportedNetwork } from 'src/types'
 import { Address } from 'viem'
-import { useDeployedVaults } from '@hooks/useDeployedVaults'
+import { useUserDeployedVaults } from '@hooks/useUserDeployedVaults'
 import { useVaultInfo } from '@hooks/useVaultInfo'
 
 interface DeployVaultButtonProps {
@@ -36,7 +36,7 @@ export const DeployVaultButton = (props: DeployVaultButtonProps) => {
 
   const setVaultAddress = useSetAtom(vaultAddressAtom)
 
-  const { addVault } = useDeployedVaults()
+  const { addVault } = useUserDeployedVaults()
 
   const {
     isWaiting: isWaitingDeploy,
