@@ -1,4 +1,5 @@
 import { useToken } from '@generationsoftware/hyperstructure-react-hooks'
+import { TokenIcon } from '@shared/react-components'
 import { Card, ExternalLink, Spinner } from '@shared/ui'
 import { getBlockExplorerUrl, shorten } from '@shared/utilities'
 import classNames from 'classnames'
@@ -55,13 +56,12 @@ interface YieldVaultCardProps {
   yieldVault: (typeof NETWORK_CONFIG)[SupportedNetwork]['yieldSources'][number]['vaults'][number]
 }
 
-// TODO: add token logos
 // TODO: add existing vaults # notice
 const YieldVaultCard = (props: YieldVaultCardProps) => {
   const { chainId, yieldVault } = props
 
   const { data: tokenAddress } = useYieldSourceTokenAddress(chainId, yieldVault.address)
-  const { data: tokenData } = useToken(chainId, tokenAddress as Address)
+  const { data: token } = useToken(chainId, tokenAddress as Address)
 
   const { vaultYieldSourceAddress } = useWatch<YieldVaultInputFormValues>()
 
@@ -77,9 +77,16 @@ const YieldVaultCard = (props: YieldVaultCardProps) => {
       )}
       className='gap-3 !justify-start !p-6'
     >
-      <span className='text-lg font-bold text-pt-purple-100'>
-        {tokenData?.symbol ?? <Spinner />}
-      </span>
+      <div className='flex items-center gap-1'>
+        {!!token ? (
+          <>
+            <TokenIcon token={token} />
+            <span className='text-lg font-bold text-pt-purple-100'>{token.symbol}</span>
+          </>
+        ) : (
+          <Spinner />
+        )}
+      </div>
       <ExternalLink
         href={getBlockExplorerUrl(chainId, yieldVault.address)}
         size='xs'
