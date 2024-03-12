@@ -1,9 +1,13 @@
 import { ExternalLink } from '@shared/ui'
 import classNames from 'classnames'
-import { useAtom } from 'jotai'
+import { useAtom, useSetAtom } from 'jotai'
 import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { vaultYieldSourceAddressAtom, vaultYieldSourceNameAtom } from 'src/atoms'
+import {
+  isUsingCustomYieldSourceAtom,
+  vaultYieldSourceAddressAtom,
+  vaultYieldSourceNameAtom
+} from 'src/atoms'
 import { isValidChars } from 'src/utils'
 import { Address, isAddress } from 'viem'
 import { NextButton } from '@components/buttons/NextButton'
@@ -27,6 +31,7 @@ export const CustomYieldSourceForm = (props: CustomYieldSourceFormProps) => {
 
   const [vaultYieldSourceName, setVaultYieldSourceName] = useAtom(vaultYieldSourceNameAtom)
   const [vaultYieldSourceAddress, setVaultYieldSourceAddress] = useAtom(vaultYieldSourceAddressAtom)
+  const setIsUsingCustomYieldSource = useSetAtom(isUsingCustomYieldSourceAtom)
 
   const { step, setStep } = useVaultCreationSteps()
 
@@ -45,7 +50,6 @@ export const CustomYieldSourceForm = (props: CustomYieldSourceFormProps) => {
     setStep(step + 2)
   }
 
-  // TODO: add option to return to audited/compatible yield sources
   return (
     <FormProvider {...formMethods}>
       <form
@@ -78,6 +82,12 @@ export const CustomYieldSourceForm = (props: CustomYieldSourceFormProps) => {
           label='Yield Source Address'
           className='w-full max-w-sm'
         />
+        <button
+          onClick={() => setIsUsingCustomYieldSource(false)}
+          className='text-pt-teal-dark underline'
+        >
+          Return to list of suggested yield sources
+        </button>
         <div className='flex gap-2 items-center'>
           <PrevButton />
           <NextButton disabled={!formMethods.formState.isValid} />

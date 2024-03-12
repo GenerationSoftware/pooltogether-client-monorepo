@@ -3,7 +3,12 @@ import classNames from 'classnames'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { vaultChainIdAtom, vaultYieldSourceIdAtom, vaultYieldSourceNameAtom } from 'src/atoms'
+import {
+  isUsingCustomYieldSourceAtom,
+  vaultChainIdAtom,
+  vaultYieldSourceIdAtom,
+  vaultYieldSourceNameAtom
+} from 'src/atoms'
 import { NextButton } from '@components/buttons/NextButton'
 import { PrevButton } from '@components/buttons/PrevButton'
 import { NETWORK_CONFIG } from '@constants/config'
@@ -26,6 +31,7 @@ export const YieldSourceForm = (props: YieldSourceFormProps) => {
   const chainId = useAtomValue(vaultChainIdAtom)
   const [vaultYieldSourceId, setVaultYieldSourceId] = useAtom(vaultYieldSourceIdAtom)
   const setVaultYieldSourceName = useSetAtom(vaultYieldSourceNameAtom)
+  const setIsUsingCustomYieldSource = useSetAtom(isUsingCustomYieldSourceAtom)
 
   const { nextStep } = useVaultCreationSteps()
 
@@ -52,7 +58,6 @@ export const YieldSourceForm = (props: YieldSourceFormProps) => {
     return <Spinner />
   }
 
-  // TODO: add option to use a custom yield source
   return (
     <FormProvider {...formMethods}>
       <form
@@ -65,6 +70,15 @@ export const YieldSourceForm = (props: YieldSourceFormProps) => {
             {NETWORK_CONFIG[chainId].yieldSources.map((yieldSource) => (
               <YieldSourceInput key={yieldSource.id} yieldSource={yieldSource} />
             ))}
+          </div>
+          <div className='flex flex-col gap-2 items-center'>
+            <span>Or...</span>
+            <button
+              onClick={() => setIsUsingCustomYieldSource(true)}
+              className='text-pt-teal-dark underline'
+            >
+              Use a custom ERC-4626 yield source
+            </button>
           </div>
         </div>
         <div className='flex gap-2 items-center'>
