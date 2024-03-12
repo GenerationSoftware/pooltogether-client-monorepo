@@ -131,6 +131,15 @@ export const NETWORK_CONFIG: Record<
 }
 
 /**
+ * Vault tag display names
+ */
+export const VAULT_TAGS: Record<YieldSourceVaultTag, string> = {
+  stablecoin: 'Stablecoin',
+  lp: 'LP Token',
+  lst: 'Liquid Staking'
+}
+
+/**
  * Local storage keys
  */
 export const LOCAL_STORAGE_KEYS = {

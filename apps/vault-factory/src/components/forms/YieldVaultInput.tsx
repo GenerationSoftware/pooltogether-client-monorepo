@@ -5,9 +5,9 @@ import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { vaultChainIdAtom } from 'src/atoms'
-import { SupportedNetwork } from 'src/types'
+import { SupportedNetwork, YieldSourceVaultTag } from 'src/types'
 import { Address } from 'viem'
-import { NETWORK_CONFIG } from '@constants/config'
+import { NETWORK_CONFIG, VAULT_TAGS } from '@constants/config'
 import { useYieldSourceTokenAddress } from '@hooks/useYieldSourceTokenAddress'
 
 interface YieldVaultInputFormValues {
@@ -56,7 +56,6 @@ interface YieldVaultCardProps {
 }
 
 // TODO: add token logos
-// TODO: add tags
 // TODO: add existing vaults # notice
 const YieldVaultCard = (props: YieldVaultCardProps) => {
   const { chainId, yieldVault } = props
@@ -76,7 +75,7 @@ const YieldVaultCard = (props: YieldVaultCardProps) => {
         'w-full h-full border cursor-pointer overflow-hidden hover:bg-pt-purple-50/20',
         { 'border-pt-teal-dark': isSelected, 'border-transparent': !isSelected }
       )}
-      className='gap-3'
+      className='gap-3 !justify-start !p-6'
     >
       <span className='text-lg font-bold text-pt-purple-100'>
         {tokenData?.symbol ?? <Spinner />}
@@ -88,6 +87,33 @@ const YieldVaultCard = (props: YieldVaultCardProps) => {
       >
         {shorten(yieldVault.address)}
       </ExternalLink>
+      <YieldVaultCardTags tags={yieldVault.tags} className='mt-auto' />
     </Card>
+  )
+}
+
+interface YieldVaultCardTagsProps {
+  tags?: YieldSourceVaultTag[]
+  className?: string
+}
+
+const YieldVaultCardTags = (props: YieldVaultCardTagsProps) => {
+  const { tags, className } = props
+
+  if (!tags?.length) {
+    return <></>
+  }
+
+  return (
+    <div className={classNames('flex flex-wrap gap-x-3 gap-y-2', className)}>
+      {tags.map((tag) => (
+        <span
+          key={tag}
+          className='px-1.5 py-1 text-xs text-pt-purple-700 bg-pt-purple-100 whitespace-nowrap rounded'
+        >
+          {VAULT_TAGS[tag]}
+        </span>
+      ))}
+    </div>
   )
 }

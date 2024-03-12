@@ -54,7 +54,6 @@ export const YieldVaultForm = (props: YieldVaultFormProps) => {
     return <Spinner />
   }
 
-  // TODO: add option to return to audited/compatible yield sources
   // TODO: add filtering options by tag
   return (
     <FormProvider {...formMethods}>
