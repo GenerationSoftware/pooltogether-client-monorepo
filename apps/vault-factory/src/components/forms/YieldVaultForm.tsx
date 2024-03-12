@@ -64,7 +64,7 @@ export const YieldVaultForm = (props: YieldVaultFormProps) => {
       >
         <div className='w-full flex flex-col gap-4 items-center'>
           <span className='text-sm font-medium text-pt-purple-100'>Select Deposit Token</span>
-          <div className='w-full flex flex-wrap justify-center gap-x-6 gap-y-4'>
+          <div className='w-full max-w-screen-md max-h-[50vh] flex flex-wrap justify-center gap-6 p-6 bg-pt-transparent rounded-2xl overflow-y-auto'>
             {yieldSource.vaults.map((yieldVault) => (
               <YieldVaultInput
                 key={`${yieldSource.id}-${chainId}-${yieldVault.address}`}

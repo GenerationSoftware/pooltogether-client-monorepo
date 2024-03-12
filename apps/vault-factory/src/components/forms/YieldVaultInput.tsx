@@ -74,10 +74,7 @@ const YieldVaultCard = (props: YieldVaultCardProps) => {
     <Card
       wrapperClassName={classNames(
         'w-full h-full border cursor-pointer overflow-hidden hover:bg-pt-purple-50/20',
-        {
-          'border-pt-teal-dark': isSelected,
-          'border-transparent': !isSelected
-        }
+        { 'border-pt-teal-dark': isSelected, 'border-transparent': !isSelected }
       )}
       className='gap-3'
     >
