@@ -64,4 +64,5 @@ export interface VaultDeployInfo {
   feeRecipient: `0x${string}`
   feePercentage: number
   owner: `0x${string}`
+  yieldBuffer: bigint
 }

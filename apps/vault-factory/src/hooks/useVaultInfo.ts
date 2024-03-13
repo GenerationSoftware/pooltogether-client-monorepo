@@ -13,6 +13,7 @@ import {
 } from 'src/atoms'
 import { Address } from 'viem'
 import { NETWORK_CONFIG } from '@constants/config'
+import { useYieldBuffer } from './useYieldBuffer'
 import { useYieldSourceTokenAddress } from './useYieldSourceTokenAddress'
 
 /**
@@ -35,6 +36,8 @@ export const useVaultInfo = (): Partial<VaultDeployInfo> => {
     yieldSourceAddress as Address
   )
 
+  const { data: yieldBuffer } = useYieldBuffer(chainId as number)
+
   const prizePool = !!chainId ? NETWORK_CONFIG[chainId].prizePool : undefined
 
   return {
@@ -48,6 +51,7 @@ export const useVaultInfo = (): Partial<VaultDeployInfo> => {
     claimer,
     feeRecipient,
     feePercentage,
-    owner
+    owner,
+    yieldBuffer
   }
 }
