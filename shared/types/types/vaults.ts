@@ -60,6 +60,7 @@ export interface VaultDeployInfo {
   yieldSourceName?: string
   yieldSourceAddress: `0x${string}`
   prizePool: `0x${string}`
+  vaultFactory?: `0x${string}`
   claimer: `0x${string}`
   feeRecipient: `0x${string}`
   feePercentage: number

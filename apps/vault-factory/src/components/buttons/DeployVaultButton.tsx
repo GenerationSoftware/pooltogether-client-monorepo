@@ -8,7 +8,6 @@ import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbo
 import { createDeployVaultTxToast, TransactionButton } from '@shared/react-components'
 import { VaultDeployInfo } from '@shared/types'
 import { Tooltip } from '@shared/ui'
-import { VAULT_FACTORY_ADDRESSES } from '@shared/utilities'
 import classNames from 'classnames'
 import { useSetAtom } from 'jotai'
 import { vaultAddressAtom } from 'src/atoms'
@@ -31,7 +30,7 @@ export const DeployVaultButton = (props: DeployVaultButtonProps) => {
   const { address: userAddress } = useAccount()
 
   const vaultInfo = useVaultInfo()
-  const { chainId, tokenAddress, yieldBuffer } = vaultInfo
+  const { chainId, tokenAddress, vaultFactory, yieldBuffer } = vaultInfo
 
   const {
     data: token,
@@ -44,8 +43,6 @@ export const DeployVaultButton = (props: DeployVaultButtonProps) => {
     { refetchOnWindowFocus: true }
   )
 
-  const vaultFactoryAddress = !!chainId ? VAULT_FACTORY_ADDRESSES[chainId] : undefined
-
   const {
     data: allowance,
     isFetched: isFetchedAllowance,
@@ -53,7 +50,7 @@ export const DeployVaultButton = (props: DeployVaultButtonProps) => {
   } = useTokenAllowance(
     chainId as SupportedNetwork,
     userAddress as Address,
-    vaultFactoryAddress as Address,
+    vaultFactory as Address,
     token?.address as Address
   )
 
@@ -141,7 +138,7 @@ export const DeployVaultButton = (props: DeployVaultButtonProps) => {
       >
         <span>Approve Yield Buffer</span>
         <Tooltip
-          content={`This is a small amount of ${token?.symbol} that will be deposited initially to prevent rounding errors on your new prize vault.`}
+          content={`This is a small amount of ${token?.symbol} that will be donated to your new prize vault to prevent potential rounding errors.`}
           className='max-w-xs whitespace-normal'
         >
           <InformationCircleIcon className='h-5 w-5' />

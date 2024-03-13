@@ -1,4 +1,4 @@
-import { erc20ABI, VAULT_FACTORY_ADDRESSES } from '@shared/utilities'
+import { erc20ABI } from '@shared/utilities'
 import { useEffect } from 'react'
 import { Address, TransactionReceipt } from 'viem'
 import {
@@ -29,19 +29,17 @@ export const useSendApproveYieldBufferTransaction = (options?: {
 } => {
   const { chain } = useAccount()
 
-  const { chainId, tokenAddress, yieldBuffer } = useVaultInfo()
-
-  const vaultFactoryAddress = !!chainId ? VAULT_FACTORY_ADDRESSES[chainId] : undefined
+  const { chainId, tokenAddress, vaultFactory, yieldBuffer } = useVaultInfo()
 
   const enabled =
-    !!chainId && chain?.id === chainId && !!tokenAddress && !!yieldBuffer && !!vaultFactoryAddress
+    !!chainId && chain?.id === chainId && !!tokenAddress && !!vaultFactory && !!yieldBuffer
 
   const { data } = useSimulateContract({
     chainId,
     address: tokenAddress,
     abi: erc20ABI,
     functionName: 'approve',
-    args: [vaultFactoryAddress as Address, yieldBuffer as bigint],
+    args: [vaultFactory as Address, yieldBuffer as bigint],
     query: { enabled }
   })
 

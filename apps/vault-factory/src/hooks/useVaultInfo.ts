@@ -1,4 +1,5 @@
 import { VaultDeployInfo } from '@shared/types'
+import { VAULT_FACTORY_ADDRESSES } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import {
   vaultChainIdAtom,
@@ -39,6 +40,7 @@ export const useVaultInfo = (): Partial<VaultDeployInfo> => {
   const { data: yieldBuffer } = useYieldBuffer(chainId as number)
 
   const prizePool = !!chainId ? NETWORK_CONFIG[chainId].prizePool : undefined
+  const vaultFactory = !!chainId ? VAULT_FACTORY_ADDRESSES[chainId] : undefined
 
   return {
     chainId,
@@ -48,6 +50,7 @@ export const useVaultInfo = (): Partial<VaultDeployInfo> => {
     yieldSourceName,
     yieldSourceAddress,
     prizePool,
+    vaultFactory,
     claimer,
     feeRecipient,
     feePercentage,
