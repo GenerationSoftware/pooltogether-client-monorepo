@@ -358,9 +358,9 @@ export const TOKEN_PRICE_REDIRECTS: {
       address: WRAPPED_NATIVE_ASSETS[NETWORK.mainnet] as Address
     },
     /* POOL */
-    [POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia]]: {
+    [POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia].toLowerCase()]: {
       chainId: NETWORK.mainnet,
-      address: POOL_TOKEN_ADDRESSES[NETWORK.mainnet]
+      address: POOL_TOKEN_ADDRESSES[NETWORK.mainnet].toLowerCase() as Address
     }
   }
 }
