@@ -1,8 +1,8 @@
 import { useToken } from '@generationsoftware/hyperstructure-react-hooks'
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
 import { TokenIcon } from '@shared/react-components'
-import { Card, ExternalLink, Spinner, Tooltip } from '@shared/ui'
-import { getBlockExplorerUrl, shorten } from '@shared/utilities'
+import { Card, ExternalLink, LINKS, Spinner, Tooltip } from '@shared/ui'
+import { getBlockExplorerUrl, getVaultId, shorten } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
@@ -100,18 +100,35 @@ const YieldVaultCard = (props: YieldVaultCardProps) => {
       <ExternalLink
         href={getBlockExplorerUrl(chainId, yieldVault.address)}
         size='xs'
-        className='text-blue-500'
+        className='text-blue-500 hover:underline'
       >
         {shorten(yieldVault.address)}
       </ExternalLink>
       {!!existingVaultAddresses.length && (
         <div className='flex items-center gap-1 whitespace-nowrap'>
-          <span className='text-xs text-pt-purple-100'>
-            {existingVaultAddresses.length} existing prize vaults
-          </span>
-          {/* TODO: add actual content */}
-          <Tooltip content={'test'}>
-            <InformationCircleIcon className='h-3 w-3' />
+          <Tooltip
+            content={
+              <div className='flex flex-col'>
+                {existingVaultAddresses.map((existingVaultAddress) => (
+                  <ExternalLink
+                    key={getVaultId({ chainId, address: existingVaultAddress })}
+                    href={`${LINKS.app}/vault/${chainId}/${existingVaultAddress}`}
+                    size='xs'
+                    className='text-pt-purple-700 hover:underline'
+                  >
+                    {shorten(existingVaultAddress)}
+                  </ExternalLink>
+                ))}
+              </div>
+            }
+          >
+            <div className='flex gap-1 items-center whitespace-nowrap'>
+              <span className='text-xs text-pt-purple-100'>
+                {existingVaultAddresses.length} existing prize vault
+                {existingVaultAddresses.length > 1 ? 's' : ''}
+              </span>
+              <InformationCircleIcon className='h-3 w-3' />
+            </div>
           </Tooltip>
         </div>
       )}
