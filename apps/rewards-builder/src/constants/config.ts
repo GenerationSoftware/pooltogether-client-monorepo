@@ -19,12 +19,12 @@ import {
 } from '@rainbow-me/rainbowkit/wallets'
 import { NETWORK } from '@shared/utilities'
 import { Address } from 'viem'
-import { mainnet, optimism, sepolia } from 'viem/chains'
+import { mainnet, optimism, optimismSepolia } from 'viem/chains'
 
 /**
  * Supported networks
  */
-export const SUPPORTED_NETWORKS = [NETWORK.optimism, NETWORK.sepolia] as const
+export const SUPPORTED_NETWORKS = [NETWORK.optimism, NETWORK.optimism_sepolia] as const
 
 /**
  * Wagmi networks
@@ -32,7 +32,7 @@ export const SUPPORTED_NETWORKS = [NETWORK.optimism, NETWORK.sepolia] as const
 export const WAGMI_CHAINS = {
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism,
-  [NETWORK.sepolia]: sepolia
+  [NETWORK.optimism_sepolia]: optimismSepolia
 } as const
 
 /**
@@ -63,7 +63,7 @@ export const WALLETS: { [wallet: string]: CreateWalletFn } = {
 export const RPC_URLS = {
   [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
-  [NETWORK.sepolia]: process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL
+  [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL
 } as const
 
 /**
@@ -74,5 +74,5 @@ export const PROMOTION_FILTERS: {
 } = {
   [NETWORK.mainnet]: {},
   [NETWORK.optimism]: { fromBlock: 112_933_000n },
-  [NETWORK.sepolia]: { fromBlock: 5_397_600n }
+  [NETWORK.optimism_sepolia]: { fromBlock: 9_270_700n }
 }

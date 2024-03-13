@@ -20,12 +20,12 @@ import {
 import { DEFAULT_CLAIMER_ADDRESSES, NETWORK } from '@shared/utilities'
 import { SupportedNetwork, YieldSourceVaultTag } from 'src/types'
 import { Address } from 'viem'
-import { mainnet, optimism, sepolia } from 'viem/chains'
+import { mainnet, optimism, optimismSepolia } from 'viem/chains'
 
 /**
  * Supported networks
  */
-export const SUPPORTED_NETWORKS = [NETWORK.sepolia] as const
+export const SUPPORTED_NETWORKS = [NETWORK.optimism_sepolia] as const
 
 /**
  * Wagmi networks
@@ -33,7 +33,7 @@ export const SUPPORTED_NETWORKS = [NETWORK.sepolia] as const
 export const WAGMI_CHAINS = {
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism,
-  [NETWORK.sepolia]: sepolia
+  [NETWORK.optimism_sepolia]: optimismSepolia
 } as const
 
 /**
@@ -64,7 +64,7 @@ export const WALLETS: { [wallet: string]: CreateWalletFn } = {
 export const RPC_URLS = {
   [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
-  [NETWORK.sepolia]: process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL
+  [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL
 } as const
 
 /**
@@ -101,10 +101,10 @@ export const NETWORK_CONFIG: Record<
   //   },
   //   yieldSources: []
   // },
-  [NETWORK.sepolia]: {
-    description: 'Sepolia testnet for the Ethereum network.',
-    prizePool: '0x934F03f3132d3B818d7c07F25818ea3961eF18aD',
-    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.sepolia],
+  [NETWORK.optimism_sepolia]: {
+    description: 'Sepolia testnet for the Optimism network.',
+    prizePool: '0x5e1b40e4249644a7d7589d1197AD0F1628e79FB1',
+    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism_sepolia],
     lp: {
       targetFirstSaleTimeFraction: 0.5,
       liquidationGasAmount: 300_000n,
@@ -117,13 +117,13 @@ export const NETWORK_CONFIG: Record<
         href: 'https://aave.com/',
         description: 'Lending and borrowing protocol',
         vaults: [
-          { address: '0x541D2a84928b7cFFe8455315c63b7F48f2f89cf8', tags: ['stablecoin'] },
-          { address: '0x26542531d946E365f23e940aE0977Fd8efD9EFd7', tags: ['stablecoin'] },
-          { address: '0x96A4624E73Ff5A305eD04c4895295Fe4E432E2b9', tags: ['stablecoin'] },
-          { address: '0xe54D68f333826D334c08194Fa018519bB4Cec4F2', tags: ['stablecoin'] },
-          { address: '0xC253890b75D75168202333F83302f9e76c5A1904', tags: ['stablecoin'] },
-          { address: '0x7590DECC35A6C43E906721d44Ebc7D4B4662D583' },
-          { address: '0xf86811C10b6f596684EE42cB6421a811e7B0527F' }
+          { address: '0x332b1EB2Cc4046954725EbDFB8143fB8354ea9a7', tags: ['stablecoin'] },
+          { address: '0x13E37b0Ca8b48fc2818C177c24635F90C1495C5c', tags: ['stablecoin'] },
+          { address: '0x602d77e900eCD48ac9b51151936Dcc5Efe2e7FaE', tags: ['stablecoin'] },
+          { address: '0xA2B0321B671A83a98Ff1F5a680b700864f57c6e7', tags: ['stablecoin'] },
+          { address: '0xd96702995B2bBD78a9A39eF86f4fA5f9704fdC7D', tags: ['stablecoin'] },
+          { address: '0xE77Db9f8b68BC47A82D4F47E68FB57535dF0086e' },
+          { address: '0x98CED5d595e8981756f063db8D3c44a6Be9A8F86' }
         ]
       }
     ]

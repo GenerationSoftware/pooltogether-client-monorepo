@@ -1,13 +1,13 @@
 import { DEAD_ADDRESS, NETWORK, POOL_TOKEN_ADDRESSES } from '@shared/utilities'
 import { Address } from 'viem'
-import { mainnet, optimism, sepolia } from 'viem/chains'
+import { mainnet, optimism, optimismSepolia } from 'viem/chains'
 
 /**
  * Supported networks
  */
 export const SUPPORTED_NETWORKS = {
   mainnets: [NETWORK.mainnet, NETWORK.optimism],
-  testnets: [NETWORK.sepolia]
+  testnets: [NETWORK.optimism_sepolia]
 } as const
 
 /**
@@ -16,7 +16,7 @@ export const SUPPORTED_NETWORKS = {
 export const WAGMI_CHAINS = {
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism,
-  [NETWORK.sepolia]: sepolia
+  [NETWORK.optimism_sepolia]: optimismSepolia
 } as const
 
 /**
@@ -25,21 +25,21 @@ export const WAGMI_CHAINS = {
 export const RPC_URLS = {
   [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
-  [NETWORK.sepolia]: process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL
+  [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL
 } as const
 
 /**
  * Queries' start blocks
  */
 export const QUERY_START_BLOCK: { [chainId: number]: bigint } = {
-  [NETWORK.sepolia]: 5_397_600n
+  [NETWORK.optimism_sepolia]: 9_270_700n
 }
 
 /**
  * Draw results URL
  */
 export const DRAW_RESULTS_URL: { [chainId: number]: string } = {
-  // [NETWORK.sepolia]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results-testnet/main/prizes/${NETWORK.sepolia}` // TODO: uncomment once actions are setup
+  [NETWORK.optimism_sepolia]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results-testnet/main/prizes/${NETWORK.sepolia}`
 }
 
 /**
@@ -64,9 +64,9 @@ export const BURN_SETTINGS: {
       '0x3989cbc1fb0eb278601c018ed7627b07be9de4cb'
     ]
   },
-  [NETWORK.sepolia]: {
-    burnTokenAddress: POOL_TOKEN_ADDRESSES[NETWORK.sepolia],
-    liquidationPairAddress: '0xda8652c939643e9175a1f52d0c211b8dc55ff613',
+  [NETWORK.optimism_sepolia]: {
+    burnTokenAddress: POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia],
+    liquidationPairAddress: '0xd20777642ba9441d0b7a3f9f53b2ef0255ec7c31',
     burnAddresses: [DEAD_ADDRESS]
   }
 }
