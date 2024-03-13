@@ -1,14 +1,17 @@
 import { useToken } from '@generationsoftware/hyperstructure-react-hooks'
+import { InformationCircleIcon } from '@heroicons/react/24/outline'
 import { TokenIcon } from '@shared/react-components'
-import { Card, ExternalLink, Spinner } from '@shared/ui'
+import { Card, ExternalLink, Spinner, Tooltip } from '@shared/ui'
 import { getBlockExplorerUrl, shorten } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
+import { useMemo } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { vaultChainIdAtom } from 'src/atoms'
 import { SupportedNetwork, YieldSourceVaultTag } from 'src/types'
 import { Address } from 'viem'
 import { NETWORK_CONFIG, VAULT_TAGS } from '@constants/config'
+import { useDeployedVaultYieldSourceAddresses } from '@hooks/useDeployedVaultYieldSourceAddresses'
 import { useYieldSourceTokenAddress } from '@hooks/useYieldSourceTokenAddress'
 
 interface YieldVaultInputFormValues {
@@ -56,12 +59,19 @@ interface YieldVaultCardProps {
   yieldVault: (typeof NETWORK_CONFIG)[SupportedNetwork]['yieldSources'][number]['vaults'][number]
 }
 
-// TODO: add existing vaults # notice
 const YieldVaultCard = (props: YieldVaultCardProps) => {
   const { chainId, yieldVault } = props
 
   const { data: tokenAddress } = useYieldSourceTokenAddress(chainId, yieldVault.address)
   const { data: token } = useToken(chainId, tokenAddress as Address)
+
+  const { data: deployedVaultYieldSourceAddresses } = useDeployedVaultYieldSourceAddresses(chainId)
+
+  const existingVaultAddresses = useMemo(() => {
+    return Object.entries(deployedVaultYieldSourceAddresses)
+      .filter((entry) => entry[1] === yieldVault.address.toLowerCase())
+      .map((entry) => entry[0] as Lowercase<Address>)
+  }, [yieldVault, deployedVaultYieldSourceAddresses])
 
   const { vaultYieldSourceAddress } = useWatch<YieldVaultInputFormValues>()
 
@@ -94,6 +104,17 @@ const YieldVaultCard = (props: YieldVaultCardProps) => {
       >
         {shorten(yieldVault.address)}
       </ExternalLink>
+      {!!existingVaultAddresses.length && (
+        <div className='flex items-center gap-1 whitespace-nowrap'>
+          <span className='text-xs text-pt-purple-100'>
+            {existingVaultAddresses.length} existing prize vaults
+          </span>
+          {/* TODO: add actual content */}
+          <Tooltip content={'test'}>
+            <InformationCircleIcon className='h-3 w-3' />
+          </Tooltip>
+        </div>
+      )}
       <YieldVaultCardTags tags={yieldVault.tags} className='mt-auto' />
     </Card>
   )
