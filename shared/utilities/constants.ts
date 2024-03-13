@@ -108,7 +108,8 @@ export const PRIZE_POOLS: {
  * Subgraph API URLs
  */
 export const SUBGRAPH_API_URLS = {
-  // TODO: add subgraph apis when available
+  [NETWORK.optimism_sepolia]:
+    'https://api.studio.thegraph.com/query/63100/pt-v5-op-sepolia/version/latest'
 } as const
 
 /**
