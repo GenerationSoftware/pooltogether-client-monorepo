@@ -68,6 +68,7 @@ export const YieldVaultForm = (props: YieldVaultFormProps) => {
               <YieldVaultInput
                 key={`${yieldSource.id}-${chainId}-${yieldVault.address}`}
                 yieldVault={yieldVault}
+                className='w-full'
               />
             ))}
           </div>
