@@ -74,11 +74,11 @@ export const CreateVaultStepInfo = (props: CreateVaultStepInfoProps) => {
   const blockedSteps = useMemo(() => {
     const blocked: number[] = []
 
-    if (step >= 3 && isUsingCustomYieldSource) {
+    if (step > 2 && isUsingCustomYieldSource) {
       blocked.push(2)
     }
 
-    if (step >= 6) {
+    if (step > 6) {
       blocked.push(...[...Array(6).keys()])
     }
 

@@ -3,7 +3,7 @@ import { getNiceNetworkNameByChainId } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import { SupportedNetwork } from 'src/types'
-import { Address, formatUnits } from 'viem'
+import { Address, formatUnits, zeroAddress } from 'viem'
 import { useAccount } from 'wagmi'
 import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
 import { useVaultInfo } from '@hooks/useVaultInfo'
@@ -32,7 +32,6 @@ export const DeployVaultView = (props: DeployVaultViewProps) => {
   )
 }
 
-// TODO: add invalid yield source warning
 // TODO: add precision per dollar check warning
 const DeployVaultViewWarnings = (props: { className?: string }) => {
   const { className } = props
@@ -48,10 +47,17 @@ const DeployVaultViewWarnings = (props: { className?: string }) => {
     { refetchOnWindowFocus: true }
   )
 
+  const { setStep } = useVaultCreationSteps()
+
   const warning = useMemo(():
     | { text: string; fix?: { text: string; onClick: () => void } }
     | undefined => {
-    if (!!token && !!yieldBuffer && token.amount < yieldBuffer) {
+    if (token?.address === zeroAddress) {
+      return {
+        text: `The yield source you have selected doesn't seem valid.`,
+        fix: { text: 'Select a valid yield source', onClick: () => setStep(1) }
+      }
+    } else if (!!token && !!yieldBuffer && token.amount < yieldBuffer) {
       return {
         text: `You need at least ${formatUnits(yieldBuffer, token.decimals)} ${
           token.symbol
@@ -69,7 +75,7 @@ const DeployVaultViewWarnings = (props: { className?: string }) => {
   return (
     <div
       className={classNames(
-        'w-full flex flex-col gap-3 px-8 py-5 text-pt-warning-light bg-pt-transparent',
+        'w-full flex flex-col gap-3 items-start px-8 py-5 text-pt-warning-light bg-pt-transparent',
         'border border-pt-purple-100 rounded-2xl',
         className
       )}
@@ -77,7 +83,7 @@ const DeployVaultViewWarnings = (props: { className?: string }) => {
       <span className='text-xl font-bold'>Warning</span>
       <span className='text-sm leading-tight'>{warning.text}</span>
       {!!warning.fix && (
-        <button onClick={warning.fix.onClick} className='text-pt-teal-dark'>
+        <button onClick={warning.fix.onClick} className='text-sm text-pt-teal-dark'>
           {warning.fix.text}
         </button>
       )}
