@@ -1,5 +1,5 @@
-import { useTokenBalance } from '@generationsoftware/hyperstructure-react-hooks'
-import { getNiceNetworkNameByChainId } from '@shared/utilities'
+import { useTokenBalance, useTokenPrices } from '@generationsoftware/hyperstructure-react-hooks'
+import { getNiceNetworkNameByChainId, USDC_TOKEN_ADDRESSES } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import { SupportedNetwork } from 'src/types'
@@ -32,7 +32,6 @@ export const DeployVaultView = (props: DeployVaultViewProps) => {
   )
 }
 
-// TODO: add precision per dollar check warning
 const DeployVaultViewWarnings = (props: { className?: string }) => {
   const { className } = props
 
@@ -47,7 +46,28 @@ const DeployVaultViewWarnings = (props: { className?: string }) => {
     { refetchOnWindowFocus: true }
   )
 
+  const { data: tokenPrices } = useTokenPrices(
+    chainId as SupportedNetwork,
+    !!chainId && !!tokenAddress ? [tokenAddress, USDC_TOKEN_ADDRESSES[chainId]] : []
+  )
+
   const { setStep } = useVaultCreationSteps()
+
+  const isBadTokenPrecision = useMemo(() => {
+    if (!!token && !isNaN(token.decimals) && !!tokenPrices) {
+      const tokenPrice = tokenPrices[token.address.toLowerCase() as Lowercase<Address>]
+      const usdcPrice = tokenPrices[USDC_TOKEN_ADDRESSES[token.chainId]]
+
+      if (!!tokenPrice && !!usdcPrice) {
+        const precision = 10 ** token.decimals / tokenPrice
+        const usdcPrecision = 10 ** 6 / usdcPrice // TODO: this assumes all USDC tokens have 6 decimals
+
+        return precision < usdcPrecision
+      }
+    }
+
+    return false
+  }, [token, tokenPrices])
 
   const warning = useMemo(():
     | { text: string; fix?: { text: string; onClick: () => void } }
@@ -56,6 +76,10 @@ const DeployVaultViewWarnings = (props: { className?: string }) => {
       return {
         text: `The yield source you have selected doesn't seem valid.`,
         fix: { text: 'Select a valid yield source', onClick: () => setStep(1) }
+      }
+    } else if (!!token && isBadTokenPrecision) {
+      return {
+        text: `Using ${token.symbol} is likely to cause rounding error issues in the long run because of its high value to decimals ratio.`
       }
     } else if (!!token && !!yieldBuffer && token.amount < yieldBuffer) {
       return {

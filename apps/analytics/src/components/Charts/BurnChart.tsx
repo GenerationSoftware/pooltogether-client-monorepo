@@ -93,7 +93,7 @@ export const BurnChart = (props: BurnChartProps) => {
             const burnAmount = formatBurnNum(burnEvent.args.value)
 
             if (toAddress === DEAD_ADDRESS) {
-              // TODO: it is possible to have multiple events in one tx - this could cause issues
+              // TODO: it is possible to have multiple events in one tx - this could cause issues (use amount to match?)
               if (buybackTxHashes.includes(burnEvent.transactionHash)) {
                 buyback.change += burnAmount
               } else {
