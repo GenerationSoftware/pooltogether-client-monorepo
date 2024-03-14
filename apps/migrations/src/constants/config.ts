@@ -422,6 +422,12 @@ export const V3_POOLS: Record<
       ticketAddress: '0x9ecb26631098973834925eb453de1908ea4bdd4e',
       tokenAddress: '0xc2132d05d31c914a87c6611c10748aeb04b58e8f',
       migrateTo: MIGRATION_DESTINATIONS.usdcVault
+    },
+    {
+      address: '0x60764c6be24ddab70d9ae1dbf7436533cc073c21',
+      ticketAddress: '0x0bc114a3163a0bc72abf0ab964eef0dc52495703',
+      tokenAddress: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
+      migrateTo: MIGRATION_DESTINATIONS.usdcVault
     }
   ],
   [NETWORK.avalanche]: [],

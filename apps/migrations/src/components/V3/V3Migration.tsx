@@ -98,7 +98,8 @@ const WithdrawContent = (props: WithdrawContentProps) => {
       args:
         migration?.type === 'pool'
           ? [userAddress, migration?.token.amount, migration?.token.address, 0n]
-          : [migration?.token.amount, 0n]
+          : [migration?.token.amount, 0n],
+      account: userAddress
     },
     { refetchInterval: sToMs(10) }
   )
