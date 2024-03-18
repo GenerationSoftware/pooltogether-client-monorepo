@@ -90,8 +90,8 @@ export const VaultCard = (props: VaultCardProps) => {
       <VaultButtons
         vault={vault}
         fullSized={true}
-        className='w-full justify-center'
-        hideDelegateButton={true}
+        forceHide={['delegate']}
+        className='justify-end'
       />
     </div>
   )
