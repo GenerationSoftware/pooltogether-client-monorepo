@@ -1,66 +1,49 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import {
-  useDrawAwardedEvents,
-  usePrizeDrawWinners
-} from '@generationsoftware/hyperstructure-react-hooks'
+import { usePrizeDrawWinners } from '@generationsoftware/hyperstructure-react-hooks'
 import { divideBigInts, formatNumberForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
-import { isCanaryTier } from 'src/utils'
-import { QUERY_START_BLOCK } from '@constants/config'
 import { LineChart } from './LineChart'
 
 interface DrawsAvgClaimFeesChartProps {
   prizePool: PrizePool
-  hideCanary?: boolean
   className?: string
 }
 
 export const DrawsAvgClaimFeesChart = (props: DrawsAvgClaimFeesChartProps) => {
-  const { prizePool, hideCanary, className } = props
+  const { prizePool, className } = props
 
   const { data: allDraws } = usePrizeDrawWinners(prizePool)
 
-  const { data: drawAwardedEvents } = useDrawAwardedEvents(prizePool, {
-    fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
-  })
-
   const chartData = useMemo(() => {
-    if (!!allDraws && !!drawAwardedEvents) {
+    if (!!allDraws) {
       const data: { name: string; percentage: number; cumAvg: number }[] = []
 
       let numValues = 0
       let sumValues = 0
 
       allDraws.forEach((draw) => {
-        const numTiers = drawAwardedEvents?.find((e) => e.args.drawId === draw.id)?.args.numTiers
+        const wins = draw.prizeClaims.filter(
+          (win) => !!win.payout && !!win.claimReward && win.claimRewardRecipient !== win.recipient
+        )
 
-        if (!!numTiers) {
-          const wins = draw.prizeClaims.filter(
-            (win) =>
-              win.claimReward > 0n &&
-              win.claimRewardRecipient !== win.recipient &&
-              (!hideCanary || !isCanaryTier(win.tier, numTiers))
-          )
+        if (!!wins.length) {
+          const sumClaimFeeAmount = wins.reduce((a, b) => a + b.claimReward, 0n)
+          const sumPrizeAmount = wins.reduce((a, b) => a + b.payout, 0n)
+          const percentage =
+            divideBigInts(sumClaimFeeAmount, sumPrizeAmount + sumClaimFeeAmount) * 100
 
-          if (!!wins.length) {
-            const sumClaimFeeAmount = wins.reduce((a, b) => a + b.claimReward, 0n)
-            const sumPrizeAmount = wins.reduce((a, b) => a + b.payout, 0n)
-            const percentage =
-              divideBigInts(sumClaimFeeAmount, sumPrizeAmount + sumClaimFeeAmount) * 100
+          numValues++
+          sumValues += percentage
+          const cumAvg = sumValues / numValues
 
-            numValues++
-            sumValues += percentage
-            const cumAvg = sumValues / numValues
-
-            data.push({ name: `#${draw.id}`, percentage, cumAvg })
-          }
+          data.push({ name: `#${draw.id}`, percentage, cumAvg })
         }
       })
 
       return data
     }
-  }, [allDraws, drawAwardedEvents])
+  }, [allDraws])
 
   if (!!chartData?.length) {
     return (

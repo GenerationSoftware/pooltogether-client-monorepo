@@ -56,7 +56,6 @@ export const PrizesView = (props: PrizesViewProps) => {
           <DrawAvgClaimFeesChart
             prizePool={prizePool}
             drawId={drawIdSelected}
-            hideCanary={true}
             className='max-w-4xl'
           />
           <PrizesTable prizePool={prizePool} drawId={drawIdSelected} className='md:mt-6' />

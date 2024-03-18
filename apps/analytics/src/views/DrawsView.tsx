@@ -52,7 +52,7 @@ export const DrawsView = (props: DrawsViewProps) => {
   return (
     <div className={classNames('w-full flex flex-col gap-6 items-center', className)}>
       <div className='w-full grid grid-cols-1 gap-6 md:grid-cols-2'>
-        <DrawsAvgClaimFeesChart prizePool={prizePool} hideCanary={true} />
+        <DrawsAvgClaimFeesChart prizePool={prizePool} />
         <DrawsAvgLiqEfficiencyChart prizePool={prizePool} />
       </div>
       <DrawCards prizePool={prizePool} />
