@@ -96,7 +96,7 @@ const DeployVaultViewWarnings = (props: { className?: string }) => {
 
         warnings.push({
           id: 'largeTotalSupply',
-          text: `A maximum of ${numTokens} ${token.symbol} can be deposited into this prize vault (less than its total supply).`
+          text: `A maximum of ${numTokens} ${token.symbol} can be deposited into this prize vault (less than its total supply). If this limit is exceeded, deposits or yield liquidations may not function.`
         })
       }
 
