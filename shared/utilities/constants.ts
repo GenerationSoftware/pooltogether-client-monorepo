@@ -394,6 +394,11 @@ export const TOKEN_DATA_REDIRECTS: {
 export const MAX_UINT_256 = 2n ** 256n - 1n
 
 /**
+ * Max uint96 value
+ */
+export const MAX_UINT_96 = 2n ** 96n - 1n
+
+/**
  * EIP2612 Permit Types
  */
 export const EIP2612_PERMIT_TYPES = {

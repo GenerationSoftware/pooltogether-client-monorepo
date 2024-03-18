@@ -1,5 +1,9 @@
-import { useTokenBalance, useTokenPrices } from '@generationsoftware/hyperstructure-react-hooks'
-import { getNiceNetworkNameByChainId, USDC_TOKEN_ADDRESSES } from '@shared/utilities'
+import {
+  useToken,
+  useTokenBalance,
+  useTokenPrices
+} from '@generationsoftware/hyperstructure-react-hooks'
+import { getNiceNetworkNameByChainId, MAX_UINT_96, USDC_TOKEN_ADDRESSES } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import { SupportedNetwork } from 'src/types'
@@ -46,6 +50,8 @@ const DeployVaultViewWarnings = (props: { className?: string }) => {
     { refetchOnWindowFocus: true }
   )
 
+  const { data: tokenWithSupply } = useToken(chainId as SupportedNetwork, tokenAddress as Address)
+
   const { data: tokenPrices } = useTokenPrices(
     chainId as SupportedNetwork,
     !!chainId && !!tokenAddress ? [tokenAddress, USDC_TOKEN_ADDRESSES[chainId]] : []
@@ -53,46 +59,63 @@ const DeployVaultViewWarnings = (props: { className?: string }) => {
 
   const { setStep } = useVaultCreationSteps()
 
-  const isBadTokenPrecision = useMemo(() => {
-    if (!!token && !isNaN(token.decimals) && !!tokenPrices) {
-      const tokenPrice = tokenPrices[token.address.toLowerCase() as Lowercase<Address>]
-      const usdcPrice = tokenPrices[USDC_TOKEN_ADDRESSES[token.chainId]]
+  const warnings = useMemo(() => {
+    const warnings: { id: string; text: string; fix?: { text: string; onClick: () => void } }[] = []
 
-      if (!!tokenPrice && !!usdcPrice) {
-        const precision = 10 ** token.decimals / tokenPrice
-        const usdcPrecision = 10 ** 6 / usdcPrice // TODO: this assumes all USDC tokens have 6 decimals
+    if (!!token) {
+      // Invalid yield source
+      if (token.address === zeroAddress) {
+        warnings.push({
+          id: 'invalidYieldSource',
+          text: `The yield source you have selected doesn't seem valid.`,
+          fix: { text: 'Select a valid yield source', onClick: () => setStep(1) }
+        })
+      }
 
-        return precision < usdcPrecision
+      // Bad precision per dollar
+      if (!isNaN(token.decimals) && !!tokenPrices) {
+        const tokenPrice = tokenPrices[token.address.toLowerCase() as Lowercase<Address>]
+        const usdcPrice = tokenPrices[USDC_TOKEN_ADDRESSES[token.chainId]]
+
+        if (!!tokenPrice && !!usdcPrice) {
+          const precision = 10 ** token.decimals / tokenPrice
+          const usdcPrecision = 10 ** 6 / usdcPrice // TODO: this assumes all USDC tokens have 6 decimals
+
+          if (precision < usdcPrecision) {
+            warnings.push({
+              id: 'badPrecisionPerDollar',
+              text: `Using ${token.symbol} is likely to cause rounding error issues in the long run because of its high value to decimals ratio.`
+            })
+          }
+        }
+      }
+
+      // Total supply too large
+      if (!!tokenWithSupply && tokenWithSupply.totalSupply > MAX_UINT_96) {
+        const numTokens = formatUnits(MAX_UINT_96, token.decimals)
+
+        warnings.push({
+          id: 'largeTotalSupply',
+          text: `A maximum of ${numTokens} ${token.symbol} can be deposited into this prize vault (less than its total supply).`
+        })
+      }
+
+      // Not enough tokens in wallet
+      if (!!yieldBuffer && token.amount < yieldBuffer) {
+        const numTokens = formatUnits(yieldBuffer, token.decimals)
+        const networkName = getNiceNetworkNameByChainId(token.chainId)
+
+        warnings.push({
+          id: 'missingTokensInWallet',
+          text: `You need at least ${numTokens} ${token.symbol} on ${networkName} to deploy this prize vault. These tokens are donated to your new prize vault to prevent potential rounding errors.`
+        })
       }
     }
 
-    return false
-  }, [token, tokenPrices])
+    return warnings
+  }, [token, yieldBuffer, tokenPrices])
 
-  const warning = useMemo(():
-    | { text: string; fix?: { text: string; onClick: () => void } }
-    | undefined => {
-    if (token?.address === zeroAddress) {
-      return {
-        text: `The yield source you have selected doesn't seem valid.`,
-        fix: { text: 'Select a valid yield source', onClick: () => setStep(1) }
-      }
-    } else if (!!token && isBadTokenPrecision) {
-      return {
-        text: `Using ${token.symbol} is likely to cause rounding error issues in the long run because of its high value to decimals ratio.`
-      }
-    } else if (!!token && !!yieldBuffer && token.amount < yieldBuffer) {
-      return {
-        text: `You need at least ${formatUnits(yieldBuffer, token.decimals)} ${
-          token.symbol
-        } on ${getNiceNetworkNameByChainId(
-          token.chainId
-        )} to deploy this prize vault. These tokens are donated to your new prize vault to prevent potential rounding errors.`
-      }
-    }
-  }, [token, yieldBuffer])
-
-  if (!warning) {
+  if (!warnings.length) {
     return <></>
   }
 
@@ -104,13 +127,17 @@ const DeployVaultViewWarnings = (props: { className?: string }) => {
         className
       )}
     >
-      <span className='text-xl font-bold'>Warning</span>
-      <span className='text-sm leading-tight'>{warning.text}</span>
-      {!!warning.fix && (
-        <button onClick={warning.fix.onClick} className='text-sm text-pt-teal-dark'>
-          {warning.fix.text}
-        </button>
-      )}
+      <span className='text-xl font-bold'>Warning{warnings.length > 1 ? 's' : ''}</span>
+      {warnings.map((warning) => (
+        <div key={warning.id} className='text-sm'>
+          <span className='leading-tight'>{warning.text}</span>
+          {!!warning.fix && (
+            <button onClick={warning.fix.onClick} className='text-pt-teal-dark'>
+              {warning.fix.text}
+            </button>
+          )}
+        </div>
+      ))}
     </div>
   )
 }
