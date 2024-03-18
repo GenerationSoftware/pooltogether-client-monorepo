@@ -3,17 +3,17 @@ import {
   useFirstDrawOpenedAt,
   useManualContributionEvents,
   usePrizeBackstopEvents,
-  usePrizeTokenData
+  usePrizeTokenData,
+  useToken
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { Token } from '@shared/types'
 import { formatNumberForDisplay, getSimpleDate, MAX_UINT_256 } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
-import { formatUnits, Log } from 'viem'
+import { Address, formatUnits, Log } from 'viem'
 import { ReserveCard } from '@components/Reserve/ReserveCard'
-import { QUERY_START_BLOCK } from '@constants/config'
+import { BURN_SETTINGS, QUERY_START_BLOCK } from '@constants/config'
 import { useReserve } from '@hooks/useReserve'
 import { DrawFinishTx, DrawStartTx, useRngTxs } from '@hooks/useRngTxs'
 import { LineChart } from './LineChart'
@@ -30,12 +30,11 @@ interface DataPoint {
 
 interface ReserveChartProps {
   prizePool: PrizePool
-  burnToken?: Token
   className?: string
 }
 
 export const ReserveChart = (props: ReserveChartProps) => {
-  const { prizePool, burnToken, className } = props
+  const { prizePool, className } = props
 
   const { data: reserve } = useReserve(prizePool)
 
@@ -53,6 +52,11 @@ export const ReserveChart = (props: ReserveChartProps) => {
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
+  const burnTokenAddress = !!prizePool
+    ? BURN_SETTINGS[prizePool.chainId]?.burnTokenAddress
+    : undefined
+  const { data: burnToken } = useToken(prizePool?.chainId, burnTokenAddress as Address)
+
   const currentTimestamp = useAtomValue(currentTimestampAtom)
 
   const chartData = useMemo(() => {
@@ -63,7 +67,8 @@ export const ReserveChart = (props: ReserveChartProps) => {
       !!firstDrawOpenedAt &&
       !!manualContributionEvents &&
       !!prizeBackstopEvents &&
-      !!prizeToken
+      !!prizeToken &&
+      (!!burnToken || !burnTokenAddress)
     ) {
       const data: DataPoint[] = []
 
