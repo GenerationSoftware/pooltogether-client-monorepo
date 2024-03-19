@@ -1,7 +1,6 @@
-import classNames from 'classnames'
-import { ReactNode } from 'react'
 import { Layout } from '@components/Layout'
 import { ResourceLink } from '@components/ResourceLink'
+import { SimpleSection } from '@components/SimpleSection'
 
 export default function YieldBotsPage() {
   return (
@@ -9,7 +8,7 @@ export default function YieldBotsPage() {
       <h1 className='w-full text-5xl'>Yield Liquidation Bot Incentives</h1>
       <hr className='w-full border-pt-purple-300' />
       <div className='w-full grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2'>
-        <Section
+        <SimpleSection
           title='What needs to be done?'
           content={
             <>
@@ -24,7 +23,7 @@ export default function YieldBotsPage() {
             </>
           }
         />
-        <Section
+        <SimpleSection
           title='What is the incentive?'
           content={
             <div className='flex flex-col'>
@@ -34,7 +33,7 @@ export default function YieldBotsPage() {
             </div>
           }
         />
-        <Section
+        <SimpleSection
           title='Resources'
           content={
             <div className='flex flex-col gap-4 items-start'>
@@ -64,22 +63,5 @@ export default function YieldBotsPage() {
         />
       </div>
     </Layout>
-  )
-}
-
-interface SectionProps {
-  title: string
-  content: ReactNode
-  className?: string
-}
-
-const Section = (props: SectionProps) => {
-  const { title, content, className } = props
-
-  return (
-    <section className={classNames('flex flex-col gap-2 text-xl', className)}>
-      <span className='text-pt-purple-300 font-semibold'>{title}</span>
-      {content}
-    </section>
   )
 }
