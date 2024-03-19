@@ -4,6 +4,4 @@
   <url> <loc>https://incentives.cabana.fi/yield-bots</loc> <changefreq>daily</changefreq> <priority>0.9</priority> </url>
   <url> <loc>https://incentives.cabana.fi/claimer-bots</loc> <changefreq>daily</changefreq> <priority>0.9</priority> </url>
   <url> <loc>https://incentives.cabana.fi/draw-bots</loc> <changefreq>daily</changefreq> <priority>0.9</priority> </url>
-  <url> <loc>https://incentives.cabana.fi/front-ends</loc> <changefreq>daily</changefreq> <priority>0.9</priority> </url>
-  <url> <loc>https://incentives.cabana.fi/vaults</loc> <changefreq>daily</changefreq> <priority>0.9</priority> </url>
 </urlset>
