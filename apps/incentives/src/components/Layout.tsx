@@ -14,7 +14,7 @@ export const Layout = (props: LayoutProps) => {
   return (
     <div className='min-h-screen flex flex-col gap-14 overflow-x-hidden'>
       <Head>
-        <title>PoolTogether Incentives</title>
+        <title>PoolTogether Builders</title>
       </Head>
 
       <Navbar className='max-w-7xl mx-auto' />

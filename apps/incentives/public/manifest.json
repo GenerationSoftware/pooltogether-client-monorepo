@@ -1,6 +1,6 @@
 {
-  "short_name": "PT Incentives",
-  "name": "PoolTogether Incentives",
+  "name": "PoolTogether Builders",
+  "short_name": "PT Builders",
   "description": "Want to contribute to the global prize savings hyperstructure? View all the tools and incentives at your disposal.",
   "start_url": "/",
   "scope": "/",

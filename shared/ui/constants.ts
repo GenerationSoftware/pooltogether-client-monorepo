@@ -20,7 +20,7 @@ export const DOMAINS = {
   rewardsBuilder: 'https://rewards.cabana.fi',
   flashLiquidator: 'https://flash.cabana.fi',
   migrations: 'https://migrate.cabana.fi',
-  incentives: 'https://incentives.cabana.fi'
+  builders: 'https://builders.cabana.fi'
 } as const
 
 /**
