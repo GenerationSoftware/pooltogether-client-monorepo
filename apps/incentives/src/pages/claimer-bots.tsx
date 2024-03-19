@@ -60,6 +60,9 @@ export default function ClaimerBotsPage() {
               <ResourceLink href='https://pooltime.app/prizes'>
                 Analytics: Prize Claims (PoolTime)
               </ResourceLink>
+              <ResourceLink href='https://github.com/GenerationSoftware/foundry-winner-calc'>
+                Tooling: G9 Foundry Winner Calculator
+              </ResourceLink>
             </div>
           }
         />
