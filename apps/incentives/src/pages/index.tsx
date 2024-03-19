@@ -1,4 +1,4 @@
-import { Button, LINKS } from '@shared/ui'
+import { Button, ExternalLink, LINKS } from '@shared/ui'
 import classNames from 'classnames'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -8,10 +8,13 @@ import { ResourceLink } from '@components/ResourceLink'
 
 export default function HomePage() {
   return (
-    <Layout>
+    <Layout className='gap-40'>
       <HeroSection />
-      <IncentivesSection className='mt-24' />
-      <FaqSection className='mt-48' />
+      <IncentivesSection />
+      <RecipesSection />
+      <ExtensionsSection />
+      <ContactSection />
+      <FaqSection />
     </Layout>
   )
 }
@@ -20,6 +23,7 @@ interface SectionProps {
   className?: string
 }
 
+// TODO: update section
 const HeroSection = (props: SectionProps) => {
   const { className } = props
 
@@ -60,7 +64,7 @@ const IncentivesSection = (props: SectionProps) => {
   return (
     <section className={classNames('w-full flex flex-col items-center text-center', className)}>
       <span className='text-2xl text-pt-purple-300'>PoolTogether V5 has</span>
-      <h3 className='text-5xl sm:text-6xl'>5 ways to earn incentives</h3>
+      <h3 className='text-5xl sm:text-6xl'>3 ways to earn incentives</h3>
       <div className='w-full grid grid-cols-1 gap-4 mt-6 md:grid-cols-3'>
         <IncentiveCard
           title='Yield Liquidation Bot'
@@ -82,22 +86,6 @@ const IncentivesSection = (props: SectionProps) => {
           description='Generate a random # and trigger prize draws'
           href='/draw-bots'
           img={{ src: '/drawBots.svg', width: 213, height: 133 }}
-        />
-      </div>
-      <div className='w-full grid grid-cols-1 gap-4 mt-6 md:grid-cols-2'>
-        <IncentiveCard
-          title='Launch a Vault'
-          subtitle='Attract deposits, apply for bonus rewards'
-          description='Launch vaults and get them listed on front ends, aggregators and vault lists'
-          href='/vaults'
-          img={{ src: '/vaults.svg', width: 339, height: 133 }}
-        />
-        <IncentiveCard
-          title='Run a Frontend'
-          subtitle='Earn $500/mo'
-          description='Host a frontend to the PoolTogether protocol - build your own or fork one'
-          href='/front-ends'
-          img={{ src: '/frontends.svg', width: 339, height: 133 }}
         />
       </div>
     </section>
@@ -126,11 +114,151 @@ const IncentiveCard = (props: IncentiveCardProps) => {
         )}
       >
         <Image {...img} alt={title} className='w-full h-auto' />
-        <span className='text-2xl line-clamp-1'>{title}</span>
-        <span className='text-pt-purple-300 line-clamp-1'>{subtitle}</span>
+        <span className='font-medium line-clamp-1'>{title}</span>
+        <span className='text-pt-purple-400 line-clamp-1'>{subtitle}</span>
         <p className='line-clamp-3 md:line-clamp-2'>{description}</p>
       </div>
     </Link>
+  )
+}
+
+const RecipesSection = (props: SectionProps) => {
+  const { className } = props
+
+  return (
+    <section className={classNames('w-full flex flex-col items-center text-center', className)}>
+      <span className='text-2xl text-pt-purple-300'>Build on PoolTogether with</span>
+      <h3 className='text-5xl sm:text-6xl'>No-Code DeFi Recipes</h3>
+      <div className='w-full grid grid-cols-1 gap-x-4 gap-y-6 mt-6 md:grid-cols-2'>
+        <RecipeCard
+          title='No-Code Airdrops'
+          description='Reward the most based community in DeFi'
+          href='/airdrops'
+          img={{ src: '/airdrops.svg', width: 339, height: 200 }}
+        />
+        <RecipeCard
+          title='Group Savings'
+          description='Save and win with friends'
+          href='/group-savings'
+          img={{ src: '/groupSavings.svg', width: 339, height: 200 }}
+        />
+        <RecipeCard
+          title='No Loss Marketing'
+          description='Delegate prizes to users, withdraw anytime'
+          href='/no-loss-marketing'
+          img={{ src: '/marketing.svg', width: 339, height: 200 }}
+        />
+        <RecipeCard
+          title='50/50 Yield/Prizes'
+          description='Convert only half of your yield into prizes'
+          href='/yield-split'
+          img={{ src: '/yieldSplit.svg', width: 339, height: 200 }}
+        />
+      </div>
+    </section>
+  )
+}
+
+interface RecipeCardProps {
+  title: string
+  description: string
+  href: string
+  img: { src: string; width: number; height: number }
+  className?: string
+}
+
+const RecipeCard = (props: RecipeCardProps) => {
+  const { title, description, href, img, className } = props
+
+  return (
+    <Link href={href}>
+      <div
+        className={classNames(
+          'flex flex-col gap-2 p-3 text-start rounded-lg',
+          'hover:bg-pt-transparent',
+          className
+        )}
+      >
+        <Image {...img} alt={title} className='w-full h-auto' />
+        <span className='text-2xl font-medium line-clamp-1'>{title}</span>
+        <p className='text-xl text-pt-purple-300 line-clamp-2 md:line-clamp-1'>{description}</p>
+      </div>
+    </Link>
+  )
+}
+
+const ExtensionsSection = (props: SectionProps) => {
+  const { className } = props
+
+  return (
+    <section className={classNames('w-full flex flex-col items-center text-center', className)}>
+      <span className='text-2xl text-pt-purple-300'>PoolTogether</span>
+      <h3 className='text-5xl sm:text-6xl'>Requests for Extensions</h3>
+      <div className='w-full grid grid-cols-1 gap-4 mt-6 md:grid-cols-3'>
+        <ExtensionCard
+          title='Yield Sources'
+          description='Integrate new yield sources with PTV5'
+          href='/yield-sources'
+          img={{ src: '/yieldSources.svg', width: 212, height: 126 }}
+        />
+        <ExtensionCard
+          title='Web 2.5 On-Ramps'
+          description='Make it easy to on-ramp from fiat to PTV5'
+          href='/on-ramps'
+          img={{ src: '/onRamps.svg', width: 212, height: 126 }}
+        />
+        <ExtensionCard
+          title='Chat Bots'
+          description='Create deposit/withdraw bots for Telegram or Discord'
+          href='/chat-bots'
+          img={{ src: '/chatBots.svg', width: 212, height: 126 }}
+        />
+      </div>
+    </section>
+  )
+}
+
+interface ExtensionCardProps {
+  title: string
+  description: string
+  href: string
+  img: { src: string; width: number; height: number }
+  className?: string
+}
+
+const ExtensionCard = (props: ExtensionCardProps) => {
+  const { title, description, href, img, className } = props
+
+  return (
+    <Link href={href}>
+      <div
+        className={classNames(
+          'flex flex-col gap-2 p-3 text-start rounded-lg',
+          'hover:bg-pt-transparent',
+          className
+        )}
+      >
+        <Image {...img} alt={title} className='w-full h-auto' />
+        <span className='text-2xl font-medium line-clamp-1'>{title}</span>
+        <p className='text-xl text-pt-purple-300 line-clamp-3 md:line-clamp-2'>{description}</p>
+      </div>
+    </Link>
+  )
+}
+
+const ContactSection = (props: SectionProps) => {
+  const { className } = props
+
+  return (
+    <section className={classNames('w-full flex flex-col items-center text-center', className)}>
+      <span className='text-2xl font-medium'>Want to build something on PoolTogether V5?</span>
+      <Button href={LINKS.governance} target='_blank' color='darkPurple' className='mt-6'>
+        Share your idea on the governance forum
+      </Button>
+      <ExternalLink href={LINKS.discord} size='sm' className='mt-3 underline'>
+        Chat with the community on Discord
+      </ExternalLink>
+    </section>
   )
 }
 
@@ -139,8 +267,8 @@ const FaqSection = (props: SectionProps) => {
 
   return (
     <section className={classNames('w-full flex flex-col gap-6', className)}>
-      <h3 className='text-5xl text-pt-purple-300 sm:text-6xl'>FAQs</h3>
-      <div className='flex flex-col gap-12'>
+      <h3 className='text-5xl font-medium text-pt-purple-300 sm:text-6xl'>FAQs</h3>
+      <div className='flex flex-col gap-6'>
         <FAQ
           q='Where can I learn more about PoolTogether V5 bots?'
           a={
@@ -159,6 +287,33 @@ const FaqSection = (props: SectionProps) => {
           }
         />
         <FAQ
+          q='How do I go about building on PoolTogether?'
+          a={
+            <>
+              <p>
+                PoolTogether is completely permissionless. If you want to build something on top or
+                related to it, just go ahead and do it! You can get started with the{' '}
+                <ResourceLink href='https://dev.pooltogether.com/protocol/design/'>
+                  dev docs
+                </ResourceLink>
+                , UI templates such as the ones for{' '}
+                <ResourceLink href='https://github.com/GenerationSoftware/pooltogether-sveltekit-template'>
+                  SvelteKit
+                </ResourceLink>{' '}
+                or{' '}
+                <ResourceLink href='https://github.com/GenerationSoftware/pooltogether-nextjs-template'>
+                  NextJS
+                </ResourceLink>
+                , or{' '}
+                <ResourceLink href='https://www.npmjs.com/package/@generationsoftware/hyperstructure-client-js'>
+                  G9's SDK
+                </ResourceLink>{' '}
+                for interacting with the protocol.
+              </p>
+            </>
+          }
+        />
+        <FAQ
           q='How much can I earn by running bots?'
           a={
             <>
@@ -173,14 +328,13 @@ const FaqSection = (props: SectionProps) => {
           }
         />
         <FAQ
-          q='Who administers these incentives programs?'
+          q='Do I need to buy POOL to make a budget request?'
           a={
             <>
               <p>
-                Bot incentives are built into the protocol, either through the prize pool directly
-                or through the many vaults connected to it. There can be, however, additional
-                incentives managed offchain from third parties contributing to the protocol's
-                growth. See more details in each type of incentive's' pages above.
+                While making a proposal onchain requires 10,000 POOL tokens, there are plenty of
+                community members that are happy to sponsor worthwhile proposals. Simply bring the
+                topic of sponsorship when discussing your proposal.
               </p>
             </>
           }
@@ -201,8 +355,8 @@ const FAQ = (props: FaqProps) => {
 
   return (
     <div className={classNames('flex flex-col gap-6', className)}>
-      <span className='text-2xl text-pt-purple-300'>{q}</span>
-      <span className='flex flex-col gap-2 text-xl'>{a}</span>
+      <span className='text-2xl font-medium text-pt-purple-300'>{q}</span>
+      <span className='text-xl'>{a}</span>
     </div>
   )
 }
