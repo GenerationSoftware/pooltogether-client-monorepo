@@ -8,7 +8,7 @@ import { ResourceLink } from '@components/ResourceLink'
 
 export default function HomePage() {
   return (
-    <Layout hideNavbar={true} className='gap-40 px-0 shadow-2xl'>
+    <Layout hideNavbar={true} className='gap-40 !px-0 shadow-2xl'>
       <HeroSection />
       <IncentivesSection className='px-6' />
       <RecipesSection className='px-6' />
