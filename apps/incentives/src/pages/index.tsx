@@ -149,8 +149,8 @@ const RecipesSection = (props: SectionProps) => {
           img={{ src: '/marketing.svg', width: 339, height: 200 }}
         />
         <RecipeCard
-          title='50/50 Yield/Prizes'
-          description='Convert only half of your yield into prizes'
+          title='50/50 Yield/Prizes Vault'
+          description='Convert only half of yield into prizes'
           href='/yield-split'
           img={{ src: '/yieldSplit.svg', width: 339, height: 200 }}
         />

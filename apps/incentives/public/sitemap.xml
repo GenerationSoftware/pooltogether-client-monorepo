@@ -8,4 +8,5 @@
   <url> <loc>https://builders.cabana.fi/on-ramps</loc> <changefreq>daily</changefreq> <priority>0.9</priority> </url>
   <url> <loc>https://builders.cabana.fi/chat-bots</loc> <changefreq>daily</changefreq> <priority>0.9</priority> </url>
   <url> <loc>https://builders.cabana.fi/airdrops</loc> <changefreq>daily</changefreq> <priority>0.9</priority> </url>
+  <url> <loc>https://builders.cabana.fi/yield-split</loc> <changefreq>daily</changefreq> <priority>0.9</priority> </url>
 </urlset>
