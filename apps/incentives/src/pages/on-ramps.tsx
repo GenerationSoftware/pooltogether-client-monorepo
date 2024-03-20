@@ -7,6 +7,8 @@ export default function OnRampsPage() {
     <Layout className='gap-6'>
       <ExtensionsPageContent
         title='Web 2.5 On-Ramps'
+        description='Easy on-ramps enabling fiat to PoolTogether V5 savings'
+        img={{ src: '/onRamps.svg', width: 212, height: 126 }}
         idea={
           <>
             <p>

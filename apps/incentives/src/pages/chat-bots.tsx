@@ -7,6 +7,8 @@ export default function ChatBotsPage() {
     <Layout className='gap-6'>
       <ExtensionsPageContent
         title='Deposit/Withdraw Chat Bots'
+        description='Enable users to interact with PoolTogether V5 through familiar chat interfaces'
+        img={{ src: '/chatBots.svg', width: 212, height: 126 }}
         idea={
           <p>
             In recent months, interacting with blockchains via chat bots has become quite popular.

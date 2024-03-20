@@ -7,6 +7,8 @@ export default function YieldSourcesPage() {
     <Layout className='gap-6'>
       <ExtensionsPageContent
         title='New Yield Sources'
+        description='Integrate more yield sources with PoolTogether V5 prize vaults'
+        img={{ src: '/yieldSources.svg', width: 212, height: 126 }}
         idea={
           <>
             <p>
