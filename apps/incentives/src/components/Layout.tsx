@@ -5,23 +5,24 @@ import { Navbar } from './Navbar'
 
 interface LayoutProps {
   children: ReactNode
+  hideNavbar?: boolean
   className?: string
 }
 
 export const Layout = (props: LayoutProps) => {
-  const { children, className } = props
+  const { children, hideNavbar, className } = props
 
   return (
     <div className='min-h-screen flex flex-col gap-14 overflow-x-hidden'>
       <Head>
-        <title>PoolTogether Incentives</title>
+        <title>PoolTogether Builders</title>
       </Head>
 
-      <Navbar className='max-w-7xl mx-auto' />
+      {!hideNavbar && <Navbar className='max-w-7xl mx-auto' />}
 
       <main
         className={classNames(
-          'w-full max-w-7xl relative flex flex-col items-center mx-auto mb-40 px-6',
+          'w-full max-w-7xl relative flex flex-col items-center mx-auto pb-40 px-6',
           className
         )}
       >

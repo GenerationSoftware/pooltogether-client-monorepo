@@ -24,7 +24,7 @@ export const ExternalLink = (props: ExternalLinkProps) => {
 
   return (
     <a
-      href={ensPaddedHref ?? href}
+      href={(ensPaddedHref ?? href) || undefined}
       target='_blank'
       rel='noreferrer'
       className={classNames(
