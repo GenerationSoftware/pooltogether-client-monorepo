@@ -54,6 +54,7 @@ const HeroSection = (props: SectionProps) => {
           href={LINKS.discord}
           target='_blank'
           color='darkPurple'
+          size='lg'
           className='mt-[max(2rem,4vw)] xl:mt-12'
         >
           Chat with us on Discord
@@ -82,7 +83,7 @@ const IncentivesSection = (props: SectionProps) => {
         <IncentiveCard
           title='Yield Liquidation Bot'
           subtitle='Earn liquidation fees'
-          description='Swap yield at a discount and build up the prize pool'
+          description='Swap yield at a discount to grow the prize pool'
           href='/yield-bots'
           img={{ src: '/yieldBots.svg', width: 213, height: 133 }}
         />
@@ -265,10 +266,10 @@ const ContactSection = (props: SectionProps) => {
   return (
     <section className={classNames('w-full flex flex-col items-center text-center', className)}>
       <span className='text-2xl font-medium'>Want to build something on PoolTogether V5?</span>
-      <Button href={LINKS.governance} target='_blank' color='darkPurple' className='mt-6'>
+      <Button href={LINKS.governance} target='_blank' color='darkPurple' size='lg' className='mt-6'>
         Share your idea on the governance forum
       </Button>
-      <ExternalLink href={LINKS.discord} size='sm' className='mt-3 underline'>
+      <ExternalLink href={LINKS.discord} className='mt-3 underline'>
         Chat with the community on Discord
       </ExternalLink>
     </section>
@@ -346,8 +347,8 @@ const FaqSection = (props: SectionProps) => {
             <>
               <p>
                 While making a proposal onchain requires 10,000 POOL tokens, there are plenty of
-                community members that are happy to sponsor worthwhile proposals. Simply bring the
-                topic of sponsorship when discussing your proposal.
+                community members that are happy to sponsor worthwhile proposals. Simply bring up
+                the topic of sponsorship when discussing your proposal.
               </p>
             </>
           }
