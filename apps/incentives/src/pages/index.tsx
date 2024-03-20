@@ -8,13 +8,13 @@ import { ResourceLink } from '@components/ResourceLink'
 
 export default function HomePage() {
   return (
-    <Layout className='gap-40'>
+    <Layout hideNavbar={true} className='gap-40 px-0 shadow-2xl'>
       <HeroSection />
-      <IncentivesSection />
-      <RecipesSection />
-      <ExtensionsSection />
-      <ContactSection />
-      <FaqSection />
+      <IncentivesSection className='px-6' />
+      <RecipesSection className='px-6' />
+      <ExtensionsSection className='px-6' />
+      <ContactSection className='px-6' />
+      <FaqSection className='px-6' />
     </Layout>
   )
 }
@@ -23,37 +23,50 @@ interface SectionProps {
   className?: string
 }
 
-// TODO: update section
 const HeroSection = (props: SectionProps) => {
   const { className } = props
 
   return (
     <section
-      className={classNames('w-full flex flex-col gap-6 items-center text-center', className)}
+      className={classNames(
+        'relative w-full flex justify-center px-6 py-14 isolate aspect-[800/494]',
+        className
+      )}
     >
-      <h1 className='text-5xl sm:text-6xl'>
-        Help <span className='text-pt-purple-300'>Run</span> The{' '}
-        <span className='text-pt-purple-300'>Hyperstructure</span>
-      </h1>
-      <Image
-        src='/heroGraphic.svg'
-        alt='Fancy Hero Image'
-        width={761}
-        height={340}
-        priority={true}
-        className='w-full h-auto'
-      />
-      <h2 className='text-2xl'>
-        We provide the <span className='font-semibold text-pt-purple-300'>tools</span> &{' '}
-        <span className='font-semibold text-pt-purple-300'>incentives</span>. You run the
-        hyperstructure.
-      </h2>
-      <div className='flex flex-col gap-6 items-center sm:flex-row'>
-        <span className='text-xl'>Have questions or want to learn more?</span>
-        <Button href={LINKS.discord} target='_blank' color='darkPurple'>
-          Chat with us in #incentives
+      <div className='flex flex-col items-center text-center'>
+        <Image
+          src='/ptLogo.svg'
+          alt='PoolTogether'
+          width={183}
+          height={72}
+          priority={true}
+          className='w-24 h-auto md:w-36'
+        />
+        <div className='flex flex-col gap-1 mt-[max(4rem,8vw)] lg:mt-[16vw] xl:mt-56'>
+          <h1 className='font-medium text-5xl sm:text-7xl'>Build on PoolTogether</h1>
+          <h2 className='text-2xl'>
+            Learn about <span className='font-medium text-pt-purple-300'>tools</span> &{' '}
+            <span className='font-medium text-pt-purple-300'>incentives</span> to extend and support
+            the protocol
+          </h2>
+        </div>
+        <Button
+          href={LINKS.discord}
+          target='_blank'
+          color='darkPurple'
+          className='mt-[max(2rem,4vw)] xl:mt-12'
+        >
+          Chat with us on Discord
         </Button>
       </div>
+      <Image
+        src='/heroBg.svg'
+        alt='Background'
+        width={800}
+        height={494}
+        priority={true}
+        className='absolute top-0 min-w-full max-w-none -z-10'
+      />
     </section>
   )
 }
@@ -109,7 +122,7 @@ const IncentiveCard = (props: IncentiveCardProps) => {
       <div
         className={classNames(
           'flex flex-col gap-2 p-3 text-start text-xl rounded-lg',
-          'hover:bg-pt-purple-50/20',
+          'hover:bg-pt-transparent',
           className
         )}
       >
