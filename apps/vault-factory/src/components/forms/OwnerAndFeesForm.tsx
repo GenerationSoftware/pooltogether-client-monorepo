@@ -37,6 +37,8 @@ export const OwnerAndFeesForm = (props: OwnerAndFeesFormProps) => {
   const [vaultFeeRecipient, setVaultFeeRecipient] = useAtom(vaultFeeRecipientAddressAtom)
   const isUsingCustomYieldSource = useAtomValue(isUsingCustomYieldSourceAtom)
 
+  const formVaultFee = formMethods.watch('vaultFee')
+
   const { step, setStep, nextStep } = useVaultCreationSteps()
 
   useEffect(() => {
@@ -50,6 +52,10 @@ export const OwnerAndFeesForm = (props: OwnerAndFeesFormProps) => {
       shouldValidate: true
     })
   }, [])
+
+  useEffect(() => {
+    formMethods.trigger('vaultFeeRecipient')
+  }, [formVaultFee])
 
   const onSubmit = (data: OwnerAndFeesFormValues) => {
     setVaultOwner(data.vaultOwner.trim() as Address)
@@ -93,10 +99,15 @@ export const OwnerAndFeesForm = (props: OwnerAndFeesFormProps) => {
         <SimpleInput
           formKey='vaultFeeRecipient'
           validate={{
-            isValidAddress: (v: string) => isAddress(v?.trim()) || 'Enter a valid wallet address.'
+            isValidAddress: (v: string) => isAddress(v?.trim()) || 'Enter a valid wallet address.',
+            isNotZeroAddress: (v: string) =>
+              !formVaultFee ||
+              parseFloat(formVaultFee) === 0 ||
+              v !== zeroAddress ||
+              'Enter a wallet address to receive yield fees.'
           }}
           defaultValue={zeroAddress}
-          label='Fee Recipient'
+          label='Yield Fee Recipient'
           needsOverride={true}
           className='w-full max-w-md'
         />

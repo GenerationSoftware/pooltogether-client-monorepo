@@ -58,7 +58,7 @@ const YieldSourceCard = (props: YieldSourceCardProps) => {
       className='gap-3'
     >
       <span className='text-lg font-bold text-pt-purple-100'>{yieldSource.name}</span>
-      <ExternalLink href={yieldSource.href} className='text-blue-500'>
+      <ExternalLink href={yieldSource.href} className='mr-auto text-blue-500'>
         {yieldSource.href}
       </ExternalLink>
       <span className='hidden line-clamp-3 lg:block'>{yieldSource.description}</span>
