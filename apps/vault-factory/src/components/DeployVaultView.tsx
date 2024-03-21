@@ -9,6 +9,7 @@ import { useMemo } from 'react'
 import { SupportedNetwork } from 'src/types'
 import { Address, formatUnits, zeroAddress } from 'viem'
 import { useAccount } from 'wagmi'
+import { useIsValidYieldSourceConversionMath } from '@hooks/useIsValidYieldSourceConversionMath'
 import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
 import { useVaultInfo } from '@hooks/useVaultInfo'
 import { DeployVaultButton } from './buttons/DeployVaultButton'
@@ -41,7 +42,7 @@ const DeployVaultViewWarnings = (props: { className?: string }) => {
 
   const { address: userAddress } = useAccount()
 
-  const { chainId, tokenAddress, yieldBuffer } = useVaultInfo()
+  const { chainId, yieldSourceAddress, tokenAddress, yieldBuffer } = useVaultInfo()
 
   const { data: token } = useTokenBalance(
     chainId as SupportedNetwork,
@@ -57,6 +58,11 @@ const DeployVaultViewWarnings = (props: { className?: string }) => {
     !!chainId && !!tokenAddress ? [tokenAddress, USDC_TOKEN_ADDRESSES[chainId]] : []
   )
 
+  const { data: isValidYieldSourceConversionMath } = useIsValidYieldSourceConversionMath(
+    chainId as SupportedNetwork,
+    yieldSourceAddress as Address
+  )
+
   const { setStep } = useVaultCreationSteps()
 
   const warnings = useMemo(() => {
@@ -68,6 +74,15 @@ const DeployVaultViewWarnings = (props: { className?: string }) => {
         warnings.push({
           id: 'invalidYieldSource',
           text: `The yield source you have selected doesn't seem valid.`,
+          fix: { text: 'Select a valid yield source', onClick: () => setStep(1) }
+        })
+      }
+
+      // Inconsistent yield source conversion math
+      if (isValidYieldSourceConversionMath === false) {
+        warnings.push({
+          id: 'inconsistentYieldSourceConversionMath',
+          text: `The yield source you have selected seems to have inconsistent math between "withdraw" and "redeem". This will likely mean your prize vault will not work as intended.`,
           fix: { text: 'Select a valid yield source', onClick: () => setStep(1) }
         })
       }
