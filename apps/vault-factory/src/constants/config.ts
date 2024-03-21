@@ -117,13 +117,13 @@ export const NETWORK_CONFIG: Record<
         href: 'https://aave.com/',
         description: 'Lending and borrowing protocol',
         vaults: [
-          { address: '0x332b1EB2Cc4046954725EbDFB8143fB8354ea9a7', tags: ['stablecoin'] },
-          { address: '0x13E37b0Ca8b48fc2818C177c24635F90C1495C5c', tags: ['stablecoin'] },
-          { address: '0x602d77e900eCD48ac9b51151936Dcc5Efe2e7FaE', tags: ['stablecoin'] },
-          { address: '0xA2B0321B671A83a98Ff1F5a680b700864f57c6e7', tags: ['stablecoin'] },
-          { address: '0xd96702995B2bBD78a9A39eF86f4fA5f9704fdC7D', tags: ['stablecoin'] },
-          { address: '0xE77Db9f8b68BC47A82D4F47E68FB57535dF0086e' },
-          { address: '0x98CED5d595e8981756f063db8D3c44a6Be9A8F86' }
+          { address: '0x4Cf96b676a347E8647eEb6AAeA99F40cA76ed342', tags: ['stablecoin'] },
+          { address: '0xBfF0113396fed91700A088F993b96B5473EB1497', tags: ['stablecoin'] },
+          { address: '0xe661730EC120D78961542bc77f197792b01E7AFC', tags: ['stablecoin'] },
+          { address: '0x5323ad247241A38e7169D694C58c8d84DE4b43B2', tags: ['stablecoin'] },
+          { address: '0xbe2ca778890B9297d3Db17ae86f548B0E298224e', tags: ['stablecoin'] },
+          { address: '0x7887F1e815847d896D52fFB10dEdf6eB09e967E9' },
+          { address: '0xcC6b662bdf918583d2a5EcF4db1787C438e699dC' }
         ]
       }
     ]
