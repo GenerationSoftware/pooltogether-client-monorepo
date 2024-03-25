@@ -19,6 +19,8 @@ export const useIsValidYieldSourceConversionMath = (chainId: number, address: Ad
       if (!!publicClient) {
         const valuesToCheck = Array.from(Array(19).keys()).map((i) => 10n ** BigInt(i))
 
+        const blockNumber = await publicClient.getBlockNumber()
+
         const initialMulticallResults = await publicClient.multicall({
           contracts: [
             ...valuesToCheck.map((v) => ({
@@ -33,7 +35,8 @@ export const useIsValidYieldSourceConversionMath = (chainId: number, address: Ad
               functionName: 'previewRedeem',
               args: [v]
             }))
-          ]
+          ],
+          blockNumber
         })
 
         const withdrawResults = initialMulticallResults
@@ -57,7 +60,8 @@ export const useIsValidYieldSourceConversionMath = (chainId: number, address: Ad
               functionName: 'previewWithdraw',
               args: [v]
             }))
-          ]
+          ],
+          blockNumber
         })
 
         const foundInconsistency = valuesToCheck.find((v, i) => {
