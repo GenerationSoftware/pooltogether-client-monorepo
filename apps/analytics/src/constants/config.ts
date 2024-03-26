@@ -6,8 +6,8 @@ import { arbitrum, arbitrumSepolia, mainnet, optimism, optimismSepolia, sepolia 
  * Supported networks
  */
 export const SUPPORTED_NETWORKS = {
-  mainnets: [NETWORK.mainnet, NETWORK.optimism, NETWORK.arbitrum],
-  testnets: [NETWORK.sepolia, NETWORK.optimism_sepolia, NETWORK.arbitrum_sepolia]
+  mainnets: [NETWORK.mainnet, NETWORK.optimism],
+  testnets: []
 } as const
 
 /**
@@ -50,8 +50,7 @@ export const QUERY_START_BLOCK: { [chainId: number]: bigint } = {
  * Draw results URL
  */
 export const DRAW_RESULTS_URL: { [chainId: number]: string } = {
-  [NETWORK.optimism]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results-mainnet/main/prizes/${NETWORK.optimism}`,
-  [NETWORK.arbitrum_sepolia]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results-testnet/main/prizes/${NETWORK.arbitrum_sepolia}`
+  [NETWORK.optimism]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results-mainnet/main/prizes/${NETWORK.optimism}`
 }
 
 /**
