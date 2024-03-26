@@ -1,5 +1,25 @@
 export const liquidationPairABI = [
   {
+    inputs: [
+      { internalType: 'contract ILiquidationSource', name: '_source', type: 'address' },
+      { internalType: 'address', name: '__tokenIn', type: 'address' },
+      { internalType: 'address', name: '__tokenOut', type: 'address' },
+      { internalType: 'uint256', name: '_targetAuctionPeriod', type: 'uint256' },
+      { internalType: 'uint192', name: '_minimumAuctionAmount', type: 'uint192' },
+      { internalType: 'uint256', name: '_smoothingFactor', type: 'uint256' }
+    ],
+    stateMutability: 'nonpayable',
+    type: 'constructor'
+  },
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'amountInMax', type: 'uint256' },
+      { internalType: 'uint256', name: 'amountIn', type: 'uint256' }
+    ],
+    name: 'SwapExceedsMax',
+    type: 'error'
+  },
+  {
     inputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     name: 'computeExactAmountIn',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
@@ -94,13 +114,5 @@ export const liquidationPairABI = [
     outputs: [{ internalType: 'address', name: '', type: 'address' }],
     stateMutability: 'view',
     type: 'function'
-  },
-  {
-    inputs: [
-      { internalType: 'uint256', name: 'amountInMax', type: 'uint256' },
-      { internalType: 'uint256', name: 'amountIn', type: 'uint256' }
-    ],
-    name: 'SwapExceedsMax',
-    type: 'error'
   }
 ] as const

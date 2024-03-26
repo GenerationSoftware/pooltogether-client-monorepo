@@ -1,5 +1,29 @@
 export const liquidationPairFactoryABI = [
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'contract TpdaLiquidationPair',
+        name: 'pair',
+        type: 'address'
+      },
+      {
+        indexed: false,
+        internalType: 'contract ILiquidationSource',
+        name: 'source',
+        type: 'address'
+      },
+      { indexed: true, internalType: 'address', name: 'tokenIn', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'tokenOut', type: 'address' },
+      { indexed: false, internalType: 'uint256', name: 'targetAuctionPeriod', type: 'uint256' },
+      { indexed: false, internalType: 'uint192', name: 'minimumAuctionAmount', type: 'uint192' },
+      { indexed: false, internalType: 'uint256', name: 'smoothingFactor', type: 'uint256' }
+    ],
+    name: 'PairCreated',
+    type: 'event'
+  },
+  {
     inputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     name: 'allPairs',
     outputs: [{ internalType: 'contract TpdaLiquidationPair', name: '', type: 'address' }],
@@ -33,29 +57,5 @@ export const liquidationPairFactoryABI = [
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'contract TpdaLiquidationPair',
-        name: 'pair',
-        type: 'address'
-      },
-      {
-        indexed: false,
-        internalType: 'contract ILiquidationSource',
-        name: 'source',
-        type: 'address'
-      },
-      { indexed: true, internalType: 'address', name: 'tokenIn', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'tokenOut', type: 'address' },
-      { indexed: false, internalType: 'uint256', name: 'targetAuctionPeriod', type: 'uint256' },
-      { indexed: false, internalType: 'uint192', name: 'minimumAuctionAmount', type: 'uint192' },
-      { indexed: false, internalType: 'uint256', name: 'smoothingFactor', type: 'uint256' }
-    ],
-    name: 'PairCreated',
-    type: 'event'
   }
 ] as const

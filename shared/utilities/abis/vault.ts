@@ -1,5 +1,256 @@
 export const vaultABI = [
   {
+    inputs: [
+      { internalType: 'string', name: '_name', type: 'string' },
+      { internalType: 'string', name: '_symbol', type: 'string' },
+      { internalType: 'contract IERC4626', name: 'yieldVault_', type: 'address' },
+      { internalType: 'contract PrizePool', name: '_prizePool', type: 'address' },
+      { internalType: 'address', name: '_claimer', type: 'address' },
+      { internalType: 'address', name: '_yieldFeeRecipient', type: 'address' },
+      { internalType: 'uint32', name: '_yieldFeePercentage', type: 'uint32' },
+      { internalType: 'address', name: '_owner', type: 'address' }
+    ],
+    stateMutability: 'nonpayable',
+    type: 'constructor'
+  },
+  { inputs: [], name: 'BurnZeroShares', type: 'error' },
+  {
+    inputs: [
+      { internalType: 'address', name: 'caller', type: 'address' },
+      { internalType: 'address', name: 'claimer', type: 'address' }
+    ],
+    name: 'CallerNotClaimer',
+    type: 'error'
+  },
+  {
+    inputs: [
+      { internalType: 'address', name: 'caller', type: 'address' },
+      { internalType: 'address', name: 'liquidationPair', type: 'address' }
+    ],
+    name: 'CallerNotLP',
+    type: 'error'
+  },
+  {
+    inputs: [
+      { internalType: 'address', name: 'caller', type: 'address' },
+      { internalType: 'address', name: 'yieldFeeRecipient', type: 'address' }
+    ],
+    name: 'CallerNotYieldFeeRecipient',
+    type: 'error'
+  },
+  { inputs: [], name: 'ClaimRecipientZeroAddress', type: 'error' },
+  { inputs: [], name: 'ClaimerZeroAddress', type: 'error' },
+  { inputs: [], name: 'DepositZeroAssets', type: 'error' },
+  { inputs: [], name: 'InvalidShortString', type: 'error' },
+  { inputs: [], name: 'LPZeroAddress', type: 'error' },
+  { inputs: [], name: 'LiquidationAmountOutZero', type: 'error' },
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'totalToWithdraw', type: 'uint256' },
+      { internalType: 'uint256', name: 'availableYield', type: 'uint256' }
+    ],
+    name: 'LiquidationExceedsAvailable',
+    type: 'error'
+  },
+  {
+    inputs: [
+      { internalType: 'address', name: 'tokenIn', type: 'address' },
+      { internalType: 'address', name: 'prizeToken', type: 'address' }
+    ],
+    name: 'LiquidationTokenInNotPrizeToken',
+    type: 'error'
+  },
+  {
+    inputs: [{ internalType: 'address', name: 'tokenOut', type: 'address' }],
+    name: 'LiquidationTokenOutNotSupported',
+    type: 'error'
+  },
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'totalAssets', type: 'uint256' },
+      { internalType: 'uint256', name: 'totalSupply', type: 'uint256' }
+    ],
+    name: 'LossyDeposit',
+    type: 'error'
+  },
+  { inputs: [], name: 'MintZeroShares', type: 'error' },
+  { inputs: [], name: 'OwnerZeroAddress', type: 'error' },
+  {
+    inputs: [
+      { internalType: 'address', name: 'caller', type: 'address' },
+      { internalType: 'address', name: 'owner', type: 'address' }
+    ],
+    name: 'PermitCallerNotOwner',
+    type: 'error'
+  },
+  { inputs: [], name: 'PrizePoolZeroAddress', type: 'error' },
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'shares', type: 'uint256' },
+      { internalType: 'uint256', name: 'yieldFeeBalance', type: 'uint256' }
+    ],
+    name: 'SharesExceedsYieldFeeBalance',
+    type: 'error'
+  },
+  {
+    inputs: [{ internalType: 'string', name: 'str', type: 'string' }],
+    name: 'StringTooLong',
+    type: 'error'
+  },
+  { inputs: [], name: 'SweepZeroAssets', type: 'error' },
+  { inputs: [], name: 'TwabControllerZeroAddress', type: 'error' },
+  { inputs: [], name: 'WithdrawZeroAssets', type: 'error' },
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'yieldFeePercentage', type: 'uint256' },
+      { internalType: 'uint256', name: 'maxYieldFeePercentage', type: 'uint256' }
+    ],
+    name: 'YieldFeePercentageExceedsMax',
+    type: 'error'
+  },
+  { inputs: [], name: 'YieldVaultZeroAddress', type: 'error' },
+  { inputs: [], name: 'ZeroTotalAssets', type: 'error' },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'owner', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'spender', type: 'address' },
+      { indexed: false, internalType: 'uint256', name: 'value', type: 'uint256' }
+    ],
+    name: 'Approval',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'recipient', type: 'address' },
+      { indexed: false, internalType: 'uint256', name: 'shares', type: 'uint256' }
+    ],
+    name: 'ClaimYieldFeeShares',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [{ indexed: true, internalType: 'address', name: 'claimer', type: 'address' }],
+    name: 'ClaimerSet',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'sender', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'owner', type: 'address' },
+      { indexed: false, internalType: 'uint256', name: 'assets', type: 'uint256' },
+      { indexed: false, internalType: 'uint256', name: 'shares', type: 'uint256' }
+    ],
+    name: 'Deposit',
+    type: 'event'
+  },
+  { anonymous: false, inputs: [], name: 'EIP712DomainChanged', type: 'event' },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'tokenOut', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'liquidationPair', type: 'address' }
+    ],
+    name: 'LiquidationPairSet',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [{ indexed: true, internalType: 'address', name: 'pendingOwner', type: 'address' }],
+    name: 'OwnershipOffered',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'previousOwner', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'newOwner', type: 'address' }
+    ],
+    name: 'OwnershipTransferred',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'account', type: 'address' },
+      {
+        components: [
+          { internalType: 'bool', name: 'useBeforeClaimPrize', type: 'bool' },
+          { internalType: 'bool', name: 'useAfterClaimPrize', type: 'bool' },
+          { internalType: 'contract IVaultHooks', name: 'implementation', type: 'address' }
+        ],
+        indexed: false,
+        internalType: 'struct VaultHooks',
+        name: 'hooks',
+        type: 'tuple'
+      }
+    ],
+    name: 'SetHooks',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'caller', type: 'address' },
+      { indexed: false, internalType: 'uint256', name: 'assets', type: 'uint256' },
+      { indexed: false, internalType: 'uint256', name: 'shares', type: 'uint256' }
+    ],
+    name: 'Sponsor',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'from', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'to', type: 'address' },
+      { indexed: false, internalType: 'uint256', name: 'value', type: 'uint256' }
+    ],
+    name: 'Transfer',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'liquidationPair', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'tokenOut', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'recipient', type: 'address' },
+      { indexed: false, internalType: 'uint256', name: 'amountOut', type: 'uint256' },
+      { indexed: false, internalType: 'uint256', name: 'yieldFee', type: 'uint256' }
+    ],
+    name: 'TransferYieldOut',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'sender', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'receiver', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'owner', type: 'address' },
+      { indexed: false, internalType: 'uint256', name: 'assets', type: 'uint256' },
+      { indexed: false, internalType: 'uint256', name: 'shares', type: 'uint256' }
+    ],
+    name: 'Withdraw',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: false, internalType: 'uint256', name: 'yieldFeePercentage', type: 'uint256' }
+    ],
+    name: 'YieldFeePercentageSet',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'yieldFeeRecipient', type: 'address' }
+    ],
+    name: 'YieldFeeRecipientSet',
+    type: 'event'
+  },
+  {
     inputs: [],
     name: 'DOMAIN_SEPARATOR',
     outputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
@@ -563,242 +814,5 @@ export const vaultABI = [
     outputs: [{ internalType: 'contract IERC4626', name: '', type: 'address' }],
     stateMutability: 'view',
     type: 'function'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'address', name: 'owner', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'spender', type: 'address' },
-      { indexed: false, internalType: 'uint256', name: 'value', type: 'uint256' }
-    ],
-    name: 'Approval',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'address', name: 'recipient', type: 'address' },
-      { indexed: false, internalType: 'uint256', name: 'shares', type: 'uint256' }
-    ],
-    name: 'ClaimYieldFeeShares',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [{ indexed: true, internalType: 'address', name: 'claimer', type: 'address' }],
-    name: 'ClaimerSet',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'address', name: 'sender', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'owner', type: 'address' },
-      { indexed: false, internalType: 'uint256', name: 'assets', type: 'uint256' },
-      { indexed: false, internalType: 'uint256', name: 'shares', type: 'uint256' }
-    ],
-    name: 'Deposit',
-    type: 'event'
-  },
-  { anonymous: false, inputs: [], name: 'EIP712DomainChanged', type: 'event' },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'address', name: 'tokenOut', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'liquidationPair', type: 'address' }
-    ],
-    name: 'LiquidationPairSet',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [{ indexed: true, internalType: 'address', name: 'pendingOwner', type: 'address' }],
-    name: 'OwnershipOffered',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'address', name: 'previousOwner', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'newOwner', type: 'address' }
-    ],
-    name: 'OwnershipTransferred',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'address', name: 'account', type: 'address' },
-      {
-        components: [
-          { internalType: 'bool', name: 'useBeforeClaimPrize', type: 'bool' },
-          { internalType: 'bool', name: 'useAfterClaimPrize', type: 'bool' },
-          { internalType: 'contract IVaultHooks', name: 'implementation', type: 'address' }
-        ],
-        indexed: false,
-        internalType: 'struct VaultHooks',
-        name: 'hooks',
-        type: 'tuple'
-      }
-    ],
-    name: 'SetHooks',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'address', name: 'caller', type: 'address' },
-      { indexed: false, internalType: 'uint256', name: 'assets', type: 'uint256' },
-      { indexed: false, internalType: 'uint256', name: 'shares', type: 'uint256' }
-    ],
-    name: 'Sponsor',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'address', name: 'from', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'to', type: 'address' },
-      { indexed: false, internalType: 'uint256', name: 'value', type: 'uint256' }
-    ],
-    name: 'Transfer',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'address', name: 'liquidationPair', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'tokenOut', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'recipient', type: 'address' },
-      { indexed: false, internalType: 'uint256', name: 'amountOut', type: 'uint256' },
-      { indexed: false, internalType: 'uint256', name: 'yieldFee', type: 'uint256' }
-    ],
-    name: 'TransferYieldOut',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'address', name: 'sender', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'receiver', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'owner', type: 'address' },
-      { indexed: false, internalType: 'uint256', name: 'assets', type: 'uint256' },
-      { indexed: false, internalType: 'uint256', name: 'shares', type: 'uint256' }
-    ],
-    name: 'Withdraw',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: false, internalType: 'uint256', name: 'yieldFeePercentage', type: 'uint256' }
-    ],
-    name: 'YieldFeePercentageSet',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'address', name: 'yieldFeeRecipient', type: 'address' }
-    ],
-    name: 'YieldFeeRecipientSet',
-    type: 'event'
-  },
-  { inputs: [], name: 'BurnZeroShares', type: 'error' },
-  {
-    inputs: [
-      { internalType: 'address', name: 'caller', type: 'address' },
-      { internalType: 'address', name: 'claimer', type: 'address' }
-    ],
-    name: 'CallerNotClaimer',
-    type: 'error'
-  },
-  {
-    inputs: [
-      { internalType: 'address', name: 'caller', type: 'address' },
-      { internalType: 'address', name: 'liquidationPair', type: 'address' }
-    ],
-    name: 'CallerNotLP',
-    type: 'error'
-  },
-  {
-    inputs: [
-      { internalType: 'address', name: 'caller', type: 'address' },
-      { internalType: 'address', name: 'yieldFeeRecipient', type: 'address' }
-    ],
-    name: 'CallerNotYieldFeeRecipient',
-    type: 'error'
-  },
-  { inputs: [], name: 'ClaimRecipientZeroAddress', type: 'error' },
-  { inputs: [], name: 'ClaimerZeroAddress', type: 'error' },
-  { inputs: [], name: 'DepositZeroAssets', type: 'error' },
-  { inputs: [], name: 'InvalidShortString', type: 'error' },
-  { inputs: [], name: 'LPZeroAddress', type: 'error' },
-  { inputs: [], name: 'LiquidationAmountOutZero', type: 'error' },
-  {
-    inputs: [
-      { internalType: 'uint256', name: 'totalToWithdraw', type: 'uint256' },
-      { internalType: 'uint256', name: 'availableYield', type: 'uint256' }
-    ],
-    name: 'LiquidationExceedsAvailable',
-    type: 'error'
-  },
-  {
-    inputs: [
-      { internalType: 'address', name: 'tokenIn', type: 'address' },
-      { internalType: 'address', name: 'prizeToken', type: 'address' }
-    ],
-    name: 'LiquidationTokenInNotPrizeToken',
-    type: 'error'
-  },
-  {
-    inputs: [{ internalType: 'address', name: 'tokenOut', type: 'address' }],
-    name: 'LiquidationTokenOutNotSupported',
-    type: 'error'
-  },
-  {
-    inputs: [
-      { internalType: 'uint256', name: 'totalAssets', type: 'uint256' },
-      { internalType: 'uint256', name: 'totalSupply', type: 'uint256' }
-    ],
-    name: 'LossyDeposit',
-    type: 'error'
-  },
-  { inputs: [], name: 'MintZeroShares', type: 'error' },
-  { inputs: [], name: 'OwnerZeroAddress', type: 'error' },
-  {
-    inputs: [
-      { internalType: 'address', name: 'caller', type: 'address' },
-      { internalType: 'address', name: 'owner', type: 'address' }
-    ],
-    name: 'PermitCallerNotOwner',
-    type: 'error'
-  },
-  { inputs: [], name: 'PrizePoolZeroAddress', type: 'error' },
-  {
-    inputs: [
-      { internalType: 'uint256', name: 'shares', type: 'uint256' },
-      { internalType: 'uint256', name: 'yieldFeeBalance', type: 'uint256' }
-    ],
-    name: 'SharesExceedsYieldFeeBalance',
-    type: 'error'
-  },
-  {
-    inputs: [{ internalType: 'string', name: 'str', type: 'string' }],
-    name: 'StringTooLong',
-    type: 'error'
-  },
-  { inputs: [], name: 'SweepZeroAssets', type: 'error' },
-  { inputs: [], name: 'TwabControllerZeroAddress', type: 'error' },
-  { inputs: [], name: 'WithdrawZeroAssets', type: 'error' },
-  {
-    inputs: [
-      { internalType: 'uint256', name: 'yieldFeePercentage', type: 'uint256' },
-      { internalType: 'uint256', name: 'maxYieldFeePercentage', type: 'uint256' }
-    ],
-    name: 'YieldFeePercentageExceedsMax',
-    type: 'error'
-  },
-  { inputs: [], name: 'YieldVaultZeroAddress', type: 'error' },
-  { inputs: [], name: 'ZeroTotalAssets', type: 'error' }
+  }
 ] as const

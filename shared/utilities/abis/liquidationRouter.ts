@@ -1,28 +1,32 @@
 export const liquidationRouterABI = [
   {
     inputs: [
-      { internalType: 'address', name: '_sender', type: 'address' },
-      { internalType: 'uint256', name: '_amountIn', type: 'uint256' },
-      { internalType: 'uint256', name: '', type: 'uint256' },
-      { internalType: 'bytes', name: '_flashSwapData', type: 'bytes' }
+      {
+        internalType: 'contract TpdaLiquidationPairFactory',
+        name: 'liquidationPairFactory_',
+        type: 'address'
+      }
     ],
-    name: 'flashSwapCallback',
-    outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function'
+    type: 'constructor'
   },
   {
+    inputs: [{ internalType: 'address', name: 'sender', type: 'address' }],
+    name: 'InvalidSender',
+    type: 'error'
+  },
+  {
+    inputs: [{ internalType: 'uint256', name: 'deadline', type: 'uint256' }],
+    name: 'SwapExpired',
+    type: 'error'
+  },
+  { inputs: [], name: 'UndefinedTpdaLiquidationPairFactory', type: 'error' },
+  {
     inputs: [
-      { internalType: 'contract TpdaLiquidationPair', name: '_liquidationPair', type: 'address' },
-      { internalType: 'address', name: '_receiver', type: 'address' },
-      { internalType: 'uint256', name: '_amountOut', type: 'uint256' },
-      { internalType: 'uint256', name: '_amountInMax', type: 'uint256' },
-      { internalType: 'uint256', name: '_deadline', type: 'uint256' }
+      { internalType: 'contract TpdaLiquidationPair', name: 'liquidationPair', type: 'address' }
     ],
-    name: 'swapExactAmountOut',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-    stateMutability: 'nonpayable',
-    type: 'function'
+    name: 'UnknownTpdaLiquidationPair',
+    type: 'error'
   },
   {
     anonymous: false,
@@ -57,21 +61,28 @@ export const liquidationRouterABI = [
     type: 'event'
   },
   {
-    inputs: [{ internalType: 'address', name: 'sender', type: 'address' }],
-    name: 'InvalidSender',
-    type: 'error'
+    inputs: [
+      { internalType: 'address', name: '_sender', type: 'address' },
+      { internalType: 'uint256', name: '_amountIn', type: 'uint256' },
+      { internalType: 'uint256', name: '', type: 'uint256' },
+      { internalType: 'bytes', name: '_flashSwapData', type: 'bytes' }
+    ],
+    name: 'flashSwapCallback',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
   },
-  {
-    inputs: [{ internalType: 'uint256', name: 'deadline', type: 'uint256' }],
-    name: 'SwapExpired',
-    type: 'error'
-  },
-  { inputs: [], name: 'UndefinedTpdaLiquidationPairFactory', type: 'error' },
   {
     inputs: [
-      { internalType: 'contract TpdaLiquidationPair', name: 'liquidationPair', type: 'address' }
+      { internalType: 'contract TpdaLiquidationPair', name: '_liquidationPair', type: 'address' },
+      { internalType: 'address', name: '_receiver', type: 'address' },
+      { internalType: 'uint256', name: '_amountOut', type: 'uint256' },
+      { internalType: 'uint256', name: '_amountInMax', type: 'uint256' },
+      { internalType: 'uint256', name: '_deadline', type: 'uint256' }
     ],
-    name: 'UnknownTpdaLiquidationPair',
-    type: 'error'
+    name: 'swapExactAmountOut',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+    type: 'function'
   }
 ] as const

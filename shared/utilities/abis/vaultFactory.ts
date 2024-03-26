@@ -1,5 +1,17 @@
 export const vaultFactoryABI = [
   {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'contract PrizeVault', name: 'vault', type: 'address' },
+      { indexed: true, internalType: 'contract IERC4626', name: 'yieldVault', type: 'address' },
+      { indexed: true, internalType: 'contract PrizePool', name: 'prizePool', type: 'address' },
+      { indexed: false, internalType: 'string', name: 'name', type: 'string' },
+      { indexed: false, internalType: 'string', name: 'symbol', type: 'string' }
+    ],
+    name: 'NewPrizeVault',
+    type: 'event'
+  },
+  {
     inputs: [],
     name: 'YIELD_BUFFER',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
@@ -49,17 +61,5 @@ export const vaultFactoryABI = [
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'contract PrizeVault', name: 'vault', type: 'address' },
-      { indexed: true, internalType: 'contract IERC4626', name: 'yieldVault', type: 'address' },
-      { indexed: true, internalType: 'contract PrizePool', name: 'prizePool', type: 'address' },
-      { indexed: false, internalType: 'string', name: 'name', type: 'string' },
-      { indexed: false, internalType: 'string', name: 'symbol', type: 'string' }
-    ],
-    name: 'NewPrizeVault',
-    type: 'event'
   }
 ] as const

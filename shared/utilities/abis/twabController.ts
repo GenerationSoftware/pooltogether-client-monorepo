@@ -1,5 +1,165 @@
 export const twabControllerABI = [
   {
+    inputs: [
+      { internalType: 'uint32', name: '_periodLength', type: 'uint32' },
+      { internalType: 'uint32', name: '_periodOffset', type: 'uint32' }
+    ],
+    stateMutability: 'nonpayable',
+    type: 'constructor'
+  },
+  {
+    inputs: [
+      { internalType: 'uint96', name: 'balance', type: 'uint96' },
+      { internalType: 'uint96', name: 'amount', type: 'uint96' },
+      { internalType: 'string', name: 'message', type: 'string' }
+    ],
+    name: 'BalanceLTAmount',
+    type: 'error'
+  },
+  { inputs: [], name: 'CannotTransferToSponsorshipAddress', type: 'error' },
+  {
+    inputs: [
+      { internalType: 'uint96', name: 'delegateBalance', type: 'uint96' },
+      { internalType: 'uint96', name: 'delegateAmount', type: 'uint96' },
+      { internalType: 'string', name: 'message', type: 'string' }
+    ],
+    name: 'DelegateBalanceLTAmount',
+    type: 'error'
+  },
+  {
+    inputs: [
+      { internalType: 'PeriodOffsetRelativeTimestamp', name: 'requestedTimestamp', type: 'uint32' },
+      { internalType: 'PeriodOffsetRelativeTimestamp', name: 'oldestTimestamp', type: 'uint32' }
+    ],
+    name: 'InsufficientHistory',
+    type: 'error'
+  },
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'start', type: 'uint256' },
+      { internalType: 'uint256', name: 'end', type: 'uint256' }
+    ],
+    name: 'InvalidTimeRange',
+    type: 'error'
+  },
+  { inputs: [], name: 'PeriodLengthTooShort', type: 'error' },
+  {
+    inputs: [{ internalType: 'uint32', name: 'periodOffset', type: 'uint32' }],
+    name: 'PeriodOffsetInFuture',
+    type: 'error'
+  },
+  {
+    inputs: [{ internalType: 'address', name: 'delegate', type: 'address' }],
+    name: 'SameDelegateAlreadySet',
+    type: 'error'
+  },
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'timestamp', type: 'uint256' },
+      { internalType: 'uint256', name: 'currentOverwritePeriodStartedAt', type: 'uint256' }
+    ],
+    name: 'TimestampNotFinalized',
+    type: 'error'
+  },
+  { inputs: [], name: 'TransferToZeroAddress', type: 'error' },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'user', type: 'address' },
+      { indexed: false, internalType: 'uint96', name: 'amount', type: 'uint96' },
+      { indexed: false, internalType: 'uint96', name: 'delegateAmount', type: 'uint96' }
+    ],
+    name: 'DecreasedBalance',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
+      { indexed: false, internalType: 'uint96', name: 'amount', type: 'uint96' },
+      { indexed: false, internalType: 'uint96', name: 'delegateAmount', type: 'uint96' }
+    ],
+    name: 'DecreasedTotalSupply',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'delegator', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'delegate', type: 'address' }
+    ],
+    name: 'Delegated',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'user', type: 'address' },
+      { indexed: false, internalType: 'uint96', name: 'amount', type: 'uint96' },
+      { indexed: false, internalType: 'uint96', name: 'delegateAmount', type: 'uint96' }
+    ],
+    name: 'IncreasedBalance',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
+      { indexed: false, internalType: 'uint96', name: 'amount', type: 'uint96' },
+      { indexed: false, internalType: 'uint96', name: 'delegateAmount', type: 'uint96' }
+    ],
+    name: 'IncreasedTotalSupply',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'user', type: 'address' },
+      { indexed: false, internalType: 'uint96', name: 'balance', type: 'uint96' },
+      { indexed: false, internalType: 'uint96', name: 'delegateBalance', type: 'uint96' },
+      { indexed: false, internalType: 'bool', name: 'isNew', type: 'bool' },
+      {
+        components: [
+          { internalType: 'uint128', name: 'cumulativeBalance', type: 'uint128' },
+          { internalType: 'uint96', name: 'balance', type: 'uint96' },
+          { internalType: 'uint32', name: 'timestamp', type: 'uint32' }
+        ],
+        indexed: false,
+        internalType: 'struct ObservationLib.Observation',
+        name: 'observation',
+        type: 'tuple'
+      }
+    ],
+    name: 'ObservationRecorded',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
+      { indexed: false, internalType: 'uint96', name: 'balance', type: 'uint96' },
+      { indexed: false, internalType: 'uint96', name: 'delegateBalance', type: 'uint96' },
+      { indexed: false, internalType: 'bool', name: 'isNew', type: 'bool' },
+      {
+        components: [
+          { internalType: 'uint128', name: 'cumulativeBalance', type: 'uint128' },
+          { internalType: 'uint96', name: 'balance', type: 'uint96' },
+          { internalType: 'uint32', name: 'timestamp', type: 'uint32' }
+        ],
+        indexed: false,
+        internalType: 'struct ObservationLib.Observation',
+        name: 'observation',
+        type: 'tuple'
+      }
+    ],
+    name: 'TotalSupplyObservationRecorded',
+    type: 'event'
+  },
+  {
     inputs: [],
     name: 'PERIOD_LENGTH',
     outputs: [{ internalType: 'uint32', name: '', type: 'uint32' }],
@@ -347,157 +507,5 @@ export const twabControllerABI = [
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'user', type: 'address' },
-      { indexed: false, internalType: 'uint96', name: 'amount', type: 'uint96' },
-      { indexed: false, internalType: 'uint96', name: 'delegateAmount', type: 'uint96' }
-    ],
-    name: 'DecreasedBalance',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
-      { indexed: false, internalType: 'uint96', name: 'amount', type: 'uint96' },
-      { indexed: false, internalType: 'uint96', name: 'delegateAmount', type: 'uint96' }
-    ],
-    name: 'DecreasedTotalSupply',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'delegator', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'delegate', type: 'address' }
-    ],
-    name: 'Delegated',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'user', type: 'address' },
-      { indexed: false, internalType: 'uint96', name: 'amount', type: 'uint96' },
-      { indexed: false, internalType: 'uint96', name: 'delegateAmount', type: 'uint96' }
-    ],
-    name: 'IncreasedBalance',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
-      { indexed: false, internalType: 'uint96', name: 'amount', type: 'uint96' },
-      { indexed: false, internalType: 'uint96', name: 'delegateAmount', type: 'uint96' }
-    ],
-    name: 'IncreasedTotalSupply',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'user', type: 'address' },
-      { indexed: false, internalType: 'uint96', name: 'balance', type: 'uint96' },
-      { indexed: false, internalType: 'uint96', name: 'delegateBalance', type: 'uint96' },
-      { indexed: false, internalType: 'bool', name: 'isNew', type: 'bool' },
-      {
-        components: [
-          { internalType: 'uint128', name: 'cumulativeBalance', type: 'uint128' },
-          { internalType: 'uint96', name: 'balance', type: 'uint96' },
-          { internalType: 'uint32', name: 'timestamp', type: 'uint32' }
-        ],
-        indexed: false,
-        internalType: 'struct ObservationLib.Observation',
-        name: 'observation',
-        type: 'tuple'
-      }
-    ],
-    name: 'ObservationRecorded',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
-      { indexed: false, internalType: 'uint96', name: 'balance', type: 'uint96' },
-      { indexed: false, internalType: 'uint96', name: 'delegateBalance', type: 'uint96' },
-      { indexed: false, internalType: 'bool', name: 'isNew', type: 'bool' },
-      {
-        components: [
-          { internalType: 'uint128', name: 'cumulativeBalance', type: 'uint128' },
-          { internalType: 'uint96', name: 'balance', type: 'uint96' },
-          { internalType: 'uint32', name: 'timestamp', type: 'uint32' }
-        ],
-        indexed: false,
-        internalType: 'struct ObservationLib.Observation',
-        name: 'observation',
-        type: 'tuple'
-      }
-    ],
-    name: 'TotalSupplyObservationRecorded',
-    type: 'event'
-  },
-  {
-    inputs: [
-      { internalType: 'uint96', name: 'balance', type: 'uint96' },
-      { internalType: 'uint96', name: 'amount', type: 'uint96' },
-      { internalType: 'string', name: 'message', type: 'string' }
-    ],
-    name: 'BalanceLTAmount',
-    type: 'error'
-  },
-  { inputs: [], name: 'CannotTransferToSponsorshipAddress', type: 'error' },
-  {
-    inputs: [
-      { internalType: 'uint96', name: 'delegateBalance', type: 'uint96' },
-      { internalType: 'uint96', name: 'delegateAmount', type: 'uint96' },
-      { internalType: 'string', name: 'message', type: 'string' }
-    ],
-    name: 'DelegateBalanceLTAmount',
-    type: 'error'
-  },
-  {
-    inputs: [
-      { internalType: 'PeriodOffsetRelativeTimestamp', name: 'requestedTimestamp', type: 'uint32' },
-      { internalType: 'PeriodOffsetRelativeTimestamp', name: 'oldestTimestamp', type: 'uint32' }
-    ],
-    name: 'InsufficientHistory',
-    type: 'error'
-  },
-  {
-    inputs: [
-      { internalType: 'uint256', name: 'start', type: 'uint256' },
-      { internalType: 'uint256', name: 'end', type: 'uint256' }
-    ],
-    name: 'InvalidTimeRange',
-    type: 'error'
-  },
-  { inputs: [], name: 'PeriodLengthTooShort', type: 'error' },
-  {
-    inputs: [{ internalType: 'uint32', name: 'periodOffset', type: 'uint32' }],
-    name: 'PeriodOffsetInFuture',
-    type: 'error'
-  },
-  {
-    inputs: [{ internalType: 'address', name: 'delegate', type: 'address' }],
-    name: 'SameDelegateAlreadySet',
-    type: 'error'
-  },
-  {
-    inputs: [
-      { internalType: 'uint256', name: 'timestamp', type: 'uint256' },
-      { internalType: 'uint256', name: 'currentOverwritePeriodStartedAt', type: 'uint256' }
-    ],
-    name: 'TimestampNotFinalized',
-    type: 'error'
-  },
-  { inputs: [], name: 'TransferToZeroAddress', type: 'error' }
+  }
 ] as const
