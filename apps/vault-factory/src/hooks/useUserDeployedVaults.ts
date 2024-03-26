@@ -13,12 +13,12 @@ export const useUserDeployedVaults = () => {
   const [vaultIds, setVaultIds] = useAtom(vaultIdsAtom)
 
   const addVault = (vaultInfo: VaultInfo) => {
-    const vaultId = getVaultId(vaultInfo).toLowerCase()
+    const vaultId = getVaultId(vaultInfo)
     setVaultIds((prev) => Array.from(new Set<string>([...prev, vaultId])))
   }
 
   const removeVault = (vaultInfo: VaultInfo) => {
-    const vaultId = getVaultId(vaultInfo).toLowerCase()
+    const vaultId = getVaultId(vaultInfo)
     setVaultIds((prev) => prev.filter((id) => id !== vaultId))
   }
 

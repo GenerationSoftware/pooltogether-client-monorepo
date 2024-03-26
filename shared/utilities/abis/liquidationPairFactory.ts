@@ -2,7 +2,7 @@ export const liquidationPairFactoryABI = [
   {
     inputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     name: 'allPairs',
-    outputs: [{ internalType: 'contract LiquidationPair', name: '', type: 'address' }],
+    outputs: [{ internalType: 'contract TpdaLiquidationPair', name: '', type: 'address' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -11,21 +11,17 @@ export const liquidationPairFactoryABI = [
       { internalType: 'contract ILiquidationSource', name: '_source', type: 'address' },
       { internalType: 'address', name: '_tokenIn', type: 'address' },
       { internalType: 'address', name: '_tokenOut', type: 'address' },
-      { internalType: 'uint32', name: '_periodLength', type: 'uint32' },
-      { internalType: 'uint32', name: '_firstPeriodStartsAt', type: 'uint32' },
-      { internalType: 'uint32', name: '_targetFirstSaleTime', type: 'uint32' },
-      { internalType: 'SD59x18', name: '_decayConstant', type: 'int256' },
-      { internalType: 'uint104', name: '_initialAmountIn', type: 'uint104' },
-      { internalType: 'uint104', name: '_initialAmountOut', type: 'uint104' },
-      { internalType: 'uint256', name: '_minimumAuctionAmount', type: 'uint256' }
+      { internalType: 'uint256', name: '_targetAuctionPeriod', type: 'uint256' },
+      { internalType: 'uint192', name: '_minimumAuctionAmount', type: 'uint192' },
+      { internalType: 'uint256', name: '_smoothingFactor', type: 'uint256' }
     ],
     name: 'createPair',
-    outputs: [{ internalType: 'contract LiquidationPair', name: '', type: 'address' }],
+    outputs: [{ internalType: 'contract TpdaLiquidationPair', name: '', type: 'address' }],
     stateMutability: 'nonpayable',
     type: 'function'
   },
   {
-    inputs: [{ internalType: 'contract LiquidationPair', name: '', type: 'address' }],
+    inputs: [{ internalType: 'contract TpdaLiquidationPair', name: '', type: 'address' }],
     name: 'deployedPairs',
     outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
     stateMutability: 'view',
@@ -41,22 +37,23 @@ export const liquidationPairFactoryABI = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'contract LiquidationPair', name: 'pair', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'tokenIn', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'tokenOut', type: 'address' },
+      {
+        indexed: true,
+        internalType: 'contract TpdaLiquidationPair',
+        name: 'pair',
+        type: 'address'
+      },
       {
         indexed: false,
         internalType: 'contract ILiquidationSource',
         name: 'source',
         type: 'address'
       },
-      { indexed: false, internalType: 'uint32', name: 'periodLength', type: 'uint32' },
-      { indexed: false, internalType: 'uint32', name: 'firstPeriodStartsAt', type: 'uint32' },
-      { indexed: false, internalType: 'uint32', name: 'targetFirstSaleTime', type: 'uint32' },
-      { indexed: false, internalType: 'SD59x18', name: 'decayConstant', type: 'int256' },
-      { indexed: false, internalType: 'uint104', name: 'initialAmountIn', type: 'uint104' },
-      { indexed: false, internalType: 'uint104', name: 'initialAmountOut', type: 'uint104' },
-      { indexed: false, internalType: 'uint256', name: 'minimumAuctionAmount', type: 'uint256' }
+      { indexed: true, internalType: 'address', name: 'tokenIn', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'tokenOut', type: 'address' },
+      { indexed: false, internalType: 'uint256', name: 'targetAuctionPeriod', type: 'uint256' },
+      { indexed: false, internalType: 'uint192', name: 'minimumAuctionAmount', type: 'uint192' },
+      { indexed: false, internalType: 'uint256', name: 'smoothingFactor', type: 'uint256' }
     ],
     name: 'PairCreated',
     type: 'event'

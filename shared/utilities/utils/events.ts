@@ -231,7 +231,7 @@ export const getLiquidationEvents = async (
       inputs: [
         {
           indexed: true,
-          internalType: 'contract LiquidationPair',
+          internalType: 'contract TpdaLiquidationPair',
           name: 'liquidationPair',
           type: 'address'
         },

@@ -1,8 +1,4 @@
-import {
-  usePrizePool,
-  usePrizeTokenPrice,
-  useToken
-} from '@generationsoftware/hyperstructure-react-hooks'
+import { useToken } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
@@ -11,17 +7,15 @@ import { vaultAddressAtom, vaultChainIdAtom } from 'src/atoms'
 import { SupportedNetwork } from 'src/types'
 import { Address } from 'viem'
 import { DeployLiquidationPairButton } from '@components/buttons/DeployLiquidationPairButton'
-import { NETWORK_CONFIG } from '@constants/config'
-import { useLiquidationPairInitialAmountIn } from '@hooks/useLiquidationPairInitialAmountIn'
 import { useLiquidationPairMinimumAuctionAmount } from '@hooks/useLiquidationPairMinimumAuctionAmount'
 import { useLiquidationPairSteps } from '@hooks/useLiquidationPairSteps'
 import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
-import { ExchangeRateInput } from './ExchangeRateInput'
 import { MinimumAuctionAmountInput } from './MinimumAuctionAmountInput'
+import { SmoothingFactorInput } from './SmoothingFactorInput'
 
 export interface DeployLiquidationPairFormValues {
-  initialExchangeRate: string
   minimumAuctionAmount: string
+  smoothingFactor: string
 }
 
 interface DeployLiquidationPairFormProps {
@@ -39,18 +33,14 @@ export const DeployLiquidationPairForm = (props: DeployLiquidationPairFormProps)
   const chainId = useAtomValue(vaultChainIdAtom) as SupportedNetwork
   const vaultAddress = useAtomValue(vaultAddressAtom) as Address
 
-  const prizePool = usePrizePool(chainId, NETWORK_CONFIG[chainId].prizePool)
-  const { data: prizeToken } = usePrizeTokenPrice(prizePool)
-
   const { data: shareToken } = useToken(chainId, vaultAddress)
 
-  const { data: defaultInitialAmountIn } = useLiquidationPairInitialAmountIn(chainId, vaultAddress)
   const { data: defaultMinimumAuctionAmount } = useLiquidationPairMinimumAuctionAmount(
     chainId,
     vaultAddress
   )
 
-  if (!prizeToken || !shareToken || !defaultInitialAmountIn || !defaultMinimumAuctionAmount) {
+  if (!shareToken || !defaultMinimumAuctionAmount) {
     return <Spinner />
   }
 
@@ -65,12 +55,12 @@ export const DeployLiquidationPairForm = (props: DeployLiquidationPairFormProps)
         onSubmit={formMethods.handleSubmit(() => {})}
         className={classNames('flex flex-col grow gap-12 items-center', className)}
       >
-        <ExchangeRateInput
-          prizeToken={prizeToken}
+        <MinimumAuctionAmountInput
+          shareToken={shareToken}
           vaultAddress={vaultAddress}
-          shareSymbol={shareToken.symbol}
+          className='w-full max-w-md'
         />
-        <MinimumAuctionAmountInput shareToken={shareToken} vaultAddress={vaultAddress} />
+        <SmoothingFactorInput className='w-full max-w-md' />
         <DeployLiquidationPairButton
           chainId={chainId}
           vaultAddress={vaultAddress}

@@ -32,7 +32,7 @@ export const RPC_URLS = {
  * Queries' start blocks
  */
 export const QUERY_START_BLOCK: { [chainId: number]: bigint } = {
-  [NETWORK.optimism_sepolia]: 9_270_700n
+  [NETWORK.optimism_sepolia]: 9_801_300n
 }
 
 /**
@@ -66,7 +66,7 @@ export const BURN_SETTINGS: {
   },
   [NETWORK.optimism_sepolia]: {
     burnTokenAddress: POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia],
-    liquidationPairAddress: '0xd20777642ba9441d0b7a3f9f53b2ef0255ec7c31',
+    liquidationPairAddress: '0xd781b45644fb5b5d8c76a991da2365b8272e932d',
     burnAddresses: [DEAD_ADDRESS]
   }
 }

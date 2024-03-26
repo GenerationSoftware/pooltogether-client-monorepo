@@ -15,6 +15,27 @@ export const opGasOracleABI = [
   },
   {
     inputs: [],
+    name: 'baseFeeScalar',
+    outputs: [{ internalType: 'uint32', name: '', type: 'uint32' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'blobBaseFee',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'blobBaseFeeScalar',
+    outputs: [{ internalType: 'uint32', name: '', type: 'uint32' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
     name: 'decimals',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'pure',
@@ -43,6 +64,13 @@ export const opGasOracleABI = [
   },
   {
     inputs: [],
+    name: 'isEcotone',
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
     name: 'l1BaseFee',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
@@ -62,6 +90,7 @@ export const opGasOracleABI = [
     stateMutability: 'view',
     type: 'function'
   },
+  { inputs: [], name: 'setEcotone', outputs: [], stateMutability: 'nonpayable', type: 'function' },
   {
     inputs: [],
     name: 'version',

@@ -13,7 +13,7 @@ export const liquidationRouterABI = [
   },
   {
     inputs: [
-      { internalType: 'contract LiquidationPair', name: '_liquidationPair', type: 'address' },
+      { internalType: 'contract TpdaLiquidationPair', name: '_liquidationPair', type: 'address' },
       { internalType: 'address', name: '_receiver', type: 'address' },
       { internalType: 'uint256', name: '_amountOut', type: 'uint256' },
       { internalType: 'uint256', name: '_amountInMax', type: 'uint256' },
@@ -29,7 +29,7 @@ export const liquidationRouterABI = [
     inputs: [
       {
         indexed: true,
-        internalType: 'contract LiquidationPairFactory',
+        internalType: 'contract TpdaLiquidationPairFactory',
         name: 'liquidationPairFactory',
         type: 'address'
       }
@@ -42,7 +42,7 @@ export const liquidationRouterABI = [
     inputs: [
       {
         indexed: true,
-        internalType: 'contract LiquidationPair',
+        internalType: 'contract TpdaLiquidationPair',
         name: 'liquidationPair',
         type: 'address'
       },
@@ -66,12 +66,12 @@ export const liquidationRouterABI = [
     name: 'SwapExpired',
     type: 'error'
   },
-  { inputs: [], name: 'UndefinedLiquidationPairFactory', type: 'error' },
+  { inputs: [], name: 'UndefinedTpdaLiquidationPairFactory', type: 'error' },
   {
     inputs: [
-      { internalType: 'contract LiquidationPair', name: 'liquidationPair', type: 'address' }
+      { internalType: 'contract TpdaLiquidationPair', name: 'liquidationPair', type: 'address' }
     ],
-    name: 'UnknownLiquidationPair',
+    name: 'UnknownTpdaLiquidationPair',
     type: 'error'
   }
 ] as const

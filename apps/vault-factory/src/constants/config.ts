@@ -76,11 +76,7 @@ export const NETWORK_CONFIG: Record<
     description: string
     prizePool: Address
     claimer: Address
-    lp: {
-      targetFirstSaleTimeFraction: number
-      liquidationGasAmount: bigint
-      minAuctionAmountEth: number
-    }
+    lp: { targetAuctionPeriodFraction: number; minAuctionAmountEth: number }
     yieldSources: {
       id: string
       name: string
@@ -94,22 +90,14 @@ export const NETWORK_CONFIG: Record<
   //   description: 'The OG optimistic rollup on Ethereum.',
   //   prizePool: '',
   //   claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism],
-  //   lp: {
-  //     targetFirstSaleTimeFraction: 0.5,
-  //     liquidationGasAmount: 300_000n,
-  //     minAuctionAmountEth: 0.001
-  //   },
+  //   lp: { targetAuctionPeriodFraction: 0.5, minAuctionAmountEth: 0.001 },
   //   yieldSources: []
   // },
   [NETWORK.optimism_sepolia]: {
     description: 'Sepolia testnet for the Optimism network.',
-    prizePool: '0x5e1b40e4249644a7d7589d1197AD0F1628e79FB1',
+    prizePool: '0x31547D3c38F2F8dC92421C54B173F3B27Ab26EbB',
     claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism_sepolia],
-    lp: {
-      targetFirstSaleTimeFraction: 0.5,
-      liquidationGasAmount: 300_000n,
-      minAuctionAmountEth: 0.001
-    },
+    lp: { targetAuctionPeriodFraction: 0.5, minAuctionAmountEth: 0.001 },
     yieldSources: [
       {
         id: 'aave',
@@ -117,13 +105,13 @@ export const NETWORK_CONFIG: Record<
         href: 'https://aave.com/',
         description: 'Lending and borrowing protocol',
         vaults: [
-          { address: '0x4Cf96b676a347E8647eEb6AAeA99F40cA76ed342', tags: ['stablecoin'] },
-          { address: '0xBfF0113396fed91700A088F993b96B5473EB1497', tags: ['stablecoin'] },
-          { address: '0xe661730EC120D78961542bc77f197792b01E7AFC', tags: ['stablecoin'] },
-          { address: '0x5323ad247241A38e7169D694C58c8d84DE4b43B2', tags: ['stablecoin'] },
-          { address: '0xbe2ca778890B9297d3Db17ae86f548B0E298224e', tags: ['stablecoin'] },
-          { address: '0x7887F1e815847d896D52fFB10dEdf6eB09e967E9' },
-          { address: '0xcC6b662bdf918583d2a5EcF4db1787C438e699dC' }
+          { address: '0xeE71a7CdE1bA4896D5Bd7D33DEDEd67D0e8bA534', tags: ['stablecoin'] },
+          { address: '0x6F626779fb5AB0F1Bba6EeE45F5D556A796e9341', tags: ['stablecoin'] },
+          { address: '0x2332B17419a9F6BA122572Aa820Ba8f8E3D08c20', tags: ['stablecoin'] },
+          { address: '0x8c2cbfeCd13344E48464c91bF7eA705aDD74D9D8', tags: ['stablecoin'] },
+          { address: '0xB1126119dD12Bc11afB35A25D33c19ac60A64d1f', tags: ['stablecoin'] },
+          { address: '0x5C28E1b31E88344606015479a4f2cfF4cB7bfAa1' },
+          { address: '0x9CfC71e201fD7E9F2C758D1cF34D33c9Bd4c32E9' }
         ]
       }
     ]

@@ -57,12 +57,7 @@ export const MinimumAuctionAmountInput = (props: MinimumAuctionAmountInputProps)
   }, [_minimumAuctionAmount])
 
   return (
-    <div
-      className={classNames(
-        'relative w-full max-w-md flex flex-col items-center overflow-hidden',
-        className
-      )}
-    >
+    <div className={classNames('relative flex flex-col items-center overflow-hidden', className)}>
       <SimpleInput
         formKey='minimumAuctionAmount'
         validate={{

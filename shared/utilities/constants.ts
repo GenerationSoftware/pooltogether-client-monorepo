@@ -31,47 +31,19 @@ export const POOL_TOKEN_ADDRESSES = {
   [NETWORK.mainnet]: '0x0cEC1A9154Ff802e7934Fc916Ed7Ca50bDE6844e',
   [NETWORK.polygon]: '0x25788a1a171ec66Da6502f9975a15B609fF54CF6',
   [NETWORK.optimism]: '0x395ae52bb17aef68c2888d941736a71dc6d4e125',
-  [NETWORK.optimism_sepolia]: '0x264954576Da8496cc0d2216Df81a7D7A38857329'
+  [NETWORK.optimism_sepolia]: '0x1e62Cf8A2C981B0AE39E0A52A06EA5679186938C'
 } as const
 
 /**
  * USDC token addresses
- *
- * NOTE: All addresses are lowercase
  */
 export const USDC_TOKEN_ADDRESSES: { [chainId: number]: Lowercase<Address> } = {
   [NETWORK.mainnet]: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
   [NETWORK.polygon]: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
   [NETWORK.optimism]: '0x7f5c764cbc14f9669b88837ca1490cca17c31607',
   [NETWORK.arbitrum]: '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8',
-  [NETWORK.optimism_sepolia]: '0xe9cb1a8c3c1b5bce7c6c0fb15f31a3a56209207f'
+  [NETWORK.optimism_sepolia]: '0x0e13bf42f927575475894f2d5076a7ac77060ea0'
 }
-
-/**
- * Second constants
- */
-export const SECONDS_PER_MINUTE = 60
-export const SECONDS_PER_HOUR = 3_600
-export const SECONDS_PER_DAY = 86_400
-export const SECONDS_PER_WEEK = 604_800
-export const SECONDS_PER_MONTH = 2_628_000
-export const SECONDS_PER_YEAR = 31_536_000
-
-/**
- * Minute constants
- */
-export const MINUTES_PER_HOUR = 60
-export const MINUTES_PER_DAY = 1_440
-
-/**
- * CoinGecko API URL
- */
-export const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3'
-
-/**
- * Token Prices API URL
- */
-export const TOKEN_PRICES_API_URL = 'https://token-prices.api.cabana.fi'
 
 /**
  * Prize Pools
@@ -91,11 +63,11 @@ export const PRIZE_POOLS: {
 }[] = [
   {
     chainId: NETWORK.optimism_sepolia,
-    address: '0x5e1b40e4249644a7d7589d1197AD0F1628e79FB1',
+    address: '0x31547D3c38F2F8dC92421C54B173F3B27Ab26EbB',
     options: {
-      prizeTokenAddress: '0x1bcd630e1303cef37F19743fbFE84b1b14e7750c',
-      drawManagerAddress: '0x07DBA6DB0b4c2B65B340C93e751f3694277A5a89',
-      twabControllerAddress: '0xd7a754FCFf13007C8E35aE5c40417432C1918616',
+      prizeTokenAddress: '0xD5C2a983D320a881F21Dc68fd89f905Ff1517B2C',
+      drawManagerAddress: '0x1bEbF92C4502341785DDDe63d2f770954CA38e33',
+      twabControllerAddress: '0xB2549f4e7b919004b31925FD4271459273DE8A89',
       drawPeriodInSeconds: 7_200,
       drawAuctionDurationInSeconds: 2_400,
       tierShares: 100,
@@ -103,75 +75,6 @@ export const PRIZE_POOLS: {
     }
   }
 ]
-
-/**
- * Subgraph API URLs
- */
-export const SUBGRAPH_API_URLS = {
-  [NETWORK.optimism_sepolia]:
-    'https://api.studio.thegraph.com/query/63100/pt-v5-op-sepolia/version/latest'
-} as const
-
-/**
- * CoinGecko platform IDs
- */
-export const COINGECKO_PLATFORMS = {
-  [NETWORK.mainnet]: 'ethereum',
-  [NETWORK.bsc]: 'binance-smart-chain',
-  [NETWORK.xdai]: 'xdai',
-  [NETWORK.polygon]: 'polygon-pos',
-  [NETWORK.optimism]: 'optimistic-ethereum',
-  [NETWORK.avalanche]: 'avalanche',
-  [NETWORK.celo]: 'celo',
-  [NETWORK.arbitrum]: 'arbitrum-one'
-} as const
-export type COINGECKO_PLATFORM = keyof typeof COINGECKO_PLATFORMS
-
-/**
- * CoinGecko native token IDs
- */
-export const COINGECKO_NATIVE_TOKEN_IDS: Record<NETWORK, string> = {
-  [NETWORK.mainnet]: 'ethereum',
-  [NETWORK.sepolia]: 'ethereum',
-  [NETWORK.bsc]: 'binancecoin',
-  [NETWORK.bsc_testnet]: 'binancecoin',
-  [NETWORK.xdai]: 'xdai',
-  [NETWORK.polygon]: 'matic-network',
-  [NETWORK.mumbai]: 'matic-network',
-  [NETWORK.optimism]: 'ethereum',
-  [NETWORK.optimism_sepolia]: 'ethereum',
-  [NETWORK.avalanche]: 'avalanche-2',
-  [NETWORK.fuji]: 'avalanche-2',
-  [NETWORK.celo]: 'celo',
-  [NETWORK.celo_testnet]: 'celo',
-  [NETWORK.arbitrum]: 'ethereum',
-  [NETWORK.arbitrum_sepolia]: 'ethereum',
-  [NETWORK.base]: 'ethereum',
-  [NETWORK.base_sepolia]: 'ethereum'
-}
-
-/**
- * Block explorer mapping
- */
-export const BLOCK_EXPLORERS: Record<NETWORK, { name: string; url: string }> = {
-  [NETWORK.mainnet]: { name: 'Etherscan', url: 'https://etherscan.io/' },
-  [NETWORK.sepolia]: { name: 'Etherscan', url: 'https://sepolia.etherscan.io/' },
-  [NETWORK.bsc]: { name: 'Bscscan', url: 'https://bscscan.com/' },
-  [NETWORK.bsc_testnet]: { name: 'Bscscan', url: 'https://testnet.bscscan.com/' },
-  [NETWORK.xdai]: { name: 'Gnosisscan', url: 'https://gnosisscan.io/' },
-  [NETWORK.polygon]: { name: 'Polygonscan', url: 'https://polygonscan.com/' },
-  [NETWORK.mumbai]: { name: 'Polygonscan', url: 'https://mumbai.polygonscan.com/' },
-  [NETWORK.optimism]: { name: 'Etherscan', url: 'https://optimistic.etherscan.io/' },
-  [NETWORK.optimism_sepolia]: { name: 'Etherscan', url: 'https://sepolia-optimism.etherscan.io/' },
-  [NETWORK.avalanche]: { name: 'Snowtrace', url: 'https://snowtrace.io/' },
-  [NETWORK.fuji]: { name: 'Snowtrace', url: 'https://testnet.snowtrace.io/' },
-  [NETWORK.celo]: { name: 'Celoscan', url: 'https://celoscan.io/' },
-  [NETWORK.celo_testnet]: { name: 'Celoscan', url: 'https://alfajores.celoscan.io/' },
-  [NETWORK.arbitrum]: { name: 'Arbiscan', url: 'https://arbiscan.io/' },
-  [NETWORK.arbitrum_sepolia]: { name: 'Arbiscan', url: 'https://sepolia.arbiscan.io/' },
-  [NETWORK.base]: { name: 'Basescan', url: 'https://basescan.org/' },
-  [NETWORK.base_sepolia]: { name: 'Blockscout', url: 'https://sepolia.basescan.org/' }
-}
 
 /**
  * Stablecoin addresses and their corresponding fiat currency
@@ -199,9 +102,9 @@ export const STABLECOINS: Record<NETWORK, { [address: Address]: string }> = {
     '0xc40f949f8a4e094d1b49a23ea9241d289b7b2819': 'usd' // LUSD
   },
   [NETWORK.optimism_sepolia]: {
-    '0xe9cb1a8c3c1b5bce7c6c0fb15f31a3a56209207f': 'usd', // USDC
-    '0x34f166839c655f2dcd56638f2ce779fd9b5987a6': 'usd', // DAI
-    '0xce1fe3170d4acefbc3d06595eef3a918f65000c2': 'usd' // GUSD
+    '0x0e13bf42f927575475894f2d5076a7ac77060ea0': 'usd', // USDC
+    '0x8261cb9519dd1d80b5ce66b0887c6fceea8a64ee': 'usd', // DAI
+    '0x493c7081faab6e5b2d6b18d9311918580e88c6bf': 'usd' // GUSD
   },
   [NETWORK.avalanche]: {
     '0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664': 'usd' // USDC.e
@@ -244,35 +147,35 @@ export const WRAPPED_NATIVE_ASSETS: Record<NETWORK, Address | null> = {
  * TWAB rewards addresses
  */
 export const TWAB_REWARDS_ADDRESSES: { [chainId: number]: Address } = {
-  [NETWORK.optimism_sepolia]: '0xB1231d0bdf134b09D92f6d33C651280D3B96F6e3'
+  [NETWORK.optimism_sepolia]: '0xC5c208DFAE3bA24132070E63aE964bA0D4A81a03'
 }
 
 /**
  * Vault factory addresses
  */
 export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
-  [NETWORK.optimism_sepolia]: '0x2031fc356feec120eFba3BAfA7997d1dfB377Ed4'
+  [NETWORK.optimism_sepolia]: '0x65741e6C8fbCcD3d4BEC7E2179417236FbD33d3A'
 }
 
 /**
  * Liquidation pair factory addresses
  */
 export const LIQUIDATION_PAIR_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
-  [NETWORK.optimism_sepolia]: '0x5114de3c33458815BaD56B28D32261695490DBf3'
+  [NETWORK.optimism_sepolia]: '0x0d2AD8f32E94605a9a7E797Ff494D27C691B16Dc'
 }
 
 /**
  * Default claimer addresses
  */
 export const DEFAULT_CLAIMER_ADDRESSES: { [chainId: number]: Address } = {
-  [NETWORK.optimism_sepolia]: '0x239d1befb50fcFF353804C6df1579ED0Bbb9dA07'
+  [NETWORK.optimism_sepolia]: '0x189231eBe184a40A8AFb1659985C6D976729780D'
 }
 
 /**
  * Liquidation router addresses
  */
 export const LIQUIDATION_ROUTER_ADDRESSES: { [chainId: number]: Address } = {
-  [NETWORK.optimism_sepolia]: '0xDfCF0c47C5697CDDFADEB7b5CbD29BC6b20c8DD1'
+  [NETWORK.optimism_sepolia]: '0xB485D92896944D3f8Dd73A1a61371CDaDb1021f5'
 }
 
 /**
@@ -289,6 +192,18 @@ export const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead'
  * Optimism gas oracle address
  */
 export const OP_GAS_ORACLE_ADDRESS = '0x420000000000000000000000000000000000000f'
+
+/**
+ * Subgraph API URLs
+ */
+export const SUBGRAPH_API_URLS = {
+  // [NETWORK.optimism_sepolia]: 'https://api.studio.thegraph.com/query/63100/pt-v5-op-sepolia/version/latest'
+} as const
+
+/**
+ * Token Prices API URL
+ */
+export const TOKEN_PRICES_API_URL = 'https://token-prices.api.cabana.fi'
 
 /**
  * Networks supported by the price caching API
@@ -334,7 +249,7 @@ export const TOKEN_PRICE_REDIRECTS: {
       address: DOLPHIN_ADDRESS
     },
     /* DAI */
-    '0x34f166839c655f2dcd56638f2ce779fd9b5987a6': {
+    '0x8261cb9519dd1d80b5ce66b0887c6fceea8a64ee': {
       chainId: NETWORK.mainnet,
       address: '0x6b175474e89094c44da98b954eedeac495271d0f'
     },
@@ -344,17 +259,17 @@ export const TOKEN_PRICE_REDIRECTS: {
       address: USDC_TOKEN_ADDRESSES[NETWORK.mainnet]
     },
     /* GUSD */
-    '0xce1fe3170d4acefbc3d06595eef3a918f65000c2': {
+    '0x493c7081faab6e5b2d6b18d9311918580e88c6bf': {
       chainId: NETWORK.mainnet,
       address: '0x056fd409e1d7a124bd7017459dfea2f387b6d5cd'
     },
     /* WBTC */
-    '0x42fd018a6ac84478f28b3f7e322271c83064d737': {
+    '0x45bbc6b553d2afc4d3e376b22f70a67d9a26f819': {
       chainId: NETWORK.mainnet,
       address: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'
     },
     /* WETH */
-    '0x1bcd630e1303cef37f19743fbfe84b1b14e7750c': {
+    '0xd5c2a983d320a881f21dc68fd89f905ff1517b2c': {
       chainId: NETWORK.mainnet,
       address: WRAPPED_NATIVE_ASSETS[NETWORK.mainnet] as Address
     },
@@ -387,6 +302,88 @@ export const TOKEN_DATA_REDIRECTS: {
     }
   }
 }
+
+/**
+ * Block explorer mapping
+ */
+export const BLOCK_EXPLORERS: Record<NETWORK, { name: string; url: string }> = {
+  [NETWORK.mainnet]: { name: 'Etherscan', url: 'https://etherscan.io/' },
+  [NETWORK.sepolia]: { name: 'Etherscan', url: 'https://sepolia.etherscan.io/' },
+  [NETWORK.bsc]: { name: 'Bscscan', url: 'https://bscscan.com/' },
+  [NETWORK.bsc_testnet]: { name: 'Bscscan', url: 'https://testnet.bscscan.com/' },
+  [NETWORK.xdai]: { name: 'Gnosisscan', url: 'https://gnosisscan.io/' },
+  [NETWORK.polygon]: { name: 'Polygonscan', url: 'https://polygonscan.com/' },
+  [NETWORK.mumbai]: { name: 'Polygonscan', url: 'https://mumbai.polygonscan.com/' },
+  [NETWORK.optimism]: { name: 'Etherscan', url: 'https://optimistic.etherscan.io/' },
+  [NETWORK.optimism_sepolia]: { name: 'Etherscan', url: 'https://sepolia-optimism.etherscan.io/' },
+  [NETWORK.avalanche]: { name: 'Snowtrace', url: 'https://snowtrace.io/' },
+  [NETWORK.fuji]: { name: 'Snowtrace', url: 'https://testnet.snowtrace.io/' },
+  [NETWORK.celo]: { name: 'Celoscan', url: 'https://celoscan.io/' },
+  [NETWORK.celo_testnet]: { name: 'Celoscan', url: 'https://alfajores.celoscan.io/' },
+  [NETWORK.arbitrum]: { name: 'Arbiscan', url: 'https://arbiscan.io/' },
+  [NETWORK.arbitrum_sepolia]: { name: 'Arbiscan', url: 'https://sepolia.arbiscan.io/' },
+  [NETWORK.base]: { name: 'Basescan', url: 'https://basescan.org/' },
+  [NETWORK.base_sepolia]: { name: 'Blockscout', url: 'https://sepolia.basescan.org/' }
+}
+
+/**
+ * CoinGecko API URL
+ */
+export const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3'
+
+/**
+ * CoinGecko platform IDs
+ */
+export const COINGECKO_PLATFORMS = {
+  [NETWORK.mainnet]: 'ethereum',
+  [NETWORK.bsc]: 'binance-smart-chain',
+  [NETWORK.xdai]: 'xdai',
+  [NETWORK.polygon]: 'polygon-pos',
+  [NETWORK.optimism]: 'optimistic-ethereum',
+  [NETWORK.avalanche]: 'avalanche',
+  [NETWORK.celo]: 'celo',
+  [NETWORK.arbitrum]: 'arbitrum-one'
+} as const
+export type COINGECKO_PLATFORM = keyof typeof COINGECKO_PLATFORMS
+
+/**
+ * CoinGecko native token IDs
+ */
+export const COINGECKO_NATIVE_TOKEN_IDS: Record<NETWORK, string> = {
+  [NETWORK.mainnet]: 'ethereum',
+  [NETWORK.sepolia]: 'ethereum',
+  [NETWORK.bsc]: 'binancecoin',
+  [NETWORK.bsc_testnet]: 'binancecoin',
+  [NETWORK.xdai]: 'xdai',
+  [NETWORK.polygon]: 'matic-network',
+  [NETWORK.mumbai]: 'matic-network',
+  [NETWORK.optimism]: 'ethereum',
+  [NETWORK.optimism_sepolia]: 'ethereum',
+  [NETWORK.avalanche]: 'avalanche-2',
+  [NETWORK.fuji]: 'avalanche-2',
+  [NETWORK.celo]: 'celo',
+  [NETWORK.celo_testnet]: 'celo',
+  [NETWORK.arbitrum]: 'ethereum',
+  [NETWORK.arbitrum_sepolia]: 'ethereum',
+  [NETWORK.base]: 'ethereum',
+  [NETWORK.base_sepolia]: 'ethereum'
+}
+
+/**
+ * Second constants
+ */
+export const SECONDS_PER_MINUTE = 60
+export const SECONDS_PER_HOUR = 3_600
+export const SECONDS_PER_DAY = 86_400
+export const SECONDS_PER_WEEK = 604_800
+export const SECONDS_PER_MONTH = 2_628_000
+export const SECONDS_PER_YEAR = 31_536_000
+
+/**
+ * Minute constants
+ */
+export const MINUTES_PER_HOUR = 60
+export const MINUTES_PER_DAY = 1_440
 
 /**
  * Max uint256 value

@@ -1,18 +1,12 @@
-import {
-  useFirstDrawOpenedAt,
-  usePrizePool,
-  useVault,
-  useVaultShareData
-} from '@generationsoftware/hyperstructure-react-hooks'
 import { PairCreateInfo } from '@shared/types'
 import { POOL_TOKEN_ADDRESSES, PRIZE_POOLS } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import {
-  liquidationPairInitialAmountInAtom,
-  liquidationPairMinimumAuctionAmountAtom
+  liquidationPairMinimumAuctionAmountAtom,
+  liquidationPairSmoothingFactorAtom
 } from 'src/atoms'
 import { SupportedNetwork } from 'src/types'
-import { Address, parseEther, parseUnits } from 'viem'
+import { Address } from 'viem'
 import { NETWORK_CONFIG } from '@constants/config'
 
 /**
@@ -25,37 +19,24 @@ export const useLiquidationPairInfo = (
   chainId: SupportedNetwork,
   vaultAddress: Address
 ): Partial<PairCreateInfo> => {
-  const initialAmountIn = useAtomValue(liquidationPairInitialAmountInAtom)
   const minimumAuctionAmount = useAtomValue(liquidationPairMinimumAuctionAmountAtom)
-
-  const vault = useVault({ chainId, address: vaultAddress })
-  const { data: shareToken } = useVaultShareData(vault)
+  const smoothingFactor = useAtomValue(liquidationPairSmoothingFactorAtom)
 
   const prizePoolInfo = PRIZE_POOLS.find(
     (pool) => pool.chainId === chainId
   ) as (typeof PRIZE_POOLS)[number]
 
-  const prizePool = usePrizePool(chainId, prizePoolInfo.address)
-  const { data: periodOffset } = useFirstDrawOpenedAt(prizePool)
-
-  const periodLength = prizePoolInfo.options.drawPeriodInSeconds
-  const targetFirstSaleTime = NETWORK_CONFIG[chainId].lp.targetFirstSaleTimeFraction * periodLength
-
-  const decayConstant = parseEther('130') / BigInt(periodLength * 50)
-
-  const initialAmountOut = !!shareToken ? parseUnits('1', shareToken.decimals) : undefined
+  const drawPeriodLength = prizePoolInfo.options.drawPeriodInSeconds
+  const targetAuctionPeriod =
+    NETWORK_CONFIG[chainId].lp.targetAuctionPeriodFraction * drawPeriodLength
 
   return {
     chainId,
     source: vaultAddress,
     tokenIn: POOL_TOKEN_ADDRESSES[chainId],
     tokenOut: vaultAddress,
-    periodLength,
-    periodOffset,
-    targetFirstSaleTime,
-    decayConstant,
-    initialAmountIn,
-    initialAmountOut,
-    minimumAuctionAmount
+    targetAuctionPeriod,
+    minimumAuctionAmount,
+    smoothingFactor
   }
 }

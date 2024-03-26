@@ -1,4 +1,4 @@
-import { NETWORK, POOL_TOKEN_ADDRESSES } from '@shared/utilities'
+import { NETWORK, POOL_TOKEN_ADDRESSES, USDC_TOKEN_ADDRESSES } from '@shared/utilities'
 
 /**
  * Token Logo URLs
@@ -37,6 +37,7 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   [NETWORK.polygon]: {
     [POOL_TOKEN_ADDRESSES[NETWORK.polygon].toLowerCase()]: tokenLogoUrls.pool,
     '0x2791bca1f2de4661ed88a30c99a7a9449aa84174': tokenLogoUrls.usdc,
+    '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359': tokenLogoUrls.usdc,
     '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063': tokenLogoUrls.dai,
     '0xc8a94a3d3d2dabc3c1caffffdca6a7543c3e3e65': tokenLogoUrls.gusd,
     '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619': tokenLogoUrls.weth,
@@ -46,6 +47,7 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   [NETWORK.optimism]: {
     [POOL_TOKEN_ADDRESSES[NETWORK.optimism].toLowerCase()]: tokenLogoUrls.pool,
     '0x7f5c764cbc14f9669b88837ca1490cca17c31607': tokenLogoUrls.usdc,
+    '0x0b2c639c533813f4aa9d7837caf62653d097ff85': tokenLogoUrls.usdc,
     '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1': tokenLogoUrls.dai,
     '0x4200000000000000000000000000000000000006': tokenLogoUrls.weth,
     '0x68f180fcce6836688e9084f035309e29bf0a2095': tokenLogoUrls.wbtc,
@@ -54,12 +56,12 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x4200000000000000000000000000000000000042': tokenLogoUrls.op
   },
   [NETWORK.optimism_sepolia]: {
-    '0x264954576da8496cc0d2216df81a7d7a38857329': tokenLogoUrls.pool,
-    '0xe9cb1a8c3c1b5bce7c6c0fb15f31a3a56209207f': tokenLogoUrls.usdc,
-    '0x34f166839c655f2dcd56638f2ce779fd9b5987a6': tokenLogoUrls.dai,
-    '0xce1fe3170d4acefbc3d06595eef3a918f65000c2': tokenLogoUrls.gusd,
-    '0x1bcd630e1303cef37f19743fbfe84b1b14e7750c': tokenLogoUrls.weth,
-    '0x42fd018a6ac84478f28b3f7e322271c83064d737': tokenLogoUrls.wbtc
+    [POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia].toLowerCase()]: tokenLogoUrls.pool,
+    [USDC_TOKEN_ADDRESSES[NETWORK.optimism_sepolia]]: tokenLogoUrls.usdc,
+    '0x8261cb9519dd1d80b5ce66b0887c6fceea8a64ee': tokenLogoUrls.dai,
+    '0x493c7081faab6e5b2d6b18d9311918580e88c6bf': tokenLogoUrls.gusd,
+    '0xd5c2a983d320a881f21dc68fd89f905ff1517b2c': tokenLogoUrls.weth,
+    '0x45bbc6b553d2afc4d3e376b22f70a67d9a26f819': tokenLogoUrls.wbtc
   },
   [NETWORK.avalanche]: {
     '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f': tokenLogoUrls.wbtc
