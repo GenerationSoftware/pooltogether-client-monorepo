@@ -105,32 +105,30 @@ const YieldVaultCard = (props: YieldVaultCardProps) => {
         {shorten(yieldVault.address)}
       </ExternalLink>
       {!!existingVaultAddresses.length && (
-        <div className='flex items-center gap-1 whitespace-nowrap'>
-          <Tooltip
-            content={
-              <div className='flex flex-col'>
-                {existingVaultAddresses.map((existingVaultAddress) => (
-                  <ExternalLink
-                    key={getVaultId({ chainId, address: existingVaultAddress })}
-                    href={`${LINKS.app}/vault/${chainId}/${existingVaultAddress}`}
-                    size='xs'
-                    className='text-pt-purple-700 hover:underline'
-                  >
-                    {shorten(existingVaultAddress)}
-                  </ExternalLink>
-                ))}
-              </div>
-            }
-          >
-            <div className='flex gap-1 items-center whitespace-nowrap'>
-              <span className='text-xs text-pt-purple-100'>
-                {existingVaultAddresses.length} existing prize vault
-                {existingVaultAddresses.length > 1 ? 's' : ''}
-              </span>
-              <InformationCircleIcon className='h-3 w-3' />
+        <Tooltip
+          content={
+            <div className='flex flex-col'>
+              {existingVaultAddresses.map((existingVaultAddress) => (
+                <ExternalLink
+                  key={getVaultId({ chainId, address: existingVaultAddress })}
+                  href={`${LINKS.app}/vault/${chainId}/${existingVaultAddress}`}
+                  size='xs'
+                  className='text-pt-purple-700 hover:underline'
+                >
+                  {shorten(existingVaultAddress)}
+                </ExternalLink>
+              ))}
             </div>
-          </Tooltip>
-        </div>
+          }
+        >
+          <div className='flex gap-1 items-center whitespace-nowrap'>
+            <span className='text-xs text-pt-purple-100'>
+              {existingVaultAddresses.length} existing prize vault
+              {existingVaultAddresses.length > 1 ? 's' : ''}
+            </span>
+            <InformationCircleIcon className='h-3 w-3' />
+          </div>
+        </Tooltip>
       )}
       <YieldVaultCardTags tags={yieldVault.tags} className='mt-auto' />
     </Card>
