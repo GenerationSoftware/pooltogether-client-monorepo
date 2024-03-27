@@ -17,7 +17,7 @@ import {
   xdefiWallet,
   zerionWallet
 } from '@rainbow-me/rainbowkit/wallets'
-import { DEFAULT_CLAIMER_ADDRESSES, NETWORK } from '@shared/utilities'
+import { DEFAULT_CLAIMER_ADDRESSES, NETWORK, SECONDS_PER_HOUR } from '@shared/utilities'
 import { SupportedNetwork, YieldSourceVaultTag } from 'src/types'
 import { Address } from 'viem'
 import { mainnet, optimism, optimismSepolia } from 'viem/chains'
@@ -76,7 +76,7 @@ export const NETWORK_CONFIG: Record<
     description: string
     prizePool: Address
     claimer: Address
-    lp: { targetAuctionPeriodFraction: number; minAuctionAmountEth: number }
+    lp: { targetAuctionPeriod: number; targetAuctionPriceUsd: number }
     yieldSources: {
       id: string
       name: string
@@ -90,14 +90,14 @@ export const NETWORK_CONFIG: Record<
   //   description: 'The OG optimistic rollup on Ethereum.',
   //   prizePool: '',
   //   claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism],
-  //   lp: { targetAuctionPeriodFraction: 0.5, minAuctionAmountEth: 0.001 },
+  //   lp: { targetAuctionPeriod: SECONDS_PER_HOUR, targetAuctionPriceUsd: 10 },
   //   yieldSources: []
   // },
   [NETWORK.optimism_sepolia]: {
     description: 'Sepolia testnet for the Optimism network.',
     prizePool: '0x31547D3c38F2F8dC92421C54B173F3B27Ab26EbB',
     claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism_sepolia],
-    lp: { targetAuctionPeriodFraction: 0.5, minAuctionAmountEth: 0.001 },
+    lp: { targetAuctionPeriod: SECONDS_PER_HOUR, targetAuctionPriceUsd: 10 },
     yieldSources: [
       {
         id: 'aave',

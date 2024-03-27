@@ -88,9 +88,14 @@ export const vaultIdsAtom = atom<string[]>(getInitialVaultIds())
 export const liquidationPairStepCounterAtom = atom<number>(0)
 
 /**
- * Liquidation Pair Minimum Auction Share Amount
+ * Liquidation Pair Target Auction Period
  */
-export const liquidationPairMinimumAuctionAmountAtom = atom<bigint | undefined>(undefined)
+export const liquidationPairTargetAuctionPeriodAtom = atom<number | undefined>(undefined)
+
+/**
+ * Liquidation Pair Target Auction Price
+ */
+export const liquidationPairTargetAuctionPriceAtom = atom<bigint | undefined>(undefined)
 
 /**
  * Liquidation Pair Smoothing Factor

@@ -1,5 +1,7 @@
 import { useToken } from '@generationsoftware/hyperstructure-react-hooks'
+import { Token } from '@shared/types'
 import { Spinner } from '@shared/ui'
+import { PRIZE_POOLS } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -7,14 +9,17 @@ import { vaultAddressAtom, vaultChainIdAtom } from 'src/atoms'
 import { SupportedNetwork } from 'src/types'
 import { Address } from 'viem'
 import { DeployLiquidationPairButton } from '@components/buttons/DeployLiquidationPairButton'
-import { useLiquidationPairMinimumAuctionAmount } from '@hooks/useLiquidationPairMinimumAuctionAmount'
+import { NETWORK_CONFIG } from '@constants/config'
 import { useLiquidationPairSteps } from '@hooks/useLiquidationPairSteps'
+import { useLiquidationPairTargetAuctionPrice } from '@hooks/useLiquidationPairTargetAuctionPrice'
 import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
-import { MinimumAuctionAmountInput } from './MinimumAuctionAmountInput'
 import { SmoothingFactorInput } from './SmoothingFactorInput'
+import { TargetAuctionPeriodInput } from './TargetAuctionPeriodInput'
+import { TargetAuctionPriceInput } from './TargetAuctionPriceInput'
 
 export interface DeployLiquidationPairFormValues {
-  minimumAuctionAmount: string
+  targetAuctionPeriod: string
+  targetAuctionPrice: string
   smoothingFactor: string
 }
 
@@ -33,14 +38,17 @@ export const DeployLiquidationPairForm = (props: DeployLiquidationPairFormProps)
   const chainId = useAtomValue(vaultChainIdAtom) as SupportedNetwork
   const vaultAddress = useAtomValue(vaultAddressAtom) as Address
 
-  const { data: shareToken } = useToken(chainId, vaultAddress)
+  const prizeTokenAddress = PRIZE_POOLS.find(
+    (pool) => pool.chainId === chainId
+  )?.options.prizeTokenAddress.toLowerCase() as Address
 
-  const { data: defaultMinimumAuctionAmount } = useLiquidationPairMinimumAuctionAmount(
-    chainId,
-    vaultAddress
+  const { data: prizeToken } = useToken(chainId, prizeTokenAddress)
+
+  const { data: defaultTargetAuctionPrice } = useLiquidationPairTargetAuctionPrice(
+    prizeToken as Token
   )
 
-  if (!shareToken || !defaultMinimumAuctionAmount) {
+  if (!prizeToken || !defaultTargetAuctionPrice) {
     return <Spinner />
   }
 
@@ -55,12 +63,17 @@ export const DeployLiquidationPairForm = (props: DeployLiquidationPairFormProps)
         onSubmit={formMethods.handleSubmit(() => {})}
         className={classNames('flex flex-col grow gap-12 items-center', className)}
       >
-        <MinimumAuctionAmountInput
-          shareToken={shareToken}
-          vaultAddress={vaultAddress}
+        <TargetAuctionPeriodInput
+          defaultPeriod={NETWORK_CONFIG[chainId].lp.targetAuctionPeriod}
           className='w-full max-w-md'
         />
         <SmoothingFactorInput className='w-full max-w-md' />
+        <TargetAuctionPriceInput
+          prizeToken={prizeToken}
+          defaultPrice={defaultTargetAuctionPrice}
+          className='w-full max-w-md'
+        />
+        {/* TODO: add option to skip deploying an lp and just set one */}
         <DeployLiquidationPairButton
           chainId={chainId}
           vaultAddress={vaultAddress}

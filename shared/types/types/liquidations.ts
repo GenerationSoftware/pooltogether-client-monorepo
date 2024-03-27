@@ -4,6 +4,6 @@ export interface PairCreateInfo {
   tokenIn: `0x${string}`
   tokenOut: `0x${string}`
   targetAuctionPeriod: number
-  minimumAuctionAmount: bigint
+  targetAuctionPrice: bigint
   smoothingFactor: number
 }

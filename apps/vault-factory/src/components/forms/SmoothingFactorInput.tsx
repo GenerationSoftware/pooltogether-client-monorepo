@@ -42,7 +42,7 @@ export const SmoothingFactorInput = (props: SmoothingFactorInputProps) => {
           v.split('.').length < 2 || v.split('.')[1].length <= 18 || 'Too many decimals'
       }}
       label={<SmoothingFactorInputLabel />}
-      defaultValue={'0'}
+      defaultValue='0'
       needsOverride={true}
       keepValueOnOverride={true}
       className={className}

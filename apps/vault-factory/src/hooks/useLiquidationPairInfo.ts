@@ -1,13 +1,13 @@
 import { PairCreateInfo } from '@shared/types'
-import { POOL_TOKEN_ADDRESSES, PRIZE_POOLS } from '@shared/utilities'
+import { PRIZE_POOLS } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import {
-  liquidationPairMinimumAuctionAmountAtom,
-  liquidationPairSmoothingFactorAtom
+  liquidationPairSmoothingFactorAtom,
+  liquidationPairTargetAuctionPeriodAtom,
+  liquidationPairTargetAuctionPriceAtom
 } from 'src/atoms'
 import { SupportedNetwork } from 'src/types'
 import { Address } from 'viem'
-import { NETWORK_CONFIG } from '@constants/config'
 
 /**
  * Returns all info required to deploy a new liquidation pair
@@ -19,24 +19,20 @@ export const useLiquidationPairInfo = (
   chainId: SupportedNetwork,
   vaultAddress: Address
 ): Partial<PairCreateInfo> => {
-  const minimumAuctionAmount = useAtomValue(liquidationPairMinimumAuctionAmountAtom)
+  const targetAuctionPeriod = useAtomValue(liquidationPairTargetAuctionPeriodAtom)
+  const targetAuctionPrice = useAtomValue(liquidationPairTargetAuctionPriceAtom)
   const smoothingFactor = useAtomValue(liquidationPairSmoothingFactorAtom)
 
-  const prizePoolInfo = PRIZE_POOLS.find(
-    (pool) => pool.chainId === chainId
-  ) as (typeof PRIZE_POOLS)[number]
-
-  const drawPeriodLength = prizePoolInfo.options.drawPeriodInSeconds
-  const targetAuctionPeriod =
-    NETWORK_CONFIG[chainId].lp.targetAuctionPeriodFraction * drawPeriodLength
+  const prizeTokenAddress = PRIZE_POOLS.find((pool) => pool.chainId === chainId)?.options
+    .prizeTokenAddress as Address
 
   return {
     chainId,
     source: vaultAddress,
-    tokenIn: POOL_TOKEN_ADDRESSES[chainId],
+    tokenIn: prizeTokenAddress,
     tokenOut: vaultAddress,
     targetAuctionPeriod,
-    minimumAuctionAmount,
+    targetAuctionPrice,
     smoothingFactor
   }
 }

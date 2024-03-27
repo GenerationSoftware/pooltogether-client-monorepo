@@ -39,7 +39,7 @@ export const useSendDeployLiquidationPairTransaction = (
     tokenIn,
     tokenOut,
     targetAuctionPeriod,
-    minimumAuctionAmount,
+    targetAuctionPrice,
     smoothingFactor
   } = pairCreateInfo
 
@@ -57,7 +57,7 @@ export const useSendDeployLiquidationPairTransaction = (
     !!tokenIn &&
     !!tokenOut &&
     !!targetAuctionPeriod &&
-    !!minimumAuctionAmount &&
+    !!targetAuctionPrice &&
     smoothingFactor !== undefined &&
     chain?.id === chainId
 
@@ -70,8 +70,8 @@ export const useSendDeployLiquidationPairTransaction = (
       source,
       tokenIn,
       tokenOut,
-      BigInt(targetAuctionPeriod),
-      minimumAuctionAmount,
+      BigInt(targetAuctionPeriod ?? 0),
+      targetAuctionPrice,
       parseEther(`${smoothingFactor}`)
     ],
     query: { enabled }
