@@ -1,4 +1,4 @@
-import { calculatePercentageOfBigInt } from '@shared/utilities'
+import { calculatePercentageOfBigInt, NETWORK } from '@shared/utilities'
 import { Chain, fallback, hexToBigInt, http, TransactionReceipt, Transport } from 'viem'
 import { createConfig } from 'wagmi'
 import { RPC_URLS, SUPPORTED_NETWORKS, WAGMI_CHAINS } from '@constants/config'
@@ -8,7 +8,7 @@ import { RPC_URLS, SUPPORTED_NETWORKS, WAGMI_CHAINS } from '@constants/config'
  * @returns
  */
 export const createCustomWagmiConfig = () => {
-  const networks = [...SUPPORTED_NETWORKS.mainnets, ...SUPPORTED_NETWORKS.testnets]
+  const networks: NETWORK[] = [...SUPPORTED_NETWORKS.mainnets, ...SUPPORTED_NETWORKS.testnets]
 
   const supportedNetworks = Object.values(WAGMI_CHAINS).filter(
     (chain) => networks.includes(chain.id) && !!RPC_URLS[chain.id]

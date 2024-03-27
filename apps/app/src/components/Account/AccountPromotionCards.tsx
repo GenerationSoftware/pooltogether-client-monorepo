@@ -27,16 +27,31 @@ export const AccountPromotionCards = (props: AccountPromotionCardsProps) => {
   const { data: claimable } = useUserClaimablePromotions(userAddress as Address)
 
   const promotions = useMemo(() => {
-    const uniquePromotions = new Set<string>()
+    const promotions: { [id: string]: { startTimestamp: number; claimable: boolean } } = {}
 
-    claimed.forEach((promotion) =>
-      uniquePromotions.add(`${promotion.chainId}-${promotion.promotionId}`)
-    )
-    claimable.forEach((promotion) =>
-      uniquePromotions.add(`${promotion.chainId}-${promotion.promotionId}`)
-    )
+    claimed.forEach((promotion) => {
+      const id = `${promotion.chainId}-${promotion.promotionId}`
 
-    return [...uniquePromotions]
+      if (promotions[id] === undefined) {
+        promotions[id] = { startTimestamp: Number(promotion.startTimestamp), claimable: false }
+      }
+    })
+
+    claimable.forEach((promotion) => {
+      const id = `${promotion.chainId}-${promotion.promotionId}`
+
+      if (promotions[id] === undefined) {
+        promotions[id] = { startTimestamp: Number(promotion.startTimestamp), claimable: true }
+      } else if (!promotions[id].claimable) {
+        promotions[id].claimable = true
+      }
+    })
+
+    return Object.entries(promotions)
+      .sort((a, b) =>
+        a[1].claimable > b[1].claimable ? -1 : b[1].startTimestamp - a[1].startTimestamp
+      )
+      ?.map(([id]) => id)
   }, [claimed, claimable])
 
   return (

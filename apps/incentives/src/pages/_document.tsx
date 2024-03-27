@@ -16,11 +16,11 @@ class MyDocument extends Document {
   }
 
   render() {
-    const title = 'PoolTogether Incentives'
+    const title = 'PoolTogether Builders'
     const description =
       'Want to contribute to the global prize savings hyperstructure? View all the tools and incentives at your disposal.'
     const keywords =
-      'prize savings win save protocol blockchain pool together incentives contribute'
+      'prize savings win save protocol blockchain pool together incentives contribute builders'
 
     return (
       <Html className='bg-pt-bg-purple-dark text-pt-purple-100 overflow-x-hidden dark'>
@@ -36,11 +36,11 @@ class MyDocument extends Document {
           <meta property='og:title' content={title} />
           <meta property='og:description' content={description} />
           <meta property='og:site_name' content={title} />
-          <meta property='og:url' content={DOMAINS.incentives} />
+          <meta property='og:url' content={DOMAINS.builders} />
           <meta property='og:type' content='website' />
           <meta
             property='og:image'
-            content={`${DOMAINS.incentives}/facebook-share-image-1200-630.png`}
+            content={`${DOMAINS.builders}/facebook-share-image-1200-630.png`}
           />
           <meta property='og:rich_attachment' content='true' />
           <meta property='og:image:width' content='1200' />
@@ -52,9 +52,9 @@ class MyDocument extends Document {
           <meta property='twitter:site' content={'@PoolTogether_'} />
           <meta
             property='twitter:image:src'
-            content={`${DOMAINS.incentives}/twitter-share-image-1200-675.png`}
+            content={`${DOMAINS.builders}/twitter-share-image-1200-675.png`}
           />
-          <meta property='twitter:url' content={DOMAINS.incentives} />
+          <meta property='twitter:url' content={DOMAINS.builders} />
           <meta property='twitter:creator' content={'@g9software'} />
 
           <link rel='manifest' href='/manifest.json' />
