@@ -8,11 +8,12 @@ import { Spinner } from '@shared/ui'
 import {
   erc20ABI,
   getSecondsSinceEpoch,
+  PRIZE_POOLS,
   sToMs,
-  TWAB_CONTROLLER_ADDRESSES,
   twabControllerABI,
   vaultABI
 } from '@shared/utilities'
+import { useMemo } from 'react'
 import { useAccount } from 'wagmi'
 import { TX_GAS_ESTIMATES } from '../../constants'
 import { CurrencyValue } from '../Currency/CurrencyValue'
@@ -29,6 +30,11 @@ export const NetworkFees = (props: NetworkFeesProps) => {
   const { address: userAddress } = useAccount()
 
   const { data: tokenAddress } = useVaultTokenAddress(vault)
+
+  const twabControllerAddress = useMemo(() => {
+    return PRIZE_POOLS.find((prizePool) => prizePool.chainId === vault.chainId)?.options
+      .twabControllerAddress
+  }, [vault])
 
   return (
     <div className='flex flex-col items-center gap-2 font-semibold'>
@@ -99,12 +105,12 @@ export const NetworkFees = (props: NetworkFeesProps) => {
               gasAmount={TX_GAS_ESTIMATES.withdraw}
             />
           )}
-          {(!show || show.includes('delegation')) && (
+          {(!show || show.includes('delegation')) && !!twabControllerAddress && (
             <TXFeeEstimate
               name={intl?.('delegation') ?? 'Delegation'}
               chainId={vault.chainId}
               tx={{
-                address: TWAB_CONTROLLER_ADDRESSES[vault.chainId],
+                address: twabControllerAddress,
                 abi: twabControllerABI,
                 functionName: 'delegate',
                 args: [vault.address, userAddress ?? vault.address],

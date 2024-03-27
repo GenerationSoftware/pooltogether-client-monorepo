@@ -9,17 +9,12 @@ export default function DrawBotsPage() {
         actions={
           <>
             <p>
-              Every draw a random number must be generated, bridged* and supplied to the prize pool
-              so that prizes may be awarded.
+              Every draw a random number must be generated and supplied to the prize pool so that
+              prizes may be awarded.
             </p>
             <p>
-              The reward for doing so is a percentage of the prize pool's reserve, kept separate for
-              this purpose. This percentage climbs non-linearly throughout the span of a draw period
-              after it is closed.
-            </p>
-            <p className='text-lg text-pt-purple-300'>
-              *While the current RNG implementation requires bridging from Ethereum mainnet to L2s,
-              this system is currently being refactored. Check back soon!
+              The reward for doing so is a percentage of the prize pool's reserve. This percentage
+              climbs non-linearly throughout the span of a draw auction period after it is closed.
             </p>
           </>
         }
@@ -40,10 +35,6 @@ export default function DrawBotsPage() {
           {
             name: 'Dev Docs: Completing Draw Auctions Guide',
             href: 'https://dev.pooltogether.com/protocol/guides/completing-draw-auctions'
-          },
-          {
-            name: 'Tutorial: Building a draw auctioning bot',
-            href: 'https://mirror.xyz/0x49ca801A80e31B1ef929eAB13Ab3FBbAe7A55e8F/1o-d_ScnJ8F0cer5SRmILMSPxTCn4vlWgN7fkU4FD4o'
           },
           {
             name: 'Example: G9 Bots Monorepo',

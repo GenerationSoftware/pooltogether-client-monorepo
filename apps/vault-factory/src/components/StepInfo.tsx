@@ -49,6 +49,8 @@ const VaultStepGraphic = (props: VaultStepGraphicProps) => {
   const completedSteps = [...Array(step).keys()]
   const futureSteps = step < maxSteps ? [...Array(maxSteps - step - 1).keys()] : []
 
+  const stepClassName = 'w-3 h-3 rounded-full'
+
   return (
     <div className={classNames('flex gap-3', className)}>
       {completedSteps.map((i) => {
@@ -61,15 +63,16 @@ const VaultStepGraphic = (props: VaultStepGraphicProps) => {
                 setStep(i)
               }
             }}
-            className={classNames('w-3 h-3 bg-pt-teal-dark rounded-full', {
-              'cursor-pointer': !isBlocked
+            className={classNames(stepClassName, {
+              'bg-pt-teal-dark cursor-pointer': !isBlocked,
+              'bg-pt-purple-50/50': isBlocked
             })}
           />
         )
       })}
       <div className='w-9 h-3 bg-pt-purple-50 rounded-full' />
       {futureSteps.map((i) => (
-        <div key={`future-${i}`} className='w-3 h-3 bg-pt-purple-50/50 rounded-full' />
+        <div key={`future-${i}`} className={classNames(stepClassName, 'bg-pt-purple-50/50')} />
       ))}
     </div>
   )

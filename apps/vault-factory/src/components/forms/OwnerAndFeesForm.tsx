@@ -1,8 +1,9 @@
 import classNames from 'classnames'
-import { useAtom } from 'jotai'
+import { useAtom, useAtomValue } from 'jotai'
 import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import {
+  isUsingCustomYieldSourceAtom,
   vaultFeePercentageAtom,
   vaultFeeRecipientAddressAtom,
   vaultOwnerAddressAtom
@@ -34,8 +35,11 @@ export const OwnerAndFeesForm = (props: OwnerAndFeesFormProps) => {
   const [vaultOwner, setVaultOwner] = useAtom(vaultOwnerAddressAtom)
   const [vaultFeePercentage, setVaultFeePercentage] = useAtom(vaultFeePercentageAtom)
   const [vaultFeeRecipient, setVaultFeeRecipient] = useAtom(vaultFeeRecipientAddressAtom)
+  const isUsingCustomYieldSource = useAtomValue(isUsingCustomYieldSourceAtom)
 
-  const { nextStep } = useVaultCreationSteps()
+  const formVaultFee = formMethods.watch('vaultFee')
+
+  const { step, setStep, nextStep } = useVaultCreationSteps()
 
   useEffect(() => {
     formMethods.setValue('vaultOwner', vaultOwner ?? userAddress ?? '', {
@@ -48,6 +52,10 @@ export const OwnerAndFeesForm = (props: OwnerAndFeesFormProps) => {
       shouldValidate: true
     })
   }, [])
+
+  useEffect(() => {
+    formMethods.trigger('vaultFeeRecipient')
+  }, [formVaultFee])
 
   const onSubmit = (data: OwnerAndFeesFormValues) => {
     setVaultOwner(data.vaultOwner.trim() as Address)
@@ -91,15 +99,20 @@ export const OwnerAndFeesForm = (props: OwnerAndFeesFormProps) => {
         <SimpleInput
           formKey='vaultFeeRecipient'
           validate={{
-            isValidAddress: (v: string) => isAddress(v?.trim()) || 'Enter a valid wallet address.'
+            isValidAddress: (v: string) => isAddress(v?.trim()) || 'Enter a valid wallet address.',
+            isNotZeroAddress: (v: string) =>
+              !formVaultFee ||
+              parseFloat(formVaultFee) === 0 ||
+              v !== zeroAddress ||
+              'Enter a wallet address to receive yield fees.'
           }}
           defaultValue={zeroAddress}
-          label='Fee Recipient'
+          label='Yield Fee Recipient'
           needsOverride={true}
           className='w-full max-w-md'
         />
         <div className='flex gap-2 items-center'>
-          <PrevButton />
+          <PrevButton onClick={isUsingCustomYieldSource ? () => setStep(step - 2) : undefined} />
           <NextButton disabled={!formMethods.formState.isValid} />
         </div>
       </form>

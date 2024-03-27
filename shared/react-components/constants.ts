@@ -1,4 +1,4 @@
-import { NETWORK, POOL_TOKEN_ADDRESSES } from '@shared/utilities'
+import { NETWORK, POOL_TOKEN_ADDRESSES, USDC_TOKEN_ADDRESSES } from '@shared/utilities'
 
 /**
  * Token Logo URLs
@@ -37,6 +37,7 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   [NETWORK.polygon]: {
     [POOL_TOKEN_ADDRESSES[NETWORK.polygon].toLowerCase()]: tokenLogoUrls.pool,
     '0x2791bca1f2de4661ed88a30c99a7a9449aa84174': tokenLogoUrls.usdc,
+    '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359': tokenLogoUrls.usdc,
     '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063': tokenLogoUrls.dai,
     '0xc8a94a3d3d2dabc3c1caffffdca6a7543c3e3e65': tokenLogoUrls.gusd,
     '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619': tokenLogoUrls.weth,
@@ -46,6 +47,7 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   [NETWORK.optimism]: {
     [POOL_TOKEN_ADDRESSES[NETWORK.optimism].toLowerCase()]: tokenLogoUrls.pool,
     '0x7f5c764cbc14f9669b88837ca1490cca17c31607': tokenLogoUrls.usdc,
+    '0x0b2c639c533813f4aa9d7837caf62653d097ff85': tokenLogoUrls.usdc,
     '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1': tokenLogoUrls.dai,
     '0x4200000000000000000000000000000000000006': tokenLogoUrls.weth,
     '0x68f180fcce6836688e9084f035309e29bf0a2095': tokenLogoUrls.wbtc,
@@ -55,11 +57,11 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   },
   [NETWORK.optimism_sepolia]: {
     [POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia].toLowerCase()]: tokenLogoUrls.pool,
-    '0x8067f3cb6eef936256108ff19a05574b8ad99cf3': tokenLogoUrls.usdc,
-    '0xd590ec14364731b62265a5cc807164a17c6797d4': tokenLogoUrls.dai,
-    '0x1a188719711d62423abf1a4de7d8aa9014a39d73': tokenLogoUrls.gusd,
-    '0xa416ed51158c5616b997b785fa6d18f02d0458a8': tokenLogoUrls.weth,
-    '0x149e3b3bd69f1cfc1b42b6a6a152a42e38ceebf1': tokenLogoUrls.wbtc
+    [USDC_TOKEN_ADDRESSES[NETWORK.optimism_sepolia]]: tokenLogoUrls.usdc,
+    '0x8261cb9519dd1d80b5ce66b0887c6fceea8a64ee': tokenLogoUrls.dai,
+    '0x493c7081faab6e5b2d6b18d9311918580e88c6bf': tokenLogoUrls.gusd,
+    '0xd5c2a983d320a881f21dc68fd89f905ff1517b2c': tokenLogoUrls.weth,
+    '0x45bbc6b553d2afc4d3e376b22f70a67d9a26f819': tokenLogoUrls.wbtc
   },
   [NETWORK.avalanche]: {
     '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f': tokenLogoUrls.wbtc
@@ -68,14 +70,7 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   [NETWORK.celo]: {},
   [NETWORK.celo_testnet]: {},
   [NETWORK.arbitrum]: {},
-  [NETWORK.arbitrum_sepolia]: {
-    [POOL_TOKEN_ADDRESSES[NETWORK.arbitrum_sepolia].toLowerCase()]: tokenLogoUrls.pool,
-    '0x7a6dbc7ff4f1a2d864291db3aec105a8eee4a3d2': tokenLogoUrls.usdc,
-    '0x08c19fe57af150a1af975cb9a38769848c7df98e': tokenLogoUrls.dai,
-    '0xb84460d777133a4b86540d557db35952e4adfee7': tokenLogoUrls.gusd,
-    '0x779275fc1b987db24463801f3708f42f3c6f6ceb': tokenLogoUrls.weth,
-    '0x1bc266e1f397517ece9e384c55c7a5414b683639': tokenLogoUrls.wbtc
-  },
+  [NETWORK.arbitrum_sepolia]: {},
   [NETWORK.base]: {},
   [NETWORK.base_sepolia]: {}
 }

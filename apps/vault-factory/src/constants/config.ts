@@ -18,18 +18,14 @@ import {
   zerionWallet
 } from '@rainbow-me/rainbowkit/wallets'
 import { DEFAULT_CLAIMER_ADDRESSES, NETWORK } from '@shared/utilities'
-import { SupportedNetwork } from 'src/types'
+import { SupportedNetwork, YieldSourceVaultTag } from 'src/types'
 import { Address } from 'viem'
-import { arbitrum, arbitrumSepolia, mainnet, optimism, optimismSepolia } from 'viem/chains'
+import { mainnet, optimism, optimismSepolia } from 'viem/chains'
 
 /**
  * Supported networks
  */
-export const SUPPORTED_NETWORKS = [
-  NETWORK.optimism,
-  NETWORK.optimism_sepolia,
-  NETWORK.arbitrum_sepolia
-] as const
+export const SUPPORTED_NETWORKS = [NETWORK.optimism_sepolia] as const
 
 /**
  * Wagmi networks
@@ -37,9 +33,7 @@ export const SUPPORTED_NETWORKS = [
 export const WAGMI_CHAINS = {
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism,
-  [NETWORK.optimism_sepolia]: optimismSepolia,
-  [NETWORK.arbitrum]: arbitrum,
-  [NETWORK.arbitrum_sepolia]: arbitrumSepolia
+  [NETWORK.optimism_sepolia]: optimismSepolia
 } as const
 
 /**
@@ -70,27 +64,67 @@ export const WALLETS: { [wallet: string]: CreateWalletFn } = {
 export const RPC_URLS = {
   [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
-  [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
-  [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
-  [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL
+  [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL
 } as const
 
 /**
- * Contract addresses
+ * Network config
  */
-export const CONTRACTS: Record<SupportedNetwork, { prizePool: Address; claimer: Address }> = {
-  [NETWORK.optimism]: {
-    prizePool: '0xe32e5E1c5f0c80bD26Def2d0EA5008C107000d6A',
-    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism]
-  },
-  [NETWORK.optimism_sepolia]: {
-    prizePool: '0x46547a849f68178208490Cdd491Df15a5bEeA4B2',
-    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism_sepolia]
-  },
-  [NETWORK.arbitrum_sepolia]: {
-    prizePool: '0x6Fd1dF849DFC4F76F0B15ba0c8D3e99FF84817f1',
-    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.arbitrum_sepolia]
+export const NETWORK_CONFIG: Record<
+  SupportedNetwork,
+  {
+    description: string
+    prizePool: Address
+    claimer: Address
+    lp: { targetAuctionPeriodFraction: number; minAuctionAmountEth: number }
+    yieldSources: {
+      id: string
+      name: string
+      href: string
+      description: string
+      vaults: { address: Address; tags?: YieldSourceVaultTag[] }[]
+    }[]
   }
+> = {
+  // [NETWORK.optimism]: {
+  //   description: 'The OG optimistic rollup on Ethereum.',
+  //   prizePool: '',
+  //   claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism],
+  //   lp: { targetAuctionPeriodFraction: 0.5, minAuctionAmountEth: 0.001 },
+  //   yieldSources: []
+  // },
+  [NETWORK.optimism_sepolia]: {
+    description: 'Sepolia testnet for the Optimism network.',
+    prizePool: '0x31547D3c38F2F8dC92421C54B173F3B27Ab26EbB',
+    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism_sepolia],
+    lp: { targetAuctionPeriodFraction: 0.5, minAuctionAmountEth: 0.001 },
+    yieldSources: [
+      {
+        id: 'aave',
+        name: 'Aave',
+        href: 'https://aave.com/',
+        description: 'Lending and borrowing protocol',
+        vaults: [
+          { address: '0xeE71a7CdE1bA4896D5Bd7D33DEDEd67D0e8bA534', tags: ['stablecoin'] },
+          { address: '0x6F626779fb5AB0F1Bba6EeE45F5D556A796e9341', tags: ['stablecoin'] },
+          { address: '0x2332B17419a9F6BA122572Aa820Ba8f8E3D08c20', tags: ['stablecoin'] },
+          { address: '0x8c2cbfeCd13344E48464c91bF7eA705aDD74D9D8', tags: ['stablecoin'] },
+          { address: '0xB1126119dD12Bc11afB35A25D33c19ac60A64d1f', tags: ['stablecoin'] },
+          { address: '0x5C28E1b31E88344606015479a4f2cfF4cB7bfAa1' },
+          { address: '0x9CfC71e201fD7E9F2C758D1cF34D33c9Bd4c32E9' }
+        ]
+      }
+    ]
+  }
+}
+
+/**
+ * Vault tag display names
+ */
+export const VAULT_TAGS: Record<YieldSourceVaultTag, string> = {
+  stablecoin: 'Stablecoin',
+  lp: 'LP Token',
+  lst: 'Liquid Staking'
 }
 
 /**
@@ -99,36 +133,3 @@ export const CONTRACTS: Record<SupportedNetwork, { prizePool: Address; claimer: 
 export const LOCAL_STORAGE_KEYS = {
   vaultIds: 'vaultIds'
 } as const
-
-/**
- * Default liquidation pair config
- */
-export const LP_CONFIG: Record<
-  SupportedNetwork,
-  { targetFirstSaleTimeFraction: number; liquidationGasAmount: bigint; minAuctionAmountEth: number }
-> = {
-  [NETWORK.optimism]: {
-    targetFirstSaleTimeFraction: 0.5,
-    liquidationGasAmount: 300_000n,
-    minAuctionAmountEth: 0.001
-  },
-  [NETWORK.optimism_sepolia]: {
-    targetFirstSaleTimeFraction: 0.5,
-    liquidationGasAmount: 300_000n,
-    minAuctionAmountEth: 0.001
-  },
-  [NETWORK.arbitrum_sepolia]: {
-    targetFirstSaleTimeFraction: 0.5,
-    liquidationGasAmount: 300_000n,
-    minAuctionAmountEth: 0.001
-  }
-}
-
-/**
- * Network descriptions
- */
-export const NETWORK_DESCRIPTIONS: Record<SupportedNetwork, string> = {
-  [NETWORK.optimism]: 'The OG optimistic rollup on Ethereum.',
-  [NETWORK.optimism_sepolia]: 'Sepolia testnet for the Optimism network.',
-  [NETWORK.arbitrum_sepolia]: 'Sepolia testnet for the Arbitrum network.'
-}

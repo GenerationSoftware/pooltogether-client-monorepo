@@ -135,12 +135,18 @@ const DrawTotals = (props: DrawTotalsProps) => {
     }
   }, [lastDrawId, lastDrawTimestamps])
 
+  const { uniqueWallets, totalPrizeAmount } = useMemo(() => {
+    const validPrizeClaims = draw.prizeClaims.filter((claim) => !!claim.payout)
+
+    return {
+      uniqueWallets: new Set<Address>(validPrizeClaims.map((claim) => claim.winner)),
+      totalPrizeAmount: validPrizeClaims.reduce((a, b) => a + b.payout, 0n)
+    }
+  }, [draw])
+
   if (prizeToken === undefined) {
     return <Spinner />
   }
-
-  const uniqueWallets = new Set<Address>(draw.prizeClaims.map((claim) => claim.winner))
-  const totalPrizeAmount = draw.prizeClaims.reduce((a, b) => a + b.payout, 0n)
 
   return (
     <span className='text-center'>
@@ -169,7 +175,9 @@ const DrawWinnersTable = (props: DrawWinnersTableProps) => {
   const wins = useMemo(() => {
     const groupedWins: { [winner: Address]: bigint } = {}
 
-    draw.prizeClaims.forEach((win) => {
+    const validPrizeClaims = draw.prizeClaims.filter((claim) => !!claim.payout)
+
+    validPrizeClaims.forEach((win) => {
       if (groupedWins[win.winner] !== undefined) {
         groupedWins[win.winner] += win.payout
       } else {

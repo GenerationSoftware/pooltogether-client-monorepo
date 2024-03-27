@@ -1,12 +1,10 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
   useBlockAtTimestamp,
-  useHistoricalTokenPrices,
-  useLiquidationEvents,
-  usePrizeTokenData
+  useLiquidationEvents
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { ExternalLink, Spinner } from '@shared/ui'
-import { getBlockExplorerUrl, NETWORK, POOL_TOKEN_ADDRESSES } from '@shared/utilities'
+import { getBlockExplorerUrl } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
@@ -14,6 +12,7 @@ import { currentTimestampAtom } from 'src/atoms'
 import { Address, formatUnits } from 'viem'
 import { QUERY_START_BLOCK } from '@constants/config'
 import { useDrawStatus } from '@hooks/useDrawStatus'
+import { useHistoricalLiquidationPairTokenInPrices } from '@hooks/useHistoricalLiquidationPairTokenInPrices'
 import { useHistoricalLiquidationPairTokenOutPrices } from '@hooks/useHistoricalLiquidationPairTokenOutPrices'
 import { DrawCardItemTitle } from './DrawCardItemTitle'
 
@@ -38,23 +37,15 @@ export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
   const { data: openedAtBlock } = useBlockAtTimestamp(prizePool?.chainId, openedAt as number)
   const { data: closedAtBlock } = useBlockAtTimestamp(prizePool?.chainId, closedAt as number)
 
-  // TODO: this assumes the tokenIn is always POOL (and uses mainnet pricing) - not ideal
-  const { data: prizeToken } = usePrizeTokenData(prizePool)
-  const { data: tokenInPrices, isFetched: isFetchedTokenInPrices } = useHistoricalTokenPrices(
-    NETWORK.mainnet,
-    [POOL_TOKEN_ADDRESSES[NETWORK.mainnet]]
-  )
-  const prizeTokenPrices =
-    tokenInPrices[POOL_TOKEN_ADDRESSES[NETWORK.mainnet].toLowerCase() as Address]
-
   const drawLiquidationEvents = useMemo(() => {
-    if (!!liquidationEvents?.length && isFetchedDrawStatus && !!openedAtBlock && !!closedAtBlock) {
+    if (!!liquidationEvents && isFetchedDrawStatus && !!openedAtBlock && !!closedAtBlock) {
       return liquidationEvents.filter(
         (event) =>
           event.blockNumber > openedAtBlock.number && event.blockNumber <= closedAtBlock.number
       )
+    } else {
+      return []
     }
-    return []
   }, [liquidationEvents, isFetchedDrawStatus, openedAtBlock, closedAtBlock])
 
   const lpAddresses = useMemo(() => {
@@ -65,43 +56,49 @@ export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
     return [...addresses]
   }, [drawLiquidationEvents])
 
+  const { data: tokenInPrices, isFetched: isFetchedTokenInPrices } =
+    useHistoricalLiquidationPairTokenInPrices(prizePool?.chainId, lpAddresses)
+
   const { data: tokenOutPrices, isFetched: isFetchedTokenOutPrices } =
     useHistoricalLiquidationPairTokenOutPrices(prizePool?.chainId, lpAddresses)
 
   const liqEfficiencyStats = useMemo(() => {
     if (
       !!drawLiquidationEvents.length &&
-      !!prizeToken &&
-      !!prizeTokenPrices &&
-      !!Object.keys(tokenOutPrices).length &&
       !!openedAt &&
-      !!closedAt
+      !!closedAt &&
+      !!Object.keys(tokenInPrices).length &&
+      !!Object.keys(tokenOutPrices).length
     ) {
       const targetTimestamp =
         closedAt < currentTimestamp ? closedAt - (closedAt - openedAt) / 2 : openedAt
       const targetDate = new Date(targetTimestamp * 1_000).toISOString().split('T')[0]
-      const prizeTokenPrice = prizeTokenPrices.find((entry) => entry.date === targetDate)?.price
 
-      if (!!prizeTokenPrice) {
-        type Stat = { efficiency: number; hash?: `0x${string}` }
+      type Stat = { efficiency: number; hash?: `0x${string}` }
 
-        let high: Stat = { efficiency: -Number.MAX_SAFE_INTEGER }
-        let low: Stat = { efficiency: Number.MAX_SAFE_INTEGER }
+      let high: Stat = { efficiency: -Number.MAX_SAFE_INTEGER }
+      let low: Stat = { efficiency: Number.MAX_SAFE_INTEGER }
 
-        let totalValueIn = 0
-        let totalValueOut = 0
+      let totalValueIn = 0
+      let totalValueOut = 0
 
-        drawLiquidationEvents.forEach((event) => {
-          const tokenOut = tokenOutPrices[event.args.liquidationPair.toLowerCase() as Address]
+      drawLiquidationEvents.forEach((event) => {
+        const liquidationPair = event.args.liquidationPair.toLowerCase() as Address
+
+        const tokenIn = tokenInPrices[liquidationPair]
+        const tokenInPrice = tokenIn?.priceHistory.find((entry) => entry.date === targetDate)?.price
+
+        if (!!tokenInPrice) {
+          const tokenOut = tokenOutPrices[liquidationPair]
           const tokenOutPrice = tokenOut?.priceHistory.find(
             (entry) => entry.date === targetDate
           )?.price
 
           if (!!tokenOutPrice) {
-            const amountIn = parseFloat(formatUnits(event.args.amountIn, prizeToken.decimals))
+            const amountIn = parseFloat(formatUnits(event.args.amountIn, tokenIn.decimals))
             const amountOut = parseFloat(formatUnits(event.args.amountOut, tokenOut.decimals))
 
-            const valueIn = amountIn * prizeTokenPrice
+            const valueIn = amountIn * tokenInPrice
             const valueOut = amountOut * tokenOutPrice
 
             const efficiency = (valueIn / valueOut) * 100
@@ -116,22 +113,21 @@ export const DrawLiqEfficiency = (props: DrawLiqEfficiencyProps) => {
             totalValueIn += valueIn
             totalValueOut += valueOut
           }
-        })
-
-        if (!!high.hash && !!low.hash && !!totalValueIn && !!totalValueOut) {
-          const avg = (totalValueIn / totalValueOut) * 100
-
-          return { avg, high, low }
         }
+      })
+
+      if (!!high.hash && !!low.hash && !!totalValueIn && !!totalValueOut) {
+        const avg = (totalValueIn / totalValueOut) * 100
+
+        return { avg, high, low }
       }
     }
-  }, [drawLiquidationEvents, prizeToken, prizeTokenPrices, tokenOutPrices, openedAt, closedAt])
+  }, [drawLiquidationEvents, openedAt, closedAt, tokenInPrices, tokenOutPrices])
 
   const isFetched =
     isFetchedLiquidationEvents &&
     isFetchedDrawStatus &&
-    isFetchedTokenInPrices &&
-    (!lpAddresses.length || isFetchedTokenOutPrices)
+    (!lpAddresses.length || (isFetchedTokenInPrices && isFetchedTokenOutPrices))
 
   return (
     <div className={classNames('flex flex-col gap-3', className)}>

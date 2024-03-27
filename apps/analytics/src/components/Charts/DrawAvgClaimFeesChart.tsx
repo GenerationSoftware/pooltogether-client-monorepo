@@ -1,8 +1,5 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import {
-  useDrawAwardedEvents,
-  usePrizeDrawWinners
-} from '@generationsoftware/hyperstructure-react-hooks'
+import { usePrizeDrawWinners } from '@generationsoftware/hyperstructure-react-hooks'
 import {
   divideBigInts,
   formatNumberForDisplay,
@@ -13,29 +10,22 @@ import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
-import { QUERY_START_BLOCK } from '@constants/config'
 import { useDrawStatus } from '@hooks/useDrawStatus'
 import { LineChart, LineChartProps } from './LineChart'
 
 interface DrawAvgClaimFeesChartProps {
   prizePool: PrizePool
   drawId: number
-  hideCanary?: boolean
   className?: string
 }
 
 export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
-  const { prizePool, drawId, hideCanary, className } = props
+  const { prizePool, drawId, className } = props
 
   const { data: wins } = usePrizeDrawWinners(prizePool)
   const drawWins = wins?.find((draw) => draw.id === drawId)?.prizeClaims
 
   const { closedAt, awardedAt, finalizedAt } = useDrawStatus(prizePool, drawId)
-
-  const { data: drawAwardedEvents } = useDrawAwardedEvents(prizePool, {
-    fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
-  })
-  const numTiers = drawAwardedEvents?.find((e) => e.args.drawId === drawId)?.args.numTiers
 
   const currentTimestamp = useAtomValue(currentTimestampAtom)
 
@@ -56,7 +46,7 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
   }, [closedAt, currentTimestamp])
 
   const chartData = useMemo(() => {
-    if (!!drawWins?.length && !!numTiers) {
+    if (!!drawWins?.length) {
       const data: { name: number; [tier: number]: number }[] = []
 
       const cumTierValues: {
@@ -64,10 +54,7 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
       } = {}
 
       const filteredWins = drawWins.filter(
-        (win) =>
-          win.fee > 0n &&
-          win.feeRecipient !== win.recipient &&
-          (!hideCanary || win.tier !== numTiers - 1)
+        (win) => !!win.payout && !!win.claimReward && win.claimRewardRecipient !== win.recipient
       )
 
       const tiers = new Set(filteredWins.map((win) => win.tier))
@@ -94,7 +81,7 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
         )
 
         checkpointWins.forEach((win) => {
-          cumTierValues[win.tier].sumClaimFeeAmount += win.fee
+          cumTierValues[win.tier].sumClaimFeeAmount += win.claimReward
           cumTierValues[win.tier].sumPrizeAmount += win.payout
         })
 
@@ -103,9 +90,9 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
 
       return data
     }
-  }, [drawWins, numTiers, chartTimestamps])
+  }, [drawWins, chartTimestamps])
 
-  if (!!chartData?.length && !!numTiers) {
+  if (!!chartData?.length) {
     const lines: LineChartProps['lines'] = Object.keys(chartData[0])
       .filter((key) => key !== 'name')
       .map((key) => ({ id: parseInt(key) }))
@@ -132,7 +119,7 @@ export const DrawAvgClaimFeesChart = (props: DrawAvgClaimFeesChartProps) => {
             show: true,
             formatter: (value, tier) => [
               `${formatNumberForDisplay(value, { maximumFractionDigits: 2 })}%`,
-              tier === 0 ? 'GP' : tier === numTiers - 1 ? 'Canary' : `Tier ${tier}`
+              tier === 0 ? 'GP' : `Tier ${tier}`
             ],
             labelFormatter: (label) => getSimpleTime(Number(label))
           }}

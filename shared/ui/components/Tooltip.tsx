@@ -15,6 +15,7 @@ export const Tooltip = (props: TooltipProps) => {
           dark: 'bg-pt-purple-100 text-gray-600 text-center'
         },
         arrow: {
+          base: 'absolute z-10 h-2 w-2 rotate-45',
           style: {
             dark: 'bg-pt-purple-100'
           }

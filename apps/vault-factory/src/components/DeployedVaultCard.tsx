@@ -14,9 +14,9 @@ import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
 import { zeroAddress } from 'viem'
 import { useAccount } from 'wagmi'
-import { useDeployedVaults } from '@hooks/useDeployedVaults'
 import { useDeployedVaultState } from '@hooks/useDeployedVaultState'
 import { useLiquidationPairSteps } from '@hooks/useLiquidationPairSteps'
+import { useUserDeployedVaults } from '@hooks/useUserDeployedVaults'
 
 interface DeployedVaultCardProps {
   vault: Vault
@@ -157,7 +157,7 @@ const VaultActionsItem = (props: ItemProps) => {
 
   const { setStep: setLpStep } = useLiquidationPairSteps()
 
-  const { removeVault } = useDeployedVaults()
+  const { removeVault } = useUserDeployedVaults()
 
   const onClickDeployLp = () => {
     setLpStep(0)

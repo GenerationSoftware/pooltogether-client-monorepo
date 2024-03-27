@@ -2,7 +2,7 @@ import { useVault, useVaultSharePrice } from '@generationsoftware/hyperstructure
 import { useMemo } from 'react'
 import { SupportedNetwork } from 'src/types'
 import { Address, parseUnits } from 'viem'
-import { LP_CONFIG } from '@constants/config'
+import { NETWORK_CONFIG } from '@constants/config'
 
 /**
  * Returns a minimum share amount for a liquidation auction to begin
@@ -20,7 +20,7 @@ export const useLiquidationPairMinimumAuctionAmount = (
 
   const data = useMemo(() => {
     if (!!shareToken?.price) {
-      const numTokens = LP_CONFIG[chainId].minAuctionAmountEth / shareToken.price
+      const numTokens = NETWORK_CONFIG[chainId].lp.minAuctionAmountEth / shareToken.price
       return parseUnits(`${numTokens}`, shareToken.decimals)
     } else if (isFetched) {
       return 0n

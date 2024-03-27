@@ -16,9 +16,9 @@ import { useRouter } from 'next/router'
 import { zeroAddress } from 'viem'
 import { useAccount } from 'wagmi'
 import { SUPPORTED_NETWORKS } from '@constants/config'
-import { useDeployedVaults } from '@hooks/useDeployedVaults'
 import { useDeployedVaultState } from '@hooks/useDeployedVaultState'
 import { useLiquidationPairSteps } from '@hooks/useLiquidationPairSteps'
+import { useUserDeployedVaults } from '@hooks/useUserDeployedVaults'
 import { DeployedVaultCard } from './DeployedVaultCard'
 
 interface DeployedVaultsTableProps {
@@ -28,7 +28,7 @@ interface DeployedVaultsTableProps {
 export const DeployedVaultsTable = (props: DeployedVaultsTableProps) => {
   const { className } = props
 
-  const { vaultInfoArray } = useDeployedVaults()
+  const { vaultInfoArray } = useUserDeployedVaults()
   const vaults = useVaults(vaultInfoArray, { useAllChains: true })
   const vaultsArray = Object.values(vaults.vaults).filter((vault) =>
     SUPPORTED_NETWORKS.includes(vault.chainId)
@@ -211,7 +211,7 @@ const VaultActionsItem = (props: ItemProps) => {
 
   const { setStep: setLpStep } = useLiquidationPairSteps()
 
-  const { removeVault } = useDeployedVaults()
+  const { removeVault } = useUserDeployedVaults()
 
   const onClickDeployLp = () => {
     setLpStep(0)

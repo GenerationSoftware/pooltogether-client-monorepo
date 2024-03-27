@@ -38,7 +38,7 @@ export default function LiquidationPairPage() {
         <Layout isSidebarActive={true}>
           <div className='w-full flex flex-col grow gap-8 lg:flex-row lg:gap-4'>
             <div className='flex flex-col shrink-0 gap-8 items-center p-6 bg-pt-transparent lg:w-[27rem] lg:py-0 lg:pl-2 lg:pr-6 lg:bg-transparent'>
-              <LiquidationPairStepInfo className='grow items-center justify-center lg:items-start' />
+              <LiquidationPairStepInfo className='w-full grow items-center justify-center lg:items-start' />
               <DeployedVaultInfo className='w-full' />
             </div>
             <LiquidationPairStepContent />

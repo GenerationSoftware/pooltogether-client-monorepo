@@ -442,7 +442,7 @@ export class Vault {
     const feesAvailable = await this.publicClient.readContract({
       address: this.address,
       abi: vaultABI,
-      functionName: 'availableYieldFeeBalance'
+      functionName: 'yieldFeeBalance'
     })
 
     this.feesAvailable = feesAvailable
@@ -724,7 +724,7 @@ export class Vault {
       account: this.walletClient.account,
       address: this.address,
       abi: vaultABI,
-      functionName: 'mintYieldFee',
+      functionName: 'claimYieldFeeShares',
       args: [amount],
       chain: this.walletClient.chain,
       ...overrides

@@ -117,7 +117,7 @@ importers:
         version: 2.2.1
       flowbite-react:
         specifier: 0.7.2
-        version: 0.7.2(@types/react@18.2.8)(esbuild@0.17.18)(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.1)
+        version: 0.7.2(@types/react@18.2.8)(esbuild@0.17.18)(next@14.1.0)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.1)
       framer-motion:
         specifier: ^10.12.16
         version: 10.12.16(react-dom@18.2.0)(react@18.2.0)
@@ -128,8 +128,8 @@ importers:
         specifier: ^2.4.0
         version: 2.4.0(react-dom@18.2.0)(react@18.2.0)
       next:
-        specifier: 13.3.0
-        version: 13.3.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -211,7 +211,7 @@ importers:
         version: 2.2.1
       flowbite-react:
         specifier: 0.7.2
-        version: 0.7.2(@types/react@18.2.8)(esbuild@0.17.18)(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.1)
+        version: 0.7.2(@types/react@18.2.8)(esbuild@0.17.18)(next@14.1.0)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.1)
       framer-motion:
         specifier: ^10.12.16
         version: 10.12.16(react-dom@18.2.0)(react@18.2.0)
@@ -222,11 +222,11 @@ importers:
         specifier: ^2.4.0
         version: 2.4.0(react-dom@18.2.0)(react@18.2.0)
       next:
-        specifier: 13.3.0
-        version: 13.3.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
       next-intl:
         specifier: ^2.15.1
-        version: 2.17.5(next@13.3.0)(react@18.2.0)
+        version: 2.17.5(next@14.1.0)(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -299,7 +299,7 @@ importers:
         version: 2.2.1
       flowbite-react:
         specifier: 0.7.2
-        version: 0.7.2(@types/react@18.2.8)(esbuild@0.17.18)(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.1)
+        version: 0.7.2(@types/react@18.2.8)(esbuild@0.17.18)(next@14.1.0)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.1)
       framer-motion:
         specifier: ^10.12.16
         version: 10.12.16(react-dom@18.2.0)(react@18.2.0)
@@ -310,8 +310,8 @@ importers:
         specifier: ^2.4.0
         version: 2.4.0(react-dom@18.2.0)(react@18.2.0)
       next:
-        specifier: 13.3.0
-        version: 13.3.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -375,7 +375,7 @@ importers:
         version: 2.2.1
       flowbite-react:
         specifier: 0.7.2
-        version: 0.7.2(@types/react@18.2.8)(esbuild@0.17.18)(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.1)
+        version: 0.7.2(@types/react@18.2.8)(esbuild@0.17.18)(next@14.1.0)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.1)
       framer-motion:
         specifier: ^10.12.16
         version: 10.12.16(react-dom@18.2.0)(react@18.2.0)
@@ -383,8 +383,8 @@ importers:
         specifier: ^1.13.1
         version: 1.13.1(@babel/core@7.23.9)(react@18.2.0)
       next:
-        specifier: 13.3.0
-        version: 13.3.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -445,7 +445,7 @@ importers:
         version: 2.2.1
       flowbite-react:
         specifier: 0.7.2
-        version: 0.7.2(@types/react@18.2.8)(esbuild@0.17.18)(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.1)
+        version: 0.7.2(@types/react@18.2.8)(esbuild@0.17.18)(next@14.1.0)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.1)
       framer-motion:
         specifier: ^10.12.16
         version: 10.12.16(react-dom@18.2.0)(react@18.2.0)
@@ -453,8 +453,8 @@ importers:
         specifier: ^1.13.1
         version: 1.13.1(@babel/core@7.23.9)(react@18.2.0)
       next:
-        specifier: 13.3.0
-        version: 13.3.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -615,7 +615,7 @@ importers:
         version: 2.2.1
       flowbite-react:
         specifier: 0.7.2
-        version: 0.7.2(@types/react@18.2.8)(esbuild@0.17.18)(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.1)
+        version: 0.7.2(@types/react@18.2.8)(esbuild@0.17.18)(next@14.1.0)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.1)
       framer-motion:
         specifier: ^10.12.16
         version: 10.12.16(react-dom@18.2.0)(react@18.2.0)
@@ -626,8 +626,8 @@ importers:
         specifier: ^2.4.0
         version: 2.4.0(react-dom@18.2.0)(react@18.2.0)
       next:
-        specifier: 13.3.0
-        version: 13.3.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -697,7 +697,7 @@ importers:
         version: 2.2.1
       flowbite-react:
         specifier: 0.7.2
-        version: 0.7.2(@types/react@18.2.8)(esbuild@0.17.18)(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.1)
+        version: 0.7.2(@types/react@18.2.8)(esbuild@0.17.18)(next@14.1.0)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.1)
       framer-motion:
         specifier: ^10.12.16
         version: 10.12.16(react-dom@18.2.0)(react@18.2.0)
@@ -708,8 +708,8 @@ importers:
         specifier: ^2.4.0
         version: 2.4.0(react-dom@18.2.0)(react@18.2.0)
       next:
-        specifier: 13.3.0
-        version: 13.3.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -782,7 +782,7 @@ importers:
         version: 2.2.1
       flowbite-react:
         specifier: 0.7.2
-        version: 0.7.2(@types/react@18.2.8)(esbuild@0.17.18)(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.1)
+        version: 0.7.2(@types/react@18.2.8)(esbuild@0.17.18)(next@14.1.0)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.1)
       framer-motion:
         specifier: ^10.12.16
         version: 10.12.16(react-dom@18.2.0)(react@18.2.0)
@@ -793,8 +793,8 @@ importers:
         specifier: ^2.4.0
         version: 2.4.0(react-dom@18.2.0)(react@18.2.0)
       next:
-        specifier: 13.3.0
-        version: 13.3.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -864,7 +864,7 @@ importers:
         version: 2.2.1
       flowbite-react:
         specifier: 0.7.2
-        version: 0.7.2(@types/react@18.2.8)(esbuild@0.17.18)(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.1)
+        version: 0.7.2(@types/react@18.2.8)(esbuild@0.17.18)(next@14.1.0)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.1)
       framer-motion:
         specifier: ^10.12.16
         version: 10.12.16(react-dom@18.2.0)(react@18.2.0)
@@ -875,8 +875,8 @@ importers:
         specifier: ^2.4.0
         version: 2.4.0(react-dom@18.2.0)(react@18.2.0)
       next:
-        specifier: 13.3.0
-        version: 13.3.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -4939,6 +4939,7 @@ packages:
       {
         integrity: sha512-AjppRV4uG3No7L1plinoTQETH+j2F10TEnrMfzbTUYwze5sBUPveeeBAPZPm8OkJZ1epq9OyYKhZrvbD6/9HCQ==
       }
+    dev: true
 
   /@next/env@14.1.0:
     resolution:
@@ -4956,6 +4957,7 @@ packages:
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-darwin-arm64@14.1.0:
@@ -4979,6 +4981,7 @@ packages:
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-darwin-x64@14.1.0:
@@ -5002,6 +5005,7 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-linux-arm64-gnu@14.1.0:
@@ -5025,6 +5029,7 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-linux-arm64-musl@14.1.0:
@@ -5048,6 +5053,7 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-linux-x64-gnu@14.1.0:
@@ -5071,6 +5077,7 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-linux-x64-musl@14.1.0:
@@ -5094,6 +5101,7 @@ packages:
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-win32-arm64-msvc@14.1.0:
@@ -5117,6 +5125,7 @@ packages:
     cpu: [ia32]
     os: [win32]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-win32-ia32-msvc@14.1.0:
@@ -5140,6 +5149,7 @@ packages:
     cpu: [x64]
     os: [win32]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-win32-x64-msvc@14.1.0:
@@ -7449,6 +7459,7 @@ packages:
       }
     dependencies:
       tslib: 2.6.2
+    dev: true
 
   /@swc/helpers@0.5.2:
     resolution:
@@ -12117,7 +12128,7 @@ packages:
       react-markdown: 9.0.1(@types/react@18.2.8)(react@18.2.0)
       sharp: 0.32.6
       tailwind-merge: 2.2.1
-      tailwindcss: 3.3.1(postcss@8.4.23)
+      tailwindcss: 3.3.1(postcss@8.4.31)
     transitivePeerDependencies:
       - '@effect-ts/otel-node'
       - '@types/react'
@@ -12125,6 +12136,7 @@ packages:
       - markdown-wasm
       - next
       - supports-color
+    dev: true
 
   /flowbite-react@0.7.2(@types/react@18.2.8)(esbuild@0.17.18)(next@14.1.0)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.1):
     resolution:
@@ -15815,6 +15827,7 @@ packages:
       - esbuild
       - markdown-wasm
       - supports-color
+    dev: true
 
   /next-contentlayer@0.3.4(contentlayer@0.3.4)(esbuild@0.17.18)(next@14.1.0)(react-dom@18.2.0)(react@18.2.0):
     resolution:
@@ -15840,7 +15853,7 @@ packages:
       - supports-color
     dev: false
 
-  /next-intl@2.17.5(next@13.3.0)(react@18.2.0):
+  /next-intl@2.17.5(next@14.1.0)(react@18.2.0):
     resolution:
       {
         integrity: sha512-p/tit4/FN0eHLw6Mjwsx4ktiFZWq9VMcuY9hhkAlYWXCQgKq09PB0lZcMNw5xLvV9eor818BzXxdA+3bSvFMmw==
@@ -15852,7 +15865,7 @@ packages:
     dependencies:
       '@formatjs/intl-localematcher': 0.2.32
       negotiator: 0.6.3
-      next: 13.3.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+      next: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       use-intl: 2.17.5(react@18.2.0)
     dev: false
@@ -15903,6 +15916,7 @@ packages:
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
+    dev: true
 
   /next@14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0):
     resolution:
@@ -16855,6 +16869,7 @@ packages:
       nanoid: 3.3.6
       picocolors: 1.0.0
       source-map-js: 1.0.2
+    dev: true
 
   /postcss@8.4.23:
     resolution:

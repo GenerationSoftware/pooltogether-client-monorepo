@@ -1,17 +1,21 @@
 import {
   useSendDeployVaultTransaction,
-  useToken
+  useTokenAllowance,
+  useTokenBalance
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { ArrowRightIcon } from '@heroicons/react/24/outline'
+import { ArrowRightIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { createDeployVaultTxToast, TransactionButton } from '@shared/react-components'
 import { VaultDeployInfo } from '@shared/types'
+import { Tooltip } from '@shared/ui'
 import classNames from 'classnames'
 import { useSetAtom } from 'jotai'
 import { vaultAddressAtom } from 'src/atoms'
 import { SupportedNetwork } from 'src/types'
 import { Address } from 'viem'
-import { useDeployedVaults } from '@hooks/useDeployedVaults'
+import { useAccount } from 'wagmi'
+import { useSendApproveYieldBufferTransaction } from '@hooks/useSendApproveYieldBufferTransaction'
+import { useUserDeployedVaults } from '@hooks/useUserDeployedVaults'
 import { useVaultInfo } from '@hooks/useVaultInfo'
 
 interface DeployVaultButtonProps {
@@ -23,9 +27,32 @@ interface DeployVaultButtonProps {
 export const DeployVaultButton = (props: DeployVaultButtonProps) => {
   const { onSuccess, className, innerClassName } = props
 
-  const vault = useVaultInfo()
+  const { address: userAddress } = useAccount()
 
-  const { data: tokenData } = useToken(vault.chainId as SupportedNetwork, vault.token as Address)
+  const vaultInfo = useVaultInfo()
+  const { chainId, tokenAddress, vaultFactory, yieldBuffer } = vaultInfo
+
+  const {
+    data: token,
+    isFetched: isFetchedToken,
+    refetch: refetchUserTokenBalance
+  } = useTokenBalance(
+    chainId as SupportedNetwork,
+    userAddress as Address,
+    tokenAddress as Address,
+    { refetchOnWindowFocus: true }
+  )
+
+  const {
+    data: allowance,
+    isFetched: isFetchedAllowance,
+    refetch: refetchAllowance
+  } = useTokenAllowance(
+    chainId as SupportedNetwork,
+    userAddress as Address,
+    vaultFactory as Address,
+    token?.address as Address
+  )
 
   const { openConnectModal } = useConnectModal()
   const { openChainModal } = useChainModal()
@@ -33,7 +60,19 @@ export const DeployVaultButton = (props: DeployVaultButtonProps) => {
 
   const setVaultAddress = useSetAtom(vaultAddressAtom)
 
-  const { addVault } = useDeployedVaults()
+  const { addVault } = useUserDeployedVaults()
+
+  const {
+    isWaiting: isWaitingApproval,
+    isConfirming: isConfirmingApproval,
+    isSuccess: isSuccessfulApproval,
+    txHash: approvalTxHash,
+    sendApproveYieldBufferTransaction: sendApproveYieldBufferTransaction
+  } = useSendApproveYieldBufferTransaction({
+    onSuccess: () => {
+      refetchAllowance()
+    }
+  })
 
   const {
     isWaiting: isWaitingDeploy,
@@ -41,46 +80,88 @@ export const DeployVaultButton = (props: DeployVaultButtonProps) => {
     isSuccess: isSuccessfulDeploy,
     txHash: deployTxHash,
     sendDeployVaultTransaction
-  } = useSendDeployVaultTransaction(vault as VaultDeployInfo, {
+  } = useSendDeployVaultTransaction(vaultInfo as VaultDeployInfo, {
     onSend: (txHash) => {
-      if (!!vault.chainId) {
-        createDeployVaultTxToast({ chainId: vault.chainId, txHash, addRecentTransaction })
+      if (!!chainId) {
+        createDeployVaultTxToast({ chainId: chainId, txHash, addRecentTransaction })
       }
     },
     onSuccess: (txReceipt) => {
-      if (!!vault.chainId) {
+      if (!!chainId) {
         const vaultAddress = txReceipt.logs[0].address
         setVaultAddress(vaultAddress)
-        addVault({ chainId: vault.chainId, address: vaultAddress })
+        addVault({ chainId: chainId, address: vaultAddress })
+        refetchUserTokenBalance()
       }
       onSuccess?.()
     }
   })
 
-  const deployVaultEnabled = !!vault.chainId && !!tokenData && !!sendDeployVaultTransaction
+  const isDataFetched =
+    !!userAddress &&
+    !!chainId &&
+    !!token &&
+    isFetchedToken &&
+    allowance !== undefined &&
+    isFetchedAllowance &&
+    !!yieldBuffer
 
-  if (!vault.chainId) {
+  const buttonClassName = classNames(
+    'min-w-[9rem] !bg-pt-purple-600 !border-pt-purple-600 hover:!bg-pt-purple-700 focus:outline-transparent',
+    className
+  )
+  const buttonInnerClassName = classNames(
+    'flex gap-2 items-center text-pt-purple-50',
+    innerClassName
+  )
+
+  if (!chainId) {
     return <></>
+  }
+
+  if (isDataFetched && allowance < yieldBuffer) {
+    return (
+      <TransactionButton
+        chainId={chainId}
+        isTxLoading={isWaitingApproval || isConfirmingApproval}
+        isTxSuccess={isSuccessfulApproval}
+        write={sendApproveYieldBufferTransaction}
+        txHash={approvalTxHash}
+        txDescription={`Approve ${token?.symbol} Buffer`}
+        disabled={!isDataFetched}
+        openConnectModal={openConnectModal}
+        openChainModal={openChainModal}
+        addRecentTransaction={addRecentTransaction}
+        color='purple'
+        className={buttonClassName}
+        innerClassName={buttonInnerClassName}
+      >
+        <span>Approve Yield Buffer</span>
+        <Tooltip
+          content={`This is a small amount of ${token?.symbol} that will be donated to your new prize vault to prevent potential rounding errors.`}
+          className='max-w-xs whitespace-normal'
+        >
+          <InformationCircleIcon className='h-5 w-5' />
+        </Tooltip>
+      </TransactionButton>
+    )
   }
 
   return (
     <TransactionButton
-      chainId={vault.chainId}
+      chainId={chainId}
       isTxLoading={isWaitingDeploy || isConfirmingDeploy}
       isTxSuccess={isSuccessfulDeploy}
       write={sendDeployVaultTransaction}
       txHash={deployTxHash}
-      txDescription={`Deploy ${tokenData?.symbol} Vault`}
-      disabled={!deployVaultEnabled}
+      txDescription={`Deploy ${token?.symbol} Vault`}
+      disabled={!isDataFetched}
       openConnectModal={openConnectModal}
       openChainModal={openChainModal}
       addRecentTransaction={addRecentTransaction}
       color='purple'
-      className={classNames(
-        'min-w-[9rem] !bg-pt-purple-600 !border-pt-purple-600 hover:!bg-pt-purple-700 focus:outline-transparent',
-        className
-      )}
-      innerClassName={classNames('flex gap-2 items-center text-pt-purple-50', innerClassName)}
+      className={buttonClassName}
+      innerClassName={buttonInnerClassName}
     >
       Deploy Vault <ArrowRightIcon className='w-4 h-4' />
     </TransactionButton>
