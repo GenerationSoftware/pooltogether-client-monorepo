@@ -91,7 +91,9 @@ const PrizeSize = (props: PrizeSizeProps) => {
   const tierWins = wins.filter((win) => win.tier === tier)
 
   const prizeSize =
-    tierPrizes?.[0]?.amount ?? !!tierWins[0] ? tierWins[0].payout + tierWins[0].fee : undefined
+    tierPrizes?.[0]?.amount ?? !!tierWins[0]
+      ? tierWins[0].payout + tierWins[0].claimReward
+      : undefined
 
   return (
     <div className={classNames('flex flex-col gap-2', className)}>
