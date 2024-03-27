@@ -1,5 +1,5 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { SubgraphDraw, Token } from '@shared/types'
+import { Prize, SubgraphDraw, Token } from '@shared/types'
 import { formatBigIntForDisplay, getTimeBreakdown } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
@@ -13,13 +13,7 @@ interface PrizesTableRowProps {
   tier: number
   numTiers: number
   awardedAt: number
-  prizes?: {
-    vault: `0x${string}`
-    winner: `0x${string}`
-    tier: number
-    prizeIndex: number
-    amount: bigint
-  }[]
+  prizes?: Prize[]
   prizeToken: Token
   className?: string
 }
@@ -36,7 +30,13 @@ export const PrizesTableRow = (props: PrizesTableRowProps) => {
       )}
     >
       <PrizeTier tier={tier} numTiers={numTiers} className='w-full md:w-auto' />
-      <PrizeSize tier={tier} prizes={prizes} prizeToken={prizeToken} className='w-1/2 md:w-auto' />
+      <PrizeSize
+        tier={tier}
+        wins={wins}
+        prizes={prizes}
+        prizeToken={prizeToken}
+        className='w-1/2 md:w-auto'
+      />
       <PrizesClaimed wins={wins} tier={tier} prizes={prizes} className='w-1/2 md:w-auto' />
       <PrizeFees prizePool={prizePool} drawId={drawId} tier={tier} className='w-full md:w-auto' />
       <PrizeClaimTime wins={wins} tier={tier} awardedAt={awardedAt} className='w-full md:w-auto' />
@@ -71,22 +71,20 @@ const PrizeTier = (props: PrizeTierProps) => {
 
 interface PrizeSizeProps {
   tier: number
-  prizes?: {
-    vault: `0x${string}`
-    winner: `0x${string}`
-    tier: number
-    prizeIndex: number
-    amount: bigint
-  }[]
+  wins: SubgraphDraw['prizeClaims']
+  prizes?: Prize[]
   prizeToken: Token
   className?: string
 }
 
 const PrizeSize = (props: PrizeSizeProps) => {
-  const { tier, prizes, prizeToken, className } = props
+  const { tier, wins, prizes, prizeToken, className } = props
 
   const tierPrizes = prizes?.filter((prize) => prize.tier === tier)
-  const prizeSize = tierPrizes?.[0]?.amount
+  const tierWins = wins.filter((win) => win.tier === tier)
+
+  const prizeSize =
+    tierPrizes?.[0]?.amount ?? !!tierWins[0] ? tierWins[0].payout + tierWins[0].fee : undefined
 
   return (
     <div className={classNames('flex flex-col gap-2', className)}>
@@ -99,6 +97,8 @@ const PrizeSize = (props: PrizeSizeProps) => {
             </span>{' '}
             {prizeToken.symbol}
           </>
+        ) : !!tierPrizes?.length ? (
+          '?' // TODO: there should be enough data onchain to calculate this retroactively
         ) : (
           '-'
         )}
@@ -110,13 +110,7 @@ const PrizeSize = (props: PrizeSizeProps) => {
 interface PrizesClaimedProps {
   wins: SubgraphDraw['prizeClaims']
   tier: number
-  prizes?: {
-    vault: `0x${string}`
-    winner: `0x${string}`
-    tier: number
-    prizeIndex: number
-    amount: bigint
-  }[]
+  prizes?: Prize[]
   className?: string
 }
 
@@ -131,17 +125,15 @@ const PrizesClaimed = (props: PrizesClaimedProps) => {
   return (
     <div className={classNames('flex flex-col gap-2', className)}>
       <span className='text-pt-purple-300 md:hidden'>{prizesHeaders.claimed}</span>
-      <span>
-        {!!numTierWins && !!numTierPrizes ? (
-          <span className={highlightClassName}>
-            {numTierWins} / {numTierPrizes}
-          </span>
-        ) : !!numTierPrizes ? (
-          <span className={highlightClassName}>{numTierWins}</span>
-        ) : (
-          <span>-</span>
-        )}
-      </span>
+      {!!numTierPrizes ? (
+        <span className={highlightClassName}>
+          {numTierWins.toLocaleString()} / {numTierPrizes.toLocaleString()}
+        </span>
+      ) : !prizes ? (
+        <span className={highlightClassName}>{numTierWins.toLocaleString()}</span>
+      ) : (
+        <span>-</span>
+      )}
     </div>
   )
 }

@@ -12,6 +12,16 @@ export interface DrawWithTimestamps {
 
 export type DrawStatus = 'open' | 'closed' | 'awarded' | 'finalized'
 
+export interface Prize {
+  chainId: number
+  drawId: number
+  vault: `0x${string}`
+  winner: `0x${string}`
+  tier: number
+  prizeIndex: number
+  amount?: bigint
+}
+
 export interface Win {
   chainId: number
   drawId: number

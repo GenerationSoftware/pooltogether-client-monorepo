@@ -47,10 +47,20 @@ export const QUERY_START_BLOCK: { [chainId: number]: bigint } = {
 }
 
 /**
+ * Old draw results URL
+ */
+export const OLD_DRAW_RESULTS_URL: { [chainId: number]: { url: string; lastDrawId: number } } = {
+  [NETWORK.optimism]: {
+    url: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results-mainnet/main/prizes/${NETWORK.optimism}`,
+    lastDrawId: 157
+  }
+}
+
+/**
  * Draw results URL
  */
 export const DRAW_RESULTS_URL: { [chainId: number]: string } = {
-  [NETWORK.optimism]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-draw-results-mainnet/main/prizes/${NETWORK.optimism}`
+  [NETWORK.optimism]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-winners-mainnet/main/winners/vaultAccounts/${NETWORK.optimism}`
 }
 
 /**
