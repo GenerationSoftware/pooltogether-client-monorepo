@@ -197,7 +197,8 @@ export const OP_GAS_ORACLE_ADDRESS = '0x420000000000000000000000000000000000000f
  * Subgraph API URLs
  */
 export const SUBGRAPH_API_URLS = {
-  // [NETWORK.optimism_sepolia]: 'https://api.studio.thegraph.com/query/63100/pt-v5-op-sepolia/version/latest'
+  [NETWORK.optimism_sepolia]:
+    'https://api.studio.thegraph.com/query/63100/pt-v5-op-sepolia/version/latest'
 } as const
 
 /**
