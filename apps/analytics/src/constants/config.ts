@@ -39,7 +39,7 @@ export const QUERY_START_BLOCK: { [chainId: number]: bigint } = {
  * Draw results URL
  */
 export const DRAW_RESULTS_URL: { [chainId: number]: string } = {
-  [NETWORK.optimism_sepolia]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-winners-mainnet/main/winners/vaultAccounts/${NETWORK.optimism_sepolia}`
+  [NETWORK.optimism_sepolia]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-winners-testnet/main/winners/vaultAccounts/${NETWORK.optimism_sepolia}`
 }
 
 /**
