@@ -3,7 +3,7 @@ import { vaultABI } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { Address, isAddress } from 'viem'
 import { usePublicClient } from 'wagmi'
-import { useLiquidationPairTokenOutAddress } from './useLiquidationPairTokenOutAddress'
+import { useLiquidationPairTokenOutAddress } from './useLiquidationPairTokenOutAddresses'
 
 export const useIsLiquidationPairTokenOutAVault = (chainId: number, lpAddress: Address) => {
   const publicClient = usePublicClient({ chainId })

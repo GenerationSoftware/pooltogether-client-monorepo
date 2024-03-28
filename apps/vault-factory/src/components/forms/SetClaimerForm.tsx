@@ -5,28 +5,29 @@ import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { vaultAddressAtom, vaultChainIdAtom, vaultClaimerAddressAtom } from 'src/atoms'
 import { Address, isAddress } from 'viem'
+import { BackButton } from '@components/buttons/BackButton'
 import { NextButton } from '@components/buttons/NextButton'
 import { PrevButton } from '@components/buttons/PrevButton'
 import { SetClaimerButton } from '@components/buttons/SetClaimerButton'
-import { CONTRACTS } from '@constants/config'
+import { NETWORK_CONFIG } from '@constants/config'
 import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
 import { SimpleInput } from './SimpleInput'
 
-export interface ClaimerFormValues {
+export interface SetClaimerFormValues {
   vaultClaimer: string
 }
 
-interface ClaimerFormProps {
+interface SetClaimerFormProps {
   isOnlyStep?: boolean
   className?: string
 }
 
-export const ClaimerForm = (props: ClaimerFormProps) => {
+export const SetClaimerForm = (props: SetClaimerFormProps) => {
   const { isOnlyStep, className } = props
 
   const router = useRouter()
 
-  const formMethods = useForm<ClaimerFormValues>({ mode: 'onChange' })
+  const formMethods = useForm<SetClaimerFormValues>({ mode: 'onChange' })
 
   const [vaultClaimer, setVaultClaimer] = useAtom(vaultClaimerAddressAtom)
 
@@ -37,12 +38,12 @@ export const ClaimerForm = (props: ClaimerFormProps) => {
 
   useEffect(() => {
     !!vaultChainId &&
-      formMethods.setValue('vaultClaimer', vaultClaimer ?? CONTRACTS[vaultChainId].claimer, {
+      formMethods.setValue('vaultClaimer', vaultClaimer ?? NETWORK_CONFIG[vaultChainId].claimer, {
         shouldValidate: true
       })
   }, [])
 
-  const onSubmit = (data: ClaimerFormValues) => {
+  const onSubmit = (data: SetClaimerFormValues) => {
     setVaultClaimer(data.vaultClaimer.trim() as Address)
     nextStep()
   }
@@ -58,7 +59,7 @@ export const ClaimerForm = (props: ClaimerFormProps) => {
           validate={{
             isValidAddress: (v: string) => isAddress(v?.trim()) || 'Enter a valid contract address.'
           }}
-          defaultValue={!!vaultChainId ? CONTRACTS[vaultChainId].claimer : undefined}
+          defaultValue={!!vaultChainId ? NETWORK_CONFIG[vaultChainId].claimer : undefined}
           label='Claimer Contract'
           needsOverride={true}
           className='w-full max-w-md'
@@ -71,11 +72,14 @@ export const ClaimerForm = (props: ClaimerFormProps) => {
         ) : (
           !!vaultChainId &&
           !!vaultAddress && (
-            <SetClaimerButton
-              chainId={vaultChainId}
-              vaultAddress={vaultAddress}
-              onSuccess={() => router.push('/')}
-            />
+            <div className='flex gap-2 items-center'>
+              <BackButton />
+              <SetClaimerButton
+                chainId={vaultChainId}
+                vaultAddress={vaultAddress}
+                onSuccess={() => router.push('/')}
+              />
+            </div>
           )
         )}
       </form>

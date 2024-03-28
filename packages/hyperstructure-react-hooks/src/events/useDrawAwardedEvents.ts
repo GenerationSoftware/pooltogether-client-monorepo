@@ -1,12 +1,11 @@
-import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import { getDrawAwardedEvents, PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
-import { getDrawAwardedEvents } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { usePublicClient } from 'wagmi'
 import { QUERY_KEYS } from '../constants'
 
 /**
- * Returns `DrawAwarded` events
+ * Returns `DrawAwarded` events from a prize pool contract
  * @param prizePool the prize pool to query events for
  * @param options optional settings
  * @returns

@@ -77,6 +77,7 @@ export * from './components/Toasts/WithdrawTxToast'
  * Tooltips
  */
 export * from './components/Tooltips/ApprovalTooltip'
+export * from './components/Tooltips/BadPrecisionPerDollarTooltip'
 export * from './components/Tooltips/BonusRewardsTooltip'
 export * from './components/Tooltips/DeprecatedVaultTooltip'
 export * from './components/Tooltips/ImportedVaultTooltip'

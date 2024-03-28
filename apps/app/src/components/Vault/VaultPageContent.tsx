@@ -14,7 +14,7 @@ import { useMemo } from 'react'
 import { Address, isAddress } from 'viem'
 import { SUPPORTED_NETWORKS } from '@constants/config'
 import { useNetworks } from '@hooks/useNetworks'
-import { VaultPageButtons } from './VaultPageButtons'
+import { VaultButtons } from './VaultButtons'
 import { VaultPageExtraInfo } from './VaultPageExtraInfo'
 import { VaultPageHeader } from './VaultPageHeader'
 import { VaultPageInfo } from './VaultPageInfo'
@@ -72,7 +72,11 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
       {!!vault && !!vaultTokenAddress ? (
         <>
           <VaultPageInfo vault={vault} className='max-w-[44rem]' />
-          <VaultPageButtons vault={vault} className='max-w-[44rem]' />
+          <VaultButtons
+            vault={vault}
+            forceShow={['delegate', 'withdraw']}
+            className='max-w-[44rem]'
+          />
           <VaultPageExtraInfo vault={vault} className='max-w-[44rem]' />
         </>
       ) : (

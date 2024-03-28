@@ -3,11 +3,12 @@ import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { createDeployLiquidationPairTxToast, TransactionButton } from '@shared/react-components'
 import { PairCreateInfo } from '@shared/types'
+import { liquidationPairFactoryABI } from '@shared/utilities'
 import classNames from 'classnames'
 import { useSetAtom } from 'jotai'
 import { liquidationPairAddressAtom } from 'src/atoms'
 import { SupportedNetwork } from 'src/types'
-import { Address, isAddress } from 'viem'
+import { Address, decodeEventLog, isAddress } from 'viem'
 import { useLiquidationPairInfo } from '@hooks/useLiquidationPairInfo'
 
 interface DeployLiquidationPairButtonProps {
@@ -40,9 +41,14 @@ export const DeployLiquidationPairButton = (props: DeployLiquidationPairButtonPr
       createDeployLiquidationPairTxToast({ chainId, txHash, addRecentTransaction })
     },
     onSuccess: (txReceipt) => {
-      const liquidationPairAddress = txReceipt.logs[0].address
-      if (isAddress(liquidationPairAddress)) {
-        setLiquidationPairAddress(liquidationPairAddress)
+      const lpCreatedEvent = decodeEventLog({
+        abi: liquidationPairFactoryABI,
+        eventName: 'PairCreated',
+        data: txReceipt.logs[0].data,
+        topics: txReceipt.logs[0].topics
+      })
+      if (isAddress(lpCreatedEvent.args.pair)) {
+        setLiquidationPairAddress(lpCreatedEvent.args.pair)
       }
       onSuccess?.()
     }

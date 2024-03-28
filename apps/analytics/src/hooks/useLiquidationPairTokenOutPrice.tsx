@@ -9,7 +9,7 @@ import { useMemo } from 'react'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { useIsLiquidationPairTokenOutAVault } from './useIsLiquidationPairTokenOutAVault'
-import { useLiquidationPairTokenOutAddress } from './useLiquidationPairTokenOutAddress'
+import { useLiquidationPairTokenOutAddress } from './useLiquidationPairTokenOutAddresses'
 
 export const useLiquidationPairTokenOutPrice = (
   chainId: number,
@@ -20,10 +20,7 @@ export const useLiquidationPairTokenOutPrice = (
   const { data: tokenOutAddress, isFetched: isFetchedTokenOutAddress } =
     useLiquidationPairTokenOutAddress(chainId, lpAddress)
 
-  const { data: shareToken, isFetched: isFetchedShareToken } = useToken(
-    chainId,
-    tokenOutAddress as Address
-  )
+  const { data: token, isFetched: isFetchedToken } = useToken(chainId, tokenOutAddress as Address)
 
   const { data: isValidVault, isFetched: isFetchedIsValidVault } =
     useIsLiquidationPairTokenOutAVault(chainId, lpAddress)
@@ -40,14 +37,14 @@ export const useLiquidationPairTokenOutPrice = (
     !!tokenOutAddress ? [tokenOutAddress] : []
   )
 
-  const isFetched = isFetchedTokenOutAddress && isFetchedShareToken && isFetchedTokenPrices
+  const isFetched = isFetchedTokenOutAddress && isFetchedToken && isFetchedTokenPrices
 
-  if (!!shareToken) {
+  if (!!token) {
     if (!!shareTokenWithPrice?.price) {
       return { data: shareTokenWithPrice, isFetched }
     } else if (!!tokenPrices && !!tokenOutAddress) {
       return {
-        data: { ...shareToken, price: tokenPrices[tokenOutAddress.toLowerCase() as Address] },
+        data: { ...token, price: tokenPrices[tokenOutAddress.toLowerCase() as Address] },
         isFetched
       }
     }

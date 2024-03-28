@@ -21,9 +21,9 @@ export const useHistoricalLiquidationPairTokenOutPrices = (
   const { data: tokenOutAddresses, isFetched: isFetchedTokenOutAddresses } =
     useLiquidationPairTokenOutAddresses(chainId, lpAddresses)
 
-  const { data: shareTokens, isFetched: isFetchedShareTokens } = useTokens(
+  const { data: tokens, isFetched: isFetchedTokens } = useTokens(
     chainId,
-    !!tokenOutAddresses ? Object.values(tokenOutAddresses) : []
+    Object.values(tokenOutAddresses)
   )
 
   const { data: isValidVaults, isFetched: isFetchedIsValidVaults } =
@@ -31,12 +31,15 @@ export const useHistoricalLiquidationPairTokenOutPrices = (
 
   const vaults = useMemo(() => {
     const allValidVaultInfo: VaultInfo[] = []
+
     Object.entries(tokenOutAddresses).forEach(([lpAddress, tokenOutAddress]) => {
       const isValid = !!isValidVaults?.[lpAddress as Address]
+
       if (isValid) {
         allValidVaultInfo.push({ chainId, address: tokenOutAddress })
       }
     })
+
     return !!allValidVaultInfo.length && !!publicClient
       ? new Vaults(allValidVaultInfo, { [chainId]: publicClient })
       : undefined
@@ -48,6 +51,7 @@ export const useHistoricalLiquidationPairTokenOutPrices = (
   const nonVaultTokenAddresses = useMemo(() => {
     const vaultAddresses =
       vaults?.vaultAddresses?.[chainId]?.map((address) => address.toLowerCase()) ?? []
+
     return Object.values(tokenOutAddresses).filter(
       (address) => !vaultAddresses.includes(address.toLowerCase())
     )
@@ -58,7 +62,7 @@ export const useHistoricalLiquidationPairTokenOutPrices = (
 
   const isFetched =
     isFetchedTokenOutAddresses &&
-    isFetchedShareTokens &&
+    isFetchedTokens &&
     (vaults === undefined || isFetchedShareTokensWithPriceHistory) &&
     (nonVaultTokenAddresses.length === 0 || isFetchedHistoricalTokenPrices)
 
@@ -70,21 +74,21 @@ export const useHistoricalLiquidationPairTokenOutPrices = (
     if (!!tokenOutAddresses) {
       Object.entries(tokenOutAddresses).forEach(([lpAddress, tokenOutAddress]) => {
         const vaultId = getVaultId({ chainId, address: tokenOutAddress })
-        const shareToken = shareTokens?.[tokenOutAddress]
-
         const shareTokenPrices = shareTokensWithPriceHistory?.[vaultId]
+
+        const token = tokens?.[tokenOutAddress]
         const tokenPrices = historicalTokenPrices?.[tokenOutAddress.toLowerCase() as Address]
 
         if (!!shareTokenPrices?.priceHistory.length) {
           results[lpAddress as Address] = shareTokenPrices
-        } else if (!!shareToken && !!tokenPrices?.length) {
-          results[lpAddress as Address] = { ...shareToken, priceHistory: tokenPrices }
+        } else if (!!token && !!tokenPrices?.length) {
+          results[lpAddress as Address] = { ...token, priceHistory: tokenPrices }
         }
       })
     }
 
     return results
-  }, [chainId, tokenOutAddresses, shareTokens, shareTokensWithPriceHistory, historicalTokenPrices])
+  }, [chainId, tokenOutAddresses, tokens, shareTokensWithPriceHistory, historicalTokenPrices])
 
   return { data, isFetched }
 }

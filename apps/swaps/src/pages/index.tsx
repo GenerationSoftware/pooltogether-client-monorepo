@@ -1,5 +1,5 @@
 import { PrizePoolBadge } from '@shared/react-components'
-import { NETWORK } from '@shared/utilities'
+import { NETWORK, PRIZE_POOLS } from '@shared/utilities'
 import { Faq } from '@components/Faq'
 import { GrandPrize } from '@components/GrandPrize'
 import { Header } from '@components/Header'
@@ -10,13 +10,19 @@ import { VaultCards } from '@components/VaultCards'
 export default function HomePage() {
   const chainId = NETWORK.optimism
 
+  const isValidChainId = !!PRIZE_POOLS.find((prizePool) => prizePool.chainId === chainId)
+
   return (
     <Layout>
       <Header className='max-w-2xl' />
-      <PrizePoolBadge chainId={chainId} className='mt-8' />
-      <GrandPrize chainId={chainId} className='mt-6' />
-      <VaultCards chainId={chainId} className='mt-8' />
-      <RecentWinners chainId={chainId} className='mt-12' />
+      {isValidChainId && (
+        <>
+          <PrizePoolBadge chainId={chainId} className='mt-8' />
+          <GrandPrize chainId={chainId} className='mt-6' />
+          <VaultCards chainId={chainId} className='mt-8' />
+          <RecentWinners chainId={chainId} className='mt-12' />
+        </>
+      )}
       <Faq className='mt-12' />
     </Layout>
   )

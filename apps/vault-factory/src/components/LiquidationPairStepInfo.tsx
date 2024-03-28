@@ -4,8 +4,8 @@ import { allVaultStepInfo } from './CreateVaultStepInfo'
 import { StepInfo } from './StepInfo'
 
 const allLiquidationPairStepInfo: { title: string; info: ReactNode }[] = [
-  allVaultStepInfo[6],
-  allVaultStepInfo[7]
+  allVaultStepInfo[7],
+  allVaultStepInfo[8]
 ]
 
 interface LiquidationPairStepInfoProps {

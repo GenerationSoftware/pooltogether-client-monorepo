@@ -14,17 +14,12 @@ interface DrawTimerProps {
 export const DrawTimer = (props: DrawTimerProps) => {
   const { prizePool, drawId, className } = props
 
-  const { status, openedAt, closedAt, awardedAt, finalizedAt, isSkipped, isFetched } =
-    useDrawStatus(prizePool, drawId)
+  const { status, openedAt, closedAt, awardedAt, isSkipped, isFetched } = useDrawStatus(
+    prizePool,
+    drawId
+  )
 
-  const timestamp =
-    status === 'finalized'
-      ? finalizedAt
-      : status === 'awarded'
-      ? awardedAt
-      : status === 'closed'
-      ? closedAt
-      : openedAt
+  const timestamp = status === 'awarded' ? awardedAt : status === 'closed' ? closedAt : openedAt
 
   const { days, hours, minutes } = useCountup(timestamp ?? 0)
   const _hours = days * 24 + hours

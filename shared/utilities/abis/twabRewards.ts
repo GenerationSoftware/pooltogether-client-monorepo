@@ -1,5 +1,145 @@
 export const twabRewardsABI = [
   {
+    inputs: [{ internalType: 'contract TwabController', name: '_twabController', type: 'address' }],
+    stateMutability: 'nonpayable',
+    type: 'constructor'
+  },
+  {
+    inputs: [
+      { internalType: 'uint48', name: 'epochDuration', type: 'uint48' },
+      { internalType: 'uint32', name: 'twabPeriodLength', type: 'uint32' }
+    ],
+    name: 'EpochDurationNotMultipleOfTwabPeriod',
+    type: 'error'
+  },
+  {
+    inputs: [{ internalType: 'uint64', name: 'epochEndTimestamp', type: 'uint64' }],
+    name: 'EpochNotOver',
+    type: 'error'
+  },
+  {
+    inputs: [
+      { internalType: 'uint8', name: 'epochExtension', type: 'uint8' },
+      { internalType: 'uint8', name: 'currentEpochs', type: 'uint8' },
+      { internalType: 'uint8', name: 'maxEpochs', type: 'uint8' }
+    ],
+    name: 'ExceedsMaxEpochs',
+    type: 'error'
+  },
+  {
+    inputs: [{ internalType: 'uint256', name: 'gracePeriodEndTimestamp', type: 'uint256' }],
+    name: 'GracePeriodActive',
+    type: 'error'
+  },
+  {
+    inputs: [
+      { internalType: 'uint8', name: 'epochId', type: 'uint8' },
+      { internalType: 'uint8', name: 'numberOfEpochs', type: 'uint8' }
+    ],
+    name: 'InvalidEpochId',
+    type: 'error'
+  },
+  {
+    inputs: [{ internalType: 'uint256', name: 'promotionId', type: 'uint256' }],
+    name: 'InvalidPromotion',
+    type: 'error'
+  },
+  {
+    inputs: [
+      { internalType: 'address', name: 'sender', type: 'address' },
+      { internalType: 'address', name: 'creator', type: 'address' }
+    ],
+    name: 'OnlyPromotionCreator',
+    type: 'error'
+  },
+  { inputs: [], name: 'PayeeZeroAddress', type: 'error' },
+  {
+    inputs: [{ internalType: 'uint256', name: 'promotionId', type: 'uint256' }],
+    name: 'PromotionInactive',
+    type: 'error'
+  },
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'promotionId', type: 'uint256' },
+      { internalType: 'address', name: 'user', type: 'address' },
+      { internalType: 'uint8', name: 'epochId', type: 'uint8' }
+    ],
+    name: 'RewardsAlreadyClaimed',
+    type: 'error'
+  },
+  {
+    inputs: [{ internalType: 'uint64', name: 'startTimePeriodOffset', type: 'uint64' }],
+    name: 'StartTimeNotAlignedWithTwabPeriod',
+    type: 'error'
+  },
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'received', type: 'uint256' },
+      { internalType: 'uint256', name: 'expected', type: 'uint256' }
+    ],
+    name: 'TokensReceivedLessThanExpected',
+    type: 'error'
+  },
+  { inputs: [], name: 'TwabControllerZeroAddress', type: 'error' },
+  { inputs: [], name: 'ZeroEpochDuration', type: 'error' },
+  { inputs: [], name: 'ZeroEpochs', type: 'error' },
+  { inputs: [], name: 'ZeroTokensPerEpoch', type: 'error' },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'uint256', name: 'promotionId', type: 'uint256' },
+      { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
+      { indexed: true, internalType: 'contract IERC20', name: 'token', type: 'address' },
+      { indexed: false, internalType: 'uint64', name: 'startTimestamp', type: 'uint64' },
+      { indexed: false, internalType: 'uint256', name: 'tokensPerEpoch', type: 'uint256' },
+      { indexed: false, internalType: 'uint48', name: 'epochDuration', type: 'uint48' },
+      { indexed: false, internalType: 'uint8', name: 'initialNumberOfEpochs', type: 'uint8' }
+    ],
+    name: 'PromotionCreated',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'uint256', name: 'promotionId', type: 'uint256' },
+      { indexed: true, internalType: 'address', name: 'recipient', type: 'address' },
+      { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }
+    ],
+    name: 'PromotionDestroyed',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'uint256', name: 'promotionId', type: 'uint256' },
+      { indexed: true, internalType: 'address', name: 'recipient', type: 'address' },
+      { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' },
+      { indexed: false, internalType: 'uint8', name: 'epochNumber', type: 'uint8' }
+    ],
+    name: 'PromotionEnded',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'uint256', name: 'promotionId', type: 'uint256' },
+      { indexed: false, internalType: 'uint256', name: 'numberOfEpochs', type: 'uint256' }
+    ],
+    name: 'PromotionExtended',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'uint256', name: 'promotionId', type: 'uint256' },
+      { indexed: false, internalType: 'uint8[]', name: 'epochIds', type: 'uint8[]' },
+      { indexed: true, internalType: 'address', name: 'user', type: 'address' },
+      { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }
+    ],
+    name: 'RewardsClaimed',
+    type: 'event'
+  },
+  {
     inputs: [],
     name: 'GRACE_PERIOD',
     outputs: [{ internalType: 'uint32', name: '', type: 'uint32' }],
@@ -123,140 +263,5 @@ export const twabRewardsABI = [
     outputs: [{ internalType: 'contract TwabController', name: '', type: 'address' }],
     stateMutability: 'view',
     type: 'function'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'uint256', name: 'promotionId', type: 'uint256' },
-      { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
-      { indexed: true, internalType: 'contract IERC20', name: 'token', type: 'address' },
-      { indexed: false, internalType: 'uint64', name: 'startTimestamp', type: 'uint64' },
-      { indexed: false, internalType: 'uint256', name: 'tokensPerEpoch', type: 'uint256' },
-      { indexed: false, internalType: 'uint48', name: 'epochDuration', type: 'uint48' },
-      { indexed: false, internalType: 'uint8', name: 'initialNumberOfEpochs', type: 'uint8' }
-    ],
-    name: 'PromotionCreated',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'uint256', name: 'promotionId', type: 'uint256' },
-      { indexed: true, internalType: 'address', name: 'recipient', type: 'address' },
-      { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }
-    ],
-    name: 'PromotionDestroyed',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'uint256', name: 'promotionId', type: 'uint256' },
-      { indexed: true, internalType: 'address', name: 'recipient', type: 'address' },
-      { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' },
-      { indexed: false, internalType: 'uint8', name: 'epochNumber', type: 'uint8' }
-    ],
-    name: 'PromotionEnded',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'uint256', name: 'promotionId', type: 'uint256' },
-      { indexed: false, internalType: 'uint256', name: 'numberOfEpochs', type: 'uint256' }
-    ],
-    name: 'PromotionExtended',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: 'uint256', name: 'promotionId', type: 'uint256' },
-      { indexed: false, internalType: 'uint8[]', name: 'epochIds', type: 'uint8[]' },
-      { indexed: true, internalType: 'address', name: 'user', type: 'address' },
-      { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }
-    ],
-    name: 'RewardsClaimed',
-    type: 'event'
-  },
-  {
-    inputs: [
-      { internalType: 'uint48', name: 'epochDuration', type: 'uint48' },
-      { internalType: 'uint32', name: 'twabPeriodLength', type: 'uint32' }
-    ],
-    name: 'EpochDurationNotMultipleOfTwabPeriod',
-    type: 'error'
-  },
-  {
-    inputs: [{ internalType: 'uint64', name: 'epochEndTimestamp', type: 'uint64' }],
-    name: 'EpochNotOver',
-    type: 'error'
-  },
-  {
-    inputs: [
-      { internalType: 'uint8', name: 'epochExtension', type: 'uint8' },
-      { internalType: 'uint8', name: 'currentEpochs', type: 'uint8' },
-      { internalType: 'uint8', name: 'maxEpochs', type: 'uint8' }
-    ],
-    name: 'ExceedsMaxEpochs',
-    type: 'error'
-  },
-  {
-    inputs: [{ internalType: 'uint256', name: 'gracePeriodEndTimestamp', type: 'uint256' }],
-    name: 'GracePeriodActive',
-    type: 'error'
-  },
-  {
-    inputs: [
-      { internalType: 'uint8', name: 'epochId', type: 'uint8' },
-      { internalType: 'uint8', name: 'numberOfEpochs', type: 'uint8' }
-    ],
-    name: 'InvalidEpochId',
-    type: 'error'
-  },
-  {
-    inputs: [{ internalType: 'uint256', name: 'promotionId', type: 'uint256' }],
-    name: 'InvalidPromotion',
-    type: 'error'
-  },
-  {
-    inputs: [
-      { internalType: 'address', name: 'sender', type: 'address' },
-      { internalType: 'address', name: 'creator', type: 'address' }
-    ],
-    name: 'OnlyPromotionCreator',
-    type: 'error'
-  },
-  { inputs: [], name: 'PayeeZeroAddress', type: 'error' },
-  {
-    inputs: [{ internalType: 'uint256', name: 'promotionId', type: 'uint256' }],
-    name: 'PromotionInactive',
-    type: 'error'
-  },
-  {
-    inputs: [
-      { internalType: 'uint256', name: 'promotionId', type: 'uint256' },
-      { internalType: 'address', name: 'user', type: 'address' },
-      { internalType: 'uint8', name: 'epochId', type: 'uint8' }
-    ],
-    name: 'RewardsAlreadyClaimed',
-    type: 'error'
-  },
-  {
-    inputs: [{ internalType: 'uint64', name: 'startTimePeriodOffset', type: 'uint64' }],
-    name: 'StartTimeNotAlignedWithTwabPeriod',
-    type: 'error'
-  },
-  {
-    inputs: [
-      { internalType: 'uint256', name: 'received', type: 'uint256' },
-      { internalType: 'uint256', name: 'expected', type: 'uint256' }
-    ],
-    name: 'TokensReceivedLessThanExpected',
-    type: 'error'
-  },
-  { inputs: [], name: 'TwabControllerZeroAddress', type: 'error' },
-  { inputs: [], name: 'ZeroEpochDuration', type: 'error' },
-  { inputs: [], name: 'ZeroEpochs', type: 'error' },
-  { inputs: [], name: 'ZeroTokensPerEpoch', type: 'error' }
+  }
 ] as const

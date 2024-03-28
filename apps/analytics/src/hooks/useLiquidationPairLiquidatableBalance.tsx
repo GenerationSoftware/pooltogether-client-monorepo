@@ -3,7 +3,7 @@ import { liquidationPairABI, vaultABI } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
-import { useLiquidationPairTokenOutAddress } from './useLiquidationPairTokenOutAddress'
+import { useLiquidationPairTokenOutAddress } from './useLiquidationPairTokenOutAddresses'
 
 export const useLiquidationPairLiquidatableBalance = (chainId: number, lpAddress: Address) => {
   const publicClient = usePublicClient({ chainId })

@@ -8,7 +8,7 @@ import classNames from 'classnames'
 import { useAtom } from 'jotai'
 import { useEffect, useMemo } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
-import { Address, PublicClient } from 'viem'
+import { PublicClient } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { LiquidationsTable } from '@components/Liquidations/LiquidationsTable'
 import { QUERY_START_BLOCK } from '@constants/config'
@@ -26,16 +26,9 @@ export const LiquidationsView = (props: LiquidationsViewProps) => {
   const [currentTimestamp, setCurrentTimestamp] = useAtom(currentTimestampAtom)
 
   const prizePool = useMemo(() => {
-    const prizePoolInfo = PRIZE_POOLS.find((pool) => pool.chainId === chainId) as {
-      chainId: number
-      address: Address
-      options: {
-        prizeTokenAddress: Address
-        drawPeriodInSeconds: number
-        tierShares: number
-        reserveShares: number
-      }
-    }
+    const prizePoolInfo = PRIZE_POOLS.find(
+      (pool) => pool.chainId === chainId
+    ) as (typeof PRIZE_POOLS)[number]
 
     return new PrizePool(
       prizePoolInfo.chainId,

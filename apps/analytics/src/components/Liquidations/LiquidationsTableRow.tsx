@@ -5,7 +5,6 @@ import {
   useTxReceipts
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
-import { Token, TokenWithPrice } from '@shared/types'
 import { ExternalLink, Spinner } from '@shared/ui'
 import {
   DOLPHIN_ADDRESS,
@@ -18,6 +17,8 @@ import { ReactNode, useMemo } from 'react'
 import { getTxGasSpent } from 'src/utils'
 import { Address, formatEther, formatUnits } from 'viem'
 import { useLiquidationPairLiquidatableBalance } from '@hooks/useLiquidationPairLiquidatableBalance'
+import { useLiquidationPairTokenInData } from '@hooks/useLiquidationPairTokenInData'
+import { useLiquidationPairTokenInPrice } from '@hooks/useLiquidationPairTokenInPrice'
 import { useLiquidationPairTokenOutData } from '@hooks/useLiquidationPairTokenOutData'
 import { useLiquidationPairTokenOutPrice } from '@hooks/useLiquidationPairTokenOutPrice'
 import { liquidationHeaders } from './LiquidationsTable'
@@ -27,13 +28,12 @@ interface LiquidationsTableRowProps {
   prizePool: PrizePool
   lpAddress: Address
   liquidations: NonNullable<ReturnType<typeof useLiquidationEvents>['data']>
-  prizeToken: TokenWithPrice
   className?: string
   gridClassName?: string
 }
 
 export const LiquidationsTableRow = (props: LiquidationsTableRowProps) => {
-  const { prizePool, lpAddress, liquidations, prizeToken, className, gridClassName } = props
+  const { prizePool, lpAddress, liquidations, className, gridClassName } = props
 
   const lpLiquidations = liquidations.filter(
     (liq) => liq.args.liquidationPair.toLowerCase() === lpAddress.toLowerCase()
@@ -50,7 +50,6 @@ export const LiquidationsTableRow = (props: LiquidationsTableRowProps) => {
         <LiquidationPairLink
           chainId={prizePool.chainId}
           lpAddress={lpAddress}
-          prizeToken={prizeToken}
           className='w-full md:w-auto'
         />
         <YieldAuctioned
@@ -63,7 +62,6 @@ export const LiquidationsTableRow = (props: LiquidationsTableRowProps) => {
           chainId={prizePool.chainId}
           lpAddress={lpAddress}
           liquidations={lpLiquidations}
-          prizeToken={prizeToken}
           className='w-1/2 md:w-auto'
         />
         <CurrentAvailableYield
@@ -75,7 +73,6 @@ export const LiquidationsTableRow = (props: LiquidationsTableRowProps) => {
           chainId={prizePool.chainId}
           lpAddress={lpAddress}
           liquidations={lpLiquidations}
-          prizeToken={prizeToken}
           className='w-1/2 md:w-auto'
         />
       </div>
@@ -83,7 +80,6 @@ export const LiquidationsTableRow = (props: LiquidationsTableRowProps) => {
         prizePool={prizePool}
         lpAddress={lpAddress}
         liquidations={lpLiquidations}
-        prizeToken={prizeToken}
       />
     </div>
   )
@@ -92,16 +88,16 @@ export const LiquidationsTableRow = (props: LiquidationsTableRowProps) => {
 interface LiquidationPairLinkProps {
   chainId: number
   lpAddress: Address
-  prizeToken: Token
   className?: string
 }
 
 const LiquidationPairLink = (props: LiquidationPairLinkProps) => {
-  const { chainId, lpAddress, prizeToken, className } = props
+  const { chainId, lpAddress, className } = props
 
-  const { data: lpToken } = useLiquidationPairTokenOutData(chainId, lpAddress)
+  const { data: tokenIn } = useLiquidationPairTokenInData(chainId, lpAddress)
+  const { data: tokenOut } = useLiquidationPairTokenOutData(chainId, lpAddress)
 
-  if (!lpToken) {
+  if (!tokenIn || !tokenOut) {
     return <Spinner className='after:border-y-pt-purple-300' />
   }
 
@@ -111,7 +107,7 @@ const LiquidationPairLink = (props: LiquidationPairLinkProps) => {
       className={classNames('text-pt-purple-200 h-min text-xl font-semibold', className)}
       iconClassName='text-blue-300 hover:text-blue-200 transition'
     >
-      {lpToken.symbol ?? '?'}/{prizeToken.symbol}
+      {tokenOut.symbol ?? '?'}/{tokenIn.symbol}
     </ExternalLink>
   )
 }
@@ -126,9 +122,9 @@ interface YieldAuctionedProps {
 const YieldAuctioned = (props: YieldAuctionedProps) => {
   const { chainId, lpAddress, liquidations, className } = props
 
-  const { data: lpToken } = useLiquidationPairTokenOutData(chainId, lpAddress)
+  const { data: tokenOut } = useLiquidationPairTokenOutData(chainId, lpAddress)
 
-  if (!lpToken) {
+  if (!tokenOut) {
     return <Spinner className='after:border-y-pt-purple-300' />
   }
 
@@ -139,9 +135,9 @@ const YieldAuctioned = (props: YieldAuctionedProps) => {
       <span className='text-pt-purple-500 md:hidden'>{liquidationHeaders.auctioned}</span>
       <span className='text-pt-purple-200'>
         <span className='text-xl font-semibold'>
-          {formatBigIntForDisplay(totalYieldAuctioned, lpToken.decimals, { hideZeroes: true })}
+          {formatBigIntForDisplay(totalYieldAuctioned, tokenOut.decimals, { hideZeroes: true })}
         </span>{' '}
-        {lpToken.symbol}
+        {tokenOut.symbol}
       </span>
     </div>
   )
@@ -151,50 +147,50 @@ interface AvgLiquidationPriceProps {
   chainId: number
   lpAddress: Address
   liquidations: LiquidationsTableRowProps['liquidations']
-  prizeToken: Token
   className?: string
 }
 
 const AvgLiquidationPrice = (props: AvgLiquidationPriceProps) => {
-  const { chainId, lpAddress, liquidations, prizeToken, className } = props
+  const { chainId, lpAddress, liquidations, className } = props
 
-  const { data: lpToken } = useLiquidationPairTokenOutData(chainId, lpAddress)
+  const { data: tokenIn } = useLiquidationPairTokenInData(chainId, lpAddress)
+  const { data: tokenOut } = useLiquidationPairTokenOutData(chainId, lpAddress)
 
   const avgPrice = useMemo(() => {
-    if (!!lpToken) {
+    if (!!tokenIn && !!tokenOut) {
       if (!liquidations.length) return 0
       const avgAmountIn =
         parseFloat(
           formatUnits(
             liquidations.reduce((a, b) => a + b.args.amountIn, 0n),
-            prizeToken.decimals
+            tokenIn.decimals
           )
         ) / liquidations.length
       const avgAmountOut =
         parseFloat(
           formatUnits(
             liquidations.reduce((a, b) => a + b.args.amountOut, 0n),
-            lpToken.decimals
+            tokenOut.decimals
           )
         ) / liquidations.length
       return avgAmountIn / avgAmountOut
     }
-  }, [liquidations, lpToken])
+  }, [liquidations, tokenIn, tokenOut])
 
   return (
     <div className={classNames('flex flex-col gap-3 text-sm', className)}>
       <span className='text-pt-purple-500 md:hidden'>{liquidationHeaders.price}</span>
       <span className='whitespace-nowrap text-pt-purple-200'>
-        {!!lpToken && !!avgPrice ? (
+        {!!tokenIn && !!tokenOut && !!avgPrice ? (
           <>
-            <span className='text-xl font-semibold'>1</span> {lpToken.symbol} ={' '}
+            <span className='text-xl font-semibold'>1</span> {tokenOut.symbol} ={' '}
             <span className='text-xl font-semibold'>
               {formatNumberForDisplay(
                 avgPrice,
                 avgPrice > 100 ? { hideZeroes: true } : { maximumFractionDigits: 2 }
               )}
             </span>{' '}
-            {prizeToken.symbol}
+            {tokenIn.symbol}
           </>
         ) : (
           <Spinner className='after:border-y-pt-purple-200' />
@@ -215,9 +211,9 @@ const CurrentAvailableYield = (props: CurrentAvailableYieldProps) => {
 
   const { data: liquidatableBalance } = useLiquidationPairLiquidatableBalance(chainId, lpAddress)
 
-  const { data: lpToken } = useLiquidationPairTokenOutData(chainId, lpAddress)
+  const { data: tokenOut } = useLiquidationPairTokenOutData(chainId, lpAddress)
 
-  if (liquidatableBalance === undefined || !lpToken) {
+  if (liquidatableBalance === undefined || !tokenOut) {
     return <Spinner className='after:border-y-pt-purple-200' />
   }
 
@@ -226,9 +222,9 @@ const CurrentAvailableYield = (props: CurrentAvailableYieldProps) => {
       <span className='text-pt-purple-500 md:hidden'>{liquidationHeaders.available}</span>
       <span className='text-pt-purple-200'>
         <span className='text-xl font-semibold'>
-          {formatBigIntForDisplay(liquidatableBalance, lpToken.decimals, { hideZeroes: true })}
+          {formatBigIntForDisplay(liquidatableBalance, tokenOut.decimals, { hideZeroes: true })}
         </span>{' '}
-        {lpToken.symbol}
+        {tokenOut.symbol}
       </span>
     </div>
   )
@@ -244,14 +240,14 @@ interface AvgEfficiencyProps {
   chainId: number
   lpAddress: Address
   liquidations: LiquidationsTableRowProps['liquidations']
-  prizeToken: TokenWithPrice
   className?: string
 }
 
 const AvgEfficiency = (props: AvgEfficiencyProps) => {
-  const { chainId, lpAddress, liquidations, prizeToken, className } = props
+  const { chainId, lpAddress, liquidations, className } = props
 
-  const { data: lpToken } = useLiquidationPairTokenOutPrice(chainId, lpAddress)
+  const { data: tokenIn } = useLiquidationPairTokenInPrice(chainId, lpAddress)
+  const { data: tokenOut } = useLiquidationPairTokenOutPrice(chainId, lpAddress)
 
   const uniqueTxHashes = new Set(liquidations.map((liq) => liq.transactionHash))
   const { data: liquidationTxReceipts } = useTxReceipts(chainId, [...uniqueTxHashes])
@@ -260,14 +256,13 @@ const AvgEfficiency = (props: AvgEfficiencyProps) => {
   const nativeTokenPrice = nativeTokenPrices?.[DOLPHIN_ADDRESS]
 
   const efficiency = useMemo(() => {
-    if (!!prizeToken?.price && !!lpToken?.price && !!liquidationTxReceipts && !!nativeTokenPrice) {
+    if (!!tokenIn?.price && !!tokenOut?.price && !!liquidationTxReceipts && !!nativeTokenPrice) {
       const totalAmountIn = liquidations.reduce((a, b) => a + b.args.amountIn, 0n)
       const totalAmountOut = liquidations.reduce((a, b) => a + b.args.amountOut, 0n)
 
-      const totalValueIn =
-        parseFloat(formatUnits(totalAmountIn, prizeToken.decimals)) * prizeToken.price
+      const totalValueIn = parseFloat(formatUnits(totalAmountIn, tokenIn.decimals)) * tokenIn.price
       const totalValueOut =
-        parseFloat(formatUnits(totalAmountOut, lpToken.decimals)) * lpToken.price
+        parseFloat(formatUnits(totalAmountOut, tokenOut.decimals)) * tokenOut.price
 
       const totalGasSpent = liquidationTxReceipts.reduce((a, b) => a + getTxGasSpent(b), 0n)
       const totalGasValueSpent = parseFloat(formatEther(totalGasSpent)) * nativeTokenPrice
@@ -278,7 +273,7 @@ const AvgEfficiency = (props: AvgEfficiencyProps) => {
 
       return { prizes, gas, bots }
     }
-  }, [liquidations, prizeToken, lpToken, liquidationTxReceipts, nativeTokenPrice])
+  }, [liquidations, tokenIn, tokenOut, liquidationTxReceipts, nativeTokenPrice])
 
   if (!efficiency) {
     return <Spinner className='after:border-y-pt-purple-300' />

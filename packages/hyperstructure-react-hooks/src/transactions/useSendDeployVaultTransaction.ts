@@ -8,6 +8,7 @@ import {
   useWaitForTransactionReceipt,
   useWriteContract
 } from 'wagmi'
+import { useTokenAllowance } from '../tokens/useTokenAllowances'
 
 /**
  * Prepares and submits a `deployVault` transaction to the vault factory
@@ -31,11 +32,11 @@ export const useSendDeployVaultTransaction = (
   txReceipt?: TransactionReceipt
   sendDeployVaultTransaction?: () => void
 } => {
-  const { chain } = useAccount()
+  const { address: userAdddress, chain } = useAccount()
 
   const {
     chainId,
-    token,
+    tokenAddress,
     name,
     symbol,
     yieldSourceAddress,
@@ -43,7 +44,8 @@ export const useSendDeployVaultTransaction = (
     claimer,
     feeRecipient,
     feePercentage,
-    owner
+    owner,
+    yieldBuffer
   } = vaultDeployInfo
 
   const vaultFactoryAddress = !!chainId ? VAULT_FACTORY_ADDRESSES[chainId] : undefined
@@ -52,10 +54,16 @@ export const useSendDeployVaultTransaction = (
     console.warn(`No vault factory address found for chain ID ${chainId}.`)
   }
 
+  const { data: allowance, isFetched: isFetchedAllowance } = useTokenAllowance(
+    chainId,
+    userAdddress as Address,
+    vaultFactoryAddress as Address,
+    tokenAddress as Address
+  )
+
   const enabled =
     !!vaultDeployInfo &&
     !!chainId &&
-    !!token &&
     !!name &&
     !!symbol &&
     !!yieldSourceAddress &&
@@ -64,8 +72,12 @@ export const useSendDeployVaultTransaction = (
     !!feeRecipient &&
     feePercentage !== undefined &&
     !!owner &&
+    !!yieldBuffer &&
     !!vaultFactoryAddress &&
-    chain?.id === chainId
+    chain?.id === chainId &&
+    isFetchedAllowance &&
+    !!allowance &&
+    allowance >= yieldBuffer
 
   const { data } = useSimulateContract({
     chainId,
@@ -73,7 +85,6 @@ export const useSendDeployVaultTransaction = (
     abi: vaultFactoryABI,
     functionName: 'deployVault',
     args: [
-      token,
       name,
       symbol,
       yieldSourceAddress,

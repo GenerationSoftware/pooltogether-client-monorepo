@@ -56,7 +56,7 @@ export const AccountDepositsCard = (props: AccountDepositsCardProps) => {
         </div>
       </div>
       {!isExternalUser && (
-        <VaultButtons vault={vault} fullSized={true} className='w-full justify-center' />
+        <VaultButtons vault={vault} fullSized={true} className='w-full justify-end' />
       )}
     </div>
   )

@@ -3,16 +3,16 @@ import classNames from 'classnames'
 import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
 import { PurpleButton, PurpleButtonProps } from './PurpleButton'
 
-interface PrevButtonProps extends Omit<PurpleButtonProps, 'onClick' | 'outline' | 'children'> {}
+interface PrevButtonProps extends Omit<PurpleButtonProps, 'outline' | 'children'> {}
 
 export const PrevButton = (props: PrevButtonProps) => {
-  const { className, innerClassName, ...rest } = props
+  const { onClick, className, innerClassName, ...rest } = props
 
   const { prevStep } = useVaultCreationSteps()
 
   return (
     <PurpleButton
-      onClick={prevStep}
+      onClick={onClick ?? prevStep}
       outline={true}
       className={classNames('w-28', className)}
       innerClassName={classNames('flex gap-2 items-center', innerClassName)}

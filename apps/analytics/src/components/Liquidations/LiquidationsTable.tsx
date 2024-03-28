@@ -1,8 +1,5 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import {
-  useLiquidationEvents,
-  usePrizeTokenPrice
-} from '@generationsoftware/hyperstructure-react-hooks'
+import { useLiquidationEvents } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import { MAX_UINT_256, SECONDS_PER_HOUR } from '@shared/utilities'
 import classNames from 'classnames'
@@ -39,8 +36,6 @@ export const LiquidationsTable = (props: LiquidationsTableProps) => {
     { fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined }
   )
 
-  const { data: prizeToken } = usePrizeTokenPrice(prizePool)
-
   const validLiquidationEvents = useMemo(() => {
     return (
       liquidationEvents?.filter(
@@ -59,7 +54,7 @@ export const LiquidationsTable = (props: LiquidationsTableProps) => {
     return [...addresses]
   }, [validLiquidationEvents])
 
-  if (!isFetchedLiquidationEvents || !prizeToken) {
+  if (!isFetchedLiquidationEvents) {
     return <Spinner className='after:border-y-pt-purple-300' />
   }
 
@@ -92,7 +87,6 @@ export const LiquidationsTable = (props: LiquidationsTableProps) => {
           prizePool={prizePool}
           lpAddress={lpAddress}
           liquidations={validLiquidationEvents}
-          prizeToken={prizeToken}
           className='py-3 px-4'
           gridClassName={classNames('flex flex-wrap', gridClassName)}
         />

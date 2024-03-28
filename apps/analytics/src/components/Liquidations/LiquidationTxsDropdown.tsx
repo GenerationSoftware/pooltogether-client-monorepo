@@ -4,7 +4,6 @@ import {
   useTokenPrices,
   useTxReceipt
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { TokenWithPrice } from '@shared/types'
 import { Button, ExternalLink, Spinner } from '@shared/ui'
 import {
   DOLPHIN_ADDRESS,
@@ -16,18 +15,18 @@ import classNames from 'classnames'
 import { ReactNode, useState } from 'react'
 import { getTxGasSpent } from 'src/utils'
 import { Address, formatEther, formatUnits } from 'viem'
+import { useLiquidationPairTokenInPrice } from '@hooks/useLiquidationPairTokenInPrice'
 import { useLiquidationPairTokenOutPrice } from '@hooks/useLiquidationPairTokenOutPrice'
 
 interface LiquidationTxsDropdownProps {
   prizePool: PrizePool
   lpAddress: Address
   liquidations: NonNullable<ReturnType<typeof useLiquidationEvents>['data']>
-  prizeToken: TokenWithPrice
   className?: string
 }
 
 export const LiquidationTxsDropdown = (props: LiquidationTxsDropdownProps) => {
-  const { prizePool, lpAddress, liquidations, prizeToken, className } = props
+  const { prizePool, lpAddress, liquidations, className } = props
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -49,7 +48,6 @@ export const LiquidationTxsDropdown = (props: LiquidationTxsDropdownProps) => {
             chainId={prizePool.chainId}
             lpAddress={lpAddress}
             liquidation={liquidation}
-            prizeToken={prizeToken}
             key={`liqTx-${liquidation.transactionHash}-${liquidation.logIndex}`}
           />
         ))}
@@ -61,28 +59,28 @@ interface LiquidationTxProps {
   chainId: number
   lpAddress: Address
   liquidation: NonNullable<ReturnType<typeof useLiquidationEvents>['data']>[0]
-  prizeToken: TokenWithPrice
   className?: string
 }
 
 const LiquidationTx = (props: LiquidationTxProps) => {
-  const { chainId, lpAddress, liquidation, prizeToken, className } = props
+  const { chainId, lpAddress, liquidation, className } = props
 
-  const { data: lpToken } = useLiquidationPairTokenOutPrice(chainId, lpAddress)
+  const { data: tokenIn } = useLiquidationPairTokenInPrice(chainId, lpAddress)
+  const { data: tokenOut } = useLiquidationPairTokenOutPrice(chainId, lpAddress)
 
   const { data: txReceipt } = useTxReceipt(chainId, liquidation.transactionHash)
 
   const { data: tokenPrices } = useTokenPrices(chainId, [DOLPHIN_ADDRESS])
 
-  if (!lpToken || !txReceipt || !tokenPrices) {
+  if (!tokenIn || !tokenOut || !txReceipt || !tokenPrices) {
     return <Spinner className='after:border-y-pt-purple-300' />
   }
 
-  const tokenInAmount = parseFloat(formatUnits(liquidation.args.amountIn, prizeToken.decimals))
-  const tokenOutAmount = parseFloat(formatUnits(liquidation.args.amountOut, lpToken.decimals))
+  const tokenInAmount = parseFloat(formatUnits(liquidation.args.amountIn, tokenIn.decimals))
+  const tokenOutAmount = parseFloat(formatUnits(liquidation.args.amountOut, tokenOut.decimals))
 
-  const tokenInValue = !!prizeToken.price ? tokenInAmount * prizeToken.price : undefined
-  const tokenOutValue = !!lpToken.price ? tokenOutAmount * lpToken.price : undefined
+  const tokenInValue = !!tokenIn.price ? tokenInAmount * tokenIn.price : undefined
+  const tokenOutValue = !!tokenOut.price ? tokenOutAmount * tokenOut.price : undefined
   const gasValue = parseFloat(formatEther(getTxGasSpent(txReceipt))) * tokenPrices[DOLPHIN_ADDRESS]
   const profit =
     !!tokenInValue && !!tokenOutValue
@@ -115,11 +113,11 @@ const LiquidationTx = (props: LiquidationTxProps) => {
         </Highlight>{' '}
         liquidated{' '}
         <Highlight>
-          {formattedTokenOutAmount} {lpToken.symbol}
+          {formattedTokenOutAmount} {tokenOut.symbol}
         </Highlight>{' '}
         for{' '}
         <Highlight>
-          {formattedTokenInAmount} {prizeToken.symbol}
+          {formattedTokenInAmount} {tokenIn.symbol}
         </Highlight>{' '}
         {profit !== undefined && (
           <span>({formatNumberForDisplay(profit, { maximumFractionDigits: 1 })}% profit)</span>

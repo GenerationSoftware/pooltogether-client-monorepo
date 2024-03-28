@@ -14,8 +14,8 @@ import Link from 'next/link'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
+import { VaultButtons } from '@components/Vault/VaultButtons'
 import { AccountVaultBalance } from './AccountVaultBalance'
-import { AccountVaultButtons } from './AccountVaultButtons'
 import { AccountVaultOdds } from './AccountVaultOdds'
 
 interface AccountDepositsTableProps extends Omit<TableProps, 'data' | 'keyPrefix'> {
@@ -129,7 +129,7 @@ export const AccountDepositsTable = (props: AccountDepositsTableProps) => {
                 position: 'center'
               },
               manage: {
-                content: <AccountVaultButtons vault={vault} />,
+                content: <VaultButtons vault={vault} />,
                 position: 'right'
               }
             }

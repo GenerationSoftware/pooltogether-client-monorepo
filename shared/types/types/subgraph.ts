@@ -7,8 +7,8 @@ export interface SubgraphDraw {
     tier: number
     prizeIndex: number
     payout: bigint
-    fee: bigint
-    feeRecipient: `0x${string}`
+    claimReward: bigint
+    claimRewardRecipient: `0x${string}`
     timestamp: number
     txHash: `0x${string}`
   }[]
@@ -20,8 +20,8 @@ export interface SubgraphPrize {
   tier: number
   prizeIndex: number
   payout: bigint
-  fee: bigint
-  feeRecipient: `0x${string}`
+  claimReward: bigint
+  claimRewardRecipient: `0x${string}`
   timestamp: number
   txHash: `0x${string}`
 }

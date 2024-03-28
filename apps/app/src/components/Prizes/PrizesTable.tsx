@@ -27,7 +27,7 @@ export const PrizesTable = (props: PrizesTableProps) => {
       {isFetchedAllPrizeInfo && isFetchedTokenData && !!tokenData ? (
         <div className='flex flex-col w-full max-w-[36rem] gap-3'>
           {Object.values(allPrizeInfo)[0]
-            .slice(0, -1)
+            .slice(0, -2)
             .map((prize, i) => {
               const frequency = formatDailyCountToFrequency(prize.dailyFrequency)
 

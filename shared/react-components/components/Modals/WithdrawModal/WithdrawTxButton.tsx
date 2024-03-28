@@ -13,7 +13,7 @@ import { Intl } from '@shared/types'
 import { Button } from '@shared/ui'
 import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
-import { Address, formatUnits, parseUnits } from 'viem'
+import { Address, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { WithdrawModalView } from '.'
 import { isValidFormInput } from '../../Form/TxFormInput'
@@ -130,12 +130,6 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
     }
   }, [withdrawTxHash, isConfirmingWithdrawal])
 
-  const isAaveCollateralizationErrored =
-    vault.tags?.includes('aave') &&
-    !!vaultExchangeRate &&
-    vault.decimals !== undefined &&
-    parseFloat(formatUnits(vaultExchangeRate, vault.decimals)) !== 1
-
   const withdrawEnabled =
     !isDisconnected &&
     !!userAddress &&
@@ -145,8 +139,7 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
     isValidFormShareAmount &&
     !!withdrawAmount &&
     userVaultShareBalance.amount >= withdrawAmount &&
-    !!sendRedeemTransaction &&
-    !isAaveCollateralizationErrored
+    !!sendRedeemTransaction
 
   if (withdrawAmount === 0n) {
     return (

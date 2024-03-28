@@ -4,38 +4,38 @@ import classNames from 'classnames'
 
 interface BurnCardProps {
   name: string
-  lp: { total: number; change: number }
+  buyback: { total: number; change: number }
   manual: { total: number; change: number }
   other: { total: number; change: number }
-  prizeToken: Token
+  burnToken: Token
   className?: string
 }
 
 export const BurnCard = (props: BurnCardProps) => {
-  const { name, lp, manual, other, prizeToken, className } = props
+  const { name, buyback, manual, other, burnToken, className } = props
 
   return (
     <div
       className={classNames(
-        'w-72 flex flex-col gap-4 p-5 text-sm bg-blue-100 rounded-lg',
+        'w-80 flex flex-col gap-4 p-5 text-sm bg-blue-100 rounded-lg',
         className
       )}
     >
       <span className='font-bold'>{name}</span>
-      <BurnCardItem name='Prizes to LPs' total={lp.total} change={lp.change} token={prizeToken} />
       <BurnCardItem
-        name='Manual Burns'
-        total={manual.total}
-        change={manual.change}
-        token={prizeToken}
+        name='Buyback'
+        total={buyback.total}
+        change={buyback.change}
+        token={burnToken}
       />
-      <BurnCardItem name='Other' total={other.total} change={other.change} token={prizeToken} />
+      <BurnCardItem name='Manual' total={manual.total} change={manual.change} token={burnToken} />
+      <BurnCardItem name='Other' total={other.total} change={other.change} token={burnToken} />
       <hr className='w-full border-gray-400' />
       <BurnCardItem
         name='Total Burned'
-        total={lp.total + manual.total + other.total}
-        change={lp.change + manual.change + other.change}
-        token={prizeToken}
+        total={buyback.total + manual.total + other.total}
+        change={buyback.change + manual.change + other.change}
+        token={burnToken}
         alwaysShow={true}
         nameClassName='font-bold'
       />
@@ -57,8 +57,8 @@ interface BurnCardItemProps {
 const BurnCardItem = (props: BurnCardItemProps) => {
   const { name, total, change, token, alwaysShow, className, nameClassName, valueClassName } = props
 
-  const formattedTotal = formatNumberForDisplay(total, { maximumFractionDigits: 0 })
-  const formattedChange = formatNumberForDisplay(change, { maximumFractionDigits: 0 })
+  const formattedTotal = formatNumberForDisplay(total, { maximumFractionDigits: 2 })
+  const formattedChange = formatNumberForDisplay(change, { maximumFractionDigits: 2 })
 
   if (!!total || alwaysShow) {
     return (

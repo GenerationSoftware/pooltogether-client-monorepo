@@ -21,16 +21,12 @@ export const ReserveTooltip = (props: ReserveTooltipProps) => {
         <div className={classNames('max-w-[32ch] flex flex-col gap-2 text-start', className)}>
           <span>
             Current:{' '}
-            {formatBigIntForDisplay(reserve.current, token.decimals, {
-              maximumFractionDigits: 1
-            })}{' '}
+            {formatBigIntForDisplay(reserve.current, token.decimals, { maximumFractionDigits: 5 })}{' '}
             {token.symbol}
           </span>
           <span>
             Open Draw:{' '}
-            {formatBigIntForDisplay(reserve.pending, token.decimals, {
-              maximumFractionDigits: 1
-            })}{' '}
+            {formatBigIntForDisplay(reserve.pending, token.decimals, { maximumFractionDigits: 5 })}{' '}
             {token.symbol}
           </span>
         </div>

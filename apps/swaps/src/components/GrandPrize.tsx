@@ -5,7 +5,7 @@ import {
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { CurrencyValue } from '@shared/react-components'
 import { ExternalLink, LINKS, Spinner } from '@shared/ui'
-import { NETWORK, PRIZE_POOLS } from '@shared/utilities'
+import { PRIZE_POOLS } from '@shared/utilities'
 import classNames from 'classnames'
 import { formatUnits } from 'viem'
 
@@ -17,16 +17,9 @@ interface GrandPrizeProps {
 export const GrandPrize = (props: GrandPrizeProps) => {
   const { chainId, className } = props
 
-  const prizePoolInfo = PRIZE_POOLS.find((pool) => pool.chainId === chainId) as {
-    chainId: NETWORK
-    address: `0x${string}`
-    options: {
-      prizeTokenAddress: `0x${string}`
-      drawPeriodInSeconds: number
-      tierShares: number
-      reserveShares: number
-    }
-  }
+  const prizePoolInfo = PRIZE_POOLS.find(
+    (pool) => pool.chainId === chainId
+  ) as (typeof PRIZE_POOLS)[number]
   const prizePool = usePrizePool(chainId, prizePoolInfo.address, prizePoolInfo.options)
   const { data: grandPrize } = useGrandPrize(prizePool, { useCurrentPrizeSizes: true })
   const { data: prizeToken } = usePrizeTokenPrice(prizePool)

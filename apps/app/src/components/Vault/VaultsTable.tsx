@@ -210,7 +210,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
             position: 'center'
           },
           manage: {
-            content: <VaultButtons vault={vault} inverseOrder={true} hideDelegateButton={true} />,
+            content: <VaultButtons vault={vault} forceHide={['delegate']} />,
             position: 'right'
           }
         }

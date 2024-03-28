@@ -4,7 +4,7 @@ import {
   useVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
-import { NETWORK, PRIZE_POOLS } from '@shared/utilities'
+import { PRIZE_POOLS } from '@shared/utilities'
 import classNames from 'classnames'
 import { VAULT_ADDRESSES } from '@constants/config'
 import { VaultCard } from './VaultCard'
@@ -20,16 +20,9 @@ export const VaultCards = (props: VaultCardsProps) => {
   const vaultInfoArray = VAULT_ADDRESSES[chainId].map((address) => ({ chainId, address }))
   const vaults = useVaults(vaultInfoArray, { useAllChains: true })
 
-  const prizePoolInfo = PRIZE_POOLS.find((pool) => pool.chainId === chainId) as {
-    chainId: NETWORK
-    address: `0x${string}`
-    options: {
-      prizeTokenAddress: `0x${string}`
-      drawPeriodInSeconds: number
-      tierShares: number
-      reserveShares: number
-    }
-  }
+  const prizePoolInfo = PRIZE_POOLS.find(
+    (pool) => pool.chainId === chainId
+  ) as (typeof PRIZE_POOLS)[number]
   const prizePool = usePrizePool(chainId, prizePoolInfo.address, prizePoolInfo.options)
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 

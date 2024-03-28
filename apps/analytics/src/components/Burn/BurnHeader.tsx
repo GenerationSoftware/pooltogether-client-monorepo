@@ -1,25 +1,22 @@
 import { useTransferEvents } from '@generationsoftware/hyperstructure-react-hooks'
 import { Token } from '@shared/types'
 import { Spinner } from '@shared/ui'
-import { DEAD_ADDRESS, formatBigIntForDisplay } from '@shared/utilities'
+import { formatBigIntForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
-import { BURN_ADDRESSES, QUERY_START_BLOCK, VAULT_LPS } from '@constants/config'
+import { BURN_SETTINGS, QUERY_START_BLOCK } from '@constants/config'
 
 interface BurnHeaderProps {
-  prizeToken: Token
+  burnToken: Token
   className?: string
 }
 
 export const BurnHeader = (props: BurnHeaderProps) => {
-  const { prizeToken, className } = props
+  const { burnToken, className } = props
 
-  const lpAddresses = VAULT_LPS[prizeToken.chainId] ?? []
-  const miscBurnAddresses = BURN_ADDRESSES[prizeToken.chainId] ?? []
-
-  const { data: burnTxs } = useTransferEvents(prizeToken.chainId, prizeToken.address, {
-    to: [...lpAddresses, ...miscBurnAddresses, DEAD_ADDRESS],
-    fromBlock: QUERY_START_BLOCK[prizeToken.chainId]
+  const { data: burnTxs } = useTransferEvents(burnToken.chainId, burnToken.address, {
+    to: BURN_SETTINGS[burnToken.chainId].burnAddresses,
+    fromBlock: QUERY_START_BLOCK[burnToken.chainId]
   })
 
   const totalBurned = useMemo(() => {
@@ -28,17 +25,17 @@ export const BurnHeader = (props: BurnHeaderProps) => {
 
   return (
     <div className={classNames('flex flex-col items-center text-pt-purple-300', className)}>
-      <span>Total {prizeToken.symbol} Burned:</span>
+      <span>{burnToken.symbol} Burned:</span>
       <span className='flex gap-1 items-center text-pt-purple-100'>
         {totalBurned !== undefined ? (
           <>
             <span className='text-2xl'>🔥</span>
             <span className='text-4xl font-semibold'>
-              {formatBigIntForDisplay(totalBurned, prizeToken.decimals, {
+              {formatBigIntForDisplay(totalBurned, burnToken.decimals, {
                 hideZeroes: true
               })}
             </span>
-            <span>{prizeToken.symbol}</span>
+            <span>{burnToken.symbol}</span>
             <span className='text-2xl'>🔥</span>
           </>
         ) : (

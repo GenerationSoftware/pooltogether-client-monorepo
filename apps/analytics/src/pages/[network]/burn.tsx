@@ -1,16 +1,19 @@
-import { Spinner } from '@shared/ui'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 import { BurnView } from 'src/views/BurnView'
 import { Layout } from '@components/Layout'
 import { useSelectedChainId } from '@hooks/useSelectedChainId'
 
 export default function BurnPage() {
+  const router = useRouter()
+
   const { chainId, isReady } = useSelectedChainId()
 
-  return (
-    <Layout>
-      {!isReady && <Spinner />}
-      {/* TODO: show some error message if invalid chainId */}
-      {isReady && (!!chainId ? <BurnView chainId={chainId} /> : <></>)}
-    </Layout>
-  )
+  useEffect(() => {
+    if (isReady && !chainId) {
+      router.replace('/burn')
+    }
+  }, [chainId, isReady])
+
+  return <Layout>{!!chainId && <BurnView chainId={chainId} />}</Layout>
 }

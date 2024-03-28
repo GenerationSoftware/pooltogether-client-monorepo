@@ -39,7 +39,7 @@ export const ExternalLink = (props: ExternalLinkProps) => {
       {children}
       <ArrowTopRightOnSquareIcon
         className={classNames(
-          'text-inherit',
+          'text-inherit shrink-0',
           {
             'h-4 w-4': size === 'xs' || size === 'sm',
             'h-5 w-5': size === 'md' || !size,

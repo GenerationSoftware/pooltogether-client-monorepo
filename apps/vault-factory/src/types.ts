@@ -12,10 +12,13 @@ export type FormKey =
   | 'vaultName'
   | 'vaultSymbol'
   | 'vaultClaimer'
-  | 'initialExchangeRate'
-  | 'minimumAuctionAmount'
+  | 'targetAuctionPeriod'
+  | 'targetAuctionPrice'
+  | 'smoothingFactor'
   | 'deployedVaultChainId'
   | 'deployedVaultAddress'
   | 'lpAddress'
 
 export type VaultState = 'active' | 'invalid' | 'missingLiquidationPair' | 'missingClaimer'
+
+export type YieldSourceVaultTag = 'stablecoin' | 'lp' | 'lst'

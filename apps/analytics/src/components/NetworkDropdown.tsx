@@ -1,10 +1,10 @@
 import { NetworkBadge } from '@shared/react-components'
 import { Dropdown, DropdownItem, Spinner } from '@shared/ui'
-import { getNetworkNameByChainId, NETWORK, PRIZE_POOLS } from '@shared/utilities'
+import { getNetworkNameByChainId, NETWORK } from '@shared/utilities'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
-import { SUPPORTED_NETWORKS } from '@constants/config'
 import { useSelectedChainId } from '@hooks/useSelectedChainId'
+import { useValidNetworks } from '@hooks/useValidNetworks'
 
 export interface NetworkDropdownProps {
   className?: string
@@ -15,24 +15,14 @@ export const NetworkDropdown = (props: NetworkDropdownProps) => {
 
   const router = useRouter()
 
+  const validNetworks = useValidNetworks()
+
   const onChangeNetwork = (newNetwork: NETWORK) => {
     const currentPage = router.pathname.split('/')[2] ?? ''
     router.replace(
       `/${getNetworkNameByChainId(newNetwork)}${!!currentPage ? `/${currentPage}` : ''}`
     )
   }
-
-  const validNetworks = useMemo(() => {
-    const networks = new Set<NETWORK>()
-    const allSupportedNetworks = [...SUPPORTED_NETWORKS.mainnets, ...SUPPORTED_NETWORKS.testnets]
-
-    allSupportedNetworks.forEach((network) => {
-      const prizePool = PRIZE_POOLS.find((prizePool) => prizePool.chainId === network)
-      !!prizePool && networks.add(network)
-    })
-
-    return [...networks]
-  }, [])
 
   const dropdownItems: DropdownItem[] = useMemo(() => {
     return validNetworks.map((network) => ({

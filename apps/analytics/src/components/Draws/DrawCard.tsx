@@ -1,11 +1,11 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import classNames from 'classnames'
 import { useDrawStatus } from '@hooks/useDrawStatus'
+import { DrawAwardReward } from './DrawAwardReward'
 import { DrawClaimFees } from './DrawClaimFees'
 import { DrawLiqEfficiency } from './DrawLiqEfficiency'
 import { DrawPrizes } from './DrawPrizes'
-import { DrawRelayFee } from './DrawRelayFee'
-import { DrawRngFee } from './DrawRngFee'
+import { DrawRngReward } from './DrawRngReward'
 import { DrawStatus } from './DrawStatus'
 import { DrawTimer } from './DrawTimer'
 
@@ -51,8 +51,8 @@ export const DrawCard = (props: DrawCardProps) => {
       />
       <DrawClaimFees prizePool={prizePool} drawId={drawId} className='w-1/2 md:w-auto' />
       <DrawLiqEfficiency prizePool={prizePool} drawId={drawId} className='w-1/2 md:w-auto' />
-      <DrawRngFee prizePool={prizePool} drawId={drawId} className='w-1/2 md:w-auto' />
-      <DrawRelayFee prizePool={prizePool} drawId={drawId} className='w-1/2 md:w-auto' />
+      <DrawRngReward prizePool={prizePool} drawId={drawId} className='w-1/2 md:w-auto' />
+      <DrawAwardReward prizePool={prizePool} drawId={drawId} className='w-1/2 md:w-auto' />
     </div>
   )
 }

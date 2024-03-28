@@ -17,9 +17,9 @@ import { TokenBadge } from '@components/TokenBadge'
 import { OLD_V5_VAULTS, SUPPORTED_NETWORKS, V5_TAG } from '@constants/config'
 import { useUserV5Balances, V5BalanceToMigrate } from '@hooks/useUserV5Balances'
 import {
-  useAllUserV5ClaimableRewards,
-  useUserV5ClaimableRewards
-} from '@hooks/useUserV5ClaimableRewards'
+  useAllUserV5ClaimablePromotions,
+  useUserV5ClaimablePromotions
+} from '@hooks/useUserV5ClaimablePromotions'
 import { ClaimRewardsButton } from './ClaimRewardsButton'
 import { WithdrawButton } from './WithdrawButton'
 
@@ -33,7 +33,7 @@ export const V5MigrationsTable = (props: V5MigrationsTableProps) => {
   const { userAddress, showPooly, className } = props
 
   const { data: userV5Balances } = useUserV5Balances(userAddress)
-  const { data: userV5Rewards } = useAllUserV5ClaimableRewards(userAddress)
+  const { data: userV5Promotions } = useAllUserV5ClaimablePromotions(userAddress)
 
   const { isMobile } = useScreenSize()
 
@@ -67,11 +67,11 @@ export const V5MigrationsTable = (props: V5MigrationsTableProps) => {
       OLD_V5_VAULTS[network]?.forEach((_vault) => {
         const vaultInfo = _vault.vault
 
-        const foundVaultRewards = userV5Rewards.find(
+        const foundVaultPromotions = userV5Promotions.find(
           (e) => e.chainId === vaultInfo.chainId && e.vaultAddress === vaultInfo.address
         )
 
-        if (!!foundVaultRewards) {
+        if (!!foundVaultPromotions) {
           const foundVaultBalance = userV5Balances.find(
             (e) =>
               e.token.chainId === vaultInfo.chainId &&
@@ -114,7 +114,7 @@ export const V5MigrationsTable = (props: V5MigrationsTableProps) => {
     })
 
     return rows
-  }, [userV5Balances, userV5Rewards, userAddress])
+  }, [userV5Balances, userV5Promotions, userAddress])
 
   const tableData: TableData = {
     headers: {
@@ -145,7 +145,7 @@ export const V5MigrationsTable = (props: V5MigrationsTableProps) => {
 
           const vaultAddressesWithRewards = [
             ...new Set(
-              userV5Rewards
+              userV5Promotions
                 .filter((e) => e.chainId === network)
                 .map((e) => e.vaultAddress.toLowerCase() as Lowercase<Address>)
             )
@@ -279,7 +279,7 @@ const StatusItem = (props: StatusItemProps) => {
         return 'Beta Ended'
       } else if (tags.includes('replaced')) {
         return 'Better Vault Available'
-      } else if (tags.includes('old-prize-pool')) {
+      } else if (tags.includes('canary')) {
         return 'Old Prize Pool Deployment'
       }
     }
@@ -287,7 +287,7 @@ const StatusItem = (props: StatusItemProps) => {
     return 'Deprecated'
   }, [tags])
 
-  return <span className={classNames('text-pt-purple-100', className)}>{status}</span>
+  return <span className={classNames('text-center text-pt-purple-100', className)}>{status}</span>
 }
 
 interface RewardsItemProps {
@@ -299,7 +299,7 @@ interface RewardsItemProps {
 const RewardsItem = (props: RewardsItemProps) => {
   const { userAddress, migration, className } = props
 
-  const { data: claimable, isFetched: isFetchedClaimable } = useUserV5ClaimableRewards(
+  const { data: claimable, isFetched: isFetchedClaimable } = useUserV5ClaimablePromotions(
     migration.vaultInfo.chainId,
     migration.vaultInfo.address,
     userAddress
@@ -399,7 +399,7 @@ const ManageItem = (props: ManageItemProps) => {
   const { userAddress, migration, fullSized, className } = props
 
   const { refetch: refetchUserV5Balances } = useUserV5Balances(userAddress)
-  const { refetch: refetchUserV5ClaimableRewards } = useUserV5ClaimableRewards(
+  const { refetch: refetchUserV5ClaimablePromotions } = useUserV5ClaimablePromotions(
     migration.token.chainId,
     migration.vaultInfo.address,
     userAddress
@@ -420,7 +420,9 @@ const ManageItem = (props: ManageItemProps) => {
             className='md:min-w-[6rem]'
           />
           <Link href={migrationURL} passHref={true} className='w-full'>
-            <Button fullSized={fullSized}>Migrate</Button>
+            <Button fullSized={fullSized} className='w-full'>
+              Migrate
+            </Button>
           </Link>
         </>
       ) : (
@@ -428,7 +430,7 @@ const ManageItem = (props: ManageItemProps) => {
           chainId={migration.token.chainId}
           vaultAddress={migration.vaultInfo.address}
           userAddress={userAddress}
-          txOptions={{ onSuccess: () => refetchUserV5ClaimableRewards() }}
+          txOptions={{ onSuccess: () => refetchUserV5ClaimablePromotions() }}
           fullSized={fullSized}
           className='md:min-w-[6rem]'
         />

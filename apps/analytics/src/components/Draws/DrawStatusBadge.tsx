@@ -23,11 +23,11 @@ export const DrawStatusBadge = (props: DrawStatusBadgeProps) => {
       className={classNames(
         'w-full px-2 py-1 text-center text-xl rounded whitespace-nowrap',
         {
+          'bg-pt-warning-light text-pt-warning-dark': isSkipped,
           'bg-blue-100 text-blue-600': status === 'open',
           'bg-yellow-100 text-yellow-500': status === 'closed' && !isSkipped,
-          'bg-pt-warning-light text-pt-warning-dark': isSkipped,
           'bg-pt-purple-200 text-pt-purple-600': status === 'awarded',
-          'bg-green-100 text-green-600': status === 'finalized'
+          'bg-green-100 text-green-600': status === 'finalized' && !isSkipped
         },
         className
       )}

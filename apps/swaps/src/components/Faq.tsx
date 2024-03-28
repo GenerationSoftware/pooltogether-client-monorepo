@@ -29,8 +29,7 @@ export const Faq = (props: FaqProps) => {
         <span>
           The tokens displayed here are prize vaults built using the ERC-4626 standard, and have
           been <FaqLink href={LINKS.audits}>thoroughly audited</FaqLink>. Their underlying yield
-          source (<FaqLink href='https://aave.com'>Aave</FaqLink>) and ERC-4626 wrappers have also
-          undergone several audits.
+          sources and ERC-4626 wrappers have also had their respective audits.
         </span>
       )
     },

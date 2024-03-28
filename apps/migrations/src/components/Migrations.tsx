@@ -7,7 +7,7 @@ import { useUserV3Balances } from '@hooks/useUserV3Balances'
 import { useUserV4Balances } from '@hooks/useUserV4Balances'
 import { useAllUserV4ClaimableRewards } from '@hooks/useUserV4ClaimableRewards'
 import { useUserV5Balances } from '@hooks/useUserV5Balances'
-import { useAllUserV5ClaimableRewards } from '@hooks/useUserV5ClaimableRewards'
+import { useAllUserV5ClaimablePromotions } from '@hooks/useUserV5ClaimablePromotions'
 import { V3Migrations } from './V3/V3Migrations'
 import { V4Migrations } from './V4/V4Migrations'
 import { V5Migrations } from './V5/V5Migrations'
@@ -40,11 +40,11 @@ export const Migrations = (props: MigrationsProps) => {
   } = useUserV3Balances(userAddress)
 
   const {
-    data: userV5Rewards,
-    isFetched: isFetchedUserV5Rewards,
-    isFetching: isFetchingUserV5Rewards,
-    refetch: refetchUserV5Rewards
-  } = useAllUserV5ClaimableRewards(userAddress)
+    data: userV5Promotions,
+    isFetched: isFetchedUserV5Promotions,
+    isFetching: isFetchingUserV5Promotions,
+    refetch: refetchUserV5Promotions
+  } = useAllUserV5ClaimablePromotions(userAddress)
   const {
     data: userV4Rewards,
     isFetched: isFetchedUserV4Rewards,
@@ -56,21 +56,21 @@ export const Migrations = (props: MigrationsProps) => {
     isFetchedUserV5Balances &&
     isFetchedUserV4Balances &&
     isFetchedUserV3Balances &&
-    isFetchedUserV5Rewards &&
+    isFetchedUserV5Promotions &&
     isFetchedUserV4Rewards
   const isEmpty =
     isFetched &&
     !userV5Balances.length &&
     !userV4Balances.length &&
     !userV3Balances.length &&
-    !userV5Rewards.length &&
+    !userV5Promotions.length &&
     !userV4Rewards.length
 
   useEffect(() => {
     if (isFetchedUserV5Balances && !isFetchingUserV5Balances) refetchUserV5Balances()
     if (isFetchedUserV4Balances && !isFetchingUserV4Balances) refetchUserV4Balances()
     if (isFetchedUserV3Balances && !isFetchingUserV3Balances) refetchUserV3Balances()
-    if (isFetchedUserV5Rewards && !isFetchingUserV5Rewards) refetchUserV5Rewards()
+    if (isFetchedUserV5Promotions && !isFetchingUserV5Promotions) refetchUserV5Promotions()
     if (isFetchedUserV4Rewards && !isFetchingUserV4Rewards) refetchUserV4Rewards()
   }, [])
 
@@ -79,7 +79,7 @@ export const Migrations = (props: MigrationsProps) => {
       {!isFetched && <Spinner />}
       {isFetched && !isEmpty && (
         <>
-          {(!!userV5Balances.length || !!userV5Rewards.length) && (
+          {(!!userV5Balances.length || !!userV5Promotions.length) && (
             <V5Migrations userAddress={userAddress} showPooly={true} />
           )}
           {(!!userV4Balances.length || !!userV4Rewards.length) && (

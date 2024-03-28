@@ -6,13 +6,7 @@ import {
 import { CurrencyValue } from '@shared/react-components'
 import { SubgraphDraw, TokenWithPrice } from '@shared/types'
 import { ExternalLink, LINKS, Spinner } from '@shared/ui'
-import {
-  getSecondsSinceEpoch,
-  NETWORK,
-  PRIZE_POOLS,
-  SECONDS_PER_DAY,
-  shorten
-} from '@shared/utilities'
+import { getSecondsSinceEpoch, PRIZE_POOLS, SECONDS_PER_DAY, shorten } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import { formatUnits } from 'viem'
@@ -26,16 +20,9 @@ interface RecentWinnersProps {
 export const RecentWinners = (props: RecentWinnersProps) => {
   const { chainId, className } = props
 
-  const prizePoolInfo = PRIZE_POOLS.find((pool) => pool.chainId === chainId) as {
-    chainId: NETWORK
-    address: `0x${string}`
-    options: {
-      prizeTokenAddress: `0x${string}`
-      drawPeriodInSeconds: number
-      tierShares: number
-      reserveShares: number
-    }
-  }
+  const prizePoolInfo = PRIZE_POOLS.find(
+    (pool) => pool.chainId === chainId
+  ) as (typeof PRIZE_POOLS)[number]
   const prizePool = usePrizePool(chainId, prizePoolInfo.address, prizePoolInfo.options)
   const { data: winners } = usePrizeDrawWinners(prizePool)
   const { data: prizeToken } = usePrizeTokenPrice(prizePool)

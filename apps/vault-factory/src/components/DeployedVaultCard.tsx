@@ -14,9 +14,9 @@ import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
 import { zeroAddress } from 'viem'
 import { useAccount } from 'wagmi'
-import { useDeployedVaults } from '@hooks/useDeployedVaults'
 import { useDeployedVaultState } from '@hooks/useDeployedVaultState'
 import { useLiquidationPairSteps } from '@hooks/useLiquidationPairSteps'
+import { useUserDeployedVaults } from '@hooks/useUserDeployedVaults'
 
 interface DeployedVaultCardProps {
   vault: Vault
@@ -157,9 +157,9 @@ const VaultActionsItem = (props: ItemProps) => {
 
   const { setStep: setLpStep } = useLiquidationPairSteps()
 
-  const { removeVault } = useDeployedVaults()
+  const { removeVault } = useUserDeployedVaults()
 
-  const onClickDeployLp = () => {
+  const onClickSetLp = () => {
     setLpStep(0)
     router.push(`/lp/${vault.chainId}/${vault.address}`)
   }
@@ -183,7 +183,7 @@ const VaultActionsItem = (props: ItemProps) => {
   return (
     <div className='flex gap-1 items-center mt-3'>
       <ArrowPathRoundedSquareIcon
-        onClick={isVaultOwner ? onClickDeployLp : undefined}
+        onClick={isVaultOwner ? onClickSetLp : undefined}
         className={ownerOnlyIconClassName}
       />
       <WrenchIcon

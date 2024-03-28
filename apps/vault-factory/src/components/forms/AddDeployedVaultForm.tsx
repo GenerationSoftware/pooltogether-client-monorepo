@@ -7,7 +7,7 @@ import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form
 import { Address, isAddress } from 'viem'
 import { PurpleButton } from '@components/buttons/PurpleButton'
 import { SUPPORTED_NETWORKS } from '@constants/config'
-import { useDeployedVaults } from '@hooks/useDeployedVaults'
+import { useUserDeployedVaults } from '@hooks/useUserDeployedVaults'
 import { SimpleInput } from './SimpleInput'
 
 interface AddDeployedVaultFormValues {
@@ -26,7 +26,7 @@ export const AddDeployedVaultForm = (props: AddDeployedVaultFormProps) => {
 
   const formMethods = useForm<AddDeployedVaultFormValues>({ mode: 'onChange' })
 
-  const { addVault } = useDeployedVaults()
+  const { addVault } = useUserDeployedVaults()
 
   const onSubmit = (data: AddDeployedVaultFormValues) => {
     addVault({
