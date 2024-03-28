@@ -213,7 +213,7 @@ const VaultActionsItem = (props: ItemProps) => {
 
   const { removeVault } = useUserDeployedVaults()
 
-  const onClickDeployLp = () => {
+  const onClickSetLp = () => {
     setLpStep(0)
     router.push(`/lp/${vault.chainId}/${vault.address}`)
   }
@@ -236,9 +236,9 @@ const VaultActionsItem = (props: ItemProps) => {
 
   return (
     <div className='flex gap-1 items-center'>
-      <Tooltip content='Deploy LP'>
+      <Tooltip content='Set LP'>
         <ArrowPathRoundedSquareIcon
-          onClick={isVaultOwner ? onClickDeployLp : undefined}
+          onClick={isVaultOwner ? onClickSetLp : undefined}
           className={ownerOnlyIconClassName}
         />
       </Tooltip>

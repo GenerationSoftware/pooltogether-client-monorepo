@@ -8,6 +8,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { vaultAddressAtom, vaultChainIdAtom } from 'src/atoms'
 import { SupportedNetwork } from 'src/types'
 import { Address } from 'viem'
+import { BackButton } from '@components/buttons/BackButton'
 import { DeployLiquidationPairButton } from '@components/buttons/DeployLiquidationPairButton'
 import { NETWORK_CONFIG } from '@constants/config'
 import { useLiquidationPairSteps } from '@hooks/useLiquidationPairSteps'
@@ -73,12 +74,19 @@ export const DeployLiquidationPairForm = (props: DeployLiquidationPairFormProps)
           defaultPrice={defaultTargetAuctionPrice}
           className='w-full max-w-md'
         />
-        {/* TODO: add option to skip deploying an lp and just set one */}
-        <DeployLiquidationPairButton
-          chainId={chainId}
-          vaultAddress={vaultAddress}
-          onSuccess={nextStep}
-        />
+        <div className='flex flex-col gap-4 items-center'>
+          <div className='flex gap-2 items-center'>
+            <BackButton />
+            <DeployLiquidationPairButton
+              chainId={chainId}
+              vaultAddress={vaultAddress}
+              onSuccess={nextStep}
+            />
+          </div>
+          <button onClick={nextStep} className='text-pt-teal-dark underline'>
+            Use an existing liquidation pair contract
+          </button>
+        </div>
       </form>
     </FormProvider>
   )
