@@ -291,11 +291,25 @@ export class Vault {
 
     const tokenData = await this.getTokenData()
 
-    const totalAssets = await this.publicClient.readContract({
-      address: this.address,
-      abi: vaultABI,
-      functionName: 'totalAssets'
-    })
+    const getTotalAssets = () =>
+      this.publicClient
+        .readContract({
+          address: this.address,
+          abi: vaultABI,
+          functionName: 'totalPreciseAssets'
+        })
+        .catch(() => {
+          console.warn(
+            `${source} | Could not query "totalPreciseAssets" for ${this.address} on network ${this.chainId}, falling back to "totalAssets"`
+          )
+          return this.publicClient.readContract({
+            address: this.address,
+            abi: vaultABI,
+            functionName: 'totalAssets'
+          })
+        })
+
+    const totalAssets = await getTotalAssets()
 
     return { ...tokenData, amount: totalAssets }
   }

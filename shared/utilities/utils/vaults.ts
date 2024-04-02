@@ -194,12 +194,16 @@ export const getVaultBalances = async (
   if (filteredVaults.length > 0) {
     const vaultAddresses = filteredVaults.map((vault) => vault.address)
     const multicallResults = await getMulticallResults(publicClient, vaultAddresses, vaultABI, [
+      { functionName: 'totalPreciseAssets' },
       { functionName: 'totalAssets' }
     ])
 
     filteredVaults.forEach((vault) => {
       const vaultId = getVaultId(vault)
-      vaultBalances[vaultId] = multicallResults[vault.address]?.['totalAssets'] ?? 0n
+      vaultBalances[vaultId] =
+        multicallResults[vault.address]?.['totalPreciseAssets'] ??
+        multicallResults[vault.address]?.['totalAssets'] ??
+        0n
     })
   }
 
