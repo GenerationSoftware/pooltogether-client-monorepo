@@ -1,4 +1,4 @@
-import { Vault } from '@generationsoftware/hyperstructure-client-js'
+import { getAssetsFromShares, Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useSendRedeemTransaction,
   useTokenBalance,
@@ -94,6 +94,12 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
     ? parseUnits(formShareAmount, decimals as number)
     : 0n
 
+  // TODO: this should accept user input in case of lossy vaults
+  const expectedAssetAmount =
+    !!withdrawAmount && !!vaultExchangeRate
+      ? getAssetsFromShares(withdrawAmount, vaultExchangeRate, decimals as number)
+      : 0n
+
   const {
     isWaiting: isWaitingWithdrawal,
     isConfirming: isConfirmingWithdrawal,
@@ -101,6 +107,7 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
     txHash: withdrawTxHash,
     sendRedeemTransaction
   } = useSendRedeemTransaction(withdrawAmount, vault, {
+    minAssets: expectedAssetAmount,
     onSend: () => {
       setModalView('waiting')
     },

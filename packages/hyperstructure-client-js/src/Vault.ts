@@ -547,10 +547,10 @@ export class Vault {
   /**
    * Submits a transaction to withdraw from the vault
    * @param amount an unformatted token amount (w/ decimals)
-   * @param overrides optional overrides for this transaction
+   * @param options optional args or tx overrides
    * @returns
    */
-  async withdraw(amount: bigint, overrides?: TxOverrides) {
+  async withdraw(amount: bigint, options?: { maxShares?: bigint; overrides?: TxOverrides }) {
     const source = 'Vault [withdraw]'
 
     if (!this.walletClient?.account) {
@@ -562,9 +562,16 @@ export class Vault {
       address: this.address,
       abi: vaultABI,
       functionName: 'withdraw',
-      args: [amount, this.walletClient.account.address, this.walletClient.account.address],
+      args: !!options?.maxShares
+        ? [
+            amount,
+            this.walletClient.account.address,
+            this.walletClient.account.address,
+            options.maxShares
+          ]
+        : [amount, this.walletClient.account.address, this.walletClient.account.address],
       chain: this.walletClient.chain,
-      ...overrides
+      ...options?.overrides
     })
 
     const txHash = await this.walletClient.writeContract(request)
@@ -576,10 +583,14 @@ export class Vault {
    * Submits a transaction to withdraw from the vault and send underlying assets to another address
    * @param amount an unformatted token amount (w/ decimals)
    * @param receiver the address to send assets to
-   * @param overrides optional overrides for this transaction
+   * @param options optional args or tx overrides
    * @returns
    */
-  async withdrawTo(amount: bigint, receiver: Address, overrides?: TxOverrides) {
+  async withdrawTo(
+    amount: bigint,
+    receiver: Address,
+    options?: { maxShares?: bigint; overrides?: TxOverrides }
+  ) {
     const source = 'Vault [withdrawTo]'
 
     if (!this.walletClient?.account) {
@@ -593,9 +604,11 @@ export class Vault {
       address: this.address,
       abi: vaultABI,
       functionName: 'withdraw',
-      args: [amount, receiver, this.walletClient.account.address],
+      args: !!options?.maxShares
+        ? [amount, receiver, this.walletClient.account.address, options.maxShares]
+        : [amount, receiver, this.walletClient.account.address],
       chain: this.walletClient.chain,
-      ...overrides
+      ...options?.overrides
     })
 
     const txHash = await this.walletClient.writeContract(request)
@@ -606,10 +619,10 @@ export class Vault {
   /**
    * Submits a transaction to redeem shares from the vault
    * @param amount an unformatted share amount (w/ decimals)
-   * @param overrides optional overrides for this transaction
+   * @param options optional args or tx overrides
    * @returns
    */
-  async redeem(amount: bigint, overrides?: TxOverrides) {
+  async redeem(amount: bigint, options?: { minAssets?: bigint; overrides?: TxOverrides }) {
     const source = 'Vault [redeem]'
 
     if (!this.walletClient?.account) {
@@ -621,9 +634,16 @@ export class Vault {
       address: this.address,
       abi: vaultABI,
       functionName: 'redeem',
-      args: [amount, this.walletClient.account.address, this.walletClient.account.address],
+      args: !!options?.minAssets
+        ? [
+            amount,
+            this.walletClient.account.address,
+            this.walletClient.account.address,
+            options.minAssets
+          ]
+        : [amount, this.walletClient.account.address, this.walletClient.account.address],
       chain: this.walletClient.chain,
-      ...overrides
+      ...options?.overrides
     })
 
     const txHash = await this.walletClient.writeContract(request)
@@ -635,10 +655,14 @@ export class Vault {
    * Submits a transaction to redeem shares from the vault and send underlying assets to another address
    * @param amount an unformatted share amount (w/ decimals)
    * @param receiver the address to send assets to
-   * @param overrides optional overrides for this transaction
+   * @param options optional args or tx overrides
    * @returns
    */
-  async redeemTo(amount: bigint, receiver: Address, overrides?: TxOverrides) {
+  async redeemTo(
+    amount: bigint,
+    receiver: Address,
+    options?: { minAssets?: bigint; overrides?: TxOverrides }
+  ) {
     const source = 'Vault [redeemTo]'
 
     if (!this.walletClient?.account) {
@@ -652,9 +676,11 @@ export class Vault {
       address: this.address,
       abi: vaultABI,
       functionName: 'redeem',
-      args: [amount, receiver, this.walletClient.account.address],
+      args: !!options?.minAssets
+        ? [amount, receiver, this.walletClient.account.address, options.minAssets]
+        : [amount, receiver, this.walletClient.account.address],
       chain: this.walletClient.chain,
-      ...overrides
+      ...options?.overrides
     })
 
     const txHash = await this.walletClient.writeContract(request)
