@@ -3,6 +3,7 @@ import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hook
 import { ExternalLink, Spinner } from '@shared/ui'
 import { formatBigIntForDisplay, getBlockExplorerUrl, shorten } from '@shared/utilities'
 import classNames from 'classnames'
+import { useCurrentDrawAwardReward } from '@hooks/useCurrentDrawAwardReward'
 import { useCurrentRngAuctionReward } from '@hooks/useCurrentRngAuctionReward'
 import { useDrawStatus } from '@hooks/useDrawStatus'
 import { useRngTxs } from '@hooks/useRngTxs'
@@ -20,13 +21,17 @@ export const DrawRngReward = (props: DrawRngRewardProps) => {
   const { status, isSkipped } = useDrawStatus(prizePool, drawId)
 
   const { data: allRngTxs, isFetched: isFetchedAllRngTxs } = useRngTxs(prizePool)
-  const drawStartTx = allRngTxs?.find((txs) => txs.drawStart.drawId === drawId)?.drawStart
+  const rngTxs = allRngTxs?.find((txs) => txs.drawStart.drawId === drawId)
+  const drawStartTx = rngTxs?.drawStart
+  const drawFinishTx = rngTxs?.drawFinish
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
   const { data: currentRngAuctionReward } = useCurrentRngAuctionReward(prizePool)
+  const { data: currentDrawAwardReward } = useCurrentDrawAwardReward(prizePool)
 
   const isRngCompletionPossible = status === 'closed' && !!currentRngAuctionReward && !isSkipped
+  const isAwardPossible = status === 'closed' && !!currentDrawAwardReward && !isSkipped
 
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
@@ -37,7 +42,11 @@ export const DrawRngReward = (props: DrawRngRewardProps) => {
             <span>
               {!!drawStartTx ? (
                 <>
-                  <span className='text-xl font-semibold'>
+                  <span
+                    className={classNames('text-xl font-semibold', {
+                      'line-through': !drawFinishTx && !isAwardPossible
+                    })}
+                  >
                     {formatBigIntForDisplay(drawStartTx.reward, prizeToken.decimals, {
                       maximumFractionDigits: 5
                     })}
