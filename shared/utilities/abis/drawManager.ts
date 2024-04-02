@@ -64,12 +64,11 @@ export const drawManagerABI = [
   {
     anonymous: false,
     inputs: [
+      { indexed: true, internalType: 'address', name: 'sender', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'recipient', type: 'address' },
       { indexed: true, internalType: 'uint24', name: 'drawId', type: 'uint24' },
-      { indexed: false, internalType: 'uint256', name: 'elapsedTime', type: 'uint256' },
-      { indexed: true, internalType: 'address', name: 'startRecipient', type: 'address' },
-      { indexed: false, internalType: 'uint256', name: 'startReward', type: 'uint256' },
-      { indexed: true, internalType: 'address', name: 'finishRecipient', type: 'address' },
-      { indexed: false, internalType: 'uint256', name: 'finishReward', type: 'uint256' },
+      { indexed: false, internalType: 'uint48', name: 'elapsedTime', type: 'uint48' },
+      { indexed: false, internalType: 'uint256', name: 'reward', type: 'uint256' },
       { indexed: false, internalType: 'uint256', name: 'remainingReserve', type: 'uint256' }
     ],
     name: 'DrawFinished',
@@ -80,9 +79,10 @@ export const drawManagerABI = [
     inputs: [
       { indexed: true, internalType: 'address', name: 'sender', type: 'address' },
       { indexed: true, internalType: 'address', name: 'recipient', type: 'address' },
-      { indexed: false, internalType: 'uint24', name: 'drawId', type: 'uint24' },
-      { indexed: false, internalType: 'uint32', name: 'rngRequestId', type: 'uint32' },
-      { indexed: false, internalType: 'uint48', name: 'elapsedTime', type: 'uint48' }
+      { indexed: true, internalType: 'uint24', name: 'drawId', type: 'uint24' },
+      { indexed: false, internalType: 'uint48', name: 'elapsedTime', type: 'uint48' },
+      { indexed: false, internalType: 'uint256', name: 'reward', type: 'uint256' },
+      { indexed: false, internalType: 'uint32', name: 'rngRequestId', type: 'uint32' }
     ],
     name: 'DrawStarted',
     type: 'event'

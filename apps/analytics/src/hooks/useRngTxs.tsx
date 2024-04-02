@@ -11,7 +11,7 @@ import { QUERY_START_BLOCK } from '@constants/config'
 
 export interface DrawStartTx {
   drawId: number
-  reward?: bigint
+  reward: bigint
   rewardRecipient: Address
   elapsedTime: number
   hash: `0x${string}`
@@ -86,6 +86,7 @@ export const useRngTxs = (prizePool: PrizePool) => {
 
           const drawStart: DrawStartTx = {
             drawId,
+            reward: drawStartedEvent.args.reward,
             rewardRecipient: drawStartedEvent.args.recipient,
             elapsedTime: drawStartedEvent.args.elapsedTime,
             hash: drawStartedEvent.transactionHash,
@@ -107,19 +108,17 @@ export const useRngTxs = (prizePool: PrizePool) => {
 
               drawFinish = {
                 drawId,
-                reward: drawFinishedEvent.args.finishReward,
-                rewardRecipient: drawFinishedEvent.args.finishRecipient,
+                reward: drawFinishedEvent.args.reward,
+                rewardRecipient: drawFinishedEvent.args.recipient,
                 reserve: drawAwardedEvent.args.reserve,
                 remainingReserve: drawFinishedEvent.args.remainingReserve,
                 lastNumTiers: drawAwardedEvent.args.lastNumTiers,
                 numTiers: drawAwardedEvent.args.numTiers,
-                elapsedTime: Number(drawFinishedEvent.args.elapsedTime), // TODO: remove number cast once contract is fixed
+                elapsedTime: drawFinishedEvent.args.elapsedTime,
                 hash: drawAwardedEvent.transactionHash,
                 blockNumber: drawAwardedEvent.blockNumber,
                 timestamp: !!drawAwardedBlock ? Number(drawAwardedBlock.timestamp) : undefined
               }
-
-              drawStart.reward = drawFinishedEvent.args.startReward
             }
           }
 

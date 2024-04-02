@@ -31,7 +31,7 @@ export const useDrawStatus = (prizePool: PrizePool, drawId: number) => {
 
       const openedAt = firstDrawOpenedAt + drawPeriod * (drawId - 1)
       const closedAt = openedAt + drawPeriod
-      const rngCompletedAt = rngTxs?.drawStart.timestamp
+      const startedAt = rngTxs?.drawStart.timestamp
       const awardedAt = rngTxs?.drawFinish?.timestamp
       const finalizedAt = closedAt + drawPeriod
 
@@ -48,8 +48,8 @@ export const useDrawStatus = (prizePool: PrizePool, drawId: number) => {
         ? 'closed'
         : 'open'
 
-      const currentAuctionClosesAt = !!rngCompletedAt
-        ? rngCompletedAt + drawAuctionDuration
+      const currentAuctionClosesAt = !!startedAt
+        ? startedAt + drawAuctionDuration
         : closedAt + drawAuctionDuration
       const isSkipped =
         (status === 'finalized' && !isAwarded) ||

@@ -26,6 +26,16 @@ export const prizePoolABI = [
   },
   { inputs: [], name: 'AddToDrawZero', type: 'error' },
   {
+    inputs: [
+      { internalType: 'address', name: 'vault', type: 'address' },
+      { internalType: 'address', name: 'winner', type: 'address' },
+      { internalType: 'uint8', name: 'tier', type: 'uint8' },
+      { internalType: 'uint32', name: 'prizeIndex', type: 'uint32' }
+    ],
+    name: 'AlreadyClaimed',
+    type: 'error'
+  },
+  {
     inputs: [{ internalType: 'uint48', name: 'drawClosesAt', type: 'uint48' }],
     name: 'AwardingDrawNotClosed',
     type: 'error'
@@ -188,6 +198,16 @@ export const prizePoolABI = [
       { internalType: 'SD59x18', name: 'y', type: 'int256' }
     ],
     name: 'PRBMath_SD59x18_Mul_Overflow',
+    type: 'error'
+  },
+  {
+    inputs: [{ internalType: 'SD59x18', name: 'x', type: 'int256' }],
+    name: 'PRBMath_SD59x18_Sqrt_NegativeInput',
+    type: 'error'
+  },
+  {
+    inputs: [{ internalType: 'SD59x18', name: 'x', type: 'int256' }],
+    name: 'PRBMath_SD59x18_Sqrt_Overflow',
     type: 'error'
   },
   {
@@ -645,7 +665,7 @@ export const prizePoolABI = [
   {
     inputs: [],
     name: 'isShutdown',
-    outputs: [{ internalType: 'bool', name: 'shutdown', type: 'bool' }],
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
     stateMutability: 'view',
     type: 'function'
   },

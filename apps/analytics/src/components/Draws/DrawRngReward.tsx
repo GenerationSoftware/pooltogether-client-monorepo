@@ -26,9 +26,6 @@ export const DrawRngReward = (props: DrawRngRewardProps) => {
 
   const { data: currentRngAuctionReward } = useCurrentRngAuctionReward(prizePool)
 
-  // TODO: query expected reward from draw manager if drawStartTx?.reward === undefined using `drawStartTx.elapsedTime` (not possible with current contract deployment)
-  const expectedDrawStartReward: bigint | undefined = undefined
-
   const isRngCompletionPossible = status === 'closed' && !!currentRngAuctionReward && !isSkipped
 
   return (
@@ -40,35 +37,12 @@ export const DrawRngReward = (props: DrawRngRewardProps) => {
             <span>
               {!!drawStartTx ? (
                 <>
-                  {drawStartTx.reward !== undefined ? (
-                    <>
-                      <span className='text-xl font-semibold'>
-                        {formatBigIntForDisplay(drawStartTx.reward, prizeToken.decimals, {
-                          maximumFractionDigits: 5
-                        })}
-                      </span>{' '}
-                      {prizeToken.symbol}
-                    </>
-                  ) : (
-                    <>
-                      {expectedDrawStartReward !== undefined ? (
-                        <>
-                          <span
-                            className={classNames('text-xl font-semibold', {
-                              'line-through': !isRngCompletionPossible
-                            })}
-                          >
-                            {formatBigIntForDisplay(expectedDrawStartReward, prizeToken.decimals, {
-                              maximumFractionDigits: 5
-                            })}
-                          </span>{' '}
-                          {prizeToken.symbol}
-                        </>
-                      ) : (
-                        <Spinner className='after:border-y-pt-purple-300' />
-                      )}
-                    </>
-                  )}
+                  <span className='text-xl font-semibold'>
+                    {formatBigIntForDisplay(drawStartTx.reward, prizeToken.decimals, {
+                      maximumFractionDigits: 5
+                    })}
+                  </span>{' '}
+                  {prizeToken.symbol}
                 </>
               ) : isRngCompletionPossible ? (
                 <>

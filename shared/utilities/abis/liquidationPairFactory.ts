@@ -17,7 +17,7 @@ export const liquidationPairFactoryABI = [
       { indexed: true, internalType: 'address', name: 'tokenIn', type: 'address' },
       { indexed: true, internalType: 'address', name: 'tokenOut', type: 'address' },
       { indexed: false, internalType: 'uint256', name: 'targetAuctionPeriod', type: 'uint256' },
-      { indexed: false, internalType: 'uint192', name: 'minimumAuctionAmount', type: 'uint192' },
+      { indexed: false, internalType: 'uint192', name: 'targetAuctionPrice', type: 'uint192' },
       { indexed: false, internalType: 'uint256', name: 'smoothingFactor', type: 'uint256' }
     ],
     name: 'PairCreated',
@@ -36,7 +36,7 @@ export const liquidationPairFactoryABI = [
       { internalType: 'address', name: '_tokenIn', type: 'address' },
       { internalType: 'address', name: '_tokenOut', type: 'address' },
       { internalType: 'uint256', name: '_targetAuctionPeriod', type: 'uint256' },
-      { internalType: 'uint192', name: '_minimumAuctionAmount', type: 'uint192' },
+      { internalType: 'uint192', name: '_targetAuctionPrice', type: 'uint192' },
       { internalType: 'uint256', name: '_smoothingFactor', type: 'uint256' }
     ],
     name: 'createPair',

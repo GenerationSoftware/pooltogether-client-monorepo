@@ -5,12 +5,14 @@ export const liquidationPairABI = [
       { internalType: 'address', name: '__tokenIn', type: 'address' },
       { internalType: 'address', name: '__tokenOut', type: 'address' },
       { internalType: 'uint256', name: '_targetAuctionPeriod', type: 'uint256' },
-      { internalType: 'uint192', name: '_minimumAuctionAmount', type: 'uint192' },
+      { internalType: 'uint192', name: '_targetAuctionPrice', type: 'uint192' },
       { internalType: 'uint256', name: '_smoothingFactor', type: 'uint256' }
     ],
     stateMutability: 'nonpayable',
     type: 'constructor'
   },
+  { inputs: [], name: 'ReceiverIsZero', type: 'error' },
+  { inputs: [], name: 'SmoothingGteOne', type: 'error' },
   {
     inputs: [
       { internalType: 'uint256', name: 'amountInMax', type: 'uint256' },
@@ -18,6 +20,20 @@ export const liquidationPairABI = [
     ],
     name: 'SwapExceedsMax',
     type: 'error'
+  },
+  { inputs: [], name: 'ZeroAvailableBalance', type: 'error' },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'sender', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'receiver', type: 'address' },
+      { indexed: false, internalType: 'uint256', name: 'amountOut', type: 'uint256' },
+      { indexed: false, internalType: 'uint256', name: 'amountInMax', type: 'uint256' },
+      { indexed: false, internalType: 'uint256', name: 'amountIn', type: 'uint256' },
+      { indexed: false, internalType: 'bytes', name: 'flashSwapData', type: 'bytes' }
+    ],
+    name: 'SwappedExactAmountOut',
+    type: 'event'
   },
   {
     inputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
@@ -52,13 +68,6 @@ export const liquidationPairABI = [
     name: 'maxAmountOut',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'nonpayable',
-    type: 'function'
-  },
-  {
-    inputs: [],
-    name: 'minimumAuctionAmount',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-    stateMutability: 'view',
     type: 'function'
   },
   {

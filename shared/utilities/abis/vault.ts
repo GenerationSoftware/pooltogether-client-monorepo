@@ -41,6 +41,11 @@ export const vaultABI = [
   { inputs: [], name: 'ClaimRecipientZeroAddress', type: 'error' },
   { inputs: [], name: 'ClaimerZeroAddress', type: 'error' },
   { inputs: [], name: 'DepositZeroAssets', type: 'error' },
+  {
+    inputs: [{ internalType: 'address', name: 'asset', type: 'address' }],
+    name: 'FailedToGetAssetDecimals',
+    type: 'error'
+  },
   { inputs: [], name: 'InvalidShortString', type: 'error' },
   { inputs: [], name: 'LPZeroAddress', type: 'error' },
   { inputs: [], name: 'LiquidationAmountOutZero', type: 'error' },
@@ -73,6 +78,27 @@ export const vaultABI = [
     name: 'LossyDeposit',
     type: 'error'
   },
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'shares', type: 'uint256' },
+      { internalType: 'uint256', name: 'maxShares', type: 'uint256' }
+    ],
+    name: 'MaxSharesExceeded',
+    type: 'error'
+  },
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'assets', type: 'uint256' },
+      { internalType: 'uint256', name: 'minAssets', type: 'uint256' }
+    ],
+    name: 'MinAssetsNotReached',
+    type: 'error'
+  },
+  {
+    inputs: [{ internalType: 'uint256', name: 'excess', type: 'uint256' }],
+    name: 'MintLimitExceeded',
+    type: 'error'
+  },
   { inputs: [], name: 'MintZeroShares', type: 'error' },
   { inputs: [], name: 'OwnerZeroAddress', type: 'error' },
   {
@@ -97,7 +123,6 @@ export const vaultABI = [
     name: 'StringTooLong',
     type: 'error'
   },
-  { inputs: [], name: 'SweepZeroAssets', type: 'error' },
   { inputs: [], name: 'TwabControllerZeroAddress', type: 'error' },
   { inputs: [], name: 'WithdrawZeroAssets', type: 'error' },
   {
@@ -602,6 +627,18 @@ export const vaultABI = [
     inputs: [
       { internalType: 'uint256', name: '_shares', type: 'uint256' },
       { internalType: 'address', name: '_receiver', type: 'address' },
+      { internalType: 'address', name: '_owner', type: 'address' },
+      { internalType: 'uint256', name: '_minAssets', type: 'uint256' }
+    ],
+    name: 'redeem',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      { internalType: 'uint256', name: '_shares', type: 'uint256' },
+      { internalType: 'address', name: '_receiver', type: 'address' },
       { internalType: 'address', name: '_owner', type: 'address' }
     ],
     name: 'redeem',
@@ -699,6 +736,13 @@ export const vaultABI = [
   },
   {
     inputs: [],
+    name: 'totalPreciseAssets',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
     name: 'totalSupply',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
@@ -766,6 +810,18 @@ export const vaultABI = [
     ],
     name: 'verifyTokensIn',
     outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      { internalType: 'uint256', name: '_assets', type: 'uint256' },
+      { internalType: 'address', name: '_receiver', type: 'address' },
+      { internalType: 'address', name: '_owner', type: 'address' },
+      { internalType: 'uint256', name: '_maxShares', type: 'uint256' }
+    ],
+    name: 'withdraw',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'nonpayable',
     type: 'function'
   },

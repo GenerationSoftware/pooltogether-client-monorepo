@@ -58,10 +58,10 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   [NETWORK.optimism_sepolia]: {
     [POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia].toLowerCase()]: tokenLogoUrls.pool,
     [USDC_TOKEN_ADDRESSES[NETWORK.optimism_sepolia]]: tokenLogoUrls.usdc,
-    '0x8261cb9519dd1d80b5ce66b0887c6fceea8a64ee': tokenLogoUrls.dai,
-    '0x493c7081faab6e5b2d6b18d9311918580e88c6bf': tokenLogoUrls.gusd,
-    '0xd5c2a983d320a881f21dc68fd89f905ff1517b2c': tokenLogoUrls.weth,
-    '0x45bbc6b553d2afc4d3e376b22f70a67d9a26f819': tokenLogoUrls.wbtc
+    '0x3eb488d3419496742963437378c2130a2edcb87d': tokenLogoUrls.dai,
+    '0xf0f496dc0558e9744963292efff344725218b1f5': tokenLogoUrls.gusd,
+    '0x0845842ad2dce40b83eddecf9c67df2c75cab844': tokenLogoUrls.weth,
+    '0xc21d6c8dd430cc97aaa58391625b82f4681ae473': tokenLogoUrls.wbtc
   },
   [NETWORK.avalanche]: {
     '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f': tokenLogoUrls.wbtc

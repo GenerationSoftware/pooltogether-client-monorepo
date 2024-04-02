@@ -32,14 +32,14 @@ export const RPC_URLS = {
  * Queries' start blocks
  */
 export const QUERY_START_BLOCK: { [chainId: number]: bigint } = {
-  [NETWORK.optimism_sepolia]: 9_801_300n
+  [NETWORK.optimism_sepolia]: 9_930_300n
 }
 
 /**
  * Draw results URL
  */
 export const DRAW_RESULTS_URL: { [chainId: number]: string } = {
-  [NETWORK.optimism_sepolia]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-winners-testnet/main/winners/vaultAccounts/${NETWORK.optimism_sepolia}`
+  [NETWORK.optimism_sepolia]: `https://raw.githubusercontent.com/chuckbergeron/wins/main/winners/vaultAccounts/${NETWORK.optimism_sepolia}`
 }
 
 /**
@@ -66,7 +66,7 @@ export const BURN_SETTINGS: {
   },
   [NETWORK.optimism_sepolia]: {
     burnTokenAddress: POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia],
-    liquidationPairAddress: '0xd781b45644fb5b5d8c76a991da2365b8272e932d',
+    liquidationPairAddress: '0xe1b44a671e3410dc6f9ac1ef88bf7f87305349bf',
     burnAddresses: [DEAD_ADDRESS]
   }
 }

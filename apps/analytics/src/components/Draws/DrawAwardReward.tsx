@@ -20,8 +20,7 @@ export const DrawAwardReward = (props: DrawAwardRewardProps) => {
   const { status, isSkipped } = useDrawStatus(prizePool, drawId)
 
   const { data: allRngTxs, isFetched: isFetchedAllRngTxs } = useRngTxs(prizePool)
-  const rngTxs = allRngTxs?.find((txs) => txs.drawStart.drawId === drawId)
-  const drawFinishTx = rngTxs?.drawFinish
+  const drawFinishTx = allRngTxs?.find((txs) => txs.drawStart.drawId === drawId)?.drawFinish
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
