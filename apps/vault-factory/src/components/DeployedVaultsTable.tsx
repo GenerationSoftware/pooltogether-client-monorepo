@@ -80,7 +80,7 @@ export const DeployedVaultsTable = (props: DeployedVaultsTableProps) => {
     return (
       <div
         className={classNames(
-          'flex flex-col items-center p-6 bg-pt-transparent/20 rounded-3xl',
+          'flex flex-col items-center p-6 bg-pt-transparent/20 rounded-3xl lg:w-full',
           className
         )}
       >

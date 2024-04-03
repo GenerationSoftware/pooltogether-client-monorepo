@@ -41,6 +41,13 @@ export const NetworkForm = (props: NetworkFormProps) => {
         onSubmit={formMethods.handleSubmit(onSubmit)}
         className={classNames('flex flex-col grow gap-12 items-center', className)}
       >
+        {/* TODO: remove on full deployment */}
+        <div className='flex flex-col items-center px-6 py-3 bg-pt-warning-light rounded-3xl'>
+          <span className='text-center text-sm text-pt-warning-dark lg:text-base'>
+            In anticipation of a new prize pool deployment, this app only supports the most recent
+            testnet
+          </span>
+        </div>
         <div className='w-full flex flex-col gap-4 items-center'>
           <span className='text-sm font-medium text-pt-purple-100'>Select Network</span>
           <div className='w-full flex flex-wrap justify-center gap-x-6 gap-y-4'>
