@@ -14,7 +14,7 @@ This monorepo includes many of PoolTogether's apps and packages in order to faci
 
 Make sure you have [pnpm](https://pnpm.io/) installed, as it is the package manager used throughout this monorepo.
 
-`pnpm install`
+`pnpm i`
 
 ## 🏎️ &nbsp; Quickstart
 
