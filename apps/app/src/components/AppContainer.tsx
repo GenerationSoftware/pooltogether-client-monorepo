@@ -1,6 +1,6 @@
 import { useSelectedLanguage } from '@shared/generic-react-hooks'
 import { Flowbite, Toaster } from '@shared/ui'
-import { NextIntlProvider } from 'next-intl'
+import { NextIntlClientProvider } from 'next-intl'
 import { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -34,10 +34,10 @@ export const AppContainer = (props: AppProps) => {
   return (
     <Flowbite>
       <Toaster expand={false} />
-      <NextIntlProvider locale={router.locale} messages={pageProps.messages}>
+      <NextIntlClientProvider locale={router.locale} messages={pageProps.messages}>
         <div id='modal-root' />
         {isReady && <Component {...pageProps} />}
-      </NextIntlProvider>
+      </NextIntlClientProvider>
     </Flowbite>
   )
 }
