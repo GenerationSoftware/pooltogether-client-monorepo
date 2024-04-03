@@ -18,7 +18,8 @@ class MyDocument extends Document {
   render() {
     const title = 'Cabana App'
     const description = 'Browse, deposit into and withdraw from any number of PoolTogether vaults.'
-    const keywords = 'prize savings win save protocol blockchain vault vaultlist 4626 ethereum'
+    const keywords =
+      'pooltogether prize savings win save protocol blockchain vault vaultlist 4626 ethereum'
 
     return (
       <Html className='bg-pt-bg-purple-darker text-pt-purple-50 overflow-x-hidden dark'>

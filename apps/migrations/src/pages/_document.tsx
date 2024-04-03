@@ -19,7 +19,7 @@ class MyDocument extends Document {
     const title = 'PoolTogether Migrations'
     const description = 'Easily migrate funds in old versions of the PoolTogether protocol.'
     const keywords =
-      'prize savings win save protocol blockchain vault ethereum polygon avalanche celo v3 v4 v5'
+      'pooltogether prize savings win save protocol blockchain vault ethereum polygon avalanche celo v3 v4 v5'
 
     return (
       <Html className='bg-pt-bg-purple-darker text-pt-purple-50 overflow-x-hidden dark'>

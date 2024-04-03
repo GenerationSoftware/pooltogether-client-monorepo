@@ -19,7 +19,7 @@ class MyDocument extends Document {
     const title = 'Cabanalytics'
     const description = 'View analytics and health metrics for the PoolTogether Hyperstructure.'
     const keywords =
-      'prize savings win save protocol blockchain vault ethereum stats analytics draws liquidations bots'
+      'pooltogether prize savings win save protocol blockchain vault ethereum stats analytics draws liquidations bots'
 
     return (
       <Html className='bg-pt-bg-purple-darker text-pt-purple-50 overflow-x-hidden dark'>
