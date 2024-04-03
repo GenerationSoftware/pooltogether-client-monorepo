@@ -14,7 +14,7 @@ interface AccountPageProps {
 }
 
 export const getStaticProps: GetStaticProps<AccountPageProps> = async ({ locale }) => {
-  const messages = await getMessages(locale, { useDefault: true })
+  const messages = await getMessages(locale)
 
   return {
     props: { messages },
