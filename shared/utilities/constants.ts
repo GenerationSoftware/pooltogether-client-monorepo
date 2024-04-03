@@ -370,7 +370,6 @@ export const LINKS = {
   tally: `https://www.tally.xyz/gov/pooltogether`,
   treasury: `https://info.pooltogether.com/treasury`,
   dune_v4: `https://dune.com/sarfang/PoolTogetherV4`,
-  prizeCalc: `https://prizecalc.com`,
   grants: `https://poolgrants.org`,
   hey: `https://hey.xyz/u/pooltogether`,
   mirror: `https://pooltogether.mirror.xyz/`,
