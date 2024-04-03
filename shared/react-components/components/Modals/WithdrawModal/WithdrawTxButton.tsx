@@ -16,9 +16,9 @@ import { useEffect } from 'react'
 import { Address, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { WithdrawModalView } from '.'
+import { TransactionButton } from '../../Buttons/TransactionButton'
 import { isValidFormInput } from '../../Form/TxFormInput'
 import { withdrawFormShareAmountAtom } from '../../Form/WithdrawForm'
-import { TransactionButton } from '../../Transaction/TransactionButton'
 
 interface WithdrawTxButtonProps {
   vault: Vault

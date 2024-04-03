@@ -10,9 +10,9 @@ import { useEffect } from 'react'
 import { Address, isAddress } from 'viem'
 import { useAccount } from 'wagmi'
 import { DelegateModalView } from '.'
+import { TransactionButton } from '../../Buttons/TransactionButton'
 import { delegateFormNewDelegateAddressAtom } from '../../Form/DelegateForm'
 import { createDelegateTxToast, DelegateTxToastProps } from '../../Toasts/DelegateTxToast'
-import { TransactionButton } from '../../Transaction/TransactionButton'
 
 interface DelegateTxButtonProps {
   twabController: Address

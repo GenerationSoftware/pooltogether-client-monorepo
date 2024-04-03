@@ -16,10 +16,10 @@ import { useEffect } from 'react'
 import { Address, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { DepositModalView } from '.'
+import { TransactionButton } from '../../Buttons/TransactionButton'
 import { depositFormTokenAmountAtom } from '../../Form/DepositForm'
 import { isValidFormInput } from '../../Form/TxFormInput'
 import { ApprovalTooltip } from '../../Tooltips/ApprovalTooltip'
-import { TransactionButton } from '../../Transaction/TransactionButton'
 
 interface DepositTxButtonProps {
   vault: Vault
