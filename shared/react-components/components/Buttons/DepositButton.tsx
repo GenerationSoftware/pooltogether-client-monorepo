@@ -13,7 +13,7 @@ import { Address } from 'viem'
 import { BadPrecisionPerDollarTooltip } from '../Tooltips/BadPrecisionPerDollarTooltip'
 import { DeprecatedVaultTooltip } from '../Tooltips/DeprecatedVaultTooltip'
 
-interface DepositButtonProps extends Omit<ButtonProps, 'onClick' | 'children'> {
+export interface DepositButtonProps extends Omit<ButtonProps, 'onClick' | 'children'> {
   vault: Vault
   intl?: {
     base: Intl<'deposit'>

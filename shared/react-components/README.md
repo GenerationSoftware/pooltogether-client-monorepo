@@ -18,47 +18,41 @@ A React componponent library utilizing some simpler components from the internal
 
 ## 🐱‍👤 &nbsp; Available Components
 
-### Badge Components
+### Badges
 
 - `ImportedBadge`
 - `NetworkBadge`
 - `PrizePoolBadge`
 - `VaultBadge`
 
-### Button Components
+### Buttons
 
 - `DelegateButton`
 - `DepositButton`
 - `SocialShareButton`
+- `TransactionButton`
 - `WithdrawButton`
 
-### Currency Components
+### Currency
 
 - `CurrencyValue`
 - `TokenAmount`
 - `TokenValue`
 - `TokenValueAndAmount`
 
-### Modals
+### Forms
 
-- `DepositModal`
-- `CheckPrizesModal`
-- `DrawModal`
-- `SettingsModal`
-- `WithdrawModal`
-
-### Form Components
-
+- `DelegateForm`
 - `DepositForm`
-- `WithdrawForm`
 - `TxFormInput`
+- `WithdrawForm`
 
-### Graphic Components
+### Graphics
 
 - `ErrorPooly`
 - `SuccessPooly`
 
-### Icon Components
+### Icons
 
 - `AlertIcon`
 - `ClipboardListIcon`
@@ -67,25 +61,38 @@ A React componponent library utilizing some simpler components from the internal
 - `SuccessIcon`
 - `TokenIcon`
 
-### Prize Pool Components
+### Modals
+
+- `CaptchaModal`
+- `CheckPrizesModal`
+- `DelegateModal`
+- `DepositModal`
+- `DrawModal`
+- `SettingsModal`
+- `WithdrawModal`
+
+### Prize Pool
 
 - `PrizePoolCard`
 - `PrizePoolDropdown`
 
-### Toast Components
+### Toasts
 
+- `DelegateTxToast`
 - `DeployLiquidationPairTxToast`
 - `DeployVaultTxToast`
 - `DepositTxToast`
+- `SetClaimerTxToast`
 - `SetLiquidationPairTxToast`
 - `VaultListToast`
 - `WithdrawTxToast`
 
-### Tooltip Components
+### Tooltips
 
 - `ApprovalTooltip`
 - `BadPrecisionPerDollarTooltip`
 - `BonusRewardsTooltip`
+- `DelegationDescriptionTooltip`
 - `DeprecatedVaultTooltip`
 - `ImportedVaultTooltip`
 - `PrizeYieldTooltip`
@@ -93,7 +100,3 @@ A React componponent library utilizing some simpler components from the internal
 - `VaultFeeTooltip`
 - `WinChanceTooltip`
 - `YieldSourceURITooltip`
-
-### Transaction Components
-
-- `TransactionButton`
