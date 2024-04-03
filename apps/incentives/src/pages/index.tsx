@@ -1,4 +1,5 @@
-import { Button, ExternalLink, LINKS } from '@shared/ui'
+import { Button, ExternalLink } from '@shared/ui'
+import { LINKS } from '@shared/utilities'
 import classNames from 'classnames'
 import Image from 'next/image'
 import Link from 'next/link'

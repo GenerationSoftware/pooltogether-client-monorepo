@@ -1,6 +1,7 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { useScreenSize } from '@shared/generic-react-hooks'
-import { LINKS, Toaster } from '@shared/ui'
+import { Toaster } from '@shared/ui'
+import { LINKS } from '@shared/utilities'
 import classNames from 'classnames'
 import Head from 'next/head'
 import Image from 'next/image'

@@ -1,4 +1,4 @@
-import { DOMAINS } from '@shared/ui'
+import { DOMAINS } from '@shared/utilities'
 import * as fathom from 'fathom-client'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'

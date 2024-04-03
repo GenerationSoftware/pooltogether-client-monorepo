@@ -21,8 +21,8 @@ import {
   SettingsModal,
   WithdrawModal
 } from '@shared/react-components'
-import { Footer, FooterItem, LINKS, Navbar, SocialIcon, toast } from '@shared/ui'
-import { getDiscordInvite, NETWORK } from '@shared/utilities'
+import { Footer, FooterItem, Navbar, SocialIcon, toast } from '@shared/ui'
+import { getDiscordInvite, LINKS, NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
 import * as fathom from 'fathom-client'
 import { useAtomValue } from 'jotai'

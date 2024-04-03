@@ -1,4 +1,5 @@
-import { Button, ButtonProps, LINKS, SocialIcon } from '@shared/ui'
+import { Button, ButtonProps, SocialIcon } from '@shared/ui'
+import { LINKS } from '@shared/utilities'
 
 interface SocialShareButtonProps extends Omit<ButtonProps, 'onClick' | 'href' | 'target'> {
   platform: 'twitter' | 'warpcast' | 'hey'

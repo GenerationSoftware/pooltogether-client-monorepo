@@ -1,4 +1,5 @@
-import { Button, LINKS } from '@shared/ui'
+import { Button } from '@shared/ui'
+import { LINKS } from '@shared/utilities'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'

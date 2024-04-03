@@ -1,4 +1,4 @@
-import { LINKS } from '@shared/ui'
+import { LINKS } from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
 

@@ -1,4 +1,5 @@
-import { Accordion, LINKS } from '@shared/ui'
+import { Accordion } from '@shared/ui'
+import { LINKS } from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { ReactNode } from 'react'

@@ -1,4 +1,4 @@
-import { DOMAINS } from '@shared/ui'
+import { DOMAINS } from '@shared/utilities'
 import Document, {
   DocumentContext,
   DocumentInitialProps,

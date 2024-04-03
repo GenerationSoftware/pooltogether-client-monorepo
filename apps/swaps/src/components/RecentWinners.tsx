@@ -5,8 +5,14 @@ import {
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { CurrencyValue } from '@shared/react-components'
 import { SubgraphDraw, TokenWithPrice } from '@shared/types'
-import { ExternalLink, LINKS, Spinner } from '@shared/ui'
-import { getSecondsSinceEpoch, PRIZE_POOLS, SECONDS_PER_DAY, shorten } from '@shared/utilities'
+import { ExternalLink, Spinner } from '@shared/ui'
+import {
+  getSecondsSinceEpoch,
+  LINKS,
+  PRIZE_POOLS,
+  SECONDS_PER_DAY,
+  shorten
+} from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import { formatUnits } from 'viem'

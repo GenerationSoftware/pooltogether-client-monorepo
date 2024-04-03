@@ -5,7 +5,8 @@ import {
   useSelectedLanguage
 } from '@shared/generic-react-hooks'
 import { Intl } from '@shared/types'
-import { BasicIcon, LINKS } from '@shared/ui'
+import { BasicIcon } from '@shared/ui'
+import { LINKS } from '@shared/utilities'
 import classNames from 'classnames'
 import { ReactNode } from 'react'
 import { SettingsModalOption, SettingsModalView } from '..'

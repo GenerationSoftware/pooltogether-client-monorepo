@@ -1,4 +1,4 @@
-import { LINKS } from '@shared/ui'
+import { LINKS } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { ReactNode, useEffect, useMemo } from 'react'
 import { isUsingCustomYieldSourceAtom } from 'src/atoms'

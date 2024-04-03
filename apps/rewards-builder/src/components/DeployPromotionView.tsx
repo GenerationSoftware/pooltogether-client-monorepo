@@ -1,4 +1,4 @@
-import { LINKS } from '@shared/ui'
+import { LINKS } from '@shared/utilities'
 import classNames from 'classnames'
 import { useRouter } from 'next/router'
 import { DeployPromotionButton } from './buttons/DeployPromotionButton'

@@ -1,7 +1,7 @@
+import { LINKS } from '@shared/utilities'
 import classNames from 'classnames'
 import { Footer as FlowbiteFooter, FooterProps as FlowbiteFooterProps } from 'flowbite-react'
 import { ReactNode } from 'react'
-import { LINKS } from '../constants'
 
 export interface FooterItem {
   title: string

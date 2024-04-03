@@ -30,8 +30,3 @@ export * from './components/Tabs'
 export * from './components/Toaster'
 export * from './components/Toggle'
 export * from './components/Tooltip'
-
-/**
- * Constants
- */
-export * from './constants'

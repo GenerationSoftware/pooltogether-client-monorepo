@@ -4,8 +4,8 @@ import {
   usePrizeTokenPrice
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { CurrencyValue } from '@shared/react-components'
-import { ExternalLink, LINKS, Spinner } from '@shared/ui'
-import { PRIZE_POOLS } from '@shared/utilities'
+import { ExternalLink, Spinner } from '@shared/ui'
+import { LINKS, PRIZE_POOLS } from '@shared/utilities'
 import classNames from 'classnames'
 import { formatUnits } from 'viem'
 

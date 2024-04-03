@@ -1,7 +1,8 @@
 import { XMarkIcon } from '@heroicons/react/24/solid'
 import { useIsDismissed } from '@shared/generic-react-hooks'
 import { AlertIcon } from '@shared/react-components'
-import { Button, ExternalLink, LINKS } from '@shared/ui'
+import { Button, ExternalLink } from '@shared/ui'
+import { LINKS } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 

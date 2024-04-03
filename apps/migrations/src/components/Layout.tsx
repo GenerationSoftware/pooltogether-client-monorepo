@@ -1,6 +1,7 @@
 import { ArrowUturnLeftIcon } from '@heroicons/react/24/outline'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
-import { LINKS, Toaster } from '@shared/ui'
+import { Toaster } from '@shared/ui'
+import { LINKS } from '@shared/utilities'
 import classNames from 'classnames'
 import { Footer as FlowbiteFooter } from 'flowbite-react'
 import Head from 'next/head'

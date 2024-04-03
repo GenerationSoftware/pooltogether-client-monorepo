@@ -1,6 +1,5 @@
 import { VaultList } from '@shared/types'
-import { LINKS } from '@shared/ui'
-import { NETWORK } from '@shared/utilities'
+import { LINKS, NETWORK } from '@shared/utilities'
 import { testnetVaults } from './testnet'
 
 const defaultVaultList: VaultList = {

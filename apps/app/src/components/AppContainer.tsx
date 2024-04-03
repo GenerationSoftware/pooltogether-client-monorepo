@@ -1,6 +1,5 @@
 import { useSelectedLanguage } from '@shared/generic-react-hooks'
-import { Flowbite } from '@shared/ui'
-import { Toaster } from '@shared/ui'
+import { Flowbite, Toaster } from '@shared/ui'
 import { NextIntlProvider } from 'next-intl'
 import { AppProps } from 'next/app'
 import { useRouter } from 'next/router'

@@ -1,4 +1,5 @@
-import { LINKS, Logo } from '@shared/ui'
+import { Logo } from '@shared/ui'
+import { LINKS } from '@shared/utilities'
 import classNames from 'classnames'
 import Image from 'next/image'
 import Link from 'next/link'
