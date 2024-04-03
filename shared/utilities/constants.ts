@@ -31,17 +31,20 @@ export const POOL_TOKEN_ADDRESSES = {
   [NETWORK.mainnet]: '0x0cEC1A9154Ff802e7934Fc916Ed7Ca50bDE6844e',
   [NETWORK.polygon]: '0x25788a1a171ec66Da6502f9975a15B609fF54CF6',
   [NETWORK.optimism]: '0x395ae52bb17aef68c2888d941736a71dc6d4e125',
+  [NETWORK.arbitrum]: '0xCF934E2402A5e072928a39a956964eb8F2B5B79C',
+  [NETWORK.base]: '0xd652C5425aea2Afd5fb142e120FeCf79e18fafc3',
   [NETWORK.optimism_sepolia]: '0xBC8c3b5234c81c97304a33A78707430622c51935'
-} as const
+} as const satisfies { [chainId: number]: Address }
 
 /**
  * USDC token addresses
  */
 export const USDC_TOKEN_ADDRESSES: { [chainId: number]: Lowercase<Address> } = {
   [NETWORK.mainnet]: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-  [NETWORK.polygon]: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-  [NETWORK.optimism]: '0x7f5c764cbc14f9669b88837ca1490cca17c31607',
-  [NETWORK.arbitrum]: '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8',
+  [NETWORK.polygon]: '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359',
+  [NETWORK.optimism]: '0x0b2c639c533813f4aa9d7837caf62653d097ff85',
+  [NETWORK.arbitrum]: '0xaf88d065e77c8cc2239327c5edb3a432268e5831',
+  [NETWORK.base]: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
   [NETWORK.optimism_sepolia]: '0x01ce79e045539f560afa57943db6cff3fb097c4b'
 }
 
@@ -199,7 +202,7 @@ export const OP_GAS_ORACLE_ADDRESS = '0x420000000000000000000000000000000000000f
 export const SUBGRAPH_API_URLS = {
   [NETWORK.optimism_sepolia]:
     'https://api.studio.thegraph.com/query/63100/pt-v5-op-sepolia-hid/version/latest'
-} as const
+} as const satisfies { [chainId: number]: `https://${string}` }
 
 /**
  * Token Prices API URL
