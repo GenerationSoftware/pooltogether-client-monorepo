@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import { DefaultFrame } from './Frames/DefaultFrame'
 
 export const AppContainer = (props: AppProps) => {
   const { Component, pageProps } = props
@@ -32,12 +33,15 @@ export const AppContainer = (props: AppProps) => {
   }, [])
 
   return (
-    <Flowbite>
-      <Toaster expand={false} />
-      <NextIntlClientProvider locale={router.locale} messages={pageProps.messages}>
-        <div id='modal-root' />
-        {isReady && <Component {...pageProps} />}
-      </NextIntlClientProvider>
-    </Flowbite>
+    <>
+      <DefaultFrame />
+      <Flowbite>
+        <Toaster expand={false} />
+        <NextIntlClientProvider locale={router.locale} messages={pageProps.messages}>
+          <div id='modal-root' />
+          {isReady && <Component {...pageProps} />}
+        </NextIntlClientProvider>
+      </Flowbite>
+    </>
   )
 }
