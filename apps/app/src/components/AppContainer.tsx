@@ -2,14 +2,11 @@ import { useSelectedLanguage } from '@shared/generic-react-hooks'
 import { Flowbite, Toaster } from '@shared/ui'
 import { NextIntlClientProvider } from 'next-intl'
 import { AppProps } from 'next/app'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { DefaultFrame } from './Frames/DefaultFrame'
 
 export const AppContainer = (props: AppProps) => {
-  const { Component, pageProps } = props
-
-  const router = useRouter()
+  const { Component, pageProps, router } = props
 
   const [isReady, setIsReady] = useState<boolean>(false)
 
@@ -32,9 +29,15 @@ export const AppContainer = (props: AppProps) => {
     }
   }, [])
 
+  const pageFrames: { [href: string]: ReactNode } = {
+    // TODO: add custom frames for individual pages
+  }
+
+  const pageFrame = pageFrames[router.pathname.split('/')[1]]
+
   return (
     <>
-      <DefaultFrame />
+      {pageFrame ?? <DefaultFrame />}
       <Flowbite>
         <Toaster expand={false} />
         <NextIntlClientProvider locale={router.locale} messages={pageProps.messages}>
