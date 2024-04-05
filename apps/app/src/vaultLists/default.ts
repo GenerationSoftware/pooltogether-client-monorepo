@@ -1,5 +1,5 @@
 import { VaultList } from '@shared/types'
-import { LINKS, NETWORK } from '@shared/utilities'
+import { DOMAINS, NETWORK } from '@shared/utilities'
 import { testnetVaults } from './testnet'
 
 const defaultVaultList: VaultList = {
@@ -7,7 +7,7 @@ const defaultVaultList: VaultList = {
   keywords: ['pooltogether', 'cabana', 'g9', 'optimism'],
   version: { major: 2, minor: 0, patch: 2 },
   timestamp: '2024-04-02T15:57:37Z',
-  logoURI: `${LINKS.app}/pooltogether-token-logo.svg`,
+  logoURI: `${DOMAINS.app}/pooltogether-token-logo.svg`,
   tokens: [
     // {
     //   chainId: NETWORK.optimism,
@@ -15,7 +15,7 @@ const defaultVaultList: VaultList = {
     //   name: 'Prize USDC.e - Aave',
     //   decimals: 6,
     //   symbol: 'pUSDC.e',
-    //   logoURI: `${LINKS.app}/icons/pUSDC.e.svg`,
+    //   logoURI: `${DOMAINS.app}/icons/pUSDC.e.svg`,
     //   tags: ['aave', 'vault_v1'],
     //   yieldSourceURI:
     //     'https://app.aave.com/reserve-overview/?underlyingAsset=0x7f5c764cbc14f9669b88837ca1490cca17c31607&marketName=proto_optimism_v3',
@@ -33,7 +33,7 @@ const defaultVaultList: VaultList = {
     //   name: 'Prize WETH - Aave',
     //   decimals: 18,
     //   symbol: 'pWETH',
-    //   logoURI: `${LINKS.app}/icons/pWETH.svg`,
+    //   logoURI: `${DOMAINS.app}/icons/pWETH.svg`,
     //   tags: ['aave', 'vault_v1', 'deprecated'],
     //   yieldSourceURI:
     //     'https://app.aave.com/reserve-overview/?underlyingAsset=0x4200000000000000000000000000000000000006&marketName=proto_optimism_v3',
@@ -51,7 +51,7 @@ const defaultVaultList: VaultList = {
     //   name: 'Prize DAI - Aave',
     //   decimals: 18,
     //   symbol: 'pDAI',
-    //   logoURI: `${LINKS.app}/icons/pDAI.svg`,
+    //   logoURI: `${DOMAINS.app}/icons/pDAI.svg`,
     //   tags: ['aave', 'vault_v1', 'deprecated'],
     //   yieldSourceURI:
     //     'https://app.aave.com/reserve-overview/?underlyingAsset=0xda10009cbd5d07dd0cecc66161fc93d7c9000da1&marketName=proto_optimism_v3',
@@ -69,7 +69,7 @@ const defaultVaultList: VaultList = {
     //   name: 'Prize USDC - Aave',
     //   decimals: 6,
     //   symbol: 'pUSDC',
-    //   logoURI: `${LINKS.app}/icons/pUSDC.svg`,
+    //   logoURI: `${DOMAINS.app}/icons/pUSDC.svg`,
     //   tags: ['aave', 'vault_v2', 'deprecated'],
     //   yieldSourceURI:
     //     'https://app.aave.com/reserve-overview/?underlyingAsset=0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85&marketName=proto_optimism_v3',
@@ -87,7 +87,7 @@ const defaultVaultList: VaultList = {
     //   name: 'Prize WETH - Aave',
     //   decimals: 18,
     //   symbol: 'pWETH',
-    //   logoURI: `${LINKS.app}/icons/pWETH.svg`,
+    //   logoURI: `${DOMAINS.app}/icons/pWETH.svg`,
     //   tags: ['aave', 'vault_v2'],
     //   yieldSourceURI:
     //     'https://app.aave.com/reserve-overview/?underlyingAsset=0x4200000000000000000000000000000000000006&marketName=proto_optimism_v3',

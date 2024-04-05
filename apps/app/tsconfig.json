@@ -1,6 +1,13 @@
 {
   "extends": "../../shared/config/nextjs.tsconfig.json",
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "tailwind.config.js", "postcss.config.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "tailwind.config.js",
+    "postcss.config.js",
+    ".next/types/**/*.ts"
+  ],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
@@ -18,6 +25,8 @@
       "@shared/types": ["../../shared/types"],
       "@shared/ui": ["../../shared/ui"],
       "@shared/utilities": ["../../shared/utilities"]
-    }
+    },
+    "plugins": [{ "name": "next" }],
+    "strictNullChecks": true
   }
 }
