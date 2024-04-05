@@ -3,18 +3,19 @@ import { Flowbite, Toaster } from '@shared/ui'
 import { NextIntlClientProvider } from 'next-intl'
 import { AppProps } from 'next/app'
 import { ReactNode, useEffect, useState } from 'react'
+import { CustomAppProps } from '@pages/_app'
+import { AccountFrame } from './Frames/AccountFrame'
 import { DefaultFrame } from './Frames/DefaultFrame'
 
-export const AppContainer = (props: AppProps) => {
-  const { Component, pageProps, router } = props
+export const AppContainer = (props: AppProps & CustomAppProps) => {
+  const { Component, pageProps, serverProps, router } = props
+  const { pathname, query, asPath, locale } = router
 
   const [isReady, setIsReady] = useState<boolean>(false)
 
   useSelectedLanguage({
-    onLanguageChange: (locale) => {
-      const { pathname, query, asPath } = router
-
-      router.push({ pathname, query }, asPath, { locale })
+    onLanguageChange: (newLanguage) => {
+      router.push({ pathname, query }, asPath, { locale: newLanguage })
 
       // Tiny delay to avoid flickering on differing language selection to locale default
       setTimeout(() => {
@@ -30,17 +31,17 @@ export const AppContainer = (props: AppProps) => {
   }, [])
 
   const pageFrames: { [href: string]: ReactNode } = {
-    // TODO: add custom frames for individual pages
+    account: <AccountFrame user={serverProps.params['user']} />
   }
 
-  const pageFrame = pageFrames[router.pathname.split('/')[1]]
+  const pageFrame = pageFrames[pathname.split('/')[1]]
 
   return (
     <>
       {pageFrame ?? <DefaultFrame />}
       <Flowbite>
         <Toaster expand={false} />
-        <NextIntlClientProvider locale={router.locale} messages={pageProps.messages}>
+        <NextIntlClientProvider locale={locale} messages={pageProps.messages}>
           <div id='modal-root' />
           {isReady && <Component {...pageProps} />}
         </NextIntlClientProvider>
