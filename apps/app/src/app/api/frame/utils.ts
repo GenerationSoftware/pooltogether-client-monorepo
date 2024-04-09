@@ -1,10 +1,9 @@
-import { FrameButton } from '@shared/types'
-import { NETWORK } from '@shared/utilities'
+import { FrameButton, VaultInfo } from '@shared/types'
+import { getTokenBalances, NETWORK } from '@shared/utilities'
 import { NextResponse } from 'next/server'
-import { createPublicClient, http, isAddress } from 'viem'
-import { mainnet } from 'viem/chains'
+import { Address, createPublicClient, http, isAddress, PublicClient } from 'viem'
 import { getEnsAddress, normalize } from 'viem/ens'
-import { RPC_URLS } from '@constants/config'
+import { RPC_URLS, WAGMI_CHAINS } from '@constants/config'
 
 export const frameResponse = <FrameStateType extends {}>(data: {
   img: string
@@ -61,7 +60,7 @@ export const getUserAddress = async (user: string) => {
 
   if (user.endsWith('.eth')) {
     const client = createPublicClient({
-      chain: mainnet,
+      chain: WAGMI_CHAINS[NETWORK.mainnet],
       transport: http(RPC_URLS[NETWORK.mainnet])
     })
 
@@ -69,4 +68,19 @@ export const getUserAddress = async (user: string) => {
 
     return address ?? undefined
   }
+}
+
+export const getUserVaultBalances = (
+  network: NETWORK,
+  userAddress: Address,
+  vaults: VaultInfo[]
+) => {
+  const client = createPublicClient({
+    chain: WAGMI_CHAINS[network as keyof typeof WAGMI_CHAINS],
+    transport: http(RPC_URLS[network as keyof typeof RPC_URLS])
+  }) as PublicClient
+
+  const vaultAddresses = vaults.filter((v) => v.chainId === network).map((v) => v.address)
+
+  return getTokenBalances(client, userAddress, vaultAddresses)
 }

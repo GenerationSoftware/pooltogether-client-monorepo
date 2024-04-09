@@ -20,15 +20,10 @@ export const AccountFrame = (props: AccountFrameProps) => {
         content={`${APP_URL}/api/frame/account${!!user ? `/${user}` : ''}`}
       />
       {!!user ? (
-        <>
-          <meta
-            name='fc:frame:button:1'
-            content={`Check ${isAddress(user) ? shorten(user) : user}\`s Account`}
-          />
-          <meta name='fc:frame:button:2' content='View on App' />
-          <meta name='fc:frame:button:2:action' content='link' />
-          <meta name='fc:frame:button:2:target' content={`${APP_URL}/account/${user}`} />
-        </>
+        <meta
+          name='fc:frame:button:1'
+          content={`Check ${isAddress(user) ? shorten(user) : user}\`s Account`}
+        />
       ) : (
         <>
           <meta name='fc:frame:input:text' content='Enter an address or ENS...' />

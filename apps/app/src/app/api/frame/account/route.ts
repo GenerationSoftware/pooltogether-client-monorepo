@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 const postUrl = `${APP_URL}/api/frame/account`
 
 interface FrameState {
-  view: 'welcome' | 'account' | 'prizes'
+  view: 'welcome' | 'account' | 'wins'
   user?: { name: string; address: Address }
 }
 
@@ -83,8 +83,8 @@ const accountView = (data: { user: NonNullable<FrameData['user']> }) => {
     postUrl,
     buttons: [
       { content: 'Switch Account' },
-      { content: 'Check Latest Prizes' },
-      { content: 'View on App', action: 'link', target: `${APP_URL}/account/${user.address}` }
+      { content: 'Check Wins' },
+      { content: 'View on App', action: 'link', target: `${APP_URL}/account/${user.name}` }
     ],
     state: { view: 'account', user }
   })

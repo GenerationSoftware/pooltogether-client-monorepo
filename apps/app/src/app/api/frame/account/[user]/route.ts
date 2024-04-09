@@ -1,13 +1,14 @@
-import { FrameRequest } from '@shared/types'
+import { FrameRequest, TokenWithAmount } from '@shared/types'
+import { NETWORK } from '@shared/utilities'
 import { type NextRequest, NextResponse } from 'next/server'
 import { Address } from 'viem'
-import { APP_URL } from '@constants/config'
-import { errorResponse, frameResponse, getUserAddress } from '../../utils'
+import { APP_URL, DEFAULT_VAULT_LISTS } from '@constants/config'
+import { errorResponse, frameResponse, getUserAddress, getUserVaultBalances } from '../../utils'
 
 export const dynamic = 'force-dynamic'
 
 interface FrameState {
-  view: 'account' | 'prizes'
+  view: 'account' | 'wins'
   user: { name: string; address: Address }
 }
 
@@ -47,22 +48,55 @@ interface FrameData {
 const frame = (postUrl: string, prevState: FrameState | undefined, data: FrameData) => {
   const { user, buttonClicked } = data
 
-  // TODO: route to different views depending on prevState and buttonClicked
-
-  return accountView({ postUrl, user })
+  if (prevState?.view === 'account' && buttonClicked === 1) {
+    return winsView({ postUrl, user })
+  } else {
+    return accountView({ postUrl, user })
+  }
 }
 
-const accountView = (data: { postUrl: string; user: FrameData['user'] }) => {
+const accountView = async (data: { postUrl: string; user: FrameData['user'] }) => {
   const { postUrl, user } = data
+
+  const vaults = DEFAULT_VAULT_LISTS.default.tokens
+  const networks = [...new Set<NETWORK>(vaults.map((v) => v.chainId))]
+
+  const vaultBalances: { [network: number]: { [vaultAddress: Address]: TokenWithAmount } } = {}
+
+  await Promise.allSettled(
+    networks.map((network) =>
+      (async () => {
+        const balances = await getUserVaultBalances(network, user.address, vaults)
+
+        Object.entries(balances).forEach(([vaultAddress, balance]) => {
+          if (vaultBalances[network] === undefined) {
+            vaultBalances[network] = {}
+          }
+
+          vaultBalances[network][vaultAddress as Address] = balance
+        })
+      })()
+    )
+  )
 
   return frameResponse<FrameState>({
     img: `${APP_URL}/facebook-share-image-1200-630.png`, // TODO: get dynamic account img
     postUrl,
     buttons: [
-      { content: 'Switch Account' },
-      { content: 'Check Latest Prizes' },
-      { content: 'View on App', action: 'link', target: `${APP_URL}/account/${user.address}` }
+      { content: 'Check Wins' },
+      { content: 'View on App', action: 'link', target: `${APP_URL}/account/${user.name}` }
     ],
     state: { view: 'account', user }
+  })
+}
+
+const winsView = (data: { postUrl: string; user: FrameData['user'] }) => {
+  const { postUrl, user } = data
+
+  return frameResponse<FrameState>({
+    img: `${APP_URL}/facebook-share-image-1200-630.png`, // TODO: get dynamic wins img
+    postUrl,
+    buttons: [{ content: 'Back' }],
+    state: { view: 'wins', user }
   })
 }
