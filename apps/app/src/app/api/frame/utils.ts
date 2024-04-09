@@ -1,9 +1,9 @@
-import { FrameButton, VaultInfo } from '@shared/types'
+import { FrameButton, TokenWithAmount, VaultInfo } from '@shared/types'
 import { getTokenBalances, NETWORK } from '@shared/utilities'
 import { NextResponse } from 'next/server'
 import { Address, createPublicClient, http, isAddress, PublicClient } from 'viem'
 import { getEnsAddress, normalize } from 'viem/ens'
-import { RPC_URLS, WAGMI_CHAINS } from '@constants/config'
+import { DEFAULT_VAULT_LISTS, RPC_URLS, WAGMI_CHAINS } from '@constants/config'
 
 export const frameResponse = <FrameStateType extends {}>(data: {
   img: string
@@ -83,4 +83,29 @@ export const getUserVaultBalances = (
   const vaultAddresses = vaults.filter((v) => v.chainId === network).map((v) => v.address)
 
   return getTokenBalances(client, userAddress, vaultAddresses)
+}
+
+export const getAllUserVaultBalances = async (userAddress: Address) => {
+  const balances: { [network: number]: { [vaultAddress: Address]: TokenWithAmount } } = {}
+
+  const vaults = DEFAULT_VAULT_LISTS.default.tokens
+  const networks = [...new Set<NETWORK>(vaults.map((v) => v.chainId))]
+
+  await Promise.allSettled(
+    networks.map((network) =>
+      (async () => {
+        const networkBalances = await getUserVaultBalances(network, userAddress, vaults)
+
+        Object.entries(networkBalances).forEach(([vaultAddress, balance]) => {
+          if (balances[network] === undefined) {
+            balances[network] = {}
+          }
+
+          balances[network][vaultAddress as Address] = balance
+        })
+      })()
+    )
+  )
+
+  return balances
 }

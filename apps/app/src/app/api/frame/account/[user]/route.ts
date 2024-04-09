@@ -1,9 +1,8 @@
-import { FrameRequest, TokenWithAmount } from '@shared/types'
-import { NETWORK } from '@shared/utilities'
+import { FrameRequest } from '@shared/types'
 import { type NextRequest, NextResponse } from 'next/server'
 import { Address } from 'viem'
-import { APP_URL, DEFAULT_VAULT_LISTS } from '@constants/config'
-import { errorResponse, frameResponse, getUserAddress, getUserVaultBalances } from '../../utils'
+import { APP_URL } from '@constants/config'
+import { errorResponse, frameResponse, getAllUserVaultBalances, getUserAddress } from '../../utils'
 
 export const dynamic = 'force-dynamic'
 
@@ -58,26 +57,7 @@ const frame = (postUrl: string, prevState: FrameState | undefined, data: FrameDa
 const accountView = async (data: { postUrl: string; user: FrameData['user'] }) => {
   const { postUrl, user } = data
 
-  const vaults = DEFAULT_VAULT_LISTS.default.tokens
-  const networks = [...new Set<NETWORK>(vaults.map((v) => v.chainId))]
-
-  const vaultBalances: { [network: number]: { [vaultAddress: Address]: TokenWithAmount } } = {}
-
-  await Promise.allSettled(
-    networks.map((network) =>
-      (async () => {
-        const balances = await getUserVaultBalances(network, user.address, vaults)
-
-        Object.entries(balances).forEach(([vaultAddress, balance]) => {
-          if (vaultBalances[network] === undefined) {
-            vaultBalances[network] = {}
-          }
-
-          vaultBalances[network][vaultAddress as Address] = balance
-        })
-      })()
-    )
-  )
+  const vaultBalances = await getAllUserVaultBalances(user.address)
 
   return frameResponse<FrameState>({
     img: `${APP_URL}/facebook-share-image-1200-630.png`, // TODO: get dynamic account img
