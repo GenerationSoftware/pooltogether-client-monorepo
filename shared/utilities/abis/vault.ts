@@ -3,7 +3,7 @@ export const vaultABI = [
     inputs: [
       { internalType: 'string', name: '_name', type: 'string' },
       { internalType: 'string', name: '_symbol', type: 'string' },
-      { internalType: 'contract IERC4626', name: 'yieldVault_', type: 'address' },
+      { internalType: 'contract YieldVaultMintRate', name: 'yieldVault_', type: 'address' },
       { internalType: 'contract PrizePool', name: '_prizePool', type: 'address' },
       { internalType: 'address', name: '_claimer', type: 'address' },
       { internalType: 'address', name: '_yieldFeeRecipient', type: 'address' },
@@ -204,10 +204,10 @@ export const vaultABI = [
         components: [
           { internalType: 'bool', name: 'useBeforeClaimPrize', type: 'bool' },
           { internalType: 'bool', name: 'useAfterClaimPrize', type: 'bool' },
-          { internalType: 'contract IVaultHooks', name: 'implementation', type: 'address' }
+          { internalType: 'contract IPrizeHooks', name: 'implementation', type: 'address' }
         ],
         indexed: false,
-        internalType: 'struct VaultHooks',
+        internalType: 'struct PrizeHooks',
         name: 'hooks',
         type: 'tuple'
       }
@@ -463,9 +463,9 @@ export const vaultABI = [
         components: [
           { internalType: 'bool', name: 'useBeforeClaimPrize', type: 'bool' },
           { internalType: 'bool', name: 'useAfterClaimPrize', type: 'bool' },
-          { internalType: 'contract IVaultHooks', name: 'implementation', type: 'address' }
+          { internalType: 'contract IPrizeHooks', name: 'implementation', type: 'address' }
         ],
-        internalType: 'struct VaultHooks',
+        internalType: 'struct PrizeHooks',
         name: '',
         type: 'tuple'
       }
@@ -666,9 +666,9 @@ export const vaultABI = [
         components: [
           { internalType: 'bool', name: 'useBeforeClaimPrize', type: 'bool' },
           { internalType: 'bool', name: 'useAfterClaimPrize', type: 'bool' },
-          { internalType: 'contract IVaultHooks', name: 'implementation', type: 'address' }
+          { internalType: 'contract IPrizeHooks', name: 'implementation', type: 'address' }
         ],
-        internalType: 'struct VaultHooks',
+        internalType: 'struct PrizeHooks',
         name: 'hooks',
         type: 'tuple'
       }

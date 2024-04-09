@@ -212,11 +212,6 @@ export const prizePoolABI = [
   },
   {
     inputs: [{ internalType: 'uint256', name: 'x', type: 'uint256' }],
-    name: 'PRBMath_UD34x4_fromUD60x18_Convert_Overflow',
-    type: 'error'
-  },
-  {
-    inputs: [{ internalType: 'uint256', name: 'x', type: 'uint256' }],
     name: 'PRBMath_UD60x18_Convert_Overflow',
     type: 'error'
   },
@@ -289,7 +284,7 @@ export const prizePoolABI = [
       { indexed: false, internalType: 'uint8', name: 'lastNumTiers', type: 'uint8' },
       { indexed: false, internalType: 'uint8', name: 'numTiers', type: 'uint8' },
       { indexed: false, internalType: 'uint104', name: 'reserve', type: 'uint104' },
-      { indexed: false, internalType: 'UD34x4', name: 'prizeTokensPerShare', type: 'uint128' },
+      { indexed: false, internalType: 'uint128', name: 'prizeTokensPerShare', type: 'uint128' },
       { indexed: false, internalType: 'uint48', name: 'drawOpenedAt', type: 'uint48' }
     ],
     name: 'DrawAwarded',
@@ -505,6 +500,20 @@ export const prizePoolABI = [
     type: 'function'
   },
   {
+    inputs: [{ internalType: 'uint8', name: 'numTiers', type: 'uint8' }],
+    name: 'estimatedPrizeCountWithBothCanaries',
+    outputs: [{ internalType: 'uint32', name: '', type: 'uint32' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'estimatedPrizeCountWithBothCanaries',
+    outputs: [{ internalType: 'uint32', name: '', type: 'uint32' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
     inputs: [],
     name: 'firstDrawOpensAt',
     outputs: [{ internalType: 'uint48', name: '', type: 'uint48' }],
@@ -712,7 +721,7 @@ export const prizePoolABI = [
   {
     inputs: [],
     name: 'prizeTokenPerShare',
-    outputs: [{ internalType: 'UD34x4', name: '', type: 'uint128' }],
+    outputs: [{ internalType: 'uint128', name: '', type: 'uint128' }],
     stateMutability: 'view',
     type: 'function'
   },

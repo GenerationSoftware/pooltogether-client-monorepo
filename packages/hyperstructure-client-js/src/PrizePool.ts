@@ -486,7 +486,7 @@ export class PrizePool {
     const estimatedPrizeCount = await this.publicClient.readContract({
       address: this.address,
       abi: prizePoolABI,
-      functionName: 'estimatedPrizeCount',
+      functionName: 'estimatedPrizeCountWithBothCanaries',
       args: [!!options?.includeCanary ? numberOfTiers : numberOfTiers - 2]
     })
 

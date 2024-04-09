@@ -8,7 +8,7 @@ export const drawManagerABI = [
       { internalType: 'UD2x18', name: '_firstStartDrawTargetFraction', type: 'uint64' },
       { internalType: 'UD2x18', name: '_firstFinishDrawTargetFraction', type: 'uint64' },
       { internalType: 'uint256', name: '_maxRewards', type: 'uint256' },
-      { internalType: 'address', name: '_remainingRewardsRecipient', type: 'address' }
+      { internalType: 'address', name: '_vaultBeneficiary', type: 'address' }
     ],
     stateMutability: 'nonpayable',
     type: 'constructor'
@@ -226,13 +226,6 @@ export const drawManagerABI = [
   },
   {
     inputs: [],
-    name: 'remainingRewardsRecipient',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [],
     name: 'rng',
     outputs: [{ internalType: 'contract IRng', name: '', type: 'address' }],
     stateMutability: 'view',
@@ -252,6 +245,13 @@ export const drawManagerABI = [
     inputs: [],
     name: 'startDrawReward',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'vaultBeneficiary',
+    outputs: [{ internalType: 'address', name: '', type: 'address' }],
     stateMutability: 'view',
     type: 'function'
   }

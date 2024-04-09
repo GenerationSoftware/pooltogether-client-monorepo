@@ -116,7 +116,7 @@ export const getDrawAwardedEvents = async (
         { indexed: false, internalType: 'uint8', name: 'lastNumTiers', type: 'uint8' },
         { indexed: false, internalType: 'uint8', name: 'numTiers', type: 'uint8' },
         { indexed: false, internalType: 'uint104', name: 'reserve', type: 'uint104' },
-        { indexed: false, internalType: 'UD34x4', name: 'prizeTokensPerShare', type: 'uint128' },
+        { indexed: false, internalType: 'uint128', name: 'prizeTokensPerShare', type: 'uint128' },
         { indexed: false, internalType: 'uint48', name: 'drawOpenedAt', type: 'uint48' }
       ],
       name: 'DrawAwarded',
