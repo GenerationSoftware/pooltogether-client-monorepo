@@ -5,7 +5,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
-import { BURN_SETTINGS } from '@constants/config'
 import { useSelectedChainId } from '@hooks/useSelectedChainId'
 import { NetworkDropdown } from './NetworkDropdown'
 
@@ -90,11 +89,6 @@ const NavbarActions = (props: NavbarActionsProps) => {
   const { chainId } = useSelectedChainId()
   const networkName = getNetworkNameByChainId(chainId ?? PRIZE_POOLS[0].chainId)
 
-  const isNotBurningReserve =
-    !!chainId &&
-    !!BURN_SETTINGS[chainId] &&
-    BURN_SETTINGS[chainId].liquidationPairAddress === undefined
-
   return (
     <>
       <NavbarLink href={`/${networkName}/`} name='Draws' className={linkClassName} />
@@ -104,10 +98,6 @@ const NavbarActions = (props: NavbarActionsProps) => {
         className={linkClassName}
       />
       <NavbarLink href={`/${networkName}/prizes`} name='Prizes' className={linkClassName} />
-      {isNotBurningReserve && (
-        <NavbarLink href={`/${networkName}/reserve`} name='Reserve' className={linkClassName} />
-      )}
-      <NavbarLink href={`/${networkName}/burn`} name='Burn' className={linkClassName} />
     </>
   )
 }
