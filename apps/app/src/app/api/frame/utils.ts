@@ -6,7 +6,7 @@ import { getEnsAddress, normalize } from 'viem/ens'
 import { DEFAULT_VAULT_LISTS, RPC_URLS, WAGMI_CHAINS } from '@constants/config'
 
 export const frameResponse = <FrameStateType extends {}>(data: {
-  img: string
+  img: { src: string; aspectRatio?: '1.91:1' | '1:1' }
   postUrl: string
   buttons: FrameButton[]
   input?: { placeholder: string }
@@ -17,10 +17,14 @@ export const frameResponse = <FrameStateType extends {}>(data: {
   let frame = `<!DOCTYPE html>
     <html><head>
     <meta property='fc:frame' content='vNext' />
-    <meta property='og:image' content='${img}' />
-    <meta property='fc:frame:image' content='${img}' />
+    <meta property='og:image' content='${img.src}' />
+    <meta property='fc:frame:image' content='${img.src}' />
     <meta name='fc:frame:post_url' content='${postUrl}' />
   `
+
+  if (!!img.aspectRatio && img.aspectRatio !== '1.91:1') {
+    frame += `<meta name='fc:frame:image:aspect_ratio' content='${img.aspectRatio}' />`
+  }
 
   if (!!state) {
     frame += `<meta name='fc:frame:state' content='${JSON.stringify(state)}' />`

@@ -59,8 +59,10 @@ const accountView = async (data: { postUrl: string; user: FrameData['user'] }) =
 
   const vaultBalances = await getAllUserVaultBalances(user.address)
 
+  const imgSrc = `${postUrl}/image` // TODO: pass vault balances through url query params
+
   return frameResponse<FrameState>({
-    img: `${APP_URL}/facebook-share-image-1200-630.png`, // TODO: get dynamic account img
+    img: { src: imgSrc, aspectRatio: '1:1' },
     postUrl,
     buttons: [
       { content: 'Check Wins' },
@@ -73,8 +75,10 @@ const accountView = async (data: { postUrl: string; user: FrameData['user'] }) =
 const winsView = (data: { postUrl: string; user: FrameData['user'] }) => {
   const { postUrl, user } = data
 
+  const imgSrc = `${APP_URL}/facebook-share-image-1200-630.png` // TODO: get dynamic wins img
+
   return frameResponse<FrameState>({
-    img: `${APP_URL}/facebook-share-image-1200-630.png`, // TODO: get dynamic wins img
+    img: { src: imgSrc },
     postUrl,
     buttons: [{ content: 'Back' }],
     state: { view: 'wins', user }

@@ -62,12 +62,12 @@ const frame = (prevState?: FrameState, data?: FrameData) => {
 const welcomeView = (data?: { isInvalidAddress?: boolean }) => {
   const { isInvalidAddress } = data ?? {}
 
-  const img = isInvalidAddress
+  const imgSrc = isInvalidAddress
     ? `${APP_URL}/facebook-share-image-1200-630.png` // TODO: get static welcome img with error msg
     : `${APP_URL}/facebook-share-image-1200-630.png` // TODO: get static welcome img (same as in AccountFrame)
 
   return frameResponse<FrameState>({
-    img,
+    img: { src: imgSrc },
     postUrl,
     buttons: [{ content: 'Check Account' }],
     input: { placeholder: 'Enter an address or ENS...' },
@@ -79,7 +79,7 @@ const accountView = (data: { user: NonNullable<FrameData['user']> }) => {
   const { user } = data
 
   return frameResponse<FrameState>({
-    img: `${APP_URL}/facebook-share-image-1200-630.png`, // TODO: get dynamic account img
+    img: { src: `${APP_URL}/facebook-share-image-1200-630.png` }, // TODO: get dynamic account img
     postUrl,
     buttons: [
       { content: 'Switch Account' },
