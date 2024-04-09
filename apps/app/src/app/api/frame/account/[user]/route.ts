@@ -2,11 +2,11 @@ import { FrameRequest } from '@shared/types'
 import { type NextRequest, NextResponse } from 'next/server'
 import { Address } from 'viem'
 import { APP_URL } from '@constants/config'
-import { errorResponse, frameResponse, getAllUserVaultBalances, getUserAddress } from '../../utils'
+import { errorResponse, frameResponse, getUserAddress } from '../../utils'
 
 export const dynamic = 'force-dynamic'
 
-interface FrameState {
+export interface FrameState {
   view: 'account' | 'wins'
   user: { name: string; address: Address }
 }
@@ -57,12 +57,12 @@ const frame = (postUrl: string, prevState: FrameState | undefined, data: FrameDa
 const accountView = async (data: { postUrl: string; user: FrameData['user'] }) => {
   const { postUrl, user } = data
 
-  const vaultBalances = await getAllUserVaultBalances(user.address)
-
-  const imgSrc = `${postUrl}/image` // TODO: pass vault balances through url query params
+  const imgSrc = new URL(`${postUrl}/image`)
+  imgSrc.searchParams.set('view', 'account')
+  imgSrc.searchParams.set('userAddress', user.address)
 
   return frameResponse<FrameState>({
-    img: { src: imgSrc, aspectRatio: '1:1' },
+    img: { src: imgSrc.toString(), aspectRatio: '1:1' },
     postUrl,
     buttons: [
       { content: 'Check Wins' },
