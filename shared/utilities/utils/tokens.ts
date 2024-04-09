@@ -35,7 +35,7 @@ export const getTokenInfo = async (
     const chainId = await publicClient.getChainId()
 
     tokenAddresses.forEach((address) => {
-      const redirect = TOKEN_DATA_REDIRECTS[chainId]?.[address.toLowerCase()]
+      const redirect = TOKEN_DATA_REDIRECTS[chainId]?.[address.toLowerCase() as Lowercase<Address>]
       const symbol: string = redirect?.symbol ?? multicallResults[address]?.['symbol']
       const name: string = redirect?.name ?? multicallResults[address]?.['name']
       const decimals = Number(multicallResults[address]?.['decimals'])

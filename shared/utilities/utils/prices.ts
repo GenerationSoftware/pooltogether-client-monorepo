@@ -104,17 +104,17 @@ export const getHistoricalTokenPrices = async (
  */
 const getRedirectedTokenPrices = async (chainId: number, tokenAddresses: string[]) => {
   const redirectedTokenPrices: { [address: string]: number } = {}
-  const redirectedTokens: {
-    [chainId: number]: { [address: string]: string }
-  } = {}
+  const redirectedTokens: { [chainId: number]: { [address: string]: string } } = {}
 
-  tokenAddresses.forEach((address) => {
-    const redirect = TOKEN_PRICE_REDIRECTS[chainId]?.[address.toLowerCase()]
+  tokenAddresses.forEach((_address) => {
+    const address = _address.toLowerCase() as Lowercase<Address>
+    const redirect = TOKEN_PRICE_REDIRECTS[chainId]?.[address]
+
     if (!!redirect) {
       if (redirectedTokens[redirect.chainId] === undefined) {
         redirectedTokens[redirect.chainId] = {}
       }
-      redirectedTokens[redirect.chainId][redirect.address] = address.toLowerCase()
+      redirectedTokens[redirect.chainId][redirect.address] = address
     }
   })
 

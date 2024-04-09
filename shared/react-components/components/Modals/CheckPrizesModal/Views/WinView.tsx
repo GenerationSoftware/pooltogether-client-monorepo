@@ -129,7 +129,7 @@ const Header = (props: HeaderProps) => {
       token.chainId === NETWORK.optimism ||
       token.chainId === NETWORK.arbitrum ||
       token.chainId === NETWORK.base
-        ? (WRAPPED_NATIVE_ASSETS[token.chainId]?.toLowerCase() as Lowercase<Address>)
+        ? WRAPPED_NATIVE_ASSETS[token.chainId]
         : undefined
 
     return selectedCurrency === 'eth' && token.address.toLowerCase() === wethTokenAddress
