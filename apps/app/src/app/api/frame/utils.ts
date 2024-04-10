@@ -5,7 +5,13 @@ import { NextResponse } from 'next/server'
 import { CSSProperties, ReactElement } from 'react'
 import { Address, createPublicClient, http, isAddress, PublicClient } from 'viem'
 import { getEnsAddress, normalize } from 'viem/ens'
-import { APP_URL, DEFAULT_VAULT_LISTS, RPC_URLS, WAGMI_CHAINS } from '@constants/config'
+import {
+  APP_URL,
+  DEFAULT_VAULT_LISTS,
+  RPC_URLS,
+  SUPPORTED_NETWORKS,
+  WAGMI_CHAINS
+} from '@constants/config'
 
 export const frameResponse = <FrameStateType extends {}>(data: {
   img: { src: string; aspectRatio?: '1.91:1' | '1:1' }
@@ -108,7 +114,9 @@ export const getUserVaultBalances = (
 export const getAllUserVaultBalances = async (userAddress: Address) => {
   const balances: TokenWithAmount[] = []
 
-  const vaults = DEFAULT_VAULT_LISTS.default.tokens
+  const vaults = DEFAULT_VAULT_LISTS.default.tokens.filter((token) =>
+    SUPPORTED_NETWORKS.mainnets.includes(token.chainId)
+  )
   const networks = [...new Set<NETWORK>(vaults.map((v) => v.chainId))]
 
   await Promise.allSettled(
