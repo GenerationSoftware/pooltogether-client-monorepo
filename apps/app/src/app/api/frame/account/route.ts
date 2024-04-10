@@ -20,7 +20,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     ? (JSON.parse(frameRequest.untrustedData.state) as FrameState)
     : undefined
 
-  const userInput = frameRequest.untrustedData.inputText
+  const userInput = frameRequest.untrustedData.inputText?.trim()
   const buttonClicked = frameRequest.untrustedData.buttonIndex
 
   if (!prevState) {
