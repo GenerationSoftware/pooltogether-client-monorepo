@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
 import { CSSProperties, ReactElement } from 'react'
 import { Address, createPublicClient, http, isAddress, PublicClient } from 'viem'
 import { getEnsAddress, normalize } from 'viem/ens'
-import { DEFAULT_VAULT_LISTS, RPC_URLS, WAGMI_CHAINS } from '@constants/config'
+import { APP_URL, DEFAULT_VAULT_LISTS, RPC_URLS, WAGMI_CHAINS } from '@constants/config'
 
 export const frameResponse = <FrameStateType extends {}>(data: {
   img: { src: string; aspectRatio?: '1.91:1' | '1:1' }
@@ -57,13 +57,17 @@ export const frameResponse = <FrameStateType extends {}>(data: {
   return new NextResponse(frame, { status: 200 })
 }
 
-export const imageResponse = (
+export const imageResponse = async (
   content: ReactElement,
   options?: { style?: CSSProperties; width?: number; height?: number }
 ) => {
+  const fontUrl = `${APP_URL}/fonts/inter/inter-regular.woff`
+  const fontData = await fetch(fontUrl).then((res) => res.arrayBuffer())
+
   return new ImageResponse(content, {
     width: options?.width ?? 600,
-    height: options?.height ?? 600
+    height: options?.height ?? 600,
+    fonts: [{ name: 'Inter', data: fontData, style: 'normal', weight: 400 }]
   })
 }
 
