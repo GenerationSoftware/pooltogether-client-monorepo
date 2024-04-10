@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic'
 
 const postUrl = `${APP_URL}/api/frame/account`
 
-interface FrameState {
+export interface FrameState {
   view: 'welcome' | 'account' | 'wins'
   user?: { name: string; address: Address }
 }
@@ -20,9 +20,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     ? (JSON.parse(frameRequest.untrustedData.state) as FrameState)
     : undefined
 
-  if (!prevState) {
-    const userInput = frameRequest.untrustedData.inputText
+  const userInput = frameRequest.untrustedData.inputText
+  const buttonClicked = frameRequest.untrustedData.buttonIndex
 
+  if (!prevState) {
     if (!!userInput) {
       const userAddress = await getUserAddress(userInput)
 
@@ -34,10 +35,17 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return frame()
   }
 
-  return frame(prevState, {
-    user: prevState.user,
-    buttonClicked: frameRequest.untrustedData.buttonIndex
-  })
+  let user = prevState.user
+
+  if (prevState.view === 'welcome' && !prevState.user && !!userInput) {
+    const userAddress = await getUserAddress(userInput)
+
+    if (!!userAddress) {
+      user = { name: userInput, address: userAddress }
+    }
+  }
+
+  return frame(prevState, { user, buttonClicked })
 }
 
 interface FrameData {
@@ -48,10 +56,14 @@ interface FrameData {
 const frame = (prevState?: FrameState, data?: FrameData) => {
   const { user, buttonClicked } = data ?? {}
 
-  // TODO: route to different views depending on prevState and buttonClicked
-
   if (!!user) {
-    return accountView({ user })
+    if (prevState?.view === 'account' && buttonClicked === 1) {
+      return welcomeView()
+    } else if (prevState?.view === 'account' && buttonClicked === 2) {
+      return winsView({ user })
+    } else {
+      return accountView({ user })
+    }
   } else if (!prevState || prevState.view === 'welcome') {
     return welcomeView({ isInvalidAddress: true })
   } else {
@@ -78,8 +90,13 @@ const welcomeView = (data?: { isInvalidAddress?: boolean }) => {
 const accountView = (data: { user: NonNullable<FrameData['user']> }) => {
   const { user } = data
 
+  const imgSrc = new URL(`${postUrl}/image`)
+  imgSrc.searchParams.set('view', 'account')
+  imgSrc.searchParams.set('userName', user.name)
+  imgSrc.searchParams.set('userAddress', user.address)
+
   return frameResponse<FrameState>({
-    img: { src: `${APP_URL}/facebook-share-image-1200-630.png` }, // TODO: get dynamic account img
+    img: { src: imgSrc.toString(), aspectRatio: '1:1' },
     postUrl,
     buttons: [
       { content: 'Switch Account' },
@@ -87,5 +104,21 @@ const accountView = (data: { user: NonNullable<FrameData['user']> }) => {
       { content: 'View on App', action: 'link', target: `${APP_URL}/account/${user.name}` }
     ],
     state: { view: 'account', user }
+  })
+}
+
+const winsView = (data: { user: NonNullable<FrameData['user']> }) => {
+  const { user } = data
+
+  const imgSrc = new URL(`${postUrl}/image`)
+  imgSrc.searchParams.set('view', 'wins')
+  imgSrc.searchParams.set('userName', user.name)
+  imgSrc.searchParams.set('userAddress', user.address)
+
+  return frameResponse<FrameState>({
+    img: { src: imgSrc.toString(), aspectRatio: '1:1' },
+    postUrl,
+    buttons: [{ content: 'Back' }],
+    state: { view: 'wins', user }
   })
 }

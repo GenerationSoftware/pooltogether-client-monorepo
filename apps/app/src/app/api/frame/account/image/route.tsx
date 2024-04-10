@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import { isAddress } from 'viem'
-import { accountViewImg, winsViewImg } from '../../../images'
-import { errorResponse } from '../../../utils'
+import { accountViewImg, winsViewImg } from '../../images'
+import { errorResponse } from '../../utils'
 import { FrameState } from '../route'
 
 export function GET(req: NextRequest) {
