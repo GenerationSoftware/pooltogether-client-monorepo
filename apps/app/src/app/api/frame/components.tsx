@@ -1,7 +1,13 @@
-import { SubgraphPrize, Token, TokenWithAmount } from '@shared/types'
-import { formatBigIntForDisplay, NETWORK, shorten } from '@shared/utilities'
+import { SubgraphPrize, Token, TokenWithAmount, VaultInfo } from '@shared/types'
+import {
+  formatBigIntForDisplay,
+  getNetworkNameByChainId,
+  NETWORK,
+  shorten
+} from '@shared/utilities'
 import { CSSProperties, ReactNode } from 'react'
 import { isAddress } from 'viem'
+import { APP_URL } from '@constants/config'
 
 interface FrameImageProps {
   children: ReactNode
@@ -51,7 +57,7 @@ export const UserCard = (props: UserCardProps) => {
     : user
 
   return (
-    <Card style={{ flexGrow: 1, fontSize: 24, background: '#36147D', ...style }}>
+    <Card style={{ flexGrow: 1, padding: '16px', fontSize: 24, background: '#36147D', ...style }}>
       <span>Account:</span>
       <span>{formattedUser}</span>
     </Card>
@@ -86,7 +92,7 @@ export const Card = (props: CardProps) => {
 }
 
 interface VaultBalanceProps {
-  token: TokenWithAmount
+  token: TokenWithAmount & VaultInfo
   style?: CSSProperties
 }
 
@@ -95,10 +101,19 @@ export const VaultBalance = (props: VaultBalanceProps) => {
 
   const formattedTokenAmount = formatBigIntForDisplay(token.amount, token.decimals)
 
+  const networkLogoURI = `${APP_URL}/icons/${getNetworkNameByChainId(10)}.svg`
+
   return (
-    <div style={{ display: 'flex', gap: '8px', ...style }}>
-      {/* TODO: add token logo */}
-      {/* TODO: add network logo (smaller?) */}
+    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', ...style }}>
+      <div style={{ display: 'flex', position: 'relative', flexShrink: 0 }}>
+        <img src={token.logoURI} width={32} height={32} style={{ borderRadius: '50%' }} />
+        <img
+          src={networkLogoURI}
+          width={16}
+          height={16}
+          style={{ position: 'absolute', top: '18px', left: '18px', borderRadius: '50%' }}
+        />
+      </div>
       <span>{formattedTokenAmount}</span>
       <span>{token.symbol}</span>
     </div>

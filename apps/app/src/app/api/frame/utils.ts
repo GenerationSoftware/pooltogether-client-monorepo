@@ -1,5 +1,5 @@
 import { FrameButton, SubgraphPrize, TokenWithAmount, VaultInfo } from '@shared/types'
-import { getTokenBalances, getUserSubgraphPrizes, NETWORK } from '@shared/utilities'
+import { getTokenBalances, getUserSubgraphPrizes, getVaultId, NETWORK } from '@shared/utilities'
 import { ImageResponse } from 'next/og'
 import { NextResponse } from 'next/server'
 import { CSSProperties, ReactElement } from 'react'
@@ -96,23 +96,35 @@ export const getUserAddress = async (user: string) => {
   }
 }
 
-export const getUserVaultBalances = (
+export const getUserVaultBalances = async (
   network: NETWORK,
   userAddress: Address,
   vaults: VaultInfo[]
 ) => {
+  const userVaultBalances: { [tokenAddress: Address]: TokenWithAmount & VaultInfo } = {}
+
   const client = createPublicClient({
     chain: WAGMI_CHAINS[network as keyof typeof WAGMI_CHAINS],
     transport: http(RPC_URLS[network as keyof typeof RPC_URLS])
   }) as PublicClient
 
-  const vaultAddresses = vaults.filter((v) => v.chainId === network).map((v) => v.address)
+  const validVaults = vaults.filter((v) => v.chainId === network)
+  const vaultAddresses = validVaults.map((v) => v.address)
 
-  return getTokenBalances(client, userAddress, vaultAddresses)
+  const tokens = await getTokenBalances(client, userAddress, vaultAddresses)
+
+  Object.entries(tokens).forEach(([_tokenAddress, token]) => {
+    const tokenAddress = _tokenAddress as Address
+    const vaultInfo = validVaults.find((v) => getVaultId(v) === getVaultId(token))
+
+    userVaultBalances[tokenAddress] = { ...token, ...vaultInfo }
+  })
+
+  return userVaultBalances
 }
 
 export const getAllUserVaultBalances = async (userAddress: Address) => {
-  const balances: TokenWithAmount[] = []
+  const allUserVaultBalances: (TokenWithAmount & VaultInfo)[] = []
 
   await Promise.allSettled(
     SUPPORTED_NETWORKS.mainnets.map((network) =>
@@ -122,30 +134,30 @@ export const getAllUserVaultBalances = async (userAddress: Address) => {
           userAddress,
           DEFAULT_VAULT_LISTS.default.tokens
         )
-        balances.push(...Object.values(networkBalances))
+        allUserVaultBalances.push(...Object.values(networkBalances))
       })()
     )
   )
 
-  return balances
+  return allUserVaultBalances
 }
 
 export const getUserLastPrizes = async (network: NETWORK, userAddress: Address) => {
-  const lastPrizes = await getUserSubgraphPrizes(network, userAddress, { numPrizes: 10 })
-  return lastPrizes.map((prize) => ({ network, ...prize }))
+  const userLastPrizes = await getUserSubgraphPrizes(network, userAddress, { numPrizes: 10 })
+  return userLastPrizes.map((prize) => ({ network, ...prize }))
 }
 
 export const getAllUserLastPrizes = async (userAddress: Address) => {
-  const lastPrizes: (SubgraphPrize & { network: NETWORK })[] = []
+  const allUserLastPrizes: (SubgraphPrize & { network: NETWORK })[] = []
 
   await Promise.allSettled(
-    SUPPORTED_NETWORKS.testnets.map((network) =>
+    SUPPORTED_NETWORKS.mainnets.map((network) =>
       (async () => {
         const networkLastPrizes = await getUserLastPrizes(network, userAddress)
-        lastPrizes.push(...networkLastPrizes)
+        allUserLastPrizes.push(...networkLastPrizes)
       })()
     )
   )
 
-  return lastPrizes.sort((a, b) => b.timestamp - a.timestamp)
+  return allUserLastPrizes.sort((a, b) => b.timestamp - a.timestamp)
 }
