@@ -1,4 +1,4 @@
-import { Token } from '@shared/types'
+import { TokenWithLogo } from '@shared/types'
 import { getVaultId, NETWORK, WRAPPED_NATIVE_ASSETS } from '@shared/utilities'
 import { Address } from 'viem'
 import { CabanaLogo, Card, FrameImage, UserCard, VaultBalance, Win } from './components'
@@ -36,13 +36,14 @@ export const winsViewImg = async (data: { userName: string | null; userAddress: 
   const winsToDisplay = wins.filter((win) => win.payout > 0n).slice(0, 5)
 
   // TODO: should not assume all prize pools have WETH as the prize token
-  const getPrizeToken = (chainId: NETWORK): Token => {
+  const getPrizeToken = (chainId: NETWORK): TokenWithLogo => {
     return {
       chainId,
       address: WRAPPED_NATIVE_ASSETS[chainId] as Address,
       symbol: 'WETH',
       name: 'Wrapped Ether',
-      decimals: 18
+      decimals: 18,
+      logoURI: 'https://etherscan.io/token/images/weth_28.png'
     }
   }
 

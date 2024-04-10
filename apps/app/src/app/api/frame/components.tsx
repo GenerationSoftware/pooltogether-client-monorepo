@@ -1,7 +1,8 @@
-import { SubgraphPrize, Token, TokenWithAmount, VaultInfo } from '@shared/types'
+import { SubgraphPrize, TokenWithAmount, TokenWithLogo, VaultInfo } from '@shared/types'
 import {
   formatBigIntForDisplay,
   getNetworkNameByChainId,
+  getSimpleDate,
   NETWORK,
   shorten
 } from '@shared/utilities'
@@ -99,22 +100,18 @@ interface VaultBalanceProps {
 export const VaultBalance = (props: VaultBalanceProps) => {
   const { token, style } = props
 
-  const formattedTokenAmount = formatBigIntForDisplay(token.amount, token.decimals)
-
-  const networkLogoURI = `${APP_URL}/icons/${getNetworkNameByChainId(10)}.svg`
-
   return (
     <div style={{ display: 'flex', gap: '8px', alignItems: 'center', ...style }}>
       <div style={{ display: 'flex', position: 'relative', flexShrink: 0 }}>
         <img src={token.logoURI} width={32} height={32} style={{ borderRadius: '50%' }} />
         <img
-          src={networkLogoURI}
+          src={`${APP_URL}/icons/${getNetworkNameByChainId(10)}.svg`}
           width={16}
           height={16}
           style={{ position: 'absolute', top: '18px', left: '18px', borderRadius: '50%' }}
         />
       </div>
-      <span>{formattedTokenAmount}</span>
+      <span>{formatBigIntForDisplay(token.amount, token.decimals)}</span>
       <span>{token.symbol}</span>
     </div>
   )
@@ -122,21 +119,26 @@ export const VaultBalance = (props: VaultBalanceProps) => {
 
 interface WinProps {
   win: SubgraphPrize & { network: NETWORK }
-  prizeToken: Token
+  prizeToken: TokenWithLogo
   style?: CSSProperties
 }
 
 export const Win = (props: WinProps) => {
   const { win, prizeToken, style } = props
 
-  const formattedWinAmount = formatBigIntForDisplay(win.payout, prizeToken.decimals)
-
   return (
-    <div style={{ display: 'flex', gap: '8px', ...style }}>
-      {/* TODO: add date */}
-      {/* TODO: add token logo */}
-      {/* TODO: add network logo (smaller?) */}
-      <span>{formattedWinAmount}</span>
+    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', ...style }}>
+      <span>{getSimpleDate(win.timestamp)}</span>
+      <div style={{ display: 'flex', position: 'relative', flexShrink: 0 }}>
+        <img src={prizeToken.logoURI} width={32} height={32} style={{ borderRadius: '50%' }} />
+        <img
+          src={`${APP_URL}/icons/${getNetworkNameByChainId(10)}.svg`}
+          width={16}
+          height={16}
+          style={{ position: 'absolute', top: '18px', left: '18px', borderRadius: '50%' }}
+        />
+      </div>
+      <span>{formatBigIntForDisplay(win.payout, prizeToken.decimals)}</span>
       <span>{prizeToken.symbol}</span>
     </div>
   )
