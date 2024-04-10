@@ -106,7 +106,7 @@ export const getUserVaultBalances = (
 }
 
 export const getAllUserVaultBalances = async (userAddress: Address) => {
-  const balances: { [network: number]: { [vaultAddress: Address]: TokenWithAmount } } = {}
+  const balances: TokenWithAmount[] = []
 
   const vaults = DEFAULT_VAULT_LISTS.default.tokens
   const networks = [...new Set<NETWORK>(vaults.map((v) => v.chainId))]
@@ -115,14 +115,7 @@ export const getAllUserVaultBalances = async (userAddress: Address) => {
     networks.map((network) =>
       (async () => {
         const networkBalances = await getUserVaultBalances(network, userAddress, vaults)
-
-        Object.entries(networkBalances).forEach(([vaultAddress, balance]) => {
-          if (balances[network] === undefined) {
-            balances[network] = {}
-          }
-
-          balances[network][vaultAddress as Address] = balance
-        })
+        balances.push(...Object.values(networkBalances))
       })()
     )
   )

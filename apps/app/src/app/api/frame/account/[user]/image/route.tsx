@@ -1,6 +1,7 @@
+import { getVaultId } from '@shared/utilities'
 import { NextRequest } from 'next/server'
 import { Address, isAddress } from 'viem'
-import { CabanaLogo, Card, FrameImage, UserCard } from '../../../components'
+import { CabanaLogo, Card, FrameImage, UserCard, VaultBalance } from '../../../components'
 import { errorResponse, getAllUserVaultBalances, imageResponse } from '../../../utils'
 import { FrameState } from '../route'
 
@@ -23,11 +24,16 @@ const accountViewImg = async (data: { userName: string | null; userAddress: Addr
 
   const vaultBalances = await getAllUserVaultBalances(userAddress)
 
-  // TODO: show vault balances in image (use old frame as reference for showing account address, cabana, etc.)
+  const balancesToDisplay = vaultBalances.filter((token) => token.amount > 0n)
 
   return imageResponse(
     <FrameImage>
-      <Card style={{ width: '100%', flexGrow: 1 }}>test</Card>
+      <Card style={{ width: '100%', flexGrow: 1, gap: '8px' }}>
+        <span>Balances:</span>
+        {balancesToDisplay.map((token) => (
+          <VaultBalance key={getVaultId(token)} token={token} />
+        ))}
+      </Card>
       <div
         style={{
           width: '100%',

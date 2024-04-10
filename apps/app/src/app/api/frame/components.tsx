@@ -1,4 +1,5 @@
-import { shorten } from '@shared/utilities'
+import { TokenWithAmount } from '@shared/types'
+import { formatBigIntForDisplay, shorten } from '@shared/utilities'
 import { CSSProperties, ReactNode } from 'react'
 import { isAddress } from 'viem'
 
@@ -80,6 +81,25 @@ export const Card = (props: CardProps) => {
       }}
     >
       {children}
+    </div>
+  )
+}
+
+interface VaultBalanceProps {
+  token: TokenWithAmount
+  style?: CSSProperties
+}
+
+export const VaultBalance = (props: VaultBalanceProps) => {
+  const { token, style } = props
+
+  const formattedTokenAmount = formatBigIntForDisplay(token.amount, token.decimals)
+
+  return (
+    <div style={{ display: 'flex', gap: '8px', ...style }}>
+      {/* TODO: add token logo */}
+      <span>{formattedTokenAmount}</span>
+      <span>{token.symbol}</span>
     </div>
   )
 }
