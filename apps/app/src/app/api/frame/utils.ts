@@ -2,7 +2,7 @@ import { FrameButton, TokenWithAmount, VaultInfo } from '@shared/types'
 import { getTokenBalances, NETWORK } from '@shared/utilities'
 import { ImageResponse } from 'next/og'
 import { NextResponse } from 'next/server'
-import { CSSProperties, ReactNode } from 'react'
+import { CSSProperties, ReactElement } from 'react'
 import { Address, createPublicClient, http, isAddress, PublicClient } from 'viem'
 import { getEnsAddress, normalize } from 'viem/ens'
 import { DEFAULT_VAULT_LISTS, RPC_URLS, WAGMI_CHAINS } from '@constants/config'
@@ -58,33 +58,13 @@ export const frameResponse = <FrameStateType extends {}>(data: {
 }
 
 export const imageResponse = (
-  content: ReactNode,
+  content: ReactElement,
   options?: { style?: CSSProperties; width?: number; height?: number }
 ) => {
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          fontSize: 40,
-          color: 'black',
-          background: 'white',
-          width: '100%',
-          height: '100%',
-          padding: '50px 200px',
-          textAlign: 'center',
-          justifyContent: 'center',
-          alignItems: 'center',
-          ...options?.style
-        }}
-      >
-        {content}
-      </div>
-    ),
-    {
-      width: options?.width ?? 600,
-      height: options?.height ?? 600
-    }
-  )
+  return new ImageResponse(content, {
+    width: options?.width ?? 600,
+    height: options?.height ?? 600
+  })
 }
 
 export const errorResponse = (message: string, status?: number) => {

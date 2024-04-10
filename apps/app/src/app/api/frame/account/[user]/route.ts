@@ -59,6 +59,7 @@ const accountView = async (data: { postUrl: string; user: FrameData['user'] }) =
 
   const imgSrc = new URL(`${postUrl}/image`)
   imgSrc.searchParams.set('view', 'account')
+  imgSrc.searchParams.set('userName', user.name)
   imgSrc.searchParams.set('userAddress', user.address)
 
   return frameResponse<FrameState>({
