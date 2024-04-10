@@ -33,6 +33,7 @@ const accountViewImg = async (data: { userName: string | null; userAddress: Addr
         {balancesToDisplay.map((token) => (
           <VaultBalance key={getVaultId(token)} token={token} />
         ))}
+        {!balancesToDisplay.length && <span style={{ fontSize: 24 }}>None</span>}
       </Card>
       <div
         style={{
