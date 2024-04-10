@@ -1,5 +1,5 @@
-import { FrameButton, TokenWithAmount, VaultInfo } from '@shared/types'
-import { getTokenBalances, NETWORK } from '@shared/utilities'
+import { FrameButton, SubgraphPrize, TokenWithAmount, VaultInfo } from '@shared/types'
+import { getTokenBalances, getUserSubgraphPrizes, NETWORK } from '@shared/utilities'
 import { ImageResponse } from 'next/og'
 import { NextResponse } from 'next/server'
 import { CSSProperties, ReactElement } from 'react'
@@ -114,19 +114,38 @@ export const getUserVaultBalances = (
 export const getAllUserVaultBalances = async (userAddress: Address) => {
   const balances: TokenWithAmount[] = []
 
-  const vaults = DEFAULT_VAULT_LISTS.default.tokens.filter((token) =>
-    SUPPORTED_NETWORKS.mainnets.includes(token.chainId)
-  )
-  const networks = [...new Set<NETWORK>(vaults.map((v) => v.chainId))]
-
   await Promise.allSettled(
-    networks.map((network) =>
+    SUPPORTED_NETWORKS.mainnets.map((network) =>
       (async () => {
-        const networkBalances = await getUserVaultBalances(network, userAddress, vaults)
+        const networkBalances = await getUserVaultBalances(
+          network,
+          userAddress,
+          DEFAULT_VAULT_LISTS.default.tokens
+        )
         balances.push(...Object.values(networkBalances))
       })()
     )
   )
 
   return balances
+}
+
+export const getUserLastPrizes = async (network: NETWORK, userAddress: Address) => {
+  const lastPrizes = await getUserSubgraphPrizes(network, userAddress, { numPrizes: 10 })
+  return lastPrizes.map((prize) => ({ network, ...prize }))
+}
+
+export const getAllUserLastPrizes = async (userAddress: Address) => {
+  const lastPrizes: (SubgraphPrize & { network: NETWORK })[] = []
+
+  await Promise.allSettled(
+    SUPPORTED_NETWORKS.testnets.map((network) =>
+      (async () => {
+        const networkLastPrizes = await getUserLastPrizes(network, userAddress)
+        lastPrizes.push(...networkLastPrizes)
+      })()
+    )
+  )
+
+  return lastPrizes.sort((a, b) => b.timestamp - a.timestamp)
 }

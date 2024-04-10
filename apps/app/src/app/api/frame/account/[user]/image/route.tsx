@@ -1,8 +1,14 @@
-import { getVaultId } from '@shared/utilities'
+import { Token } from '@shared/types'
+import { getVaultId, NETWORK, WRAPPED_NATIVE_ASSETS } from '@shared/utilities'
 import { NextRequest } from 'next/server'
 import { Address, isAddress } from 'viem'
-import { CabanaLogo, Card, FrameImage, UserCard, VaultBalance } from '../../../components'
-import { errorResponse, getAllUserVaultBalances, imageResponse } from '../../../utils'
+import { CabanaLogo, Card, FrameImage, UserCard, VaultBalance, Win } from '../../../components'
+import {
+  errorResponse,
+  getAllUserLastPrizes,
+  getAllUserVaultBalances,
+  imageResponse
+} from '../../../utils'
 import { FrameState } from '../route'
 
 export function GET(req: NextRequest) {
@@ -14,6 +20,8 @@ export function GET(req: NextRequest) {
 
   if (view === 'account' && !!userAddress && isAddress(userAddress)) {
     return accountViewImg({ userName, userAddress })
+  } else if (view === 'wins' && !!userAddress && isAddress(userAddress)) {
+    return winsViewImg({ userName, userAddress })
   }
 
   return errorResponse('Invalid Request', 400)
@@ -35,14 +43,42 @@ const accountViewImg = async (data: { userName: string | null; userAddress: Addr
         ))}
         {!balancesToDisplay.length && <span style={{ fontSize: 24 }}>None</span>}
       </Card>
-      <div
-        style={{
-          width: '100%',
-          display: 'flex',
-          gap: '32px',
-          alignItems: 'center'
-        }}
-      >
+      <div style={{ width: '100%', display: 'flex', gap: '32px', alignItems: 'center' }}>
+        <CabanaLogo style={{ flexShrink: 1, padding: '16px' }} />
+        <UserCard user={userName ?? userAddress} />
+      </div>
+    </FrameImage>
+  )
+}
+
+const winsViewImg = async (data: { userName: string | null; userAddress: Address }) => {
+  const { userName, userAddress } = data
+
+  const wins = await getAllUserLastPrizes(userAddress)
+
+  const winsToDisplay = wins.filter((win) => win.payout > 0n).slice(0, 5)
+
+  // TODO: should not assume all prize pools have WETH as the prize token
+  const getPrizeToken = (chainId: NETWORK): Token => {
+    return {
+      chainId,
+      address: WRAPPED_NATIVE_ASSETS[chainId] as Address,
+      symbol: 'WETH',
+      name: 'Wrapped Ether',
+      decimals: 18
+    }
+  }
+
+  return imageResponse(
+    <FrameImage>
+      <Card style={{ width: '100%', flexGrow: 1, gap: '8px' }}>
+        <span>Recent Wins:</span>
+        {winsToDisplay.map((win) => (
+          <Win key={`${win.network}-${win.id}`} win={win} prizeToken={getPrizeToken(win.network)} />
+        ))}
+        {!winsToDisplay.length && <span style={{ fontSize: 24 }}>None yet</span>}
+      </Card>
+      <div style={{ width: '100%', display: 'flex', gap: '32px', alignItems: 'center' }}>
         <CabanaLogo style={{ flexShrink: 1, padding: '16px' }} />
         <UserCard user={userName ?? userAddress} />
       </div>

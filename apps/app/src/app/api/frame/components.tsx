@@ -1,5 +1,5 @@
-import { TokenWithAmount } from '@shared/types'
-import { formatBigIntForDisplay, shorten } from '@shared/utilities'
+import { SubgraphPrize, Token, TokenWithAmount } from '@shared/types'
+import { formatBigIntForDisplay, NETWORK, shorten } from '@shared/utilities'
 import { CSSProperties, ReactNode } from 'react'
 import { isAddress } from 'viem'
 
@@ -98,8 +98,31 @@ export const VaultBalance = (props: VaultBalanceProps) => {
   return (
     <div style={{ display: 'flex', gap: '8px', ...style }}>
       {/* TODO: add token logo */}
+      {/* TODO: add network logo (smaller?) */}
       <span>{formattedTokenAmount}</span>
       <span>{token.symbol}</span>
+    </div>
+  )
+}
+
+interface WinProps {
+  win: SubgraphPrize & { network: NETWORK }
+  prizeToken: Token
+  style?: CSSProperties
+}
+
+export const Win = (props: WinProps) => {
+  const { win, prizeToken, style } = props
+
+  const formattedWinAmount = formatBigIntForDisplay(win.payout, prizeToken.decimals)
+
+  return (
+    <div style={{ display: 'flex', gap: '8px', ...style }}>
+      {/* TODO: add date */}
+      {/* TODO: add token logo */}
+      {/* TODO: add network logo (smaller?) */}
+      <span>{formattedWinAmount}</span>
+      <span>{prizeToken.symbol}</span>
     </div>
   )
 }

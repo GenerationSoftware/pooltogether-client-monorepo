@@ -76,10 +76,13 @@ const accountView = async (data: { postUrl: string; user: FrameData['user'] }) =
 const winsView = (data: { postUrl: string; user: FrameData['user'] }) => {
   const { postUrl, user } = data
 
-  const imgSrc = `${APP_URL}/facebook-share-image-1200-630.png` // TODO: get dynamic wins img
+  const imgSrc = new URL(`${postUrl}/image`)
+  imgSrc.searchParams.set('view', 'wins')
+  imgSrc.searchParams.set('userName', user.name)
+  imgSrc.searchParams.set('userAddress', user.address)
 
   return frameResponse<FrameState>({
-    img: { src: imgSrc },
+    img: { src: imgSrc.toString(), aspectRatio: '1:1' },
     postUrl,
     buttons: [{ content: 'Back' }],
     state: { view: 'wins', user }
