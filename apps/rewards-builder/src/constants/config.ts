@@ -74,5 +74,5 @@ export const PROMOTION_FILTERS: {
 } = {
   [NETWORK.mainnet]: {},
   [NETWORK.optimism]: { fromBlock: 112_933_000n },
-  [NETWORK.optimism_sepolia]: { fromBlock: 10_407_650n }
+  [NETWORK.optimism_sepolia]: { fromBlock: 10_535_200n }
 }
