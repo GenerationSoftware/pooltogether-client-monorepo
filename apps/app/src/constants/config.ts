@@ -105,7 +105,7 @@ export const TWAB_REWARDS_SETTINGS: {
       USDC_TOKEN_ADDRESSES[NETWORK.optimism_sepolia],
       POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia]
     ],
-    fromBlock: 10_535_200n
+    fromBlock: 10_574_800n
   }
 }
 
