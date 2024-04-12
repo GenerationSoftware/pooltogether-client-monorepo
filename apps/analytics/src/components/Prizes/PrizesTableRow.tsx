@@ -95,6 +95,10 @@ const PrizeSize = (props: PrizeSizeProps) => {
       ? tierWins[0].payout + tierWins[0].claimReward
       : undefined
 
+  const formattedPrizeSize = !!prizeSize
+    ? formatBigIntForDisplay(prizeSize, prizeToken.decimals, { maximumFractionDigits: 4 })
+    : undefined
+
   return (
     <div className={classNames('flex flex-col gap-2', className)}>
       <span className='text-pt-purple-300 md:hidden'>{prizesHeaders.size}</span>
@@ -102,7 +106,7 @@ const PrizeSize = (props: PrizeSizeProps) => {
         {!!prizeSize ? (
           <>
             <span className='text-xl font-semibold'>
-              {formatBigIntForDisplay(prizeSize, prizeToken.decimals, { maximumFractionDigits: 2 })}
+              {formattedPrizeSize === '0' ? '< 0.0001' : formattedPrizeSize}
             </span>{' '}
             {prizeToken.symbol}
           </>
