@@ -31,7 +31,7 @@ export const useDrawStatus = (prizePool: PrizePool, drawId: number) => {
 
       const openedAt = firstDrawOpenedAt + drawPeriod * (drawId - 1)
       const closedAt = openedAt + drawPeriod
-      const startedAt = rngTxs?.drawStart[0].timestamp // TODO: double check this - don't know if its the first or last event
+      const startedAt = rngTxs?.drawStart[rngTxs.drawStart.length - 1].timestamp
       const awardedAt = rngTxs?.drawFinish?.timestamp
       const finalizedAt = closedAt + drawPeriod
 
