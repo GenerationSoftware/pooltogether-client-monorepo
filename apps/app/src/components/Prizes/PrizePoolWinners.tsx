@@ -92,6 +92,7 @@ interface DrawRowProps {
   isOngoing?: boolean
 }
 
+// TODO: highlight draws with grand prizes awarded
 const DrawRow = (props: DrawRowProps) => {
   const { prizePool, draw, isOngoing } = props
 

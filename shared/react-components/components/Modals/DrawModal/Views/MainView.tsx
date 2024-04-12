@@ -198,8 +198,8 @@ const DrawWinnersTable = (props: DrawWinnersTableProps) => {
         <div className='flex flex-col w-full max-h-52 gap-3 overflow-y-auto'>
           {wins.map((win) => {
             const formattedPrize = formatBigIntForDisplay(win[1], tokenData.decimals, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2
+              minimumFractionDigits: 4,
+              maximumFractionDigits: 4
             })
 
             return (
@@ -211,7 +211,9 @@ const DrawWinnersTable = (props: DrawWinnersTableProps) => {
                 </span>
                 <span className='w-1/2 text-right whitespace-nowrap md:text-center'>
                   {!!tokenData ? (
-                    `${formattedPrize === '0.00' ? '< 0.01' : formattedPrize} ${tokenData.symbol}`
+                    `${formattedPrize === '0.0000' ? '< 0.0001' : formattedPrize} ${
+                      tokenData.symbol
+                    }`
                   ) : (
                     <Spinner />
                   )}
