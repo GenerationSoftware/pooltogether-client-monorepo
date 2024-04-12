@@ -164,7 +164,10 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
           }
         />
       )}
-      <VaultInfoRow name={t_vault('headers.tvl')} data={<VaultTotalDeposits vault={vault} />} />
+      <VaultInfoRow
+        name={t_vault('headers.tvl')}
+        data={<VaultTotalDeposits vault={vault} className='!flex-row gap-1' />}
+      />
       {!!prizeToken && (
         <VaultInfoRow
           name={

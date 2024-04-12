@@ -45,7 +45,7 @@ export const AccountDepositsCard = (props: AccountDepositsCardProps) => {
           <span className='text-xs text-pt-purple-200'>
             {isExternalUser ? t_vault('headers.balance') : t_vault('headers.yourBalance')}
           </span>
-          <AccountVaultBalance vault={vault} address={userAddress} className='!flex-row gap-1' />
+          <AccountVaultBalance vault={vault} address={userAddress} className='!items-end' />
         </div>
         <div className='flex items-center justify-between'>
           <span className='flex gap-1 items-center text-xs text-pt-purple-200'>

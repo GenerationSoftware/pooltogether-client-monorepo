@@ -1,14 +1,16 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useVaultBalance, useVaultShareData } from '@generationsoftware/hyperstructure-react-hooks'
-import { TokenAmount, TokenValue } from '@shared/react-components'
+import { TokenAmount, TokenValueAndAmount } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
+import { formatUnits } from 'viem'
 
 interface VaultTotalDepositsProps {
   vault: Vault
+  className?: string
 }
 
 export const VaultTotalDeposits = (props: VaultTotalDepositsProps) => {
-  const { vault } = props
+  const { vault, className } = props
 
   const { data: shareData } = useVaultShareData(vault)
 
@@ -26,11 +28,16 @@ export const VaultTotalDeposits = (props: VaultTotalDepositsProps) => {
     return <TokenAmount token={{ ...shareData, amount: shareData.totalSupply }} hideZeroes={true} />
   }
 
+  const shiftedAmount = parseFloat(formatUnits(totalDeposits.amount, totalDeposits.decimals))
+
   return (
-    <TokenValue
+    <TokenValueAndAmount
       token={totalDeposits}
-      hideZeroes={true}
-      fallback={<TokenAmount token={totalDeposits} hideZeroes={true} />}
+      className={className}
+      valueClassName='text-sm md:text-base'
+      amountClassName='text-xs md:text-sm'
+      valueOptions={{ hideZeroes: true }}
+      amountOptions={shiftedAmount > 1e3 ? { hideZeroes: true } : { maximumFractionDigits: 2 }}
     />
   )
 }
