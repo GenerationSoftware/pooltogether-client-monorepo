@@ -1,6 +1,7 @@
 /**
  * ABIs
  */
+export * from './abis/claimer'
 export * from './abis/drawManager'
 export * from './abis/erc20-oldPermit'
 export * from './abis/erc20'

@@ -39,8 +39,12 @@ export const useBlocksAtTimestamps = (chainId: number, timestamps: number[]) => 
   return useMemo(() => {
     const isFetched = results?.every((result) => result.isFetched)
 
-    const data: { [timestamp: number]: GetBlockReturnType<Chain, false> | undefined } = {}
-    results.forEach((result, i) => (data[timestamps[i]] = result.data))
+    const data: { [timestamp: number]: GetBlockReturnType<Chain, false> } = {}
+    results.forEach((result, i) => {
+      if (!!result.data) {
+        data[timestamps[i]] = result.data
+      }
+    })
 
     return { isFetched, data }
   }, [results])

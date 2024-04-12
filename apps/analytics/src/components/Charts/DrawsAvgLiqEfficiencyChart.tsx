@@ -66,8 +66,8 @@ export const DrawsAvgLiqEfficiencyChart = (props: DrawsAvgLiqEfficiencyChartProp
     if (
       !!liquidationEvents &&
       !!allDrawsStatus &&
-      !!openedAtBlocksByTimestamp &&
-      !!closedAtBlocksByTimestamp &&
+      !!Object.keys(openedAtBlocksByTimestamp).length &&
+      !!Object.keys(closedAtBlocksByTimestamp).length &&
       !!Object.keys(tokenInPrices).length &&
       !!Object.keys(tokenOutPrices).length
     ) {
