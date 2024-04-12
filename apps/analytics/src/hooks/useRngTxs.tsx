@@ -24,7 +24,6 @@ export interface DrawFinishTx {
   reward: bigint
   rewardRecipient: Address
   reserve: bigint
-  remainingReserve: bigint
   lastNumTiers: number
   numTiers: number
   elapsedTime: number
@@ -76,23 +75,31 @@ export const useRngTxs = (prizePool: PrizePool) => {
       !!drawStartedBlocks &&
       !!drawAwardedBlocks
     ) {
-      const rngTxs = drawStartedEvents
-        .map((drawStartedEvent) => {
-          const drawId = drawStartedEvent.args.drawId
+      const drawIds = [...new Set<number>(drawStartedEvents.map((e) => e.args.drawId))]
 
-          const drawStartedBlock = drawStartedBlocks.find(
-            (block) => block.number === drawStartedEvent.blockNumber
+      const rngTxs = drawIds
+        .map((drawId) => {
+          const relevantDrawStartedEvents = drawStartedEvents.filter(
+            (e) => e.args.drawId === drawId
           )
 
-          const drawStart: DrawStartTx = {
-            drawId,
-            reward: drawStartedEvent.args.reward,
-            rewardRecipient: drawStartedEvent.args.recipient,
-            elapsedTime: drawStartedEvent.args.elapsedTime,
-            hash: drawStartedEvent.transactionHash,
-            blockNumber: drawStartedEvent.blockNumber,
-            timestamp: !!drawStartedBlock ? Number(drawStartedBlock.timestamp) : undefined
-          }
+          const drawStart: DrawStartTx[] = []
+
+          relevantDrawStartedEvents.forEach((drawStartedEvent) => {
+            const drawStartedBlock = drawStartedBlocks.find(
+              (block) => block.number === drawStartedEvent.blockNumber
+            )
+
+            drawStart.push({
+              drawId,
+              reward: drawStartedEvent.args.reward,
+              rewardRecipient: drawStartedEvent.args.recipient,
+              elapsedTime: drawStartedEvent.args.elapsedTime,
+              hash: drawStartedEvent.transactionHash,
+              blockNumber: drawStartedEvent.blockNumber,
+              timestamp: !!drawStartedBlock ? Number(drawStartedBlock.timestamp) : undefined
+            })
+          })
 
           let drawFinish: DrawFinishTx | undefined = undefined
 
@@ -111,7 +118,6 @@ export const useRngTxs = (prizePool: PrizePool) => {
                 reward: drawFinishedEvent.args.reward,
                 rewardRecipient: drawFinishedEvent.args.recipient,
                 reserve: drawAwardedEvent.args.reserve,
-                remainingReserve: drawFinishedEvent.args.remainingReserve,
                 lastNumTiers: drawAwardedEvent.args.lastNumTiers,
                 numTiers: drawAwardedEvent.args.numTiers,
                 elapsedTime: drawFinishedEvent.args.elapsedTime,

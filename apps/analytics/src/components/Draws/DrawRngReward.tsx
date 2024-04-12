@@ -20,7 +20,7 @@ export const DrawRngReward = (props: DrawRngRewardProps) => {
   const { status, isSkipped } = useDrawStatus(prizePool, drawId)
 
   const { data: allRngTxs, isFetched: isFetchedAllRngTxs } = useRngTxs(prizePool)
-  const drawStartTx = allRngTxs?.find((txs) => txs.drawStart.drawId === drawId)?.drawStart
+  const drawStartTxs = allRngTxs?.find((txs) => txs.drawStart[0].drawId === drawId)?.drawStart
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
@@ -34,9 +34,9 @@ export const DrawRngReward = (props: DrawRngRewardProps) => {
       <div className='flex flex-col gap-1 text-sm text-pt-purple-200 whitespace-nowrap'>
         {isFetchedAllRngTxs && !!prizeToken ? (
           <>
-            <span>
-              {!!drawStartTx ? (
-                <>
+            {!!drawStartTxs ? (
+              drawStartTxs.map((drawStartTx) => (
+                <span key={`reward-${drawStartTx.hash}`}>
                   <span
                     className={classNames('text-xl font-semibold', { 'line-through': isSkipped })}
                   >
@@ -45,30 +45,31 @@ export const DrawRngReward = (props: DrawRngRewardProps) => {
                     })}
                   </span>{' '}
                   {prizeToken.symbol}
-                </>
-              ) : isRngCompletionPossible ? (
-                <>
-                  <span className='text-xl font-semibold'>
-                    {formatBigIntForDisplay(currentRngAuctionReward, prizeToken.decimals, {
-                      maximumFractionDigits: 5
-                    })}
-                  </span>{' '}
-                  {prizeToken.symbol}
-                </>
-              ) : (
-                <span>-</span>
-              )}
-            </span>
-            {!!drawStartTx ? (
-              <ExternalLink
-                href={getBlockExplorerUrl(prizePool.chainId, drawStartTx.hash, 'tx')}
-                className='text-blue-400 hover:text-blue-300 transition'
-              >
-                {shorten(drawStartTx.hash, { short: true })}
-              </ExternalLink>
+                </span>
+              ))
+            ) : isRngCompletionPossible ? (
+              <span>
+                <span className='text-xl font-semibold'>
+                  {formatBigIntForDisplay(currentRngAuctionReward, prizeToken.decimals, {
+                    maximumFractionDigits: 5
+                  })}
+                </span>{' '}
+                {prizeToken.symbol}
+              </span>
             ) : (
-              isRngCompletionPossible && <span>Not Yet Awarded</span>
+              <span>-</span>
             )}
+            {!!drawStartTxs
+              ? drawStartTxs.map((drawStartTx) => (
+                  <ExternalLink
+                    key={`link-${drawStartTx.hash}`}
+                    href={getBlockExplorerUrl(prizePool.chainId, drawStartTx.hash, 'tx')}
+                    className='text-blue-400 hover:text-blue-300 transition'
+                  >
+                    {shorten(drawStartTx.hash, { short: true })}
+                  </ExternalLink>
+                ))
+              : isRngCompletionPossible && <span>Not Yet Awarded</span>}
           </>
         ) : (
           <Spinner className='after:border-y-pt-purple-300' />
