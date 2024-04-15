@@ -90,14 +90,14 @@ export const NETWORK_CONFIG: Record<
   //   description: 'The OG optimistic rollup on Ethereum.',
   //   prizePool: '',
   //   claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism],
-  //   lp: { targetAuctionPeriod: SECONDS_PER_HOUR, targetAuctionPriceUsd: 10 },
+  //   lp: { targetAuctionPeriod: SECONDS_PER_HOUR * 6, targetAuctionPriceUsd: 10 },
   //   yieldSources: []
   // },
   [NETWORK.optimism_sepolia]: {
     description: 'Sepolia testnet for the Optimism network.',
     prizePool: '0x9f594BA8A838D41E7781BFA2aeA42702E216AF5a',
     claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism_sepolia],
-    lp: { targetAuctionPeriod: SECONDS_PER_HOUR, targetAuctionPriceUsd: 10 },
+    lp: { targetAuctionPeriod: SECONDS_PER_HOUR * 6, targetAuctionPriceUsd: 10 },
     yieldSources: [
       {
         id: 'aave',

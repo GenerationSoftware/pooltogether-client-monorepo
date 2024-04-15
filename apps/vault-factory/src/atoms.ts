@@ -100,7 +100,7 @@ export const liquidationPairTargetAuctionPriceAtom = atom<bigint | undefined>(un
 /**
  * Liquidation Pair Smoothing Factor
  */
-export const liquidationPairSmoothingFactorAtom = atom<number>(0)
+export const liquidationPairSmoothingFactorAtom = atom<number>(0.5)
 
 /**
  * Liquidation Pair Address
