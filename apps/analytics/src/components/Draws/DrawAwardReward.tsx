@@ -28,6 +28,14 @@ export const DrawAwardReward = (props: DrawAwardRewardProps) => {
 
   const isAwardPossible = status === 'closed' && !!currentDrawAwardReward && !isSkipped
 
+  const getFormattedAmount = (rawAmount: bigint, decimals: number) => {
+    const formattedBigInt = formatBigIntForDisplay(rawAmount, decimals, {
+      maximumFractionDigits: 4
+    })
+
+    return formattedBigInt !== '0' ? formattedBigInt : '< 0.0001'
+  }
+
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
       <DrawCardItemTitle>
@@ -41,18 +49,14 @@ export const DrawAwardReward = (props: DrawAwardRewardProps) => {
               {!!drawFinishTx ? (
                 <>
                   <span className='text-xl font-semibold'>
-                    {formatBigIntForDisplay(drawFinishTx.reward, prizeToken.decimals, {
-                      maximumFractionDigits: 5
-                    })}
+                    {getFormattedAmount(drawFinishTx.reward, prizeToken.decimals)}
                   </span>{' '}
                   {prizeToken.symbol}
                 </>
               ) : isAwardPossible ? (
                 <>
                   <span className='text-xl font-semibold'>
-                    {formatBigIntForDisplay(currentDrawAwardReward, prizeToken.decimals, {
-                      maximumFractionDigits: 5
-                    })}
+                    {getFormattedAmount(currentDrawAwardReward, prizeToken.decimals)}
                   </span>{' '}
                   {prizeToken.symbol}
                 </>

@@ -28,6 +28,14 @@ export const DrawRngReward = (props: DrawRngRewardProps) => {
 
   const isRngCompletionPossible = status === 'closed' && !!currentRngAuctionReward && !isSkipped
 
+  const getFormattedAmount = (rawAmount: bigint, decimals: number) => {
+    const formattedBigInt = formatBigIntForDisplay(rawAmount, decimals, {
+      maximumFractionDigits: 4
+    })
+
+    return formattedBigInt !== '0' ? formattedBigInt : '< 0.0001'
+  }
+
   return (
     <div className={classNames('flex flex-col gap-3', className)}>
       <DrawCardItemTitle>{isRngCompletionPossible ? 'Current ' : ''}RNG Reward</DrawCardItemTitle>
@@ -40,9 +48,7 @@ export const DrawRngReward = (props: DrawRngRewardProps) => {
                   <span
                     className={classNames('text-xl font-semibold', { 'line-through': isSkipped })}
                   >
-                    {formatBigIntForDisplay(drawStartTx.reward, prizeToken.decimals, {
-                      maximumFractionDigits: 5
-                    })}
+                    {getFormattedAmount(drawStartTx.reward, prizeToken.decimals)}
                   </span>{' '}
                   {prizeToken.symbol}
                 </span>
@@ -50,9 +56,7 @@ export const DrawRngReward = (props: DrawRngRewardProps) => {
             ) : isRngCompletionPossible ? (
               <span>
                 <span className='text-xl font-semibold'>
-                  {formatBigIntForDisplay(currentRngAuctionReward, prizeToken.decimals, {
-                    maximumFractionDigits: 5
-                  })}
+                  {getFormattedAmount(currentRngAuctionReward, prizeToken.decimals)}
                 </span>{' '}
                 {prizeToken.symbol}
               </span>

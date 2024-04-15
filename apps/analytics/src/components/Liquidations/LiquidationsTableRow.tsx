@@ -187,7 +187,7 @@ const AvgLiquidationPrice = (props: AvgLiquidationPriceProps) => {
             <span className='text-xl font-semibold'>
               {formatNumberForDisplay(
                 avgPrice,
-                avgPrice > 100 ? { hideZeroes: true } : { maximumFractionDigits: 2 }
+                avgPrice > 100 ? { hideZeroes: true } : { maximumFractionDigits: 4 }
               )}
             </span>{' '}
             {tokenIn.symbol}
@@ -345,9 +345,7 @@ const AvgEfficiencyItem = (props: AvgEfficiencyItemProps) => {
       )}
     >
       <div className={classNames('w-3 h-3 rounded mr-1', color)} />
-      <span>
-        {formatNumberForDisplay(efficiency, { hideZeroes: true, maximumFractionDigits: 1 })}%
-      </span>
+      <span>{formatNumberForDisplay(efficiency, { maximumFractionDigits: 2 })}%</span>
       <ArrowRightIcon className='w-auto h-3' />
       <span>{label}</span>
     </div>

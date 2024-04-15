@@ -118,7 +118,7 @@ export const ClaimFeeStat = (props: ClaimFeeStatProps) => {
   const formattedPercentage = (
     <span className='pl-2'>
       <span className='text-xl'>
-        {data.percentage.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+        {data.percentage.toLocaleString(undefined, { maximumFractionDigits: 2 })}
       </span>
       %
     </span>
