@@ -6,7 +6,7 @@ import { useEffect, useMemo } from 'react'
 import { selectedDrawIdAtom } from 'src/atoms'
 import { PublicClient } from 'viem'
 import { usePublicClient } from 'wagmi'
-import { DrawClaimFeesOverTimeChart } from '@components/Charts/DrawClaimFeesOverTimeChart'
+import { DrawAvgClaimFeesChart } from '@components/Charts/DrawAvgClaimFeesChart'
 import { DrawSelector } from '@components/Draws/DrawSelector'
 import { DrawStatusBadge } from '@components/Draws/DrawStatusBadge'
 import { PrizesTable } from '@components/Prizes/PrizesTable'
@@ -53,11 +53,17 @@ export const PrizesView = (props: PrizesViewProps) => {
       {!!drawIdSelected && (
         <>
           <DrawStatusBadge prizePool={prizePool} drawId={drawIdSelected} />
-          <DrawClaimFeesOverTimeChart
+          <DrawAvgClaimFeesChart
             prizePool={prizePool}
             drawId={drawIdSelected}
             className='max-w-4xl'
           />
+          {/* TODO: re-add this chart once infura caching issue is fixed */}
+          {/* <DrawClaimFeesOverTimeChart
+            prizePool={prizePool}
+            drawId={drawIdSelected}
+            className='max-w-4xl'
+          /> */}
           <PrizesTable prizePool={prizePool} drawId={drawIdSelected} className='md:mt-6' />
         </>
       )}
