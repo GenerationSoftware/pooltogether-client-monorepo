@@ -5,6 +5,7 @@ import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { usePublicClient, useReadContract } from 'wagmi'
 
+// TODO: BUG - infura seems to be returning bogus/cached data, with viem batching or not
 export const useClaimFeesOverTime = (prizePool: PrizePool, blockNumbers: bigint[]) => {
   const publicClient = usePublicClient({ chainId: prizePool.chainId })
 

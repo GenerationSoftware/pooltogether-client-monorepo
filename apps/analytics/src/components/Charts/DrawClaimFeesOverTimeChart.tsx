@@ -5,6 +5,7 @@ import {
   usePrizeTokenPrice,
   useTokenPrices
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { Token } from '@shared/types'
 import {
   formatNumberForDisplay,
   getSimpleTime,
@@ -15,8 +16,9 @@ import {
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
+import { TooltipProps } from 'recharts'
 import { currentTimestampAtom } from 'src/atoms'
-import { formatUnits } from 'viem'
+import { Address, formatUnits } from 'viem'
 import { useClaimFeesOverTime } from '@hooks/useClaimFeesOverTime'
 import { useDrawStatus } from '@hooks/useDrawStatus'
 import { LineChart } from './LineChart'
@@ -25,6 +27,13 @@ interface DrawClaimFeesOverTimeChartProps {
   prizePool: PrizePool
   drawId: number
   className?: string
+}
+
+interface Claim {
+  txHash: `0x${string}`
+  reward: number
+  recipient: Address
+  timestamp: number
 }
 
 export const DrawClaimFeesOverTimeChart = (props: DrawClaimFeesOverTimeChartProps) => {
@@ -48,7 +57,6 @@ export const DrawClaimFeesOverTimeChart = (props: DrawClaimFeesOverTimeChartProp
   )
 
   const {
-    closedAt,
     awardedAt,
     finalizedAt,
     isFetched: isFetchedDrawStatus
@@ -59,8 +67,8 @@ export const DrawClaimFeesOverTimeChart = (props: DrawClaimFeesOverTimeChartProp
   const periodicTimestamps = useMemo(() => {
     const timestamps: number[] = []
 
-    if (!!closedAt && !!finalizedAt) {
-      const startTimestamp = closedAt
+    if (!!awardedAt && !!finalizedAt) {
+      const startTimestamp = awardedAt
       const endTimestamp = Math.min(finalizedAt, currentTimestamp)
 
       for (let i = startTimestamp; i < endTimestamp; i += SECONDS_PER_MINUTE * 5) {
@@ -70,7 +78,7 @@ export const DrawClaimFeesOverTimeChart = (props: DrawClaimFeesOverTimeChartProp
     }
 
     return timestamps
-  }, [closedAt, finalizedAt, currentTimestamp])
+  }, [awardedAt, finalizedAt, currentTimestamp])
 
   const { data: periodicBlocks, isFetched: isFetchedPeriodicBlocks } = useBlocksAtTimestamps(
     prizePool.chainId,
@@ -98,36 +106,71 @@ export const DrawClaimFeesOverTimeChart = (props: DrawClaimFeesOverTimeChartProp
   )
 
   const chartTimestamps = useMemo(() => {
-    return [...periodicTimestamps, ...winTimestamps]
-      .sort((a, b) => a - b)
-      .filter((t) => t >= (awardedAt ?? 0)) // TODO: no idea why, but if we query `useClaimFeesOverTime` with t >= awardedAt it breaks
+    return [...periodicTimestamps, ...winTimestamps].sort((a, b) => a - b)
   }, [periodicTimestamps, winTimestamps, awardedAt])
 
   const chartData = useMemo(() => {
-    const data: { name: number; claimFee: number; claimFeeUsd?: number }[] = []
+    const data: {
+      name: number
+      claimFee: number
+      claimFeeUsd?: number
+      claims: Claim[]
+    }[] = []
 
     if (!!prizeToken) {
-      chartTimestamps.forEach((timestamp) => {
+      const getPrizeTokenAmount = (rawAmount: bigint) => {
+        return parseFloat(formatUnits(rawAmount, prizeToken.decimals))
+      }
+
+      const claimsQueue = !!drawWins
+        ? [...drawWins]
+            .sort((a, b) => a.timestamp - b.timestamp)
+            .map((w) => ({
+              txHash: w.txHash,
+              reward:
+                !!prizeToken.price && !!usdPrice
+                  ? (getPrizeTokenAmount(w.claimReward) * prizeToken.price) / usdPrice
+                  : getPrizeTokenAmount(w.claimReward),
+              recipient: w.claimRewardRecipient,
+              timestamp: w.timestamp
+            }))
+        : []
+
+      chartTimestamps.forEach((timestamp, i) => {
         const blockNumber = blockNumbers[timestamp]
 
         if (!!blockNumber) {
           const rawClaimFee = claimFeesOverTime[blockNumber.toString()]
 
           if (!!rawClaimFee) {
-            const claimFee = parseFloat(formatUnits(rawClaimFee, prizeToken.decimals))
+            const claimFee = getPrizeTokenAmount(rawClaimFee)
             const claimFeeUsd =
               !!prizeToken.price && !!usdPrice
                 ? (claimFee * prizeToken.price) / usdPrice
                 : undefined
 
-            data.push({ name: timestamp, claimFee, claimFeeUsd })
+            const claims: Claim[] = []
+
+            if (i === chartTimestamps.length - 1) {
+              claims.push(...claimsQueue.splice(0))
+            } else {
+              const firstInvalidClaimIndex = claimsQueue.findIndex(
+                (c) => c.timestamp >= chartTimestamps[i + 1]
+              )
+
+              if (firstInvalidClaimIndex !== -1) {
+                claims.push(...claimsQueue.splice(0, firstInvalidClaimIndex))
+              }
+            }
+
+            data.push({ name: timestamp, claimFee, claimFeeUsd, claims })
           }
         }
       })
     }
 
     return data
-  }, [prizeToken, usdPrice, chartTimestamps, blockNumbers, claimFeesOverTime])
+  }, [prizeToken, usdPrice, drawWins, blockNumbers, claimFeesOverTime, chartTimestamps])
 
   const isFetched =
     isFetchedPrizeToken &&
@@ -141,12 +184,6 @@ export const DrawClaimFeesOverTimeChart = (props: DrawClaimFeesOverTimeChartProp
   if (isFetched && !!prizeToken && !!chartData?.length) {
     const isUsdValueDisplayed = !!prizeToken.price && !!usdPrice
 
-    const getFormattedTooltipValue = (value: number) => {
-      return isUsdValueDisplayed
-        ? `$${formatNumberForDisplay(value, { maximumFractionDigits: 2 })}`
-        : `${formatNumberForDisplay(value, { maximumFractionDigits: 4 })} ${prizeToken.symbol}`
-    }
-
     return (
       <div
         className={classNames(
@@ -158,11 +195,9 @@ export const DrawClaimFeesOverTimeChart = (props: DrawClaimFeesOverTimeChartProp
         <LineChart
           data={chartData}
           lines={[{ id: isUsdValueDisplayed ? 'claimFeeUsd' : 'claimFee' }]}
-          // TODO: show txs when they occur on tooltip
           tooltip={{
             show: true,
-            formatter: (value) => [getFormattedTooltipValue(value), 'Claim Fee'],
-            labelFormatter: (label) => getSimpleTime(Number(label))
+            content: <Tooltip prizeToken={prizeToken} />
           }}
           xAxis={{
             type: 'number',
@@ -182,4 +217,36 @@ export const DrawClaimFeesOverTimeChart = (props: DrawClaimFeesOverTimeChartProp
   }
 
   return <></>
+}
+
+const Tooltip = (props: TooltipProps<number, string | number> & { prizeToken: Token }) => {
+  const { active, payload: _payload, label, prizeToken } = props
+
+  if (active && !!_payload && !!_payload.length) {
+    const payload = _payload[0].payload as {
+      claimFee: number
+      claimFeeUsd?: number
+      claims: Claim[]
+    }
+
+    const time = getSimpleTime(Number(label))
+
+    const formattedClaimFee = !!payload.claimFeeUsd
+      ? `$${formatNumberForDisplay(payload.claimFeeUsd, { maximumFractionDigits: 2 })}`
+      : `${formatNumberForDisplay(payload.claimFee, { maximumFractionDigits: 4 })} ${
+          prizeToken.symbol
+        }`
+
+    const numClaims = payload.claims.length
+
+    return (
+      <div className='flex flex-col p-[10px] bg-white border border-[#cccccc]'>
+        <span>{time}</span>
+        <span className='py-1' style={{ color: _payload[0].color }}>
+          Claim Fee: {formattedClaimFee}
+        </span>
+        {!!numClaims && <span>+{numClaims.toLocaleString()} Prize Claims</span>}
+      </div>
+    )
+  }
 }
