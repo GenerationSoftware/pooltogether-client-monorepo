@@ -3,9 +3,8 @@ import { useDrawIds } from '@generationsoftware/hyperstructure-react-hooks'
 import { DrawStatus } from '@shared/types'
 import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
-import { useAtom } from 'jotai'
+import { useRouter } from 'next/router'
 import { ReactNode, useEffect, useMemo } from 'react'
-import { selectedDrawIdAtom } from 'src/atoms'
 import { useAllDrawsStatus } from '@hooks/useAllDrawsStatus'
 
 interface DrawSelectorProps {
@@ -16,6 +15,8 @@ interface DrawSelectorProps {
 
 export const DrawSelector = (props: DrawSelectorProps) => {
   const { prizePool, excludeDrawStatus, className } = props
+
+  const router = useRouter()
 
   const { data: allDrawIds } = useDrawIds(prizePool)
 
@@ -43,14 +44,17 @@ export const DrawSelector = (props: DrawSelectorProps) => {
     }
   }, [draws, excludeDrawStatus])
 
-  const [drawIdSelected, setDrawIdSelected] = useAtom(selectedDrawIdAtom)
+  const drawIdSelected = useMemo(() => {
+    const queryDraw = router.query['draw'] as string | undefined
+    return queryDraw ? parseInt(queryDraw) : undefined
+  }, [router.query])
 
   const firstDrawId = drawIds[0]
   const lastDrawId = drawIds[drawIds.length - 1]
 
   useEffect(() => {
-    if (!!lastDrawId && !drawIdSelected) {
-      setDrawIdSelected(lastDrawId)
+    if (!!lastDrawId && !drawIdSelected && router.isReady) {
+      router.push({ query: { ...router.query, draw: lastDrawId } }, undefined, { shallow: true })
     }
   }, [lastDrawId])
 
@@ -90,7 +94,15 @@ interface DrawIdProps {
 const DrawId = (props: DrawIdProps) => {
   const { id, content, className } = props
 
-  const [drawIdSelected, setDrawIdSelected] = useAtom(selectedDrawIdAtom)
+  const router = useRouter()
+
+  const drawIdSelected = useMemo(() => {
+    return parseInt(router.query['draw'] as string)
+  }, [router.query])
+
+  const setDrawIdSelected = (id: number) => {
+    router.push({ query: { ...router.query, draw: id } }, undefined, { shallow: true })
+  }
 
   return (
     <span

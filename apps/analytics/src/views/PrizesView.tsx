@@ -1,9 +1,8 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { PRIZE_POOLS, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
-import { useAtomValue } from 'jotai'
+import { useRouter } from 'next/router'
 import { useEffect, useMemo } from 'react'
-import { selectedDrawIdAtom } from 'src/atoms'
 import { PublicClient } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { DrawAvgClaimFeesChart } from '@components/Charts/DrawAvgClaimFeesChart'
@@ -20,6 +19,8 @@ interface PrizesViewProps {
 export const PrizesView = (props: PrizesViewProps) => {
   const { chainId, className } = props
 
+  const router = useRouter()
+
   const publicClient = usePublicClient({ chainId })
 
   const prizePool = useMemo(() => {
@@ -35,6 +36,11 @@ export const PrizesView = (props: PrizesViewProps) => {
     )
   }, [chainId, publicClient])
 
+  const drawIdSelected = useMemo(() => {
+    const queryDraw = router.query['draw'] as string | undefined
+    return queryDraw ? parseInt(queryDraw) : undefined
+  }, [router.query])
+
   const { refetch: refetchRngTxs } = useRngTxs(prizePool)
 
   // Automatic data refetching
@@ -45,8 +51,6 @@ export const PrizesView = (props: PrizesViewProps) => {
 
     return () => clearInterval(interval)
   }, [])
-
-  const drawIdSelected = useAtomValue(selectedDrawIdAtom)
 
   return (
     <div className={classNames('w-full flex flex-col grow gap-2 items-center md:gap-6', className)}>
