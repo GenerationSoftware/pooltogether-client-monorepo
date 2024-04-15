@@ -249,4 +249,6 @@ const Tooltip = (props: TooltipProps<number, string | number> & { prizeToken: To
       </div>
     )
   }
+
+  return <></>
 }
