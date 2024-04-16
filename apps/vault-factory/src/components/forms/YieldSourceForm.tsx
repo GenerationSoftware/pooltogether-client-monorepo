@@ -70,6 +70,11 @@ export const YieldSourceForm = (props: YieldSourceFormProps) => {
             {NETWORK_CONFIG[chainId].yieldSources.map((yieldSource) => (
               <YieldSourceInput key={yieldSource.id} yieldSource={yieldSource} />
             ))}
+            {!NETWORK_CONFIG[chainId].yieldSources.length && (
+              <span className='text-pt-warning-light text-sm'>
+                No default yield sources currently available for this network.
+              </span>
+            )}
           </div>
           <div className='flex flex-col gap-2 items-center'>
             <span>Or...</span>

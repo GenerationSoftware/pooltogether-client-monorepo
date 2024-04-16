@@ -101,7 +101,7 @@ export const NETWORK_CONFIG: Record<
     yieldSources: [
       {
         id: 'aave',
-        name: 'Aave',
+        name: 'Faux Aave',
         href: 'https://aave.com/',
         description: 'Lending and borrowing protocol',
         vaults: [
