@@ -26,6 +26,7 @@ export interface CurrencyValueProps extends Omit<Intl.NumberFormatOptions, 'styl
   locale?: string
   round?: boolean
   hideZeroes?: boolean
+  shortenMillions?: boolean
   fallback?: JSX.Element
 }
 

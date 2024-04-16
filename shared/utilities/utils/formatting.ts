@@ -27,9 +27,27 @@ export const formatNumberForDisplay = (
     locale?: string
     round?: boolean
     hideZeroes?: boolean
+    shortenMillions?: boolean
   } = { locale: 'en' }
 ) => {
-  const { locale, round, hideZeroes, ...formatOptions } = options
+  const { locale, round, hideZeroes, shortenMillions, ...formatOptions } = options
+
+  const format = (v: number) => {
+    return v.toLocaleString(locale || 'en', {
+      ...formatOptions,
+      maximumFractionDigits: !!hideZeroes
+        ? v <= 1
+          ? formatOptions.maximumFractionDigits
+          : 0
+        : formatOptions.maximumFractionDigits,
+      minimumFractionDigits: !!hideZeroes
+        ? v <= 1
+          ? formatOptions.minimumFractionDigits
+          : 0
+        : formatOptions.minimumFractionDigits
+    })
+  }
+
   let _val: number
 
   if (val === undefined || val === null) {
@@ -46,19 +64,17 @@ export const formatNumberForDisplay = (
     _val = Math.round(_val)
   }
 
-  return _val.toLocaleString(locale || 'en', {
-    ...formatOptions,
-    maximumFractionDigits: !!hideZeroes
-      ? _val <= 1
-        ? formatOptions.maximumFractionDigits
-        : 0
-      : formatOptions.maximumFractionDigits,
-    minimumFractionDigits: !!hideZeroes
-      ? _val <= 1
-        ? formatOptions.minimumFractionDigits
-        : 0
-      : formatOptions.minimumFractionDigits
-  })
+  if (!!shortenMillions) {
+    if (_val >= 1e8) {
+      return format(Math.round(_val / 1e6)) + 'M'
+    } else if (_val >= 1e7) {
+      return format(Math.round(_val / 1e5) / 10) + 'M'
+    } else if (_val >= 1e6) {
+      return format(Math.round(_val / 1e4) / 100) + 'M'
+    }
+  }
+
+  return format(_val)
 }
 
 /**
@@ -95,6 +111,7 @@ export const formatCurrencyNumberForDisplay = (
     locale?: string
     round?: boolean
     hideZeroes?: boolean
+    shortenMillions?: boolean
   }
 ) => {
   if (currency.toLowerCase() === 'eth') {

@@ -36,7 +36,7 @@ export const VaultTotalDeposits = (props: VaultTotalDepositsProps) => {
       className={className}
       valueClassName='text-sm md:text-base'
       amountClassName='text-xs md:text-sm'
-      valueOptions={{ hideZeroes: true }}
+      valueOptions={{ hideZeroes: true, shortenMillions: true }}
       amountOptions={shiftedAmount > 1e3 ? { hideZeroes: true } : { maximumFractionDigits: 2 }}
     />
   )
