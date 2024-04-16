@@ -38,6 +38,7 @@ import { useNetworks } from '@hooks/useNetworks'
 import { useSelectedPrizePool } from '@hooks/useSelectedPrizePool'
 import { useSettingsModalView } from '@hooks/useSettingsModalView'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
+import { MigrationPopup } from './MigrationPopup'
 import { drawIdAtom } from './Prizes/PrizePoolWinners'
 import { VaultListHandler } from './VaultListHandler'
 
@@ -310,6 +311,9 @@ export const Layout = (props: LayoutProps) => {
       />
 
       <VaultListHandler />
+
+      {/* TODO: remove a while after launch */}
+      <MigrationPopup />
 
       <main
         className={classNames(
