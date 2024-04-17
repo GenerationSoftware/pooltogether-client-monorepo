@@ -1,15 +1,58 @@
+import {
+  useAllVaultPromotionsApr,
+  usePrizePool,
+  useVaults
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { useIsDismissed } from '@shared/generic-react-hooks'
+import { Token } from '@shared/types'
 import { Button, Modal } from '@shared/ui'
-import { LINKS } from '@shared/utilities'
+import { formatNumberForDisplay, LINKS, NETWORK, PRIZE_POOLS } from '@shared/utilities'
+import defaultVaultList from '@vaultLists/default'
 import { useTranslations } from 'next-intl'
+import { useMemo } from 'react'
+import { TWAB_REWARDS_SETTINGS } from '@constants/config'
 
 export const MigrationPopup = () => {
   const t = useTranslations('Common.greatMigration')
 
   const { isDismissed, dismiss } = useIsDismissed('greatMigrationPopup')
 
-  // TODO: calculate highest apr in bonus rewards
-  const highestRewardsApr = 10
+  const token: Token = {
+    chainId: NETWORK.optimism_sepolia,
+    address: '0x4200000000000000000000000000000000000042',
+    symbol: 'OP',
+    name: 'Optimism',
+    decimals: 18
+  }
+
+  const vaultInfo = useMemo(() => {
+    return defaultVaultList.tokens.filter((t) => t.chainId === token.chainId)
+  }, [])
+
+  const vaults = useVaults(vaultInfo)
+
+  const prizePoolInfo = useMemo(() => {
+    return PRIZE_POOLS.find(
+      (pool) => pool.chainId === token.chainId
+    ) as (typeof PRIZE_POOLS)[number]
+  }, [])
+
+  const prizePool = usePrizePool(
+    prizePoolInfo.chainId,
+    prizePoolInfo.address,
+    prizePoolInfo.options
+  )
+
+  const { data: allVaultPromotionsApr } = useAllVaultPromotionsApr(
+    vaults,
+    prizePool,
+    [token.address],
+    { fromBlock: TWAB_REWARDS_SETTINGS[token.chainId]?.fromBlock }
+  )
+
+  const highestRewardsApr = useMemo(() => {
+    return Math.max(...Object.values(allVaultPromotionsApr))
+  }, [allVaultPromotionsApr])
 
   if (isDismissed) {
     return <></>
@@ -31,12 +74,14 @@ export const MigrationPopup = () => {
                 highlight: (chunks) => <span className='text-pt-purple-50'>{chunks}</span>
               })}
             </span>
-            <span className='text-2xl'>
-              {t.rich('earnUpTo', {
-                apr: highestRewardsApr,
-                highlight: (chunks) => <span className='text-pt-teal'>{chunks}</span>
-              })}
-            </span>
+            {highestRewardsApr > 0 && (
+              <span className='text-2xl'>
+                {t.rich('earnUpTo', {
+                  apr: formatNumberForDisplay(highestRewardsApr, { maximumFractionDigits: 1 }),
+                  highlight: (chunks) => <span className='text-pt-teal'>{chunks}</span>
+                })}
+              </span>
+            )}
           </div>
           <Button href={LINKS.migrations} target='_blank' size='lg' className='min-w-[16rem]'>
             {t('joinButton')}
