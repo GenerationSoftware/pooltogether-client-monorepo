@@ -3,7 +3,7 @@ import {
   usePrizePool,
   useVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { useIsDismissed } from '@shared/generic-react-hooks'
+import { useIsDismissed, useScreenSize } from '@shared/generic-react-hooks'
 import { Token } from '@shared/types'
 import { Button, Modal } from '@shared/ui'
 import { formatNumberForDisplay, LINKS, NETWORK, PRIZE_POOLS } from '@shared/utilities'
@@ -14,6 +14,8 @@ import { TWAB_REWARDS_SETTINGS } from '@constants/config'
 
 export const MigrationPopup = () => {
   const t = useTranslations('Common.greatMigration')
+
+  const { isMobile } = useScreenSize()
 
   const { isDismissed, dismiss } = useIsDismissed('greatMigrationPopup')
 
@@ -58,24 +60,23 @@ export const MigrationPopup = () => {
     return <></>
   }
 
-  // TODO: style on mobile so it doesn't break :3
   return (
     <Modal
       bodyContent={
-        <div className='relative w-[768px] h-[500px] flex flex-col items-center justify-between gap-4 py-12 rounded-3xl isolate overflow-hidden'>
+        <div className='relative aspect-[768/500] flex flex-col items-center justify-between gap-4 p-4 rounded-3xl isolate overflow-hidden md:px-10 md:py-12'>
           <object
             type='image/svg+xml'
             data='/greatMigration.svg'
             className='absolute top-0 -z-10'
           />
-          <div className='flex flex-col gap-4 text-center'>
-            <span className='text-5xl text-pt-purple-200'>
+          <div className='flex flex-col gap-2 text-center md:gap-4'>
+            <span className='text-2xl text-pt-purple-200 sm:text-4xl md:text-5xl'>
               {t.rich('joinTitle', {
                 highlight: (chunks) => <span className='text-pt-purple-50'>{chunks}</span>
               })}
             </span>
             {highestRewardsApr > 0 && (
-              <span className='text-2xl'>
+              <span className='sm:text-lg md:text-2xl'>
                 {t.rich('earnUpTo', {
                   apr: formatNumberForDisplay(highestRewardsApr, { maximumFractionDigits: 1 }),
                   highlight: (chunks) => <span className='text-pt-teal'>{chunks}</span>
@@ -83,12 +84,17 @@ export const MigrationPopup = () => {
               </span>
             )}
           </div>
-          <Button href={LINKS.migrations} target='_blank' size='lg' className='min-w-[16rem]'>
+          <Button
+            href={LINKS.migrations}
+            target='_blank'
+            size={isMobile ? 'md' : 'lg'}
+            className='md:min-w-[16rem]'
+          >
             {t('joinButton')}
           </Button>
         </div>
       }
-      className='p-12 !rounded-3xl md:!w-auto md:max-w-none'
+      className='p-12 rounded-t-3xl md:!w-auto md:max-w-none md:!rounded-3xl'
       onClose={dismiss}
       label='great-migration-popup'
       hideHeader={true}
