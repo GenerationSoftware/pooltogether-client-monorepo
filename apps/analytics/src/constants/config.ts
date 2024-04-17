@@ -31,7 +31,7 @@ export const RPC_URLS = {
  * Queries' start blocks
  */
 export const QUERY_START_BLOCK: { [chainId: number]: bigint } = {
-  [NETWORK.optimism_sepolia]: 10_574_800n
+  [NETWORK.optimism_sepolia]: 10_793_300n
 }
 
 /**

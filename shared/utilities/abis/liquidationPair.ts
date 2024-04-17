@@ -4,12 +4,20 @@ export const liquidationPairABI = [
       { internalType: 'contract ILiquidationSource', name: '_source', type: 'address' },
       { internalType: 'address', name: '__tokenIn', type: 'address' },
       { internalType: 'address', name: '__tokenOut', type: 'address' },
-      { internalType: 'uint256', name: '_targetAuctionPeriod', type: 'uint256' },
+      { internalType: 'uint64', name: '_targetAuctionPeriod', type: 'uint64' },
       { internalType: 'uint192', name: '_targetAuctionPrice', type: 'uint192' },
       { internalType: 'uint256', name: '_smoothingFactor', type: 'uint256' }
     ],
     stateMutability: 'nonpayable',
     type: 'constructor'
+  },
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'requested', type: 'uint256' },
+      { internalType: 'uint256', name: 'available', type: 'uint256' }
+    ],
+    name: 'InsufficientBalance',
+    type: 'error'
   },
   { inputs: [], name: 'ReceiverIsZero', type: 'error' },
   { inputs: [], name: 'SmoothingGteOne', type: 'error' },
@@ -21,7 +29,6 @@ export const liquidationPairABI = [
     name: 'SwapExceedsMax',
     type: 'error'
   },
-  { inputs: [], name: 'ZeroAvailableBalance', type: 'error' },
   {
     anonymous: false,
     inputs: [
@@ -87,7 +94,7 @@ export const liquidationPairABI = [
   {
     inputs: [
       { internalType: 'address', name: '_receiver', type: 'address' },
-      { internalType: 'uint256', name: '', type: 'uint256' },
+      { internalType: 'uint256', name: '_amountOut', type: 'uint256' },
       { internalType: 'uint256', name: '_amountInMax', type: 'uint256' },
       { internalType: 'bytes', name: '_flashSwapData', type: 'bytes' }
     ],

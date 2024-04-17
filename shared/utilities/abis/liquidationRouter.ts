@@ -22,9 +22,7 @@ export const liquidationRouterABI = [
   },
   { inputs: [], name: 'UndefinedTpdaLiquidationPairFactory', type: 'error' },
   {
-    inputs: [
-      { internalType: 'contract TpdaLiquidationPair', name: 'liquidationPair', type: 'address' }
-    ],
+    inputs: [{ internalType: 'address', name: 'liquidationPair', type: 'address' }],
     name: 'UnknownTpdaLiquidationPair',
     type: 'error'
   },

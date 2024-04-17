@@ -16,7 +16,7 @@ export const liquidationPairFactoryABI = [
       },
       { indexed: true, internalType: 'address', name: 'tokenIn', type: 'address' },
       { indexed: true, internalType: 'address', name: 'tokenOut', type: 'address' },
-      { indexed: false, internalType: 'uint256', name: 'targetAuctionPeriod', type: 'uint256' },
+      { indexed: false, internalType: 'uint64', name: 'targetAuctionPeriod', type: 'uint64' },
       { indexed: false, internalType: 'uint192', name: 'targetAuctionPrice', type: 'uint192' },
       { indexed: false, internalType: 'uint256', name: 'smoothingFactor', type: 'uint256' }
     ],
@@ -35,7 +35,7 @@ export const liquidationPairFactoryABI = [
       { internalType: 'contract ILiquidationSource', name: '_source', type: 'address' },
       { internalType: 'address', name: '_tokenIn', type: 'address' },
       { internalType: 'address', name: '_tokenOut', type: 'address' },
-      { internalType: 'uint256', name: '_targetAuctionPeriod', type: 'uint256' },
+      { internalType: 'uint64', name: '_targetAuctionPeriod', type: 'uint64' },
       { internalType: 'uint192', name: '_targetAuctionPrice', type: 'uint192' },
       { internalType: 'uint256', name: '_smoothingFactor', type: 'uint256' }
     ],
@@ -45,9 +45,9 @@ export const liquidationPairFactoryABI = [
     type: 'function'
   },
   {
-    inputs: [{ internalType: 'contract TpdaLiquidationPair', name: '', type: 'address' }],
+    inputs: [{ internalType: 'address', name: 'pair', type: 'address' }],
     name: 'deployedPairs',
-    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+    outputs: [{ internalType: 'bool', name: 'wasDeployed', type: 'bool' }],
     stateMutability: 'view',
     type: 'function'
   },

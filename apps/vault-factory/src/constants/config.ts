@@ -95,7 +95,7 @@ export const NETWORK_CONFIG: Record<
   // },
   [NETWORK.optimism_sepolia]: {
     description: 'Sepolia testnet for the Optimism network.',
-    prizePool: '0x9f594BA8A838D41E7781BFA2aeA42702E216AF5a',
+    prizePool: '0x122FecA66c2b1Ba8Fa9C39E88152592A5496Bc99',
     claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism_sepolia],
     lp: { targetAuctionPeriod: SECONDS_PER_HOUR * 6, targetAuctionPriceUsd: 10 },
     yieldSources: [
@@ -105,11 +105,11 @@ export const NETWORK_CONFIG: Record<
         href: 'https://aave.com/',
         description: 'Lending and borrowing protocol',
         vaults: [
-          { address: '0x837125c98821babC7E397C9b28a799Ec780511a6', tags: ['stablecoin'] },
-          { address: '0x4766D615e49DD28d858F7c78f112e825124c795F', tags: ['stablecoin'] },
-          { address: '0x7f0EE5ea120165eA78D5cB8dba64f4f261b33731', tags: ['stablecoin'] },
-          { address: '0x8f6F9C51f756C5f73850371A019c5f9524003c34' },
-          { address: '0x1791769092e9fC458fFF27F8589099eD1BaDf785' }
+          { address: '0x6cDfb8288F5445255F9dfF6782471DE7556fD481', tags: ['stablecoin'] },
+          { address: '0x19f8F337C72C430cFDe9EC07D5C51639ad143bd5', tags: ['stablecoin'] },
+          { address: '0x14A1EDBB4723AA163A11742Df934C53C43feEC23', tags: ['stablecoin'] },
+          { address: '0xaF9Ad81aB225Fe2d24dD2067a38A4CE69Ec07784' },
+          { address: '0xDD41e571f0f7614Ae37935538f92589363843266' }
         ]
       }
     ]

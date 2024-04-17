@@ -27,6 +27,7 @@ export interface DrawFinishTx {
   lastNumTiers: number
   numTiers: number
   elapsedTime: number
+  contribution: bigint
   hash: `0x${string}`
   blockNumber: bigint
   timestamp?: number
@@ -121,6 +122,7 @@ export const useRngTxs = (prizePool: PrizePool) => {
                 lastNumTiers: drawAwardedEvent.args.lastNumTiers,
                 numTiers: drawAwardedEvent.args.numTiers,
                 elapsedTime: drawFinishedEvent.args.elapsedTime,
+                contribution: drawFinishedEvent.args.contribution,
                 hash: drawAwardedEvent.transactionHash,
                 blockNumber: drawAwardedEvent.blockNumber,
                 timestamp: !!drawAwardedBlock ? Number(drawAwardedBlock.timestamp) : undefined

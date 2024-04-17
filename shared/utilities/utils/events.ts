@@ -149,7 +149,8 @@ export const getDrawFinishedEvents = async (
         { indexed: true, internalType: 'address', name: 'recipient', type: 'address' },
         { indexed: true, internalType: 'uint24', name: 'drawId', type: 'uint24' },
         { indexed: false, internalType: 'uint48', name: 'elapsedTime', type: 'uint48' },
-        { indexed: false, internalType: 'uint256', name: 'reward', type: 'uint256' }
+        { indexed: false, internalType: 'uint256', name: 'reward', type: 'uint256' },
+        { indexed: false, internalType: 'uint256', name: 'contribution', type: 'uint256' }
       ],
       name: 'DrawFinished',
       type: 'event'

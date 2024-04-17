@@ -80,6 +80,14 @@ export const prizePoolABI = [
   { inputs: [], name: 'DrawTimeoutGTGrandPrizePeriodDraws', type: 'error' },
   { inputs: [], name: 'DrawTimeoutIsZero', type: 'error' },
   { inputs: [], name: 'FirstDrawOpensInPast', type: 'error' },
+  {
+    inputs: [
+      { internalType: 'uint24', name: 'grandPrizePeriodDraws', type: 'uint24' },
+      { internalType: 'uint24', name: 'maxGrandPrizePeriodDraws', type: 'uint24' }
+    ],
+    name: 'GrandPrizePeriodDrawsTooLarge',
+    type: 'error'
+  },
   { inputs: [], name: 'IncompatibleTwabPeriodLength', type: 'error' },
   { inputs: [], name: 'IncompatibleTwabPeriodOffset', type: 'error' },
   {
@@ -399,6 +407,26 @@ export const prizePoolABI = [
     type: 'function'
   },
   {
+    inputs: [
+      { internalType: 'address', name: '_vault', type: 'address' },
+      { internalType: 'address', name: '_account', type: 'address' }
+    ],
+    name: 'computeShutdownPortion',
+    outputs: [
+      {
+        components: [
+          { internalType: 'uint256', name: 'numerator', type: 'uint256' },
+          { internalType: 'uint256', name: 'denominator', type: 'uint256' }
+        ],
+        internalType: 'struct ShutdownPortion',
+        name: '',
+        type: 'tuple'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
     inputs: [{ internalType: 'uint8', name: '_numberOfTiers', type: 'uint8' }],
     name: 'computeTotalShares',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
@@ -433,13 +461,6 @@ export const prizePoolABI = [
     inputs: [{ internalType: 'uint24', name: 'drawId', type: 'uint24' }],
     name: 'drawClosesAt',
     outputs: [{ internalType: 'uint48', name: '', type: 'uint48' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [],
-    name: 'drawIdPriorToShutdown',
-    outputs: [{ internalType: 'uint24', name: '', type: 'uint24' }],
     stateMutability: 'view',
     type: 'function'
   },
@@ -542,6 +563,13 @@ export const prizePoolABI = [
     type: 'function'
   },
   {
+    inputs: [{ internalType: 'uint256', name: '_timestamp', type: 'uint256' }],
+    name: 'getDrawId',
+    outputs: [{ internalType: 'uint24', name: '', type: 'uint24' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
     inputs: [],
     name: 'getDrawIdToAward',
     outputs: [{ internalType: 'uint24', name: '', type: 'uint24' }],
@@ -560,6 +588,31 @@ export const prizePoolABI = [
     name: 'getOpenDrawId',
     outputs: [{ internalType: 'uint24', name: '', type: 'uint24' }],
     stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getShutdownDrawId',
+    outputs: [{ internalType: 'uint24', name: '', type: 'uint24' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getShutdownInfo',
+    outputs: [
+      { internalType: 'uint256', name: 'balance', type: 'uint256' },
+      {
+        components: [
+          { internalType: 'uint96', name: 'available', type: 'uint96' },
+          { internalType: 'uint160', name: 'disbursed', type: 'uint160' }
+        ],
+        internalType: 'struct Observation',
+        name: 'observation',
+        type: 'tuple'
+      }
+    ],
+    stateMutability: 'nonpayable',
     type: 'function'
   },
   {
@@ -601,6 +654,23 @@ export const prizePoolABI = [
     type: 'function'
   },
   {
+    inputs: [],
+    name: 'getTotalAccumulatorNewestObservation',
+    outputs: [
+      {
+        components: [
+          { internalType: 'uint96', name: 'available', type: 'uint96' },
+          { internalType: 'uint160', name: 'disbursed', type: 'uint160' }
+        ],
+        internalType: 'struct Observation',
+        name: '',
+        type: 'tuple'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
     inputs: [
       { internalType: 'uint24', name: '_startDrawIdInclusive', type: 'uint24' },
       { internalType: 'uint24', name: '_endDrawIdInclusive', type: 'uint24' }
@@ -614,6 +684,23 @@ export const prizePoolABI = [
     inputs: [],
     name: 'getTotalShares',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [{ internalType: 'address', name: '_vault', type: 'address' }],
+    name: 'getVaultAccumulatorNewestObservation',
+    outputs: [
+      {
+        components: [
+          { internalType: 'uint96', name: 'available', type: 'uint96' },
+          { internalType: 'uint160', name: 'disbursed', type: 'uint160' }
+        ],
+        internalType: 'struct Observation',
+        name: '',
+        type: 'tuple'
+      }
+    ],
     stateMutability: 'view',
     type: 'function'
   },
@@ -767,7 +854,7 @@ export const prizePoolABI = [
     ],
     name: 'shutdownBalanceOf',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-    stateMutability: 'view',
+    stateMutability: 'nonpayable',
     type: 'function'
   },
   {
@@ -802,6 +889,19 @@ export const prizePoolABI = [
     inputs: [
       { internalType: 'address', name: '_vault', type: 'address' },
       { internalType: 'address', name: '_winner', type: 'address' },
+      { internalType: 'uint8', name: '_tier', type: 'uint8' },
+      { internalType: 'uint32', name: '_prizeIndex', type: 'uint32' }
+    ],
+    name: 'wasClaimed',
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      { internalType: 'address', name: '_vault', type: 'address' },
+      { internalType: 'address', name: '_winner', type: 'address' },
+      { internalType: 'uint24', name: '_drawId', type: 'uint24' },
       { internalType: 'uint8', name: '_tier', type: 'uint8' },
       { internalType: 'uint32', name: '_prizeIndex', type: 'uint32' }
     ],
