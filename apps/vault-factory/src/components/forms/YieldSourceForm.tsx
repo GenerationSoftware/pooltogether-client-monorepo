@@ -58,6 +58,8 @@ export const YieldSourceForm = (props: YieldSourceFormProps) => {
     return <Spinner />
   }
 
+  const isNoYieldSources = !NETWORK_CONFIG[chainId].yieldSources.length
+
   return (
     <FormProvider {...formMethods}>
       <form
@@ -70,7 +72,7 @@ export const YieldSourceForm = (props: YieldSourceFormProps) => {
             {NETWORK_CONFIG[chainId].yieldSources.map((yieldSource) => (
               <YieldSourceInput key={yieldSource.id} yieldSource={yieldSource} />
             ))}
-            {!NETWORK_CONFIG[chainId].yieldSources.length && (
+            {isNoYieldSources && (
               <span className='text-pt-warning-light text-sm'>
                 No default yield sources currently available for this network.
               </span>
@@ -88,7 +90,7 @@ export const YieldSourceForm = (props: YieldSourceFormProps) => {
         </div>
         <div className='flex gap-2 items-center'>
           <PrevButton />
-          <NextButton disabled={!formMethods.formState.isValid} />
+          <NextButton disabled={!formMethods.formState.isValid || isNoYieldSources} />
         </div>
       </form>
     </FormProvider>
