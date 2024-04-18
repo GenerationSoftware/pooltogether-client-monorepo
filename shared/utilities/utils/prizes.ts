@@ -1,5 +1,5 @@
 import { PrizeInfo } from '@shared/types'
-import { Address, formatUnits, getContract, PublicClient, zeroAddress } from 'viem'
+import { Address, formatEther, formatUnits, getContract, PublicClient, zeroAddress } from 'viem'
 import { prizePoolABI } from '../abis/prizePool'
 import { SECONDS_PER_DAY } from '../constants'
 import { formatStringWithPrecision } from './formatting'
@@ -181,6 +181,7 @@ export const getPrizePoolAllPrizeInfo = async (
     { functionName: 'tierShares' },
     { functionName: 'getTotalShares' },
     { functionName: 'getLastAwardedDrawId' },
+    { functionName: 'tierLiquidityUtilizationRate' },
     ...tiers.map((tier) => ({ functionName: 'getTierAccrualDurationInDraws', args: [tier] })),
     ...tiers.map((tier) => ({ functionName: 'getTierPrizeSize', args: [tier] }))
   ]
@@ -215,17 +216,20 @@ export const getPrizePoolAllPrizeInfo = async (
     formatStringWithPrecision(tierSharePercentage.toString(), 4)
   )
 
-  const tierContributionPerDraw =
+  const tierLiquidityUtilizationRate = parseFloat(formatEther(multicallResults[4] ?? 0n))
+  const tierContributionPerDraw = calculatePercentageOfBigInt(
     calculatePercentageOfBigInt(totalContributions, formattedTierSharePercentage) /
-    BigInt(lastDrawId - startDrawId + 1)
+      BigInt(lastDrawId - startDrawId + 1),
+    tierLiquidityUtilizationRate
+  )
 
   tiers.forEach((tier) => {
     const tierPrizeCount = 4 ** tier
 
     const currentPrizeSize: bigint =
-      multicallResults[tier + tiers.length + 4] || tierContributionPerDraw / BigInt(tierPrizeCount)
+      multicallResults[tier + tiers.length + 5] || tierContributionPerDraw / BigInt(tierPrizeCount)
 
-    const accrualDraws = Number(multicallResults[tier + 4])
+    const accrualDraws = Number(multicallResults[tier + 5])
     const accrualSeconds = accrualDraws * drawPeriod
     const accrualDays = accrualSeconds / SECONDS_PER_DAY
 
