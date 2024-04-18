@@ -20,7 +20,7 @@ export const MigrationPopup = () => {
   const { isDismissed, dismiss } = useIsDismissed('greatMigrationPopup')
 
   const token: Token = {
-    chainId: NETWORK.optimism_sepolia,
+    chainId: NETWORK.optimism,
     address: '0x4200000000000000000000000000000000000042',
     symbol: 'OP',
     name: 'Optimism',
@@ -75,14 +75,18 @@ export const MigrationPopup = () => {
                 highlight: (chunks) => <span className='text-pt-purple-50'>{chunks}</span>
               })}
             </span>
-            {highestRewardsApr > 0 && (
-              <span className='sm:text-lg md:text-2xl'>
-                {t.rich('earnUpTo', {
-                  apr: formatNumberForDisplay(highestRewardsApr, { maximumFractionDigits: 1 }),
-                  highlight: (chunks) => <span className='text-pt-teal'>{chunks}</span>
-                })}
-              </span>
-            )}
+            <span className='sm:text-lg md:max-w-xl md:mx-auto md:text-2xl'>
+              {t('migrateTo')}
+              {highestRewardsApr > 0 && (
+                <>
+                  {' '}
+                  {t.rich('earnUpTo', {
+                    apr: formatNumberForDisplay(highestRewardsApr, { hideZeroes: true }),
+                    highlight: (chunks) => <span className='text-pt-teal'>{chunks}</span>
+                  })}
+                </>
+              )}
+            </span>
           </div>
           <Button
             href={LINKS.migrations}
