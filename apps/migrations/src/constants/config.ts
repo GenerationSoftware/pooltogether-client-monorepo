@@ -80,13 +80,15 @@ export const RPC_URLS = {
   [NETWORK.celo]: process.env.NEXT_PUBLIC_CELO_RPC_URL
 } as const
 
-// TODO: update addresses to toucan deployment
 /**
  * Migration Destinations
  */
 export const MIGRATION_DESTINATIONS = {
-  wethVault: { chainId: NETWORK.optimism, address: '0xf0b19f02c63d51b69563a2b675e0160e1c34397c' },
-  usdcVault: { chainId: NETWORK.optimism, address: '0xe3b3a464ee575e8e25d2508918383b89c832f275' }
+  wethVault: { chainId: NETWORK.optimism, address: '0x2998c1685e308661123f64b333767266035f5020' },
+  usdcVault: { chainId: NETWORK.optimism, address: '0x03d3ce84279cb6f54f5e6074ff0f8319d830dafe' },
+  daiVault: { chainId: NETWORK.optimism, address: '0x3e8dbe51da479f7e8ac46307af99ad5b4b5b41dc' },
+  lusdVault: { chainId: NETWORK.optimism, address: '0x1f16d3ccf568e96019cedc8a2c79d2ca6257894e' },
+  poolVault: { chainId: NETWORK.optimism, address: '0xa52e38a9147f5ea9e0c5547376c21c9e3f3e5e1f' }
 } as const satisfies Record<string, { chainId: SupportedNetwork; address: Lowercase<Address> }>
 
 /**
@@ -194,7 +196,7 @@ export const OLD_V5_VAULTS: {
         tags: ['canary'],
         logoURI: 'https://assets.coingecko.com/coins/images/9956/small/4943.png?1636636734'
       },
-      migrateTo: MIGRATION_DESTINATIONS.usdcVault
+      migrateTo: MIGRATION_DESTINATIONS.daiVault
     },
     {
       vault: {
@@ -206,7 +208,7 @@ export const OLD_V5_VAULTS: {
         tags: ['canary'],
         logoURI: 'https://etherscan.io/token/images/pooltogether_32.png'
       },
-      migrateTo: MIGRATION_DESTINATIONS.wethVault
+      migrateTo: MIGRATION_DESTINATIONS.poolVault
     },
     {
       vault: {
@@ -218,7 +220,7 @@ export const OLD_V5_VAULTS: {
         tags: ['canary'],
         logoURI: 'https://etherscan.io/token/images/liquitylusd_32.png'
       },
-      migrateTo: MIGRATION_DESTINATIONS.usdcVault
+      migrateTo: MIGRATION_DESTINATIONS.lusdVault
     }
   ]
 }
@@ -234,7 +236,8 @@ export const V5_PROMOTION_SETTINGS: {
 } = {
   [NETWORK.optimism]: {
     twabRewards: [
-      { address: '0x27ed5760edc0128e3043f6cc0c3428e337396a66', fromBlock: 112_933_000n }
+      { address: '0x27ed5760edc0128e3043f6cc0c3428e337396a66', fromBlock: 112_933_000n },
+      { address: '0x90d383dea4dce52d3e5d3c93de75ef36da3ea9ea', fromBlock: 118_900_000n }
     ],
     tokenAddresses: [
       '0x4200000000000000000000000000000000000042', // OP
@@ -374,7 +377,7 @@ export const V3_POOLS: Record<
       address: '0xebfb47a7ad0fd6e57323c8a42b2e5a6a4f68fc1a',
       ticketAddress: '0x334cbb5858417aee161b53ee0d5349ccf54514cf',
       tokenAddress: '0x6b175474e89094c44da98b954eedeac495271d0f',
-      migrateTo: MIGRATION_DESTINATIONS.usdcVault,
+      migrateTo: MIGRATION_DESTINATIONS.daiVault,
       podAddress: '0x2f994e2e4f3395649eee8a89092e63ca526da829'
     },
     {
@@ -406,7 +409,7 @@ export const V3_POOLS: Record<
       address: '0x396b4489da692788e327e2e4b2b0459a5ef26791',
       ticketAddress: '0x27d22a7648e955e510a40bdb058333e9190d12d4',
       tokenAddress: '0x0cec1a9154ff802e7934fc916ed7ca50bde6844e',
-      migrateTo: MIGRATION_DESTINATIONS.wethVault
+      migrateTo: MIGRATION_DESTINATIONS.poolVault
     }
   ],
   [NETWORK.optimism]: [],
@@ -427,7 +430,7 @@ export const V3_POOLS: Record<
       address: '0x60764c6be24ddab70d9ae1dbf7436533cc073c21',
       ticketAddress: '0x0bc114a3163a0bc72abf0ab964eef0dc52495703',
       tokenAddress: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
-      migrateTo: MIGRATION_DESTINATIONS.usdcVault
+      migrateTo: MIGRATION_DESTINATIONS.daiVault
     }
   ],
   [NETWORK.avalanche]: [],
