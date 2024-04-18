@@ -18,12 +18,15 @@ export const VaultsDisclaimer = (props: VaultsDisclaimerProps) => {
 
   const { isDismissed, dismiss } = useIsDismissed('vaultsDisclaimer')
 
+  if (isDismissed) {
+    return <></>
+  }
+
   return (
     <div
       className={classNames(
         'relative w-full max-w-[36rem] flex flex-col gap-4 p-4 bg-pt-transparent text-pt-purple-100 rounded-lg',
         'lg:max-w-none lg:flex-row lg:items-center lg:px-10',
-        { hidden: isDismissed },
         className
       )}
     >

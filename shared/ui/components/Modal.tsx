@@ -209,7 +209,7 @@ const ModalContent = (props: ModalContentProps) => {
         onClick={onClose}
       />
       {!hideHeader && (
-        <ModalHeader className={headerClassName} onClose={onClose} mobileStyle={mobileStyle}>
+        <ModalHeader className={headerClassName} mobileStyle={mobileStyle}>
           {headerContent}
         </ModalHeader>
       )}
@@ -222,12 +222,11 @@ const ModalContent = (props: ModalContentProps) => {
 interface ModalHeaderProps {
   children?: ReactNode
   className?: string
-  onClose?: () => void
   mobileStyle?: MobileStyle
 }
 
 const ModalHeader = (props: ModalHeaderProps) => {
-  const { children, className, onClose, mobileStyle } = props
+  const { children, className, mobileStyle } = props
 
   return (
     <div

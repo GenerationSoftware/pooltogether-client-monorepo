@@ -22,7 +22,12 @@
     "bonusRewards": "Bonus Rewards",
     "claim": "Claim",
     "apr": "APR",
-    "warning": "Warning"
+    "warning": "Warning",
+    "greatMigration": {
+      "joinTitle": "Join the Great <highlight>Pooly</highlight> Migration",
+      "joinButton": "Join the Migration",
+      "earnUpTo": "Earn up to <highlight>{apr}% APR</highlight> in OP Bonus Rewards"
+    }
   },
   "Navigation": {
     "home": "Home",
