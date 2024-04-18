@@ -89,6 +89,7 @@ export * from './components/Tooltips/PrizeYieldTooltip'
 export * from './components/Tooltips/VaultContributionsTooltip'
 export * from './components/Tooltips/VaultFeeTooltip'
 export * from './components/Tooltips/WinChanceTooltip'
+export * from './components/Tooltips/WrongPrizePoolVaultTooltip'
 export * from './components/Tooltips/YieldSourceURITooltip'
 
 /**

@@ -1,8 +1,13 @@
-import { USDC_TOKEN_ADDRESSES, Vault } from '@generationsoftware/hyperstructure-client-js'
+import {
+  PRIZE_POOLS,
+  USDC_TOKEN_ADDRESSES,
+  Vault
+} from '@generationsoftware/hyperstructure-client-js'
 import {
   useSelectedVault,
   useTokenPrices,
-  useVaultTokenData
+  useVaultTokenData,
+  useVaultTwabController
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Intl } from '@shared/types'
@@ -12,12 +17,13 @@ import { useMemo } from 'react'
 import { Address } from 'viem'
 import { BadPrecisionPerDollarTooltip } from '../Tooltips/BadPrecisionPerDollarTooltip'
 import { DeprecatedVaultTooltip } from '../Tooltips/DeprecatedVaultTooltip'
+import { WrongPrizePoolVaultTooltip } from '../Tooltips/WrongPrizePoolVaultTooltip'
 
 export interface DepositButtonProps extends Omit<ButtonProps, 'onClick' | 'children'> {
   vault: Vault
   intl?: {
     base: Intl<'deposit'>
-    tooltips: Intl<'deprecatedVault' | 'badPrecisionPerDollar'>
+    tooltips: Intl<'deprecatedVault' | 'wrongPrizePoolVault' | 'badPrecisionPerDollar'>
   }
 }
 
@@ -34,6 +40,19 @@ export const DepositButton = (props: DepositButtonProps) => {
     vault.chainId,
     !!token?.address ? [token.address, USDC_TOKEN_ADDRESSES[vault.chainId]] : []
   )
+
+  const { data: vaultTwabController } = useVaultTwabController(vault)
+
+  const isWrongPrizePool = useMemo(() => {
+    if (!!vaultTwabController) {
+      const prizePoolTwabController = PRIZE_POOLS.find((pool) => pool.chainId === vault.chainId)
+        ?.options.twabControllerAddress
+
+      if (!!prizePoolTwabController) {
+        return vaultTwabController.toLowerCase() !== prizePoolTwabController.toLowerCase()
+      }
+    }
+  }, [vaultTwabController])
 
   const isBadPrecisionPerDollar = useMemo(() => {
     if (!!token && !!tokenPrices) {
@@ -66,6 +85,16 @@ export const DepositButton = (props: DepositButtonProps) => {
           {buttonContent}
         </Button>
       </DeprecatedVaultTooltip>
+    )
+  }
+
+  if (isWrongPrizePool) {
+    return (
+      <WrongPrizePoolVaultTooltip intl={intl?.tooltips('wrongPrizePoolVault')}>
+        <Button onClick={handleClick} className={buttonClassName} disabled={true} {...rest}>
+          {buttonContent}
+        </Button>
+      </WrongPrizePoolVaultTooltip>
     )
   }
 
