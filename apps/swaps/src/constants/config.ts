@@ -27,7 +27,9 @@ export const RPC_URLS = {
  * Vaults to display
  */
 export const VAULT_ADDRESSES: { [chainId: number]: Address[] } = {
-  // TODO: add vault addresses once deployed
+  [NETWORK.optimism]: [
+    // TODO: add vaults with swap liquidity here
+  ]
 }
 
 /**

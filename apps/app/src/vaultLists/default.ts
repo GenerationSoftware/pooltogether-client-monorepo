@@ -5,100 +5,97 @@ import { testnetVaults } from './testnet'
 const defaultVaultList: VaultList = {
   name: 'Cabana Vault List',
   keywords: ['pooltogether', 'cabana', 'g9', 'optimism'],
-  version: { major: 2, minor: 0, patch: 6 },
-  timestamp: '2024-04-17T22:58:25Z',
+  version: { major: 2, minor: 1, patch: 0 },
+  timestamp: '2024-04-18T01:31:10Z',
   logoURI: `${DOMAINS.app}/pooltogether-token-logo.svg`,
   tokens: [
-    // {
-    //   chainId: NETWORK.optimism,
-    //   address: '0xE3B3a464ee575E8E25D2508918383b89c832f275',
-    //   name: 'Prize USDC.e - Aave',
-    //   decimals: 6,
-    //   symbol: 'pUSDC.e',
-    //   logoURI: `${DOMAINS.app}/icons/pUSDC.e.svg`,
-    //   tags: ['aave', 'vault_v1'],
-    //   yieldSourceURI:
-    //     'https://app.aave.com/reserve-overview/?underlyingAsset=0x7f5c764cbc14f9669b88837ca1490cca17c31607&marketName=proto_optimism_v3',
-    //   extensions: {
-    //     underlyingAsset: {
-    //       address: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
-    //       symbol: 'USDC.e',
-    //       name: 'USDC (Bridged from Ethereum)'
-    //     }
-    //   }
-    // },
-    // {
-    //   chainId: NETWORK.optimism,
-    //   address: '0x29Cb69D4780B53c1e5CD4D2B817142D2e9890715',
-    //   name: 'Prize WETH - Aave',
-    //   decimals: 18,
-    //   symbol: 'pWETH',
-    //   logoURI: `${DOMAINS.app}/icons/pWETH.svg`,
-    //   tags: ['aave', 'vault_v1', 'deprecated'],
-    //   yieldSourceURI:
-    //     'https://app.aave.com/reserve-overview/?underlyingAsset=0x4200000000000000000000000000000000000006&marketName=proto_optimism_v3',
-    //   extensions: {
-    //     underlyingAsset: {
-    //       address: '0x4200000000000000000000000000000000000006',
-    //       symbol: 'WETH',
-    //       name: 'Wrapped Ether'
-    //     }
-    //   }
-    // },
-    // {
-    //   chainId: NETWORK.optimism,
-    //   address: '0xCe8293f586091d48A0cE761bBf85D5bCAa1B8d2b',
-    //   name: 'Prize DAI - Aave',
-    //   decimals: 18,
-    //   symbol: 'pDAI',
-    //   logoURI: `${DOMAINS.app}/icons/pDAI.svg`,
-    //   tags: ['aave', 'vault_v1', 'deprecated'],
-    //   yieldSourceURI:
-    //     'https://app.aave.com/reserve-overview/?underlyingAsset=0xda10009cbd5d07dd0cecc66161fc93d7c9000da1&marketName=proto_optimism_v3',
-    //   extensions: {
-    //     underlyingAsset: {
-    //       address: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
-    //       symbol: 'DAI',
-    //       name: 'Dai Stablecoin'
-    //     }
-    //   }
-    // },
-    // {
-    //   chainId: NETWORK.optimism,
-    //   address: '0x77935f2c72b5eb814753a05921ae495aa283906b',
-    //   name: 'Prize USDC - Aave',
-    //   decimals: 6,
-    //   symbol: 'pUSDC',
-    //   logoURI: `${DOMAINS.app}/icons/pUSDC.svg`,
-    //   tags: ['aave', 'vault_v2', 'deprecated'],
-    //   yieldSourceURI:
-    //     'https://app.aave.com/reserve-overview/?underlyingAsset=0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85&marketName=proto_optimism_v3',
-    //   extensions: {
-    //     underlyingAsset: {
-    //       address: '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85',
-    //       symbol: 'USDC',
-    //       name: 'USD Coin'
-    //     }
-    //   }
-    // },
-    // {
-    //   chainId: NETWORK.optimism,
-    //   address: '0xf0b19f02c63d51b69563a2b675e0160e1c34397c',
-    //   name: 'Prize WETH - Aave',
-    //   decimals: 18,
-    //   symbol: 'pWETH',
-    //   logoURI: `${DOMAINS.app}/icons/pWETH.svg`,
-    //   tags: ['aave', 'vault_v2'],
-    //   yieldSourceURI:
-    //     'https://app.aave.com/reserve-overview/?underlyingAsset=0x4200000000000000000000000000000000000006&marketName=proto_optimism_v3',
-    //   extensions: {
-    //     underlyingAsset: {
-    //       address: '0x4200000000000000000000000000000000000006',
-    //       symbol: 'WETH',
-    //       name: 'Wrapped Ether'
-    //     }
-    //   }
-    // },
+    {
+      chainId: NETWORK.optimism,
+      address: '0xa52e38a9147f5eA9E0c5547376c21c9E3F3e5e1f',
+      name: 'Prize POOL',
+      decimals: 18,
+      symbol: 'przPOOL',
+      logoURI: `${DOMAINS.app}/icons/przPOOL.svg`,
+      extensions: {
+        underlyingAsset: {
+          address: '0x395Ae52bB17aef68C2888d941736A71dC6d4e125',
+          symbol: 'POOL',
+          name: 'PoolTogether'
+        }
+      }
+    },
+    {
+      chainId: NETWORK.optimism,
+      address: '0x03D3CE84279cB6F54f5e6074ff0F8319d830dafe',
+      name: 'Prize USDC',
+      decimals: 6,
+      symbol: 'przUSDC',
+      logoURI: `${DOMAINS.app}/icons/przUSDC.svg`,
+      tags: ['aave'],
+      yieldSourceURI:
+        'https://app.aave.com/reserve-overview/?underlyingAsset=0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85&marketName=proto_optimism_v3',
+      extensions: {
+        underlyingAsset: {
+          address: '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85',
+          symbol: 'USDC',
+          name: 'USD Coin'
+        }
+      }
+    },
+    {
+      chainId: NETWORK.optimism,
+      address: '0x2998c1685E308661123F64B333767266035f5020',
+      name: 'Prize WETH',
+      decimals: 18,
+      symbol: 'przWETH',
+      logoURI: `${DOMAINS.app}/icons/przWETH.svg`,
+      tags: ['aave'],
+      yieldSourceURI:
+        'https://app.aave.com/reserve-overview/?underlyingAsset=0x4200000000000000000000000000000000000006&marketName=proto_optimism_v3',
+      extensions: {
+        underlyingAsset: {
+          address: '0x4200000000000000000000000000000000000006',
+          symbol: 'WETH',
+          name: 'Wrapped Ether'
+        }
+      }
+    },
+    {
+      chainId: NETWORK.optimism,
+      address: '0x3e8DBe51DA479f7E8aC46307af99AD5B4B5b41Dc',
+      name: 'Prize DAI',
+      decimals: 18,
+      symbol: 'przDAI',
+      logoURI: `${DOMAINS.app}/icons/przDAI.svg`,
+      tags: ['aave'],
+      yieldSourceURI:
+        'https://app.aave.com/reserve-overview/?underlyingAsset=0xda10009cbd5d07dd0cecc66161fc93d7c9000da1&marketName=proto_optimism_v3',
+      extensions: {
+        underlyingAsset: {
+          address: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
+          symbol: 'DAI',
+          name: 'Dai Stablecoin'
+        }
+      }
+    },
+    {
+      chainId: NETWORK.optimism,
+      address: '0x1F16D3CCF568e96019cEdc8a2c79d2ca6257894E',
+      name: 'Prize LUSD',
+      decimals: 18,
+      symbol: 'przLUSD',
+      logoURI: `${DOMAINS.app}/icons/przLUSD.svg`,
+      tags: ['aave'],
+      yieldSourceURI:
+        'https://app.aave.com/reserve-overview/?underlyingAsset=0xc40f949f8a4e094d1b49a23ea9241d289b7b2819&marketName=proto_optimism_v3',
+      extensions: {
+        underlyingAsset: {
+          address: '0xc40F949F8a4e094D1b49a23ea9241D289B7b2819',
+          symbol: 'LUSD',
+          name: 'LUSD Stablecoin'
+        }
+      }
+    },
     ...testnetVaults
   ]
 }

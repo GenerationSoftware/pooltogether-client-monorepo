@@ -1,14 +1,15 @@
 export const vaultABI = [
   {
     inputs: [
-      { internalType: 'string', name: '_name', type: 'string' },
-      { internalType: 'string', name: '_symbol', type: 'string' },
-      { internalType: 'contract YieldVaultMintRate', name: 'yieldVault_', type: 'address' },
-      { internalType: 'contract PrizePool', name: '_prizePool', type: 'address' },
-      { internalType: 'address', name: '_claimer', type: 'address' },
-      { internalType: 'address', name: '_yieldFeeRecipient', type: 'address' },
-      { internalType: 'uint32', name: '_yieldFeePercentage', type: 'uint32' },
-      { internalType: 'address', name: '_owner', type: 'address' }
+      { internalType: 'string', name: 'name_', type: 'string' },
+      { internalType: 'string', name: 'symbol_', type: 'string' },
+      { internalType: 'contract IERC4626', name: 'yieldVault_', type: 'address' },
+      { internalType: 'contract PrizePool', name: 'prizePool_', type: 'address' },
+      { internalType: 'address', name: 'claimer_', type: 'address' },
+      { internalType: 'address', name: 'yieldFeeRecipient_', type: 'address' },
+      { internalType: 'uint32', name: 'yieldFeePercentage_', type: 'uint32' },
+      { internalType: 'uint256', name: 'yieldBuffer_', type: 'uint256' },
+      { internalType: 'address', name: 'owner_', type: 'address' }
     ],
     stateMutability: 'nonpayable',
     type: 'constructor'

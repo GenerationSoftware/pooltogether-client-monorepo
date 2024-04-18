@@ -98,7 +98,7 @@ export const TWAB_REWARDS_SETTINGS: {
       '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1', // DAI
       '0x395Ae52bB17aef68C2888d941736A71dC6d4e125' // POOL
     ],
-    fromBlock: 112_933_000n
+    fromBlock: 118_900_000n
   },
   [NETWORK.optimism_sepolia]: {
     tokenAddresses: [

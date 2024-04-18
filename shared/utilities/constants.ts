@@ -65,6 +65,19 @@ export const PRIZE_POOLS: {
   }
 }[] = [
   {
+    chainId: NETWORK.optimism,
+    address: '0xF35fE10ffd0a9672d0095c435fd8767A7fe29B55',
+    options: {
+      prizeTokenAddress: '0x4200000000000000000000000000000000000006',
+      drawManagerAddress: '0x7eED7444dE862c4F79c5820ff867FA3A82641857',
+      twabControllerAddress: '0xCB0672dE558Ad8F122C0E081f0D35480aB3be167',
+      drawPeriodInSeconds: 86_400,
+      drawAuctionDurationInSeconds: 10_800,
+      tierShares: 100,
+      reserveShares: 30
+    }
+  },
+  {
     chainId: NETWORK.optimism_sepolia,
     address: '0x122FecA66c2b1Ba8Fa9C39E88152592A5496Bc99',
     options: {
@@ -146,6 +159,7 @@ export const WRAPPED_NATIVE_ASSETS: Record<NETWORK, Lowercase<Address> | null> =
  * TWAB rewards addresses
  */
 export const TWAB_REWARDS_ADDRESSES: { [chainId: number]: Address } = {
+  [NETWORK.optimism]: '0x90D383dEA4dcE52D3e5D3C93dE75eF36da3Ea9Ea',
   [NETWORK.optimism_sepolia]: '0x505E334544689C7A4BF4c6A0CF8d52A5fB6F0A4A'
 }
 
@@ -153,6 +167,7 @@ export const TWAB_REWARDS_ADDRESSES: { [chainId: number]: Address } = {
  * Vault factory addresses
  */
 export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
+  [NETWORK.optimism]: '0xF0F151494658baE060034c8f4f199F74910ea806',
   [NETWORK.optimism_sepolia]: '0x28548033b3f49b03472630ED06E8a6E92b269ce4'
 }
 
@@ -160,6 +175,7 @@ export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
  * Liquidation pair factory addresses
  */
 export const LIQUIDATION_PAIR_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
+  [NETWORK.optimism]: '0x80F86691632d9863E6bCaa472e5c34574F77c7D1',
   [NETWORK.optimism_sepolia]: '0x99e05e2346885D1c1Ce714c9e794A7ca6E3634b4'
 }
 
@@ -167,6 +183,7 @@ export const LIQUIDATION_PAIR_FACTORY_ADDRESSES: { [chainId: number]: Address } 
  * Default claimer addresses
  */
 export const DEFAULT_CLAIMER_ADDRESSES: { [chainId: number]: Address } = {
+  [NETWORK.optimism]: '0x0b5a1dc536D5A67C66D00B337E6b189385BD8438',
   [NETWORK.optimism_sepolia]: '0xac2be4D9C0d8841c1f0Af43A564BDF2EF3Df3954'
 }
 
@@ -174,6 +191,7 @@ export const DEFAULT_CLAIMER_ADDRESSES: { [chainId: number]: Address } = {
  * Liquidation router addresses
  */
 export const LIQUIDATION_ROUTER_ADDRESSES: { [chainId: number]: Address } = {
+  [NETWORK.optimism]: '0x7766b5E6839a1a218Fc861b0810C504490876136',
   [NETWORK.optimism_sepolia]: '0x4694F3CD7fedD269aaF2a168e12C544f829a6b50'
 }
 
@@ -196,6 +214,7 @@ export const OP_GAS_ORACLE_ADDRESS = '0x420000000000000000000000000000000000000f
  * Subgraph API URLs
  */
 export const SUBGRAPH_API_URLS = {
+  [NETWORK.optimism]: 'https://api.studio.thegraph.com/query/63100/pt-v5-optimism/version/latest',
   [NETWORK.optimism_sepolia]:
     'https://api.studio.thegraph.com/query/63100/pt-v5-op-sepolia/version/latest'
 } as const satisfies { [chainId: number]: `https://${string}` }

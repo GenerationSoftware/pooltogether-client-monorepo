@@ -25,7 +25,7 @@ import { mainnet, optimism, optimismSepolia } from 'viem/chains'
 /**
  * Supported networks
  */
-export const SUPPORTED_NETWORKS = [NETWORK.optimism_sepolia] as const
+export const SUPPORTED_NETWORKS = [NETWORK.optimism, NETWORK.optimism_sepolia] as const
 
 /**
  * Wagmi networks
@@ -86,13 +86,13 @@ export const NETWORK_CONFIG: Record<
     }[]
   }
 > = {
-  // [NETWORK.optimism]: {
-  //   description: 'The OG optimistic rollup on Ethereum.',
-  //   prizePool: '',
-  //   claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism],
-  //   lp: { targetAuctionPeriod: SECONDS_PER_HOUR * 6, targetAuctionPriceUsd: 10 },
-  //   yieldSources: []
-  // },
+  [NETWORK.optimism]: {
+    description: 'The OG optimistic rollup on Ethereum.',
+    prizePool: '0xF35fE10ffd0a9672d0095c435fd8767A7fe29B55',
+    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism],
+    lp: { targetAuctionPeriod: SECONDS_PER_HOUR * 6, targetAuctionPriceUsd: 10 },
+    yieldSources: []
+  },
   [NETWORK.optimism_sepolia]: {
     description: 'Sepolia testnet for the Optimism network.',
     prizePool: '0x122FecA66c2b1Ba8Fa9C39E88152592A5496Bc99',

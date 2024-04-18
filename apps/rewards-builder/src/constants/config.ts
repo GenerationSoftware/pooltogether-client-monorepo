@@ -73,6 +73,6 @@ export const PROMOTION_FILTERS: {
   [chainId: number]: { tokenAddresses?: Address[]; fromBlock?: bigint }
 } = {
   [NETWORK.mainnet]: {},
-  [NETWORK.optimism]: { fromBlock: 112_933_000n },
+  [NETWORK.optimism]: { fromBlock: 118_900_000n },
   [NETWORK.optimism_sepolia]: { fromBlock: 10_793_300n }
 }
