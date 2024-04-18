@@ -66,3 +66,13 @@ const isL2TransactionReceipt = (
   let receipt = txReceipt as L2TransactionReceipt
   return !!receipt.l1GasUsed && !!receipt.l1GasPrice && !!receipt.l1FeeScalar
 }
+
+/**
+ * Returns true if the tier is a canary tier
+ * @param tier the tier to check
+ * @param numTiers the total number of tiers in a given draw
+ * @returns
+ */
+export const isCanaryTier = (tier: number, numTiers: number) => {
+  return tier >= numTiers - 2
+}

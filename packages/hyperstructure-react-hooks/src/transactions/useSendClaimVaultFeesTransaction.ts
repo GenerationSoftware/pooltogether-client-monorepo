@@ -42,7 +42,7 @@ export const useSendClaimVaultFeesTransaction = (
     chainId: vault?.chainId,
     address: vault?.address,
     abi: vaultABI,
-    functionName: 'mintYieldFee',
+    functionName: 'claimYieldFeeShares',
     args: [amount],
     query: { enabled }
   })

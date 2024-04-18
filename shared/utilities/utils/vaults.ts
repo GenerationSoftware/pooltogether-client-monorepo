@@ -2,6 +2,8 @@ import { VaultInfo } from '@shared/types'
 import { Address, formatUnits, isAddress, parseUnits, PublicClient } from 'viem'
 import { twabControllerABI } from '../abis/twabController'
 import { vaultABI } from '../abis/vault'
+import { vaultFactoryABI } from '../abis/vaultFactory'
+import { VAULT_FACTORY_ADDRESSES } from '../constants'
 import { formatStringWithPrecision } from './formatting'
 import {
   getComplexMulticallResults,
@@ -192,12 +194,16 @@ export const getVaultBalances = async (
   if (filteredVaults.length > 0) {
     const vaultAddresses = filteredVaults.map((vault) => vault.address)
     const multicallResults = await getMulticallResults(publicClient, vaultAddresses, vaultABI, [
+      { functionName: 'totalPreciseAssets' },
       { functionName: 'totalAssets' }
     ])
 
     filteredVaults.forEach((vault) => {
       const vaultId = getVaultId(vault)
-      vaultBalances[vaultId] = multicallResults[vault.address]?.['totalAssets'] ?? 0n
+      vaultBalances[vaultId] =
+        multicallResults[vault.address]?.['totalPreciseAssets'] ??
+        multicallResults[vault.address]?.['totalAssets'] ??
+        0n
     })
   }
 
@@ -222,6 +228,48 @@ export const getVaultAddresses = (vaults: VaultInfo[]): { [chainId: number]: Add
   })
 
   return vaultAddresses
+}
+
+/**
+ * Returns all vault addresses from the vault factory
+ * @param publicClient a public Viem client to query through
+ * @returns
+ */
+export const getVaultAddressesFromFactory = async (publicClient: PublicClient) => {
+  const vaultAddresses = new Set<Lowercase<Address>>()
+
+  const chainId = await publicClient.getChainId()
+
+  const vaultFactoryAddress = VAULT_FACTORY_ADDRESSES[chainId]
+
+  if (!vaultFactoryAddress) throw new Error(`No vault factory address set for chain ID ${chainId}`)
+
+  const totalVaults = await publicClient.readContract({
+    address: vaultFactoryAddress,
+    abi: vaultFactoryABI,
+    functionName: 'totalVaults'
+  })
+
+  const vaultIndexes = [...Array(Number(totalVaults)).keys()]
+  const calls = vaultIndexes.map((vaultIndex) => ({
+    functionName: 'allVaults',
+    args: [vaultIndex]
+  }))
+
+  const multicallResults: (string | undefined)[] = await getSimpleMulticallResults(
+    publicClient,
+    vaultFactoryAddress,
+    vaultFactoryABI,
+    calls
+  )
+
+  multicallResults.forEach((address) => {
+    if (!!address && isAddress(address)) {
+      vaultAddresses.add(address.toLowerCase() as Lowercase<Address>)
+    }
+  })
+
+  return [...vaultAddresses]
 }
 
 /**

@@ -5,7 +5,7 @@ import { SupportedNetwork } from 'src/types'
 import { isAddress } from 'viem'
 import { allVaultStepInfo } from '@components/CreateVaultStepInfo'
 import { DeployedVaultInfo } from '@components/DeployedVaultInfo'
-import { ClaimerForm } from '@components/forms/ClaimerForm'
+import { SetClaimerForm } from '@components/forms/SetClaimerForm'
 import { Layout } from '@components/Layout'
 import { StepInfo } from '@components/StepInfo'
 import { SUPPORTED_NETWORKS } from '@constants/config'
@@ -56,7 +56,7 @@ const ClaimerStepInfo = () => {
   return (
     <StepInfo
       step={0}
-      stepInfo={[allVaultStepInfo[4]]}
+      stepInfo={[allVaultStepInfo[5]]}
       setStep={() => {}}
       className='grow items-center justify-center lg:items-start'
     />
@@ -66,7 +66,7 @@ const ClaimerStepInfo = () => {
 const ClaimerStepContent = () => {
   return (
     <div className='flex grow items-center justify-center px-4 lg:px-0'>
-      <ClaimerForm isOnlyStep={true} />
+      <SetClaimerForm isOnlyStep={true} />
     </div>
   )
 }

@@ -1,7 +1,9 @@
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import type { AppProps } from 'next/app'
+import { IncomingMessage } from 'http'
+import type { AppContext, AppInitialProps, AppProps } from 'next/app'
+import App from 'next/app'
 import { WagmiProvider } from 'wagmi'
 import { AppContainer } from '@components/AppContainer'
 import { SUPPORTED_NETWORKS } from '@constants/config'
@@ -16,7 +18,13 @@ const queryClient = new QueryClient()
 const networks = [...SUPPORTED_NETWORKS.mainnets, ...SUPPORTED_NETWORKS.testnets]
 const wagmiConfig = createCustomWagmiConfig(networks, { useCustomRPCs: true })
 
-export default function MyApp(props: AppProps) {
+export interface CustomAppProps {
+  serverProps: {
+    params: { [key: string]: string }
+  }
+}
+
+export default function MyApp(props: AppProps & CustomAppProps) {
   useFathom()
 
   return (
@@ -33,4 +41,20 @@ export default function MyApp(props: AppProps) {
       </QueryClientProvider>
     </WagmiProvider>
   )
+}
+
+MyApp.getInitialProps = async (appCtx: AppContext): Promise<AppInitialProps & CustomAppProps> => {
+  const initialProps = await App.getInitialProps(appCtx)
+
+  const internalReqKey = Symbol.for('NextInternalRequestMeta')
+  interface NextIncomingMessage extends IncomingMessage {
+    [internalReqKey]: {
+      match: { params: { [key: string]: string } }
+    }
+  }
+  const req = appCtx.ctx.req as NextIncomingMessage | undefined
+  const { match } = req?.[internalReqKey] ?? {}
+  const serverProps = { params: match?.params ?? {} }
+
+  return { ...initialProps, serverProps }
 }

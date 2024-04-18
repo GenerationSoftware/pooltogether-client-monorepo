@@ -14,7 +14,7 @@ This monorepo includes many of PoolTogether's apps and packages in order to faci
 
 Make sure you have [pnpm](https://pnpm.io/) installed, as it is the package manager used throughout this monorepo.
 
-`pnpm install`
+`pnpm i`
 
 ## 🏎️ &nbsp; Quickstart
 
@@ -52,10 +52,13 @@ All apps above are [Next.js](https://nextjs.org/) apps with [Tailwind CSS](https
 
 Prize pool and auxiliary contract addresses are included in the `hyperstructure-client-js` package. If you'd like to use older protocol deployments, refer to the versions below:
 
-- Current Optimism Deployment:
+- Current:
   - `hyperstructure-client-js@latest`
   - `hyperstructure-react-hooks@latest`
-- Beta Optimism Deployment:
+- Canary (Optimism):
+  - `hyperstructure-client-js@1.9.0`
+  - `hyperstructure-react-hooks@1.14.5`
+- Beta (Optimism):
   - `hyperstructure-client-js@1.2.8`
   - `hyperstructure-react-hooks@1.4.10`
 

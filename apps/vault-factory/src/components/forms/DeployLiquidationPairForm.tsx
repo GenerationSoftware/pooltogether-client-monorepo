@@ -1,27 +1,27 @@
-import {
-  usePrizePool,
-  usePrizeTokenPrice,
-  useToken
-} from '@generationsoftware/hyperstructure-react-hooks'
+import { useToken } from '@generationsoftware/hyperstructure-react-hooks'
+import { Token } from '@shared/types'
 import { Spinner } from '@shared/ui'
+import { PRIZE_POOLS } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { FormProvider, useForm } from 'react-hook-form'
 import { vaultAddressAtom, vaultChainIdAtom } from 'src/atoms'
 import { SupportedNetwork } from 'src/types'
 import { Address } from 'viem'
+import { BackButton } from '@components/buttons/BackButton'
 import { DeployLiquidationPairButton } from '@components/buttons/DeployLiquidationPairButton'
-import { CONTRACTS } from '@constants/config'
-import { useLiquidationPairInitialAmountIn } from '@hooks/useLiquidationPairInitialAmountIn'
-import { useLiquidationPairMinimumAuctionAmount } from '@hooks/useLiquidationPairMinimumAuctionAmount'
+import { NETWORK_CONFIG } from '@constants/config'
 import { useLiquidationPairSteps } from '@hooks/useLiquidationPairSteps'
+import { useLiquidationPairTargetAuctionPrice } from '@hooks/useLiquidationPairTargetAuctionPrice'
 import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
-import { ExchangeRateInput } from './ExchangeRateInput'
-import { MinimumAuctionAmountInput } from './MinimumAuctionAmountInput'
+import { SmoothingFactorInput } from './SmoothingFactorInput'
+import { TargetAuctionPeriodInput } from './TargetAuctionPeriodInput'
+import { TargetAuctionPriceInput } from './TargetAuctionPriceInput'
 
 export interface DeployLiquidationPairFormValues {
-  initialExchangeRate: string
-  minimumAuctionAmount: string
+  targetAuctionPeriod: string
+  targetAuctionPrice: string
+  smoothingFactor: string
 }
 
 interface DeployLiquidationPairFormProps {
@@ -39,18 +39,17 @@ export const DeployLiquidationPairForm = (props: DeployLiquidationPairFormProps)
   const chainId = useAtomValue(vaultChainIdAtom) as SupportedNetwork
   const vaultAddress = useAtomValue(vaultAddressAtom) as Address
 
-  const prizePool = usePrizePool(chainId, CONTRACTS[chainId].prizePool)
-  const { data: prizeToken } = usePrizeTokenPrice(prizePool)
+  const prizeTokenAddress = PRIZE_POOLS.find(
+    (pool) => pool.chainId === chainId
+  )?.options.prizeTokenAddress.toLowerCase() as Address
 
-  const { data: shareToken } = useToken(chainId, vaultAddress)
+  const { data: prizeToken } = useToken(chainId, prizeTokenAddress)
 
-  const { data: defaultInitialAmountIn } = useLiquidationPairInitialAmountIn(chainId, vaultAddress)
-  const { data: defaultMinimumAuctionAmount } = useLiquidationPairMinimumAuctionAmount(
-    chainId,
-    vaultAddress
+  const { data: defaultTargetAuctionPrice } = useLiquidationPairTargetAuctionPrice(
+    prizeToken as Token
   )
 
-  if (!prizeToken || !shareToken || !defaultInitialAmountIn || !defaultMinimumAuctionAmount) {
+  if (!prizeToken || !defaultTargetAuctionPrice) {
     return <Spinner />
   }
 
@@ -65,17 +64,29 @@ export const DeployLiquidationPairForm = (props: DeployLiquidationPairFormProps)
         onSubmit={formMethods.handleSubmit(() => {})}
         className={classNames('flex flex-col grow gap-12 items-center', className)}
       >
-        <ExchangeRateInput
+        <TargetAuctionPeriodInput
+          defaultPeriod={NETWORK_CONFIG[chainId].lp.targetAuctionPeriod}
+          className='w-full max-w-md'
+        />
+        <SmoothingFactorInput className='w-full max-w-md' />
+        <TargetAuctionPriceInput
           prizeToken={prizeToken}
-          vaultAddress={vaultAddress}
-          shareSymbol={shareToken.symbol}
+          defaultPrice={defaultTargetAuctionPrice}
+          className='w-full max-w-md'
         />
-        <MinimumAuctionAmountInput shareToken={shareToken} vaultAddress={vaultAddress} />
-        <DeployLiquidationPairButton
-          chainId={chainId}
-          vaultAddress={vaultAddress}
-          onSuccess={nextStep}
-        />
+        <div className='flex flex-col gap-4 items-center'>
+          <div className='flex gap-2 items-center'>
+            <BackButton />
+            <DeployLiquidationPairButton
+              chainId={chainId}
+              vaultAddress={vaultAddress}
+              onSuccess={nextStep}
+            />
+          </div>
+          <button onClick={nextStep} className='text-pt-teal-dark underline'>
+            Use an existing liquidation pair contract
+          </button>
+        </div>
       </form>
     </FormProvider>
   )

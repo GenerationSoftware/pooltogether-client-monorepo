@@ -3,7 +3,8 @@ import {
   useLastCheckedPrizesTimestamps
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Win } from '@shared/types'
-import { ExternalLink, LINKS } from '@shared/ui'
+import { ExternalLink } from '@shared/ui'
+import { LINKS } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'

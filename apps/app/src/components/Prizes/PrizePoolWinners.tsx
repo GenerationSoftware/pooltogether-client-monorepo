@@ -92,6 +92,7 @@ interface DrawRowProps {
   isOngoing?: boolean
 }
 
+// TODO: highlight draws with grand prizes awarded
 const DrawRow = (props: DrawRowProps) => {
   const { prizePool, draw, isOngoing } = props
 
@@ -104,13 +105,19 @@ const DrawRow = (props: DrawRowProps) => {
 
   const setSelectedDrawId = useSetAtom(drawIdAtom)
 
+  const { uniqueWallets, totalPrizeAmount } = useMemo(() => {
+    const validPrizeClaims = draw.prizeClaims.filter((claim) => !!claim.payout)
+
+    return {
+      uniqueWallets: new Set<Address>(validPrizeClaims.map((claim) => claim.winner)),
+      totalPrizeAmount: validPrizeClaims.reduce((a, b) => a + b.payout, 0n)
+    }
+  }, [draw])
+
   const handleClick = () => {
     setSelectedDrawId(draw.id)
     setIsModalOpen(true)
   }
-
-  const uniqueWallets = new Set<Address>(draw.prizeClaims.map((claim) => claim.winner))
-  const totalPrizeAmount = draw.prizeClaims.reduce((a, b) => a + b.payout, 0n)
 
   const firstPrizeTimestamp = draw.prizeClaims[0].timestamp
   const currentTime = getSecondsSinceEpoch()

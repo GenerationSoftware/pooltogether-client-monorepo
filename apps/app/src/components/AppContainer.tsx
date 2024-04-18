@@ -1,23 +1,21 @@
 import { useSelectedLanguage } from '@shared/generic-react-hooks'
-import { Flowbite } from '@shared/ui'
-import { Toaster } from '@shared/ui'
-import { NextIntlProvider } from 'next-intl'
+import { Flowbite, Toaster } from '@shared/ui'
+import { NextIntlClientProvider } from 'next-intl'
 import { AppProps } from 'next/app'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
+import { CustomAppProps } from '@pages/_app'
+import { AccountFrame } from './Frames/AccountFrame'
+import { DefaultFrame } from './Frames/DefaultFrame'
 
-export const AppContainer = (props: AppProps) => {
-  const { Component, pageProps } = props
-
-  const router = useRouter()
+export const AppContainer = (props: AppProps & CustomAppProps) => {
+  const { Component, pageProps, serverProps, router } = props
+  const { pathname, query, asPath, locale } = router
 
   const [isReady, setIsReady] = useState<boolean>(false)
 
   useSelectedLanguage({
-    onLanguageChange: (locale) => {
-      const { pathname, query, asPath } = router
-
-      router.push({ pathname, query }, asPath, { locale })
+    onLanguageChange: (newLanguage) => {
+      router.push({ pathname, query }, asPath, { locale: newLanguage })
 
       // Tiny delay to avoid flickering on differing language selection to locale default
       setTimeout(() => {
@@ -32,13 +30,22 @@ export const AppContainer = (props: AppProps) => {
     }
   }, [])
 
+  const pageFrames: { [href: string]: ReactNode } = {
+    account: <AccountFrame user={serverProps.params['user']} />
+  }
+
+  const pageFrame = pageFrames[pathname.split('/')[1]]
+
   return (
-    <Flowbite>
-      <Toaster expand={false} />
-      <NextIntlProvider locale={router.locale} messages={pageProps.messages}>
-        <div id='modal-root' />
-        {isReady && <Component {...pageProps} />}
-      </NextIntlProvider>
-    </Flowbite>
+    <>
+      {pageFrame ?? <DefaultFrame />}
+      <Flowbite>
+        <Toaster expand={false} />
+        <NextIntlClientProvider locale={locale} messages={pageProps.messages}>
+          <div id='modal-root' />
+          {isReady && <Component {...pageProps} />}
+        </NextIntlClientProvider>
+      </Flowbite>
+    </>
   )
 }

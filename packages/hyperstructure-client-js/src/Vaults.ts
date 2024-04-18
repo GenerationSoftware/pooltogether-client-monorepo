@@ -10,7 +10,6 @@ import {
   getVaultId,
   getVaultsByChainId,
   getVaultUnderlyingTokenAddresses,
-  TWAB_CONTROLLER_ADDRESSES,
   validateAddress,
   validateClientNetwork
 } from '@shared/utilities'
@@ -291,11 +290,13 @@ export class Vaults {
       networksToQuery.map((chainId) =>
         (async () => {
           const vaultAddresses = this.vaultAddresses[chainId]
-          const twabControllerAddress = TWAB_CONTROLLER_ADDRESSES[chainId]
-          if (!!vaultAddresses && !!twabControllerAddress) {
+          if (!!vaultAddresses?.length) {
             const client = this.publicClients[chainId]
             if (!!client) {
               await validateClientNetwork(chainId, client, source + ` [${chainId}]`)
+              const twabControllerAddress = await this.vaults[
+                getVaultId({ chainId, address: vaultAddresses[0] })
+              ].getTWABController()
               const chainDelegateBalances = await getVaultDelegateBalances(
                 client,
                 userAddress as Address,
@@ -333,11 +334,13 @@ export class Vaults {
       networksToQuery.map((chainId) =>
         (async () => {
           const vaultAddresses = this.vaultAddresses[chainId]
-          const twabControllerAddress = TWAB_CONTROLLER_ADDRESSES[chainId]
-          if (!!vaultAddresses && !!twabControllerAddress) {
+          if (!!vaultAddresses?.length) {
             const client = this.publicClients[chainId]
             if (!!client) {
               await validateClientNetwork(chainId, client, source + ` [${chainId}]`)
+              const twabControllerAddress = await this.vaults[
+                getVaultId({ chainId, address: vaultAddresses[0] })
+              ].getTWABController()
               const chainDelegates = await getVaultDelegates(
                 client,
                 userAddress as Address,

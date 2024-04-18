@@ -3,5 +3,4 @@
   <url> <loc>https://analytics.cabana.fi</loc> <changefreq>daily</changefreq> <priority>0.8</priority> </url>
   <url> <loc>https://analytics.cabana.fi/liquidations</loc> <changefreq>daily</changefreq> <priority>0.8</priority> </url>
   <url> <loc>https://analytics.cabana.fi/prizes</loc> <changefreq>daily</changefreq> <priority>0.8</priority> </url>
-  <url> <loc>https://analytics.cabana.fi/reserve</loc> <changefreq>daily</changefreq> <priority>0.8</priority> </url>
 </urlset>

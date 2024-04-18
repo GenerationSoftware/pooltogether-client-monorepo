@@ -1,12 +1,7 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useUserVaultShareBalance } from '@generationsoftware/hyperstructure-react-hooks'
 import { GiftIcon } from '@heroicons/react/24/solid'
-import {
-  DelegateButton,
-  DepositButton,
-  DeprecatedVaultTooltip,
-  WithdrawButton
-} from '@shared/react-components'
+import { DelegateButton, DepositButton, WithdrawButton } from '@shared/react-components'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Address } from 'viem'
@@ -14,14 +9,14 @@ import { useAccount } from 'wagmi'
 
 interface VaultButtonsProps {
   vault: Vault
-  hideDelegateButton?: boolean
+  forceShow?: ('delegate' | 'withdraw')[]
+  forceHide?: ('delegate' | 'withdraw')[]
   fullSized?: boolean
-  inverseOrder?: boolean
   className?: string
 }
 
 export const VaultButtons = (props: VaultButtonsProps) => {
-  const { vault, hideDelegateButton, fullSized, inverseOrder, className } = props
+  const { vault, forceShow, forceHide, fullSized, className } = props
 
   const t_common = useTranslations('Common')
   const t_tooltips = useTranslations('Tooltips')
@@ -31,42 +26,28 @@ export const VaultButtons = (props: VaultButtonsProps) => {
   const { data: vaultBalance } = useUserVaultShareBalance(vault, userAddress as Address)
   const shareBalance = vaultBalance?.amount ?? 0n
 
-  const isDeprecated = vault.tags?.includes('deprecated')
+  const isDelegateButtonShown =
+    (shareBalance > 0n || forceShow?.includes('delegate')) && !forceHide?.includes('delegate')
+  const isWithdrawButtonShown =
+    (shareBalance > 0n || forceShow?.includes('withdraw')) && !forceHide?.includes('withdraw')
 
   return (
     <div className={classNames('flex items-center gap-2', className)}>
-      {shareBalance > 0n && !hideDelegateButton && (
-        <DelegateButton vault={vault} color='transparent'>
+      {isDelegateButtonShown && (
+        <DelegateButton vault={vault} color='transparent' className='w-full'>
           <GiftIcon className='w-4 h-4 my-0.5' />
         </DelegateButton>
       )}
-      {isDeprecated ? (
-        <div className={classNames('w-full', inverseOrder ? 'order-2' : 'order-1')}>
-          <DeprecatedVaultTooltip intl={t_tooltips('deprecatedVault')}>
-            <DepositButton vault={vault} fullSized={fullSized}>
-              {t_common('deposit')}
-            </DepositButton>
-          </DeprecatedVaultTooltip>
-        </div>
-      ) : (
-        <DepositButton
-          vault={vault}
-          fullSized={fullSized}
-          className={inverseOrder ? 'order-2' : 'order-1'}
-        >
-          {t_common('deposit')}
-        </DepositButton>
-      )}
-      {shareBalance > 0n && (
-        <WithdrawButton
-          vault={vault}
-          fullSized={fullSized}
-          className={inverseOrder ? 'order-1' : 'order-2'}
-          color='transparent'
-        >
+      {isWithdrawButtonShown && (
+        <WithdrawButton vault={vault} fullSized={fullSized} color='transparent'>
           {t_common('withdraw')}
         </WithdrawButton>
       )}
+      <DepositButton
+        vault={vault}
+        fullSized={fullSized}
+        intl={{ base: t_common, tooltips: t_tooltips }}
+      />
     </div>
   )
 }

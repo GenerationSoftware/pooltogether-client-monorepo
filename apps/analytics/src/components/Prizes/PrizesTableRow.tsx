@@ -3,6 +3,7 @@ import { Prize, SubgraphDraw, Token } from '@shared/types'
 import { formatBigIntForDisplay, getTimeBreakdown } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
+import { isCanaryTier } from 'src/utils'
 import { ClaimFees } from '@components/ClaimFees'
 import { prizesHeaders } from './PrizesTable'
 
@@ -38,7 +39,13 @@ export const PrizesTableRow = (props: PrizesTableRowProps) => {
         className='w-1/2 md:w-auto'
       />
       <PrizesClaimed wins={wins} tier={tier} prizes={prizes} className='w-1/2 md:w-auto' />
-      <PrizeFees prizePool={prizePool} drawId={drawId} tier={tier} className='w-full md:w-auto' />
+      <PrizeFees
+        prizePool={prizePool}
+        drawId={drawId}
+        tier={tier}
+        numTiers={numTiers}
+        className='w-full md:w-auto'
+      />
       <PrizeClaimTime wins={wins} tier={tier} awardedAt={awardedAt} className='w-full md:w-auto' />
     </div>
   )
@@ -57,7 +64,7 @@ const PrizeTier = (props: PrizeTierProps) => {
     <span className={classNames('text-xl font-semibold text-pt-purple-200', className)}>
       {tier === 0 ? (
         'GP'
-      ) : tier === numTiers - 1 ? (
+      ) : tier >= numTiers - 2 ? (
         'Canary'
       ) : (
         <>
@@ -84,7 +91,13 @@ const PrizeSize = (props: PrizeSizeProps) => {
   const tierWins = wins.filter((win) => win.tier === tier)
 
   const prizeSize =
-    tierPrizes?.[0]?.amount ?? !!tierWins[0] ? tierWins[0].payout + tierWins[0].fee : undefined
+    tierPrizes?.[0]?.amount ?? !!tierWins[0]
+      ? tierWins[0].payout + tierWins[0].claimReward
+      : undefined
+
+  const formattedPrizeSize = !!prizeSize
+    ? formatBigIntForDisplay(prizeSize, prizeToken.decimals, { maximumFractionDigits: 4 })
+    : undefined
 
   return (
     <div className={classNames('flex flex-col gap-2', className)}>
@@ -93,7 +106,7 @@ const PrizeSize = (props: PrizeSizeProps) => {
         {!!prizeSize ? (
           <>
             <span className='text-xl font-semibold'>
-              {formatBigIntForDisplay(prizeSize, prizeToken.decimals, { maximumFractionDigits: 2 })}
+              {formattedPrizeSize === '0' ? '< 0.0001' : formattedPrizeSize}
             </span>{' '}
             {prizeToken.symbol}
           </>
@@ -142,21 +155,26 @@ interface PrizeFeesProps {
   prizePool: PrizePool
   drawId: number
   tier: number
+  numTiers: number
   className?: string
 }
 
 const PrizeFees = (props: PrizeFeesProps) => {
-  const { prizePool, drawId, tier, className } = props
+  const { prizePool, drawId, tier, numTiers, className } = props
 
   return (
     <div className={classNames('flex flex-col gap-2', className)}>
       <span className='text-pt-purple-300 md:hidden'>{prizesHeaders.fees}</span>
-      <ClaimFees
-        prizePool={prizePool}
-        drawId={drawId}
-        tier={tier}
-        className='items-center text-start md:items-start'
-      />
+      {isCanaryTier(tier, numTiers) ? (
+        <span>-</span>
+      ) : (
+        <ClaimFees
+          prizePool={prizePool}
+          drawId={drawId}
+          tier={tier}
+          className='items-center text-start md:items-start'
+        />
+      )}
     </div>
   )
 }

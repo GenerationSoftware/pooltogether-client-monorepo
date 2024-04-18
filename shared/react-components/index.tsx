@@ -12,6 +12,7 @@ export * from './components/Badges/VaultBadge'
 export * from './components/Buttons/DelegateButton'
 export * from './components/Buttons/DepositButton'
 export * from './components/Buttons/SocialShareButton'
+export * from './components/Buttons/TransactionButton'
 export * from './components/Buttons/WithdrawButton'
 
 /**
@@ -23,8 +24,9 @@ export * from './components/Currency/TokenValue'
 export * from './components/Currency/TokenValueAndAmount'
 
 /**
- * Form
+ * Forms
  */
+export * from './components/Form/DelegateForm'
 export * from './components/Form/DepositForm'
 export * from './components/Form/TxFormInput'
 export * from './components/Form/WithdrawForm'
@@ -65,6 +67,7 @@ export * from './components/PrizePool/PrizePoolDropdown'
 /**
  * Toasts
  */
+export * from './components/Toasts/DelegateTxToast'
 export * from './components/Toasts/DeployLiquidationPairTxToast'
 export * from './components/Toasts/DeployVaultTxToast'
 export * from './components/Toasts/DepositTxToast'
@@ -77,7 +80,9 @@ export * from './components/Toasts/WithdrawTxToast'
  * Tooltips
  */
 export * from './components/Tooltips/ApprovalTooltip'
+export * from './components/Tooltips/BadPrecisionPerDollarTooltip'
 export * from './components/Tooltips/BonusRewardsTooltip'
+export * from './components/Tooltips/DelegationDescriptionTooltip'
 export * from './components/Tooltips/DeprecatedVaultTooltip'
 export * from './components/Tooltips/ImportedVaultTooltip'
 export * from './components/Tooltips/PrizeYieldTooltip'
@@ -85,11 +90,6 @@ export * from './components/Tooltips/VaultContributionsTooltip'
 export * from './components/Tooltips/VaultFeeTooltip'
 export * from './components/Tooltips/WinChanceTooltip'
 export * from './components/Tooltips/YieldSourceURITooltip'
-
-/**
- * Transaction
- */
-export * from './components/Transaction/TransactionButton'
 
 /**
  * Constants

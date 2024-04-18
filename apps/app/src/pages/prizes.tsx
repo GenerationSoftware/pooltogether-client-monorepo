@@ -1,5 +1,5 @@
-import { ExternalLink, LINKS } from '@shared/ui'
-import { SECONDS_PER_DAY } from '@shared/utilities'
+import { ExternalLink } from '@shared/ui'
+import { LINKS, SECONDS_PER_DAY } from '@shared/utilities'
 import { GetStaticProps } from 'next'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
@@ -14,7 +14,7 @@ interface PrizesPageProps {
 }
 
 export const getStaticProps: GetStaticProps<PrizesPageProps> = async ({ locale }) => {
-  const messages = await getMessages(locale, { useDefault: true })
+  const messages = await getMessages(locale)
 
   return {
     props: { messages },

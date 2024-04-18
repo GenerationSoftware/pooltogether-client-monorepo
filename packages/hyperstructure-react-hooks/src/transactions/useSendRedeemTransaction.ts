@@ -14,13 +14,14 @@ import { useGasAmountEstimate, useUserVaultShareBalance } from '..'
  * Prepares and submits a `redeem` transaction to a vault
  * @param amount the amount of shares to redeem
  * @param vault the vault to redeem from
- * @param options optional callbacks
+ * @param options optional args or callbacks
  * @returns
  */
 export const useSendRedeemTransaction = (
   amount: bigint,
   vault: Vault,
   options?: {
+    minAssets?: bigint
     onSend?: (txHash: `0x${string}`) => void
     onSuccess?: (txReceipt: TransactionReceipt) => void
     onError?: () => void
@@ -55,7 +56,9 @@ export const useSendRedeemTransaction = (
       address: vault?.address,
       abi: vaultABI,
       functionName: 'redeem',
-      args: [amount, userAddress as Address, userAddress as Address],
+      args: !!options?.minAssets
+        ? [amount, userAddress as Address, userAddress as Address, options.minAssets]
+        : [amount, userAddress as Address, userAddress as Address],
       account: userAddress as Address
     },
     { enabled }
@@ -66,7 +69,9 @@ export const useSendRedeemTransaction = (
     address: vault?.address,
     abi: vaultABI,
     functionName: 'redeem',
-    args: [amount, userAddress as Address, userAddress as Address],
+    args: !!options?.minAssets
+      ? [amount, userAddress as Address, userAddress as Address, options.minAssets]
+      : [amount, userAddress as Address, userAddress as Address],
     gas: !!gasEstimate ? calculatePercentageOfBigInt(gasEstimate, 1.2) : undefined,
     query: { enabled }
   })

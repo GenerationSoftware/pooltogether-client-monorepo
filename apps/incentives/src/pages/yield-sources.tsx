@@ -1,4 +1,4 @@
-import { LINKS } from '@shared/ui'
+import { LINKS } from '@shared/utilities'
 import { ExtensionsPageContent } from '@components/ExtensionsPageContent'
 import { Layout } from '@components/Layout'
 

@@ -22,7 +22,12 @@
     "bonusRewards": "Bonus Rewards",
     "claim": "Claim",
     "apr": "APR",
-    "warning": "Warning"
+    "warning": "Warning",
+    "greatMigration": {
+      "joinTitle": "Join the Great <highlight>Pooly</highlight> Migration",
+      "joinButton": "Join the Migration",
+      "earnUpTo": "Earn up to <highlight>{apr}% APR</highlight> in OP Bonus Rewards"
+    }
   },
   "Navigation": {
     "home": "Home",
@@ -283,6 +288,7 @@
     "importedVault": "This vault is from the following imported list(s):",
     "vaultContribution": "The amount of {symbol} contributed to the prize pool over the last {days} days",
     "deprecatedVault": "This vault has been deprecated. It may still be eligible to win prizes, but we encourage users to migrate to other vaults.",
+    "badPrecisionPerDollar": "This vault is likely to have rounding errors which may lead to lossy withdrawals.",
     "delegateDescription": "By default the prize token holder is the delegated address. That can be overridden with delegation."
   },
   "Toasts": {

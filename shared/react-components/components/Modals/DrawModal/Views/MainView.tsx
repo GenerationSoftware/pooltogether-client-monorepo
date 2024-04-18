@@ -135,12 +135,18 @@ const DrawTotals = (props: DrawTotalsProps) => {
     }
   }, [lastDrawId, lastDrawTimestamps])
 
+  const { uniqueWallets, totalPrizeAmount } = useMemo(() => {
+    const validPrizeClaims = draw.prizeClaims.filter((claim) => !!claim.payout)
+
+    return {
+      uniqueWallets: new Set<Address>(validPrizeClaims.map((claim) => claim.winner)),
+      totalPrizeAmount: validPrizeClaims.reduce((a, b) => a + b.payout, 0n)
+    }
+  }, [draw])
+
   if (prizeToken === undefined) {
     return <Spinner />
   }
-
-  const uniqueWallets = new Set<Address>(draw.prizeClaims.map((claim) => claim.winner))
-  const totalPrizeAmount = draw.prizeClaims.reduce((a, b) => a + b.payout, 0n)
 
   return (
     <span className='text-center'>
@@ -169,7 +175,9 @@ const DrawWinnersTable = (props: DrawWinnersTableProps) => {
   const wins = useMemo(() => {
     const groupedWins: { [winner: Address]: bigint } = {}
 
-    draw.prizeClaims.forEach((win) => {
+    const validPrizeClaims = draw.prizeClaims.filter((claim) => !!claim.payout)
+
+    validPrizeClaims.forEach((win) => {
       if (groupedWins[win.winner] !== undefined) {
         groupedWins[win.winner] += win.payout
       } else {
@@ -190,8 +198,8 @@ const DrawWinnersTable = (props: DrawWinnersTableProps) => {
         <div className='flex flex-col w-full max-h-52 gap-3 overflow-y-auto'>
           {wins.map((win) => {
             const formattedPrize = formatBigIntForDisplay(win[1], tokenData.decimals, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2
+              minimumFractionDigits: 4,
+              maximumFractionDigits: 4
             })
 
             return (
@@ -203,7 +211,9 @@ const DrawWinnersTable = (props: DrawWinnersTableProps) => {
                 </span>
                 <span className='w-1/2 text-right whitespace-nowrap md:text-center'>
                   {!!tokenData ? (
-                    `${formattedPrize === '0.00' ? '< 0.01' : formattedPrize} ${tokenData.symbol}`
+                    `${formattedPrize === '0.0000' ? '< 0.0001' : formattedPrize} ${
+                      tokenData.symbol
+                    }`
                   ) : (
                     <Spinner />
                   )}

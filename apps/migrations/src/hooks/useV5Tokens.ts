@@ -1,7 +1,6 @@
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { TokenWithLogo, VaultInfo } from '@shared/types'
-import { DOMAINS } from '@shared/ui'
-import { getVaultList } from '@shared/utilities'
+import { DOMAINS, getVaultList } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { SUPPORTED_NETWORKS } from '@constants/config'

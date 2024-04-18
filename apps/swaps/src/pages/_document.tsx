@@ -1,4 +1,4 @@
-import { DOMAINS } from '@shared/ui'
+import { DOMAINS } from '@shared/utilities'
 import Document, {
   DocumentContext,
   DocumentInitialProps,
@@ -18,7 +18,8 @@ class MyDocument extends Document {
   render() {
     const title = 'Cabana Swaps'
     const description = 'Browse and swap into your favorite PoolTogether vaults.'
-    const keywords = 'prize savings win save protocol blockchain vault ethereum swap swaps'
+    const keywords =
+      'pooltogether prize savings win save protocol blockchain vault ethereum swap swaps'
 
     return (
       <Html className='bg-pt-purple-600 text-pt-purple-50 overflow-x-hidden dark'>

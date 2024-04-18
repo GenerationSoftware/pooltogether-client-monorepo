@@ -1,19 +1,13 @@
-import {
-  useFirstDrawOpenedAt,
-  usePrizePool,
-  useVault,
-  useVaultShareData
-} from '@generationsoftware/hyperstructure-react-hooks'
 import { PairCreateInfo } from '@shared/types'
-import { POOL_TOKEN_ADDRESSES, PRIZE_POOLS } from '@shared/utilities'
+import { PRIZE_POOLS } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import {
-  liquidationPairInitialAmountInAtom,
-  liquidationPairMinimumAuctionAmountAtom
+  liquidationPairSmoothingFactorAtom,
+  liquidationPairTargetAuctionPeriodAtom,
+  liquidationPairTargetAuctionPriceAtom
 } from 'src/atoms'
 import { SupportedNetwork } from 'src/types'
-import { Address, parseEther, parseUnits } from 'viem'
-import { LP_CONFIG } from '@constants/config'
+import { Address } from 'viem'
 
 /**
  * Returns all info required to deploy a new liquidation pair
@@ -25,44 +19,20 @@ export const useLiquidationPairInfo = (
   chainId: SupportedNetwork,
   vaultAddress: Address
 ): Partial<PairCreateInfo> => {
-  const initialAmountIn = useAtomValue(liquidationPairInitialAmountInAtom)
-  const minimumAuctionAmount = useAtomValue(liquidationPairMinimumAuctionAmountAtom)
+  const targetAuctionPeriod = useAtomValue(liquidationPairTargetAuctionPeriodAtom)
+  const targetAuctionPrice = useAtomValue(liquidationPairTargetAuctionPriceAtom)
+  const smoothingFactor = useAtomValue(liquidationPairSmoothingFactorAtom)
 
-  const vault = useVault({ chainId, address: vaultAddress })
-  const { data: shareToken } = useVaultShareData(vault)
-
-  const prizePoolInfo = PRIZE_POOLS.find((pool) => pool.chainId === chainId) as {
-    chainId: SupportedNetwork
-    address: Address
-    options: {
-      prizeTokenAddress: Address
-      drawPeriodInSeconds: number
-      tierShares: number
-      reserveShares: number
-    }
-  }
-
-  const prizePool = usePrizePool(chainId, prizePoolInfo.address)
-  const { data: periodOffset } = useFirstDrawOpenedAt(prizePool)
-
-  const periodLength = prizePoolInfo.options.drawPeriodInSeconds
-  const targetFirstSaleTime = LP_CONFIG[chainId].targetFirstSaleTimeFraction * periodLength
-
-  const decayConstant = parseEther('130') / BigInt(periodLength * 50)
-
-  const initialAmountOut = !!shareToken ? parseUnits('1', shareToken.decimals) : undefined
+  const prizeTokenAddress = PRIZE_POOLS.find((pool) => pool.chainId === chainId)?.options
+    .prizeTokenAddress as Address
 
   return {
     chainId,
     source: vaultAddress,
-    tokenIn: POOL_TOKEN_ADDRESSES[chainId],
+    tokenIn: prizeTokenAddress,
     tokenOut: vaultAddress,
-    periodLength,
-    periodOffset,
-    targetFirstSaleTime,
-    decayConstant,
-    initialAmountIn,
-    initialAmountOut,
-    minimumAuctionAmount
+    targetAuctionPeriod,
+    targetAuctionPrice,
+    smoothingFactor
   }
 }

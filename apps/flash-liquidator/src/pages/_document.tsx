@@ -1,4 +1,4 @@
-import { DOMAINS } from '@shared/ui'
+import { DOMAINS } from '@shared/utilities'
 import Document, {
   DocumentContext,
   DocumentInitialProps,
@@ -19,7 +19,7 @@ class MyDocument extends Document {
     const title = 'Cabana Flash Liquidator'
     const description = 'Flash liquidate yield from any PoolTogether prize vault.'
     const keywords =
-      'prize savings win save protocol blockchain ethereum optimism tool flash liquidate liquidations'
+      'pooltogether prize savings win save protocol blockchain ethereum optimism tool flash liquidate liquidations'
 
     return (
       <Html className='bg-pt-purple-800 text-pt-purple-50 overflow-x-hidden dark'>

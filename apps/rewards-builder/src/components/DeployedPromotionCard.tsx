@@ -6,8 +6,8 @@ import {
   SquaresPlusIcon
 } from '@heroicons/react/24/outline'
 import { TokenIcon, VaultBadge } from '@shared/react-components'
-import { LINKS, Spinner, Tooltip } from '@shared/ui'
-import { getBlockExplorerUrl, getSimpleDate, isTestnet, shorten } from '@shared/utilities'
+import { Spinner, Tooltip } from '@shared/ui'
+import { getBlockExplorerUrl, getSimpleDate, isTestnet, LINKS, shorten } from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { useRouter } from 'next/router'

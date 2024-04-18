@@ -17,7 +17,7 @@ export const VaultPreview = (props: VaultPreviewProps) => {
 
   const {
     chainId,
-    token,
+    tokenAddress,
     yieldSourceName,
     yieldSourceAddress,
     feePercentage,
@@ -28,13 +28,13 @@ export const VaultPreview = (props: VaultPreviewProps) => {
     claimer
   } = useVaultInfo()
 
-  const { data: tokenData } = useToken(chainId as SupportedNetwork, token as Address)
+  const { data: tokenData } = useToken(chainId as SupportedNetwork, tokenAddress as Address)
 
   const formattedFeePercentage = useMemo(() => {
     return feePercentage !== undefined ? getFormattedFeePercentage(feePercentage) : undefined
   }, [feePercentage])
 
-  const isInvalidYieldSource = token === zeroAddress
+  const isInvalidYieldSource = tokenAddress === zeroAddress
 
   return (
     <div

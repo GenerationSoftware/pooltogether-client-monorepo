@@ -11,7 +11,6 @@
   ],
   "scripts": {
     "build": "tsup",
-    "prepare": "pnpm build",
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "clean": "rm -rf dist"

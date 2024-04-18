@@ -1,4 +1,4 @@
-import { DOMAINS } from '@shared/ui'
+import { DOMAINS } from '@shared/utilities'
 import Document, {
   DocumentContext,
   DocumentInitialProps,
@@ -20,7 +20,7 @@ class MyDocument extends Document {
     const description =
       'Want to contribute to the global prize savings hyperstructure? View all the tools and incentives at your disposal.'
     const keywords =
-      'prize savings win save protocol blockchain pool together incentives contribute builders'
+      'pooltogether prize savings win save protocol blockchain incentives contribute builders'
 
     return (
       <Html className='bg-pt-bg-purple-dark text-pt-purple-100 overflow-x-hidden dark'>

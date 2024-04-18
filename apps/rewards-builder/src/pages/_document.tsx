@@ -1,4 +1,4 @@
-import { DOMAINS } from '@shared/ui'
+import { DOMAINS } from '@shared/utilities'
 import Document, {
   DocumentContext,
   DocumentInitialProps,
@@ -19,7 +19,7 @@ class MyDocument extends Document {
     const title = 'Cabana Rewards Builder'
     const description = 'Create and manage rewards for any PoolTogether prize vault.'
     const keywords =
-      'prize savings win save protocol blockchain vault 4626 ethereum optimism arbitrum tool rewards'
+      'pooltogether prize savings win save protocol blockchain vault 4626 ethereum optimism arbitrum tool rewards'
 
     return (
       <Html className='bg-pt-purple-800 text-pt-purple-50 overflow-x-hidden dark'>

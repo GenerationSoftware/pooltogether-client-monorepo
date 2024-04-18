@@ -8,6 +8,7 @@ import { ExternalLink, Spinner } from '@shared/ui'
 import { divideBigInts, getBlockExplorerUrl, MAX_UINT_256 } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
+import { isCanaryTier } from 'src/utils'
 import { QUERY_START_BLOCK } from '@constants/config'
 
 type Stat = { amount: bigint; percentage: number; txHash?: `0x${string}` }
@@ -30,20 +31,21 @@ export const ClaimFees = (props: ClaimFeesProps) => {
     prizePool,
     { fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined }
   )
-  const drawAwardedEvent = drawAwardedEvents?.find((e) => e.args.drawId === drawId)
-  const numTiers = drawAwardedEvent?.args.numTiers
+
+  const numTiers = useMemo(() => {
+    const drawAwardedEvent = drawAwardedEvents?.find((e) => e.args.drawId === drawId)
+    return drawAwardedEvent?.args.numTiers
+  }, [drawId, drawAwardedEvents])
 
   const wins = useMemo(() => {
     const filteredWins: SubgraphDraw['prizeClaims'] = []
     if (!!draw) {
       draw.prizeClaims.forEach((prize) => {
-        const isValidTier = tier === undefined || prize.tier === tier
-        const isCanaryTier = !!numTiers ? prize.tier === numTiers - 1 : false
         if (
-          prize.fee > 0n &&
-          prize.feeRecipient !== prize.recipient &&
-          isValidTier &&
-          (!hideCanary || !isCanaryTier)
+          prize.claimReward > 0n &&
+          prize.claimRewardRecipient !== prize.recipient &&
+          (tier === undefined || prize.tier === tier) &&
+          (!hideCanary || (!!numTiers && !isCanaryTier(prize.tier, numTiers)))
         ) {
           filteredWins.push(prize)
         }
@@ -54,21 +56,25 @@ export const ClaimFees = (props: ClaimFeesProps) => {
 
   const claimFeeStats = useMemo(() => {
     if (wins.length > 0) {
-      const sumClaimFeeAmount = wins.reduce((a, b) => a + b.fee, 0n)
+      const sumClaimFeeAmount = wins.reduce((a, b) => a + b.claimReward, 0n)
       const sumPrizeAmount = wins.reduce((a, b) => a + b.payout, 0n)
 
       const high: Stat = wins.reduce(
         (a, b) => {
-          const percentage = divideBigInts(b.fee, b.payout + b.fee) * 100
-          return a.percentage < percentage ? { amount: b.fee, percentage, txHash: b.txHash } : a
+          const percentage = divideBigInts(b.claimReward, b.payout + b.claimReward) * 100
+          return a.percentage < percentage
+            ? { amount: b.claimReward, percentage, txHash: b.txHash }
+            : a
         },
         { amount: 0n, percentage: 0 }
       )
 
       const low: Stat = wins.reduce(
         (a, b) => {
-          const percentage = divideBigInts(b.fee, b.payout + b.fee) * 100
-          return a.percentage > percentage ? { amount: b.fee, percentage, txHash: b.txHash } : a
+          const percentage = divideBigInts(b.claimReward, b.payout + b.claimReward) * 100
+          return a.percentage > percentage
+            ? { amount: b.claimReward, percentage, txHash: b.txHash }
+            : a
         },
         { amount: MAX_UINT_256, percentage: 100 }
       )
@@ -112,7 +118,7 @@ export const ClaimFeeStat = (props: ClaimFeeStatProps) => {
   const formattedPercentage = (
     <span className='pl-2'>
       <span className='text-xl'>
-        {data.percentage.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+        {data.percentage.toLocaleString(undefined, { maximumFractionDigits: 2 })}
       </span>
       %
     </span>

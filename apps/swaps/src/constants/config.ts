@@ -5,10 +5,7 @@ import { mainnet, optimism } from 'viem/chains'
 /**
  * Supported networks
  */
-export const SUPPORTED_NETWORKS = {
-  mainnets: [NETWORK.mainnet, NETWORK.optimism],
-  testnets: []
-} as const
+export const SUPPORTED_NETWORKS = [NETWORK.mainnet, NETWORK.optimism] as const
 
 /**
  * Wagmi networks
@@ -29,20 +26,20 @@ export const RPC_URLS = {
 /**
  * Vaults to display
  */
-export const VAULT_ADDRESSES = {
-  [NETWORK.optimism]: ['0x29Cb69D4780B53c1e5CD4D2B817142D2e9890715']
-} as const
+export const VAULT_ADDRESSES: { [chainId: number]: Address[] } = {
+  [NETWORK.optimism]: [
+    // TODO: add vaults with swap liquidity here
+  ]
+}
 
 /**
  * Curve pools
  *
  * NOTE: All vault addresses are lowercase
  */
-export const CURVE_POOLS: { [chainId: number]: { [vaultAddress: Address]: string } } = {
-  [NETWORK.optimism]: { '0x31515cfc4550d9c83e2d86e8a352886d1364e2d9': 'factory-v2-76' }
-}
+export const CURVE_POOLS: { [chainId: number]: { [vaultAddress: Address]: string } } = {}
 
 /**
- * Minimum "big win" POOL amount
+ * Minimum "big win" WETH amount
  */
-export const MIN_BIG_WIN = parseEther('100')
+export const MIN_BIG_WIN = parseEther('0.01')

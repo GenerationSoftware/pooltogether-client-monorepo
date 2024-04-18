@@ -1,4 +1,5 @@
-import { Accordion, LINKS } from '@shared/ui'
+import { Accordion } from '@shared/ui'
+import { LINKS } from '@shared/utilities'
 import classNames from 'classnames'
 import { ReactNode } from 'react'
 
@@ -29,7 +30,7 @@ export const FaqSection = (props: FaqSectionProps) => {
           Cabana offers a suite of open-source tools for interacting with PoolTogether V5.{' '}
           <FaqLink href={LINKS.app}>app.cabana.fi</FaqLink> allows anyone to deposit and withdraw
           from the protocol. <FaqLink href={LINKS.vaultFactory}>factory.cabana.fi</FaqLink> allows
-          anyone to deploy their own prize vaults using any ERC-4626 compatible yield source.{' '}
+          anyone to deploy their own prize vaults using ERC-4626 compatible yield sources.{' '}
           <FaqLink href={LINKS.vaultListCreator}>lists.cabana.fi</FaqLink> makes it easy for anyone
           to curate their own prize vault lists that can be shared and accessed via the main app.
         </span>

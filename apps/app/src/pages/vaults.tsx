@@ -11,7 +11,7 @@ interface VaultsPageProps {
 }
 
 export const getStaticProps: GetStaticProps<VaultsPageProps> = async ({ locale }) => {
-  const messages = await getMessages(locale, { useDefault: true })
+  const messages = await getMessages(locale)
 
   return {
     props: { messages },

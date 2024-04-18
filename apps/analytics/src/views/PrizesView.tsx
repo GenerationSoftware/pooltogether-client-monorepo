@@ -1,23 +1,15 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import {
-  useDrawAwardedEvents,
-  useRelayAuctionEvents,
-  useRngAuctionEvents,
-  useRngL1RelayMsgEvents,
-  useRngL2RelayMsgEvents
-} from '@generationsoftware/hyperstructure-react-hooks'
-import { PRIZE_POOLS, RNG_RELAY_ADDRESSES, sToMs } from '@shared/utilities'
+import { PRIZE_POOLS, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
-import { useAtomValue } from 'jotai'
+import { useRouter } from 'next/router'
 import { useEffect, useMemo } from 'react'
-import { selectedDrawIdAtom } from 'src/atoms'
-import { Address, PublicClient } from 'viem'
+import { PublicClient } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { DrawAvgClaimFeesChart } from '@components/Charts/DrawAvgClaimFeesChart'
 import { DrawSelector } from '@components/Draws/DrawSelector'
 import { DrawStatusBadge } from '@components/Draws/DrawStatusBadge'
 import { PrizesTable } from '@components/Prizes/PrizesTable'
-import { QUERY_START_BLOCK } from '@constants/config'
+import { useRngTxs } from '@hooks/useRngTxs'
 
 interface PrizesViewProps {
   chainId: number
@@ -27,19 +19,14 @@ interface PrizesViewProps {
 export const PrizesView = (props: PrizesViewProps) => {
   const { chainId, className } = props
 
+  const router = useRouter()
+
   const publicClient = usePublicClient({ chainId })
 
   const prizePool = useMemo(() => {
-    const prizePoolInfo = PRIZE_POOLS.find((pool) => pool.chainId === chainId) as {
-      chainId: number
-      address: Address
-      options: {
-        prizeTokenAddress: Address
-        drawPeriodInSeconds: number
-        tierShares: number
-        reserveShares: number
-      }
-    }
+    const prizePoolInfo = PRIZE_POOLS.find(
+      (pool) => pool.chainId === chainId
+    ) as (typeof PRIZE_POOLS)[number]
 
     return new PrizePool(
       prizePoolInfo.chainId,
@@ -49,42 +36,21 @@ export const PrizesView = (props: PrizesViewProps) => {
     )
   }, [chainId, publicClient])
 
-  const originChainId = !!prizePool
-    ? RNG_RELAY_ADDRESSES[prizePool.chainId].from.chainId
-    : undefined
-  const fromBlock = !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
-  const originFromBlock = !!originChainId ? QUERY_START_BLOCK[originChainId] : undefined
+  const drawIdSelected = useMemo(() => {
+    const queryDraw = router.query['draw'] as string | undefined
+    return queryDraw ? parseInt(queryDraw) : undefined
+  }, [router.query])
 
-  const { refetch: refetchRngAuctionEvents } = useRngAuctionEvents(originChainId as number, {
-    fromBlock: originFromBlock
-  })
-  const { refetch: refetchRngL1RelayMsgEvents } = useRngL1RelayMsgEvents(
-    originChainId as number,
-    prizePool?.chainId,
-    { fromBlock: originFromBlock }
-  )
-  const { refetch: refetchRelayAuctionEvents } = useRelayAuctionEvents(prizePool?.chainId, {
-    fromBlock
-  })
-  const { refetch: refetchDrawAwardedEvents } = useDrawAwardedEvents(prizePool, { fromBlock })
-  const { refetch: refetchRngL2RelayMsgEvents } = useRngL2RelayMsgEvents(prizePool?.chainId, {
-    fromBlock
-  })
+  const { refetch: refetchRngTxs } = useRngTxs(prizePool)
 
   // Automatic data refetching
   useEffect(() => {
     const interval = setInterval(() => {
-      refetchRngAuctionEvents()
-      refetchRngL1RelayMsgEvents()
-      refetchRelayAuctionEvents()
-      refetchDrawAwardedEvents()
-      refetchRngL2RelayMsgEvents()
+      refetchRngTxs()
     }, sToMs(300))
 
     return () => clearInterval(interval)
   }, [])
-
-  const drawIdSelected = useAtomValue(selectedDrawIdAtom)
 
   return (
     <div className={classNames('w-full flex flex-col grow gap-2 items-center md:gap-6', className)}>
@@ -96,6 +62,12 @@ export const PrizesView = (props: PrizesViewProps) => {
             drawId={drawIdSelected}
             className='max-w-4xl'
           />
+          {/* TODO: re-add this chart once infura caching issue is fixed */}
+          {/* <DrawClaimFeesOverTimeChart
+            prizePool={prizePool}
+            drawId={drawIdSelected}
+            className='max-w-4xl'
+          /> */}
           <PrizesTable prizePool={prizePool} drawId={drawIdSelected} className='md:mt-6' />
         </>
       )}

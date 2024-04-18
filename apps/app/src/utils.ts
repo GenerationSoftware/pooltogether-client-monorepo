@@ -119,18 +119,15 @@ const getNetworkTransports = (
 /**
  * Returns messages for localization through next-intl
  * @param locale the locale to fetch messages for
- * @param options optional settings
  * @returns
  */
-export const getMessages = async (locale?: string, options?: { useDefault?: boolean }) => {
+export const getMessages = async (locale?: string) => {
   const defaultMessages: IntlMessages = (await import(`../messages/en.json`)).default
 
   if (!locale) return defaultMessages
 
   const localeMessages: IntlMessages = (await import(`../messages/${locale}.json`)).default
-  const messages = options?.useDefault
-    ? deepmerge<IntlMessages>(defaultMessages, localeMessages)
-    : localeMessages
+  const messages = deepmerge<IntlMessages>(defaultMessages, localeMessages)
 
   return messages
 }

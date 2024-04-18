@@ -1,36 +1,44 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { useDrawPeriod, useFirstDrawOpenedAt } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useDrawAuctionDuration,
+  useDrawPeriod,
+  useFirstDrawOpenedAt
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { DrawStatus } from '@shared/types'
-import { getSecondsSinceEpoch, SECONDS_PER_HOUR } from '@shared/utilities'
+import { getSecondsSinceEpoch } from '@shared/utilities'
 import { useMemo } from 'react'
 import { useRngTxs } from './useRngTxs'
 
-// TODO: need to be able to set refetch interval or manual refetch
 export const useDrawStatus = (prizePool: PrizePool, drawId: number) => {
   const { data: firstDrawOpenedAt, isFetched: isFetchedFirstDrawOpenedAt } =
     useFirstDrawOpenedAt(prizePool)
-
   const { data: drawPeriod, isFetched: isFetchedDrawPeriod } = useDrawPeriod(prizePool)
+  const { data: drawAuctionDuration, isFetched: isFetchedDrawAuctionDuration } =
+    useDrawAuctionDuration(prizePool)
 
-  const { data: allRngTxs, isFetched: isFetchedAllRngTxs } = useRngTxs(prizePool)
+  const { data: allRngTxs, isFetched: isFetchedAllRngTxs, refetch } = useRngTxs(prizePool)
 
   const isFetched =
-    !!drawId && isFetchedFirstDrawOpenedAt && isFetchedDrawPeriod && isFetchedAllRngTxs
+    !!drawId &&
+    isFetchedFirstDrawOpenedAt &&
+    isFetchedDrawPeriod &&
+    isFetchedDrawAuctionDuration &&
+    isFetchedAllRngTxs
 
   const data = useMemo(() => {
-    if (isFetched && !!firstDrawOpenedAt && !!drawPeriod && !!allRngTxs) {
-      const rngTxs = allRngTxs.find((txs) => txs.rng.drawId === drawId)
+    if (isFetched && !!firstDrawOpenedAt && !!drawPeriod && !!drawAuctionDuration && !!allRngTxs) {
+      const rngTxs = allRngTxs.find((txs) => txs.drawStart[0].drawId === drawId)
 
       const openedAt = firstDrawOpenedAt + drawPeriod * (drawId - 1)
       const closedAt = openedAt + drawPeriod
-      const rngCompletedAt = rngTxs?.rng?.timestamp
-      const awardedAt = rngTxs?.relay.l2?.timestamp
+      const startedAt = rngTxs?.drawStart[rngTxs.drawStart.length - 1].timestamp
+      const awardedAt = rngTxs?.drawFinish?.timestamp
       const finalizedAt = closedAt + drawPeriod
 
       const currentTime = getSecondsSinceEpoch()
       const isClosed = currentTime >= closedAt
       const isAwarded = !!awardedAt
-      const isFinalized = isAwarded && currentTime >= finalizedAt
+      const isFinalized = currentTime >= finalizedAt
 
       const status: DrawStatus = isFinalized
         ? 'finalized'
@@ -40,10 +48,12 @@ export const useDrawStatus = (prizePool: PrizePool, drawId: number) => {
         ? 'closed'
         : 'open'
 
-      const relayAuctionClosesAt = !!rngCompletedAt
-        ? rngCompletedAt + SECONDS_PER_HOUR * 6
-        : finalizedAt
-      const isSkipped = status === 'closed' && currentTime >= relayAuctionClosesAt
+      const currentAuctionClosesAt = !!startedAt
+        ? startedAt + drawAuctionDuration
+        : closedAt + drawAuctionDuration
+      const isSkipped =
+        (status === 'finalized' && !isAwarded) ||
+        (status === 'closed' && currentTime >= currentAuctionClosesAt)
 
       return {
         status,
@@ -54,7 +64,7 @@ export const useDrawStatus = (prizePool: PrizePool, drawId: number) => {
         isSkipped
       }
     }
-  }, [drawId, firstDrawOpenedAt, drawPeriod, allRngTxs, isFetched])
+  }, [drawId, firstDrawOpenedAt, drawPeriod, drawAuctionDuration, allRngTxs, isFetched])
 
-  return { ...data, isFetched }
+  return { ...data, isFetched, refetch }
 }

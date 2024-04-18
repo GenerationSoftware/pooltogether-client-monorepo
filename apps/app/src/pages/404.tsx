@@ -9,7 +9,7 @@ interface Custom404PageProps {
 }
 
 export const getStaticProps: GetStaticProps<Custom404PageProps> = async ({ locale }) => {
-  const messages = await getMessages(locale, { useDefault: true })
+  const messages = await getMessages(locale)
 
   return {
     props: { messages },

@@ -1,6 +1,7 @@
 {
   "name": "@generationsoftware/hyperstructure-react-hooks",
-  "version": "1.14.5",
+  "description": "React hooks library for interacting with PoolTogether contracts",
+  "version": "1.15.0",
   "license": "MIT",
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

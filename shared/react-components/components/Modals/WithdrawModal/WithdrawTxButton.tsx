@@ -1,4 +1,4 @@
-import { Vault } from '@generationsoftware/hyperstructure-client-js'
+import { getAssetsFromShares, Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useSendRedeemTransaction,
   useTokenBalance,
@@ -13,12 +13,12 @@ import { Intl } from '@shared/types'
 import { Button } from '@shared/ui'
 import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
-import { Address, formatUnits, parseUnits } from 'viem'
+import { Address, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { WithdrawModalView } from '.'
+import { TransactionButton } from '../../Buttons/TransactionButton'
 import { isValidFormInput } from '../../Form/TxFormInput'
 import { withdrawFormShareAmountAtom } from '../../Form/WithdrawForm'
-import { TransactionButton } from '../../Transaction/TransactionButton'
 
 interface WithdrawTxButtonProps {
   vault: Vault
@@ -94,6 +94,12 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
     ? parseUnits(formShareAmount, decimals as number)
     : 0n
 
+  // TODO: this should accept user input in case of lossy vaults
+  const expectedAssetAmount =
+    !!withdrawAmount && !!vaultExchangeRate
+      ? getAssetsFromShares(withdrawAmount, vaultExchangeRate, decimals as number)
+      : 0n
+
   const {
     isWaiting: isWaitingWithdrawal,
     isConfirming: isConfirmingWithdrawal,
@@ -101,6 +107,7 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
     txHash: withdrawTxHash,
     sendRedeemTransaction
   } = useSendRedeemTransaction(withdrawAmount, vault, {
+    minAssets: expectedAssetAmount,
     onSend: () => {
       setModalView('waiting')
     },
@@ -130,12 +137,6 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
     }
   }, [withdrawTxHash, isConfirmingWithdrawal])
 
-  const isAaveCollateralizationErrored =
-    vault.tags?.includes('aave') &&
-    !!vaultExchangeRate &&
-    vault.decimals !== undefined &&
-    parseFloat(formatUnits(vaultExchangeRate, vault.decimals)) !== 1
-
   const withdrawEnabled =
     !isDisconnected &&
     !!userAddress &&
@@ -145,8 +146,7 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
     isValidFormShareAmount &&
     !!withdrawAmount &&
     userVaultShareBalance.amount >= withdrawAmount &&
-    !!sendRedeemTransaction &&
-    !isAaveCollateralizationErrored
+    !!sendRedeemTransaction
 
   if (withdrawAmount === 0n) {
     return (

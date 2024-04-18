@@ -7,12 +7,7 @@ import { useSelectedCurrency } from '@shared/generic-react-hooks'
 import { DrawWithTimestamps, SubgraphPrize, TokenWithAmount, Win } from '@shared/types'
 import { Intl } from '@shared/types'
 import { Button } from '@shared/ui'
-import {
-  getSimpleDate,
-  NETWORK,
-  POOL_TOKEN_ADDRESSES,
-  WRAPPED_NATIVE_ASSETS
-} from '@shared/utilities'
+import { getSimpleDate, NETWORK, WRAPPED_NATIVE_ASSETS } from '@shared/utilities'
 import classNames from 'classnames'
 import Lottie from 'lottie-react'
 import { useMemo, useState } from 'react'
@@ -129,22 +124,15 @@ const Header = (props: HeaderProps) => {
   const { selectedCurrency } = useSelectedCurrency()
 
   const isTokenEquivalentHidden = useMemo(() => {
-    const poolTokenAddress = POOL_TOKEN_ADDRESSES[
-      token.chainId as keyof typeof POOL_TOKEN_ADDRESSES
-    ]?.toLowerCase() as Lowercase<Address> | undefined
-
     const wethTokenAddress =
       token.chainId === NETWORK.mainnet ||
       token.chainId === NETWORK.optimism ||
       token.chainId === NETWORK.arbitrum ||
       token.chainId === NETWORK.base
-        ? (WRAPPED_NATIVE_ASSETS[token.chainId]?.toLowerCase() as Lowercase<Address>)
+        ? WRAPPED_NATIVE_ASSETS[token.chainId]
         : undefined
 
-    return (
-      (selectedCurrency === 'pool' && token.address.toLowerCase() === poolTokenAddress) ||
-      (selectedCurrency === 'eth' && token.address.toLowerCase() === wethTokenAddress)
-    )
+    return selectedCurrency === 'eth' && token.address.toLowerCase() === wethTokenAddress
   }, [token, selectedCurrency])
 
   return (

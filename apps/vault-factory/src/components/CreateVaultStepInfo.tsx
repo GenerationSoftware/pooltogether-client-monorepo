@@ -1,6 +1,9 @@
-import { LINKS } from '@shared/ui'
-import { ReactNode, useMemo } from 'react'
+import { LINKS } from '@shared/utilities'
+import { useAtomValue } from 'jotai'
+import { ReactNode, useEffect, useMemo } from 'react'
+import { isUsingCustomYieldSourceAtom } from 'src/atoms'
 import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
+import { useVaultInfo } from '@hooks/useVaultInfo'
 import { StepInfo } from './StepInfo'
 
 export const allVaultStepInfo: { title: string; info: ReactNode }[] = [
@@ -10,7 +13,11 @@ export const allVaultStepInfo: { title: string; info: ReactNode }[] = [
   },
   {
     title: 'Choose a yield source',
-    info: `Any ERC-4626 compatible yield source can be used to generate yield for your prize vault.`
+    info: `Choose from a list of audited and compatible ERC-4626 yield sources to provide yield for your prize vault, or use your own.`
+  },
+  {
+    title: 'Choose a token',
+    info: `Choose the deposit token to use with ???`
   },
   {
     title: 'Configure ownership and vault fees',
@@ -39,7 +46,7 @@ export const allVaultStepInfo: { title: string; info: ReactNode }[] = [
   },
   {
     title: 'Deploy your liquidation pair',
-    info: `This is the contract that enables your prize vault's yield to be liquidated for POOL prizes. We've set some initial settings automatically, but feel free to customize these.`
+    info: `This is the contract that enables your prize vault's yield to be liquidated and sent to the prize pool. We've set some initial settings automatically, but feel free to customize these.`
   },
   {
     title: 'Set the liquidation pair to your prize vault',
@@ -56,12 +63,27 @@ export const CreateVaultStepInfo = (props: CreateVaultStepInfoProps) => {
 
   const { step, setStep } = useVaultCreationSteps()
 
+  const { yieldSourceName } = useVaultInfo()
+
+  const isUsingCustomYieldSource = useAtomValue(isUsingCustomYieldSourceAtom)
+
+  useEffect(() => {
+    allVaultStepInfo[2].info = `Choose the deposit token to use with ${yieldSourceName ?? '???'}`
+  }, [yieldSourceName])
+
   const blockedSteps = useMemo(() => {
-    if (step >= 6) {
-      return [...Array(6).keys()]
+    const blocked: number[] = []
+
+    if (step > 2 && isUsingCustomYieldSource) {
+      blocked.push(2)
     }
-    return []
-  }, [step])
+
+    if (step > 6) {
+      blocked.push(...[...Array(6).keys()])
+    }
+
+    return blocked
+  }, [step, isUsingCustomYieldSource])
 
   return (
     <StepInfo

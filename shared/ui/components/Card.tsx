@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { Card as FlowbiteCard, CardProps as FlowbiteCardProps } from 'flowbite-react'
 
-type CardProps = FlowbiteCardProps & {
+export type CardProps = FlowbiteCardProps & {
   className?: string
   wrapperClassName?: string
 }

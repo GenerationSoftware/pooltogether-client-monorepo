@@ -9,6 +9,11 @@ import { SupportedNetwork } from './types'
 export const vaultChainIdAtom = atom<SupportedNetwork | undefined>(undefined)
 
 /**
+ * Vault Yield Source ID
+ */
+export const vaultYieldSourceIdAtom = atom<string>('')
+
+/**
  * Vault Yield Source Name
  */
 export const vaultYieldSourceNameAtom = atom<string>('')
@@ -17,6 +22,11 @@ export const vaultYieldSourceNameAtom = atom<string>('')
  * Vault Yield Source Address
  */
 export const vaultYieldSourceAddressAtom = atom<Address | undefined>(undefined)
+
+/**
+ * Custom Vault Yield Source State
+ */
+export const isUsingCustomYieldSourceAtom = atom<boolean>(false)
 
 /**
  * Vault Fee Percentage
@@ -78,14 +88,19 @@ export const vaultIdsAtom = atom<string[]>(getInitialVaultIds())
 export const liquidationPairStepCounterAtom = atom<number>(0)
 
 /**
- * Liquidation Pair Initial POOL Exchange Rate
+ * Liquidation Pair Target Auction Period
  */
-export const liquidationPairInitialAmountInAtom = atom<bigint | undefined>(undefined)
+export const liquidationPairTargetAuctionPeriodAtom = atom<number | undefined>(undefined)
 
 /**
- * Liquidation Pair Minimum Auction Share Amount
+ * Liquidation Pair Target Auction Price
  */
-export const liquidationPairMinimumAuctionAmountAtom = atom<bigint | undefined>(undefined)
+export const liquidationPairTargetAuctionPriceAtom = atom<bigint | undefined>(undefined)
+
+/**
+ * Liquidation Pair Smoothing Factor
+ */
+export const liquidationPairSmoothingFactorAtom = atom<number>(0.5)
 
 /**
  * Liquidation Pair Address

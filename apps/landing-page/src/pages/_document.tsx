@@ -1,4 +1,4 @@
-import { DOMAINS } from '@shared/ui'
+import { DOMAINS } from '@shared/utilities'
 import Document, {
   DocumentContext,
   DocumentInitialProps,
@@ -19,7 +19,7 @@ class MyDocument extends Document {
     const title = 'Cabana'
     const description =
       'Welcome to Cabana, a suite of open source interfaces and tools for the PoolTogether Hyperstructure.'
-    const keywords = 'prize savings win save protocol blockchain pool together tools'
+    const keywords = 'pooltogether prize savings win save protocol blockchain tools'
 
     return (
       <Html className='bg-pt-purple-700 text-pt-purple-50 overflow-x-hidden dark'>

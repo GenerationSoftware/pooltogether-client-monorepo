@@ -5,7 +5,7 @@ import { getNiceNetworkNameByChainId } from '@shared/utilities'
 import classNames from 'classnames'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { SupportedNetwork } from 'src/types'
-import { CONTRACTS, NETWORK_DESCRIPTIONS } from '@constants/config'
+import { NETWORK_CONFIG } from '@constants/config'
 
 interface NetworkInputFormValues {
   vaultChainId: string
@@ -48,7 +48,7 @@ interface NetworkCardProps {
 const NetworkCard = (props: NetworkCardProps) => {
   const { chainId } = props
 
-  const prizePoolAddress = CONTRACTS[chainId].prizePool
+  const prizePoolAddress = NETWORK_CONFIG[chainId].prizePool
   const prizePool = usePrizePool(chainId, prizePoolAddress)
   const { data: grandPrize } = useGrandPrize(prizePool, { useCurrentPrizeSizes: true })
 
@@ -67,10 +67,10 @@ const NetworkCard = (props: NetworkCardProps) => {
       )}
       className='gap-3'
     >
-      <span className='text-lg font-bold text-blue-500'>
+      <span className='text-lg font-bold text-pt-purple-100'>
         {getNiceNetworkNameByChainId(chainId)}
       </span>
-      <span className='text-pt-purple-100'>
+      <span className='text-blue-500'>
         Grand Prize:{' '}
         {!!grandPrize ? (
           <TokenValue
@@ -82,7 +82,7 @@ const NetworkCard = (props: NetworkCardProps) => {
           <Spinner />
         )}
       </span>
-      <span className='hidden line-clamp-3 lg:block'>{NETWORK_DESCRIPTIONS[chainId]}</span>
+      <span className='hidden line-clamp-3 lg:block'>{NETWORK_CONFIG[chainId].description}</span>
     </Card>
   )
 }

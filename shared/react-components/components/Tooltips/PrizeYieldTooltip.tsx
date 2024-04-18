@@ -1,5 +1,6 @@
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
-import { LINKS, Tooltip } from '@shared/ui'
+import { Tooltip } from '@shared/ui'
+import { LINKS } from '@shared/utilities'
 import classNames from 'classnames'
 
 export interface PrizeYieldTooltipProps {

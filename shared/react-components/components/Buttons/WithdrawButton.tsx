@@ -4,7 +4,7 @@ import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Button, ButtonProps } from '@shared/ui'
 import classNames from 'classnames'
 
-interface WithdrawButtonProps extends Omit<ButtonProps, 'onClick'> {
+export interface WithdrawButtonProps extends Omit<ButtonProps, 'onClick'> {
   vault: Vault
 }
 

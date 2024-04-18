@@ -301,9 +301,11 @@ const ManageItem = (props: ManageItemProps) => {
             fullSized={fullSized}
             className='md:min-w-[6rem]'
           />
-          <Link href={migrationURL} passHref={true} className='w-full'>
-            <Button fullSized={fullSized}>Migrate</Button>
-          </Link>
+          {/* <Link href={migrationURL} passHref={true} className='w-full'> */}
+          <Button fullSized={fullSized} disabled>
+            Migrate (Soon)
+          </Button>
+          {/* </Link> */}
         </>
       ) : (
         <ClaimRewardsButton

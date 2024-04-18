@@ -98,8 +98,6 @@ const NavbarActions = (props: NavbarActionsProps) => {
         className={linkClassName}
       />
       <NavbarLink href={`/${networkName}/prizes`} name='Prizes' className={linkClassName} />
-      <NavbarLink href={`/${networkName}/reserve`} name='Reserve' className={linkClassName} />
-      <NavbarLink href={`/${networkName}/burn`} name='Burn' className={linkClassName} />
     </>
   )
 }

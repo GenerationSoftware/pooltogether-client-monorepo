@@ -14,13 +14,14 @@ import { useGasAmountEstimate, useUserVaultTokenBalance } from '..'
  * Prepares and submits a `withdraw` transaction to a vault
  * @param amount the amount of tokens to withdraw
  * @param vault the vault to withdraw from
- * @param options optional callbacks
+ * @param options optional args or callbacks
  * @returns
  */
 export const useSendWithdrawTransaction = (
   amount: bigint,
   vault: Vault,
   options?: {
+    maxShares?: bigint
     onSend?: (txHash: `0x${string}`) => void
     onSuccess?: (txReceipt: TransactionReceipt) => void
     onError?: () => void
@@ -55,7 +56,9 @@ export const useSendWithdrawTransaction = (
       address: vault?.address,
       abi: vaultABI,
       functionName: 'withdraw',
-      args: [amount, userAddress as Address, userAddress as Address],
+      args: !!options?.maxShares
+        ? [amount, userAddress as Address, userAddress as Address, options.maxShares]
+        : [amount, userAddress as Address, userAddress as Address],
       account: userAddress as Address
     },
     { enabled }
@@ -66,7 +69,9 @@ export const useSendWithdrawTransaction = (
     address: vault?.address,
     abi: vaultABI,
     functionName: 'withdraw',
-    args: [amount, userAddress as Address, userAddress as Address],
+    args: !!options?.maxShares
+      ? [amount, userAddress as Address, userAddress as Address, options.maxShares]
+      : [amount, userAddress as Address, userAddress as Address],
     gas: !!gasEstimate ? calculatePercentageOfBigInt(gasEstimate, 1.2) : undefined,
     query: { enabled }
   })

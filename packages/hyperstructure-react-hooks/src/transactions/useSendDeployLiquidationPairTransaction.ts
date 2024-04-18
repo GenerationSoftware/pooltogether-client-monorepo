@@ -1,7 +1,7 @@
 import { PairCreateInfo } from '@shared/types'
 import { LIQUIDATION_PAIR_FACTORY_ADDRESSES, liquidationPairFactoryABI } from '@shared/utilities'
 import { useEffect } from 'react'
-import { Address, TransactionReceipt } from 'viem'
+import { Address, parseEther, TransactionReceipt } from 'viem'
 import {
   useAccount,
   useSimulateContract,
@@ -38,13 +38,9 @@ export const useSendDeployLiquidationPairTransaction = (
     source,
     tokenIn,
     tokenOut,
-    periodLength,
-    periodOffset,
-    targetFirstSaleTime,
-    decayConstant,
-    initialAmountIn,
-    initialAmountOut,
-    minimumAuctionAmount
+    targetAuctionPeriod,
+    targetAuctionPrice,
+    smoothingFactor
   } = pairCreateInfo
 
   const liquidationPairFactoryAddress = !!chainId
@@ -60,13 +56,9 @@ export const useSendDeployLiquidationPairTransaction = (
     !!chainId &&
     !!tokenIn &&
     !!tokenOut &&
-    periodLength !== undefined &&
-    periodOffset !== undefined &&
-    targetFirstSaleTime !== undefined &&
-    decayConstant !== undefined &&
-    initialAmountIn !== undefined &&
-    initialAmountOut !== undefined &&
-    minimumAuctionAmount !== undefined &&
+    !!targetAuctionPeriod &&
+    !!targetAuctionPrice &&
+    smoothingFactor !== undefined &&
     chain?.id === chainId
 
   const { data } = useSimulateContract({
@@ -78,13 +70,9 @@ export const useSendDeployLiquidationPairTransaction = (
       source,
       tokenIn,
       tokenOut,
-      periodLength,
-      periodOffset,
-      targetFirstSaleTime,
-      decayConstant,
-      initialAmountIn,
-      initialAmountOut,
-      minimumAuctionAmount
+      BigInt(targetAuctionPeriod ?? 0),
+      targetAuctionPrice,
+      parseEther(`${smoothingFactor}`)
     ],
     query: { enabled }
   })

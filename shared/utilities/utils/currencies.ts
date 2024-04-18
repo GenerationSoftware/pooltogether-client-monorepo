@@ -20,6 +20,7 @@ export const formatCurrencyValue = (
     locale?: string
     round?: boolean
     hideZeroes?: boolean
+    shortenMillions?: boolean
   }
 ) => {
   const currencyValue = calculateCurrencyValue(baseValue, currency, exchangeRates, {

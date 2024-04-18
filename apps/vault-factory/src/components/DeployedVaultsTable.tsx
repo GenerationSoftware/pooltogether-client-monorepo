@@ -8,17 +8,17 @@ import {
 import { ArrowPathRoundedSquareIcon, TrashIcon, WrenchIcon } from '@heroicons/react/24/outline'
 import { useScreenSize } from '@shared/generic-react-hooks'
 import { VaultBadge } from '@shared/react-components'
-import { LINKS, Spinner, Table, TableData, Tooltip } from '@shared/ui'
-import { getBlockExplorerUrl, shorten } from '@shared/utilities'
+import { Spinner, Table, TableData, Tooltip } from '@shared/ui'
+import { getBlockExplorerUrl, LINKS, shorten } from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { zeroAddress } from 'viem'
 import { useAccount } from 'wagmi'
 import { SUPPORTED_NETWORKS } from '@constants/config'
-import { useDeployedVaults } from '@hooks/useDeployedVaults'
 import { useDeployedVaultState } from '@hooks/useDeployedVaultState'
 import { useLiquidationPairSteps } from '@hooks/useLiquidationPairSteps'
+import { useUserDeployedVaults } from '@hooks/useUserDeployedVaults'
 import { DeployedVaultCard } from './DeployedVaultCard'
 
 interface DeployedVaultsTableProps {
@@ -28,7 +28,7 @@ interface DeployedVaultsTableProps {
 export const DeployedVaultsTable = (props: DeployedVaultsTableProps) => {
   const { className } = props
 
-  const { vaultInfoArray } = useDeployedVaults()
+  const { vaultInfoArray } = useUserDeployedVaults()
   const vaults = useVaults(vaultInfoArray, { useAllChains: true })
   const vaultsArray = Object.values(vaults.vaults).filter((vault) =>
     SUPPORTED_NETWORKS.includes(vault.chainId)
@@ -80,7 +80,7 @@ export const DeployedVaultsTable = (props: DeployedVaultsTableProps) => {
     return (
       <div
         className={classNames(
-          'flex flex-col items-center p-6 bg-pt-transparent/20 rounded-3xl',
+          'flex flex-col items-center p-6 bg-pt-transparent/20 rounded-3xl lg:w-full',
           className
         )}
       >
@@ -211,9 +211,9 @@ const VaultActionsItem = (props: ItemProps) => {
 
   const { setStep: setLpStep } = useLiquidationPairSteps()
 
-  const { removeVault } = useDeployedVaults()
+  const { removeVault } = useUserDeployedVaults()
 
-  const onClickDeployLp = () => {
+  const onClickSetLp = () => {
     setLpStep(0)
     router.push(`/lp/${vault.chainId}/${vault.address}`)
   }
@@ -236,9 +236,9 @@ const VaultActionsItem = (props: ItemProps) => {
 
   return (
     <div className='flex gap-1 items-center'>
-      <Tooltip content='Deploy LP'>
+      <Tooltip content='Set LP'>
         <ArrowPathRoundedSquareIcon
-          onClick={isVaultOwner ? onClickDeployLp : undefined}
+          onClick={isVaultOwner ? onClickSetLp : undefined}
           className={ownerOnlyIconClassName}
         />
       </Tooltip>

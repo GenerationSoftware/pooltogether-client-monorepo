@@ -21,8 +21,8 @@ import {
   SettingsModal,
   WithdrawModal
 } from '@shared/react-components'
-import { Footer, FooterItem, LINKS, Navbar, SocialIcon, toast } from '@shared/ui'
-import { getDiscordInvite, NETWORK } from '@shared/utilities'
+import { ExternalLink, Footer, FooterItem, Navbar, SocialIcon, toast } from '@shared/ui'
+import { getDiscordInvite, LINKS, NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
 import * as fathom from 'fathom-client'
 import { useAtomValue } from 'jotai'
@@ -38,6 +38,7 @@ import { useNetworks } from '@hooks/useNetworks'
 import { useSelectedPrizePool } from '@hooks/useSelectedPrizePool'
 import { useSettingsModalView } from '@hooks/useSettingsModalView'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
+import { MigrationPopup } from './MigrationPopup'
 import { drawIdAtom } from './Prizes/PrizePoolWinners'
 import { VaultListHandler } from './VaultListHandler'
 
@@ -81,11 +82,11 @@ export const Layout = (props: LayoutProps) => {
 
   const { vaults } = useSelectedVaults()
   const { address: userAddress } = useAccount()
-  const { refetch: refetchUserVaultBalances } = useAllUserVaultBalances(
-    vaults,
-    userAddress as Address,
-    { refetchOnWindowFocus: true }
-  )
+  const {
+    data: userVaultBalances,
+    isFetched: isFetchedUserVaultBalances,
+    refetch: refetchUserVaultBalances
+  } = useAllUserVaultBalances(vaults, userAddress as Address, { refetchOnWindowFocus: true })
   const { refetch: refetchUserVaultDelegationBalances } = useAllUserVaultDelegationBalances(
     vaults,
     userAddress as Address,
@@ -117,6 +118,33 @@ export const Layout = (props: LayoutProps) => {
       toast(alert.content, { id: alert.id })
     })
   })
+
+  // TODO: remove this whole block a while after launch
+  const [needsMigrationToastCheck, setNeedsMigrationToastCheck] = useState<boolean>(false)
+  useEffect(() => {
+    setNeedsMigrationToastCheck(true)
+  })
+  useEffect(() => {
+    if (needsMigrationToastCheck && isFetchedUserVaultBalances) {
+      setNeedsMigrationToastCheck(false)
+
+      const positiveBalances = Object.values(userVaultBalances ?? {})
+        .map((b) => b.amount)
+        .filter((b) => b > 0n)
+      if (!positiveBalances.length) {
+        toast(
+          <div className='flex flex-col gap-2 items-center text-center text-base'>
+            <span>Is your account missing some deposits?</span>
+            <span>You might have been deposited in an older version of PoolTogether.</span>
+            <ExternalLink href={LINKS.migrations} className='text-pt-teal'>
+              Check the migration app
+            </ExternalLink>
+          </div>,
+          { id: 'migrationAppNudge' }
+        )
+      }
+    }
+  }, [userVaultBalances, isFetchedUserVaultBalances])
 
   const footerItems: FooterItem[] = [
     {
@@ -310,6 +338,9 @@ export const Layout = (props: LayoutProps) => {
       />
 
       <VaultListHandler />
+
+      {/* TODO: remove a while after launch */}
+      <MigrationPopup />
 
       <main
         className={classNames(

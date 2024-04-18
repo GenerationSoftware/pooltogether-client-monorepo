@@ -1,4 +1,5 @@
-import { Button, LINKS } from '@shared/ui'
+import { Button } from '@shared/ui'
+import { LINKS } from '@shared/utilities'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
@@ -32,7 +33,6 @@ export const HomePageContent = () => {
   return (
     <div className='flex flex-col grow gap-8 items-center justify-center px-4 lg:px-0'>
       <VaultsIntro />
-      {/* TODO: add video tutorial once available */}
       <div className='flex flex-col gap-4 items-center sm:flex-row'>
         <DeployNewVaultButton />
         <Button href={LINKS.factoryDocs} target='_blank'>
@@ -59,9 +59,8 @@ const DeployNewVaultButton = (props: DeployNewVaultButtonProps) => {
     router.replace('/create')
   }
 
-  // TODO: re-enable once vault factory is re-deployed or app is re-designed
   return (
-    <PurpleButton onClick={onClickDeploy} className={className} disabled={true}>
+    <PurpleButton onClick={onClickDeploy} className={className}>
       Deploy a Prize Vault
     </PurpleButton>
   )

@@ -5,7 +5,7 @@ import { Button, ButtonProps } from '@shared/ui'
 import classNames from 'classnames'
 import { ReactNode } from 'react'
 
-interface DelegateButtonProps extends Omit<ButtonProps, 'onClick'> {
+export interface DelegateButtonProps extends Omit<ButtonProps, 'onClick'> {
   vault: Vault
   children?: ReactNode
   className?: string
