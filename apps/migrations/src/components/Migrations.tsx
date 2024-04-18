@@ -1,4 +1,5 @@
-import { Spinner } from '@shared/ui'
+import { Button, Spinner } from '@shared/ui'
+import { LINKS } from '@shared/utilities'
 import classNames from 'classnames'
 import Image from 'next/image'
 import { useEffect } from 'react'
@@ -106,6 +107,7 @@ const NoMigrationsAvailable = () => {
             We couldn't find any prize tokens in your wallet that need migrating.
           </span>
         </div>
+        <Button href={`${LINKS.app}/vaults`}>Open Cabana App</Button>
       </div>
     </div>
   )
