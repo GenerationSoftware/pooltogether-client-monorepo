@@ -302,7 +302,7 @@ export const getUserSubgraphObservations = async (
       query: `query($address: Bytes, $numVaults: Int, $numObservations: Int, $offsetVaults: Int, $offsetObservations: Int, $orderDirection: OrderDirection, $orderBy: AccountObservation_orderBy) {
         user(id: $address) {
           accounts(first: $numVaults, skip: $offsetVaults) {
-            vault { address }
+            prizeVault { address }
             observations(first: $numObservations, skip: $offsetObservations, orderDirection: $orderDirection, orderBy: $orderBy) {
               balance
               delegateBalance
@@ -326,7 +326,7 @@ export const getUserSubgraphObservations = async (
     const result = await fetch(subgraphUrl, { method: 'POST', headers, body })
     const jsonData = await result.json()
     const accounts: {
-      vault: { address: string }
+      prizeVault: { address: string }
       observations: {
         balance: string
         delegateBalance: string
@@ -338,7 +338,7 @@ export const getUserSubgraphObservations = async (
     const observations: { [vaultAddress: `0x${string}`]: SubgraphObservation[] } = {}
 
     accounts.forEach((account) => {
-      observations[account.vault.address as Address] = account.observations.map((obs) => ({
+      observations[account.prizeVault.address as Address] = account.observations.map((obs) => ({
         balance: BigInt(obs.balance),
         delegateBalance: BigInt(obs.delegateBalance),
         timestamp: parseInt(obs.timestamp),

@@ -78,7 +78,9 @@ export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
           if (
             wins[chainId].some(
               (win) =>
-                drawIdsToCheck.includes(win.drawId) && win.timestamp > lastCheckedPrizesTimestamp
+                !!win.payout &&
+                drawIdsToCheck.includes(win.drawId) &&
+                win.timestamp > lastCheckedPrizesTimestamp
             )
           ) {
             setView('win')

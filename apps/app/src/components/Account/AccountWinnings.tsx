@@ -48,15 +48,17 @@ export const AccountWinnings = (props: AccountWinningsProps) => {
       const groupedChainWins: { [txHash: `0x${string}`]: Win } = {}
 
       wins[chainId].forEach((win) => {
-        if (groupedChainWins[win.txHash] !== undefined) {
-          groupedChainWins[win.txHash].payout += win.payout
-        } else if (win.timestamp <= lastCheckedPrizesTimestamp || isExternalUser) {
-          groupedChainWins[win.txHash] = {
-            chainId,
-            drawId: win.drawId,
-            payout: win.payout,
-            txHash: win.txHash,
-            timestamp: win.timestamp
+        if (!!win.payout) {
+          if (groupedChainWins[win.txHash] !== undefined) {
+            groupedChainWins[win.txHash].payout += win.payout
+          } else if (win.timestamp <= lastCheckedPrizesTimestamp || isExternalUser) {
+            groupedChainWins[win.txHash] = {
+              chainId,
+              drawId: win.drawId,
+              payout: win.payout,
+              txHash: win.txHash,
+              timestamp: win.timestamp
+            }
           }
         }
       })

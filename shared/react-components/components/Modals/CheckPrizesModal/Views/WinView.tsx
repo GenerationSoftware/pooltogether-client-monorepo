@@ -51,21 +51,23 @@ export const WinView = (props: WinViewProps) => {
         const groupedChainWins: { [txHash: `0x${string}`]: Win } = {}
 
         wins[chainId].forEach((win) => {
-          if (groupedChainWins[win.txHash] !== undefined) {
-            groupedChainWins[win.txHash].payout += win.payout
-            totalAmount += win.payout
-          } else if (
-            drawIdsToCheck.includes(win.drawId) &&
-            win.timestamp > lastCheckedPrizesTimestamp
-          ) {
-            groupedChainWins[win.txHash] = {
-              chainId,
-              drawId: win.drawId,
-              payout: win.payout,
-              txHash: win.txHash,
-              timestamp: win.timestamp
+          if (!!win.payout) {
+            if (groupedChainWins[win.txHash] !== undefined) {
+              groupedChainWins[win.txHash].payout += win.payout
+              totalAmount += win.payout
+            } else if (
+              drawIdsToCheck.includes(win.drawId) &&
+              win.timestamp > lastCheckedPrizesTimestamp
+            ) {
+              groupedChainWins[win.txHash] = {
+                chainId,
+                drawId: win.drawId,
+                payout: win.payout,
+                txHash: win.txHash,
+                timestamp: win.timestamp
+              }
+              totalAmount += win.payout
             }
-            totalAmount += win.payout
           }
         })
 

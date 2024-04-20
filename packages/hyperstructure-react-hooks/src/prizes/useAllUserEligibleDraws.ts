@@ -26,8 +26,8 @@ export const useAllUserEligibleDraws = (prizePools: PrizePool[], userAddress: st
   const { data: allBalanceUpdates, isFetched: isFetchedAllBalanceUpdates } =
     useAllUserBalanceUpdates(prizePools, userAddress)
 
-  // TODO: this assumes `grandPrizePeriodDraws` is always 365 - not ideal
-  const grandPrizePeriodDraws = 365
+  // TODO: this assumes `grandPrizePeriodDraws` is always 91 - not ideal
+  const grandPrizePeriodDraws = 91
 
   const isFetched =
     isFetchedAllDrawIds &&
