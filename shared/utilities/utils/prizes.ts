@@ -119,23 +119,25 @@ export const getPrizePoolContributionPercentages = async (
  * @param publicClient a public Viem client for the prize pool's chain
  * @param prizePoolAddress the prize pool's address
  * @param vaultAddresses the addresses for any vaults to get total supply TWAB for
- * @param numDraws the number of draws to look back on
+ * @param startDrawId the draw to start at (inclusive)
+ * @param endDrawId the draw to end at (inclusive)
  * @returns
  */
 export const getPrizePoolTotalSupplyTwabs = async (
   publicClient: PublicClient,
   prizePoolAddress: Address,
   vaultAddresses: Address[],
-  numDraws: number
+  startDrawId: number,
+  endDrawId: number
 ): Promise<{ [vaultId: string]: bigint }> => {
   const totalSupplyTwabs: { [vaultId: string]: bigint } = {}
 
   const chainId = await publicClient.getChainId()
 
-  if (vaultAddresses.length > 0 && numDraws >= 0) {
+  if (vaultAddresses.length > 0 && startDrawId <= endDrawId) {
     const calls = vaultAddresses.map((vaultAddress) => ({
       functionName: 'getVaultUserBalanceAndTotalSupplyTwab',
-      args: [vaultAddress, zeroAddress, Math.floor(numDraws)]
+      args: [vaultAddress, zeroAddress, startDrawId, endDrawId]
     }))
 
     const multicallResults = await getSimpleMulticallResults(

@@ -347,11 +347,15 @@ export class PrizePool {
     const source = 'Prize Pool [getVaultTotalSupplyTwab]'
     await validateClientNetwork(this.chainId, this.publicClient, source)
 
+    const lastDrawId = (await this.getLastAwardedDrawId()) || 1
+    const startDrawId = numDraws > lastDrawId ? 1 : lastDrawId - Math.floor(numDraws) + 1
+
     const totalSupplyTwabs = await getPrizePoolTotalSupplyTwabs(
       this.publicClient,
       this.address,
       vaultAddresses,
-      numDraws
+      startDrawId,
+      lastDrawId
     )
 
     return totalSupplyTwabs
