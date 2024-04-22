@@ -431,6 +431,12 @@ export const V3_POOLS: Record<
       ticketAddress: '0x0bc114a3163a0bc72abf0ab964eef0dc52495703',
       tokenAddress: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
       migrateTo: MIGRATION_DESTINATIONS.daiVault
+    },
+    {
+      address: '0x2ac049f07d56ed04f84ff80022a71a1a2d8ce19b',
+      ticketAddress: '0xd80eaa761ccfdc8698999d73c96cec39fbb1fc48',
+      tokenAddress: '0x25788a1a171ec66da6502f9975a15b609ff54cf6',
+      migrateTo: MIGRATION_DESTINATIONS.poolVault
     }
   ],
   [NETWORK.avalanche]: [],
