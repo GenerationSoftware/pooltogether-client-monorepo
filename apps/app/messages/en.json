@@ -27,7 +27,8 @@
       "joinTitle": "Join the Great <highlight>Pooly</highlight> Migration",
       "joinButton": "Join the Migration",
       "migrateTo": "Migrate to the new PoolTogether",
-      "earnUpTo": "and earn up to <highlight>{apr}% APR</highlight> in OP Bonus Rewards"
+      "earnUpTo": "and earn up to <highlight>{apr}% APR</highlight> in OP Bonus Rewards",
+      "skipForNow": "Skip for now"
     }
   },
   "Navigation": {
