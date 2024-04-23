@@ -370,6 +370,7 @@ export const V3_POOLS: Record<
     tokenAddress: Lowercase<Address>
     migrateTo: { chainId: SupportedNetwork; address: Lowercase<Address> }
     podAddress?: Lowercase<Address>
+    rewardsAddress?: Lowercase<Address>
   }[]
 > = {
   [NETWORK.mainnet]: [
@@ -409,7 +410,22 @@ export const V3_POOLS: Record<
       address: '0x396b4489da692788e327e2e4b2b0459a5ef26791',
       ticketAddress: '0x27d22a7648e955e510a40bdb058333e9190d12d4',
       tokenAddress: '0x0cec1a9154ff802e7934fc916ed7ca50bde6844e',
-      migrateTo: MIGRATION_DESTINATIONS.poolVault
+      migrateTo: MIGRATION_DESTINATIONS.poolVault,
+      rewardsAddress: '0x30430419b86e9512e6d93fc2b0791d98dbeb637b'
+    },
+    {
+      address: '0xc2a7dfb76e93d12a1bb1fa151b9900158090395d',
+      ticketAddress: '0xfa831a04cb52fc89dd519d08dc5e94ab2df52b7e',
+      tokenAddress: '0x3472a5a71965499acd81997a54bba8d852c6e53d',
+      migrateTo: MIGRATION_DESTINATIONS.wethVault,
+      rewardsAddress: '0x40f76363129118b34cc2af44963192c3e8690ba6'
+    },
+    {
+      address: '0x3af7072d29adde20fc7e173a7cb9e45307d2fb0a',
+      ticketAddress: '0xeb8928ee92efb06c44d072a24c2bcb993b61e543',
+      tokenAddress: '0x85cb0bab616fe88a89a35080516a8928f38b518b',
+      migrateTo: MIGRATION_DESTINATIONS.wethVault,
+      rewardsAddress: '0x9a29401ef1856b669f55ae5b24505b3b6faeb370'
     }
   ],
   [NETWORK.optimism]: [],
