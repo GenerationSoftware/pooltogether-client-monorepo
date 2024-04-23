@@ -49,7 +49,7 @@ export const PrizesTable = (props: PrizesTableProps) => {
                     />
                   </span>
                   <span className='flex-grow text-pt-purple-100 pr-8 text-right md:text-xl md:pr-16'>
-                    {getPrizeTextFromFrequency(frequency, 'daily', t_freq)}
+                    {getPrizeTextFromFrequency(frequency, 'everyXdays', t_freq)}
                   </span>
                 </div>
               )

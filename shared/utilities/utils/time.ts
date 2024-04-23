@@ -6,6 +6,7 @@ import {
   SECONDS_PER_MINUTE,
   SECONDS_PER_YEAR
 } from '../constants'
+import { formatNumberForDisplay } from './formatting'
 
 /**
  * Breaks down a number of seconds into years, months, days, hours, minutes, seconds
@@ -251,7 +252,7 @@ export const formatDailyCountToFrequency = (dailyCount: number) => {
  */
 export const getPrizeTextFromFrequency = (
   data: { frequency: number; unit: TimeUnit },
-  format?: 'everyXdays' | 'daily',
+  format: 'everyXdays' | 'daily',
   intl?: Intl<
     | 'daily'
     | 'everyXdays'
@@ -270,7 +271,13 @@ export const getPrizeTextFromFrequency = (
       const x = Math.round(data.frequency)
       if (data.unit === TimeUnit.day) {
         if (data.frequency < 1.5) {
-          return intl?.('daily') ?? `Daily`
+          const prizesDaily = Math.round(1 / data.frequency)
+          if (prizesDaily > 1) {
+            const formattedMultiplier = `${formatNumberForDisplay(prizesDaily)}x`
+            return `${formattedMultiplier} ${intl?.('daily')}` ?? `${formattedMultiplier} Daily`
+          } else {
+            return intl?.('daily') ?? `Daily`
+          }
         } else {
           return intl?.('everyXdays', { number: x }) ?? `Every ${x} days`
         }
