@@ -33,22 +33,10 @@ export const StartBuildingSection = (props: StartBuildingSectionProps) => {
           description='View analytics and health metrics for the PoolTogether Hyperstructure.'
         />
         <StartBuildingItem
-          href={LINKS.swaps}
-          imgSrc='/swapScreenshot.png'
-          title='Cabana Swaps'
-          description='Browse and swap into your favorite PoolTogether vaults.'
-        />
-        <StartBuildingItem
           href={LINKS.rewardsBuilder}
           imgSrc='/rewardsScreenshot.png'
           title='Cabana Rewards Builder'
           description='Create and manage bonus rewards for any PoolTogether prize vault.'
-        />
-        <StartBuildingItem
-          href={LINKS.flashLiquidator}
-          imgSrc='/flashScreenshot.png'
-          title='Cabana Flash'
-          description='Flash liquidate yield from PoolTogether prize vaults.'
         />
       </div>
     </section>
