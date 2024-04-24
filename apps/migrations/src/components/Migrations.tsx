@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useEffect } from 'react'
 import { Address } from 'viem'
 import { useUserV3Balances } from '@hooks/useUserV3Balances'
+import { useAllUserV3ClaimableRewards } from '@hooks/useUserV3ClaimableRewards'
 import { useUserV4Balances } from '@hooks/useUserV4Balances'
 import { useAllUserV4ClaimableRewards } from '@hooks/useUserV4ClaimableRewards'
 import { useUserV5Balances } from '@hooks/useUserV5Balances'
@@ -52,20 +53,28 @@ export const Migrations = (props: MigrationsProps) => {
     isFetching: isFetchingUserV4Rewards,
     refetch: refetchUserV4Rewards
   } = useAllUserV4ClaimableRewards(userAddress)
+  const {
+    data: userV3Rewards,
+    isFetched: isFetchedUserV3Rewards,
+    isFetching: isFetchingUserV3Rewards,
+    refetch: refetchUserV3Rewards
+  } = useAllUserV3ClaimableRewards(userAddress)
 
   const isFetched =
     isFetchedUserV5Balances &&
     isFetchedUserV4Balances &&
     isFetchedUserV3Balances &&
     isFetchedUserV5Promotions &&
-    isFetchedUserV4Rewards
+    isFetchedUserV4Rewards &&
+    isFetchedUserV3Rewards
   const isEmpty =
     isFetched &&
     !userV5Balances.length &&
     !userV4Balances.length &&
     !userV3Balances.length &&
     !userV5Promotions.length &&
-    !userV4Rewards.length
+    !userV4Rewards.length &&
+    !userV3Rewards.length
 
   useEffect(() => {
     if (isFetchedUserV5Balances && !isFetchingUserV5Balances) refetchUserV5Balances()
@@ -73,6 +82,7 @@ export const Migrations = (props: MigrationsProps) => {
     if (isFetchedUserV3Balances && !isFetchingUserV3Balances) refetchUserV3Balances()
     if (isFetchedUserV5Promotions && !isFetchingUserV5Promotions) refetchUserV5Promotions()
     if (isFetchedUserV4Rewards && !isFetchingUserV4Rewards) refetchUserV4Rewards()
+    if (isFetchedUserV3Rewards && !isFetchingUserV3Rewards) refetchUserV3Rewards()
   }, [])
 
   return (
@@ -86,7 +96,7 @@ export const Migrations = (props: MigrationsProps) => {
           {(!!userV4Balances.length || !!userV4Rewards.length) && (
             <V4Migrations userAddress={userAddress} showPooly={!userV5Balances.length} />
           )}
-          {!!userV3Balances.length && (
+          {(!!userV3Balances.length || !!userV3Rewards.length) && (
             <V3Migrations userAddress={userAddress} showPooly={!userV4Balances.length} />
           )}
         </>
