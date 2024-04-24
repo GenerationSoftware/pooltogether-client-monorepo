@@ -53,8 +53,8 @@ export const useSendV4ClaimRewardsTransaction = (
     isAddress(userAddress) &&
     !!V4_PROMOTIONS[chainId] &&
     isFetchedClaimable &&
-    !!claimable
-  !!Object.keys(epochsToClaim).length
+    !!claimable &&
+    !!Object.keys(epochsToClaim).length
 
   const claimRewardsArgs = useMemo((): [Address, bigint, number[]] | undefined => {
     if (enabled) {
