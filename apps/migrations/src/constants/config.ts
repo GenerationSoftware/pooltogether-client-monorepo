@@ -96,7 +96,6 @@ export const MIGRATION_DESTINATIONS = {
  */
 export type V5_TAG = 'beta' | 'canary' | 'replaced'
 
-// TODO: implement v5 disabled migrations (only withdraw or claim rewards)
 /**
  * Deprecated V5 Vaults
  */
@@ -112,7 +111,6 @@ export const OLD_V5_VAULTS: {
       logoURI: string
     }
     migrateTo: { chainId: SupportedNetwork; address: Lowercase<Address> }
-    disabledMigration?: boolean
   }[]
 } = {
   [NETWORK.optimism]: [
@@ -361,7 +359,6 @@ export const V4_PROMOTIONS: {
   }
 }
 
-// TODO: implement v3 disabled migrations (only withdraw or claim rewards)
 /**
  * V3 Pools
  */
@@ -374,7 +371,6 @@ export const V3_POOLS: Record<
     migrateTo: { chainId: SupportedNetwork; address: Lowercase<Address> }
     podAddress?: Lowercase<Address>
     rewardsAddress?: Lowercase<Address>
-    disabledMigration?: boolean
   }[]
 > = {
   [NETWORK.mainnet]: [
@@ -429,8 +425,7 @@ export const V3_POOLS: Record<
       ticketAddress: '0xeb8928ee92efb06c44d072a24c2bcb993b61e543',
       tokenAddress: '0x85cb0bab616fe88a89a35080516a8928f38b518b',
       migrateTo: MIGRATION_DESTINATIONS.wethVault,
-      rewardsAddress: '0x9a29401ef1856b669f55ae5b24505b3b6faeb370',
-      disabledMigration: true
+      rewardsAddress: '0x9a29401ef1856b669f55ae5b24505b3b6faeb370'
     }
   ],
   [NETWORK.optimism]: [],
