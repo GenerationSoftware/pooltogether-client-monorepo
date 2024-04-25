@@ -23,6 +23,7 @@ export const AccountWinAmount = (props: AccountWinAmountProps) => {
   return (
     <TokenValueAndAmount
       token={{ ...tokenData, amount }}
+      amountOptions={{ hideZeroes: true, maximumFractionDigits: 5 }}
       className={className}
       valueClassName={valueClassName}
       amountClassName={amountClassName}
