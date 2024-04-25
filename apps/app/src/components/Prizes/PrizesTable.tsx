@@ -43,7 +43,7 @@ export const PrizesTable = (props: PrizesTableProps) => {
                       fallback={
                         <TokenAmount
                           token={{ ...tokenData, amount: prize.amount.current }}
-                          maximumFractionDigits={1}
+                          maximumFractionDigits={4}
                         />
                       }
                     />
