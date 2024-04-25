@@ -216,6 +216,13 @@ export const getTokenPermitSupport = async (
   publicClient: PublicClient,
   tokenAddress: Address
 ): Promise<'eip2612' | 'daiPermit' | 'none'> => {
+  if (
+    tokenAddress.toLowerCase() === '0xdb1fe6da83698885104da02a6e0b3b65c0b0de80' ||
+    tokenAddress.toLowerCase() === '0x6da98bde0068d10ddd11b468b197ea97d96f96bc'
+  ) {
+    return 'none'
+  }
+
   try {
     await publicClient.simulateContract({
       address: tokenAddress,
