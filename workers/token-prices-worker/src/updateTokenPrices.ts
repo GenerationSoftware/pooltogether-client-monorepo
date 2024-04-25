@@ -13,6 +13,7 @@ export const updateTokenPrices = async (event: FetchEvent | ScheduledEvent) => {
   }
 }
 
+// TODO: need to include logic to query lp token prices as well
 const getAllChainTokenPrices = async () => {
   const allChainTokenPrices: { [chainId: number]: ChainTokenPrices } = {}
 
