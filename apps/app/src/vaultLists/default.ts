@@ -5,8 +5,8 @@ import { testnetVaults } from './testnet'
 const defaultVaultList: VaultList = {
   name: 'Cabana Vault List',
   keywords: ['pooltogether', 'cabana', 'g9', 'optimism'],
-  version: { major: 2, minor: 1, patch: 0 },
-  timestamp: '2024-04-18T01:31:10Z',
+  version: { major: 2, minor: 2, patch: 0 },
+  timestamp: '2024-04-25T19:07:12Z',
   logoURI: `${DOMAINS.app}/pooltogether-token-logo.svg`,
   tokens: [
     {
@@ -93,6 +93,40 @@ const defaultVaultList: VaultList = {
           address: '0xc40F949F8a4e094D1b49a23ea9241D289B7b2819',
           symbol: 'LUSD',
           name: 'LUSD Stablecoin'
+        }
+      }
+    },
+    {
+      chainId: NETWORK.optimism,
+      address: '0x9b53ef6f13077727d22cb4acad1119c79a97be17',
+      name: 'Prize POOL/WETH Beefy',
+      decimals: 18,
+      symbol: 'przPOOLWETH',
+      logoURI: `${DOMAINS.app}/icons/przVELO.svg`,
+      tags: ['beefy', 'lp'],
+      yieldSourceURI: 'https://app.beefy.finance/vault/velodrome-v2-pool-weth',
+      extensions: {
+        underlyingAsset: {
+          address: '0xDB1FE6DA83698885104DA02A6e0b3b65c0B0dE80',
+          symbol: 'vAMMV2-POOL/WETH',
+          name: 'VolatileV2 AMM - POOL/WETH'
+        }
+      }
+    },
+    {
+      chainId: NETWORK.optimism,
+      address: '0x9b4c0de59628c64b02d7ce86f21db9a579539d5a',
+      name: 'Prize WSTETH-ETH Beefy',
+      decimals: 18,
+      symbol: 'przWSTETH-ETH',
+      logoURI: `${DOMAINS.app}/icons/przVELO.svg`,
+      tags: ['beefy', 'lp'],
+      yieldSourceURI: 'https://app.beefy.finance/vault/velodrome-v2-wsteth-weth',
+      extensions: {
+        underlyingAsset: {
+          address: '0x6dA98Bde0068d10DDD11b468b197eA97D96F96Bc',
+          symbol: 'vAMMV2-wstETH/WETH',
+          name: 'VolatileV2 AMM - wstETH/WETH'
         }
       }
     },
