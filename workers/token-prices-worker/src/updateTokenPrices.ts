@@ -1,3 +1,4 @@
+import { Address } from 'viem'
 import { NETWORK_KEYS, SUPPORTED_NETWORKS } from './constants'
 import { ChainTokenPrices } from './types'
 import { updateHandler } from './updateHandler'
@@ -22,11 +23,11 @@ const getAllChainTokenPrices = async () => {
           NETWORK_KEYS[chainId]
         )
         if (!!cachedTokenAddresses) {
-          const tokenAddresses = cachedTokenAddresses.split(',') as `0x${string}`[]
+          const tokenAddresses = cachedTokenAddresses.split(',') as Address[]
           // TODO: check for least recent token price and use `from` appropriately to only query needed data
           const tokenPrices = await getCovalentTokenPrices(chainId, tokenAddresses)
           for (const strAddress in tokenPrices) {
-            const address = strAddress as `0x${string}`
+            const address = strAddress as Address
             if (allChainTokenPrices[chainId] === undefined) {
               allChainTokenPrices[chainId] = {}
             }

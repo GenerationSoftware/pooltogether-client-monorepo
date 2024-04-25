@@ -1,8 +1,8 @@
+import { Address, isAddress } from 'viem'
 import { DEFAULT_HEADERS, SUPPORTED_NETWORKS } from './constants'
 import { fetchAllTokenPrices } from './fetchAllTokenPrices'
 import { fetchTokenPrices } from './fetchTokenPrices'
 import { SUPPORTED_NETWORK } from './types'
-import { isAddress } from './utils'
 
 export const handleRequest = async (event: FetchEvent): Promise<Response> => {
   try {
@@ -55,7 +55,7 @@ export const handleRequest = async (event: FetchEvent): Promise<Response> => {
         const tokens = urlTokens
           .split(',')
           .filter((address) => isAddress(address))
-          .map((address) => address.toLowerCase()) as `0x${string}`[]
+          .map((address) => address.toLowerCase()) as Address[]
         const tokenPrices =
           tokens.length > 0
             ? await fetchTokenPrices(event, chainId as SUPPORTED_NETWORK, tokens)

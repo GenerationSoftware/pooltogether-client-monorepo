@@ -1,3 +1,4 @@
+import { Address } from 'viem'
 import { NETWORK_KEYS, SUPPORTED_NETWORKS } from './constants'
 import { ChainTokenPrices, SUPPORTED_NETWORK, TokenPrices } from './types'
 import { sortTokenPricesByDate } from './utils'
@@ -21,7 +22,7 @@ export const updateHandler = async (
 
           const newChainTokenPrices: ChainTokenPrices = { ...cachedChainTokenPrices }
           Object.keys(chainTokenPrices).forEach((strAddress) => {
-            const address = strAddress as `0x${string}`
+            const address = strAddress as Address
             if (newChainTokenPrices[address] === undefined) {
               newChainTokenPrices[address] = sortTokenPricesByDate(chainTokenPrices[address])
             } else {

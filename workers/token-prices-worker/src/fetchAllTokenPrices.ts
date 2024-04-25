@@ -1,3 +1,4 @@
+import { Address } from 'viem'
 import { NETWORK_KEYS, SUPPORTED_NETWORKS } from './constants'
 import { ChainTokenPrices, TokenPrices } from './types'
 
@@ -14,7 +15,7 @@ export const fetchAllTokenPrices = async () => {
           if (!!chainTokenPrices) {
             const parsedChainTokenPrices = JSON.parse(chainTokenPrices) as ChainTokenPrices
             Object.keys(parsedChainTokenPrices).forEach((strAddress) => {
-              const address = strAddress as `0x${string}`
+              const address = strAddress as Address
               parsedChainTokenPrices[address].splice(1)
             })
             allTokenPrices[chainId] = parsedChainTokenPrices
