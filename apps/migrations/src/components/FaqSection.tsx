@@ -39,10 +39,8 @@ export const FaqSection = (props: FaqSectionProps) => {
       answer: (
         <span>
           Some rewards can be retrieved by whomever deployed them after a long time (usually many
-          months), meaning you won't be able to claim them after such time. Check{' '}
-          <FaqLink href='https://tools.pooltogether.com/token-faucet'>here</FaqLink> to see if you
-          still have any PoolTogether V3 rewards to claim. If you have any PoolTogether V4 rewards
-          left to claim, they will be shown above.
+          months), meaning you won't be able to claim them after such time. We will display any
+          claimable rewards for PoolTogether V3 or V4 above!
         </span>
       )
     }

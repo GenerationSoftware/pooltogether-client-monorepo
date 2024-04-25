@@ -1,15 +1,22 @@
+import { useTokensAcrossChains } from '@generationsoftware/hyperstructure-react-hooks'
 import { useScreenSize } from '@shared/generic-react-hooks'
 import { TokenValueAndAmount } from '@shared/react-components'
 import { TokenWithAmount } from '@shared/types'
-import { Button, ExternalLink, Table, TableData } from '@shared/ui'
+import { Button, Spinner, Table, TableData } from '@shared/ui'
+import { formatBigIntForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ReactNode } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { Address } from 'viem'
 import { TokenBadge } from '@components/TokenBadge'
-import { SupportedNetwork, V3_POOLS } from '@constants/config'
+import { SUPPORTED_NETWORKS, SupportedNetwork, V3_POOLS, V3_REWARD_TOKENS } from '@constants/config'
 import { useUserV3Balances, V3BalanceToMigrate } from '@hooks/useUserV3Balances'
+import {
+  useAllUserV3ClaimableRewards,
+  useUserV3ClaimableRewards
+} from '@hooks/useUserV3ClaimableRewards'
+import { ClaimRewardsButton } from './ClaimRewardsButton'
 import { WithdrawPodButton } from './WithdrawPodButton'
 import { WithdrawPoolButton } from './WithdrawPoolButton'
 
@@ -23,18 +30,32 @@ export const V3MigrationsTable = (props: V3MigrationsTableProps) => {
   const { userAddress, showPooly, className } = props
 
   const { data: userV3Balances } = useUserV3Balances(userAddress)
+  const { data: userV3Rewards } = useAllUserV3ClaimableRewards(userAddress)
+
+  const ticketAddresses = useMemo(() => {
+    const addresses: { [chainId: number]: Lowercase<Address>[] } = {}
+
+    SUPPORTED_NETWORKS.forEach((network) => {
+      const tokens = V3_POOLS[network].map((e) => e.ticketAddress)
+
+      if (!!tokens.length) {
+        if (addresses[network] === undefined) {
+          addresses[network] = []
+        }
+
+        addresses[network].push(...tokens)
+      }
+    })
+
+    return addresses
+  }, [V3_POOLS])
+
+  const { data: tickets } = useTokensAcrossChains(ticketAddresses)
 
   const { isMobile } = useScreenSize()
 
-  const tableData: TableData = {
-    headers: {
-      token: { content: 'Token' },
-      status: { content: 'Status', position: 'center' },
-      rewards: { content: 'Unclaimed Rewards', position: 'center' },
-      balance: { content: 'Your Balance', position: 'center' },
-      manage: { content: 'Manage', position: 'right' }
-    },
-    rows: userV3Balances.map((migration) => ({
+  const tableRows = useMemo(() => {
+    const rows: TableData['rows'] = userV3Balances.map((migration) => ({
       id: `v3Migration-${migration.token.chainId}-${migration.contractAddress}`,
       cells: {
         token: { content: <TokenBadge token={migration.token} /> },
@@ -43,7 +64,7 @@ export const V3MigrationsTable = (props: V3MigrationsTableProps) => {
           position: 'center'
         },
         rewards: {
-          content: <RewardsItem />,
+          content: <RewardsItem userAddress={userAddress} migration={migration} />,
           position: 'center'
         },
         balance: { content: <BalanceItem token={migration.token} />, position: 'center' },
@@ -53,6 +74,69 @@ export const V3MigrationsTable = (props: V3MigrationsTableProps) => {
         }
       }
     }))
+
+    SUPPORTED_NETWORKS.forEach((network) => {
+      V3_POOLS[network]?.forEach((entry) => {
+        const foundPoolRewards = userV3Rewards.find(
+          (e) => e.chainId === network && e.ticketAddress === entry.ticketAddress
+        )
+
+        if (!!foundPoolRewards) {
+          const foundPoolBalance = userV3Balances.find(
+            (e) =>
+              e.token.chainId === network && e.token.address.toLowerCase() === entry.ticketAddress
+          )
+
+          const ticket = tickets?.[network]?.[entry.ticketAddress]
+
+          if (!foundPoolBalance && !!ticket) {
+            const migration: V3BalanceToMigrate = {
+              token: { ...ticket, amount: 0n },
+              underlyingTokenAddress: entry.tokenAddress,
+              contractAddress: entry.address,
+              type: 'pool',
+              destination: entry.migrateTo
+            }
+
+            rows.push({
+              id: `v3Migration-${migration.token.chainId}-${migration.contractAddress}`,
+              cells: {
+                token: { content: <TokenBadge token={migration.token} /> },
+                status: {
+                  content: <StatusItem />,
+                  position: 'center'
+                },
+                rewards: {
+                  content: <RewardsItem userAddress={userAddress} migration={migration} />,
+                  position: 'center'
+                },
+                balance: {
+                  content: <BalanceItem token={migration.token} />,
+                  position: 'center'
+                },
+                manage: {
+                  content: <ManageItem userAddress={userAddress} migration={migration} />,
+                  position: 'right'
+                }
+              }
+            })
+          }
+        }
+      })
+    })
+
+    return rows
+  }, [userV3Balances, userV3Rewards, userAddress, tickets])
+
+  const tableData: TableData = {
+    headers: {
+      token: { content: 'Token' },
+      status: { content: 'Status', position: 'center' },
+      rewards: { content: 'Unclaimed Rewards', position: 'center' },
+      balance: { content: 'Your Balance', position: 'center' },
+      manage: { content: 'Manage', position: 'right' }
+    },
+    rows: tableRows
   }
 
   if (isMobile) {
@@ -66,6 +150,43 @@ export const V3MigrationsTable = (props: V3MigrationsTableProps) => {
             className='w-full max-w-md'
           />
         ))}
+        {SUPPORTED_NETWORKS.map((network) => {
+          const poolsWithBalance = userV3Balances
+            .filter((e) => e.token.chainId === network)
+            .map((e) => e.token.address.toLowerCase() as Lowercase<Address>)
+
+          const poolsWithRewards = [
+            ...new Set(
+              userV3Rewards.filter((e) => e.chainId === network).map((e) => e.ticketAddress)
+            )
+          ]
+
+          return V3_POOLS[network]
+            ?.filter(
+              (e) =>
+                poolsWithRewards.includes(e.ticketAddress) &&
+                !poolsWithBalance.includes(e.ticketAddress) &&
+                !!tickets?.[network]?.[e.ticketAddress]
+            )
+            .map((entry) => {
+              const migration: V3BalanceToMigrate = {
+                token: { ...tickets[network][entry.ticketAddress], amount: 0n },
+                underlyingTokenAddress: entry.tokenAddress,
+                contractAddress: entry.address,
+                type: 'pool',
+                destination: entry.migrateTo
+              }
+
+              return (
+                <V3MigrationCard
+                  key={`v3Migration-${migration.token.chainId}-${migration.contractAddress}`}
+                  userAddress={userAddress}
+                  migration={migration}
+                  className='w-full max-w-md'
+                />
+              )
+            })
+        })}
       </div>
     )
   }
@@ -107,7 +228,7 @@ const V3MigrationCard = (props: V3MigrationCardProps) => {
     { label: 'Status', content: <StatusItem className='text-sm' /> },
     {
       label: 'Unclaimed Rewards',
-      content: <RewardsItem />
+      content: <RewardsItem userAddress={userAddress} migration={migration} />
     },
     {
       label: 'Your Balance',
@@ -158,20 +279,39 @@ const StatusItem = (props: StatusItemProps) => {
 }
 
 interface RewardsItemProps {
+  userAddress: Address
+  migration: V3BalanceToMigrate
   className?: string
 }
 
 const RewardsItem = (props: RewardsItemProps) => {
-  const { className } = props
+  const { userAddress, migration, className } = props
+
+  const { data: claimable, isFetched: isFetchedClaimable } = useUserV3ClaimableRewards(
+    migration.token.chainId,
+    migration.token.address.toLowerCase() as Lowercase<Address>,
+    userAddress
+  )
+
+  if (!isFetchedClaimable) {
+    return <Spinner />
+  }
+
+  const rewardToken = V3_REWARD_TOKENS[migration.token.chainId]
 
   return (
-    <ExternalLink
-      href={'https://tools.pooltogether.com/token-faucet'}
-      size='sm'
-      className={classNames('text-pt-purple-400', className)}
-    >
-      Check
-    </ExternalLink>
+    <div className={className}>
+      {!!rewardToken && !!claimable?.rewards.amount ? (
+        <span className='flex gap-1 items-center'>
+          <span className='text-xl font-medium text-pt-purple-100'>
+            {formatBigIntForDisplay(claimable.rewards.amount, rewardToken.decimals)}
+          </span>
+          <span className='text-sm text-pt-purple-400'>{rewardToken.symbol}</span>
+        </span>
+      ) : (
+        <>-</>
+      )}
+    </div>
   )
 }
 
@@ -207,36 +347,54 @@ const ManageItem = (props: ManageItemProps) => {
   const { userAddress, migration, fullSized, className } = props
 
   const { refetch: refetchUserV3Balances } = useUserV3Balances(userAddress)
+  const { refetch: refetchUserV3ClaimableRewards } = useUserV3ClaimableRewards(
+    migration.token.chainId,
+    migration.token.address.toLowerCase() as Lowercase<Address>,
+    userAddress
+  )
 
   const migrationURL = `/migrate/v3/${migration.token.chainId}/${migration.token.address}`
 
   return (
     <div className={classNames('flex gap-2 items-center', className)}>
-      {migration.type === 'pool' && (
-        <WithdrawPoolButton
-          migration={migration}
-          txOptions={{ onSuccess: refetchUserV3Balances }}
-          hideWrongNetworkState={true}
-          color='transparent'
+      {!!migration.token.amount ? (
+        <>
+          {migration.type === 'pool' && (
+            <WithdrawPoolButton
+              migration={migration}
+              txOptions={{ onSuccess: refetchUserV3Balances }}
+              hideWrongNetworkState={true}
+              color='transparent'
+              fullSized={fullSized}
+              className='md:min-w-[6rem]'
+            />
+          )}
+          {migration.type === 'pod' && (
+            <WithdrawPodButton
+              migration={migration}
+              txOptions={{ onSuccess: refetchUserV3Balances }}
+              hideWrongNetworkState={true}
+              color='transparent'
+              fullSized={fullSized}
+              className='md:min-w-[6rem]'
+            />
+          )}
+          {/* <Link href={migrationURL} passHref={true} className='w-full'> */}
+          <Button fullSized={fullSized} disabled>
+            Migrate (Soon)
+          </Button>
+          {/* </Link> */}
+        </>
+      ) : (
+        <ClaimRewardsButton
+          chainId={migration.token.chainId}
+          ticketAddress={migration.token.address.toLowerCase() as Lowercase<Address>}
+          userAddress={userAddress}
+          txOptions={{ onSuccess: () => refetchUserV3ClaimableRewards() }}
           fullSized={fullSized}
           className='md:min-w-[6rem]'
         />
       )}
-      {migration.type === 'pod' && (
-        <WithdrawPodButton
-          migration={migration}
-          txOptions={{ onSuccess: refetchUserV3Balances }}
-          hideWrongNetworkState={true}
-          color='transparent'
-          fullSized={fullSized}
-          className='md:min-w-[6rem]'
-        />
-      )}
-      {/* <Link href={migrationURL} passHref={true} className='w-full'> */}
-      <Button fullSized={fullSized} disabled>
-        Migrate (Soon)
-      </Button>
-      {/* </Link> */}
     </div>
   )
 }

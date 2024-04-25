@@ -2,7 +2,7 @@ import {
   useGasCostEstimates,
   useTokenBalance
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { ArrowUturnLeftIcon } from '@heroicons/react/24/outline'
+import { ArrowUturnLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/outline'
 import { CurrencyValue, NetworkBadge, TokenIcon } from '@shared/react-components'
 import { Button, Spinner } from '@shared/ui'
 import { formatBigIntForDisplay, sToMs } from '@shared/utilities'
@@ -12,15 +12,18 @@ import { ReactNode, useMemo, useState } from 'react'
 import { Address, formatUnits } from 'viem'
 import { SimpleBadge } from '@components/SimpleBadge'
 import { SwapWidget } from '@components/SwapWidget'
-import { SupportedNetwork, V3_POOLS } from '@constants/config'
+import { SupportedNetwork, V3_POOLS, V3_REWARD_TOKENS } from '@constants/config'
 import { v3PodABI } from '@constants/v3PodABI'
 import { v3PoolABI } from '@constants/v3PoolABI'
 import { V3BalanceToMigrate } from '@hooks/useUserV3Balances'
+import { useUserV3ClaimableRewards } from '@hooks/useUserV3ClaimableRewards'
+import { useV3ClaimRewardsGasEstimate } from '@hooks/useV3ClaimRewardsGasEstimate'
+import { ClaimRewardsButton } from './ClaimRewardsButton'
 import { V3MigrationHeader } from './V3MigrationHeader'
 import { WithdrawPodButton } from './WithdrawPodButton'
 import { WithdrawPoolButton } from './WithdrawPoolButton'
 
-export type V3MigrationStep = 'withdraw' | 'swap'
+export type V3MigrationStep = 'claim' | 'withdraw' | 'swap'
 
 export interface V3MigrationProps {
   userAddress: Address
@@ -33,7 +36,22 @@ export const V3Migration = (props: V3MigrationProps) => {
 
   const [actionsCompleted, setActionsCompleted] = useState(0)
 
+  const { data: claimable, isFetched: isFetchedClaimable } = useUserV3ClaimableRewards(
+    migration.token.chainId,
+    migration.token.address.toLowerCase() as Lowercase<Address>,
+    userAddress
+  )
+
+  const isRewardsClaimable = isFetchedClaimable ? !!claimable?.rewards.amount : undefined
+
   const allMigrationActions: Record<V3MigrationStep, ReactNode> = {
+    claim: (
+      <ClaimContent
+        userAddress={userAddress}
+        migration={migration}
+        onSuccess={() => setActionsCompleted(actionsCompleted + 1)}
+      />
+    ),
     withdraw: (
       <WithdrawContent
         userAddress={userAddress}
@@ -50,7 +68,15 @@ export const V3Migration = (props: V3MigrationProps) => {
     )
   }
 
-  const migrationActions: V3MigrationStep[] = ['withdraw', 'swap']
+  const migrationActions = useMemo((): V3MigrationStep[] => {
+    if (isRewardsClaimable) {
+      return ['claim', 'withdraw', 'swap']
+    } else if (isRewardsClaimable !== undefined) {
+      return ['withdraw', 'swap']
+    } else {
+      return []
+    }
+  }, [allMigrationActions, isRewardsClaimable])
 
   return (
     <div className={classNames('w-full flex flex-col gap-16 items-center', className)}>
@@ -75,6 +101,79 @@ export const V3Migration = (props: V3MigrationProps) => {
           </Button>
         </Link>
       )}
+    </div>
+  )
+}
+
+interface ClaimContentProps {
+  userAddress: Address
+  migration: V3BalanceToMigrate
+  onSuccess?: () => void
+  className?: string
+}
+
+const ClaimContent = (props: ClaimContentProps) => {
+  const { userAddress, migration, onSuccess, className } = props
+
+  const { data: claimable } = useUserV3ClaimableRewards(
+    migration.token.chainId,
+    migration.token.address.toLowerCase() as Lowercase<Address>,
+    userAddress
+  )
+
+  const { data: gasEstimate, isFetched: isFetchedGasEstimate } = useV3ClaimRewardsGasEstimate(
+    migration.token.chainId,
+    migration.token.address.toLowerCase() as Lowercase<Address>,
+    userAddress
+  )
+
+  if (claimable === undefined) {
+    return <Spinner />
+  }
+
+  const rewardToken = V3_REWARD_TOKENS[migration.token.chainId]
+
+  return (
+    <div
+      className={classNames(
+        'w-full max-w-xl flex flex-col gap-6 items-center px-8 py-11 bg-pt-purple-700 rounded-md',
+        className
+      )}
+    >
+      <NetworkBadge chainId={migration.token.chainId} />
+      {!!rewardToken && (
+        <>
+          <div className='flex flex-col gap-2 items-center'>
+            <span className='text-sm font-semibold text-pt-purple-100'>Claim Your Rewards:</span>
+            <SimpleBadge className='gap-2 !text-2xl font-semibold'>
+              {formatBigIntForDisplay(claimable.rewards.amount, rewardToken.decimals)}
+              <TokenIcon token={rewardToken} />
+              <span className='text-pt-purple-200'>{rewardToken.symbol}</span>
+            </SimpleBadge>
+            <span className='flex gap-1 items-center text-sm font-semibold text-pt-purple-100'>
+              Estimated Network Fee:{' '}
+              {isFetchedGasEstimate && !!gasEstimate ? (
+                <CurrencyValue baseValue={gasEstimate.totalGasEth} />
+              ) : (
+                <Spinner />
+              )}
+            </span>
+          </div>
+          <ClaimRewardsButton
+            chainId={migration.token.chainId}
+            ticketAddress={migration.token.address.toLowerCase() as Lowercase<Address>}
+            userAddress={userAddress}
+            txOptions={{ onSuccess }}
+            fullSized={true}
+          />
+        </>
+      )}
+      <button
+        onClick={onSuccess}
+        className='flex gap-1 items-center text-sm hover:text-pt-purple-100'
+      >
+        Skip claiming rewards <ChevronDoubleRightIcon className='w-4 h-4' />
+      </button>
     </div>
   )
 }
