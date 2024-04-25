@@ -13,8 +13,6 @@
 ![tailwind](https://img.shields.io/static/v1?label&logo=tailwindcss&logoColor=white&message=tailwind&color=38B2AC)
 ![version](https://img.shields.io/github/package-json/v/GenerationSoftware/pooltogether-client-monorepo?filename=apps%2Fvaultlist-creator%2Fpackage.json&color=brightgreen)
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/bd681332-5339-4dd0-9121-088ac214e031/deploy-status)](https://app.netlify.com/sites/vaultlist-creator/deploys)
-
 # 🏆 &nbsp; Overview
 
 App to easily create, edit and distribute PoolTogether vault lists.

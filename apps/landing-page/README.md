@@ -13,8 +13,6 @@
 ![tailwind](https://img.shields.io/static/v1?label&logo=tailwindcss&logoColor=white&message=tailwind&color=38B2AC)
 ![version](https://img.shields.io/github/package-json/v/GenerationSoftware/pooltogether-client-monorepo?filename=apps%2Flanding-page%2Fpackage.json&color=brightgreen)
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/b54fe6e6-a206-4a42-902f-bf721702ed84/deploy-status)](https://app.netlify.com/sites/cabana-landing-page/deploys)
-
 # 🏆 &nbsp; Overview
 
 Cabana's landing page, giving users some info as to what this suite of PoolTogether tools encompasses, what it does not, etc.

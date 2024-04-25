@@ -13,8 +13,6 @@
 ![tailwind](https://img.shields.io/static/v1?label&logo=tailwindcss&logoColor=white&message=tailwind&color=38B2AC)
 ![version](https://img.shields.io/github/package-json/v/GenerationSoftware/pooltogether-client-monorepo?filename=apps%2Fanalytics%2Fpackage.json&color=brightgreen)
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/3f1b294f-32c7-42cc-ad23-77218b9ccd3d/deploy-status)](https://app.netlify.com/sites/cabanalytics/deploys)
-
 # 🏆 &nbsp; Overview
 
 App to visualize analytics and general health metrics of the PoolTogether protocol.
