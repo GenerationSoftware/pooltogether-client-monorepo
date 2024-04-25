@@ -1,4 +1,4 @@
-import { NETWORK, POOL_TOKEN_ADDRESSES, USDC_TOKEN_ADDRESSES } from '@shared/utilities'
+import { LINKS, NETWORK, POOL_TOKEN_ADDRESSES, USDC_TOKEN_ADDRESSES } from '@shared/utilities'
 
 /**
  * Token Logo URLs
@@ -12,7 +12,8 @@ const tokenLogoUrls = {
   wbtc: 'https://etherscan.io/token/images/wbtc_28.png?v=1',
   lusd: 'https://etherscan.io/token/images/liquitylusd_32.png',
   ageur: 'https://etherscan.io/token/images/ageur_32.png?=v982',
-  op: 'https://optimistic.etherscan.io/token/images/optimism_32.png'
+  op: 'https://optimistic.etherscan.io/token/images/optimism_32.png',
+  veloLP: `${LINKS.app}/icons/przVELO.svg`
 } as const
 
 /**
@@ -53,7 +54,9 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x68f180fcce6836688e9084f035309e29bf0a2095': tokenLogoUrls.wbtc,
     '0xc40f949f8a4e094d1b49a23ea9241d289b7b2819': tokenLogoUrls.lusd,
     '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': tokenLogoUrls.ageur,
-    '0x4200000000000000000000000000000000000042': tokenLogoUrls.op
+    '0x4200000000000000000000000000000000000042': tokenLogoUrls.op,
+    '0xdb1fe6da83698885104da02a6e0b3b65c0b0de80': tokenLogoUrls.veloLP,
+    '0x6da98bde0068d10ddd11b468b197ea97d96f96bc': tokenLogoUrls.veloLP
   },
   [NETWORK.optimism_sepolia]: {
     [POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia].toLowerCase()]: tokenLogoUrls.pool,
