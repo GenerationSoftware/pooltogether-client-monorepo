@@ -8,7 +8,6 @@ import { Spinner } from '@shared/ui'
 import { getNiceNetworkNameByChainId } from '@shared/utilities'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 import { WithdrawForm } from '../../../Form/WithdrawForm'
-import { ExchangeRateError } from '../../ExchangeRateError'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 
 interface MainViewProps {
@@ -18,7 +17,6 @@ interface MainViewProps {
     common?: Intl<'prizePool' | 'warning'>
     fees?: NetworkFeesProps['intl']
     errors?: RichIntl<
-      | 'exchangeRateError'
       | 'formErrors.notEnoughTokens'
       | 'formErrors.invalidNumber'
       | 'formErrors.negativeNumber'
@@ -59,13 +57,12 @@ export const MainView = (props: MainViewProps) => {
         intl={intl?.common}
         className='!py-1 mx-auto'
       />
-      {!!vaultExchangeRate ? (
+      {/* TODO: add flow for when exchange rate cannot be found */}
+      {!!vaultExchangeRate && (
         <>
           <WithdrawForm vault={vault} showInputInfoRows={true} intl={intl} />
           <NetworkFees vault={vault} show={['withdraw']} intl={intl?.fees} />
         </>
-      ) : (
-        <ExchangeRateError vault={vault} intl={intl?.errors} />
       )}
     </div>
   )

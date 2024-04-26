@@ -290,7 +290,6 @@
     "hmmm": "Mmm...",
     "pageNotFound": "No pudimos encontrar la página que estás buscando.",
     "return": "Regresa a la Pool",
-    "exchangeRateError": "Algo salió mal al calcular los tipos de cambio de esta bóveda. Todavía puedes intercambiar dentro o fuera de esta bóveda a través de un intercambio o cambio de agregador (<link>Uniswap</link> por ejemplo).",
     "formErrors": {
       "invalidSrc": "No es una URL válida o dominio ENS",
       "invalidVaultList": "No se encontró una lista de bóveda válida",

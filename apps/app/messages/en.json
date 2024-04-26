@@ -23,6 +23,7 @@
     "claim": "Claim",
     "apr": "APR",
     "warning": "Warning",
+    "getTokenAt": "Get {token} at",
     "greatMigration": {
       "joinTitle": "Join the Great <highlight>Pooly</highlight> Migration",
       "joinButton": "Join the Migration",
@@ -331,7 +332,6 @@
     "hmmm": "Hmmm...",
     "pageNotFound": "We couldn't find the page you're looking for.",
     "return": "Return to the Pool",
-    "exchangeRateError": "Something went wrong while calculating exchange rates for this vault. You can still swap in or out of this vault through an exchange or exchange aggregator (<link>Uniswap</link> for example).",
     "aaveCollateralizationError": {
       "issue": "This vault is experiencing issues due to using a high percentage of Aave's supply. <link>Learn more</link>",
       "recommendation": "It is not recommended to withdraw at this time",

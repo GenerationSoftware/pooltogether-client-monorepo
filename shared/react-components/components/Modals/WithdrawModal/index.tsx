@@ -56,7 +56,6 @@ export interface WithdrawModalProps {
     fees?: NetworkFeesProps['intl']
     txToast?: WithdrawTxToastProps['intl']
     errors?: RichIntl<
-      | 'exchangeRateError'
       | 'formErrors.notEnoughTokens'
       | 'formErrors.invalidNumber'
       | 'formErrors.negativeNumber'

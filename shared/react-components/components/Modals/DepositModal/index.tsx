@@ -68,12 +68,13 @@ export interface DepositModalProps {
       | 'risksDisclaimer'
       | 'depositDisclaimer'
     >
-    common?: Intl<'prizePool' | 'connectWallet' | 'close' | 'viewOn' | 'learnAboutRisks'>
+    common?: Intl<
+      'prizePool' | 'connectWallet' | 'close' | 'viewOn' | 'learnAboutRisks' | 'getTokenAt'
+    >
     fees?: NetworkFeesProps['intl']
     tooltips?: Intl<'approval'>
     txToast?: DepositTxToastProps['intl']
     errors?: RichIntl<
-      | 'exchangeRateError'
       | 'formErrors.notEnoughTokens'
       | 'formErrors.invalidNumber'
       | 'formErrors.negativeNumber'

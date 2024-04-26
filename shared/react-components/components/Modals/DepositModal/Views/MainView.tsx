@@ -12,9 +12,9 @@ import { useAtomValue } from 'jotai'
 import { Address } from 'viem'
 import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
 import { DepositForm, depositFormShareAmountAtom } from '../../../Form/DepositForm'
-import { ExchangeRateError } from '../../ExchangeRateError'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
+import { LpSource } from '../LpSource'
 
 interface MainViewProps {
   vault: Vault
@@ -23,10 +23,9 @@ interface MainViewProps {
     base?: Intl<
       'depositTo' | 'depositToShort' | 'balance' | 'max' | 'weeklyChances' | 'oneInXChance'
     >
-    common?: Intl<'prizePool'>
+    common?: Intl<'prizePool' | 'getTokenAt'>
     fees?: NetworkFeesProps['intl']
     errors?: RichIntl<
-      | 'exchangeRateError'
       | 'formErrors.notEnoughTokens'
       | 'formErrors.invalidNumber'
       | 'formErrors.negativeNumber'
@@ -80,8 +79,10 @@ export const MainView = (props: MainViewProps) => {
         intl={intl?.common}
         className='!py-1 mx-auto'
       />
-      {!!vaultExchangeRate ? (
+      {/* TODO: add flow for when exchange rate cannot be found */}
+      {!!vaultExchangeRate && (
         <>
+          <LpSource vault={vault} intl={intl?.common} />
           <DepositForm vault={vault} showInputInfoRows={true} intl={intl} />
           {!!formShareAmount && (
             <div className='flex flex-col gap-4 mx-auto md:flex-row md:gap-9'>
@@ -90,8 +91,6 @@ export const MainView = (props: MainViewProps) => {
             </div>
           )}
         </>
-      ) : (
-        <ExchangeRateError vault={vault} intl={intl?.errors} />
       )}
     </div>
   )
