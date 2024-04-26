@@ -92,7 +92,7 @@ export const fetchTokenPrices = async (
           const lpTokenPrices = calcLpTokenPrices(lpTokenInfo, underlyingTokenPrices)
           for (const strAddress in lpTokenPrices) {
             const address = strAddress as Address
-            chainTokenPrices[address] = [lpTokenPrices[address][0]]
+            chainTokenPrices[address] = lpTokenPrices[address]
           }
           await updateHandler(event, { [chainId]: lpTokenPrices })
         }

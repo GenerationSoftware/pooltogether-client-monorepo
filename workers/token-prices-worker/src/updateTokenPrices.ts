@@ -2,7 +2,7 @@ import { Address } from 'viem'
 import { NETWORK_KEYS, SUPPORTED_NETWORKS } from './constants'
 import { ChainTokenPrices } from './types'
 import { updateHandler } from './updateHandler'
-import { getCovalentTokenPrices } from './utils'
+import { calcLpTokenPrices, getCovalentTokenPrices, getLpTokenInfo } from './utils'
 
 export const updateTokenPrices = async (event: FetchEvent | ScheduledEvent) => {
   try {
@@ -13,7 +13,6 @@ export const updateTokenPrices = async (event: FetchEvent | ScheduledEvent) => {
   }
 }
 
-// TODO: need to include logic to query lp token prices as well
 const getAllChainTokenPrices = async () => {
   const allChainTokenPrices: { [chainId: number]: ChainTokenPrices } = {}
 
@@ -24,15 +23,30 @@ const getAllChainTokenPrices = async () => {
           NETWORK_KEYS[chainId]
         )
         if (!!cachedTokenAddresses) {
-          const tokenAddresses = cachedTokenAddresses.split(',') as Address[]
+          const tokenAddresses = new Set(cachedTokenAddresses.split(',') as Address[])
           // TODO: check for least recent token price and use `from` appropriately to only query needed data
-          const tokenPrices = await getCovalentTokenPrices(chainId, tokenAddresses)
+          const tokenPrices = await getCovalentTokenPrices(chainId, Array.from(tokenAddresses))
+
           for (const strAddress in tokenPrices) {
             const address = strAddress as Address
             if (allChainTokenPrices[chainId] === undefined) {
               allChainTokenPrices[chainId] = {}
             }
             allChainTokenPrices[chainId][address] = tokenPrices[address]
+            tokenAddresses.delete(address)
+          }
+
+          if (tokenAddresses.size > 0) {
+            const lpTokenInfo = await getLpTokenInfo(chainId, Array.from(tokenAddresses))
+            const lpTokenPrices = calcLpTokenPrices(lpTokenInfo, tokenPrices)
+
+            for (const strAddress in lpTokenPrices) {
+              const address = strAddress as Address
+              if (allChainTokenPrices[chainId] === undefined) {
+                allChainTokenPrices[chainId] = {}
+              }
+              allChainTokenPrices[chainId][address] = lpTokenPrices[address]
+            }
           }
         }
       })()
