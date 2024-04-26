@@ -202,11 +202,11 @@ export const VaultsTable = (props: VaultsTableProps) => {
             position: 'center'
           },
           totalDeposits: {
-            content: <VaultTotalDeposits vault={vault} />,
+            content: <VaultTotalDeposits vault={vault} className='text-center' />,
             position: 'center'
           },
           balance: {
-            content: <AccountVaultBalance vault={vault} />,
+            content: <AccountVaultBalance vault={vault} className='text-center' />,
             position: 'center'
           },
           manage: {
