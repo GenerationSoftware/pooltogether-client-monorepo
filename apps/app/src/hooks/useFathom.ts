@@ -9,6 +9,7 @@ export const useFathom = () => {
   useEffect(() => {
     const fathomSiteId = process.env.NEXT_PUBLIC_FATHOM_SITE_ID
     const fathomSiteDomain = APP_URL.split('://')[1]
+    console.log(`fathomSiteDomain:`, fathomSiteDomain)
 
     const onRouteChangeComplete = () => {
       fathom.trackPageview()
