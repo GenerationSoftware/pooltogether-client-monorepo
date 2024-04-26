@@ -5,7 +5,7 @@ import { testnetVaults } from './testnet'
 const defaultVaultList: VaultList = {
   name: 'Cabana Vault List',
   keywords: ['pooltogether', 'cabana', 'g9', 'optimism'],
-  version: { major: 2, minor: 2, patch: 1 },
+  version: { major: 2, minor: 2, patch: 2 },
   timestamp: '2024-04-26T18:34:15Z',
   logoURI: `${DOMAINS.app}/pooltogether-token-logo.svg`,
   tokens: [
@@ -99,7 +99,7 @@ const defaultVaultList: VaultList = {
     {
       chainId: NETWORK.optimism,
       address: '0x9b53ef6f13077727d22cb4acad1119c79a97be17',
-      name: 'Prize POOL/WETH Beefy',
+      name: 'Prize POOL/WETH - Beefy',
       decimals: 18,
       symbol: 'przPOOLWETH',
       logoURI: `${DOMAINS.app}/icons/przVELO.svg`,
@@ -120,7 +120,7 @@ const defaultVaultList: VaultList = {
     {
       chainId: NETWORK.optimism,
       address: '0x9b4c0de59628c64b02d7ce86f21db9a579539d5a',
-      name: 'Prize WSTETH-ETH Beefy',
+      name: 'Prize WSTETH-ETH - Beefy',
       decimals: 18,
       symbol: 'przWSTETH-ETH',
       logoURI: `${DOMAINS.app}/icons/przVELO.svg`,
