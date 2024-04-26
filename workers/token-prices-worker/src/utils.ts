@@ -208,8 +208,11 @@ export const calcLpTokenPrices = (
   Object.entries(lpTokenInfo).forEach(([strAddress, info]) => {
     const lpTokenAddress = strAddress as Address
 
-    const token0Price = underlyingTokenPrices[info.token0.address]?.[0]?.price
-    const token1Price = underlyingTokenPrices[info.token1.address]?.[0]?.price
+    const token0Address = info.token0.address.toLowerCase() as Lowercase<Address>
+    const token1Address = info.token1.address.toLowerCase() as Lowercase<Address>
+
+    const token0Price = underlyingTokenPrices[token0Address]?.[0]?.price
+    const token1Price = underlyingTokenPrices[token1Address]?.[0]?.price
 
     if (!!token0Price && !!token1Price) {
       const token0Amount = parseFloat(formatUnits(info.token0.reserve, info.token0.decimals))
