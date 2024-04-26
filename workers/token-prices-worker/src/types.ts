@@ -1,3 +1,4 @@
+import { Address } from 'viem'
 import { SUPPORTED_NETWORKS } from './constants'
 
 export interface TokenPrices {
@@ -5,13 +6,17 @@ export interface TokenPrices {
 }
 
 export interface ChainTokenPrices {
-  [address: `0x${string}`]: { date: string; price: number }[]
+  [address: Address]: { date: string; price: number }[]
 }
 
 export type SUPPORTED_NETWORK = (typeof SUPPORTED_NETWORKS)[number]
 
 export interface CovalentPricingApiResponse {
-  contract_address: `0x${string}`
+  contract_address: Address
   quote_currency: string
   prices: { date: string; price: number | null }[]
+}
+
+export interface LpTokens {
+  [address: Lowercase<Address>]: { isLp: false } | { isLp: true; underlying: [Address, Address] }
 }

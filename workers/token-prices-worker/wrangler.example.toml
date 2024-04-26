@@ -7,7 +7,8 @@ route = { pattern = "<YOUR_URL_HERE>", zone_id = "<YOUR_ZONE_ID_HERE>", custom_d
 
 kv_namespaces = [
   { binding = "TOKEN_PRICES", id = "<YOUR_KV_ID_HERE>", preview_id = "<YOUR_PREVIEW_KV_ID_HERE>" },
-  { binding = "TOKEN_ADDRESSES", id = "<YOUR_KV_ID_HERE>", preview_id = "<YOUR_PREVIEW_KV_ID_HERE>" }
+  { binding = "TOKEN_ADDRESSES", id = "<YOUR_KV_ID_HERE>", preview_id = "<YOUR_PREVIEW_KV_ID_HERE>" },
+  { binding = "LP_TOKENS", id = "<YOUR_KV_ID_HERE>", preview_id = "<YOUR_PREVIEW_KV_ID_HERE>" }
 ]
 
 [triggers]
@@ -15,3 +16,7 @@ crons = ["0 */1 * * *"]
 
 [vars]
 COVALENT_API_KEY = "<YOUR_API_KEY_HERE>"
+MAINNET_RPC_URL = "<YOUR_RPC_URL_HERE>"
+POLYGON_RPC_URL = "<YOUR_RPC_URL_HERE>"
+OPTIMISM_RPC_URL = "<YOUR_RPC_URL_HERE>"
+ARBITRUM_RPC_URL = "<YOUR_RPC_URL_HERE>"

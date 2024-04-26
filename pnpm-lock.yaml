@@ -1007,6 +1007,10 @@ importers:
         version: 5.0.4
 
   workers/token-prices-worker:
+    dependencies:
+      viem:
+        specifier: ^2.7.9
+        version: 2.7.9(typescript@5.0.4)
     devDependencies:
       '@cloudflare/workers-types':
         specifier: ^4.20230518.0
