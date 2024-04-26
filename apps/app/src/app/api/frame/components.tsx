@@ -1,5 +1,6 @@
 import { SubgraphPrize, TokenWithAmount, TokenWithLogo, VaultInfo } from '@shared/types'
 import {
+  DOMAINS,
   formatBigIntForDisplay,
   getNetworkNameByChainId,
   getSimpleDate,
@@ -8,7 +9,6 @@ import {
 } from '@shared/utilities'
 import { CSSProperties, ReactNode } from 'react'
 import { isAddress } from 'viem'
-import { APP_URL } from '@constants/config'
 
 interface FrameImageProps {
   children: ReactNode
@@ -105,7 +105,7 @@ export const VaultBalance = (props: VaultBalanceProps) => {
       <div style={{ display: 'flex', position: 'relative', flexShrink: 0 }}>
         <img src={token.logoURI} width={32} height={32} style={{ borderRadius: '50%' }} />
         <img
-          src={`${APP_URL}/icons/${getNetworkNameByChainId(10)}.svg`}
+          src={`${DOMAINS.app}/icons/${getNetworkNameByChainId(10)}.svg`}
           width={16}
           height={16}
           style={{ position: 'absolute', top: '18px', left: '18px', borderRadius: '50%' }}
@@ -132,7 +132,7 @@ export const Win = (props: WinProps) => {
       <div style={{ display: 'flex', position: 'relative', flexShrink: 0 }}>
         <img src={prizeToken.logoURI} width={32} height={32} style={{ borderRadius: '50%' }} />
         <img
-          src={`${APP_URL}/icons/${getNetworkNameByChainId(10)}.svg`}
+          src={`${DOMAINS.app}/icons/${getNetworkNameByChainId(10)}.svg`}
           width={16}
           height={16}
           style={{ position: 'absolute', top: '18px', left: '18px', borderRadius: '50%' }}

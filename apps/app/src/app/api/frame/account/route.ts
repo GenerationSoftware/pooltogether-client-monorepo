@@ -1,12 +1,12 @@
 import { FrameRequest } from '@shared/types'
+import { DOMAINS } from '@shared/utilities'
 import { type NextRequest, NextResponse } from 'next/server'
 import { Address } from 'viem'
-import { APP_URL } from '@constants/config'
 import { frameResponse, getUserAddress } from '../utils'
 
 export const dynamic = 'force-dynamic'
 
-const postUrl = `${APP_URL}/api/frame/account`
+const postUrl = `${DOMAINS.app}/api/frame/account`
 
 export interface FrameState {
   view: 'welcome' | 'account' | 'wins'
@@ -75,8 +75,8 @@ const welcomeView = (data?: { isInvalidAddress?: boolean }) => {
   const { isInvalidAddress } = data ?? {}
 
   const imgSrc = isInvalidAddress
-    ? `${APP_URL}/facebook-share-image-1200-630.png` // TODO: get static welcome img with error msg
-    : `${APP_URL}/facebook-share-image-1200-630.png` // TODO: get static welcome img (same as in AccountFrame)
+    ? `${DOMAINS.app}/facebook-share-image-1200-630.png` // TODO: get static welcome img with error msg
+    : `${DOMAINS.app}/facebook-share-image-1200-630.png` // TODO: get static welcome img (same as in AccountFrame)
 
   return frameResponse<FrameState>({
     img: { src: imgSrc },
@@ -101,7 +101,7 @@ const accountView = (data: { user: NonNullable<FrameData['user']> }) => {
     buttons: [
       { content: 'Switch Account' },
       { content: 'Check Wins' },
-      { content: 'View on App', action: 'link', target: `${APP_URL}/account/${user.name}` }
+      { content: 'View on App', action: 'link', target: `${DOMAINS.app}/account/${user.name}` }
     ],
     state: { view: 'account', user }
   })

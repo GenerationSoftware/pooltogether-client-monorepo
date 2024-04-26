@@ -1,15 +1,14 @@
+import { DOMAINS } from '@shared/utilities'
 import * as fathom from 'fathom-client'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { APP_URL } from '@constants/config'
 
 export const useFathom = () => {
   const router = useRouter()
 
   useEffect(() => {
     const fathomSiteId = process.env.NEXT_PUBLIC_FATHOM_SITE_ID
-    const fathomSiteDomain = APP_URL.split('://')[1]
-    console.log(`fathomSiteDomain:`, fathomSiteDomain)
+    const fathomSiteDomain = DOMAINS.app.split('://')[1]
 
     const onRouteChangeComplete = () => {
       fathom.trackPageview()

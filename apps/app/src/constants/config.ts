@@ -62,14 +62,6 @@ export const WALLETS: { [wallet: string]: CreateWalletFn } = {
 }
 
 /**
- * App URL
- */
-export const APP_URL =
-  process.env.URL ?? !!process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : 'http://localhost:3000'
-
-/**
  * RPCs
  */
 export const RPC_URLS = {

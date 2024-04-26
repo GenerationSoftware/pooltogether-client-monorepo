@@ -1,17 +1,17 @@
 import { FrameButton, SubgraphPrize, TokenWithAmount, VaultInfo } from '@shared/types'
-import { getTokenBalances, getUserSubgraphPrizes, getVaultId, NETWORK } from '@shared/utilities'
+import {
+  DOMAINS,
+  getTokenBalances,
+  getUserSubgraphPrizes,
+  getVaultId,
+  NETWORK
+} from '@shared/utilities'
 import { ImageResponse } from 'next/og'
 import { NextResponse } from 'next/server'
 import { CSSProperties, ReactElement } from 'react'
 import { Address, createPublicClient, http, isAddress, PublicClient } from 'viem'
 import { getEnsAddress, normalize } from 'viem/ens'
-import {
-  APP_URL,
-  DEFAULT_VAULT_LISTS,
-  RPC_URLS,
-  SUPPORTED_NETWORKS,
-  WAGMI_CHAINS
-} from '@constants/config'
+import { DEFAULT_VAULT_LISTS, RPC_URLS, SUPPORTED_NETWORKS, WAGMI_CHAINS } from '@constants/config'
 
 export const frameResponse = <FrameStateType extends {}>(data: {
   img: { src: string; aspectRatio?: '1.91:1' | '1:1' }
@@ -67,7 +67,7 @@ export const imageResponse = async (
   content: ReactElement,
   options?: { style?: CSSProperties; width?: number; height?: number }
 ) => {
-  const fontUrl = `${APP_URL}/fonts/inter/inter-regular.woff`
+  const fontUrl = `${DOMAINS.app}/fonts/inter/inter-regular.woff`
   const fontData = await fetch(fontUrl).then((res) => res.arrayBuffer())
 
   return new ImageResponse(content, {
