@@ -60,7 +60,7 @@ export const PrizePoolCard = (props: PrizePoolCardProps) => {
               </span>
               {!isTokenEquivalentHidden && (
                 <span className='hidden font-light md:block'>
-                  ≈ <TokenAmount token={grandPrize} hideZeroes={true} />
+                  ≈ <TokenAmount token={grandPrize} maximumFractionDigits={2} />
                 </span>
               )}
             </>
