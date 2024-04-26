@@ -18,6 +18,7 @@ import {
   VaultFeeTooltip,
   WinChanceTooltip
 } from '@shared/react-components'
+import { VaultInfo } from '@shared/types'
 import { ExternalLink, Spinner } from '@shared/ui'
 import { getBlockExplorerUrl, getVaultId, shorten } from '@shared/utilities'
 import classNames from 'classnames'
@@ -79,15 +80,30 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
     { fromBlock }
   )
 
-  const foundInVaultLists = useMemo(() => {
-    return Object.values({ ...localVaultLists, ...importedVaultLists }).some((list) => {
-      for (const listVault of list.tokens) {
-        if (vault.id === getVaultId(listVault)) {
-          return true
+  const vaultListEntries = useMemo(() => {
+    const entries: VaultInfo[] = []
+
+    Object.values({ ...localVaultLists, ...importedVaultLists }).forEach((list) => {
+      for (const entry of list.tokens) {
+        if (vault.id === getVaultId(entry)) {
+          entries.push(entry)
         }
       }
     })
+
+    return entries
   }, [vault, localVaultLists, importedVaultLists])
+
+  const lpInfo = useMemo(() => {
+    let info: { appURI?: string } = {}
+
+    vaultListEntries.forEach((entry) => {
+      const appURI = entry.extensions?.lp?.appURI
+      if (!!appURI) info.appURI = appURI
+    })
+
+    return info
+  }, [vaultListEntries])
 
   return (
     <div className={classNames('flex flex-col w-full gap-2 text-sm md:text-base', className)}>
@@ -234,6 +250,12 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
           data={<VaultInfoURI URI={vault.yieldSourceURI} />}
         />
       )}
+      {!!lpInfo.appURI && (
+        <VaultInfoRow
+          name={t_vault('headers.lpSource')}
+          data={<VaultInfoURI URI={lpInfo.appURI} />}
+        />
+      )}
       {!!vaultFee && vaultFee.percent > 0 && (
         <>
           <VaultInfoRow
@@ -256,7 +278,7 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
           />
         </>
       )}
-      {!foundInVaultLists && <NotInVaultListsWarning />}
+      {vaultListEntries.length === 0 && <NotInVaultListsWarning />}
     </div>
   )
 }

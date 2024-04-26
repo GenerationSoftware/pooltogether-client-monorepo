@@ -5,8 +5,8 @@ import { testnetVaults } from './testnet'
 const defaultVaultList: VaultList = {
   name: 'Cabana Vault List',
   keywords: ['pooltogether', 'cabana', 'g9', 'optimism'],
-  version: { major: 2, minor: 2, patch: 0 },
-  timestamp: '2024-04-25T19:07:12Z',
+  version: { major: 2, minor: 2, patch: 1 },
+  timestamp: '2024-04-26T18:34:15Z',
   logoURI: `${DOMAINS.app}/pooltogether-token-logo.svg`,
   tokens: [
     {
@@ -103,13 +103,17 @@ const defaultVaultList: VaultList = {
       decimals: 18,
       symbol: 'przPOOLWETH',
       logoURI: `${DOMAINS.app}/icons/przVELO.svg`,
-      tags: ['beefy', 'lp'],
+      tags: ['beefy', 'lp', 'velodrome'],
       yieldSourceURI: 'https://app.beefy.finance/vault/velodrome-v2-pool-weth',
       extensions: {
         underlyingAsset: {
           address: '0xDB1FE6DA83698885104DA02A6e0b3b65c0B0dE80',
           symbol: 'vAMMV2-POOL/WETH',
           name: 'VolatileV2 AMM - POOL/WETH'
+        },
+        lp: {
+          appURI:
+            'https://velodrome.finance/deposit?token0=0x395Ae52bB17aef68C2888d941736A71dC6d4e125&token1=0x4200000000000000000000000000000000000006&type=-1'
         }
       }
     },
@@ -120,13 +124,17 @@ const defaultVaultList: VaultList = {
       decimals: 18,
       symbol: 'przWSTETH-ETH',
       logoURI: `${DOMAINS.app}/icons/przVELO.svg`,
-      tags: ['beefy', 'lp'],
+      tags: ['beefy', 'lp', 'velodrome'],
       yieldSourceURI: 'https://app.beefy.finance/vault/velodrome-v2-wsteth-weth',
       extensions: {
         underlyingAsset: {
           address: '0x6dA98Bde0068d10DDD11b468b197eA97D96F96Bc',
           symbol: 'vAMMV2-wstETH/WETH',
           name: 'VolatileV2 AMM - wstETH/WETH'
+        },
+        lp: {
+          appURI:
+            'https://velodrome.finance/deposit?token0=0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb&token1=0x4200000000000000000000000000000000000006&type=-1'
         }
       }
     },

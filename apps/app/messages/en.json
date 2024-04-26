@@ -107,6 +107,7 @@
       "vaultFee": "Vault Fee",
       "feeRecipient": "Fee Recipient",
       "yieldSource": "Yield Source",
+      "lpSource": "Liquidity Pair Source",
       "vaultOwner": "Vault Owner"
     },
     "returnToVaults": "Return to Vaults",

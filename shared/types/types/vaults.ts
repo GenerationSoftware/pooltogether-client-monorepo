@@ -32,6 +32,9 @@ export interface VaultExtensions {
     readonly name?: string
     readonly logoURI?: string
   }
+  readonly lp?: {
+    readonly appURI?: string
+  }
   readonly [key: string]:
     | {
         [key: string]:
