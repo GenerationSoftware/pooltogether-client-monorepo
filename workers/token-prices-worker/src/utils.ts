@@ -99,7 +99,7 @@ export const getLpTokenInfo = async (chainId: SUPPORTED_NETWORK, tokenAddresses:
       const cachedData = cachedLpTokens[address.toLowerCase() as Lowercase<Address>]
       if (cachedData?.isLp) {
         tokenAddressMap[address] = [cachedData.underlying[0], cachedData.underlying[1]]
-      } else {
+      } else if (!cachedData) {
         tokensToCheck.push(address)
         tokenCalls.push({ address, abi: lpABI, functionName: 'token0' })
         tokenCalls.push({ address, abi: lpABI, functionName: 'token1' })
