@@ -3,12 +3,13 @@ import {
   ContractFunctionParameters,
   createPublicClient,
   erc20Abi,
+  formatUnits,
   http,
   isAddress
 } from 'viem'
 import { lpABI } from './abis/lpABI'
-import { COVALENT_API_URL, RPC_URLS, START_DATE, VIEM_CHAINS } from './constants'
-import { ChainTokenPrices, CovalentPricingApiResponse, SUPPORTED_NETWORK } from './types'
+import { COVALENT_API_URL, NETWORK_KEYS, RPC_URLS, START_DATE, VIEM_CHAINS } from './constants'
+import { ChainTokenPrices, CovalentPricingApiResponse, LpTokens, SUPPORTED_NETWORK } from './types'
 
 export const getCovalentTokenPrices = async (
   chainId: SUPPORTED_NETWORK,
@@ -57,6 +58,19 @@ export const sortTokenPricesByDate = (
   })
 }
 
+export const getCurrentDate = () => {
+  const date = new Date()
+
+  const yyyy = date.getFullYear()
+  let mm = `${date.getMonth() + 1}`
+  let dd = `${date.getDate()}`
+
+  if (mm.length === 1) mm = '0' + mm
+  if (dd.length === 1) dd = '0' + dd
+
+  return yyyy + '-' + mm + '-' + dd
+}
+
 // TODO: should not assume every LP has 2 underlying tokens (could have more)
 export const getLpTokenInfo = async (chainId: SUPPORTED_NETWORK, tokenAddresses: Address[]) => {
   const lpTokenInfo: {
@@ -68,6 +82,9 @@ export const getLpTokenInfo = async (chainId: SUPPORTED_NETWORK, tokenAddresses:
     }
   } = {}
 
+  const { value: _cachedLpTokens } = await LP_TOKENS.getWithMetadata(NETWORK_KEYS[chainId])
+  const cachedLpTokens = !!_cachedLpTokens ? (JSON.parse(_cachedLpTokens) as LpTokens) : {}
+
   const publicClient = createPublicClient({
     chain: VIEM_CHAINS[chainId],
     transport: http(RPC_URLS[chainId])
@@ -76,10 +93,17 @@ export const getLpTokenInfo = async (chainId: SUPPORTED_NETWORK, tokenAddresses:
   if (!!publicClient && tokenAddresses.length > 0) {
     const tokenAddressMap: { [lpTokenAddress: Address]: [Address, Address] } = {}
 
+    const tokensToCheck: Address[] = []
     const tokenCalls: ContractFunctionParameters<typeof lpABI>[] = []
     tokenAddresses.forEach((address) => {
-      tokenCalls.push({ address, abi: lpABI, functionName: 'token0' })
-      tokenCalls.push({ address, abi: lpABI, functionName: 'token1' })
+      const cachedData = cachedLpTokens[address.toLowerCase() as Lowercase<Address>]
+      if (cachedData?.isLp) {
+        tokenAddressMap[address] = [cachedData.underlying[0], cachedData.underlying[1]]
+      } else {
+        tokensToCheck.push(address)
+        tokenCalls.push({ address, abi: lpABI, functionName: 'token0' })
+        tokenCalls.push({ address, abi: lpABI, functionName: 'token1' })
+      }
     })
 
     const tokenResults = await publicClient.multicall({ contracts: tokenCalls })
@@ -100,7 +124,7 @@ export const getLpTokenInfo = async (chainId: SUPPORTED_NETWORK, tokenAddresses:
       }
 
       if (isValidTokenResult(token0) && isValidTokenResult(token1)) {
-        const lpTokenAddress = tokenAddresses[Math.floor(i / 2)]
+        const lpTokenAddress = tokensToCheck[Math.floor(i / 2)]
         tokenAddressMap[lpTokenAddress] = [token0.result, token1.result]
       }
     }
@@ -171,4 +195,35 @@ export const getLpTokenInfo = async (chainId: SUPPORTED_NETWORK, tokenAddresses:
   }
 
   return lpTokenInfo
+}
+
+export const calcLpTokenPrices = (
+  lpTokenInfo: Awaited<ReturnType<typeof getLpTokenInfo>>,
+  underlyingTokenPrices: ChainTokenPrices
+) => {
+  const lpTokenPrices: ChainTokenPrices = {}
+
+  const date = getCurrentDate()
+
+  Object.entries(lpTokenInfo).forEach(([strAddress, info]) => {
+    const lpTokenAddress = strAddress as Address
+
+    const token0Price = underlyingTokenPrices[info.token0.address]?.[0]?.price
+    const token1Price = underlyingTokenPrices[info.token1.address]?.[0]?.price
+
+    if (!!token0Price && !!token1Price) {
+      const token0Amount = parseFloat(formatUnits(info.token0.reserve, info.token0.decimals))
+      const token1Amount = parseFloat(formatUnits(info.token1.reserve, info.token1.decimals))
+      const token0Value = token0Price * token0Amount
+      const token1Value = token1Price * token1Amount
+
+      const lpSupply = parseFloat(formatUnits(info.totalSupply, info.decimals))
+
+      const lpPrice = (token0Value + token1Value) / lpSupply
+
+      lpTokenPrices[lpTokenAddress] = [{ date, price: lpPrice }]
+    }
+  })
+
+  return lpTokenPrices
 }

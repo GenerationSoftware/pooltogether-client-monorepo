@@ -1,8 +1,8 @@
 import { Address } from 'viem'
 import { NETWORK_KEYS } from './constants'
-import { ChainTokenPrices, SUPPORTED_NETWORK } from './types'
-import { updateHandler } from './updateHandler'
-import { getCovalentTokenPrices, getLpTokenInfo } from './utils'
+import { ChainTokenPrices, LpTokens, SUPPORTED_NETWORK } from './types'
+import { updateCachedLpTokens, updateHandler } from './updateHandler'
+import { calcLpTokenPrices, getCovalentTokenPrices, getLpTokenInfo } from './utils'
 
 export const fetchTokenPrices = async (
   event: FetchEvent,
@@ -54,9 +54,28 @@ export const fetchTokenPrices = async (
 
       // Querying missing LP token prices
       if (tokenSet.size > 0) {
-        const lpTokenInfo = await getLpTokenInfo(chainId, Array.from(tokenSet))
+        const tokenAddresses = Array.from(tokenSet)
+        const lpTokenInfo = await getLpTokenInfo(chainId, tokenAddresses)
 
-        if (Object.keys(lpTokenInfo).length > 0) {
+        const lpTokenAddresses = Object.keys(lpTokenInfo) as Address[]
+        const invalidTokenAddresses = tokenAddresses.filter(
+          (address) => !lpTokenAddresses.includes(address)
+        )
+
+        const newLpTokens: LpTokens = {}
+        invalidTokenAddresses.forEach((address) => {
+          newLpTokens[address.toLowerCase() as Lowercase<Address>] = { isLp: false }
+        })
+        Object.entries(lpTokenInfo).forEach(([strAddress, info]) => {
+          const lpTokenAddress = strAddress.toLowerCase() as Lowercase<Address>
+          newLpTokens[lpTokenAddress] = {
+            isLp: true,
+            underlying: [info.token0.address, info.token1.address]
+          }
+        })
+        await updateCachedLpTokens(event, chainId, newLpTokens)
+
+        if (lpTokenAddresses.length > 0) {
           const underlyingTokenAddresses = new Set<Address>()
           Object.values(lpTokenInfo).forEach((entry) => {
             underlyingTokenAddresses.add(entry.token0.address)
@@ -70,9 +89,12 @@ export const fetchTokenPrices = async (
             ? (JSON.parse(strUnderlyingTokenPrices) as ChainTokenPrices)
             : {}
 
-          // TODO: calculate lp token prices
-          // TODO: append to chainTokenPrices
-          // TODO: call updateHandler
+          const lpTokenPrices = calcLpTokenPrices(lpTokenInfo, underlyingTokenPrices)
+          for (const strAddress in lpTokenPrices) {
+            const address = strAddress as Address
+            chainTokenPrices[address] = [lpTokenPrices[address][0]]
+          }
+          await updateHandler(event, { [chainId]: lpTokenPrices })
         }
       }
 

@@ -1,6 +1,6 @@
 import { Address } from 'viem'
 import { NETWORK_KEYS, SUPPORTED_NETWORKS } from './constants'
-import { ChainTokenPrices, SUPPORTED_NETWORK, TokenPrices } from './types'
+import { ChainTokenPrices, LpTokens, SUPPORTED_NETWORK, TokenPrices } from './types'
 import { sortTokenPricesByDate } from './utils'
 
 export const updateHandler = async (
@@ -79,6 +79,26 @@ const updateCachedAddresses = async (
           })
         )
       }
+    })
+  )
+}
+
+export const updateCachedLpTokens = async (
+  event: FetchEvent | ScheduledEvent,
+  chainId: SUPPORTED_NETWORK,
+  lpTokens: LpTokens
+) => {
+  event.waitUntil(
+    LP_TOKENS.getWithMetadata(NETWORK_KEYS[chainId]).then((data) => {
+      const cachedLpTokens: LpTokens = !!data.value ? JSON.parse(data.value) : {}
+
+      const newLpTokens: LpTokens = { ...cachedLpTokens, ...lpTokens }
+
+      event.waitUntil(
+        LP_TOKENS.put(NETWORK_KEYS[chainId], JSON.stringify(newLpTokens), {
+          metadata: { lastUpdated: new Date(Date.now()).toUTCString() }
+        })
+      )
     })
   )
 }

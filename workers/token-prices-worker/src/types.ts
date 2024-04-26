@@ -16,3 +16,7 @@ export interface CovalentPricingApiResponse {
   quote_currency: string
   prices: { date: string; price: number | null }[]
 }
+
+export interface LpTokens {
+  [address: Lowercase<Address>]: { isLp: false } | { isLp: true; underlying: [Address, Address] }
+}
