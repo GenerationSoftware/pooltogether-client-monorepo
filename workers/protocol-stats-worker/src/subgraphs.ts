@@ -83,7 +83,7 @@ export const getV5SubgraphVaultData = async (
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         query: `query($maxVaultsPerPage: Int, $lastVaultId: Bytes) {
-          vaults(first: $maxVaultsPerPage, where: { balance_gt: 0, id_gt: $lastVaultId }) {
+          prizeVaults(first: $maxVaultsPerPage, where: { balance_gt: 0, id_gt: $lastVaultId }) {
             id
             address
             balance
@@ -99,9 +99,9 @@ export const getV5SubgraphVaultData = async (
     const data =
       (
         await result.json<{
-          data?: { vaults?: { id: string; address: string; balance: string }[] }
+          data?: { prizeVaults?: { id: string; address: string; balance: string }[] }
         }>()
-      )?.data?.vaults ?? []
+      )?.data?.prizeVaults ?? []
 
     const formattedData: V5SubgraphVaultData[] = data.map((entry) => ({
       id: entry.id,

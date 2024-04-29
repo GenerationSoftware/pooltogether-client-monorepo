@@ -75,7 +75,7 @@ export const V4_TICKETS: Record<
 }
 
 export const V5_SUBGRAPH_API_URLS: Record<(typeof V5_NETWORKS)[number], string> = {
-  [NETWORK.optimism]: 'https://api.studio.thegraph.com/query/50959/pt-v5-op/version/latest'
+  [NETWORK.optimism]: 'https://api.studio.thegraph.com/query/63100/pt-v5-optimism/version/latest'
 }
 
 export const V4_TWAB_SUBGRAPH_API_URLS: Record<(typeof V4_NETWORKS)[number], string> = {
@@ -104,7 +104,7 @@ export const V3_SUBGRAPH_API_URLS: Record<(typeof V3_NETWORKS)[number], string> 
 
 export const V5_PRIZE_TOKEN_PRICE_REF = {
   chainId: NETWORK.mainnet,
-  address: '0x0cec1a9154ff802e7934fc916ed7ca50bde6844e',
+  address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
   decimals: 18
 } as const satisfies { chainId: NETWORK; address: Lowercase<`0x${string}`>; decimals: number }
 
