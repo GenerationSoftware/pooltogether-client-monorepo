@@ -25,7 +25,11 @@ import { mainnet, optimism, optimismSepolia } from 'viem/chains'
 /**
  * Supported networks
  */
-export const SUPPORTED_NETWORKS = [NETWORK.optimism, NETWORK.optimism_sepolia] as const
+export const SUPPORTED_NETWORKS = [
+  NETWORK.optimism,
+  NETWORK.optimism_sepolia,
+  NETWORK.base_sepolia
+] as const
 
 /**
  * Wagmi networks
@@ -33,7 +37,8 @@ export const SUPPORTED_NETWORKS = [NETWORK.optimism, NETWORK.optimism_sepolia] a
 export const WAGMI_CHAINS = {
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism,
-  [NETWORK.optimism_sepolia]: optimismSepolia
+  [NETWORK.optimism_sepolia]: optimismSepolia,
+  [NETWORK.base_sepolia]: optimismSepolia
 } as const
 
 /**
@@ -64,7 +69,8 @@ export const WALLETS: { [wallet: string]: CreateWalletFn } = {
 export const RPC_URLS = {
   [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
-  [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL
+  [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
+  [NETWORK.base_sepolia]: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL
 } as const
 
 /**
@@ -110,6 +116,27 @@ export const NETWORK_CONFIG: Record<
           { address: '0x14A1EDBB4723AA163A11742Df934C53C43feEC23', tags: ['stablecoin'] },
           { address: '0xaF9Ad81aB225Fe2d24dD2067a38A4CE69Ec07784' },
           { address: '0xDD41e571f0f7614Ae37935538f92589363843266' }
+        ]
+      }
+    ]
+  },
+  [NETWORK.base_sepolia]: {
+    description: 'Sepolia testnet for the Base network.',
+    prizePool: '0xC90625047f206f525a811a54BbEc05C23E08B58b',
+    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.base_sepolia],
+    lp: { targetAuctionPeriod: SECONDS_PER_HOUR * 6, targetAuctionPriceUsd: 10 },
+    yieldSources: [
+      {
+        id: 'aave',
+        name: 'Faux Aave',
+        href: 'https://aave.com/',
+        description: 'Lending and borrowing protocol',
+        vaults: [
+          { address: '0x8D2F084f97E38EB1d630D0C341aC6281E0Dca41C', tags: ['stablecoin'] },
+          { address: '0x6787Cb862802a0C422FD89564f5e7b6403347451', tags: ['stablecoin'] },
+          { address: '0x61B32C1df62586B6286f866C465bD5aE0b6020dB', tags: ['stablecoin'] },
+          { address: '0xe3944bb9129ac6e117a838a4e4b3A97c80b389ED' },
+          { address: '0x2755e45642f88b3F2d1E007119d29914CE8D1A99' }
         ]
       }
     ]

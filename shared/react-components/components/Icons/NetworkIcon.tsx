@@ -204,6 +204,31 @@ const CeloIcon = (props: { className?: string }) => (
   </svg>
 )
 
+const BaseIcon = (props: { className?: string }) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    viewBox='0 0 24 24'
+    fill='none'
+    className={props.className}
+  >
+    <g clipPath='url(#base-icon-clip-path)'>
+      <path
+        d='M12 23C14.1756 23 16.3023 22.3548 18.1113 21.1462C19.9202 19.9375 21.3301 18.2195 22.1627 16.2095C22.9953 14.1995 23.2131 11.9878 22.7887 9.85404C22.3642 7.72022 21.3165 5.76021 19.7782 4.22183C18.2398 2.68345 16.2798 1.6358 14.146 1.21137C12.0122 0.786929 9.80048 1.00477 7.79048 1.83733C5.7805 2.6699 4.06253 4.07979 2.85384 5.88873C1.64514 7.69767 1 9.82441 1 12C1 14.9174 2.15893 17.7153 4.22182 19.7782C6.28472 21.8411 9.08259 23 12 23Z'
+        fill='#0052FF'
+      ></path>
+      <path
+        d='M11.9742 19.7465C16.2524 19.7465 19.7206 16.2783 19.7206 12C19.7206 7.72176 16.2524 4.25354 11.9742 4.25354C7.91543 4.25354 4.58574 7.37493 4.25469 11.3481H15.7499V12.6381H4.25354C4.57799 16.6179 7.91068 19.7465 11.9742 19.7465Z'
+        fill='white'
+      ></path>
+    </g>
+    <defs>
+      <clipPath id='base-icon-clip-path'>
+        <rect width='22' height='22' fill='white' transform='translate(1 1)'></rect>
+      </clipPath>
+    </defs>
+  </svg>
+)
+
 /* ================================ Icon Mapping ================================ */
 
 const icons = {
@@ -218,5 +243,7 @@ const icons = {
   [NETWORK.avalanche]: { svgIcon: AvalancheIcon, iconBgColor: '#e84142' },
   [NETWORK.fuji]: { svgIcon: AvalancheIcon, iconBgColor: '#e84142' },
   [NETWORK.celo]: { svgIcon: CeloIcon, iconBgColor: '#ffffff' },
-  [NETWORK.celo_testnet]: { svgIcon: CeloIcon, iconBgColor: '#ffffff' }
+  [NETWORK.celo_testnet]: { svgIcon: CeloIcon, iconBgColor: '#ffffff' },
+  [NETWORK.base]: { svgIcon: BaseIcon, iconBgColor: '#0052FF' },
+  [NETWORK.base_sepolia]: { svgIcon: BaseIcon, iconBgColor: '#0052FF' }
 }
