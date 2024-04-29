@@ -10,6 +10,8 @@ import { ReactNode, useMemo } from 'react'
 import { isCanaryTier } from 'src/utils'
 import { QUERY_START_BLOCK } from '@constants/config'
 import { useDrawResults } from '@hooks/useDrawResults'
+import { useDrawStatus } from '@hooks/useDrawStatus'
+import { useEstimatedNextNumTiers } from '@hooks/useEstimatedNextNumTiers'
 import { DrawCardItemTitle } from './DrawCardItemTitle'
 
 interface DrawPrizesProps {
@@ -25,6 +27,12 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
     prizePool,
     { fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined }
   )
+
+  const { data: estimatedNextNumTiers } = useEstimatedNextNumTiers(prizePool, {
+    refetchInterval: sToMs(300)
+  })
+
+  const { status } = useDrawStatus(prizePool, drawId)
 
   const numTiers = useMemo(() => {
     const drawAwardedEvent = drawAwardedEvents?.find((e) => e.args.drawId === drawId)
@@ -70,6 +78,10 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
             {!!numTiers ? (
               <span>
                 <BigText>{numTiers}</BigText> tiers
+              </span>
+            ) : status !== 'finalized' ? (
+              <span>
+                <BigText>{estimatedNextNumTiers}</BigText> tiers (estimated)
               </span>
             ) : (
               <span>-</span>
