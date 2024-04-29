@@ -32,19 +32,21 @@ export const formatNumberForDisplay = (
 ) => {
   const { locale, round, hideZeroes, shortenMillions, ...formatOptions } = options
 
-  const format = (v: number) => {
+  const format = (v: number, settings?: { ignoreHideZeroes?: boolean }) => {
     return v.toLocaleString(locale || 'en', {
       ...formatOptions,
-      maximumFractionDigits: !!hideZeroes
-        ? v <= 1
-          ? formatOptions.maximumFractionDigits
-          : 0
-        : formatOptions.maximumFractionDigits,
-      minimumFractionDigits: !!hideZeroes
-        ? v <= 1
-          ? formatOptions.minimumFractionDigits
-          : 0
-        : formatOptions.minimumFractionDigits
+      maximumFractionDigits:
+        !!hideZeroes && !settings?.ignoreHideZeroes
+          ? v <= 1
+            ? formatOptions.maximumFractionDigits
+            : 0
+          : formatOptions.maximumFractionDigits,
+      minimumFractionDigits:
+        !!hideZeroes && !settings?.ignoreHideZeroes
+          ? v <= 1
+            ? formatOptions.minimumFractionDigits
+            : 0
+          : formatOptions.minimumFractionDigits
     })
   }
 
@@ -66,11 +68,11 @@ export const formatNumberForDisplay = (
 
   if (!!shortenMillions) {
     if (_val >= 1e8) {
-      return format(Math.round(_val / 1e6)) + 'M'
+      return format(Math.round(_val / 1e6), { ignoreHideZeroes: true }) + 'M'
     } else if (_val >= 1e7) {
-      return format(Math.round(_val / 1e5) / 10) + 'M'
+      return format(Math.round(_val / 1e5) / 10, { ignoreHideZeroes: true }) + 'M'
     } else if (_val >= 1e6) {
-      return format(Math.round(_val / 1e4) / 100) + 'M'
+      return format(Math.round(_val / 1e4) / 100, { ignoreHideZeroes: true }) + 'M'
     }
   }
 
