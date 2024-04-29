@@ -34,6 +34,9 @@ export const getNiceNetworkNameByChainId = (chainId: number): string => {
     case NETWORK.arbitrum_sepolia: {
       return 'Arbitrum Sepolia'
     }
+    case NETWORK.base_sepolia: {
+      return 'Base Sepolia'
+    }
     case NETWORK.bsc_testnet: {
       return 'BSC Testnet'
     }
