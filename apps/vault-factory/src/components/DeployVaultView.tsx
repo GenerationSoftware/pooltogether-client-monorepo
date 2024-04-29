@@ -3,7 +3,12 @@ import {
   useTokenBalance,
   useTokenPrices
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { getNiceNetworkNameByChainId, MAX_UINT_96, USDC_TOKEN_ADDRESSES } from '@shared/utilities'
+import {
+  getNiceNetworkNameByChainId,
+  lower,
+  MAX_UINT_96,
+  USDC_TOKEN_ADDRESSES
+} from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import { SupportedNetwork } from 'src/types'
@@ -89,7 +94,7 @@ const DeployVaultViewWarnings = (props: { className?: string }) => {
 
       // Bad precision per dollar
       if (!isNaN(token.decimals) && !!tokenPrices) {
-        const tokenPrice = tokenPrices[token.address.toLowerCase() as Lowercase<Address>]
+        const tokenPrice = tokenPrices[lower(token.address)]
         const usdcPrice = tokenPrices[USDC_TOKEN_ADDRESSES[token.chainId]]
 
         if (!!tokenPrice && !!usdcPrice) {

@@ -9,7 +9,13 @@ import { ArrowUturnLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/
 import { CurrencyValue, NetworkBadge, TokenIcon } from '@shared/react-components'
 import { TokenWithAmount } from '@shared/types'
 import { Button, Spinner } from '@shared/ui'
-import { formatBigIntForDisplay, sToMs, TWAB_REWARDS_ADDRESSES, vaultABI } from '@shared/utilities'
+import {
+  formatBigIntForDisplay,
+  lower,
+  sToMs,
+  TWAB_REWARDS_ADDRESSES,
+  vaultABI
+} from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { ReactNode, useMemo, useState } from 'react'
@@ -140,9 +146,7 @@ const ClaimContent = (props: ClaimContentProps) => {
     { twabRewardsAddress }
   )
 
-  const claimableTokenAddresses = new Set(
-    claimable.map((entry) => entry.tokenAddress.toLowerCase() as Lowercase<Address>)
-  )
+  const claimableTokenAddresses = new Set(claimable.map((entry) => lower(entry.tokenAddress)))
   const { data: tokenData } = useTokens(migration.vaultInfo.chainId, [...claimableTokenAddresses])
 
   const tokensToClaim = useMemo(() => {
@@ -169,9 +173,7 @@ const ClaimContent = (props: ClaimContentProps) => {
 
   const onSuccessClaimTX = (txReceipt: TransactionReceipt) => {
     if (!!onSuccess && !!txReceipt.to) {
-      const newTwabRewardsAddressesClaimed = twabRewardsAddressesClaimed.add(
-        txReceipt.to.toLowerCase() as Lowercase<Address>
-      )
+      const newTwabRewardsAddressesClaimed = twabRewardsAddressesClaimed.add(lower(txReceipt.to))
       setTwabRewardsAddressesClaimed(newTwabRewardsAddressesClaimed)
       if (newTwabRewardsAddressesClaimed.size >= twabRewardsAddresses.length) {
         onSuccess?.()

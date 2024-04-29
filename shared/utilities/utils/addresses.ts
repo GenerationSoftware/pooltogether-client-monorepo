@@ -1,3 +1,5 @@
+import { Address } from 'viem'
+
 /**
  * Shortens a hash into something a little more user friendly
  * @param hash hash string to shorten
@@ -18,4 +20,13 @@ export const shorten = (hash: string, options?: { short?: boolean }) => {
   }
 
   return options?.short ? `${result[1]}...` : `${result[1]}...${result[2]}`
+}
+
+/**
+ * Returns a typecasted lowercase address
+ * @param address original address
+ * @returns
+ */
+export const lower = (address: string) => {
+  return address.toLowerCase() as Lowercase<Address>
 }

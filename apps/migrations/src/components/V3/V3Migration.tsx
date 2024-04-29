@@ -5,7 +5,7 @@ import {
 import { ArrowUturnLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/outline'
 import { CurrencyValue, NetworkBadge, TokenIcon } from '@shared/react-components'
 import { Button, Spinner } from '@shared/ui'
-import { formatBigIntForDisplay, sToMs } from '@shared/utilities'
+import { formatBigIntForDisplay, lower, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { ReactNode, useMemo, useState } from 'react'
@@ -38,7 +38,7 @@ export const V3Migration = (props: V3MigrationProps) => {
 
   const { data: claimable, isFetched: isFetchedClaimable } = useUserV3ClaimableRewards(
     migration.token.chainId,
-    migration.token.address.toLowerCase() as Lowercase<Address>,
+    lower(migration.token.address),
     userAddress
   )
 
@@ -117,13 +117,13 @@ const ClaimContent = (props: ClaimContentProps) => {
 
   const { data: claimable } = useUserV3ClaimableRewards(
     migration.token.chainId,
-    migration.token.address.toLowerCase() as Lowercase<Address>,
+    lower(migration.token.address),
     userAddress
   )
 
   const { data: gasEstimate, isFetched: isFetchedGasEstimate } = useV3ClaimRewardsGasEstimate(
     migration.token.chainId,
-    migration.token.address.toLowerCase() as Lowercase<Address>,
+    lower(migration.token.address),
     userAddress
   )
 
@@ -161,7 +161,7 @@ const ClaimContent = (props: ClaimContentProps) => {
           </div>
           <ClaimRewardsButton
             chainId={migration.token.chainId}
-            ticketAddress={migration.token.address.toLowerCase() as Lowercase<Address>}
+            ticketAddress={lower(migration.token.address)}
             userAddress={userAddress}
             txOptions={{ onSuccess }}
             fullSized={true}

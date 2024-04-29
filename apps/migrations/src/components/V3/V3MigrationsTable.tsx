@@ -3,7 +3,7 @@ import { useScreenSize } from '@shared/generic-react-hooks'
 import { TokenValueAndAmount } from '@shared/react-components'
 import { TokenWithAmount } from '@shared/types'
 import { Button, Spinner, Table, TableData } from '@shared/ui'
-import { formatBigIntForDisplay } from '@shared/utilities'
+import { formatBigIntForDisplay, lower } from '@shared/utilities'
 import classNames from 'classnames'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -153,7 +153,7 @@ export const V3MigrationsTable = (props: V3MigrationsTableProps) => {
         {SUPPORTED_NETWORKS.map((network) => {
           const poolsWithBalance = userV3Balances
             .filter((e) => e.token.chainId === network)
-            .map((e) => e.token.address.toLowerCase() as Lowercase<Address>)
+            .map((e) => lower(e.token.address))
 
           const poolsWithRewards = [
             ...new Set(
@@ -289,7 +289,7 @@ const RewardsItem = (props: RewardsItemProps) => {
 
   const { data: claimable, isFetched: isFetchedClaimable } = useUserV3ClaimableRewards(
     migration.token.chainId,
-    migration.token.address.toLowerCase() as Lowercase<Address>,
+    lower(migration.token.address),
     userAddress
   )
 
@@ -349,7 +349,7 @@ const ManageItem = (props: ManageItemProps) => {
   const { refetch: refetchUserV3Balances } = useUserV3Balances(userAddress)
   const { refetch: refetchUserV3ClaimableRewards } = useUserV3ClaimableRewards(
     migration.token.chainId,
-    migration.token.address.toLowerCase() as Lowercase<Address>,
+    lower(migration.token.address),
     userAddress
   )
 
@@ -388,7 +388,7 @@ const ManageItem = (props: ManageItemProps) => {
       ) : (
         <ClaimRewardsButton
           chainId={migration.token.chainId}
-          ticketAddress={migration.token.address.toLowerCase() as Lowercase<Address>}
+          ticketAddress={lower(migration.token.address)}
           userAddress={userAddress}
           txOptions={{ onSuccess: () => refetchUserV3ClaimableRewards() }}
           fullSized={fullSized}

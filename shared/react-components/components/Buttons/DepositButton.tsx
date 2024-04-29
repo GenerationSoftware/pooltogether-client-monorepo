@@ -1,8 +1,4 @@
-import {
-  PRIZE_POOLS,
-  USDC_TOKEN_ADDRESSES,
-  Vault
-} from '@generationsoftware/hyperstructure-client-js'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useSelectedVault,
   useTokenPrices,
@@ -12,9 +8,9 @@ import {
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Intl } from '@shared/types'
 import { Button, ButtonProps } from '@shared/ui'
+import { lower, PRIZE_POOLS, USDC_TOKEN_ADDRESSES } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
-import { Address } from 'viem'
 import { BadPrecisionPerDollarTooltip } from '../Tooltips/BadPrecisionPerDollarTooltip'
 import { DeprecatedVaultTooltip } from '../Tooltips/DeprecatedVaultTooltip'
 import { WrongPrizePoolVaultTooltip } from '../Tooltips/WrongPrizePoolVaultTooltip'
@@ -56,7 +52,7 @@ export const DepositButton = (props: DepositButtonProps) => {
 
   const isBadPrecisionPerDollar = useMemo(() => {
     if (!!token && !!tokenPrices) {
-      const tokenPrice = tokenPrices[token.address.toLowerCase() as Lowercase<Address>]
+      const tokenPrice = tokenPrices[lower(token.address)]
       const usdcPrice = tokenPrices[USDC_TOKEN_ADDRESSES[token.chainId]]
 
       if (!!tokenPrice && !!usdcPrice) {

@@ -4,6 +4,7 @@ import { twabControllerABI } from '../abis/twabController'
 import { vaultABI } from '../abis/vault'
 import { vaultFactoryABI } from '../abis/vaultFactory'
 import { VAULT_FACTORY_ADDRESSES } from '../constants'
+import { lower } from './addresses'
 import { formatStringWithPrecision } from './formatting'
 import {
   getComplexMulticallResults,
@@ -265,7 +266,7 @@ export const getVaultAddressesFromFactory = async (publicClient: PublicClient) =
 
   multicallResults.forEach((address) => {
     if (!!address && isAddress(address)) {
-      vaultAddresses.add(address.toLowerCase() as Lowercase<Address>)
+      vaultAddresses.add(lower(address))
     }
   })
 

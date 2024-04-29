@@ -1,4 +1,5 @@
 import { useToken, useTokenPrices } from '@generationsoftware/hyperstructure-react-hooks'
+import { lower } from '@shared/utilities'
 import { useMemo } from 'react'
 import { LiquidationPair } from 'src/types'
 import { Address, formatUnits } from 'viem'
@@ -12,9 +13,9 @@ export const useBestLiquidationProfit = (liquidationPair: LiquidationPair) => {
   const { data: gasEstimate, isFetched: isFetchedGasEstimate } =
     useBestLiquidationGasEstimate(liquidationPair)
 
-  const revenueTokenAddress = (
+  const revenueTokenAddress = lower(
     liquidationPair.swapPath[liquidationPair.swapPath.length - 1] as Address
-  ).toLowerCase() as Lowercase<Address>
+  )
 
   const { data: revenueToken, isFetched: isFetchedRevenueToken } = useToken(
     liquidationPair.chainId,

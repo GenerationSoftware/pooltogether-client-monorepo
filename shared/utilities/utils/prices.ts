@@ -4,6 +4,7 @@ import {
   TOKEN_PRICE_REDIRECTS,
   TOKEN_PRICES_API_URL
 } from '../constants'
+import { lower } from './addresses'
 
 /**
  * Returns token prices in ETH from the CloudFlare API
@@ -83,7 +84,7 @@ export const getHistoricalTokenPrices = async (
 
       return tokenPrices
     } else {
-      const lowercaseTokenAddress = tokenAddress.toLowerCase() as Lowercase<Address>
+      const lowercaseTokenAddress = lower(tokenAddress)
       const mostRecentTokenPrice = (await getTokenPrices(chainId, [tokenAddress]))[
         lowercaseTokenAddress
       ]
@@ -107,7 +108,7 @@ const getRedirectedTokenPrices = async (chainId: number, tokenAddresses: string[
   const redirectedTokens: { [chainId: number]: { [address: string]: string } } = {}
 
   tokenAddresses.forEach((_address) => {
-    const address = _address.toLowerCase() as Lowercase<Address>
+    const address = lower(_address)
     const redirect = TOKEN_PRICE_REDIRECTS[chainId]?.[address]
 
     if (!!redirect) {

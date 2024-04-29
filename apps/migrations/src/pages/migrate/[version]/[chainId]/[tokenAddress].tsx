@@ -1,3 +1,4 @@
+import { lower } from '@shared/utilities'
 import { useRouter } from 'next/router'
 import { Address, isAddress } from 'viem'
 import { useAccount } from 'wagmi'
@@ -38,7 +39,7 @@ export default function MigrationPage() {
       !!router.query.tokenAddress &&
       typeof router.query.tokenAddress === 'string' &&
       isAddress(router.query.tokenAddress)
-        ? (router.query.tokenAddress.toLowerCase() as Lowercase<Address>)
+        ? lower(router.query.tokenAddress)
         : undefined
 
     if (!!userAddress && !!chainId && !!version && !!tokenAddress) {

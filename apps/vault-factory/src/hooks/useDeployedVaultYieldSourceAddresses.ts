@@ -1,6 +1,7 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { QUERY_KEYS, usePublicClientsByChain } from '@generationsoftware/hyperstructure-react-hooks'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
+import { lower } from '@shared/utilities'
 import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { SupportedNetwork } from 'src/types'
@@ -42,7 +43,7 @@ export const useDeployedVaultYieldSourceAddresses = (chainId: SupportedNetwork) 
     const data: { [vaultAddress: Lowercase<Address>]: Lowercase<Address> } = {}
     results.forEach((result, i) => {
       if (result.status === 'success') {
-        data[deployedVaultAddresses[i]] = result.data.toLowerCase() as Lowercase<Address>
+        data[deployedVaultAddresses[i]] = lower(result.data)
       }
     })
 

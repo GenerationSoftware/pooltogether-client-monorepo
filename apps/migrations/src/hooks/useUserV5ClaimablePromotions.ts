@@ -1,4 +1,5 @@
 import { PartialPromotionInfo } from '@shared/types'
+import { lower } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useUserV5ClaimableRewards } from './useUserV5ClaimableRewards'
@@ -80,8 +81,8 @@ export const useAllUserV5ClaimablePromotions = (userAddress: Address) => {
         chainId: promotion.chainId,
         twabRewardsAddress: promotion.twabRewardsAddress,
         promotionId: promotion.promotionId,
-        tokenAddress: promotion.token.toLowerCase() as Lowercase<Address>,
-        vaultAddress: promotion.vault.toLowerCase() as Lowercase<Address>,
+        tokenAddress: lower(promotion.token),
+        vaultAddress: lower(promotion.vault),
         rewards: promotion.epochRewards,
         total: Object.values(promotion.epochRewards).reduce((a, b) => a + b, 0n)
       })

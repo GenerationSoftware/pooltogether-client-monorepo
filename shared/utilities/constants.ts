@@ -1,4 +1,5 @@
 import { Address } from 'viem'
+import { lower } from './utils/addresses'
 
 /**
  * Network IDs
@@ -246,7 +247,7 @@ export const TOKEN_PRICE_REDIRECTS: {
     /* POOL */
     '0x395ae52bb17aef68c2888d941736a71dc6d4e125': {
       chainId: NETWORK.mainnet,
-      address: POOL_TOKEN_ADDRESSES[NETWORK.mainnet].toLowerCase() as Lowercase<Address>
+      address: lower(POOL_TOKEN_ADDRESSES[NETWORK.mainnet])
     },
     /* agEUR */
     '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': {
@@ -295,7 +296,7 @@ export const TOKEN_PRICE_REDIRECTS: {
     /* POOL */
     [POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia].toLowerCase()]: {
       chainId: NETWORK.mainnet,
-      address: POOL_TOKEN_ADDRESSES[NETWORK.mainnet].toLowerCase() as Lowercase<Address>
+      address: lower(POOL_TOKEN_ADDRESSES[NETWORK.mainnet])
     }
   }
 }

@@ -9,12 +9,12 @@ import { CountUp, Spinner } from '@shared/ui'
 import {
   calculateCurrencyValue,
   formatCurrencyNumberForDisplay,
+  lower,
   NETWORK,
   POOL_TOKEN_ADDRESSES,
   USDC_TOKEN_ADDRESSES
 } from '@shared/utilities'
 import { useMemo, useState } from 'react'
-import { Address } from 'viem'
 
 export interface CurrencyValueProps extends Omit<Intl.NumberFormatOptions, 'style' | 'currency'> {
   baseValue: number | string
@@ -56,8 +56,7 @@ export const CurrencyValue = (props: CurrencyValueProps) => {
 
     if (!!rates.eth && !!extraTokenPrices) {
       const usdcPrice = extraTokenPrices[USDC_TOKEN_ADDRESSES[NETWORK.mainnet]]
-      const poolPrice =
-        extraTokenPrices[POOL_TOKEN_ADDRESSES[NETWORK.mainnet].toLowerCase() as Lowercase<Address>]
+      const poolPrice = extraTokenPrices[lower(POOL_TOKEN_ADDRESSES[NETWORK.mainnet])]
 
       if (!!rates.usd && !!usdcPrice) {
         rates.usd.value = rates.eth.value / usdcPrice

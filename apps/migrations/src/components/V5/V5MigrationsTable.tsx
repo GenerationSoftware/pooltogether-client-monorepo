@@ -7,7 +7,7 @@ import { useScreenSize } from '@shared/generic-react-hooks'
 import { TokenValueAndAmount } from '@shared/react-components'
 import { TokenWithAmount, TokenWithLogo } from '@shared/types'
 import { Button, Spinner, Table, TableData } from '@shared/ui'
-import { formatBigIntForDisplay } from '@shared/utilities'
+import { formatBigIntForDisplay, lower } from '@shared/utilities'
 import classNames from 'classnames'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -141,13 +141,13 @@ export const V5MigrationsTable = (props: V5MigrationsTableProps) => {
         {SUPPORTED_NETWORKS.map((network) => {
           const vaultAddressesWithBalance = userV5Balances
             .filter((e) => e.token.chainId === network)
-            .map((e) => e.token.address.toLowerCase() as Lowercase<Address>)
+            .map((e) => lower(e.token.address))
 
           const vaultAddressesWithRewards = [
             ...new Set(
               userV5Promotions
                 .filter((e) => e.chainId === network)
-                .map((e) => e.vaultAddress.toLowerCase() as Lowercase<Address>)
+                .map((e) => lower(e.vaultAddress))
             )
           ]
 
@@ -305,9 +305,7 @@ const RewardsItem = (props: RewardsItemProps) => {
     userAddress
   )
 
-  const claimableTokenAddresses = new Set(
-    claimable.map((entry) => entry.tokenAddress.toLowerCase() as Lowercase<Address>)
-  )
+  const claimableTokenAddresses = new Set(claimable.map((entry) => lower(entry.tokenAddress)))
   const { data: tokenData, isFetched: isFetchedTokenData } = useTokens(
     migration.vaultInfo.chainId,
     [...claimableTokenAddresses]
