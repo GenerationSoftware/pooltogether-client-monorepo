@@ -6,7 +6,7 @@ import { TrashIcon } from '@heroicons/react/24/outline'
 import { VaultList } from '@shared/types'
 import { Intl } from '@shared/types'
 import { BasicIcon, Button, ExternalLink, Spinner, Toggle } from '@shared/ui'
-import { getVaultList, LINKS, NETWORK } from '@shared/utilities'
+import { getVaultList, isTestnet, LINKS, NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -24,7 +24,8 @@ interface VaultListViewProps {
       | 'urlInput'
       | 'addVaultList'
       | 'clearImportedVaultLists'
-      | 'numTokens'
+      | 'numVaults'
+      | 'numTestnetVaults'
       | 'imported'
     >
     errors?: Intl<'formErrors.invalidSrc' | 'formErrors.invalidVaultList'>
@@ -224,7 +225,7 @@ interface VaultListItemProps {
   vaultList: VaultList
   isChecked?: boolean
   isImported?: boolean
-  intl?: Intl<'numTokens' | 'imported'>
+  intl?: Intl<'numVaults' | 'numTestnetVaults' | 'imported'>
 }
 
 const VaultListItem = (props: VaultListItemProps) => {
@@ -249,6 +250,15 @@ const VaultListItem = (props: VaultListItemProps) => {
 
   const version = `v${vaultList.version.major}.${vaultList.version.minor}.${vaultList.version.patch}`
 
+  const numVaults = useMemo(() => {
+    let mainnet = 0
+    let testnet = 0
+
+    vaultList.tokens.forEach((v) => (isTestnet(v.chainId) ? testnet++ : mainnet++))
+
+    return { mainnet, testnet }
+  }, [vaultList])
+
   return (
     <div className='w-full flex items-center justify-between gap-2'>
       <div className='flex items-center gap-2'>
@@ -258,15 +268,23 @@ const VaultListItem = (props: VaultListItemProps) => {
           <BasicIcon content='?' size='lg' />
         )}
         <div className='flex flex-col gap-1 text-pt-purple-50'>
-          <span>
+          <a href={isImported ? id : `/api/vaultList/${id}`} target='_blank'>
             <span className='text-sm md:text-base md:font-medium'>{vaultList.name}</span>{' '}
             <span className='text-xs'>{version}</span>
-          </span>
+          </a>
           <div className='flex items-center gap-2 text-pt-purple-100'>
             <span className='text-xs'>
-              {intl?.('numTokens', { number: vaultList.tokens.length }) ??
-                `${vaultList.tokens.length} Token${vaultList.tokens.length > 1 ? 's' : ''}`}
+              {intl?.('numVaults', { number: numVaults.mainnet }) ??
+                `${numVaults.mainnet} vault${numVaults.mainnet === 1 ? '' : 's'}`}
             </span>
+            {numVaults.testnet > 0 && (
+              <span className='text-xs'>
+                (+
+                {intl?.('numTestnetVaults', { number: numVaults.testnet }) ??
+                  `${numVaults.testnet} vault${numVaults.testnet === 1 ? '' : 's'}`}
+                )
+              </span>
+            )}
             {isImported && <ImportedBadge intl={{ text: intl?.('imported') }} />}
           </div>
         </div>
