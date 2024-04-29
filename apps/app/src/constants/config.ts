@@ -20,14 +20,14 @@ import {
 import { NETWORK, POOL_TOKEN_ADDRESSES, USDC_TOKEN_ADDRESSES } from '@shared/utilities'
 import defaultVaultList from '@vaultLists/default'
 import { Address } from 'viem'
-import { mainnet, optimism, optimismSepolia } from 'viem/chains'
+import { baseSepolia, mainnet, optimism, optimismSepolia } from 'viem/chains'
 
 /**
  * Supported networks
  */
 export const SUPPORTED_NETWORKS = {
   mainnets: [NETWORK.mainnet, NETWORK.optimism],
-  testnets: [NETWORK.optimism_sepolia]
+  testnets: [NETWORK.optimism_sepolia, NETWORK.base_sepolia]
 } as const
 
 /**
@@ -36,7 +36,8 @@ export const SUPPORTED_NETWORKS = {
 export const WAGMI_CHAINS = {
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism,
-  [NETWORK.optimism_sepolia]: optimismSepolia
+  [NETWORK.optimism_sepolia]: optimismSepolia,
+  [NETWORK.base_sepolia]: baseSepolia
 } as const
 
 /**
@@ -67,7 +68,8 @@ export const WALLETS: { [wallet: string]: CreateWalletFn } = {
 export const RPC_URLS = {
   [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
-  [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL
+  [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
+  [NETWORK.base_sepolia]: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL
 } as const
 
 /**
@@ -101,6 +103,13 @@ export const TWAB_REWARDS_SETTINGS: {
       POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia]
     ],
     fromBlock: 10_793_300n
+  },
+  [NETWORK.base_sepolia]: {
+    tokenAddresses: [
+      USDC_TOKEN_ADDRESSES[NETWORK.base_sepolia],
+      POOL_TOKEN_ADDRESSES[NETWORK.base_sepolia]
+    ],
+    fromBlock: 9_156_200n
   }
 }
 
