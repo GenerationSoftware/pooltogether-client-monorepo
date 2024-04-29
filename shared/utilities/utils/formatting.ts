@@ -32,21 +32,27 @@ export const formatNumberForDisplay = (
 ) => {
   const { locale, round, hideZeroes, shortenMillions, ...formatOptions } = options
 
-  const format = (v: number, settings?: { maximumFractionDigits?: number }) => {
+  const format = (
+    v: number,
+    overrides?: {
+      minimumFractionDigits?: number
+      maximumFractionDigits?: number
+    }
+  ) => {
     return v.toLocaleString(locale || 'en', {
       ...formatOptions,
       maximumFractionDigits:
-        !!hideZeroes && settings?.maximumFractionDigits === undefined
+        !!hideZeroes && overrides?.maximumFractionDigits === undefined
           ? v <= 1
             ? formatOptions.maximumFractionDigits
             : 0
-          : settings?.maximumFractionDigits ?? formatOptions.maximumFractionDigits,
+          : overrides?.maximumFractionDigits ?? formatOptions.maximumFractionDigits,
       minimumFractionDigits:
-        !!hideZeroes && !settings?.maximumFractionDigits === undefined
+        !!hideZeroes && overrides?.minimumFractionDigits === undefined
           ? v <= 1
             ? formatOptions.minimumFractionDigits
             : 0
-          : settings?.maximumFractionDigits ?? formatOptions.minimumFractionDigits
+          : overrides?.minimumFractionDigits ?? formatOptions.minimumFractionDigits
     })
   }
 
@@ -68,11 +74,26 @@ export const formatNumberForDisplay = (
 
   if (!!shortenMillions) {
     if (_val >= 1e8) {
-      return format(Math.round(_val / 1e6), { maximumFractionDigits: 0 }) + 'M'
+      return (
+        format(Math.round(_val / 1e6), {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        }) + 'M'
+      )
     } else if (_val >= 1e7) {
-      return format(Math.round(_val / 1e5) / 10, { maximumFractionDigits: 1 }) + 'M'
+      return (
+        format(Math.round(_val / 1e5) / 10, {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 1
+        }) + 'M'
+      )
     } else if (_val >= 1e6) {
-      return format(Math.round(_val / 1e4) / 100, { maximumFractionDigits: 2 }) + 'M'
+      return (
+        format(Math.round(_val / 1e4) / 100, {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2
+        }) + 'M'
+      )
     }
   }
 
