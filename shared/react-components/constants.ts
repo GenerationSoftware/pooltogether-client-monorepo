@@ -55,8 +55,8 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0xc40f949f8a4e094d1b49a23ea9241d289b7b2819': tokenLogoUrls.lusd,
     '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': tokenLogoUrls.ageur,
     '0x4200000000000000000000000000000000000042': tokenLogoUrls.op,
-    '0xdb1fe6da83698885104da02a6e0b3b65c0b0de80': tokenLogoUrls.veloLP,
-    '0x6da98bde0068d10ddd11b468b197ea97d96f96bc': tokenLogoUrls.veloLP
+    '0x9b53ef6f13077727d22cb4acad1119c79a97be17': tokenLogoUrls.veloLP,
+    '0x9b4c0de59628c64b02d7ce86f21db9a579539d5a': tokenLogoUrls.veloLP
   },
   [NETWORK.optimism_sepolia]: {
     [POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia].toLowerCase()]: tokenLogoUrls.pool,

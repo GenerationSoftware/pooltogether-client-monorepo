@@ -17,16 +17,18 @@ export const TokenIcon = (props: TokenIconProps) => {
     ? `${token.symbol} Logo`
     : !!token.name
     ? `${token.name} Logo`
-    : undefined
+    : 'Token Logo'
+
+  const Icon = (props: { logoURI: string }) => (
+    <img
+      src={props.logoURI}
+      alt={altText}
+      className={classNames('h-6 w-6 rounded-full', className)}
+    />
+  )
 
   if (!!token.logoURI) {
-    return (
-      <img
-        src={token.logoURI}
-        alt={altText}
-        className={classNames('h-6 w-6 rounded-full', className)}
-      />
-    )
+    return <Icon logoURI={token.logoURI} />
   }
 
   if (!!token.chainId && !!token.address) {
@@ -34,14 +36,13 @@ export const TokenIcon = (props: TokenIconProps) => {
       TOKEN_LOGO_OVERRIDES[token.chainId as NETWORK]?.[
         token.address.toLowerCase() as Lowercase<string>
       ]
+
     if (!!logoOverride) {
-      return (
-        <img
-          src={logoOverride}
-          alt={altText}
-          className={classNames('h-6 w-6 rounded-full', className)}
-        />
-      )
+      return <Icon logoURI={logoOverride} />
+    }
+
+    if (token.chainId === NETWORK.optimism && token.symbol?.startsWith('vAMMV2-')) {
+      return <Icon logoURI='https://optimistic.etherscan.io/token/images/velodromefinance_32.png' />
     }
 
     if (token.chainId in COINGECKO_PLATFORMS) {
