@@ -9,6 +9,7 @@
     "manage": "Управление",
     "deposit": "Депозит",
     "withdraw": "Вывести",
+    "delegate": "Delegate",
     "learnMore": "Подробнее",
     "back": "Назад",
     "connectWallet": "Подключить кошелек",
@@ -17,7 +18,19 @@
     "close": "Закрыть",
     "learnAboutRisks": "Узнайте о рисках",
     "readDocs": "Читайте документы",
-    "termsOfService": "Условия предоставления услуг"
+    "termsOfService": "Условия предоставления услуг",
+    "bonusRewards": "Bonus Rewards",
+    "claim": "Claim",
+    "apr": "APR",
+    "warning": "Warning",
+    "getTokenAt": "Get {token} at",
+    "greatMigration": {
+      "joinTitle": "Join the Great <highlight>Pooly</highlight> Migration",
+      "joinButton": "Join the Migration",
+      "migrateTo": "Migrate to the new PoolTogether",
+      "earnUpTo": "and earn up to <highlight>{apr}% APR</highlight> in OP Bonus Rewards",
+      "skipForNow": "Skip for now"
+    }
   },
   "Navigation": {
     "home": "Главная",
@@ -72,6 +85,8 @@
     "disclaimer": "Призовые хранилища PoolTogether могут быть развернуты любым человеком. <link>Знайте, во что вы вкладываете деньги</link>",
     "headers": {
       "token": "Токен",
+      "prizeYield": "Prize Yield",
+      "bonusRewards": "Bonus Rewards",
       "totalDeposits": "Итого депозиты",
       "yourBalance": "Ваш баланс"
     }
@@ -82,6 +97,8 @@
       "yourWinChance": "Ваш шанс на победу",
       "balance": "Баланс",
       "winChance": "Шанс на победу",
+      "prizeYield": "Prize Yield",
+      "bonusRewards": "Bonus Rewards",
       "tvl": "TVL",
       "contributions": "{number}D Взнос в призовой фонд",
       "depositToken": "Токен депозита",
@@ -90,7 +107,9 @@
       "delegatedAmount": "Делегированная сумма",
       "vaultFee": "Плата за хранилище",
       "feeRecipient": "Получатель вознаграждения",
-      "yieldSource": "Источник урожайности"
+      "yieldSource": "Источник урожайности",
+      "lpSource": "Liquidity Pair Source",
+      "vaultOwner": "Vault Owner"
     },
     "returnToVaults": "Вернуться в хранилища",
     "learnAboutVault": "Узнайте о {vaultName}",
@@ -118,6 +137,9 @@
     "oneInXChance": "1 в {number}",
     "noPrizesRecently": "В последнее время Вы не выигрывали никаких призов.",
     "learnHowItWorks": "Узнайте, как работает PoolTogether",
+    "claimRewardsTx": "{symbol} Rewards Claim",
+    "claimAllRewardsTx": "{network} Multi-Rewards Claim",
+    "claimAllOnNetwork": "Claim all on {network}",
     "winHeaders": {
       "date": "Дата",
       "prizePool": "Призовой фонд",
@@ -125,7 +147,12 @@
       "moreInfo": "Дополнительная информация"
     },
     "bonusRewardHeaders": {
-      "token": "Токен"
+      "token": "Токен",
+      "rewardToken": "Reward Token",
+      "rewardsEarned": "Rewards Earned",
+      "rewardsClaimed": "Claimed Rewards",
+      "rewardsClaimable": "Unclaimed Rewards",
+      "claims": "Claims"
     },
     "prizeChecking": {
       "eligibleDraws": "Вы имели право на {number, plural, one {# draw} other {# draws}}",
@@ -146,11 +173,20 @@
     "depositToShort": "Депозит на имя {name}",
     "withdrawFrom": "Выйти из{name} в {network}",
     "withdrawFromShort": "Выйти из{name}",
+    "delegateFrom": "Delegate your {name} on {network}",
+    "delegateFromShort": "Delegate your {name}",
+    "delegateSelfDescription": "You are delegating to yourself. Any prize your {tokens} deposit wins will go to your wallet.",
+    "delegateDescription": "The delegated address receives any prizes your {tokens} deposit wins.",
+    "delegatedAddress": "Delegated Address",
+    "changeDelegateAddress": "Change delegate address",
+    "changeDelegateAddressShort": "Edit Delegate",
+    "updateDelegatedAddress": "Update delegated address",
     "fees": {
       "title": "Расчетные сетевые тарифы",
       "approval": "Утверждение",
       "deposit": "Депозит",
-      "withdrawal": "Вывод средств"
+      "withdrawal": "Вывод средств",
+      "delegation": "Delegation"
     },
     "dailyChances": "Ежедневные шансы на выигрыш",
     "weeklyChances": "Еженедельные шансы на выигрыш",
@@ -159,27 +195,30 @@
     "balance": "Баланс:",
     "enterAnAmount": "Введите сумму",
     "approvalButton": "Утвердить{symbol}",
-    "approvalTx": "Точное {symbol} Утверждение",
+    "approvalTx": "{symbol} Approval",
+    "reviewDelegation": "Review Delegation",
     "reviewDeposit": "Обзорный депозит",
     "reviewWithdrawal": "Отзыв отзыва",
     "confirmDeposit": "Подтвердить депозит",
     "confirmWithdrawal": "Подтвердить снятие с учета",
     "depositTx": "{symbol} Депозит",
     "withdrawTx": "{symbol} Вывод средств",
+    "delegateTx": "{symbol} Delegation",
     "switchNetwork": "Переключиться на {network}",
     "switchingNetwork": "Переход на{network}...",
     "confirmNotice": "Подтверждение транзакции в кошельке",
     "submissionNotice": "Представленная сделка",
     "depositing": "Внесение {tokens}...",
     "withdrawing": "Вывод {tokens}...",
+    "delegating": "Delegating {tokens}...",
     "success": "Успехов!",
     "deposited": "Вы депонировали{tokens}",
     "withdrew": "Вы отказались от участия{tokens}",
+    "delegated": "You delegated {tokens}",
     "nowEligible": "Теперь вы имеете право участвовать во всех последующих розыгрышах этого пула.",
-    "shareTwitter": "Поделиться в Twitter",
-    "shareWarpcast": "Поделиться на Warpcast",
-    "shareHey": "Поделиться на Эй",
+    "shareOn": "Share on",
     "viewAccount": "Просмотр счета",
+    "waiting": "Waiting for Transaction",
     "uhOh": "Ой!",
     "failedTx": "Что-то пошло не так....",
     "tryAgain": "Попробуйте еще раз",
@@ -210,6 +249,7 @@
     "changeLanguage": "Изменить язык",
     "viewEcosystem": "Просмотр экосистемы",
     "manageVaultLists": "Управление списками хранилищ",
+    "setCustomRPCs": "Set Custom RPCs",
     "getHelp": "Получить помощь",
     "getHelpWithCabana": "Получить помощь в использовании Cabana",
     "vaultListsDescription": "Списки хранилищ определяют, какие хранилища призов отображаются в приложении. Будьте осторожны при работе с импортированными списками.",
@@ -217,8 +257,15 @@
     "urlInput": "https:// или ipfs:// или имя ENS",
     "addVaultList": "Добавить список хранилищ",
     "clearImportedVaultLists": "Очистить все импортированные списки хранилищ",
-    "numTokens": "{number, plural, one {# Токен} other {# Токен}}",
-    "imported": "Импорт"
+    "numVaults": "{number, plural, one {# vault} other {# vaults}}",
+    "numTestnetVaults": "{number, plural, one {# testnet vault} other {# testnet vaults}}",
+    "imported": "Импорт",
+    "customRpcDescription": "Route the app's onchain queries through RPCs of your choosing. These are stored locally on your browser.",
+    "customNetworkRpc": "Custom {network} RPC",
+    "override": "override",
+    "default": "Default",
+    "set": "Set",
+    "refreshToUpdateRPCs": "Refresh the page to see changes"
   },
   "Abbreviations": {
     "days": "дней",
@@ -239,22 +286,30 @@
   },
   "Tooltips": {
     "prizeYield": "Недавнее среднее значение взносов хранилища в призовой фонд",
+    "bonusRewards": "An estimate of current extra incentives for depositors",
     "winChance": "Ваш шанс выиграть приз в любом розыгрыше",
     "approval": "Вы даете согласие на внесение определенной суммы {symbol}",
     "vaultFee": "Процент доходности, который не идет на выплату призов и определяется развертывателем хранилища",
     "importedVault": "Данное хранилище относится к следующему импортируемому списку (s):",
-    "vaultContribution": "Сумма {symbol}, внесенная в призовой фонд за последние {days} дней"
+    "vaultContribution": "Сумма {symbol}, внесенная в призовой фонд за последние {days} дней",
+    "deprecatedVault": "This vault has been deprecated. It may still be eligible to win prizes, but we encourage users to migrate to other vaults.",
+    "wrongPrizePoolVault": "This vault is connected to a prize pool not supported by this interface.",
+    "badPrecisionPerDollar": "This vault is likely to have rounding errors which may lead to lossy withdrawals.",
+    "delegateDescription": "By default the prize token holder is the delegated address. That can be overridden with delegation."
   },
   "Toasts": {
     "transactions": {
       "deposit": "Депозит",
       "withdrawal": "Вывод средств",
+      "delegate": "Delegate",
       "depositing": "Внесение {tokens}...",
       "withdrawing": "Вывод {tokens}...",
+      "delegating": "Delegating {tokens}...",
       "viewOn": "Посмотреть{name}",
       "success": "Успехов!",
       "deposited": "Вы внесли {tokens} в {network}",
       "withdrew": "Вы вывели {tokens} в {network}",
+      "delegated": "You delegated {tokens} on {network}",
       "uhOh": "Ой!",
       "failedTx": "Что-то пошло не так....",
       "tryAgain": "Попробуйте еще раз"
@@ -278,13 +333,22 @@
     "hmmm": "Хммм...",
     "pageNotFound": "Мы не смогли найти страницу, которую Вы ищете.",
     "return": "Возвращение в бассейн",
+    "aaveCollateralizationError": {
+      "issue": "This vault is experiencing issues due to using a high percentage of Aave's supply. <link>Learn more</link>",
+      "recommendation": "It is not recommended to withdraw at this time",
+      "moreInfo": "You may be able to swap out via <uniLink>Uniswap</uniLink>, or wait for the vault to normalize. For further updates, visit PoolTogether's <discordLink>Discord</discordLink>"
+    },
     "formErrors": {
       "invalidSrc": "Не является действительным URL или доменом ENS",
       "invalidVaultList": "Действительный список хранилищ не найден",
       "notEnoughTokens": "Недостаточно {symbol} в кошельке",
       "invalidNumber": "Введите действительный номер",
+      "invalidAddress": "Enter a valid EVM address",
+      "sameAsDelegate": "Entered address is same as current delegate",
       "negativeNumber": "Введите положительное число",
-      "tooManyDecimals": "Слишком много десятичных дробей"
+      "tooManyDecimals": "Слишком много десятичных дробей",
+      "invalidRpcNetwork": "This RPC doesn't seem to be for the {network} network",
+      "invalidRpcUrl": "Not a valid RPC URL"
     }
   }
 }

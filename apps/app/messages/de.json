@@ -9,6 +9,7 @@
     "manage": "Bearbeiten",
     "deposit": "Einzahlen",
     "withdraw": "Abheben",
+    "delegate": "Delegieren",
     "learnMore": "Weitere Informationen",
     "back": "Zurück",
     "connectWallet": "Wallet verbinden",
@@ -17,7 +18,19 @@
     "close": "Schließen",
     "learnAboutRisks": "Erfahre mehr über die Risiken",
     "readDocs": "Dokumentation lesen",
-    "termsOfService": "Nutzungsbedingungen"
+    "termsOfService": "Nutzungsbedingungen",
+    "bonusRewards": "Bonusbelohnung",
+    "claim": "Beanspruchen",
+    "apr": "Jahreszins",
+    "warning": "Warnung",
+    "getTokenAt": "Get {token} at",
+    "greatMigration": {
+      "joinTitle": "Join the Great <highlight>Pooly</highlight> Migration",
+      "joinButton": "Join the Migration",
+      "migrateTo": "Migrate to the new PoolTogether",
+      "earnUpTo": "and earn up to <highlight>{apr}% APR</highlight> in OP Bonus Rewards",
+      "skipForNow": "Skip for now"
+    }
   },
   "Navigation": {
     "home": "Startseite",
@@ -72,6 +85,8 @@
     "disclaimer": "PoolTogether Preis Vaults können von jedem erstellt werden. <link>Zahle nur in Dir bekannte Vaults ein</link>",
     "headers": {
       "token": "Token",
+      "prizeYield": "Preisrendite",
+      "bonusRewards": "Bonusbelohnung",
       "totalDeposits": "Gesamteinzahlungen",
       "yourBalance": "Dein Kontostand"
     }
@@ -82,6 +97,8 @@
       "yourWinChance": "Deine Gewinnchance",
       "balance": "Kontostand",
       "winChance": "Gewinnchance",
+      "prizeYield": "Preisrendite",
+      "bonusRewards": "Bonusbelohnung",
       "tvl": "TVL",
       "contributions": "{number}T Beitrag zum Preis Pool",
       "depositToken": "Einzahlungstoken",
@@ -90,7 +107,9 @@
       "delegatedAmount": "Delegierter Betrag",
       "vaultFee": "Vault Gebühr",
       "feeRecipient": "Gebührenempfänger",
-      "yieldSource": "Yield Quelle"
+      "yieldSource": "Yield Quelle",
+      "lpSource": "Liquidity Pair Source",
+      "vaultOwner": "Vault Eigentümer"
     },
     "returnToVaults": "Zurück zu Vaults",
     "learnAboutVault": "Erfahre mehr über {vaultName}",
@@ -118,6 +137,9 @@
     "oneInXChance": "1 zu {number}",
     "noPrizesRecently": "Du hast in letzter Zeit keine Preise gewonnen.",
     "learnHowItWorks": "Erfahre, wie PoolTogether funktioniert",
+    "claimRewardsTx": "{symbol} Belohnungen beanspruchen",
+    "claimAllRewardsTx": "{network} Mehrere Belohnungen beanspruchen",
+    "claimAllOnNetwork": "Alle auf {network} beanspruchen",
     "winHeaders": {
       "date": "Datum",
       "prizePool": "Preis Pool",
@@ -125,7 +147,12 @@
       "moreInfo": "Weitere Informationen"
     },
     "bonusRewardHeaders": {
-      "token": "Token"
+      "token": "Token",
+      "rewardToken": "Belohnungstoken",
+      "rewardsEarned": "Verdiente Belohnungen",
+      "rewardsClaimed": "Claimed Rewards",
+      "rewardsClaimable": "Unclaimed Rewards",
+      "claims": "Ansprüche"
     },
     "prizeChecking": {
       "eligibleDraws": "Du warst für {number, plural, one {# Auslosung} other {# Auslosungen}} berechtigt",
@@ -146,11 +173,20 @@
     "depositToShort": "Auf {name} einzahlen",
     "withdrawFrom": "Von {name} auf {network} abheben",
     "withdrawFromShort": "Von {name} abheben",
+    "delegateFrom": "Delegiere Dein {name} auf {network}",
+    "delegateFromShort": "Delegiere Dein {name}",
+    "delegateSelfDescription": "Du delegierst an Dich selbst. Jeder Preis, den Deine {tokens} Einzahlung gewinnt, geht an Deine Wallet.",
+    "delegateDescription": "Die delegierte Adresse erhält alle Preise, die Deine {tokens} Einzahlung gewinnt.",
+    "delegatedAddress": "Delegierte Adresse",
+    "changeDelegateAddress": "Delegierte Adresse ändern",
+    "changeDelegateAddressShort": "Delegierten bearbeiten",
+    "updateDelegatedAddress": "Delegierte Adresse aktualisieren",
     "fees": {
       "title": "Geschätzte Netzwerkgebühren",
       "approval": "Genehmigung",
       "deposit": "Einzahlung",
-      "withdrawal": "Abhebung"
+      "withdrawal": "Abhebung",
+      "delegation": "Delegation"
     },
     "dailyChances": "Tägliche Gewinnchance",
     "weeklyChances": "Wöchentliche Gewinnchance",
@@ -159,27 +195,30 @@
     "balance": "Guthaben:",
     "enterAnAmount": "Gib eine Anzahl ein",
     "approvalButton": "{symbol} genehmigen",
-    "approvalTx": "Genaue {symbol} Genehmigung",
+    "approvalTx": "{symbol} Genehmigung",
+    "reviewDelegation": "Delegation überprüfen",
     "reviewDeposit": "Einzahlung überprüfen",
     "reviewWithdrawal": "Abhebung überprüfen",
     "confirmDeposit": "Einzahlung bestätigen",
     "confirmWithdrawal": "Abhebung bestätigen",
     "depositTx": "{symbol} Einzahlung",
     "withdrawTx": "{symbol} Abhebung",
+    "delegateTx": "{symbol} Delegation",
     "switchNetwork": "Zu {network} wechseln",
     "switchingNetwork": "Wechseln zu {network}...",
     "confirmNotice": "Transaktion in Wallet bestätigen",
     "submissionNotice": "Transaktion übermittelt",
     "depositing": "{tokens} einzahlen...",
     "withdrawing": "{tokens} abheben...",
+    "delegating": "Delegiere {tokens}...",
     "success": "Erfolgreich!",
     "deposited": "Du hast {tokens} eingezahlt",
     "withdrew": "Du hast {tokens} abgehoben",
+    "delegated": "Du hast {tokens} delegiert",
     "nowEligible": "Du bist nun für alle zukünftigen Auslosungen in diesem Pool berechtigt.",
-    "shareTwitter": "Auf Twitter teilen",
-    "shareWarpcast": "Auf Warpcast teilen",
-    "shareHey": "Auf Hey teilen",
+    "shareOn": "Teilen auf",
     "viewAccount": "Konto anzeigen",
+    "waiting": "Auf Transaktion warten",
     "uhOh": "Oh, oh!",
     "failedTx": "Etwas ist schiefgelaufen....",
     "tryAgain": "Versuche es erneut",
@@ -210,6 +249,7 @@
     "changeLanguage": "Sprache ändern",
     "viewEcosystem": "Ökosystem anzeigen",
     "manageVaultLists": "Vault Listen bearbeiten",
+    "setCustomRPCs": "Benutzerdefinierte RPCs",
     "getHelp": "Hilfe erhalten",
     "getHelpWithCabana": "Erhalte Hilfe für die Nutzung von Cabana",
     "vaultListsDescription": "Vault Listen bestimmen, welche Preis Vaults in der App angezeigt werden. Bei Interaktion mit importierten Listen ist Vorsicht geboten.",
@@ -217,8 +257,15 @@
     "urlInput": "https:// oder ipfs:// oder ENS Name",
     "addVaultList": "Vault Liste hinzufügen",
     "clearImportedVaultLists": "Alle importierten Vault Listen löschen",
-    "numTokens": "{number, plural, one {# Token} other {# Token}}",
-    "imported": "Importiert"
+    "numVaults": "{number, plural, one {# vault} other {# vaults}}",
+    "numTestnetVaults": "{number, plural, one {# testnet vault} other {# testnet vaults}}",
+    "imported": "Importiert",
+    "customRpcDescription": "Route die Onchain-Abfragen der App über RPCs Deiner Wahl. Diese werden lokal in Deinem Browser gespeichert.",
+    "customNetworkRpc": "Benutzerdefiniertes {network} RPC",
+    "override": "überschreibe",
+    "default": "Standard",
+    "set": "Festlegen",
+    "refreshToUpdateRPCs": "Seite aktualisieren, um Änderungen zu sehen"
   },
   "Abbreviations": {
     "days": "Tg",
@@ -238,22 +285,31 @@
     "xPrizesYearly": "{number, plural, one {# Preis} other {# Preise}} jährlich"
   },
   "Tooltips": {
+    "prizeYield": "Ein letzter Durchschnitt der Beiträge eines Vaults zum Preispool",
+    "bonusRewards": "Eine Schätzung der aktuellen zusätzlichen Anreize für Kontoinhaber",
     "winChance": "Deine Chance, einen Preis bei einer beliebigen Auslosung zu gewinnen",
     "approval": "Du gibst Deine Zustimmung, eine bestimmte Anzahl von {symbol} einzuzahlen",
     "vaultFee": "Ein Prozentsatz des Yield, der nicht in Preise fließt und vom Vault Ersteller bestimmt wird",
     "importedVault": "Dieses Vault stammt von der(n) folgenden importierten Liste(n):",
-    "vaultContribution": "Die Gesamtzahl von {symbol} hat in den letzten {days} Tagen zum Preispool beigetragen"
+    "vaultContribution": "Die Gesamtzahl von {symbol} hat in den letzten {days} Tagen zum Preispool beigetragen",
+    "deprecatedVault": "Dieser Vault ist nicht mehr aktuell. Evtl. ist er noch berechtigt, Preise zu gewinnen, aber wir ermutigen Nutzer, in andere Vaults zu migrieren.",
+    "wrongPrizePoolVault": "This vault is connected to a prize pool not supported by this interface.",
+    "badPrecisionPerDollar": "This vault is likely to have rounding errors which may lead to lossy withdrawals.",
+    "delegateDescription": "Standardmäßig ist der Inhaber des Preistokens die delegierte Adresse. Dies kann mit der Delegation überschrieben werden."
   },
   "Toasts": {
     "transactions": {
       "deposit": "Einzahlung",
       "withdrawal": "Abhebung",
+      "delegate": "Delegieren",
       "depositing": "{tokens} einzahlen...",
       "withdrawing": "{tokens} abheben...",
+      "delegating": "Delegieren {tokens}...",
       "viewOn": "Auf {name} ansehen",
       "success": "Erfolgreich!",
       "deposited": "Du hast {tokens} auf {network} eingezahlt",
       "withdrew": "Du hast {tokens} auf {network} abgehoben",
+      "delegated": "Du hast {tokens} auf {network} eingezahlt",
       "uhOh": "Oh, oh!",
       "failedTx": "Etwas ist schiefgelaufen....",
       "tryAgain": "Versuche es erneut"
@@ -277,13 +333,22 @@
     "hmmm": "Hmmm...",
     "pageNotFound": "Die gesuchte Seite konnte nicht gefunden werden.",
     "return": "Zurück zum Pool",
+    "aaveCollateralizationError": {
+      "issue": "Dieser Vault hat Probleme, da ein hoher Prozentsatz des Aave Bestandes verwendet wird. <link>Erfahre mehr</link>",
+      "recommendation": "Es wird nicht empfohlen, zu diesem Zeitpunkt abzuheben",
+      "moreInfo": "Möglicherweise kannst Du über <uniLink>Uniswap</uniLink> tauschen, oder Du wartest, bis sich der Vault normalisiert hat. Für weitere Updates besuche PoolTogether's <discordLink>Discord</discordLink>"
+    },
     "formErrors": {
       "invalidSrc": "Keine gültige URL oder ENS Domain",
       "invalidVaultList": "Keine gültige Vault Liste gefunden",
       "notEnoughTokens": "Nicht genügend {symbol} in der Wallet",
       "invalidNumber": "Gib eine gültige Zahl ein",
+      "invalidAddress": "Gib eine gültige EVM-Adresse ein",
+      "sameAsDelegate": "Die eingegebene Adresse ist identisch mit dem aktuellen Delegierten",
       "negativeNumber": "Gib eine positive Zahl ein",
-      "tooManyDecimals": "Zu viele Dezimalstellen"
+      "tooManyDecimals": "Zu viele Dezimalstellen",
+      "invalidRpcNetwork": "Dieses RPC scheint nicht für das {network} Netzwerk zu sein",
+      "invalidRpcUrl": "Keine gültige RPC URL"
     }
   }
 }

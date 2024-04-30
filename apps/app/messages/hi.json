@@ -9,6 +9,7 @@
     "manage": "प्रबंधित करना",
     "deposit": "जमा",
     "withdraw": "निकालना",
+    "delegate": "Delegate",
     "learnMore": "और अधिक जानें",
     "back": "पीछे",
     "connectWallet": "वॉलेट कनेक्ट करें",
@@ -20,7 +21,16 @@
     "termsOfService": "सेवा की शर्तें",
     "bonusRewards": "बोनस पुरस्कार",
     "claim": "दावा",
-    "apr": "ऐपर"
+    "apr": "ऐपर",
+    "warning": "Warning",
+    "getTokenAt": "Get {token} at",
+    "greatMigration": {
+      "joinTitle": "Join the Great <highlight>Pooly</highlight> Migration",
+      "joinButton": "Join the Migration",
+      "migrateTo": "Migrate to the new PoolTogether",
+      "earnUpTo": "and earn up to <highlight>{apr}% APR</highlight> in OP Bonus Rewards",
+      "skipForNow": "Skip for now"
+    }
   },
   "Navigation": {
     "home": "घर",
@@ -97,7 +107,9 @@
       "delegatedAmount": "प्रत्यायोजित राशि",
       "vaultFee": "तिजोरी शुल्क",
       "feeRecipient": "शुल्क प्राप्तकर्ता",
-      "yieldSource": "उपज स्रोत"
+      "yieldSource": "उपज स्रोत",
+      "lpSource": "Liquidity Pair Source",
+      "vaultOwner": "Vault Owner"
     },
     "returnToVaults": "वॉल्ट्स को लौटें",
     "learnAboutVault": "{vaultName} के बारे में जानें",
@@ -126,6 +138,8 @@
     "noPrizesRecently": "आपने हाल ही में कोई पुरस्कार नहीं जीता है |",
     "learnHowItWorks": "जानें कि पूलटुगेदर कैसे काम करता है",
     "claimRewardsTx": "{symbol} पुरस्कार का दावा",
+    "claimAllRewardsTx": "{network} Multi-Rewards Claim",
+    "claimAllOnNetwork": "Claim all on {network}",
     "winHeaders": {
       "date": "तारीख",
       "prizePool": "कीमत पूल",
@@ -136,6 +150,8 @@
       "token": "टोकन",
       "rewardToken": "इनाम टोकन",
       "rewardsEarned": "पुरस्कार अर्जित किये गये",
+      "rewardsClaimed": "Claimed Rewards",
+      "rewardsClaimable": "Unclaimed Rewards",
       "claims": "दावा"
     },
     "prizeChecking": {
@@ -157,11 +173,20 @@
     "depositToShort": "{name} पर जमा करें",
     "withdrawFrom": "{network} पर {name} से निकासी",
     "withdrawFromShort": "{name} से वापस लें",
+    "delegateFrom": "Delegate your {name} on {network}",
+    "delegateFromShort": "Delegate your {name}",
+    "delegateSelfDescription": "You are delegating to yourself. Any prize your {tokens} deposit wins will go to your wallet.",
+    "delegateDescription": "The delegated address receives any prizes your {tokens} deposit wins.",
+    "delegatedAddress": "Delegated Address",
+    "changeDelegateAddress": "Change delegate address",
+    "changeDelegateAddressShort": "Edit Delegate",
+    "updateDelegatedAddress": "Update delegated address",
     "fees": {
       "title": "अनुमानित नेटवर्क शुल्क",
       "approval": "अनुमोदन",
       "deposit": "जमा",
-      "withdrawal": "निकासी"
+      "withdrawal": "निकासी",
+      "delegation": "Delegation"
     },
     "dailyChances": "जीतने की दैनिक संभावना",
     "weeklyChances": "जीतने की साप्ताहिक संभावना",
@@ -170,27 +195,30 @@
     "balance": "संतुलन:",
     "enterAnAmount": "एक राशि दर्ज करें",
     "approvalButton": "स्वीकृत करें {symbol}",
-    "approvalTx": "सटीक {symbol} अनुमोदन",
+    "approvalTx": "{symbol} Approval",
+    "reviewDelegation": "Review Delegation",
     "reviewDeposit": "जमा की समीक्षा करें",
     "reviewWithdrawal": "निकासी की समीक्षा करें",
     "confirmDeposit": "जमा की पुष्टि करें",
     "confirmWithdrawal": "निकासी की पुष्टि करें",
     "depositTx": "{symbol} जमा",
     "withdrawTx": "{symbol} निकासी",
+    "delegateTx": "{symbol} Delegation",
     "switchNetwork": "{network} पर स्विच करें",
     "switchingNetwork": "{network} पर स्विच किया जा रहा है...",
     "confirmNotice": "वॉलेट में लेनदेन की पुष्टि करें",
     "submissionNotice": "लेन-देन प्रस्तुत किया गया",
     "depositing": "{tokens} जमा किया जा रहा है...",
     "withdrawing": "{tokens} वापस लिया जा रहा है...",
+    "delegating": "Delegating {tokens}...",
     "success": "सफलता!",
     "deposited": "आपने {tokens} जमा कर दिए",
     "withdrew": "आपने {tokens} वापस ले लिया",
+    "delegated": "You delegated {tokens}",
     "nowEligible": "अब आप इस पूल में भविष्य के सभी ड्रा के लिए पात्र हैं।",
-    "shareTwitter": "ट्विटर पर साझा करें",
-    "shareWarpcast": "वरपकास्ट पर साझा करें",
-    "shareHey": "अरे पर साझा करें",
+    "shareOn": "Share on",
     "viewAccount": "अपना खाता देखें",
+    "waiting": "Waiting for Transaction",
     "uhOh": "उह ओह!",
     "failedTx": "कुछ गलत हो गया....",
     "tryAgain": "पुनः प्रयास करें",
@@ -221,6 +249,7 @@
     "changeLanguage": "भाषा बदलें",
     "viewEcosystem": "पारिस्थितिकी तंत्र देखें",
     "manageVaultLists": "वॉल्ट सूचियाँ प्रबंधित करें",
+    "setCustomRPCs": "Set Custom RPCs",
     "getHelp": "मदद लें",
     "getHelpWithCabana": "कबाना का उपयोग करते समय सहायता प्राप्त करें",
     "vaultListsDescription": "वॉल्ट सूचियाँ यह निर्धारित करती हैं कि पूरे ऐप में कौन से पुरस्कार वॉल्ट प्रदर्शित किए जाएंगे। आयातित सूचियों के साथ इंटरैक्ट करते समय सावधानी बरतें।",
@@ -228,8 +257,15 @@
     "urlInput": "https:// या ipfs:// या ENS नाम",
     "addVaultList": "वॉल्ट सूची जोड़ें",
     "clearImportedVaultLists": "सभी आयातित वॉल्ट सूचियाँ साफ़ करें",
-    "numTokens": "{number, plural, one {# टोकन} other {# टोकन}}",
-    "imported": "आयातित"
+    "numVaults": "{number, plural, one {# vault} other {# vaults}}",
+    "numTestnetVaults": "{number, plural, one {# testnet vault} other {# testnet vaults}}",
+    "imported": "आयातित",
+    "customRpcDescription": "Route the app's onchain queries through RPCs of your choosing. These are stored locally on your browser.",
+    "customNetworkRpc": "Custom {network} RPC",
+    "override": "override",
+    "default": "Default",
+    "set": "Set",
+    "refreshToUpdateRPCs": "Refresh the page to see changes"
   },
   "Abbreviations": {
     "days": "दिन",
@@ -255,18 +291,25 @@
     "approval": "आप {symbol} की एक विशिष्ट राशि जमा करने के लिए अपनी स्वीकृति देंगे",
     "vaultFee": "उपज का एक प्रतिशत जो पुरस्कारों में नहीं जाता है, और वॉल्ट डिप्लॉयर द्वारा निर्धारित किया जाता है",
     "importedVault": "यह वॉल्ट निम्नलिखित आयातित सूची(सूचियों) में से है:",
-    "vaultContribution": "पिछले {days} दिनों में {symbol} की राशि ने पुरस्कार पूल में योगदान दिया"
+    "vaultContribution": "पिछले {days} दिनों में {symbol} की राशि ने पुरस्कार पूल में योगदान दिया",
+    "deprecatedVault": "This vault has been deprecated. It may still be eligible to win prizes, but we encourage users to migrate to other vaults.",
+    "wrongPrizePoolVault": "This vault is connected to a prize pool not supported by this interface.",
+    "badPrecisionPerDollar": "This vault is likely to have rounding errors which may lead to lossy withdrawals.",
+    "delegateDescription": "By default the prize token holder is the delegated address. That can be overridden with delegation."
   },
   "Toasts": {
     "transactions": {
       "deposit": "जमा",
       "withdrawal": "निकासी",
+      "delegate": "Delegate",
       "depositing": "{tokens} जमा किया जा रहा है...",
       "withdrawing": "{tokens} वापस लिया जा रहा है...",
+      "delegating": "Delegating {tokens}...",
       "viewOn": "{name} पर देखें",
       "success": "सफलता!",
       "deposited": "आपने {network} पर {tokens} जमा किए",
       "withdrew": "आपने {network} पर {tokens} वापस ले लिए",
+      "delegated": "You delegated {tokens} on {network}",
       "uhOh": "उह ओह!",
       "failedTx": "कुछ गलत हो गया....",
       "tryAgain": "पुनः प्रयास करें"
@@ -290,13 +333,22 @@
     "hmmm": "हम्म...",
     "pageNotFound": "हमें वह पेज नहीं मिला जिसे आप ढूंढ रहे थे।",
     "return": "पूल पर लौटें",
+    "aaveCollateralizationError": {
+      "issue": "This vault is experiencing issues due to using a high percentage of Aave's supply. <link>Learn more</link>",
+      "recommendation": "It is not recommended to withdraw at this time",
+      "moreInfo": "You may be able to swap out via <uniLink>Uniswap</uniLink>, or wait for the vault to normalize. For further updates, visit PoolTogether's <discordLink>Discord</discordLink>"
+    },
     "formErrors": {
       "invalidSrc": "मान्य यूआरएल या ईएनएस डोमेन नहीं है",
       "invalidVaultList": "कोई वैध वॉल्ट सूची नहीं मिली",
       "notEnoughTokens": "बटुए में पर्याप्त {symbol} नहीं है",
       "invalidNumber": "एक वैध संख्या दर्ज करें",
+      "invalidAddress": "Enter a valid EVM address",
+      "sameAsDelegate": "Entered address is same as current delegate",
       "negativeNumber": "एक सकारात्मक संख्या दर्ज करें",
-      "tooManyDecimals": "बहुत अधिक दशमलव"
+      "tooManyDecimals": "बहुत अधिक दशमलव",
+      "invalidRpcNetwork": "This RPC doesn't seem to be for the {network} network",
+      "invalidRpcUrl": "Not a valid RPC URL"
     }
   }
 }
