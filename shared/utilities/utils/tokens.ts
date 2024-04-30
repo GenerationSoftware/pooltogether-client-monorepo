@@ -180,26 +180,27 @@ export const getTokenDomain = async (publicClient: PublicClient, tokenAddress: A
 
     domain.name = eip712Domain[1]
     domain.version = eip712Domain[2]
-    domain.verifyingContract = eip712Domain[4]
-    domain.salt = eip712Domain[5]
+    // TODO: for some reason, adding salt and verifying contract from domain breaks sigs
+    // domain.verifyingContract = eip712Domain[4]
+    // domain.salt = eip712Domain[5]
 
     return domain
   } catch {
     try {
-      const version = await publicClient.readContract({
-        address: tokenAddress,
-        abi: erc20ABI,
-        functionName: 'version'
-      })
-
       const name = await publicClient.readContract({
         address: tokenAddress,
         abi: erc20ABI,
         functionName: 'name'
       })
 
-      domain.version = version
+      const version = await publicClient.readContract({
+        address: tokenAddress,
+        abi: erc20ABI,
+        functionName: 'version'
+      })
+
       domain.name = name
+      domain.version = version
 
       return domain
     } catch {
@@ -217,13 +218,6 @@ export const getTokenPermitSupport = async (
   publicClient: PublicClient,
   tokenAddress: Address
 ): Promise<'eip2612' | 'daiPermit' | 'none'> => {
-  if (
-    tokenAddress.toLowerCase() === '0xdb1fe6da83698885104da02a6e0b3b65c0b0de80' ||
-    tokenAddress.toLowerCase() === '0x6da98bde0068d10ddd11b468b197ea97d96f96bc'
-  ) {
-    return 'none'
-  }
-
   try {
     await publicClient.simulateContract({
       address: tokenAddress,
