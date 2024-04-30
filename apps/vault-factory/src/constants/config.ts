@@ -20,7 +20,7 @@ import {
 import { DEFAULT_CLAIMER_ADDRESSES, NETWORK, SECONDS_PER_HOUR } from '@shared/utilities'
 import { SupportedNetwork, YieldSourceVaultTag } from 'src/types'
 import { Address } from 'viem'
-import { mainnet, optimism, optimismSepolia } from 'viem/chains'
+import { baseSepolia, mainnet, optimism, optimismSepolia } from 'viem/chains'
 
 /**
  * Supported networks
@@ -38,7 +38,7 @@ export const WAGMI_CHAINS = {
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism,
   [NETWORK.optimism_sepolia]: optimismSepolia,
-  [NETWORK.base_sepolia]: optimismSepolia
+  [NETWORK.base_sepolia]: baseSepolia
 } as const
 
 /**
@@ -97,7 +97,18 @@ export const NETWORK_CONFIG: Record<
     prizePool: '0xF35fE10ffd0a9672d0095c435fd8767A7fe29B55',
     claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.optimism],
     lp: { targetAuctionPeriod: SECONDS_PER_HOUR * 6, targetAuctionPriceUsd: 10 },
-    yieldSources: []
+    yieldSources: [
+      {
+        id: 'beefy',
+        name: 'Beefy',
+        href: 'https://beefy.finance/',
+        description: 'Multichain yield optimizer',
+        vaults: [
+          { address: '0x1dBD083e1422c8c7AcD7091F5437e8C2854F25f4', tags: ['lp'] },
+          { address: '0xCC60ebB05b1E327Ccb4F6c297B9404fdD2Ff5fC2', tags: ['lp'] }
+        ]
+      }
+    ]
   },
   [NETWORK.optimism_sepolia]: {
     description: 'Sepolia testnet for the Optimism network.',
