@@ -32,7 +32,7 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
     refetchInterval: sToMs(300)
   })
 
-  const { status } = useDrawStatus(prizePool, drawId)
+  const { status, isSkipped } = useDrawStatus(prizePool, drawId)
 
   const numTiers = useMemo(() => {
     const drawAwardedEvent = drawAwardedEvents?.find((e) => e.args.drawId === drawId)
@@ -79,7 +79,7 @@ export const DrawPrizes = (props: DrawPrizesProps) => {
               <span>
                 <BigText>{numTiers}</BigText> tiers
               </span>
-            ) : status !== 'finalized' ? (
+            ) : status !== 'finalized' && !isSkipped ? (
               <span>
                 <BigText>{estimatedNextNumTiers}</BigText> tiers (estimated)
               </span>
