@@ -164,9 +164,15 @@ export const getTokenNonces = async (
 export const getTokenDomain = async (publicClient: PublicClient, tokenAddress: Address) => {
   const chainId = await publicClient.getChainId()
 
+  const name = await publicClient.readContract({
+    address: tokenAddress,
+    abi: erc20ABI,
+    functionName: 'name'
+  })
+
   const domain: TypedDataDomain = {
     chainId,
-    name: '',
+    name,
     verifyingContract: tokenAddress,
     version: '1'
   }
@@ -180,32 +186,18 @@ export const getTokenDomain = async (publicClient: PublicClient, tokenAddress: A
 
     domain.name = eip712Domain[1]
     domain.version = eip712Domain[2]
-    // TODO: for some reason, adding salt and verifying contract from domain breaks sigs
-    // domain.verifyingContract = eip712Domain[4]
-    // domain.salt = eip712Domain[5]
-
-    return domain
   } catch {
     try {
-      const name = await publicClient.readContract({
-        address: tokenAddress,
-        abi: erc20ABI,
-        functionName: 'name'
-      })
-
       const version = await publicClient.readContract({
         address: tokenAddress,
         abi: erc20ABI,
         functionName: 'version'
       })
 
-      domain.name = name
       domain.version = version
-
-      return domain
-    } catch {
-      return undefined
-    }
+    } catch {}
+  } finally {
+    return domain
   }
 }
 
