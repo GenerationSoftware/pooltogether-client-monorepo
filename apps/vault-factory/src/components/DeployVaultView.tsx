@@ -127,7 +127,7 @@ const DeployVaultViewWarnings = (props: { className?: string }) => {
 
         warnings.push({
           id: 'missingTokensInWallet',
-          text: `You need at least ${numTokens} ${token.symbol} on ${networkName} to deploy this prize vault. These tokens are donated to your new prize vault to prevent potential rounding errors.`
+          text: `You need at least ${numTokens} ${token.symbol} on ${networkName} to deploy this prize vault. These tokens are donated to your new prize vault to compensate for potential rounding errors.`
         })
       }
     }

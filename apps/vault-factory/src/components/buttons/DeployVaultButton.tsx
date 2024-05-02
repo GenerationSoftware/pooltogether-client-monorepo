@@ -104,7 +104,7 @@ export const DeployVaultButton = (props: DeployVaultButtonProps) => {
     isFetchedToken &&
     allowance !== undefined &&
     isFetchedAllowance &&
-    !!yieldBuffer
+    yieldBuffer !== undefined
 
   const buttonClassName = classNames(
     'min-w-[9rem] !bg-pt-purple-600 !border-pt-purple-600 hover:!bg-pt-purple-700 focus:outline-transparent',

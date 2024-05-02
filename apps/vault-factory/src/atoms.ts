@@ -59,6 +59,11 @@ export const vaultSymbolAtom = atom<string | undefined>(undefined)
 export const vaultClaimerAddressAtom = atom<Address | undefined>(undefined)
 
 /**
+ * Vault Yield Buffer
+ */
+export const vaultYieldBufferAtom = atom<bigint>(100_000n)
+
+/**
  * Vault Creation Step Counter
  */
 export const vaultCreationStepCounterAtom = atom<number>(0)

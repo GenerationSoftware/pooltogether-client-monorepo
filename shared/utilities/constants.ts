@@ -188,9 +188,9 @@ export const TWAB_REWARDS_ADDRESSES: { [chainId: number]: Address } = {
  * Vault factory addresses
  */
 export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
-  [NETWORK.optimism]: '0xF0F151494658baE060034c8f4f199F74910ea806',
-  [NETWORK.optimism_sepolia]: '0x28548033b3f49b03472630ED06E8a6E92b269ce4',
-  [NETWORK.base_sepolia]: '0x8e59E973A3388eB35d0f3a74f1Df32dc94bde546'
+  [NETWORK.optimism]: '0x0c379e9b71ba7079084ada0d1c1aeb85d24dfd39',
+  [NETWORK.optimism_sepolia]: '0x5ecc83b1a0ba255713b69154451826a937702435',
+  [NETWORK.base_sepolia]: '0x039846bae81b6ad824188b090d6f0f808a9686ba'
 }
 
 /**

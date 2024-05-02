@@ -232,16 +232,20 @@ export const getVaultAddresses = (vaults: VaultInfo[]): { [chainId: number]: Add
 }
 
 /**
- * Returns all vault addresses from the vault factory
+ * Returns all vault addresses from a vault factory
  * @param publicClient a public Viem client to query through
+ * @param options optional custom vault factory address
  * @returns
  */
-export const getVaultAddressesFromFactory = async (publicClient: PublicClient) => {
+export const getVaultAddressesFromFactory = async (
+  publicClient: PublicClient,
+  options?: { factoryAddress?: Address }
+) => {
   const vaultAddresses = new Set<Lowercase<Address>>()
 
   const chainId = await publicClient.getChainId()
 
-  const vaultFactoryAddress = VAULT_FACTORY_ADDRESSES[chainId]
+  const vaultFactoryAddress = options?.factoryAddress ?? VAULT_FACTORY_ADDRESSES[chainId]
 
   if (!vaultFactoryAddress) throw new Error(`No vault factory address set for chain ID ${chainId}`)
 

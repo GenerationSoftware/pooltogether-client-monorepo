@@ -41,6 +41,10 @@ export const allVaultStepInfo: { title: string; info: ReactNode }[] = [
     )
   },
   {
+    title: 'Configure a yield buffer',
+    info: `This amount (in wei) will need to be donated to your vault upon deployment, in order to compensate for potential rounding errors. If you forsee larger inaccuracies, this value should be increased.`
+  },
+  {
     title: 'Deploy your vault',
     info: `Make sure your vault is set up correctly, then sign a transaction to deploy it onchain!`
   },

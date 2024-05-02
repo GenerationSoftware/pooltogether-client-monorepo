@@ -1,6 +1,6 @@
 import { usePublicClientsByChain } from '@generationsoftware/hyperstructure-react-hooks'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
-import { getVaultAddressesFromFactory } from '@shared/utilities'
+import { getVaultAddressesFromFactory, NETWORK } from '@shared/utilities'
 import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { Address } from 'viem'
@@ -19,7 +19,21 @@ export const useAllDeployedVaultAddresses = () => {
 
       return {
         queryKey: ['vaultAddressesFromFactory', chainId],
-        queryFn: async () => await getVaultAddressesFromFactory(publicClient),
+        queryFn: async () => {
+          let vaultAddresses: Lowercase<Address>[] = []
+
+          const addresses = await getVaultAddressesFromFactory(publicClient)
+          vaultAddresses.push(...addresses)
+
+          if (chainId === NETWORK.optimism) {
+            const oldAddresses = await getVaultAddressesFromFactory(publicClient, {
+              factoryAddress: '0xF0F151494658baE060034c8f4f199F74910ea806'
+            })
+            vaultAddresses.push(...oldAddresses)
+          }
+
+          return vaultAddresses
+        },
         enabled: !!chainId && !!publicClient,
         ...NO_REFETCH
       }

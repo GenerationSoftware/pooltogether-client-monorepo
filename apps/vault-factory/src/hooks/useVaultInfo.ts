@@ -9,12 +9,12 @@ import {
   vaultNameAtom,
   vaultOwnerAddressAtom,
   vaultSymbolAtom,
+  vaultYieldBufferAtom,
   vaultYieldSourceAddressAtom,
   vaultYieldSourceNameAtom
 } from 'src/atoms'
 import { Address } from 'viem'
 import { NETWORK_CONFIG } from '@constants/config'
-import { useYieldBuffer } from './useYieldBuffer'
 import { useYieldSourceTokenAddress } from './useYieldSourceTokenAddress'
 
 /**
@@ -31,13 +31,12 @@ export const useVaultInfo = (): Partial<VaultDeployInfo> => {
   const name = useAtomValue(vaultNameAtom)
   const symbol = useAtomValue(vaultSymbolAtom)
   const claimer = useAtomValue(vaultClaimerAddressAtom)
+  const yieldBuffer = useAtomValue(vaultYieldBufferAtom)
 
   const { data: tokenAddress } = useYieldSourceTokenAddress(
     chainId as number,
     yieldSourceAddress as Address
   )
-
-  const { data: yieldBuffer } = useYieldBuffer(chainId as number)
 
   const prizePool = !!chainId ? NETWORK_CONFIG[chainId].prizePool : undefined
   const vaultFactory = !!chainId ? VAULT_FACTORY_ADDRESSES[chainId] : undefined

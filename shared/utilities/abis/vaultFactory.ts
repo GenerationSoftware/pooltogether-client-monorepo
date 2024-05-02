@@ -12,13 +12,6 @@ export const vaultFactoryABI = [
     type: 'event'
   },
   {
-    inputs: [],
-    name: 'YIELD_BUFFER',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
     inputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     name: 'allVaults',
     outputs: [{ internalType: 'contract PrizeVault', name: '', type: 'address' }],
@@ -34,6 +27,7 @@ export const vaultFactoryABI = [
       { internalType: 'address', name: '_claimer', type: 'address' },
       { internalType: 'address', name: '_yieldFeeRecipient', type: 'address' },
       { internalType: 'uint32', name: '_yieldFeePercentage', type: 'uint32' },
+      { internalType: 'uint256', name: '_yieldBuffer', type: 'uint256' },
       { internalType: 'address', name: '_owner', type: 'address' }
     ],
     name: 'deployVault',

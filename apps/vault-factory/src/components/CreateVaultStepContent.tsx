@@ -8,6 +8,7 @@ import { NetworkForm } from './forms/NetworkForm'
 import { OwnerAndFeesForm } from './forms/OwnerAndFeesForm'
 import { SetClaimerForm } from './forms/SetClaimerForm'
 import { SetLiquidationPairForm } from './forms/SetLiquidationPairForm'
+import { YieldBufferForm } from './forms/YieldBufferForm'
 import { YieldVaultForm } from './forms/YieldVaultForm'
 import { YieldSourceView } from './YieldSourceView'
 
@@ -18,6 +19,7 @@ const allVaultStepContent: ReactNode[] = [
   <OwnerAndFeesForm />,
   <NameAndSymbolForm />,
   <SetClaimerForm />,
+  <YieldBufferForm />,
   <DeployVaultView />,
   <DeployLiquidationPairForm />,
   <SetLiquidationPairForm />

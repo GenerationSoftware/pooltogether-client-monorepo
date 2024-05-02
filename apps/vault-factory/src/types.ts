@@ -12,6 +12,7 @@ export type FormKey =
   | 'vaultName'
   | 'vaultSymbol'
   | 'vaultClaimer'
+  | 'vaultYieldBuffer'
   | 'targetAuctionPeriod'
   | 'targetAuctionPrice'
   | 'smoothingFactor'
