@@ -5,8 +5,8 @@ import { testnetVaults } from './testnet'
 const defaultVaultList: VaultList = {
   name: 'Cabana Vault List',
   keywords: ['pooltogether', 'cabana', 'g9', 'optimism'],
-  version: { major: 2, minor: 3, patch: 0 },
-  timestamp: '2024-04-29T20:00:57Z',
+  version: { major: 2, minor: 4, patch: 0 },
+  timestamp: '2024-05-02T18:46:23Z',
   logoURI: `${DOMAINS.app}/pooltogether-token-logo.svg`,
   tokens: [
     {
@@ -135,6 +135,23 @@ const defaultVaultList: VaultList = {
         lp: {
           appURI:
             'https://velodrome.finance/deposit?token0=0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb&token1=0x4200000000000000000000000000000000000006&type=-1'
+        }
+      }
+    },
+    {
+      chainId: NETWORK.optimism,
+      address: '0xF1d934D5A3c6E530ac1450c92Af5Ba01eb90d4dE',
+      name: 'Prize OP - Beefy Sonne',
+      decimals: 18,
+      symbol: 'przOP',
+      logoURI: `${DOMAINS.app}/icons/przOP.svg`,
+      tags: ['beefy', 'sonne'],
+      yieldSourceURI: 'https://app.beefy.finance/vault/sonne-op-op',
+      extensions: {
+        underlyingAsset: {
+          address: '0x4200000000000000000000000000000000000042',
+          symbol: 'OP',
+          name: 'Optimism'
         }
       }
     },
