@@ -25,7 +25,8 @@ export const VaultPreview = (props: VaultPreviewProps) => {
     owner,
     name,
     symbol,
-    claimer
+    claimer,
+    yieldBuffer
   } = useVaultInfo()
 
   const { data: tokenData } = useToken(chainId as SupportedNetwork, tokenAddress as Address)
@@ -94,6 +95,9 @@ export const VaultPreview = (props: VaultPreviewProps) => {
           value={`${shorten(claimer)}`}
           href={getBlockExplorerUrl(chainId, claimer)}
         />
+      )}
+      {yieldBuffer !== undefined && (
+        <VaultPreviewItem label='Yield Buffer' value={yieldBuffer.toString()} />
       )}
     </div>
   )

@@ -7,8 +7,8 @@ import { VaultPreview } from './VaultPreview'
 export const CreatePageContent = () => {
   const { step } = useVaultCreationSteps()
 
-  const showPreview: number[] = [1, 2, 3, 4, 5]
-  const showDeployment: number[] = [7, 8]
+  const showPreview: number[] = [1, 2, 3, 4, 5, 6]
+  const showDeployment: number[] = [8, 9]
 
   return (
     <div className='w-full flex flex-col grow gap-8 lg:flex-row lg:gap-4'>

@@ -10,7 +10,7 @@ import { useVaultCreationSteps } from '@hooks/useVaultCreationSteps'
 import { SimpleInput } from './SimpleInput'
 
 export interface YieldBufferFormValues {
-  yieldBuffer: string
+  vaultYieldBuffer: string
 }
 
 interface YieldBufferFormProps {
@@ -27,11 +27,15 @@ export const YieldBufferForm = (props: YieldBufferFormProps) => {
   const { nextStep } = useVaultCreationSteps()
 
   useEffect(() => {
-    formMethods.setValue('yieldBuffer', yieldBuffer.toString(), { shouldValidate: true })
+    formMethods.setValue(
+      'vaultYieldBuffer',
+      yieldBuffer !== undefined ? yieldBuffer.toString() : '100000',
+      { shouldValidate: true }
+    )
   }, [])
 
   const onSubmit = (data: YieldBufferFormValues) => {
-    setYieldBuffer(BigInt(data.yieldBuffer))
+    setYieldBuffer(BigInt(data.vaultYieldBuffer))
     nextStep()
   }
 

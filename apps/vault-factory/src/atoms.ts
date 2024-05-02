@@ -61,7 +61,7 @@ export const vaultClaimerAddressAtom = atom<Address | undefined>(undefined)
 /**
  * Vault Yield Buffer
  */
-export const vaultYieldBufferAtom = atom<bigint>(100_000n)
+export const vaultYieldBufferAtom = atom<bigint | undefined>(undefined)
 
 /**
  * Vault Creation Step Counter
