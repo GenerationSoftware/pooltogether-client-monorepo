@@ -381,6 +381,18 @@ export const TOKEN_DATA_REDIRECTS: {
       name: 'USDC (Bridged from Ethereum)',
       symbol: 'USDC.e'
     }
+  },
+  [NETWORK.polygon]: {
+    '0x2791bca1f2de4661ed88a30c99a7a9449aa84174': {
+      name: 'USDC (Bridged from Ethereum)',
+      symbol: 'USDC.e'
+    }
+  },
+  [NETWORK.avalanche]: {
+    '0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664': {
+      name: 'USDC (Bridged from Ethereum)',
+      symbol: 'USDC.e'
+    }
   }
 }
 
