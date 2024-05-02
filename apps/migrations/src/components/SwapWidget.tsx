@@ -24,7 +24,7 @@ export interface SwapWidgetProps {
     | 'containerStyle'
     | 'routePriority'
   >
-  onSuccess?: () => void
+  onSuccess?: (amount: bigint) => void
   className?: string
 }
 
@@ -59,12 +59,12 @@ export const SwapWidget = (props: SwapWidgetProps) => {
   useEffect(() => {
     widgetEvents.on(
       WidgetEvent.RouteExecutionCompleted,
-      (route: { fromToken: Token; toToken: Token }) => {
+      (route: { fromToken: Token; toToken: Token; toAmount: string }) => {
         if (
           (!config?.toChain || route.toToken.chainId === config.toChain) &&
           (!config?.toToken || route.toToken.address.toLowerCase() === config.toToken.toLowerCase())
         ) {
-          onSuccess?.()
+          onSuccess?.(BigInt(route.toAmount))
         }
       }
     )

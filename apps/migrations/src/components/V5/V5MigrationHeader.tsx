@@ -1,3 +1,4 @@
+import { useVault, useVaultTokenData } from '@generationsoftware/hyperstructure-react-hooks'
 import classNames from 'classnames'
 import { MigrationSteps } from '@components/MigrationSteps'
 import { V5BalanceToMigrate } from '@hooks/useUserV5Balances'
@@ -13,13 +14,14 @@ export interface V5MigrationHeaderProps {
 export const V5MigrationHeader = (props: V5MigrationHeaderProps) => {
   const { migration, actions, actionsCompleted, className } = props
 
+  const vault = useVault(migration.vaultInfo)
+  const { data: token } = useVaultTokenData(vault)
+
   const actionNames: Record<V5MigrationStep, string> = {
     claim: 'Claim Rewards',
-    withdraw: `Withdraw ${migration.token.symbol}`,
-    swap:
-      migration.token.chainId !== migration.destination.chainId
-        ? 'Bridge & Deposit Into V5'
-        : 'Deposit Into V5'
+    withdraw: `Withdraw ${token?.symbol ?? ''}`,
+    swap: migration.token.chainId !== migration.destination.chainId ? 'Bridge & Swap' : 'Swap',
+    deposit: 'Deposit Into V5'
   }
 
   return (

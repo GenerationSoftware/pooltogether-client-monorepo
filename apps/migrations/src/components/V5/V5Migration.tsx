@@ -1,16 +1,22 @@
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useGasCostEstimates,
+  useTokenAllowance,
   useTokenBalance,
+  useTokenPermitSupport,
   useTokens,
   useVault,
-  useVaultTokenAddress
+  useVaultTokenAddress,
+  useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { ArrowUturnLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/outline'
 import { CurrencyValue, NetworkBadge, TokenIcon } from '@shared/react-components'
 import { TokenWithAmount } from '@shared/types'
 import { Button, Spinner } from '@shared/ui'
 import {
+  erc20ABI,
   formatBigIntForDisplay,
+  getSecondsSinceEpoch,
   lower,
   sToMs,
   TWAB_REWARDS_ADDRESSES,
@@ -27,10 +33,12 @@ import { V5BalanceToMigrate } from '@hooks/useUserV5Balances'
 import { useUserV5ClaimablePromotions } from '@hooks/useUserV5ClaimablePromotions'
 import { useV5ClaimRewardsGasEstimate } from '@hooks/useV5ClaimRewardsGasEstimate'
 import { ClaimRewardsButton } from './ClaimRewardsButton'
+import { DepositButton } from './DepositButton'
+import { DepositWithPermitButton } from './DepositWithPermitButton'
 import { V5MigrationHeader } from './V5MigrationHeader'
 import { WithdrawButton } from './WithdrawButton'
 
-export type V5MigrationStep = 'claim' | 'withdraw' | 'swap'
+export type V5MigrationStep = 'claim' | 'withdraw' | 'swap' | 'deposit'
 
 export interface V5MigrationProps {
   userAddress: Address
@@ -42,6 +50,7 @@ export const V5Migration = (props: V5MigrationProps) => {
   const { userAddress, migration, className } = props
 
   const [actionsCompleted, setActionsCompleted] = useState(0)
+  const [swappedAmountOut, setSwappedAmountOut] = useState(0n)
 
   const { data: claimable, isFetched: isFetchedClaimable } = useUserV5ClaimablePromotions(
     migration.token.chainId,
@@ -73,6 +82,17 @@ export const V5Migration = (props: V5MigrationProps) => {
       <SwapContent
         userAddress={userAddress}
         migration={migration}
+        onSuccess={(amount) => {
+          setSwappedAmountOut(amount)
+          setActionsCompleted(actionsCompleted + 1)
+        }}
+      />
+    ),
+    deposit: (
+      <DepositContent
+        userAddress={userAddress}
+        migration={migration}
+        depositAmount={swappedAmountOut}
         onSuccess={() => setActionsCompleted(actionsCompleted + 1)}
       />
     )
@@ -80,9 +100,9 @@ export const V5Migration = (props: V5MigrationProps) => {
 
   const migrationActions = useMemo((): V5MigrationStep[] => {
     if (isRewardsClaimable) {
-      return ['claim', 'withdraw', 'swap']
+      return ['claim', 'withdraw', 'swap', 'deposit']
     } else if (isRewardsClaimable !== undefined) {
-      return ['withdraw', 'swap']
+      return ['withdraw', 'swap', 'deposit']
     } else {
       return []
     }
@@ -245,12 +265,12 @@ const WithdrawContent = (props: WithdrawContentProps) => {
   const { userAddress, migration, onSuccess, className } = props
 
   const { data: gasEstimates, isFetched: isFetchedGasEstimates } = useGasCostEstimates(
-    migration?.token.chainId,
+    migration.token.chainId,
     {
-      address: migration?.token.address,
+      address: migration.token.address,
       abi: vaultABI,
       functionName: 'redeem',
-      args: [migration?.token.amount, userAddress, userAddress],
+      args: [migration.token.amount, userAddress, userAddress],
       account: userAddress
     },
     { refetchInterval: sToMs(10) }
@@ -291,7 +311,7 @@ const WithdrawContent = (props: WithdrawContentProps) => {
 interface SwapContentProps {
   userAddress: Address
   migration: V5BalanceToMigrate
-  onSuccess?: () => void
+  onSuccess?: (amount: bigint) => void
   className?: string
 }
 
@@ -321,4 +341,152 @@ const SwapContent = (props: SwapContentProps) => {
   }, [migration, underlyingToken])
 
   return <SwapWidget config={swapWidgetConfig} onSuccess={onSuccess} className={className} />
+}
+
+interface DepositContentProps {
+  userAddress: Address
+  migration: V5BalanceToMigrate
+  depositAmount: bigint
+  onSuccess?: () => void
+  className?: string
+}
+
+const DepositContent = (props: DepositContentProps) => {
+  const { userAddress, migration, depositAmount, onSuccess, className } = props
+
+  const vault = useVault(migration.destination)
+  const { data: token } = useVaultTokenData(vault)
+
+  const { data: tokenPermitSupport } = useTokenPermitSupport(
+    token?.chainId as number,
+    token?.address as Address
+  )
+
+  if (!token) {
+    return <Spinner />
+  }
+
+  return (
+    <div
+      className={classNames(
+        'w-full max-w-xl flex flex-col gap-6 items-center px-8 py-11 bg-pt-purple-700 rounded-md',
+        className
+      )}
+    >
+      <NetworkBadge chainId={migration.token.chainId} />
+      <span className='text-sm font-semibold text-pt-purple-100'>Deposit Into V5:</span>
+      <SimpleBadge className='gap-2 !text-2xl font-semibold'>
+        {formatBigIntForDisplay(depositAmount, token.decimals)}
+        <TokenIcon token={token} />
+        <span className='text-pt-purple-200'>{token.symbol}</span>
+      </SimpleBadge>
+      <DepositGasEstimate
+        userAddress={userAddress}
+        vault={vault}
+        token={{ ...token, amount: depositAmount }}
+      />
+      {tokenPermitSupport === 'eip2612' ? (
+        <DepositWithPermitButton
+          vault={vault}
+          token={{ ...token, amount: depositAmount }}
+          onSuccess={onSuccess}
+        />
+      ) : (
+        <DepositButton
+          vault={vault}
+          token={{ ...token, amount: depositAmount }}
+          onSuccess={onSuccess}
+        />
+      )}
+    </div>
+  )
+}
+
+interface DepositGasEstimateProps {
+  userAddress: Address
+  vault: Vault
+  token: TokenWithAmount
+}
+
+const DepositGasEstimate = (props: DepositGasEstimateProps) => {
+  const { userAddress, vault, token } = props
+
+  const { data: tokenPermitSupport } = useTokenPermitSupport(
+    token.chainId as number,
+    token.address as Address
+  )
+
+  const { data: allowance, isFetched: isFetchedAllowance } = useTokenAllowance(
+    vault.chainId,
+    userAddress,
+    vault.address,
+    token.address
+  )
+
+  const { data: approvalGasEstimates, isFetched: isFetchedApprovalGasEstimates } =
+    useGasCostEstimates(
+      vault.chainId,
+      {
+        address: token.address,
+        abi: erc20ABI,
+        functionName: 'approve',
+        args: [vault.address, token.amount],
+        account: userAddress
+      },
+      { refetchInterval: sToMs(10) }
+    )
+
+  const { data: depositGasEstimates, isFetched: isFetchedDepositGasEstimates } =
+    useGasCostEstimates(
+      vault.chainId,
+      {
+        address: vault.address,
+        abi: vaultABI,
+        functionName: 'deposit',
+        args: [token.amount, userAddress],
+        account: userAddress
+      },
+      { refetchInterval: sToMs(10) }
+    )
+
+  const { data: depositWithPermitGasEstimates, isFetched: isFetchedDepositWithPermitGasEstimates } =
+    useGasCostEstimates(
+      vault.chainId,
+      {
+        address: vault.address,
+        abi: vaultABI,
+        functionName: 'depositWithPermit',
+        args: [
+          1n,
+          vault.address,
+          getSecondsSinceEpoch(),
+          28,
+          '0x6e100a352ec6ad1b70802290e18aeed190704973570f3b8ed42cb9808e2ea6bf',
+          '0x4a90a229a244495b41890987806fcbd2d5d23fc0dbe5f5256c2613c039d76db8'
+        ],
+        account: userAddress
+      },
+      { refetchInterval: sToMs(10) }
+    )
+
+  const needsApproval = isFetchedAllowance && allowance !== undefined && allowance < token.amount
+
+  const isFetched = needsApproval
+    ? tokenPermitSupport === 'eip2612'
+      ? isFetchedDepositWithPermitGasEstimates
+      : isFetchedApprovalGasEstimates && isFetchedDepositGasEstimates
+    : isFetchedDepositGasEstimates
+
+  const gasEstimate = needsApproval
+    ? tokenPermitSupport === 'eip2612'
+      ? depositWithPermitGasEstimates?.totalGasEth ?? 0
+      : (approvalGasEstimates?.totalGasEth ?? 0) + (depositGasEstimates?.totalGasEth ?? 0)
+    : depositGasEstimates?.totalGasEth ?? 0
+
+  return (
+    <span className='flex gap-1 items-center text-sm font-semibold text-pt-purple-100'>
+      Estimated Network Fee:{' '}
+      {isFetched && !!gasEstimate ? <CurrencyValue baseValue={gasEstimate} /> : <Spinner />}
+    </span>
+  )
 }
