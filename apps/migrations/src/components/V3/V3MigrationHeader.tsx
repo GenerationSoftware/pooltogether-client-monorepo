@@ -16,10 +16,8 @@ export const V3MigrationHeader = (props: V3MigrationHeaderProps) => {
   const actionNames: Record<V3MigrationStep, string> = {
     claim: 'Claim Rewards',
     withdraw: `Withdraw ${migration.token.symbol}`,
-    swap:
-      migration.token.chainId !== migration.destination.chainId
-        ? 'Bridge & Deposit Into V5'
-        : 'Deposit Into V5'
+    swap: migration.token.chainId !== migration.destination.chainId ? 'Bridge & Swap' : 'Swap',
+    deposit: 'Deposit Into V5'
   }
 
   return (

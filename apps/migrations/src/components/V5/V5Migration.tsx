@@ -6,7 +6,7 @@ import {
   useVaultTokenAddress
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { ArrowUturnLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/outline'
-import { CurrencyValue, NetworkBadge, TokenIcon } from '@shared/react-components'
+import { CurrencyValue, NetworkBadge, TX_GAS_ESTIMATES, TokenIcon } from '@shared/react-components'
 import { TokenWithAmount } from '@shared/types'
 import { Button, Spinner } from '@shared/ui'
 import {
@@ -18,8 +18,9 @@ import {
 } from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
-import { ReactNode, useMemo, useState } from 'react'
+import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { Address, formatUnits, TransactionReceipt } from 'viem'
+import { DepositContent } from '@components/DepositContent'
 import { SimpleBadge } from '@components/SimpleBadge'
 import { SwapWidget } from '@components/SwapWidget'
 import { V5_PROMOTION_SETTINGS } from '@constants/config'
@@ -30,7 +31,7 @@ import { ClaimRewardsButton } from './ClaimRewardsButton'
 import { V5MigrationHeader } from './V5MigrationHeader'
 import { WithdrawButton } from './WithdrawButton'
 
-export type V5MigrationStep = 'claim' | 'withdraw' | 'swap'
+export type V5MigrationStep = 'claim' | 'withdraw' | 'swap' | 'deposit'
 
 export interface V5MigrationProps {
   userAddress: Address
@@ -42,6 +43,7 @@ export const V5Migration = (props: V5MigrationProps) => {
   const { userAddress, migration, className } = props
 
   const [actionsCompleted, setActionsCompleted] = useState(0)
+  const [swappedAmountOut, setSwappedAmountOut] = useState(0n)
 
   const { data: claimable, isFetched: isFetchedClaimable } = useUserV5ClaimablePromotions(
     migration.token.chainId,
@@ -73,6 +75,17 @@ export const V5Migration = (props: V5MigrationProps) => {
       <SwapContent
         userAddress={userAddress}
         migration={migration}
+        onSuccess={(amount) => {
+          setSwappedAmountOut(amount)
+          setActionsCompleted(actionsCompleted + 1)
+        }}
+      />
+    ),
+    deposit: (
+      <DepositContent
+        userAddress={userAddress}
+        destination={migration.destination}
+        depositAmount={swappedAmountOut}
         onSuccess={() => setActionsCompleted(actionsCompleted + 1)}
       />
     )
@@ -80,9 +93,9 @@ export const V5Migration = (props: V5MigrationProps) => {
 
   const migrationActions = useMemo((): V5MigrationStep[] => {
     if (isRewardsClaimable) {
-      return ['claim', 'withdraw', 'swap']
+      return ['claim', 'withdraw', 'swap', 'deposit']
     } else if (isRewardsClaimable !== undefined) {
-      return ['withdraw', 'swap']
+      return ['withdraw', 'swap', 'deposit']
     } else {
       return []
     }
@@ -95,7 +108,8 @@ export const V5Migration = (props: V5MigrationProps) => {
         actions={migrationActions}
         actionsCompleted={actionsCompleted}
       />
-      {!!migrationActions?.length ? (
+      {!!migrationActions.length ? (
+        actionsCompleted < migrationActions.length &&
         allMigrationActions[
           migrationActions[Math.min(actionsCompleted, migrationActions.length - 1)]
         ]
@@ -245,15 +259,15 @@ const WithdrawContent = (props: WithdrawContentProps) => {
   const { userAddress, migration, onSuccess, className } = props
 
   const { data: gasEstimates, isFetched: isFetchedGasEstimates } = useGasCostEstimates(
-    migration?.token.chainId,
+    migration.token.chainId,
     {
-      address: migration?.token.address,
+      address: migration.token.address,
       abi: vaultABI,
       functionName: 'redeem',
-      args: [migration?.token.amount, userAddress, userAddress],
+      args: [migration.token.amount, userAddress, userAddress],
       account: userAddress
     },
-    { refetchInterval: sToMs(10) }
+    { gasAmount: TX_GAS_ESTIMATES.withdraw,  refetchInterval: sToMs(10) }
   )
 
   return (
@@ -291,34 +305,47 @@ const WithdrawContent = (props: WithdrawContentProps) => {
 interface SwapContentProps {
   userAddress: Address
   migration: V5BalanceToMigrate
-  onSuccess?: () => void
+  onSuccess?: (amount: bigint) => void
   className?: string
 }
 
 const SwapContent = (props: SwapContentProps) => {
   const { userAddress, migration, onSuccess, className } = props
 
-  const vault = useVault(migration.vaultInfo)
+  const fromVault = useVault(migration.vaultInfo)
+  const toVault = useVault(migration.destination)
 
-  const { data: underlyingTokenAddress } = useVaultTokenAddress(vault)
+  const { data: fromTokenAddress } = useVaultTokenAddress(fromVault)
+  const { data: toTokenAddress } = useVaultTokenAddress(toVault)
 
-  const { data: underlyingToken } = useTokenBalance(
-    migration.token.chainId,
+  const { data: fromToken } = useTokenBalance(
+    fromVault.chainId,
     userAddress,
-    underlyingTokenAddress as Address
+    fromTokenAddress as Address
   )
 
   const swapWidgetConfig = useMemo(() => {
     return {
       fromChain: migration.token.chainId,
-      fromToken: underlyingTokenAddress,
-      fromAmount: !!underlyingToken
-        ? formatUnits(underlyingToken.amount, underlyingToken.decimals)
-        : undefined,
+      fromToken: fromTokenAddress,
+      fromAmount: !!fromToken
+        ? formatUnits(fromToken.amount, fromToken.decimals)
+        : formatUnits(migration.token.amount, migration.token.decimals),
       toChain: migration.destination.chainId,
-      toToken: migration.destination.address
+      toToken: toTokenAddress
     }
-  }, [migration, underlyingToken])
+  }, [migration, fromTokenAddress, toTokenAddress])
+
+  useEffect(() => {
+    if (
+      !!fromToken &&
+      !!toTokenAddress &&
+      fromToken.chainId === migration.destination.chainId &&
+      fromToken.address.toLowerCase() === toTokenAddress.toLowerCase()
+    ) {
+      onSuccess?.(fromToken.amount)
+    }
+  }, [fromToken, toTokenAddress])
 
   return <SwapWidget config={swapWidgetConfig} onSuccess={onSuccess} className={className} />
 }
