@@ -10,7 +10,7 @@ import {
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { ArrowUturnLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/outline'
-import { CurrencyValue, NetworkBadge, TokenIcon } from '@shared/react-components'
+import { CurrencyValue, NetworkBadge, TokenIcon, TX_GAS_ESTIMATES } from '@shared/react-components'
 import { TokenWithAmount } from '@shared/types'
 import { Button, Spinner } from '@shared/ui'
 import {
@@ -24,8 +24,10 @@ import {
 } from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
-import { ReactNode, useMemo, useState } from 'react'
+import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { Address, formatUnits, TransactionReceipt } from 'viem'
+import { DepositButton } from '@components/DepositButton'
+import { DepositWithPermitButton } from '@components/DepositWithPermitButton'
 import { SimpleBadge } from '@components/SimpleBadge'
 import { SwapWidget } from '@components/SwapWidget'
 import { V5_PROMOTION_SETTINGS } from '@constants/config'
@@ -33,8 +35,6 @@ import { V5BalanceToMigrate } from '@hooks/useUserV5Balances'
 import { useUserV5ClaimablePromotions } from '@hooks/useUserV5ClaimablePromotions'
 import { useV5ClaimRewardsGasEstimate } from '@hooks/useV5ClaimRewardsGasEstimate'
 import { ClaimRewardsButton } from './ClaimRewardsButton'
-import { DepositButton } from './DepositButton'
-import { DepositWithPermitButton } from './DepositWithPermitButton'
 import { V5MigrationHeader } from './V5MigrationHeader'
 import { WithdrawButton } from './WithdrawButton'
 
@@ -115,7 +115,8 @@ export const V5Migration = (props: V5MigrationProps) => {
         actions={migrationActions}
         actionsCompleted={actionsCompleted}
       />
-      {!!migrationActions?.length ? (
+      {!!migrationActions.length ? (
+        actionsCompleted < migrationActions.length &&
         allMigrationActions[
           migrationActions[Math.min(actionsCompleted, migrationActions.length - 1)]
         ]
@@ -318,27 +319,40 @@ interface SwapContentProps {
 const SwapContent = (props: SwapContentProps) => {
   const { userAddress, migration, onSuccess, className } = props
 
-  const vault = useVault(migration.vaultInfo)
+  const fromVault = useVault(migration.vaultInfo)
+  const toVault = useVault(migration.destination)
 
-  const { data: underlyingTokenAddress } = useVaultTokenAddress(vault)
+  const { data: fromTokenAddress } = useVaultTokenAddress(fromVault)
+  const { data: toTokenAddress } = useVaultTokenAddress(toVault)
 
-  const { data: underlyingToken } = useTokenBalance(
-    migration.token.chainId,
+  const { data: fromToken } = useTokenBalance(
+    fromVault.chainId,
     userAddress,
-    underlyingTokenAddress as Address
+    fromTokenAddress as Address
   )
 
   const swapWidgetConfig = useMemo(() => {
     return {
       fromChain: migration.token.chainId,
-      fromToken: underlyingTokenAddress,
-      fromAmount: !!underlyingToken
-        ? formatUnits(underlyingToken.amount, underlyingToken.decimals)
-        : undefined,
+      fromToken: fromTokenAddress,
+      fromAmount: !!fromToken
+        ? formatUnits(fromToken.amount, fromToken.decimals)
+        : formatUnits(migration.token.amount, migration.token.decimals),
       toChain: migration.destination.chainId,
-      toToken: migration.destination.address
+      toToken: toTokenAddress
     }
-  }, [migration, underlyingToken])
+  }, [migration, fromTokenAddress, toTokenAddress])
+
+  useEffect(() => {
+    if (
+      !!fromToken &&
+      !!toTokenAddress &&
+      fromToken.chainId === migration.destination.chainId &&
+      fromToken.address.toLowerCase() === toTokenAddress.toLowerCase()
+    ) {
+      onSuccess?.(fromToken.amount)
+    }
+  }, [fromToken, toTokenAddress])
 
   return <SwapWidget config={swapWidgetConfig} onSuccess={onSuccess} className={className} />
 }
@@ -387,15 +401,19 @@ const DepositContent = (props: DepositContentProps) => {
       />
       {tokenPermitSupport === 'eip2612' ? (
         <DepositWithPermitButton
+          userAddress={userAddress}
           vault={vault}
           token={{ ...token, amount: depositAmount }}
-          onSuccess={onSuccess}
+          txOptions={{ onSuccess }}
+          fullSized={true}
         />
       ) : (
         <DepositButton
+          userAddress={userAddress}
           vault={vault}
           token={{ ...token, amount: depositAmount }}
-          onSuccess={onSuccess}
+          txOptions={{ onSuccess }}
+          fullSized={true}
         />
       )}
     </div>
@@ -433,7 +451,7 @@ const DepositGasEstimate = (props: DepositGasEstimateProps) => {
         args: [vault.address, token.amount],
         account: userAddress
       },
-      { refetchInterval: sToMs(10) }
+      { gasAmount: TX_GAS_ESTIMATES.approve, refetchInterval: sToMs(10) }
     )
 
   const { data: depositGasEstimates, isFetched: isFetchedDepositGasEstimates } =
@@ -446,7 +464,7 @@ const DepositGasEstimate = (props: DepositGasEstimateProps) => {
         args: [token.amount, userAddress],
         account: userAddress
       },
-      { refetchInterval: sToMs(10) }
+      { gasAmount: TX_GAS_ESTIMATES.deposit, refetchInterval: sToMs(10) }
     )
 
   const { data: depositWithPermitGasEstimates, isFetched: isFetchedDepositWithPermitGasEstimates } =
@@ -466,7 +484,7 @@ const DepositGasEstimate = (props: DepositGasEstimateProps) => {
         ],
         account: userAddress
       },
-      { refetchInterval: sToMs(10) }
+      { gasAmount: TX_GAS_ESTIMATES.depositWithPermit, refetchInterval: sToMs(10) }
     )
 
   const needsApproval = isFetchedAllowance && allowance !== undefined && allowance < token.amount
