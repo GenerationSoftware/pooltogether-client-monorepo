@@ -1,6 +1,8 @@
 import {
   useGasCostEstimates,
-  useTokenBalance
+  useTokenBalance,
+  useVault,
+  useVaultTokenAddress
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { ArrowUturnLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/outline'
 import { CurrencyValue, NetworkBadge, TokenIcon } from '@shared/react-components'
@@ -8,8 +10,9 @@ import { Button, Spinner } from '@shared/ui'
 import { formatBigIntForDisplay, lower, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
-import { ReactNode, useMemo, useState } from 'react'
+import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { Address, formatUnits } from 'viem'
+import { DepositContent } from '@components/DepositContent'
 import { SimpleBadge } from '@components/SimpleBadge'
 import { SwapWidget } from '@components/SwapWidget'
 import { SupportedNetwork, V3_POOLS, V3_REWARD_TOKENS } from '@constants/config'
@@ -23,7 +26,7 @@ import { V3MigrationHeader } from './V3MigrationHeader'
 import { WithdrawPodButton } from './WithdrawPodButton'
 import { WithdrawPoolButton } from './WithdrawPoolButton'
 
-export type V3MigrationStep = 'claim' | 'withdraw' | 'swap'
+export type V3MigrationStep = 'claim' | 'withdraw' | 'swap' | 'deposit'
 
 export interface V3MigrationProps {
   userAddress: Address
@@ -35,6 +38,7 @@ export const V3Migration = (props: V3MigrationProps) => {
   const { userAddress, migration, className } = props
 
   const [actionsCompleted, setActionsCompleted] = useState(0)
+  const [swappedAmountOut, setSwappedAmountOut] = useState(0n)
 
   const { data: claimable, isFetched: isFetchedClaimable } = useUserV3ClaimableRewards(
     migration.token.chainId,
@@ -63,6 +67,17 @@ export const V3Migration = (props: V3MigrationProps) => {
       <SwapContent
         userAddress={userAddress}
         migration={migration}
+        onSuccess={(amount) => {
+          setSwappedAmountOut(amount)
+          setActionsCompleted(actionsCompleted + 1)
+        }}
+      />
+    ),
+    deposit: (
+      <DepositContent
+        userAddress={userAddress}
+        destination={migration.destination}
+        depositAmount={swappedAmountOut}
         onSuccess={() => setActionsCompleted(actionsCompleted + 1)}
       />
     )
@@ -70,9 +85,9 @@ export const V3Migration = (props: V3MigrationProps) => {
 
   const migrationActions = useMemo((): V3MigrationStep[] => {
     if (isRewardsClaimable) {
-      return ['claim', 'withdraw', 'swap']
+      return ['claim', 'withdraw', 'swap', 'deposit']
     } else if (isRewardsClaimable !== undefined) {
-      return ['withdraw', 'swap']
+      return ['withdraw', 'swap', 'deposit']
     } else {
       return []
     }
@@ -85,7 +100,8 @@ export const V3Migration = (props: V3MigrationProps) => {
         actions={migrationActions}
         actionsCompleted={actionsCompleted}
       />
-      {!!migrationActions?.length ? (
+      {!!migrationActions.length ? (
+        actionsCompleted < migrationActions.length &&
         allMigrationActions[
           migrationActions[Math.min(actionsCompleted, migrationActions.length - 1)]
         ]
@@ -189,15 +205,15 @@ const WithdrawContent = (props: WithdrawContentProps) => {
   const { userAddress, migration, onSuccess, className } = props
 
   const { data: gasEstimates, isFetched: isFetchedGasEstimates } = useGasCostEstimates(
-    migration?.token.chainId,
+    migration.token.chainId,
     {
-      address: migration?.contractAddress,
-      abi: migration?.type === 'pool' ? v3PoolABI : v3PodABI,
+      address: migration.contractAddress,
+      abi: migration.type === 'pool' ? v3PoolABI : v3PodABI,
       functionName: migration.type === 'pool' ? 'withdrawInstantlyFrom' : 'withdraw',
       args:
-        migration?.type === 'pool'
-          ? [userAddress, migration?.token.amount, migration?.token.address, 0n]
-          : [migration?.token.amount, 0n],
+        migration.type === 'pool'
+          ? [userAddress, migration.token.amount, migration.token.address, 0n]
+          : [migration.token.amount, 0n],
       account: userAddress
     },
     { refetchInterval: sToMs(10) }
@@ -254,14 +270,17 @@ const WithdrawContent = (props: WithdrawContentProps) => {
 interface SwapContentProps {
   userAddress: Address
   migration: V3BalanceToMigrate
-  onSuccess?: () => void
+  onSuccess?: (amount: bigint) => void
   className?: string
 }
 
 const SwapContent = (props: SwapContentProps) => {
   const { userAddress, migration, onSuccess, className } = props
 
-  const { data: underlyingToken } = useTokenBalance(
+  const toVault = useVault(migration.destination)
+  const { data: toTokenAddress } = useVaultTokenAddress(toVault)
+
+  const { data: fromToken } = useTokenBalance(
     migration.token.chainId,
     userAddress,
     migration.underlyingTokenAddress
@@ -271,13 +290,22 @@ const SwapContent = (props: SwapContentProps) => {
     return {
       fromChain: migration.token.chainId,
       fromToken: migration.underlyingTokenAddress,
-      fromAmount: !!underlyingToken
-        ? formatUnits(underlyingToken.amount, underlyingToken.decimals)
-        : undefined,
+      fromAmount: !!fromToken ? formatUnits(fromToken.amount, fromToken.decimals) : undefined,
       toChain: migration.destination.chainId,
-      toToken: migration.destination.address
+      toToken: toTokenAddress
     }
-  }, [migration, underlyingToken])
+  }, [migration, fromToken, toTokenAddress])
+
+  useEffect(() => {
+    if (
+      !!fromToken &&
+      !!toTokenAddress &&
+      fromToken.chainId === migration.destination.chainId &&
+      fromToken.address.toLowerCase() === toTokenAddress.toLowerCase()
+    ) {
+      onSuccess?.(fromToken.amount)
+    }
+  }, [fromToken, toTokenAddress])
 
   return <SwapWidget config={swapWidgetConfig} onSuccess={onSuccess} className={className} />
 }
