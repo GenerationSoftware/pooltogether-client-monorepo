@@ -6,7 +6,7 @@ import {
   useVaultTokenAddress
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { ArrowUturnLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/outline'
-import { CurrencyValue, NetworkBadge, TokenIcon } from '@shared/react-components'
+import { CurrencyValue, NetworkBadge, TX_GAS_ESTIMATES, TokenIcon } from '@shared/react-components'
 import { TokenWithAmount } from '@shared/types'
 import { Button, Spinner } from '@shared/ui'
 import {
@@ -267,7 +267,7 @@ const WithdrawContent = (props: WithdrawContentProps) => {
       args: [migration.token.amount, userAddress, userAddress],
       account: userAddress
     },
-    { refetchInterval: sToMs(10) }
+    { gasAmount: TX_GAS_ESTIMATES.withdraw,  refetchInterval: sToMs(10) }
   )
 
   return (
