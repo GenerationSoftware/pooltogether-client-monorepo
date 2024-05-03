@@ -1,3 +1,4 @@
+import { useVault, useVaultTokenAddress } from '@generationsoftware/hyperstructure-react-hooks'
 import { ArrowUturnLeftIcon } from '@heroicons/react/24/outline'
 import { ChevronDoubleRightIcon } from '@heroicons/react/24/outline'
 import { CurrencyValue, NetworkBadge, TokenIcon } from '@shared/react-components'
@@ -7,6 +8,7 @@ import classNames from 'classnames'
 import Link from 'next/link'
 import { ReactNode, useMemo, useState } from 'react'
 import { Address, formatUnits } from 'viem'
+import { DepositContent } from '@components/DepositContent'
 import { SimpleBadge } from '@components/SimpleBadge'
 import { SwapWidget } from '@components/SwapWidget'
 import { V4_PROMOTIONS } from '@constants/config'
@@ -16,7 +18,7 @@ import { useV4ClaimRewardsGasEstimate } from '@hooks/useV4ClaimRewardsGasEstimat
 import { ClaimRewardsButton } from './ClaimRewardsButton'
 import { V4MigrationHeader } from './V4MigrationHeader'
 
-export type V4MigrationStep = 'claim' | 'swap'
+export type V4MigrationStep = 'claim' | 'swap' | 'deposit'
 
 export interface V4MigrationProps {
   userAddress: Address
@@ -28,6 +30,7 @@ export const V4Migration = (props: V4MigrationProps) => {
   const { userAddress, migration, className } = props
 
   const [actionsCompleted, setActionsCompleted] = useState(0)
+  const [swappedAmountOut, setSwappedAmountOut] = useState(0n)
 
   const { data: claimable, isFetched: isFetchedClaimable } = useUserV4ClaimableRewards(
     migration.token.chainId,
@@ -50,6 +53,17 @@ export const V4Migration = (props: V4MigrationProps) => {
     swap: (
       <SwapContent
         migration={migration}
+        onSuccess={(amount) => {
+          setSwappedAmountOut(amount)
+          setActionsCompleted(actionsCompleted + 1)
+        }}
+      />
+    ),
+    deposit: (
+      <DepositContent
+        userAddress={userAddress}
+        destination={migration.destination}
+        depositAmount={swappedAmountOut}
         onSuccess={() => setActionsCompleted(actionsCompleted + 1)}
       />
     )
@@ -57,9 +71,9 @@ export const V4Migration = (props: V4MigrationProps) => {
 
   const migrationActions = useMemo((): V4MigrationStep[] => {
     if (isRewardsClaimable) {
-      return ['claim', 'swap']
+      return ['claim', 'swap', 'deposit']
     } else if (isRewardsClaimable !== undefined) {
-      return ['swap']
+      return ['swap', 'deposit']
     } else {
       return []
     }
@@ -72,7 +86,8 @@ export const V4Migration = (props: V4MigrationProps) => {
         actions={migrationActions}
         actionsCompleted={actionsCompleted}
       />
-      {!!migrationActions?.length ? (
+      {!!migrationActions.length ? (
+        actionsCompleted < migrationActions.length &&
         allMigrationActions[
           migrationActions[Math.min(actionsCompleted, migrationActions.length - 1)]
         ]
@@ -155,12 +170,15 @@ const ClaimContent = (props: ClaimContentProps) => {
 
 interface SwapContentProps {
   migration: V4BalanceToMigrate
-  onSuccess?: () => void
+  onSuccess?: (amount: bigint) => void
   className?: string
 }
 
 const SwapContent = (props: SwapContentProps) => {
   const { migration, onSuccess, className } = props
+
+  const toVault = useVault(migration.destination)
+  const { data: toTokenAddress } = useVaultTokenAddress(toVault)
 
   const swapWidgetConfig = useMemo(() => {
     return {
@@ -168,9 +186,9 @@ const SwapContent = (props: SwapContentProps) => {
       fromToken: migration.token.address,
       fromAmount: formatUnits(migration.token.amount, migration.token.decimals),
       toChain: migration.destination.chainId,
-      toToken: migration.destination.address
+      toToken: toTokenAddress
     }
-  }, [migration])
+  }, [migration, toTokenAddress])
 
   return <SwapWidget config={swapWidgetConfig} onSuccess={onSuccess} className={className} />
 }

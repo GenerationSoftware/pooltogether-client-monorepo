@@ -15,10 +15,8 @@ export const V4MigrationHeader = (props: V4MigrationHeaderProps) => {
 
   const actionNames: Record<V4MigrationStep, string> = {
     claim: 'Claim Rewards',
-    swap:
-      migration.token.chainId !== migration.destination.chainId
-        ? 'Bridge & Deposit Into V5'
-        : 'Deposit Into V5'
+    swap: migration.token.chainId !== migration.destination.chainId ? 'Bridge & Swap' : 'Swap',
+    deposit: 'Deposit Into V5'
   }
 
   return (
