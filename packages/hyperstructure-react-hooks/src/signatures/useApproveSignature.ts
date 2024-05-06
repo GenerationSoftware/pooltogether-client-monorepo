@@ -84,14 +84,17 @@ export const useApproveSignature = (
   const verifySignature = async (sigToVerify: `0x${string}`) => {
     setIsInvalidSignature(false)
 
-    const isValid = await verifyTypedData({
-      address: userAddress as Address,
-      domain: tokenDomain,
-      message,
-      types,
-      primaryType: 'Permit',
-      signature: sigToVerify
-    })
+    const isValid =
+      !!message.value &&
+      message.value === amount &&
+      (await verifyTypedData({
+        address: userAddress as Address,
+        domain: tokenDomain,
+        message,
+        types,
+        primaryType: 'Permit',
+        signature: sigToVerify
+      }))
 
     if (isValid) {
       options?.onSuccess?.(sigToVerify)
@@ -111,19 +114,18 @@ export const useApproveSignature = (
     signTypedData: _signTypedData
   } = useSignTypedData()
 
-  const signTypedData = !!_signTypedData
-    ? () => {
-        if (tokenPermitSupport === 'eip2612') {
-          setDeadline(message.deadline as bigint)
-        } else if (tokenPermitSupport === 'daiPermit') {
-          setDeadline(message.expiry as bigint)
-        }
-        _signTypedData(
-          { domain: tokenDomain, message, types, primaryType: 'Permit' },
-          { onSuccess: verifySignature, onError: options?.onError }
-        )
-      }
-    : undefined
+  const signTypedData = () => {
+    if (tokenPermitSupport === 'eip2612') {
+      setDeadline(message.deadline as bigint)
+    } else if (tokenPermitSupport === 'daiPermit') {
+      setDeadline(message.expiry as bigint)
+    }
+
+    _signTypedData(
+      { domain: tokenDomain, message, types, primaryType: 'Permit' },
+      { onSuccess: verifySignature, onError: options?.onError }
+    )
+  }
 
   const enabled =
     !!userAddress &&
@@ -134,7 +136,8 @@ export const useApproveSignature = (
     nonces !== undefined &&
     nonces !== -1n &&
     !!message.value &&
-    !!signTypedData
+    message.value === amount &&
+    !!types.Permit.length
 
   const signApprove = enabled ? signTypedData : undefined
 
