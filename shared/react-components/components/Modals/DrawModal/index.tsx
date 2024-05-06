@@ -7,6 +7,7 @@ import { MainView } from './Views/MainView'
 export interface DrawModalProps {
   draw?: SubgraphDraw
   prizePool?: PrizePool
+  onClose?: () => void
   intl?: {
     base?: Intl<'close' | 'prizePool' | 'drawId'>
     prizes?: Intl<
@@ -21,9 +22,9 @@ export interface DrawModalProps {
 }
 
 export const DrawModal = (props: DrawModalProps) => {
-  const { draw, prizePool, intl } = props
+  const { draw, prizePool, onClose, intl } = props
 
-  const { isModalOpen, setIsModalOpen } = useIsModalOpen(MODAL_KEYS.drawWinners)
+  const { isModalOpen, setIsModalOpen } = useIsModalOpen(MODAL_KEYS.drawWinners, { onClose })
 
   const { isMobile } = useScreenSize()
 

@@ -17,6 +17,7 @@ import { WrongPrizePoolVaultTooltip } from '../Tooltips/WrongPrizePoolVaultToolt
 
 export interface DepositButtonProps extends Omit<ButtonProps, 'onClick' | 'children'> {
   vault: Vault
+  extraOnClick?: () => void
   intl?: {
     base: Intl<'deposit'>
     tooltips: Intl<'deprecatedVault' | 'wrongPrizePoolVault' | 'badPrecisionPerDollar'>
@@ -24,7 +25,7 @@ export interface DepositButtonProps extends Omit<ButtonProps, 'onClick' | 'child
 }
 
 export const DepositButton = (props: DepositButtonProps) => {
-  const { vault, className, intl, ...rest } = props
+  const { vault, extraOnClick, className, intl, ...rest } = props
 
   const { setIsModalOpen } = useIsModalOpen(MODAL_KEYS.deposit)
 
@@ -66,6 +67,7 @@ export const DepositButton = (props: DepositButtonProps) => {
 
   const handleClick = () => {
     setSelectedVaultById(vault.id)
+    extraOnClick?.()
     setIsModalOpen(true)
   }
 

@@ -7,13 +7,14 @@ import { ReactNode } from 'react'
 
 export interface DelegateButtonProps extends Omit<ButtonProps, 'onClick'> {
   vault: Vault
+  extraOnClick?: () => void
   children?: ReactNode
   className?: string
   size?: string
 }
 
 export const DelegateButton = (props: DelegateButtonProps) => {
-  const { vault, children, className, size, ...rest } = props
+  const { vault, extraOnClick, children, className, size, ...rest } = props
 
   const { setIsModalOpen } = useIsModalOpen(MODAL_KEYS.delegate)
 
@@ -21,6 +22,7 @@ export const DelegateButton = (props: DelegateButtonProps) => {
 
   const handleClick = () => {
     setSelectedVaultById(vault.id)
+    extraOnClick?.()
     setIsModalOpen(true)
   }
 

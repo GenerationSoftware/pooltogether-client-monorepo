@@ -26,6 +26,7 @@ export interface SettingsModalProps {
   onCurrencyChange?: (id: CURRENCY_ID) => void
   onLanguageChange?: (id: LANGUAGE_ID) => void
   onVaultListImport?: (id: string) => void
+  onRpcChange?: () => void
   intl?: {
     base?: Intl<
       | 'customizeExperience'
@@ -75,6 +76,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
     onCurrencyChange,
     onLanguageChange,
     onVaultListImport,
+    onRpcChange,
     intl
   } = props
 
@@ -97,7 +99,14 @@ export const SettingsModal = (props: SettingsModalProps) => {
       <VaultListView localVaultLists={localVaultLists} onSuccess={onVaultListImport} intl={intl} />
     ),
     customRPCs: (
-      <RPCsView chainIds={supportedNetworks ?? []} onClickPageReload={reloadPage} intl={intl} />
+      <RPCsView
+        chainIds={supportedNetworks ?? []}
+        onClickPageReload={() => {
+          onRpcChange?.()
+          reloadPage()
+        }}
+        intl={intl}
+      />
     )
   }
 

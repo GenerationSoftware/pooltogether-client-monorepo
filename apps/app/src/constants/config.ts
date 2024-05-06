@@ -118,12 +118,17 @@ export const TWAB_REWARDS_SETTINGS: {
  */
 export const FATHOM_EVENTS = {
   approvedExact: 'ApprovedExact',
-  deposited: 'Deposited',
-  depositedWithPermit: 'DepositedWithPermit',
-  redeemed: 'Redeemed',
-  checkedPrizes: 'CheckedPrizes',
   changedCurrency: 'ChangedCurrency',
   changedLanguage: 'ChangedLanguage',
+  changedRPC: 'ChangedRPC',
+  checkedPrizes: 'CheckedPrizes',
+  delegated: 'Delegated',
+  deposited: 'Deposited',
+  depositedWithPermit: 'DepositedWithPermit',
   importedVaultList: 'ImportedVaultList',
-  delegated: 'Delegated'
+  openedDelegateModal: 'OpenedDelegateModal',
+  openedDepositModal: 'OpenedDepositModal',
+  openedDrawModal: 'OpenedDrawModal',
+  openedWithdrawModal: 'OpenedWithdrawModal',
+  redeemed: 'Redeemed'
 } as const

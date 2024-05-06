@@ -30,6 +30,7 @@ export type DepositModalView = 'main' | 'review' | 'waiting' | 'confirming' | 's
 
 export interface DepositModalProps {
   prizePools: PrizePool[]
+  onClose?: () => void
   onGoToAccount?: () => void
   openConnectModal?: () => void
   openChainModal?: () => void
@@ -86,6 +87,7 @@ export interface DepositModalProps {
 export const DepositModal = (props: DepositModalProps) => {
   const {
     prizePools,
+    onClose,
     onGoToAccount,
     openConnectModal,
     openChainModal,
@@ -99,7 +101,7 @@ export const DepositModal = (props: DepositModalProps) => {
 
   const { vault } = useSelectedVault()
 
-  const { isModalOpen, setIsModalOpen } = useIsModalOpen(MODAL_KEYS.deposit)
+  const { isModalOpen, setIsModalOpen } = useIsModalOpen(MODAL_KEYS.deposit, { onClose })
 
   const [view, setView] = useState<DepositModalView>('main')
 

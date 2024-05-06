@@ -16,6 +16,7 @@ import { DelegateTxButton } from './DelegateTxButton'
 export type DelegateModalView = 'main' | 'waiting' | 'success' | 'error' | 'confirming'
 
 export interface DelegateModalProps {
+  onClose?: () => void
   openConnectModal?: () => void
   openChainModal?: () => void
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
@@ -49,12 +50,18 @@ export interface DelegateModalProps {
 }
 
 export const DelegateModal = (props: DelegateModalProps) => {
-  const { openConnectModal, openChainModal, addRecentTransaction, onSuccessfulDelegation, intl } =
-    props
+  const {
+    onClose,
+    openConnectModal,
+    openChainModal,
+    addRecentTransaction,
+    onSuccessfulDelegation,
+    intl
+  } = props
 
   const { vault } = useSelectedVault()
 
-  const { isModalOpen, setIsModalOpen } = useIsModalOpen(MODAL_KEYS.delegate)
+  const { isModalOpen, setIsModalOpen } = useIsModalOpen(MODAL_KEYS.delegate, { onClose })
 
   const [view, setView] = useState<DelegateModalView>('main')
 

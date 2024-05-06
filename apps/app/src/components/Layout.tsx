@@ -265,6 +265,7 @@ export const Layout = (props: LayoutProps) => {
         onCurrencyChange={() => fathom.trackEvent(FATHOM_EVENTS.changedCurrency)}
         onLanguageChange={() => fathom.trackEvent(FATHOM_EVENTS.changedLanguage)}
         onVaultListImport={() => fathom.trackEvent(FATHOM_EVENTS.importedVaultList)}
+        onRpcChange={() => fathom.trackEvent(FATHOM_EVENTS.changedRPC)}
         intl={{ base: t_settings, errors: t_errors }}
       />
 

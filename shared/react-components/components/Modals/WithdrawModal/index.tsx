@@ -24,6 +24,7 @@ import { WithdrawTxButton } from './WithdrawTxButton'
 export type WithdrawModalView = 'main' | 'review' | 'waiting' | 'confirming' | 'success' | 'error'
 
 export interface WithdrawModalProps {
+  onClose?: () => void
   onGoToAccount?: () => void
   openConnectModal?: () => void
   openChainModal?: () => void
@@ -66,6 +67,7 @@ export interface WithdrawModalProps {
 
 export const WithdrawModal = (props: WithdrawModalProps) => {
   const {
+    onClose,
     onGoToAccount,
     openConnectModal,
     openChainModal,
@@ -77,7 +79,7 @@ export const WithdrawModal = (props: WithdrawModalProps) => {
 
   const { vault } = useSelectedVault()
 
-  const { isModalOpen, setIsModalOpen } = useIsModalOpen(MODAL_KEYS.withdraw)
+  const { isModalOpen, setIsModalOpen } = useIsModalOpen(MODAL_KEYS.withdraw, { onClose })
 
   const [view, setView] = useState<WithdrawModalView>('main')
 

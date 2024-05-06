@@ -6,10 +6,11 @@ import classNames from 'classnames'
 
 export interface WithdrawButtonProps extends Omit<ButtonProps, 'onClick'> {
   vault: Vault
+  extraOnClick?: () => void
 }
 
 export const WithdrawButton = (props: WithdrawButtonProps) => {
-  const { vault, children, className, ...rest } = props
+  const { vault, extraOnClick, children, className, ...rest } = props
 
   const { setIsModalOpen } = useIsModalOpen(MODAL_KEYS.withdraw)
 
@@ -17,6 +18,7 @@ export const WithdrawButton = (props: WithdrawButtonProps) => {
 
   const handleClick = () => {
     setSelectedVaultById(vault.id)
+    extraOnClick?.()
     setIsModalOpen(true)
   }
 
