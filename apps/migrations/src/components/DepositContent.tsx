@@ -25,14 +25,12 @@ export const DepositContent = (props: DepositContentProps) => {
   const { userAddress, destination, depositAmount, onSuccess, className } = props
 
   const vault = useVault(destination)
-  const { data: token } = useVaultTokenData(vault)
+  const { data: token, isFetched: isFetchedToken } = useVaultTokenData(vault)
 
-  const { data: tokenPermitSupport } = useTokenPermitSupport(
-    token?.chainId as number,
-    token?.address as Address
-  )
+  const { data: tokenPermitSupport, isFetched: isFetchedTokenPermitSupport } =
+    useTokenPermitSupport(token?.chainId as number, token?.address as Address)
 
-  if (!token) {
+  if (!isFetchedToken || !isFetchedTokenPermitSupport || !token || !depositAmount) {
     return <Spinner />
   }
 
