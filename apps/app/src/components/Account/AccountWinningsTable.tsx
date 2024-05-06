@@ -1,5 +1,6 @@
-import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { PrizePoolBadge, SortIcon } from '@shared/react-components'
+import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
+import { usePublicClientsByChain } from '@generationsoftware/hyperstructure-react-hooks'
+import { PrizePoolBadge, SortIcon, VaultBadge } from '@shared/react-components'
 import { Win } from '@shared/types'
 import { Table, TableProps } from '@shared/ui'
 import { getSimpleDate, sortByBigIntDesc } from '@shared/utilities'
@@ -20,6 +21,8 @@ interface AccountWinningsTableProps extends Omit<TableProps, 'data' | 'keyPrefix
 export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
   const { wins, prizePools, className, innerClassName, headerClassName, rowClassName, ...rest } =
     props
+
+  const publicClients = usePublicClientsByChain()
 
   const t_common = useTranslations('Common')
   const t_account = useTranslations('Account')
@@ -66,7 +69,7 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
           />
         )
       },
-      prizePool: { content: t_account('winHeaders.prizePool'), position: 'center' },
+      prizeVault: { content: t_account('winHeaders.prizeVault'), position: 'center' },
       winnings: {
         content: (
           <SortableHeader
@@ -89,12 +92,14 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
         const prizePool = prizePools.find((prizePool) => prizePool.chainId === win.chainId)
 
         if (!!prizePool) {
+          const vault = new Vault(win.chainId, win.vault, publicClients[win.chainId])
+
           const cells: TableProps['data']['rows'][0]['cells'] = {
             date: { content: getSimpleDate(win.timestamp) },
-            prizePool: {
+            prizeVault: {
               content: (
-                <Link href={`/prizes?network=${win.chainId}`}>
-                  <PrizePoolBadge chainId={win.chainId} onClick={() => {}} intl={t_common} />
+                <Link href={`/vault/${vault.chainId}/${vault.address}`}>
+                  <VaultBadge vault={vault} onClick={() => {}} />
                 </Link>
               ),
               position: 'center'
@@ -102,9 +107,7 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
             winnings: {
               content: (
                 <AccountWinAmount
-                  prizePool={
-                    prizePools.find((prizePool) => prizePool.chainId === win.chainId) as PrizePool
-                  }
+                  prizePool={prizePool}
                   amount={win.payout}
                   amountClassName='text-sm'
                 />

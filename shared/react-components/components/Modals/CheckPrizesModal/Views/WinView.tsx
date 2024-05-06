@@ -39,7 +39,7 @@ export const WinView = (props: WinViewProps) => {
   const [isAnimationComplete, setIsAnimationComplete] = useState<boolean>(false)
 
   const prizes = useMemo(() => {
-    const toDisplay: Win[] = []
+    const toDisplay: { chainId: number; payout: bigint; timestamp: number }[] = []
     let totalAmount = 0n
 
     if (!!userAddress) {
@@ -48,7 +48,7 @@ export const WinView = (props: WinViewProps) => {
         const drawIdsToCheck = draws[chainId]?.map((d) => d.id) ?? []
         const lastCheckedPrizesTimestamp = lastCheckedPrizesTimestamps[chainId] ?? 0
 
-        const groupedChainWins: { [txHash: `0x${string}`]: Win } = {}
+        const groupedChainWins: { [txHash: `0x${string}`]: (typeof toDisplay)[number] } = {}
 
         wins[chainId].forEach((win) => {
           if (!!win.payout) {
@@ -61,9 +61,7 @@ export const WinView = (props: WinViewProps) => {
             ) {
               groupedChainWins[win.txHash] = {
                 chainId,
-                drawId: win.drawId,
                 payout: win.payout,
-                txHash: win.txHash,
                 timestamp: win.timestamp
               }
               totalAmount += win.payout
@@ -95,7 +93,12 @@ export const WinView = (props: WinViewProps) => {
           )}
         >
           {prizes.toDisplay.map((prize, i) => (
-            <PrizeRow key={`prize-${i}-${prize.timestamp}`} win={prize} prizeToken={prizeToken} />
+            <PrizeRow
+              key={`prize-${i}-${prize.timestamp}`}
+              chainId={prize.chainId}
+              timestamp={prize.timestamp}
+              prizeToken={{ ...prizeToken, amount: prize.payout }}
+            />
           ))}
         </div>
         <Lottie
@@ -152,14 +155,15 @@ const Header = (props: HeaderProps) => {
 }
 
 interface PrizeRowProps {
-  win: Win
-  prizeToken: { chainId: number; address: Address }
+  chainId: number
+  timestamp: number
+  prizeToken: { chainId: number; address: Address; amount: bigint }
   className?: string
   intl?: Intl<'xWon'>
 }
 
 const PrizeRow = (props: PrizeRowProps) => {
-  const { win, prizeToken, className, intl } = props
+  const { chainId, timestamp, prizeToken, className, intl } = props
 
   return (
     <div
@@ -169,11 +173,11 @@ const PrizeRow = (props: PrizeRowProps) => {
       )}
     >
       <div className='flex gap-2 items-center'>
-        <NetworkIcon chainId={win.chainId} className='w-4 h-4' />
-        <span className='text-sm text-pt-purple-300'>{getSimpleDate(win.timestamp)}</span>
+        <NetworkIcon chainId={chainId} className='w-4 h-4' />
+        <span className='text-sm text-pt-purple-300'>{getSimpleDate(timestamp)}</span>
       </div>
       <span className='font-medium'>
-        <TokenValue token={{ ...prizeToken, amount: win.payout }} /> {intl?.('xWon') ?? `Won!`}
+        <TokenValue token={prizeToken} /> {intl?.('xWon') ?? `Won!`}
       </span>
     </div>
   )

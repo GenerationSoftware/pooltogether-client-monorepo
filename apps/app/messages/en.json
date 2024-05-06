@@ -142,7 +142,7 @@
     "claimAllOnNetwork": "Claim all on {network}",
     "winHeaders": {
       "date": "Date",
-      "prizePool": "Prize Pool",
+      "prizeVault": "Prize Vault",
       "winnings": "Winnings",
       "moreInfo": "More Info"
     },

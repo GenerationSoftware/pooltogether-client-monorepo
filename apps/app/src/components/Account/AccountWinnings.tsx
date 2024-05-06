@@ -45,16 +45,20 @@ export const AccountWinnings = (props: AccountWinningsProps) => {
       const chainId = parseInt(key)
       const lastCheckedPrizesTimestamp = lastCheckedPrizesTimestamps[chainId] ?? 0
 
-      const groupedChainWins: { [txHash: `0x${string}`]: Win } = {}
+      const groupedChainWins: { [txHash: `0x${string}`]: { [vaultAddress: Address]: Win } } = {}
 
       wins[chainId].forEach((win) => {
         if (!!win.payout) {
-          if (groupedChainWins[win.txHash] !== undefined) {
-            groupedChainWins[win.txHash].payout += win.payout
+          if (groupedChainWins[win.txHash] === undefined) {
+            groupedChainWins[win.txHash] = {}
+          }
+          if (groupedChainWins[win.txHash][win.vaultAddress] !== undefined) {
+            groupedChainWins[win.txHash][win.vaultAddress].payout += win.payout
           } else if (win.timestamp <= lastCheckedPrizesTimestamp || isExternalUser) {
-            groupedChainWins[win.txHash] = {
+            groupedChainWins[win.txHash][win.vaultAddress] = {
               chainId,
               drawId: win.drawId,
+              vault: win.vaultAddress,
               payout: win.payout,
               txHash: win.txHash,
               timestamp: win.timestamp
@@ -63,7 +67,9 @@ export const AccountWinnings = (props: AccountWinningsProps) => {
         }
       })
 
-      flattenedWins.push(...Object.values(groupedChainWins))
+      Object.values(groupedChainWins).forEach((txGroup) => {
+        flattenedWins.push(...Object.values(txGroup))
+      })
     }
 
     return flattenedWins.sort((a, b) => b.timestamp - a.timestamp)

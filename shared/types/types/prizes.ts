@@ -25,6 +25,7 @@ export interface Prize {
 export interface Win {
   chainId: number
   drawId: number
+  vault: `0x${string}`
   payout: bigint
   txHash: `0x${string}`
   timestamp: number
