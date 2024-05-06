@@ -17,6 +17,7 @@ export interface SubgraphDraw {
 export interface SubgraphPrize {
   id: string
   drawId: number
+  vaultAddress: `0x${string}`
   tier: number
   prizeIndex: number
   payout: bigint

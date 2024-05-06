@@ -188,6 +188,7 @@ export const getUserSubgraphPrizes = async (
         prizeClaims(where: { recipient: $id }, first: $numPrizes, skip: $offsetPrizes, orderDirection: $orderDirection, orderBy: $orderBy) {
           id
           draw { drawId }
+          prizeVault { address }
           tier
           prizeIndex
           payout
@@ -211,6 +212,7 @@ export const getUserSubgraphPrizes = async (
     const wins: {
       id: string
       draw: { drawId: number }
+      prizeVault: { address: string }
       tier: number
       prizeIndex: string
       payout: string
@@ -223,6 +225,7 @@ export const getUserSubgraphPrizes = async (
     const formattedWins = wins.map((win) => ({
       id: win.id,
       drawId: win.draw.drawId,
+      vaultAddress: win.prizeVault.address as Address,
       tier: win.tier,
       prizeIndex: parseInt(win.prizeIndex),
       payout: BigInt(win.payout),
