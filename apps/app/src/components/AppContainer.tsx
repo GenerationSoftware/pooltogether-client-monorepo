@@ -6,6 +6,7 @@ import { ReactNode, useEffect, useState } from 'react'
 import { CustomAppProps } from '@pages/_app'
 import { AccountFrame } from './Frames/AccountFrame'
 import { DefaultFrame } from './Frames/DefaultFrame'
+import { Highlight } from './Highlight'
 
 export const AppContainer = (props: AppProps & CustomAppProps) => {
   const { Component, pageProps, serverProps, router } = props
@@ -38,6 +39,7 @@ export const AppContainer = (props: AppProps & CustomAppProps) => {
 
   return (
     <>
+      <Highlight />
       {pageFrame ?? <DefaultFrame />}
       <Flowbite>
         <Toaster expand={false} />
