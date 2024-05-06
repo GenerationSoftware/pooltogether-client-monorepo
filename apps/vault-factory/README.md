@@ -13,8 +13,6 @@
 ![tailwind](https://img.shields.io/static/v1?label&logo=tailwindcss&logoColor=white&message=tailwind&color=38B2AC)
 ![version](https://img.shields.io/github/package-json/v/GenerationSoftware/pooltogether-client-monorepo?filename=apps%2Fvault-factory%2Fpackage.json&color=brightgreen)
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/82229846-14bf-465b-b539-46b0beb68f6d/deploy-status)](https://app.netlify.com/sites/vault-factory/deploys)
-
 # 🏆 &nbsp; Overview
 
 App to easily create and manage ERC-4626 vaults for the PoolTogether Hyperstructure.

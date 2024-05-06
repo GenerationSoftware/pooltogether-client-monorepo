@@ -14,8 +14,6 @@
 ![tailwind](https://img.shields.io/static/v1?label&logo=tailwindcss&logoColor=white&message=tailwind&color=38B2AC)
 ![version](https://img.shields.io/github/package-json/v/GenerationSoftware/pooltogether-client-monorepo?filename=apps%2Fmigrations%2Fpackage.json&color=brightgreen)
 
-<!-- [![Netlify Status](https://api.netlify.com/api/v1/badges/0009543e-3942-40fb-83dd-49a69ec899cf/deploy-status)](https://app.netlify.com/sites/cabana-app/deploys) -->
-
 # 🏆 &nbsp; Overview
 
 App to facilitate migrations from old protocol versions.

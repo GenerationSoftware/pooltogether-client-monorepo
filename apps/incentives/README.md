@@ -13,8 +13,6 @@
 ![tailwind](https://img.shields.io/static/v1?label&logo=tailwindcss&logoColor=white&message=tailwind&color=38B2AC)
 ![version](https://img.shields.io/github/package-json/v/GenerationSoftware/pooltogether-client-monorepo?filename=apps%2Fincentives%2Fpackage.json&color=brightgreen)
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/c26abf1b-333e-4e43-9bf2-f030058648aa/deploy-status)](https://app.netlify.com/sites/pt-incentives/deploys)
-
 # 🏆 &nbsp; Overview
 
 A simple app to present the protocol's many onchain and offchain incentives for contributors, be it for front-end, running bots, creating new vaults, etc.
