@@ -201,11 +201,18 @@ const ModalContent = (props: ModalContentProps) => {
     mobileStyle
   } = props
 
+  const { height, isMobile } = useScreenSize()
+
   return (
     <>
       {mobileStyle === 'tab' && <ModalTabHandle />}
       <XMarkIcon
-        className='hidden sm:inline-block absolute top-5 end-4 ms-auto h-6 w-6 ml-auto cursor-pointer hover:bg-pt-purple-600 hover:text-pt-purple-200 rounded-lg transition duration-100'
+        className='hidden md:inline-block absolute top-5 end-4 h-6 w-6 ml-auto cursor-pointer hover:bg-pt-purple-600 hover:text-pt-purple-200 rounded-lg transition duration-100'
+        style={
+          !!height && isMobile && mobileStyle === 'cover'
+            ? { display: 'inline-block', top: 'auto', bottom: height - 44 }
+            : undefined
+        }
         onClick={onClose}
       />
       {!hideHeader && (
