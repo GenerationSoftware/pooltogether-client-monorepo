@@ -122,7 +122,7 @@ export const V5MigrationsTable = (props: V5MigrationsTableProps) => {
       status: { content: 'Status', position: 'center' },
       rewards: { content: 'Unclaimed Rewards', position: 'center' },
       balance: { content: 'Your Balance', position: 'center' },
-      manage: { content: 'Manage', position: 'right' }
+      manage: { content: <span className='w-[13rem] text-center'>Manage</span>, position: 'right' }
     },
     rows: tableRows
   }
@@ -418,7 +418,7 @@ const ManageItem = (props: ManageItemProps) => {
             className='md:min-w-[6rem]'
           />
           <Link href={migrationURL} passHref={true} className='w-full'>
-            <Button fullSized={fullSized} className='w-full'>
+            <Button fullSized={fullSized} className='md:min-w-[6rem]'>
               Migrate
             </Button>
           </Link>
@@ -430,7 +430,7 @@ const ManageItem = (props: ManageItemProps) => {
           userAddress={userAddress}
           txOptions={{ onSuccess: () => refetchUserV5ClaimablePromotions() }}
           fullSized={fullSized}
-          className='md:min-w-[6rem]'
+          className='md:min-w-[6rem] md:mr-[0.4rem]'
         />
       )}
     </div>
