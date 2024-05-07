@@ -56,6 +56,18 @@ export const formatNumberForDisplay = (
     })
   }
 
+  const formatShortened = (v: number) => {
+    if (v < 1e6) return format(v)
+
+    const numDigits = Math.floor(Math.abs(v)).toString().length
+    const maximumFractionDigits =
+      numDigits === 7 || numDigits === 10 ? 2 : numDigits === 8 || numDigits === 11 ? 1 : 0
+    const newValue = Math.round(v / 10 ** (numDigits - 3)) / 10 ** maximumFractionDigits
+    const label = numDigits >= 10 ? 'B' : 'M'
+
+    return format(newValue, { minimumFractionDigits: 0, maximumFractionDigits }) + label
+  }
+
   let _val: number
 
   if (val === undefined || val === null) {
@@ -73,28 +85,7 @@ export const formatNumberForDisplay = (
   }
 
   if (!!shortenMillions) {
-    if (_val >= 1e8) {
-      return (
-        format(Math.round(_val / 1e6), {
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0
-        }) + 'M'
-      )
-    } else if (_val >= 1e7) {
-      return (
-        format(Math.round(_val / 1e5) / 10, {
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 1
-        }) + 'M'
-      )
-    } else if (_val >= 1e6) {
-      return (
-        format(Math.round(_val / 1e4) / 100, {
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 2
-        }) + 'M'
-      )
-    }
+    return formatShortened(_val)
   }
 
   return format(_val)
