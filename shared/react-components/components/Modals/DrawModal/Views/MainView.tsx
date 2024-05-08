@@ -6,14 +6,8 @@ import {
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl, SubgraphDraw } from '@shared/types'
-import { ExternalLink, Spinner } from '@shared/ui'
-import {
-  formatBigIntForDisplay,
-  getBlockExplorerUrl,
-  shorten,
-  sortByBigIntDesc,
-  sToMs
-} from '@shared/utilities'
+import { Spinner } from '@shared/ui'
+import { formatBigIntForDisplay, shorten, sortByBigIntDesc, sToMs } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
@@ -23,6 +17,8 @@ import { TokenValue } from '../../../Currency/TokenValue'
 interface MainViewProps {
   draw: SubgraphDraw
   prizePool: PrizePool
+  onGoToAccount: (address: Address) => void
+  onClose?: () => void
   intl?: {
     base?: Intl<'prizePool' | 'drawId'>
     prizes?: Intl<
@@ -37,7 +33,7 @@ interface MainViewProps {
 }
 
 export const MainView = (props: MainViewProps) => {
-  const { draw, prizePool, intl } = props
+  const { draw, prizePool, onGoToAccount, onClose, intl } = props
 
   return (
     <div className='flex flex-col gap-6 mb-6'>
@@ -45,7 +41,13 @@ export const MainView = (props: MainViewProps) => {
       <PrizePoolBadge chainId={prizePool.chainId} intl={intl?.base} className='mx-auto' />
       <EligibilityInfo draw={draw} prizePool={prizePool} intl={intl?.prizes} />
       <DrawTotals draw={draw} prizePool={prizePool} intl={intl?.prizes} />
-      <DrawWinnersTable draw={draw} prizePool={prizePool} intl={intl?.prizes} />
+      <DrawWinnersTable
+        draw={draw}
+        prizePool={prizePool}
+        onGoToAccount={onGoToAccount}
+        onClose={onClose}
+        intl={intl?.prizes}
+      />
     </div>
   )
 }
@@ -163,12 +165,14 @@ const DrawTotals = (props: DrawTotalsProps) => {
 interface DrawWinnersTableProps {
   draw: SubgraphDraw
   prizePool: PrizePool
+  onGoToAccount: (address: Address) => void
+  onClose?: () => void
   intl?: Intl<'winner' | 'prize'>
 }
 
 // TODO: highlight grand prizes
 const DrawWinnersTable = (props: DrawWinnersTableProps) => {
-  const { draw, prizePool, intl } = props
+  const { draw, prizePool, onGoToAccount, onClose, intl } = props
 
   const { data: tokenData } = usePrizeTokenData(prizePool)
 
@@ -188,6 +192,11 @@ const DrawWinnersTable = (props: DrawWinnersTableProps) => {
     return Object.entries(groupedWins).sort((a, b) => sortByBigIntDesc(a[1], b[1]))
   }, [draw])
 
+  const handleAddressClick = (address: Address) => {
+    onGoToAccount(address)
+    onClose?.()
+  }
+
   return (
     <div className='flex flex-col w-full gap-2 md:text-center'>
       <div className='flex w-full text-pt-purple-100 font-semibold'>
@@ -197,17 +206,21 @@ const DrawWinnersTable = (props: DrawWinnersTableProps) => {
       {!!tokenData ? (
         <div className='flex flex-col w-full max-h-52 gap-3 overflow-y-auto'>
           {wins.map((win) => {
+            const winner = win[0] as Address
             const formattedPrize = formatBigIntForDisplay(win[1], tokenData.decimals, {
               minimumFractionDigits: 4,
               maximumFractionDigits: 4
             })
 
             return (
-              <div key={`prize-${win[0]}`} className='flex w-full items-center'>
+              <div key={`prize-${winner}`} className='flex w-full items-center'>
                 <span className='w-1/2'>
-                  <ExternalLink href={getBlockExplorerUrl(prizePool.chainId, win[0], 'address')}>
-                    {shorten(win[0], { short: true }) as string}
-                  </ExternalLink>
+                  <button
+                    onClick={() => handleAddressClick(winner)}
+                    className='hover:text-pt-purple-100'
+                  >
+                    {shorten(winner)}
+                  </button>
                 </span>
                 <span className='w-1/2 text-right whitespace-nowrap md:text-center'>
                   {!!tokenData ? (

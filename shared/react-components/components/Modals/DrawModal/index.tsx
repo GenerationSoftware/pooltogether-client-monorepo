@@ -2,11 +2,13 @@ import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { MODAL_KEYS, useIsModalOpen, useScreenSize } from '@shared/generic-react-hooks'
 import { Intl, SubgraphDraw } from '@shared/types'
 import { Button, Modal } from '@shared/ui'
+import { Address } from 'viem'
 import { MainView } from './Views/MainView'
 
 export interface DrawModalProps {
   draw?: SubgraphDraw
   prizePool?: PrizePool
+  onGoToAccount: (address: Address) => void
   onClose?: () => void
   intl?: {
     base?: Intl<'close' | 'prizePool' | 'drawId'>
@@ -22,7 +24,7 @@ export interface DrawModalProps {
 }
 
 export const DrawModal = (props: DrawModalProps) => {
-  const { draw, prizePool, onClose, intl } = props
+  const { draw, prizePool, onGoToAccount, onClose, intl } = props
 
   const { isModalOpen, setIsModalOpen } = useIsModalOpen(MODAL_KEYS.drawWinners, { onClose })
 
@@ -35,7 +37,15 @@ export const DrawModal = (props: DrawModalProps) => {
   if (isModalOpen && !!draw && !!prizePool) {
     return (
       <Modal
-        bodyContent={<MainView draw={draw} prizePool={prizePool} intl={intl} />}
+        bodyContent={
+          <MainView
+            draw={draw}
+            prizePool={prizePool}
+            onGoToAccount={onGoToAccount}
+            onClose={handleClose}
+            intl={intl}
+          />
+        }
         footerContent={
           <Button onClick={handleClose} fullSized={true}>
             {intl?.base?.('close') ?? 'Close'}

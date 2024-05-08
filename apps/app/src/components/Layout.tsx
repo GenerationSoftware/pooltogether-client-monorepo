@@ -321,6 +321,7 @@ export const Layout = (props: LayoutProps) => {
       <DrawModal
         draw={selectedDraw}
         prizePool={selectedPrizePool}
+        onGoToAccount={(address) => router.push(`/account/${address}`)}
         intl={{ base: t_common, prizes: t_drawModal }}
       />
 
