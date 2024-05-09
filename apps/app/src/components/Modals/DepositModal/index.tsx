@@ -6,17 +6,15 @@ import {
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
-import { Intl, RichIntl } from '@shared/types'
+import { AlertIcon, createDepositTxToast } from '@shared/react-components'
 import { Modal } from '@shared/ui'
 import { formatNumberForDisplay, LINKS } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
+import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo, useState } from 'react'
 import { Address } from 'viem'
-import { depositFormShareAmountAtom, depositFormTokenAmountAtom } from '../../Form/DepositForm'
-import { AlertIcon } from '../../Icons/AlertIcon'
-import { createDepositTxToast, DepositTxToastProps } from '../../Toasts/DepositTxToast'
-import { NetworkFeesProps } from '../NetworkFees'
+import { depositFormShareAmountAtom, depositFormTokenAmountAtom } from './DepositForm'
 import { DepositTxButton } from './DepositTxButton'
 import { DepositWithPermitTxButton } from './DepositWithPermitTxButton'
 import { ConfirmingView } from './Views/ConfirmingView'
@@ -39,49 +37,6 @@ export interface DepositModalProps {
   onSuccessfulApproval?: () => void
   onSuccessfulDeposit?: () => void
   onSuccessfulDepositWithPermit?: () => void
-  intl?: {
-    base?: RichIntl<
-      | 'depositTo'
-      | 'depositToShort'
-      | 'weeklyChances'
-      | 'oneInXChance'
-      | 'max'
-      | 'balance'
-      | 'enterAnAmount'
-      | 'approvalButton'
-      | 'approvalTx'
-      | 'reviewDeposit'
-      | 'confirmDeposit'
-      | 'depositTx'
-      | 'switchNetwork'
-      | 'switchingNetwork'
-      | 'confirmNotice'
-      | 'submissionNotice'
-      | 'depositing'
-      | 'success'
-      | 'deposited'
-      | 'nowEligible'
-      | 'shareOn'
-      | 'viewAccount'
-      | 'uhOh'
-      | 'failedTx'
-      | 'tryAgain'
-      | 'risksDisclaimer'
-      | 'depositDisclaimer'
-    >
-    common?: Intl<
-      'prizePool' | 'connectWallet' | 'close' | 'viewOn' | 'learnAboutRisks' | 'getTokenAt'
-    >
-    fees?: NetworkFeesProps['intl']
-    tooltips?: Intl<'approval'>
-    txToast?: DepositTxToastProps['intl']
-    errors?: RichIntl<
-      | 'formErrors.notEnoughTokens'
-      | 'formErrors.invalidNumber'
-      | 'formErrors.negativeNumber'
-      | 'formErrors.tooManyDecimals'
-    >
-  }
 }
 
 export const DepositModal = (props: DepositModalProps) => {
@@ -95,9 +50,10 @@ export const DepositModal = (props: DepositModalProps) => {
     refetchUserBalances,
     onSuccessfulApproval,
     onSuccessfulDeposit,
-    onSuccessfulDepositWithPermit,
-    intl
+    onSuccessfulDepositWithPermit
   } = props
+
+  const t_toasts = useTranslations('Toasts.transactions')
 
   const { vault } = useSelectedVault()
 
@@ -133,7 +89,7 @@ export const DepositModal = (props: DepositModalProps) => {
         formattedAmount: formatNumberForDisplay(formTokenAmount),
         addRecentTransaction: addRecentTransaction,
         refetchUserBalances: refetchUserBalances,
-        intl: intl?.txToast
+        intl: t_toasts
       })
     }
   }
@@ -146,22 +102,19 @@ export const DepositModal = (props: DepositModalProps) => {
 
   if (isModalOpen && !!vault) {
     const modalViews: Record<DepositModalView, ReactNode> = {
-      main: <MainView vault={vault} prizePool={prizePool as PrizePool} intl={intl} />,
-      review: <ReviewView vault={vault} prizePool={prizePool as PrizePool} intl={intl} />,
-      waiting: <WaitingView vault={vault} closeModal={handleClose} intl={intl} />,
-      confirming: (
-        <ConfirmingView vault={vault} txHash={depositTxHash} closeModal={handleClose} intl={intl} />
-      ),
+      main: <MainView vault={vault} prizePool={prizePool as PrizePool} />,
+      review: <ReviewView vault={vault} prizePool={prizePool as PrizePool} />,
+      waiting: <WaitingView vault={vault} closeModal={handleClose} />,
+      confirming: <ConfirmingView vault={vault} txHash={depositTxHash} closeModal={handleClose} />,
       success: (
         <SuccessView
           vault={vault}
           txHash={depositTxHash}
           closeModal={handleClose}
           goToAccount={onGoToAccount}
-          intl={intl}
         />
       ),
-      error: <ErrorView setModalView={setView} intl={intl?.base} />
+      error: <ErrorView setModalView={setView} />
     }
 
     const modalFooterContent = !!vaultExchangeRate ? (
@@ -170,7 +123,7 @@ export const DepositModal = (props: DepositModalProps) => {
           hidden: view !== 'main' && view !== 'review'
         })}
       >
-        {view === 'main' && !formShareAmount && <RisksDisclaimer vault={vault} intl={intl} />}
+        {view === 'main' && !formShareAmount && <RisksDisclaimer vault={vault} />}
         {tokenPermitSupport === 'eip2612' ? (
           <DepositWithPermitTxButton
             vault={vault}
@@ -182,7 +135,6 @@ export const DepositModal = (props: DepositModalProps) => {
             addRecentTransaction={addRecentTransaction}
             refetchUserBalances={refetchUserBalances}
             onSuccessfulDepositWithPermit={onSuccessfulDepositWithPermit}
-            intl={intl}
           />
         ) : (
           <DepositTxButton
@@ -196,10 +148,9 @@ export const DepositModal = (props: DepositModalProps) => {
             refetchUserBalances={refetchUserBalances}
             onSuccessfulApproval={onSuccessfulApproval}
             onSuccessfulDeposit={onSuccessfulDeposit}
-            intl={intl}
           />
         )}
-        {view === 'review' && <DepositDisclaimer vault={vault} intl={intl?.base} />}
+        {view === 'review' && <DepositDisclaimer vault={vault} />}
       </div>
     ) : undefined
 
@@ -219,11 +170,13 @@ export const DepositModal = (props: DepositModalProps) => {
 
 interface RisksDisclaimerProps {
   vault: Vault
-  intl?: { base?: RichIntl<'risksDisclaimer'>; common?: Intl<'learnAboutRisks'> }
 }
 
 const RisksDisclaimer = (props: RisksDisclaimerProps) => {
-  const { vault, intl } = props
+  const { vault } = props
+
+  const t_common = useTranslations('Common')
+  const t_modals = useTranslations('TxModals')
 
   const vaultHref = `/vault/${vault.chainId}/${vault.address}`
 
@@ -231,20 +184,12 @@ const RisksDisclaimer = (props: RisksDisclaimerProps) => {
     <div className='w-full flex flex-col gap-4 p-6 text-pt-purple-100 bg-pt-transparent rounded-lg lg:items-center'>
       <div className='flex gap-2 items-center'>
         <AlertIcon className='w-5 h-5' />
-        <span className='text-xs font-semibold lg:text-sm'>
-          {intl?.common?.('learnAboutRisks') ?? 'Learn about the risks'}
-        </span>
+        <span className='text-xs font-semibold lg:text-sm'>{t_common('learnAboutRisks')}</span>
       </div>
       <span className='text-xs lg:text-center lg:text-sm'>
-        {intl?.base?.rich('risksDisclaimer', {
+        {t_modals.rich('risksDisclaimer', {
           vaultLink: (chunks) => <DisclaimerLink href={vaultHref}>{chunks}</DisclaimerLink>
-        }) ?? (
-          <>
-            PoolTogether is a permissionless protocol. Prize vaults can be deployed by anyone. Make
-            sure you know what you are depositing into.{' '}
-            <DisclaimerLink href={vaultHref}>Learn more about this prize vault.</DisclaimerLink>
-          </>
-        )}
+        })}
       </span>
     </div>
   )
@@ -252,27 +197,21 @@ const RisksDisclaimer = (props: RisksDisclaimerProps) => {
 
 interface DepositDisclaimerProps {
   vault: Vault
-  intl?: RichIntl<'depositDisclaimer'>
 }
 
 const DepositDisclaimer = (props: DepositDisclaimerProps) => {
-  const { vault, intl } = props
+  const { vault } = props
+
+  const t_modals = useTranslations('TxModals')
 
   const vaultHref = `/vault/${vault.chainId}/${vault.address}`
 
   return (
     <span className='text-xs text-pt-purple-100 px-6'>
-      {intl?.rich('depositDisclaimer', {
+      {t_modals.rich('depositDisclaimer', {
         tosLink: (chunks) => <DisclaimerLink href={LINKS.termsOfService}>{chunks}</DisclaimerLink>,
         vaultLink: (chunks) => <DisclaimerLink href={vaultHref}>{chunks}</DisclaimerLink>
-      }) ?? (
-        <>
-          By clicking "Confirm Deposit", you agree to Cabana's{' '}
-          <DisclaimerLink href={LINKS.termsOfService}>Terms of Service</DisclaimerLink>. Click{' '}
-          <DisclaimerLink href={vaultHref}>here</DisclaimerLink> to learn more about the vault
-          you're depositing into.
-        </>
-      )}
+      })}
     </span>
   )
 }

@@ -4,28 +4,25 @@ import {
   useVaultShareData,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { Intl, Token, TokenWithLogo } from '@shared/types'
+import { PrizePoolBadge, TokenIcon } from '@shared/react-components'
+import { Token, TokenWithLogo } from '@shared/types'
 import { useAtomValue } from 'jotai'
+import { useTranslations } from 'next-intl'
 import { Address } from 'viem'
-import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
-import { depositFormShareAmountAtom, depositFormTokenAmountAtom } from '../../../Form/DepositForm'
-import { TokenIcon } from '../../../Icons/TokenIcon'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
+import { depositFormShareAmountAtom, depositFormTokenAmountAtom } from '../DepositForm'
 
 interface ReviewViewProps {
   vault: Vault
   prizePool: PrizePool
-  intl?: {
-    base?: Intl<'confirmDeposit' | 'weeklyChances' | 'oneInXChance'>
-    common?: Intl<'prizePool'>
-    fees?: NetworkFeesProps['intl']
-  }
 }
 
-// TODO: add warning if deposit doesn't make sense gas-wise
 export const ReviewView = (props: ReviewViewProps) => {
-  const { vault, prizePool, intl } = props
+  const { vault, prizePool } = props
+
+  const t_common = useTranslations('Common')
+  const t_modals = useTranslations('TxModals')
 
   const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
   const formShareAmount = useAtomValue(depositFormShareAmountAtom)
@@ -45,13 +42,11 @@ export const ReviewView = (props: ReviewViewProps) => {
 
   return (
     <div className='flex flex-col gap-6'>
-      <span className='text-xl font-semibold text-center'>
-        {intl?.base?.('confirmDeposit') ?? 'Confirm Deposit'}
-      </span>
+      <span className='text-xl font-semibold text-center'>{t_modals('confirmDeposit')}</span>
       <PrizePoolBadge
         chainId={vault.chainId}
         hideBorder={true}
-        intl={intl?.common}
+        intl={t_common}
         className='!py-1 mx-auto'
       />
       {!!shareData && !!tokenData && (
@@ -69,8 +64,8 @@ export const ReviewView = (props: ReviewViewProps) => {
         </div>
       )}
       <div className='flex flex-col gap-4 mx-auto md:flex-row md:gap-9'>
-        <Odds vault={vault} prizePool={prizePool} intl={intl?.base} />
-        <NetworkFees vault={vault} show={feesToShow} intl={intl?.fees} />
+        <Odds vault={vault} prizePool={prizePool} />
+        <NetworkFees vault={vault} show={feesToShow} />
       </div>
     </div>
   )

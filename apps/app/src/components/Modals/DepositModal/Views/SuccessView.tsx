@@ -1,6 +1,6 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useVaultTokenData } from '@generationsoftware/hyperstructure-react-hooks'
-import { Intl } from '@shared/types'
+import { PrizePoolBadge, SocialShareButton, SuccessPooly } from '@shared/react-components'
 import { ExternalLink } from '@shared/ui'
 import {
   formatNumberForDisplay,
@@ -9,25 +9,22 @@ import {
   getNiceNetworkNameByChainId
 } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
+import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
-import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
-import { SocialShareButton } from '../../../Buttons/SocialShareButton'
-import { depositFormTokenAmountAtom } from '../../../Form/DepositForm'
-import { SuccessPooly } from '../../../Graphics/SuccessPooly'
+import { depositFormTokenAmountAtom } from '../DepositForm'
 
 interface SuccessViewProps {
   vault: Vault
   closeModal: () => void
   txHash?: string
   goToAccount?: () => void
-  intl?: {
-    base?: Intl<'success' | 'deposited' | 'nowEligible' | 'shareOn' | 'viewAccount'>
-    common?: Intl<'prizePool' | 'viewOn'>
-  }
 }
 
 export const SuccessView = (props: SuccessViewProps) => {
-  const { vault, txHash, intl } = props
+  const { vault, txHash } = props
+
+  const t_common = useTranslations('Common')
+  const t_modals = useTranslations('TxModals')
 
   const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
 
@@ -40,41 +37,40 @@ export const SuccessView = (props: SuccessViewProps) => {
     <div className='flex flex-col gap-6 items-center'>
       <div className='flex flex-col gap-3 items-center'>
         <div className='flex flex-col items-center text-lg font-medium text-center'>
-          <span className='text-pt-teal'>{intl?.base?.('success') ?? 'Success!'}</span>
-          <span>{intl?.base?.('deposited', { tokens }) ?? `You deposited ${tokens}`}</span>
+          <span className='text-pt-teal'>{t_modals('success')}</span>
+          <span>{t_modals('deposited', { tokens })}</span>
         </div>
         <PrizePoolBadge
           chainId={vault.chainId}
           hideBorder={true}
-          intl={intl?.common}
+          intl={t_common}
           className='!py-1'
         />
         <SuccessPooly className='w-40 h-auto mt-3' />
       </div>
-      <span className='text-sm text-center md:text-base'>
-        {intl?.base?.('nowEligible') ?? 'You are now eligible for all future draws in this pool.'}
-      </span>
+      <span className='text-sm text-center md:text-base'>{t_modals('nowEligible')}</span>
       {!!txHash && (
         <ExternalLink
           href={getBlockExplorerUrl(vault.chainId, txHash, 'tx')}
           size='sm'
           className='text-pt-teal'
         >
-          {intl?.common?.('viewOn', { name }) ?? `View on ${name}`}
+          {t_common('viewOn', { name })}
         </ExternalLink>
       )}
-      <ShareButtons vault={vault} intl={intl?.base} />
+      <ShareButtons vault={vault} />
     </div>
   )
 }
 
 interface ShareButtonsProps {
   vault: Vault
-  intl?: Intl<'shareOn'>
 }
 
 const ShareButtons = (props: ShareButtonsProps) => {
-  const { vault, intl } = props
+  const { vault } = props
+
+  const t = useTranslations('TxModals')
 
   const { data: tokenData } = useVaultTokenData(vault)
 
@@ -95,7 +91,7 @@ const ShareButtons = (props: ShareButtonsProps) => {
 
   return (
     <div className='flex flex-col items-center'>
-      <h1 className='py-1 text-sm sm:text-md font-medium'>{intl?.('shareOn') ?? 'Share on'}:</h1>
+      <h1 className='py-1 text-sm sm:text-md font-medium'>{t('shareOn')}:</h1>
       <div className='flex flex-col sm:flex-row gap-2'>
         <SocialShareButton platform='twitter' text={text.twitter} hashTags={hashTags} />
         <SocialShareButton platform='warpcast' text={text.warpcast} />

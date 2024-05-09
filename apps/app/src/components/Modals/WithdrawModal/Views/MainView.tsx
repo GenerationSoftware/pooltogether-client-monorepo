@@ -3,30 +3,22 @@ import {
   useVaultExchangeRate,
   useVaultShareData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { Intl, RichIntl } from '@shared/types'
+import { PrizePoolBadge } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import { getNiceNetworkNameByChainId } from '@shared/utilities'
-import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
-import { WithdrawForm } from '../../../Form/WithdrawForm'
-import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
+import { useTranslations } from 'next-intl'
+import { NetworkFees } from '../../NetworkFees'
+import { WithdrawForm } from '../WithdrawForm'
 
 interface MainViewProps {
   vault: Vault
-  intl?: {
-    base?: Intl<'withdrawFrom' | 'withdrawFromShort' | 'balance' | 'max'>
-    common?: Intl<'prizePool' | 'warning'>
-    fees?: NetworkFeesProps['intl']
-    errors?: RichIntl<
-      | 'formErrors.notEnoughTokens'
-      | 'formErrors.invalidNumber'
-      | 'formErrors.negativeNumber'
-      | 'formErrors.tooManyDecimals'
-    >
-  }
 }
 
 export const MainView = (props: MainViewProps) => {
-  const { vault, intl } = props
+  const { vault } = props
+
+  const t_common = useTranslations('Common')
+  const t_modals = useTranslations('TxModals')
 
   const { data: shareData } = useVaultShareData(vault)
 
@@ -40,13 +32,12 @@ export const MainView = (props: MainViewProps) => {
       <span className='text-lg font-semibold text-center'>
         {!!vaultName && (
           <span className='hidden md:inline-block'>
-            {intl?.base?.('withdrawFrom', { name: vaultName, network: networkName }) ??
-              `Withdraw from ${vaultName} on ${networkName}`}
+            {t_modals('withdrawFrom', { name: vaultName, network: networkName })}
           </span>
         )}
         {!!vaultName && (
           <span className='inline-block md:hidden'>
-            {intl?.base?.('withdrawFromShort', { name: vaultName }) ?? `Withdraw from ${vaultName}`}
+            {t_modals('withdrawFromShort', { name: vaultName })}
           </span>
         )}
         {!vaultName && <Spinner />}
@@ -54,14 +45,14 @@ export const MainView = (props: MainViewProps) => {
       <PrizePoolBadge
         chainId={vault.chainId}
         hideBorder={true}
-        intl={intl?.common}
+        intl={t_common}
         className='!py-1 mx-auto'
       />
       {/* TODO: add flow for when exchange rate cannot be found */}
       {!!vaultExchangeRate && (
         <>
-          <WithdrawForm vault={vault} showInputInfoRows={true} intl={intl} />
-          <NetworkFees vault={vault} show={['withdraw']} intl={intl?.fees} />
+          <WithdrawForm vault={vault} showInputInfoRows={true} />
+          <NetworkFees vault={vault} show={['withdraw']} />
         </>
       )}
     </div>

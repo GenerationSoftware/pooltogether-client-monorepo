@@ -1,10 +1,10 @@
-import { Intl, TokenWithAmount, TokenWithLogo, TokenWithPrice } from '@shared/types'
+import { CurrencyValue, TokenIcon } from '@shared/react-components'
+import { TokenWithAmount, TokenWithLogo, TokenWithPrice } from '@shared/types'
 import { formatBigIntForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
 import { useFormContext } from 'react-hook-form'
 import { formatUnits } from 'viem'
-import { CurrencyValue } from '../Currency/CurrencyValue'
-import { TokenIcon } from '../Icons/TokenIcon'
 
 export interface TxFormValues {
   tokenAmount: string
@@ -19,22 +19,14 @@ export interface TxFormInputProps {
   onChange?: (v: string) => void
   showInfoRow?: boolean
   showMaxButton?: boolean
-  intl?: { base?: Intl<'balance' | 'max'>; errors?: InputProps['intl'] }
   className?: string
 }
 
 export const TxFormInput = (props: TxFormInputProps) => {
-  const {
-    token,
-    formKey,
-    validate,
-    disabled,
-    onChange,
-    showInfoRow,
-    showMaxButton,
-    intl,
-    className
-  } = props
+  const { token, formKey, validate, disabled, onChange, showInfoRow, showMaxButton, className } =
+    props
+
+  const t = useTranslations('TxModals')
 
   const {
     watch,
@@ -84,7 +76,6 @@ export const TxFormInput = (props: TxFormInputProps) => {
           validate={validate}
           disabled={disabled}
           onChange={onChange}
-          intl={intl?.errors}
         />
         <div className='flex shrink-0 items-center gap-1'>
           <TokenIcon token={token} />
@@ -96,14 +87,14 @@ export const TxFormInput = (props: TxFormInputProps) => {
           <CurrencyValue baseValue={amountValue} fallback={<></>} />
           <div className='flex gap-1 ml-auto'>
             <span>
-              {intl?.base?.('balance') ?? 'Balance:'} {formattedBalance}
+              {t('balance')} {formattedBalance}
             </span>
             {showMaxButton && (
               <span
                 onClick={setFormAmountToMax}
                 className='text-pt-purple-200 cursor-pointer select-none'
               >
-                {intl?.base?.('max') ?? 'Max'}
+                {t('max')}
               </span>
             )}
           </div>
@@ -120,25 +111,20 @@ interface InputProps {
   validate?: { [rule: string]: (v: any) => true | string }
   disabled?: boolean
   onChange?: (v: string) => void
-  intl?: Intl<
-    'formErrors.invalidNumber' | 'formErrors.negativeNumber' | 'formErrors.tooManyDecimals'
-  >
 }
 
 const Input = (props: InputProps) => {
-  const { formKey, decimals, validate, disabled, onChange, intl } = props
+  const { formKey, decimals, validate, disabled, onChange } = props
+
+  const t = useTranslations('Error.formErrors')
 
   const { register } = useFormContext<TxFormValues>()
 
   const basicValidation: { [rule: string]: (v: any) => true | string } = {
-    isValidNumber: (v) =>
-      !Number.isNaN(Number(v)) || (intl?.('formErrors.invalidNumber') ?? 'Enter a valid number'),
-    isGreaterThanOrEqualToZero: (v) =>
-      parseFloat(v) >= 0 || (intl?.('formErrors.negativeNumber') ?? 'Enter a positive number'),
+    isValidNumber: (v) => !Number.isNaN(Number(v)) || t('invalidNumber'),
+    isGreaterThanOrEqualToZero: (v) => parseFloat(v) >= 0 || t('negativeNumber'),
     isNotTooPrecise: (v) =>
-      v.split('.').length < 2 ||
-      v.split('.')[1].length <= decimals ||
-      (intl?.('formErrors.tooManyDecimals') ?? 'Too many decimals')
+      v.split('.').length < 2 || v.split('.')[1].length <= decimals || t('tooManyDecimals')
   }
 
   return (

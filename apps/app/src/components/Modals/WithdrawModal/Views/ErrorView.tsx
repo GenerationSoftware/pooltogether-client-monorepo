@@ -1,21 +1,22 @@
-import { Intl } from '@shared/types'
+import { ErrorPooly } from '@shared/react-components'
 import { Button } from '@shared/ui'
-import { DepositModalView } from '..'
-import { ErrorPooly } from '../../../Graphics/ErrorPooly'
+import { useTranslations } from 'next-intl'
+import { WithdrawModalView } from '..'
 
 interface ErrorViewProps {
-  setModalView: (view: DepositModalView) => void
-  intl?: Intl<'uhOh' | 'failedTx' | 'tryAgain'>
+  setModalView: (view: WithdrawModalView) => void
 }
 
 export const ErrorView = (props: ErrorViewProps) => {
-  const { setModalView, intl } = props
+  const { setModalView } = props
+
+  const t = useTranslations('TxModals')
 
   return (
     <div className='flex flex-col gap-6 items-center'>
       <div className='flex flex-col items-center text-lg font-semibold text-center'>
-        <span className='text-[#EA8686]'>{intl?.('uhOh') ?? 'Uh oh!'}</span>
-        <span>{intl?.('failedTx') ?? 'Something went wrong...'}</span>
+        <span className='text-[#EA8686]'>{t('uhOh')}</span>
+        <span>{t('failedTx')}</span>
       </div>
       <ErrorPooly className='w-40 h-auto' />
       <Button
@@ -24,7 +25,7 @@ export const ErrorView = (props: ErrorViewProps) => {
         onClick={() => setModalView('main')}
         className='md:mt-32'
       >
-        {intl?.('tryAgain') ?? 'Try Again'}
+        {t('tryAgain')}
       </Button>
     </div>
   )

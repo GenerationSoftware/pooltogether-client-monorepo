@@ -1,6 +1,6 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useVaultTokenData } from '@generationsoftware/hyperstructure-react-hooks'
-import { Intl } from '@shared/types'
+import { PrizePoolBadge } from '@shared/react-components'
 import { Button, ExternalLink, Spinner } from '@shared/ui'
 import {
   formatNumberForDisplay,
@@ -8,20 +8,22 @@ import {
   getBlockExplorerUrl
 } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
-import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
-import { withdrawFormTokenAmountAtom } from '../../../Form/WithdrawForm'
+import { useTranslations } from 'next-intl'
+import { depositFormTokenAmountAtom } from '../DepositForm'
 
 interface ConfirmingViewProps {
   vault: Vault
   closeModal: () => void
   txHash?: string
-  intl?: { base?: Intl<'submissionNotice' | 'withdrawing'>; common?: Intl<'close' | 'viewOn'> }
 }
 
 export const ConfirmingView = (props: ConfirmingViewProps) => {
-  const { vault, txHash, closeModal, intl } = props
+  const { vault, txHash, closeModal } = props
 
-  const formTokenAmount = useAtomValue(withdrawFormTokenAmountAtom)
+  const t_common = useTranslations('Common')
+  const t_modals = useTranslations('TxModals')
+
+  const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
 
   const { data: tokenData } = useVaultTokenData(vault)
 
@@ -30,13 +32,14 @@ export const ConfirmingView = (props: ConfirmingViewProps) => {
 
   return (
     <div className='flex flex-col gap-6'>
-      <span className='text-lg font-semibold text-center'>
-        {intl?.base?.('submissionNotice') ?? 'Transaction Submitted'}
-      </span>
-      <PrizePoolBadge chainId={vault.chainId} hideBorder={true} className='!py-1 mx-auto' />
-      <span className='text-sm text-center md:text-base'>
-        {intl?.base?.('withdrawing', { tokens }) ?? `Withdrawing ${tokens}...`}
-      </span>
+      <span className='text-lg font-semibold text-center'>{t_modals('submissionNotice')}</span>
+      <PrizePoolBadge
+        chainId={vault.chainId}
+        hideBorder={true}
+        intl={t_common}
+        className='!py-1 mx-auto'
+      />
+      <span className='text-sm text-center md:text-base'>{t_modals('depositing', { tokens })}</span>
       <Spinner size='lg' className='mx-auto after:border-y-pt-teal' />
       <div className='flex flex-col w-full justify-end h-24 gap-4 md:h-36 md:gap-6'>
         {!!txHash && (
@@ -45,11 +48,11 @@ export const ConfirmingView = (props: ConfirmingViewProps) => {
             size='sm'
             className='mx-auto text-pt-purple-100'
           >
-            {intl?.common?.('viewOn', { name }) ?? `View on ${name}`}
+            {t_common('viewOn', { name })}
           </ExternalLink>
         )}
         <Button fullSized={true} color='transparent' onClick={closeModal}>
-          {intl?.common?.('close') ?? 'Close'}
+          {t_common('close')}
         </Button>
       </div>
     </div>

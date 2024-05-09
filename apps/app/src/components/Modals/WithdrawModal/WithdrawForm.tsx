@@ -6,14 +6,14 @@ import {
   useVaultSharePrice,
   useVaultTokenPrice
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { Intl } from '@shared/types'
 import { getAssetsFromShares, getSharesFromAssets } from '@shared/utilities'
 import { atom, useSetAtom } from 'jotai'
+import { useTranslations } from 'next-intl'
 import { useEffect, useMemo } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Address, formatUnits, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
-import { isValidFormInput, TxFormInput, TxFormValues } from './TxFormInput'
+import { isValidFormInput, TxFormInput, TxFormValues } from '../TxFormInput'
 
 export const withdrawFormShareAmountAtom = atom<string>('')
 export const withdrawFormTokenAmountAtom = atom<string>('')
@@ -21,19 +21,12 @@ export const withdrawFormTokenAmountAtom = atom<string>('')
 export interface WithdrawFormProps {
   vault: Vault
   showInputInfoRows?: boolean
-  intl?: {
-    base?: Intl<'balance' | 'max'>
-    errors?: Intl<
-      | 'formErrors.notEnoughTokens'
-      | 'formErrors.invalidNumber'
-      | 'formErrors.negativeNumber'
-      | 'formErrors.tooManyDecimals'
-    >
-  }
 }
 
 export const WithdrawForm = (props: WithdrawFormProps) => {
-  const { vault, showInputInfoRows, intl } = props
+  const { vault, showInputInfoRows } = props
+
+  const t_errors = useTranslations('Error.formErrors')
 
   const { data: vaultExchangeRate } = useVaultExchangeRate(vault)
 
@@ -156,15 +149,11 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
                   parseFloat(formatUnits(shareBalance, decimals)) >= parseFloat(v) ||
                   !isFetchedVaultBalance ||
                   !vaultBalance ||
-                  (intl?.errors?.('formErrors.notEnoughTokens', {
-                    symbol: shareToken?.symbol ?? '?'
-                  }) ??
-                    `Not enough ${shareToken?.symbol ?? '?'} in wallet`)
+                  t_errors('notEnoughTokens', { symbol: shareToken?.symbol ?? '?' })
               }}
               onChange={handleShareAmountChange}
               showInfoRow={showInputInfoRows}
               showMaxButton={true}
-              intl={intl}
               className='mb-0.5'
             />
             <TxFormInput
@@ -172,7 +161,6 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
               formKey='tokenAmount'
               onChange={handleTokenAmountChange}
               showInfoRow={showInputInfoRows}
-              intl={intl}
               className='my-0.5'
             />
           </FormProvider>

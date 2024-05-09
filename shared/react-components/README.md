@@ -43,9 +43,6 @@ A React componponent library utilizing some simpler components from the internal
 ### Forms
 
 - `DelegateForm`
-- `DepositForm`
-- `TxFormInput`
-- `WithdrawForm`
 
 ### Graphics
 
@@ -66,10 +63,8 @@ A React componponent library utilizing some simpler components from the internal
 - `CaptchaModal`
 - `CheckPrizesModal`
 - `DelegateModal`
-- `DepositModal`
 - `DrawModal`
 - `SettingsModal`
-- `WithdrawModal`
 
 ### Prize Pool
 

@@ -3,27 +3,22 @@ import {
   useVaultShareData,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { Intl, Token, TokenWithLogo } from '@shared/types'
+import { PrizePoolBadge, TokenIcon } from '@shared/react-components'
+import { Token, TokenWithLogo } from '@shared/types'
 import { useAtomValue } from 'jotai'
-import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
-import {
-  withdrawFormShareAmountAtom,
-  withdrawFormTokenAmountAtom
-} from '../../../Form/WithdrawForm'
-import { TokenIcon } from '../../../Icons/TokenIcon'
-import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
+import { useTranslations } from 'next-intl'
+import { NetworkFees } from '../../NetworkFees'
+import { withdrawFormShareAmountAtom, withdrawFormTokenAmountAtom } from '../WithdrawForm'
 
 interface ReviewViewProps {
   vault: Vault
-  intl?: {
-    base?: Intl<'confirmWithdrawal'>
-    common?: Intl<'prizePool'>
-    fees?: NetworkFeesProps['intl']
-  }
 }
 
 export const ReviewView = (props: ReviewViewProps) => {
-  const { vault, intl } = props
+  const { vault } = props
+
+  const t_common = useTranslations('Common')
+  const t_modals = useTranslations('TxModals')
 
   const formShareAmount = useAtomValue(withdrawFormShareAmountAtom)
   const formTokenAmount = useAtomValue(withdrawFormTokenAmountAtom)
@@ -33,13 +28,11 @@ export const ReviewView = (props: ReviewViewProps) => {
 
   return (
     <div className='flex flex-col gap-6'>
-      <span className='text-xl font-semibold text-center'>
-        {intl?.base?.('confirmWithdrawal') ?? 'Confirm Withdrawal'}
-      </span>
+      <span className='text-xl font-semibold text-center'>{t_modals('confirmWithdrawal')}</span>
       <PrizePoolBadge
         chainId={vault.chainId}
         hideBorder={true}
-        intl={intl?.common}
+        intl={t_common}
         className='!py-1 mx-auto'
       />
       {!!shareData && !!tokenData && (
@@ -56,7 +49,7 @@ export const ReviewView = (props: ReviewViewProps) => {
           />
         </div>
       )}
-      <NetworkFees vault={vault} show={['withdraw']} intl={intl?.fees} />
+      <NetworkFees vault={vault} show={['withdraw']} />
     </div>
   )
 }

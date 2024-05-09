@@ -27,9 +27,6 @@ export * from './components/Currency/TokenValueAndAmount'
  * Forms
  */
 export * from './components/Form/DelegateForm'
-export * from './components/Form/DepositForm'
-export * from './components/Form/TxFormInput'
-export * from './components/Form/WithdrawForm'
 
 /**
  * Graphics
@@ -53,10 +50,8 @@ export * from './components/Icons/TokenIcon'
 export * from './components/Modals/CaptchaModal'
 export * from './components/Modals/CheckPrizesModal'
 export * from './components/Modals/DelegateModal'
-export * from './components/Modals/DepositModal'
 export * from './components/Modals/DrawModal'
 export * from './components/Modals/SettingsModal'
-export * from './components/Modals/WithdrawModal'
 
 /**
  * Prize Pool

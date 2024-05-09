@@ -4,22 +4,24 @@ import {
   useTokenBalance,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { Intl, VaultInfo } from '@shared/types'
+import { VaultInfo } from '@shared/types'
 import { ExternalLink } from '@shared/ui'
 import { getVaultId } from '@shared/utilities'
 import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 
 interface LpSourceProps {
   vault: Vault
-  intl?: Intl<'getTokenAt'>
   className?: string
 }
 
 export const LpSource = (props: LpSourceProps) => {
-  const { vault, intl, className } = props
+  const { vault, className } = props
+
+  const t = useTranslations('Common')
 
   const { localVaultLists, importedVaultLists } = useSelectedVaultLists()
 
@@ -73,7 +75,7 @@ export const LpSource = (props: LpSourceProps) => {
   if (!!vaultToken && !!sourceURI && !!cleanSourceURI && tokenBalance === 0n) {
     return (
       <span className={classNames('text-center text-sm', className)}>
-        {intl?.('getTokenAt', { token: vaultToken.symbol }) ?? `Get ${vaultToken.symbol} at`}{' '}
+        {t('getTokenAt', { token: vaultToken.symbol })}{' '}
         <ExternalLink href={sourceURI} size='sm' className='text-pt-purple-200'>
           {cleanSourceURI}
         </ExternalLink>

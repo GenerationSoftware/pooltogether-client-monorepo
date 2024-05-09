@@ -9,16 +9,16 @@ import {
   useVaultExchangeRate,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { Intl } from '@shared/types'
+import { TransactionButton } from '@shared/react-components'
 import { Button } from '@shared/ui'
 import { useAtomValue } from 'jotai'
+import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
 import { Address, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { WithdrawModalView } from '.'
-import { TransactionButton } from '../../Buttons/TransactionButton'
-import { isValidFormInput } from '../../Form/TxFormInput'
-import { withdrawFormShareAmountAtom } from '../../Form/WithdrawForm'
+import { isValidFormInput } from '../TxFormInput'
+import { withdrawFormShareAmountAtom } from './WithdrawForm'
 
 interface WithdrawTxButtonProps {
   vault: Vault
@@ -30,17 +30,6 @@ interface WithdrawTxButtonProps {
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
   onSuccessfulWithdrawal?: () => void
-  intl?: {
-    base?: Intl<
-      | 'enterAnAmount'
-      | 'reviewWithdrawal'
-      | 'withdrawTx'
-      | 'confirmWithdrawal'
-      | 'switchNetwork'
-      | 'switchingNetwork'
-    >
-    common?: Intl<'connectWallet'>
-  }
 }
 
 export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
@@ -53,9 +42,11 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
     openChainModal,
     addRecentTransaction,
     refetchUserBalances,
-    onSuccessfulWithdrawal,
-    intl
+    onSuccessfulWithdrawal
   } = props
+
+  const t_common = useTranslations('Common')
+  const t_modals = useTranslations('TxModals')
 
   const { address: userAddress, chain, isDisconnected } = useAccount()
 
@@ -151,13 +142,13 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
   if (withdrawAmount === 0n) {
     return (
       <Button color='transparent' fullSized={true} disabled={true}>
-        {intl?.base?.('enterAnAmount') ?? 'Enter an amount'}
+        {t_modals('enterAnAmount')}
       </Button>
     )
   } else if (!isDisconnected && chain?.id === vault.chainId && modalView === 'main') {
     return (
       <Button onClick={() => setModalView('review')} fullSized={true} disabled={!withdrawEnabled}>
-        {intl?.base?.('reviewWithdrawal') ?? 'Review Withdrawal'}
+        {t_modals('reviewWithdrawal')}
       </Button>
     )
   } else {
@@ -168,18 +159,15 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
         isTxSuccess={isSuccessfulWithdrawal}
         write={sendRedeemTransaction}
         txHash={withdrawTxHash}
-        txDescription={
-          intl?.base?.('withdrawTx', { symbol: tokenData?.symbol ?? '?' }) ??
-          `${tokenData?.symbol} Withdrawal`
-        }
+        txDescription={t_modals('withdrawTx', { symbol: tokenData?.symbol ?? '?' })}
         fullSized={true}
         disabled={!withdrawEnabled}
         openConnectModal={openConnectModal}
         openChainModal={openChainModal}
         addRecentTransaction={addRecentTransaction}
-        intl={intl}
+        intl={{ base: t_modals, common: t_common }}
       >
-        {intl?.base?.('confirmWithdrawal') ?? 'Confirm Withdrawal'}
+        {t_modals('confirmWithdrawal')}
       </TransactionButton>
     )
   }
