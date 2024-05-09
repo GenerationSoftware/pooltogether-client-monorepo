@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev --port 3000",
@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@decent.xyz/box-common": "^2.0.21",
     "@generationsoftware/hyperstructure-client-js": "workspace:*",
     "@generationsoftware/hyperstructure-react-hooks": "workspace:*",
     "@heroicons/react": "^2.0.16",
