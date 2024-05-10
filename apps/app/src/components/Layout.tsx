@@ -57,7 +57,6 @@ export const Layout = (props: LayoutProps) => {
   const t_settings = useTranslations('Settings')
   const t_footer = useTranslations('Footer')
   const t_txModals = useTranslations('TxModals')
-  const t_txFees = useTranslations('TxModals.fees')
   const t_txToasts = useTranslations('Toasts.transactions')
   const t_drawModal = useTranslations('Prizes.drawModal')
   const t_errors = useTranslations('Error')
@@ -270,10 +269,6 @@ export const Layout = (props: LayoutProps) => {
 
       <DepositModal
         prizePools={prizePoolsArray}
-        openConnectModal={openConnectModal}
-        openChainModal={openChainModal}
-        addRecentTransaction={addRecentTransaction}
-        onGoToAccount={() => router.push('/account')}
         refetchUserBalances={refetchUserBalances}
         onSuccessfulApproval={() => fathom.trackEvent(FATHOM_EVENTS.approvedExact)}
         onSuccessfulDeposit={() => fathom.trackEvent(FATHOM_EVENTS.deposited)}
@@ -281,9 +276,6 @@ export const Layout = (props: LayoutProps) => {
       />
 
       <WithdrawModal
-        openConnectModal={openConnectModal}
-        openChainModal={openChainModal}
-        addRecentTransaction={addRecentTransaction}
         onGoToAccount={() => router.push('/account')}
         refetchUserBalances={refetchUserBalances}
         onSuccessfulWithdrawal={() => fathom.trackEvent(FATHOM_EVENTS.redeemed)}
@@ -293,13 +285,7 @@ export const Layout = (props: LayoutProps) => {
         openChainModal={openChainModal}
         addRecentTransaction={addRecentTransaction}
         onSuccessfulDelegation={() => fathom.trackEvent(FATHOM_EVENTS.delegated)}
-        intl={{
-          base: t_txModals,
-          common: t_common,
-          fees: t_txFees,
-          txToast: t_txToasts,
-          errors: t_errors
-        }}
+        intl={{ base: t_txModals, common: t_common, txToast: t_txToasts, errors: t_errors }}
       />
 
       <DrawModal

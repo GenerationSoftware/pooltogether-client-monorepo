@@ -5,6 +5,7 @@ import {
   useVaultExchangeRate,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { AlertIcon, createDepositTxToast } from '@shared/react-components'
 import { Modal } from '@shared/ui'
@@ -29,10 +30,6 @@ export type DepositModalView = 'main' | 'review' | 'waiting' | 'confirming' | 's
 export interface DepositModalProps {
   prizePools: PrizePool[]
   onClose?: () => void
-  onGoToAccount?: () => void
-  openConnectModal?: () => void
-  openChainModal?: () => void
-  addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
   onSuccessfulApproval?: () => void
   onSuccessfulDeposit?: () => void
@@ -43,10 +40,6 @@ export const DepositModal = (props: DepositModalProps) => {
   const {
     prizePools,
     onClose,
-    onGoToAccount,
-    openConnectModal,
-    openChainModal,
-    addRecentTransaction,
     refetchUserBalances,
     onSuccessfulApproval,
     onSuccessfulDeposit,
@@ -54,6 +47,8 @@ export const DepositModal = (props: DepositModalProps) => {
   } = props
 
   const t_toasts = useTranslations('Toasts.transactions')
+
+  const addRecentTransaction = useAddRecentTransaction()
 
   const { vault } = useSelectedVault()
 
@@ -87,8 +82,8 @@ export const DepositModal = (props: DepositModalProps) => {
         vault: vault,
         txHash: depositTxHash,
         formattedAmount: formatNumberForDisplay(formTokenAmount),
-        addRecentTransaction: addRecentTransaction,
-        refetchUserBalances: refetchUserBalances,
+        addRecentTransaction,
+        refetchUserBalances,
         intl: t_toasts
       })
     }
@@ -106,14 +101,7 @@ export const DepositModal = (props: DepositModalProps) => {
       review: <ReviewView vault={vault} prizePool={prizePool as PrizePool} />,
       waiting: <WaitingView vault={vault} closeModal={handleClose} />,
       confirming: <ConfirmingView vault={vault} txHash={depositTxHash} closeModal={handleClose} />,
-      success: (
-        <SuccessView
-          vault={vault}
-          txHash={depositTxHash}
-          closeModal={handleClose}
-          goToAccount={onGoToAccount}
-        />
-      ),
+      success: <SuccessView vault={vault} txHash={depositTxHash} />,
       error: <ErrorView setModalView={setView} />
     }
 
@@ -130,9 +118,6 @@ export const DepositModal = (props: DepositModalProps) => {
             modalView={view}
             setModalView={setView}
             setDepositTxHash={setDepositTxHash}
-            openConnectModal={openConnectModal}
-            openChainModal={openChainModal}
-            addRecentTransaction={addRecentTransaction}
             refetchUserBalances={refetchUserBalances}
             onSuccessfulDepositWithPermit={onSuccessfulDepositWithPermit}
           />
@@ -142,9 +127,6 @@ export const DepositModal = (props: DepositModalProps) => {
             modalView={view}
             setModalView={setView}
             setDepositTxHash={setDepositTxHash}
-            openConnectModal={openConnectModal}
-            openChainModal={openChainModal}
-            addRecentTransaction={addRecentTransaction}
             refetchUserBalances={refetchUserBalances}
             onSuccessfulApproval={onSuccessfulApproval}
             onSuccessfulDeposit={onSuccessfulDeposit}

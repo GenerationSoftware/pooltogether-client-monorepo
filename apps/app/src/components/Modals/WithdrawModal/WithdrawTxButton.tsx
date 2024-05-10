@@ -9,6 +9,7 @@ import {
   useVaultExchangeRate,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { TransactionButton } from '@shared/react-components'
 import { Button } from '@shared/ui'
 import { useAtomValue } from 'jotai'
@@ -25,9 +26,6 @@ interface WithdrawTxButtonProps {
   modalView: string
   setModalView: (view: WithdrawModalView) => void
   setWithdrawTxHash: (txHash: string) => void
-  openConnectModal?: () => void
-  openChainModal?: () => void
-  addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
   onSuccessfulWithdrawal?: () => void
 }
@@ -38,15 +36,16 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
     modalView,
     setModalView,
     setWithdrawTxHash,
-    openConnectModal,
-    openChainModal,
-    addRecentTransaction,
     refetchUserBalances,
     onSuccessfulWithdrawal
   } = props
 
   const t_common = useTranslations('Common')
   const t_modals = useTranslations('TxModals')
+
+  const { openConnectModal } = useConnectModal()
+  const { openChainModal } = useChainModal()
+  const addRecentTransaction = useAddRecentTransaction()
 
   const { address: userAddress, chain, isDisconnected } = useAccount()
 

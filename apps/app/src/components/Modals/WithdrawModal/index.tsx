@@ -3,6 +3,7 @@ import {
   useSelectedVault,
   useVaultExchangeRate
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { createWithdrawTxToast } from '@shared/react-components'
 import { Modal } from '@shared/ui'
@@ -25,25 +26,16 @@ export type WithdrawModalView = 'main' | 'review' | 'waiting' | 'confirming' | '
 export interface WithdrawModalProps {
   onClose?: () => void
   onGoToAccount?: () => void
-  openConnectModal?: () => void
-  openChainModal?: () => void
-  addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
   onSuccessfulWithdrawal?: () => void
 }
 
 export const WithdrawModal = (props: WithdrawModalProps) => {
-  const {
-    onClose,
-    onGoToAccount,
-    openConnectModal,
-    openChainModal,
-    addRecentTransaction,
-    refetchUserBalances,
-    onSuccessfulWithdrawal
-  } = props
+  const { onClose, onGoToAccount, refetchUserBalances, onSuccessfulWithdrawal } = props
 
   const t_toasts = useTranslations('Toasts.transactions')
+
+  const addRecentTransaction = useAddRecentTransaction()
 
   const { vault } = useSelectedVault()
 
@@ -63,8 +55,8 @@ export const WithdrawModal = (props: WithdrawModalProps) => {
         vault: vault,
         txHash: withdrawTxHash,
         formattedAmount: formatNumberForDisplay(formTokenAmount),
-        addRecentTransaction: addRecentTransaction,
-        refetchUserBalances: refetchUserBalances,
+        addRecentTransaction,
+        refetchUserBalances,
         intl: t_toasts
       })
     }
@@ -104,9 +96,6 @@ export const WithdrawModal = (props: WithdrawModalProps) => {
           modalView={view}
           setModalView={setView}
           setWithdrawTxHash={setWithdrawTxHash}
-          openConnectModal={openConnectModal}
-          openChainModal={openChainModal}
-          addRecentTransaction={addRecentTransaction}
           refetchUserBalances={refetchUserBalances}
           onSuccessfulWithdrawal={onSuccessfulWithdrawal}
         />

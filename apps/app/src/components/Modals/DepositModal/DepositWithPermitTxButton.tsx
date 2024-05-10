@@ -10,6 +10,7 @@ import {
   useVaultBalance,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { TransactionButton } from '@shared/react-components'
 import { Button } from '@shared/ui'
 import { useAtomValue } from 'jotai'
@@ -26,9 +27,6 @@ interface DepositWithPermitTxButtonProps {
   modalView: string
   setModalView: (view: DepositModalView) => void
   setDepositTxHash: (txHash: string) => void
-  openConnectModal?: () => void
-  openChainModal?: () => void
-  addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
   onSuccessfulDepositWithPermit?: () => void
 }
@@ -39,15 +37,16 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
     modalView,
     setModalView,
     setDepositTxHash,
-    openConnectModal,
-    openChainModal,
-    addRecentTransaction,
     refetchUserBalances,
     onSuccessfulDepositWithPermit
   } = props
 
   const t_common = useTranslations('Common')
   const t_modals = useTranslations('TxModals')
+
+  const { openConnectModal } = useConnectModal()
+  const { openChainModal } = useChainModal()
+  const addRecentTransaction = useAddRecentTransaction()
 
   const { address: userAddress, chain, isDisconnected } = useAccount()
 

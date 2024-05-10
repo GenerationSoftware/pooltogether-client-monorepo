@@ -15,9 +15,7 @@ import { depositFormTokenAmountAtom } from '../DepositForm'
 
 interface SuccessViewProps {
   vault: Vault
-  closeModal: () => void
   txHash?: string
-  goToAccount?: () => void
 }
 
 export const SuccessView = (props: SuccessViewProps) => {
