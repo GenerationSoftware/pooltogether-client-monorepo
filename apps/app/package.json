@@ -8,7 +8,6 @@
     "start": "next start"
   },
   "dependencies": {
-    "@decent.xyz/box-common": "^2.0.21",
     "@generationsoftware/hyperstructure-client-js": "workspace:*",
     "@generationsoftware/hyperstructure-react-hooks": "workspace:*",
     "@heroicons/react": "^2.0.16",

@@ -1,11 +1,3 @@
-import {
-  ActionType,
-  bigintDeserializer,
-  bigintSerializer,
-  BoxActionRequest,
-  BoxActionResponse,
-  EvmTransaction
-} from '@decent.xyz/box-common'
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useVaultTokenAddress } from '@generationsoftware/hyperstructure-react-hooks'
 import { sToMs } from '@shared/utilities'
@@ -13,6 +5,57 @@ import { useQuery } from '@tanstack/react-query'
 import { useEffect, useMemo } from 'react'
 import { Address, TransactionReceipt } from 'viem'
 import { useAccount, useSendTransaction, useWaitForTransactionReceipt } from 'wagmi'
+
+interface DecentRequest {
+  sender: Address
+  srcChainId: number
+  srcToken?: Address
+  dstChainId: number
+  dstToken?: Address
+  slippage: number
+  actionType: 'evm-function'
+  actionConfig: {
+    chainId: number
+    contractAddress: Address
+    cost: DecentToken
+    signature: string
+    args: any[]
+    allowSwapping?: boolean
+    allowBridging?: boolean
+  }
+}
+
+interface DecentResponse {
+  tx: {
+    to: Address
+    data?: `0x${string}`
+    value?: bigint
+    gasPrice?: bigint
+    gasLimit?: bigint
+    maxFeePerGas?: bigint
+    maxPriorityFeePerGas?: bigint
+    chainId?: number
+  }
+  tokenPayment?: DecentToken
+  applicationFee?: DecentToken
+  bridgeFee?: DecentToken
+  bridgeId?: string
+  relayInfo?: {
+    actions: {
+      address: Address
+      signatures: string[]
+      args: any[]
+      functionName: string
+      value?: bigint
+    }[]
+  }
+  amountOut?: DecentToken
+  arbitraryData?: any
+}
+
+type DecentToken =
+  | { amount: bigint; isNative?: false; tokenAddress: Address }
+  | { amount: bigint; isNative: true; tokenAddress?: Address }
 
 // TODO: detect permit support and use depositWithPermit if appropriate
 // TODO: allow for multichain routes
@@ -40,12 +83,14 @@ export const useSendDecentTransaction = (
   isError: boolean
   txHash?: Address
   txReceipt?: TransactionReceipt
-  // sendApproveTransaction?: () => void // TODO: check if decent api actually returns approval tx or if we should check first and approve ourselves
+  sendApproveTransaction?: () => void
   sendDepositTransaction?: () => void
 } => {
   const { address: userAddress, chain } = useAccount()
 
   const { data: tokenAddress, isFetched: isFetchedTokenAddress } = useVaultTokenAddress(vault)
+
+  // TODO: check approval for token being spent and setup approval transaction if necessary
 
   const enabled =
     !!amount &&
@@ -56,10 +101,10 @@ export const useSendDecentTransaction = (
     !!tokenAddress &&
     !!process.env.NEXT_PUBLIC_DECENT_API_KEY
 
-  const txConfig = useMemo((): BoxActionRequest | undefined => {
+  const txConfig = useMemo((): DecentRequest | undefined => {
     if (enabled) {
       return {
-        actionType: ActionType.EvmFunction,
+        actionType: 'evm-function',
         sender: userAddress,
         srcToken: options?.fromTokenAddress ?? tokenAddress,
         dstToken: tokenAddress,
@@ -96,9 +141,9 @@ export const useSendDecentTransaction = (
         method: 'get',
         headers: { 'x-api-key': process.env.NEXT_PUBLIC_DECENT_API_KEY as string }
       }).then((r) => r.text())
-      const { tx }: BoxActionResponse = JSON.parse(rawApiResponse, bigintDeserializer)
+      const { tx }: DecentResponse = JSON.parse(rawApiResponse, bigintDeserializer)
 
-      return tx as EvmTransaction
+      return tx
     },
     enabled: !!txConfig,
     staleTime: sToMs(60)
@@ -145,4 +190,14 @@ export const useSendDecentTransaction = (
   }, [isError])
 
   return { isWaiting, isConfirming, isSuccess, isError, txHash, txReceipt, sendDepositTransaction }
+}
+
+const bigintSerializer = (_key: string, value: unknown): unknown => {
+  if (typeof value === 'bigint') return value.toString() + 'n'
+  return value
+}
+
+const bigintDeserializer = (_key: string, value: unknown): unknown => {
+  if (typeof value === 'string' && /^-?\d+n$/.test(value)) return BigInt(value.slice(0, -1))
+  return value
 }
