@@ -9,7 +9,6 @@ import { Modal } from '@shared/ui'
 import { useState } from 'react'
 import { Address } from 'viem'
 import { DelegateTxToastProps } from '../../Toasts/DelegateTxToast'
-import { NetworkFeesProps } from '../NetworkFees'
 import { DelegateModalBody } from './DelegateModalBody'
 import { DelegateTxButton } from './DelegateTxButton'
 
@@ -43,7 +42,6 @@ export interface DelegateModalProps {
     >
     tooltip?: Intl<'delegateDescription'>
     common?: Intl<'prizePool' | 'connectWallet' | 'close' | 'viewOn' | 'warning' | 'learnMore'>
-    fees?: NetworkFeesProps['intl']
     txToast?: DelegateTxToastProps['intl']
     errors?: RichIntl<'formErrors.invalidAddress' | 'formErrors.sameAsDelegate'>
   }
