@@ -1,5 +1,9 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { useVaultTokenAddress } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useSendGenericApproveTransaction,
+  useTokenAllowance,
+  useVaultTokenAddress
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { sToMs } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useMemo } from 'react'
@@ -90,8 +94,6 @@ export const useSendDecentTransaction = (
 
   const { data: tokenAddress, isFetched: isFetchedTokenAddress } = useVaultTokenAddress(vault)
 
-  // TODO: check approval for token being spent and setup approval transaction if necessary
-
   const enabled =
     !!amount &&
     !!vault &&
@@ -141,42 +143,80 @@ export const useSendDecentTransaction = (
         method: 'get',
         headers: { 'x-api-key': process.env.NEXT_PUBLIC_DECENT_API_KEY as string }
       }).then((r) => r.text())
-      const { tx }: DecentResponse = JSON.parse(rawApiResponse, bigintDeserializer)
+      const apiResponse: DecentResponse = JSON.parse(rawApiResponse, bigintDeserializer)
 
-      return tx
+      return apiResponse
     },
     enabled: !!txConfig,
     staleTime: sToMs(60)
   })
   console.log('🍪 ~ decentTxData:', isFetchedDecentTxData, decentTxData) // TODO: remove
 
+  const approvalToken = useMemo(() => {
+    if (
+      !!decentTxData &&
+      !!decentTxData.tx.chainId &&
+      !!decentTxData.tokenPayment &&
+      !decentTxData.tokenPayment.isNative
+    ) {
+      return {
+        chainId: decentTxData.tx.chainId,
+        address: decentTxData.tokenPayment.tokenAddress,
+        amount: decentTxData.tokenPayment.amount
+      }
+    }
+  }, [decentTxData])
+  console.log('🍪 ~ approvalToken:', approvalToken)
+
+  const {
+    data: allowance,
+    isFetched: isFetchedAllowance,
+    refetch: refetchAllowance
+  } = useTokenAllowance(
+    approvalToken?.chainId as number,
+    userAddress as Address,
+    decentTxData?.tx.to as Address,
+    approvalToken?.address as Address
+  )
+  console.log('🍪 ~ allowance:', isFetchedAllowance, allowance)
+
+  const {
+    isWaiting: isWaitingApproval,
+    isConfirming: isConfirmingApproval,
+    sendApproveTransaction
+  } = useSendGenericApproveTransaction(
+    approvalToken?.chainId as number,
+    approvalToken?.address as Address,
+    decentTxData?.tx.to as Address,
+    approvalToken?.amount as bigint,
+    { onSuccess: () => refetchAllowance() }
+  )
+
   const {
     data: txHash,
-    isPending: isWaiting,
+    isPending: isWaitingDeposit,
     isError: isSendingError,
-    isSuccess: isSendingSuccess,
     sendTransaction: _sendDepositTransaction
   } = useSendTransaction()
 
-  const sendDepositTransaction = !!decentTxData
-    ? () => _sendDepositTransaction(decentTxData)
-    : undefined
-
-  useEffect(() => {
-    if (!!txHash && isSendingSuccess) {
-      options?.onSend?.(txHash)
-    }
-  }, [isSendingSuccess])
+  const sendDepositTransaction =
+    !!txConfig && !!decentTxData && isFetchedAllowance && !!allowance && allowance >= 0n
+      ? () =>
+          _sendDepositTransaction(decentTxData.tx, {
+            onSuccess: (txHash) => options?.onSend?.(txHash)
+          })
+      : undefined
 
   const {
     data: txReceipt,
-    isFetching: isConfirming,
+    isFetching: isConfirmingDeposit,
     isSuccess,
     isError: isConfirmingError
   } = useWaitForTransactionReceipt({ chainId: vault?.chainId, hash: txHash })
 
   useEffect(() => {
     if (!!txReceipt && isSuccess) {
+      refetchAllowance()
       options?.onSuccess?.(txReceipt)
     }
   }, [isSuccess])
@@ -189,7 +229,19 @@ export const useSendDecentTransaction = (
     }
   }, [isError])
 
-  return { isWaiting, isConfirming, isSuccess, isError, txHash, txReceipt, sendDepositTransaction }
+  const isWaiting = isWaitingApproval || isWaitingDeposit
+  const isConfirming = isConfirmingApproval || isConfirmingDeposit
+
+  return {
+    isWaiting,
+    isConfirming,
+    isSuccess,
+    isError,
+    txHash,
+    txReceipt,
+    sendApproveTransaction,
+    sendDepositTransaction
+  }
 }
 
 const bigintSerializer = (_key: string, value: unknown): unknown => {
