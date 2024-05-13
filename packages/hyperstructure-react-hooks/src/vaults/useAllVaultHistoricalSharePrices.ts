@@ -47,27 +47,30 @@ export const useAllVaultHistoricalSharePrices = (chainId: number, vaults: Vaults
       } = {}
 
       Object.entries(allShareData).forEach(([vaultId, shareToken]) => {
-        const tokenAddress = allTokenAddresses.byVault[vaultId].toLowerCase() as Address
-        const tokenPrices = allHistoricalTokenPrices[tokenAddress]
-        const exchangeRate = allExchangeRates[vaultId]
+        const tokenAddress = allTokenAddresses.byVault[vaultId]?.toLowerCase() as Address
 
-        const priceHistory =
-          !!exchangeRate && !!tokenPrices
-            ? tokenPrices.map((entry) => ({
-                date: entry.date,
-                price: parseFloat(
-                  formatEther(
-                    getAssetsFromShares(
-                      parseEther(`${entry.price}`),
-                      exchangeRate,
-                      shareToken.decimals
+        if (!!tokenAddress) {
+          const tokenPrices = allHistoricalTokenPrices[tokenAddress]
+          const exchangeRate = allExchangeRates[vaultId]
+
+          const priceHistory =
+            !!exchangeRate && !!tokenPrices
+              ? tokenPrices.map((entry) => ({
+                  date: entry.date,
+                  price: parseFloat(
+                    formatEther(
+                      getAssetsFromShares(
+                        parseEther(`${entry.price}`),
+                        exchangeRate,
+                        shareToken.decimals
+                      )
                     )
                   )
-                )
-              }))
-            : []
+                }))
+              : []
 
-        sharePrices[vaultId] = { ...shareToken, priceHistory }
+          sharePrices[vaultId] = { ...shareToken, priceHistory }
+        }
       })
 
       return sharePrices

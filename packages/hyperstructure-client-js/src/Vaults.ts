@@ -418,7 +418,9 @@ export class Vaults {
             const chainTokenAddresses = await getVaultUnderlyingTokenAddresses(client, chainVaults)
             Object.assign(tokenAddresses.byVault, chainTokenAddresses)
 
-            const uniqueTokenAddresses = Array.from(new Set(Object.values(chainTokenAddresses)))
+            const uniqueTokenAddresses = Array.from(
+              new Set(Object.values(chainTokenAddresses).filter((address) => !!address))
+            )
             tokenAddresses.byChain[chainId] = uniqueTokenAddresses
 
             Object.keys(chainTokenAddresses).forEach((vaultId) => {

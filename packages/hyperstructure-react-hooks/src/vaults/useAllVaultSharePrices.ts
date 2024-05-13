@@ -42,25 +42,28 @@ export const useAllVaultSharePrices = (vaults: Vaults) => {
       const sharePrices: { [vaultId: string]: TokenWithSupply & TokenWithPrice } = {}
 
       Object.entries(allShareData).forEach(([vaultId, shareToken]) => {
-        const chainId = parseInt(vaultId.split('-')[1])
-        const tokenAddress = allTokenAddresses.byVault[vaultId].toLowerCase() as Address
-        const tokenPrice = allTokenPrices[chainId]?.[tokenAddress]
-        const exchangeRate = allExchangeRates[vaultId]
+        const tokenAddress = allTokenAddresses.byVault[vaultId]?.toLowerCase() as Address
 
-        const sharePrice =
-          !!exchangeRate && !!tokenPrice
-            ? parseFloat(
-                formatEther(
-                  getAssetsFromShares(
-                    parseEther(`${tokenPrice}`),
-                    exchangeRate,
-                    shareToken.decimals
+        if (!!tokenAddress) {
+          const chainId = parseInt(vaultId.split('-')[1])
+          const tokenPrice = allTokenPrices[chainId]?.[tokenAddress]
+          const exchangeRate = allExchangeRates[vaultId]
+
+          const sharePrice =
+            !!exchangeRate && !!tokenPrice
+              ? parseFloat(
+                  formatEther(
+                    getAssetsFromShares(
+                      parseEther(`${tokenPrice}`),
+                      exchangeRate,
+                      shareToken.decimals
+                    )
                   )
                 )
-              )
-            : undefined
+              : undefined
 
-        sharePrices[vaultId] = { ...shareToken, price: sharePrice }
+          sharePrices[vaultId] = { ...shareToken, price: sharePrice }
+        }
       })
 
       return sharePrices

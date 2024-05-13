@@ -57,8 +57,10 @@ export const useSelectedVaults = (): { vaults: Vaults; isFetched: boolean } => {
       if (vaults.vaults[vaultId].decimals === undefined && !isNaN(shareData[vaultId].decimals)) {
         vaults.vaults[vaultId].decimals = shareData[vaultId].decimals
       }
+
       vaults.vaults[vaultId].shareData = shareData[vaultId]
-      if (vaults.vaults[vaultId].name === undefined) {
+
+      if (vaults.vaults[vaultId].name === undefined && !!shareData[vaultId]?.name) {
         vaults.vaults[vaultId].name = shareData[vaultId].name
       }
     })
@@ -69,7 +71,12 @@ export const useSelectedVaults = (): { vaults: Vaults; isFetched: boolean } => {
       if (vaults.vaults[vaultId].decimals === undefined && !isNaN(tokenData[vaultId].decimals)) {
         vaults.vaults[vaultId].decimals = tokenData[vaultId].decimals
       }
+
       vaults.vaults[vaultId].tokenData = tokenData[vaultId]
+
+      if (vaults.vaults[vaultId].tokenAddress === undefined && !!tokenData[vaultId]?.address) {
+        vaults.vaults[vaultId].tokenAddress = tokenData[vaultId].address
+      }
     })
   }
 
