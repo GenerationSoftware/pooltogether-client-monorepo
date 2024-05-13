@@ -3,8 +3,9 @@ import {
   useVaultShareData,
   useVaultTokenAddress
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { TokenWithLogo } from '@shared/types'
+import { lower, NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
+import { TOKEN_LOGO_OVERRIDES } from '../../constants'
 import { NetworkIcon } from '../Icons/NetworkIcon'
 import { TokenIcon } from '../Icons/TokenIcon'
 
@@ -23,13 +24,7 @@ export const VaultBadge = (props: VaultBadgeProps) => {
   const { data: shareData } = useVaultShareData(vault)
   const { data: tokenAddress } = useVaultTokenAddress(vault)
 
-  const token: Partial<TokenWithLogo> = {
-    chainId: vault.chainId,
-    address: !!vault.logoURI ? vault.address : vault.tokenAddress ?? tokenAddress,
-    name: vault.name ?? shareData?.name,
-    symbol: vault.shareData?.symbol ?? shareData?.symbol,
-    logoURI: vault.logoURI ?? vault.tokenLogoURI
-  }
+  const isLogoOverridden = !!TOKEN_LOGO_OVERRIDES[vault.chainId as NETWORK]?.[lower(vault.address)]
 
   return (
     <div
@@ -43,7 +38,17 @@ export const VaultBadge = (props: VaultBadgeProps) => {
       onClick={onClick}
     >
       <div className={classNames('relative pb-1 shrink-0', iconClassName)}>
-        <TokenIcon token={token} />
+        <TokenIcon
+          token={{
+            ...shareData,
+            ...vault,
+            address:
+              !!vault.logoURI || isLogoOverridden
+                ? vault.address
+                : vault.tokenAddress ?? tokenAddress,
+            logoURI: vault.logoURI ?? vault.tokenLogoURI
+          }}
+        />
         <NetworkIcon chainId={vault.chainId} className='absolute top-3 left-3 h-4 w-4' />
       </div>
       <span
@@ -52,10 +57,10 @@ export const VaultBadge = (props: VaultBadgeProps) => {
           nameClassName
         )}
       >
-        {token.name}
+        {vault.name ?? shareData?.name}
       </span>
       <span className={classNames('text-xs text-pt-purple-200', symbolClassName)}>
-        {token.symbol}
+        {vault.shareData?.symbol ?? shareData?.symbol}
       </span>
     </div>
   )
