@@ -61,6 +61,7 @@ type DecentToken =
   | { amount: bigint; isNative?: false; tokenAddress: Address }
   | { amount: bigint; isNative: true; tokenAddress?: Address }
 
+// TODO: allow `fromTokenAddress` of native asset (isNative: true)
 // TODO: detect permit support and use depositWithPermit if appropriate
 // TODO: allow for multichain routes
 
@@ -166,7 +167,7 @@ export const useSendDecentTransaction = (
       }
     }
   }, [decentTxData])
-  console.log('🍪 ~ approvalToken:', approvalToken)
+  console.log('🍪 ~ approvalToken:', approvalToken) // TODO: remove
 
   const {
     data: allowance,
@@ -178,7 +179,7 @@ export const useSendDecentTransaction = (
     decentTxData?.tx.to as Address,
     approvalToken?.address as Address
   )
-  console.log('🍪 ~ allowance:', isFetchedAllowance, allowance)
+  console.log('🍪 ~ allowance:', isFetchedAllowance, allowance) // TODO: remove
 
   const {
     isWaiting: isWaitingApproval,
