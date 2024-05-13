@@ -15,7 +15,6 @@ import { Address, formatUnits, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { isValidFormInput, TxFormInput, TxFormValues } from '../TxFormInput'
 
-export const depositFormTokenAddressAtom = atom<string>('')
 export const depositFormTokenAmountAtom = atom<string>('')
 export const depositFormShareAmountAtom = atom<string>('')
 
@@ -23,11 +22,6 @@ export interface DepositFormProps {
   vault: Vault
   showInputInfoRows?: boolean
 }
-
-// TODO: need to calculate and setup deposit tx based on swap output
-
-// TODO: allow user to switch top token address (dropdown with tokens in wallet - https://docs.decent.xyz/development/api-reference/ui-helpers)
-// TODO: if token isn't underlying vault token, use DepositWithDecentButton (and calculate exchange rate based the input or output of the swap + vault exchange rate)
 
 export const DepositForm = (props: DepositFormProps) => {
   const { vault, showInputInfoRows } = props
