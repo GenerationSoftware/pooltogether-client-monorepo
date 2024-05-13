@@ -3,22 +3,22 @@ import {
   useSelectedVault,
   useVaultExchangeRate
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
-import { Intl, RichIntl } from '@shared/types'
+import { createWithdrawTxToast } from '@shared/react-components'
 import { Modal } from '@shared/ui'
 import { formatNumberForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
+import { useTranslations } from 'next-intl'
 import { ReactNode, useState } from 'react'
-import { withdrawFormTokenAmountAtom } from '../../Form/WithdrawForm'
-import { createWithdrawTxToast, WithdrawTxToastProps } from '../../Toasts/WithdrawTxToast'
-import { NetworkFeesProps } from '../NetworkFees'
 import { ConfirmingView } from './Views/ConfirmingView'
 import { ErrorView } from './Views/ErrorView'
 import { MainView } from './Views/MainView'
 import { ReviewView } from './Views/ReviewView'
 import { SuccessView } from './Views/SuccessView'
 import { WaitingView } from './Views/WaitingView'
+import { withdrawFormTokenAmountAtom } from './WithdrawForm'
 import { WithdrawTxButton } from './WithdrawTxButton'
 
 export type WithdrawModalView = 'main' | 'review' | 'waiting' | 'confirming' | 'success' | 'error'
@@ -26,56 +26,16 @@ export type WithdrawModalView = 'main' | 'review' | 'waiting' | 'confirming' | '
 export interface WithdrawModalProps {
   onClose?: () => void
   onGoToAccount?: () => void
-  openConnectModal?: () => void
-  openChainModal?: () => void
-  addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
   onSuccessfulWithdrawal?: () => void
-  intl?: {
-    base?: RichIntl<
-      | 'withdrawFrom'
-      | 'withdrawFromShort'
-      | 'max'
-      | 'balance'
-      | 'enterAnAmount'
-      | 'reviewWithdrawal'
-      | 'withdrawTx'
-      | 'confirmWithdrawal'
-      | 'switchNetwork'
-      | 'switchingNetwork'
-      | 'confirmNotice'
-      | 'submissionNotice'
-      | 'withdrawing'
-      | 'success'
-      | 'withdrew'
-      | 'viewAccount'
-      | 'uhOh'
-      | 'failedTx'
-      | 'tryAgain'
-    >
-    common?: Intl<'prizePool' | 'connectWallet' | 'close' | 'viewOn' | 'warning'>
-    fees?: NetworkFeesProps['intl']
-    txToast?: WithdrawTxToastProps['intl']
-    errors?: RichIntl<
-      | 'formErrors.notEnoughTokens'
-      | 'formErrors.invalidNumber'
-      | 'formErrors.negativeNumber'
-      | 'formErrors.tooManyDecimals'
-    >
-  }
 }
 
 export const WithdrawModal = (props: WithdrawModalProps) => {
-  const {
-    onClose,
-    onGoToAccount,
-    openConnectModal,
-    openChainModal,
-    addRecentTransaction,
-    refetchUserBalances,
-    onSuccessfulWithdrawal,
-    intl
-  } = props
+  const { onClose, onGoToAccount, refetchUserBalances, onSuccessfulWithdrawal } = props
+
+  const t_toasts = useTranslations('Toasts.transactions')
+
+  const addRecentTransaction = useAddRecentTransaction()
 
   const { vault } = useSelectedVault()
 
@@ -95,9 +55,9 @@ export const WithdrawModal = (props: WithdrawModalProps) => {
         vault: vault,
         txHash: withdrawTxHash,
         formattedAmount: formatNumberForDisplay(formTokenAmount),
-        addRecentTransaction: addRecentTransaction,
-        refetchUserBalances: refetchUserBalances,
-        intl: intl?.txToast
+        addRecentTransaction,
+        refetchUserBalances,
+        intl: t_toasts
       })
     }
   }
@@ -110,27 +70,19 @@ export const WithdrawModal = (props: WithdrawModalProps) => {
 
   if (isModalOpen && !!vault) {
     const modalViews: Record<WithdrawModalView, ReactNode> = {
-      main: <MainView vault={vault} intl={intl} />,
-      review: <ReviewView vault={vault} intl={intl} />,
-      waiting: <WaitingView vault={vault} closeModal={handleClose} intl={intl} />,
-      confirming: (
-        <ConfirmingView
-          vault={vault}
-          txHash={withdrawTxHash}
-          closeModal={handleClose}
-          intl={intl}
-        />
-      ),
+      main: <MainView vault={vault} />,
+      review: <ReviewView vault={vault} />,
+      waiting: <WaitingView vault={vault} closeModal={handleClose} />,
+      confirming: <ConfirmingView vault={vault} txHash={withdrawTxHash} closeModal={handleClose} />,
       success: (
         <SuccessView
           vault={vault}
           txHash={withdrawTxHash}
           closeModal={handleClose}
           goToAccount={onGoToAccount}
-          intl={intl}
         />
       ),
-      error: <ErrorView setModalView={setView} intl={intl?.base} />
+      error: <ErrorView setModalView={setView} />
     }
 
     const modalFooterContent = !!vaultExchangeRate ? (
@@ -144,12 +96,8 @@ export const WithdrawModal = (props: WithdrawModalProps) => {
           modalView={view}
           setModalView={setView}
           setWithdrawTxHash={setWithdrawTxHash}
-          openConnectModal={openConnectModal}
-          openChainModal={openChainModal}
-          addRecentTransaction={addRecentTransaction}
           refetchUserBalances={refetchUserBalances}
           onSuccessfulWithdrawal={onSuccessfulWithdrawal}
-          intl={intl}
         />
       </div>
     ) : undefined

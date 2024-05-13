@@ -191,7 +191,7 @@ importers:
         version: 2.0.17(react@18.2.0)
       '@highlight-run/next':
         specifier: ^7.5.3
-        version: 7.5.3(@opentelemetry/api@1.7.0)(next@14.1.0)(react-dom@18.2.0)(react@18.2.0)
+        version: 7.5.3(@opentelemetry/api@1.8.0)(next@14.1.0)(react-dom@18.2.0)(react@18.2.0)
       '@rainbow-me/rainbowkit':
         specifier: ^2.0.0
         version: 2.0.0(@types/react@18.2.8)(react-dom@18.2.0)(react@18.2.0)(viem@2.7.9)(wagmi@2.5.6)
@@ -227,7 +227,7 @@ importers:
         version: 2.4.0(react-dom@18.2.0)(react@18.2.0)
       next:
         specifier: 14.1.0
-        version: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+        version: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.8.0)(react-dom@18.2.0)(react@18.2.0)
       next-intl:
         specifier: ^3.11.0
         version: 3.11.0(next@14.1.0)(react@18.2.0)
@@ -3204,30 +3204,30 @@ packages:
     dependencies:
       react: 18.2.0
 
-  /@highlight-run/cloudflare@2.1.5(@opentelemetry/api@1.7.0):
+  /@highlight-run/cloudflare@2.1.5(@opentelemetry/api@1.8.0):
     resolution: {integrity: sha512-ekBPsCxwMu+bH6r8GW2bdKYod37SNrvEPufL/UAcSEIU7L9JAGebxvb0h+G1hpCrkgqM7Ff5srre7YuJwv1y4g==}
     dependencies:
       '@highlight-run/opentelemetry-sdk-workers': 1.0.6
-      '@opentelemetry/resources': 1.22.0(@opentelemetry/api@1.7.0)
+      '@opentelemetry/resources': 1.22.0(@opentelemetry/api@1.8.0)
     transitivePeerDependencies:
       - '@opentelemetry/api'
       - supports-color
     dev: false
 
-  /@highlight-run/next@7.5.3(@opentelemetry/api@1.7.0)(next@14.1.0)(react-dom@18.2.0)(react@18.2.0):
+  /@highlight-run/next@7.5.3(@opentelemetry/api@1.8.0)(next@14.1.0)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-p9aM/M/VDQ42cb7bD2wUb+Wk3YO5wLdcGQ53uS76CsQcLdwxtt5OJ/sUfy2vW/hGtVdTAjC333MGTPtzws4irA==}
     peerDependencies:
       next: '>=11'
       react: '>=17'
     dependencies:
-      '@highlight-run/cloudflare': 2.1.5(@opentelemetry/api@1.7.0)
+      '@highlight-run/cloudflare': 2.1.5(@opentelemetry/api@1.8.0)
       '@highlight-run/node': 3.9.0
       '@highlight-run/opentelemetry-sdk-workers': 1.0.6
       '@highlight-run/react': 3.2.2(react-dom@18.2.0)(react@18.2.0)
       '@highlight-run/sourcemap-uploader': 0.6.3
       highlight.run: 8.12.2
       js-cookie: 3.0.5
-      next: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+      next: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.8.0)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
     transitivePeerDependencies:
       - '@opentelemetry/api'
@@ -4383,16 +4383,6 @@ packages:
       '@opentelemetry/api': 1.7.0
       '@opentelemetry/semantic-conventions': 1.21.0
 
-  /@opentelemetry/core@1.22.0(@opentelemetry/api@1.7.0):
-    resolution: {integrity: sha512-0VoAlT6x+Xzik1v9goJ3pZ2ppi6+xd3aUfg4brfrLkDBHRIVjMP0eBHrKrhB+NKcDyMAg8fAbGL3Npg/F6AwWA==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      '@opentelemetry/api': '>=1.0.0 <1.9.0'
-    dependencies:
-      '@opentelemetry/api': 1.7.0
-      '@opentelemetry/semantic-conventions': 1.22.0
-    dev: false
-
   /@opentelemetry/core@1.22.0(@opentelemetry/api@1.8.0):
     resolution: {integrity: sha512-0VoAlT6x+Xzik1v9goJ3pZ2ppi6+xd3aUfg4brfrLkDBHRIVjMP0eBHrKrhB+NKcDyMAg8fAbGL3Npg/F6AwWA==}
     engines: {node: '>=14'}
@@ -4541,17 +4531,6 @@ packages:
       '@opentelemetry/api': 1.7.0
       '@opentelemetry/core': 1.21.0(@opentelemetry/api@1.7.0)
       '@opentelemetry/semantic-conventions': 1.21.0
-
-  /@opentelemetry/resources@1.22.0(@opentelemetry/api@1.7.0):
-    resolution: {integrity: sha512-+vNeIFPH2hfcNL0AJk/ykJXoUCtR1YaDUZM+p3wZNU4Hq98gzq+7b43xbkXjadD9VhWIUQqEwXyY64q6msPj6A==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      '@opentelemetry/api': '>=1.0.0 <1.9.0'
-    dependencies:
-      '@opentelemetry/api': 1.7.0
-      '@opentelemetry/core': 1.22.0(@opentelemetry/api@1.7.0)
-      '@opentelemetry/semantic-conventions': 1.22.0
-    dev: false
 
   /@opentelemetry/resources@1.22.0(@opentelemetry/api@1.8.0):
     resolution: {integrity: sha512-+vNeIFPH2hfcNL0AJk/ykJXoUCtR1YaDUZM+p3wZNU4Hq98gzq+7b43xbkXjadD9VhWIUQqEwXyY64q6msPj6A==}
@@ -12170,7 +12149,7 @@ packages:
     dependencies:
       '@formatjs/intl-localematcher': 0.2.32
       negotiator: 0.6.3
-      next: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+      next: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.8.0)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       use-intl: 3.11.0(react@18.2.0)
     dev: false
@@ -12237,6 +12216,46 @@ packages:
     dependencies:
       '@next/env': 14.1.0
       '@opentelemetry/api': 1.7.0
+      '@swc/helpers': 0.5.2
+      busboy: 1.6.0
+      caniuse-lite: 1.0.30001587
+      graceful-fs: 4.2.11
+      postcss: 8.4.31
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      styled-jsx: 5.1.1(@babel/core@7.23.9)(react@18.2.0)
+    optionalDependencies:
+      '@next/swc-darwin-arm64': 14.1.0
+      '@next/swc-darwin-x64': 14.1.0
+      '@next/swc-linux-arm64-gnu': 14.1.0
+      '@next/swc-linux-arm64-musl': 14.1.0
+      '@next/swc-linux-x64-gnu': 14.1.0
+      '@next/swc-linux-x64-musl': 14.1.0
+      '@next/swc-win32-arm64-msvc': 14.1.0
+      '@next/swc-win32-ia32-msvc': 14.1.0
+      '@next/swc-win32-x64-msvc': 14.1.0
+    transitivePeerDependencies:
+      - '@babel/core'
+      - babel-plugin-macros
+    dev: false
+
+  /next@14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.8.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-wlzrsbfeSU48YQBjZhDzOwhWhGsy+uQycR8bHAOt1LY1bn3zZEcDyHQOEoN3aWzQ8LHCAJ1nqrWCc9XF2+O45Q==}
+    engines: {node: '>=18.17.0'}
+    hasBin: true
+    peerDependencies:
+      '@opentelemetry/api': ^1.1.0
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      sass: ^1.3.0
+    peerDependenciesMeta:
+      '@opentelemetry/api':
+        optional: true
+      sass:
+        optional: true
+    dependencies:
+      '@next/env': 14.1.0
+      '@opentelemetry/api': 1.8.0
       '@swc/helpers': 0.5.2
       busboy: 1.6.0
       caniuse-lite: 1.0.30001587

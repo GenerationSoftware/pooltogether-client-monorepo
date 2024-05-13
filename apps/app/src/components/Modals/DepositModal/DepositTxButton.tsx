@@ -9,43 +9,26 @@ import {
   useVaultBalance,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { Intl } from '@shared/types'
+import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
+import { ApprovalTooltip, TransactionButton } from '@shared/react-components'
 import { Button } from '@shared/ui'
 import { useAtomValue } from 'jotai'
+import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
 import { Address, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { DepositModalView } from '.'
-import { TransactionButton } from '../../Buttons/TransactionButton'
-import { depositFormTokenAmountAtom } from '../../Form/DepositForm'
-import { isValidFormInput } from '../../Form/TxFormInput'
-import { ApprovalTooltip } from '../../Tooltips/ApprovalTooltip'
+import { isValidFormInput } from '../TxFormInput'
+import { depositFormTokenAmountAtom } from './DepositForm'
 
 interface DepositTxButtonProps {
   vault: Vault
   modalView: string
   setModalView: (view: DepositModalView) => void
   setDepositTxHash: (txHash: string) => void
-  openConnectModal?: () => void
-  openChainModal?: () => void
-  addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
   onSuccessfulApproval?: () => void
   onSuccessfulDeposit?: () => void
-  intl?: {
-    base?: Intl<
-      | 'enterAnAmount'
-      | 'approvalButton'
-      | 'approvalTx'
-      | 'reviewDeposit'
-      | 'confirmDeposit'
-      | 'depositTx'
-      | 'switchNetwork'
-      | 'switchingNetwork'
-    >
-    common?: Intl<'connectWallet'>
-    tooltips?: Intl<'approval'>
-  }
 }
 
 export const DepositTxButton = (props: DepositTxButtonProps) => {
@@ -54,14 +37,18 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
     modalView,
     setModalView,
     setDepositTxHash,
-    openConnectModal,
-    openChainModal,
-    addRecentTransaction,
     refetchUserBalances,
     onSuccessfulApproval,
-    onSuccessfulDeposit,
-    intl
+    onSuccessfulDeposit
   } = props
+
+  const t_common = useTranslations('Common')
+  const t_modals = useTranslations('TxModals')
+  const t_tooltips = useTranslations('Tooltips')
+
+  const { openConnectModal } = useConnectModal()
+  const { openChainModal } = useChainModal()
+  const addRecentTransaction = useAddRecentTransaction()
 
   const { address: userAddress, chain, isDisconnected } = useAccount()
 
@@ -176,7 +163,7 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
   if (depositAmount === 0n) {
     return (
       <Button color='transparent' fullSized={true} disabled={true}>
-        {intl?.base?.('enterAnAmount') ?? 'Enter an amount'}
+        {t_modals('enterAnAmount')}
       </Button>
     )
   }
@@ -190,23 +177,19 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
         isTxSuccess={isSuccessfulApproval}
         write={sendApproveTransaction}
         txHash={approvalTxHash}
-        txDescription={
-          intl?.base?.('approvalTx', { symbol: tokenData?.symbol ?? '?' }) ??
-          `${tokenData?.symbol ?? '?'} Approval`
-        }
+        txDescription={t_modals('approvalTx', { symbol: tokenData?.symbol ?? '?' })}
         fullSized={true}
         disabled={!approvalEnabled}
         openConnectModal={openConnectModal}
         openChainModal={openChainModal}
         addRecentTransaction={addRecentTransaction}
         innerClassName='flex gap-2 items-center'
-        intl={intl}
+        intl={{ base: t_modals, common: t_common }}
       >
-        {intl?.base?.('approvalButton', { symbol: tokenData?.symbol ?? '?' }) ??
-          `Approve ${tokenData?.symbol}`}
+        {t_modals('approvalButton', { symbol: tokenData?.symbol ?? '?' })}
         <ApprovalTooltip
           tokenSymbol={tokenData.symbol}
-          intl={intl?.tooltips}
+          intl={t_tooltips}
           className='whitespace-normal'
         />
       </TransactionButton>
@@ -217,7 +200,7 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
   if (isDataFetched && modalView === 'main') {
     return (
       <Button onClick={() => setModalView('review')} fullSized={true} disabled={!depositEnabled}>
-        {intl?.base?.('reviewDeposit') ?? 'Review Deposit'}
+        {t_modals('reviewDeposit')}
       </Button>
     )
   }
@@ -230,18 +213,15 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
       isTxSuccess={isSuccessfulDeposit}
       write={sendDepositTransaction}
       txHash={depositTxHash}
-      txDescription={
-        intl?.base?.('depositTx', { symbol: tokenData?.symbol ?? '?' }) ??
-        `${tokenData?.symbol} Deposit`
-      }
+      txDescription={t_modals('depositTx', { symbol: tokenData?.symbol ?? '?' })}
       fullSized={true}
       disabled={!depositEnabled}
       openConnectModal={openConnectModal}
       openChainModal={openChainModal}
       addRecentTransaction={addRecentTransaction}
-      intl={intl}
+      intl={{ base: t_modals, common: t_common }}
     >
-      {intl?.base?.('confirmDeposit') ?? 'Confirm Deposit'}
+      {t_modals('confirmDeposit')}
     </TransactionButton>
   )
 }

@@ -13,7 +13,6 @@ import { useAccount } from 'wagmi'
 import { DelegateForm } from '../../Form/DelegateForm'
 import { NetworkIcon } from '../../Icons/NetworkIcon'
 import { TokenIcon } from '../../Icons/TokenIcon'
-import { NetworkFeesProps } from '../NetworkFees'
 import { DelegateModalView } from './index'
 
 interface DelegateModalBodyProps {
@@ -31,7 +30,6 @@ interface DelegateModalBodyProps {
     >
     tooltip?: Intl<'delegateDescription'>
     common?: Intl<'prizePool' | 'warning' | 'learnMore'>
-    fees?: NetworkFeesProps['intl']
     errors?: RichIntl<'formErrors.invalidAddress' | 'formErrors.sameAsDelegate'>
   }
 }

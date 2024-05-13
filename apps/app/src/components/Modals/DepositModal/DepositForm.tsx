@@ -6,14 +6,14 @@ import {
   useVaultSharePrice,
   useVaultTokenPrice
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { Intl } from '@shared/types'
 import { getAssetsFromShares, getSharesFromAssets } from '@shared/utilities'
 import { atom, useSetAtom } from 'jotai'
+import { useTranslations } from 'next-intl'
 import { useEffect, useMemo } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Address, formatUnits, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
-import { isValidFormInput, TxFormInput, TxFormValues } from './TxFormInput'
+import { isValidFormInput, TxFormInput, TxFormValues } from '../TxFormInput'
 
 export const depositFormTokenAmountAtom = atom<string>('')
 export const depositFormShareAmountAtom = atom<string>('')
@@ -21,19 +21,12 @@ export const depositFormShareAmountAtom = atom<string>('')
 export interface DepositFormProps {
   vault: Vault
   showInputInfoRows?: boolean
-  intl?: {
-    base?: Intl<'balance' | 'max'>
-    errors?: Intl<
-      | 'formErrors.notEnoughTokens'
-      | 'formErrors.invalidNumber'
-      | 'formErrors.negativeNumber'
-      | 'formErrors.tooManyDecimals'
-    >
-  }
 }
 
 export const DepositForm = (props: DepositFormProps) => {
-  const { vault, showInputInfoRows, intl } = props
+  const { vault, showInputInfoRows } = props
+
+  const t_errors = useTranslations('Error.formErrors')
 
   const { data: vaultExchangeRate } = useVaultExchangeRate(vault)
 
@@ -156,15 +149,11 @@ export const DepositForm = (props: DepositFormProps) => {
                   parseFloat(formatUnits(tokenBalance, decimals)) >= parseFloat(v) ||
                   !isFetchedTokenBalance ||
                   !tokenWithAmount ||
-                  (intl?.errors?.('formErrors.notEnoughTokens', {
-                    symbol: vaultToken?.symbol ?? '?'
-                  }) ??
-                    `Not enough ${vaultToken?.symbol ?? '?'} in wallet`)
+                  t_errors('notEnoughTokens', { symbol: vaultToken?.symbol ?? '?' })
               }}
               onChange={handleTokenAmountChange}
               showInfoRow={showInputInfoRows}
               showMaxButton={true}
-              intl={intl}
               className='mb-0.5'
             />
             <TxFormInput
@@ -172,7 +161,6 @@ export const DepositForm = (props: DepositFormProps) => {
               formKey='shareAmount'
               onChange={handleShareAmountChange}
               showInfoRow={showInputInfoRows}
-              intl={intl}
               className='my-0.5'
             />
           </FormProvider>

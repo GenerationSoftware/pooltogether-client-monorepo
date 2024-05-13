@@ -4,7 +4,6 @@ import {
   usePrizeOdds,
   useVaultShareData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { Intl } from '@shared/types'
 import { Spinner } from '@shared/ui'
 import {
   calculateUnionProbability,
@@ -12,18 +11,20 @@ import {
   SECONDS_PER_WEEK
 } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
+import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { parseUnits } from 'viem'
-import { depositFormShareAmountAtom, depositFormTokenAmountAtom } from '../Form/DepositForm'
+import { depositFormShareAmountAtom, depositFormTokenAmountAtom } from './DepositModal/DepositForm'
 
 interface OddsProps {
   vault: Vault
   prizePool: PrizePool
-  intl?: Intl<'weeklyChances' | 'oneInXChance'>
 }
 
 export const Odds = (props: OddsProps) => {
-  const { vault, prizePool, intl } = props
+  const { vault, prizePool } = props
+
+  const t = useTranslations('TxModals')
 
   const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
   const formShareAmount = useAtomValue(depositFormShareAmountAtom)
@@ -45,15 +46,13 @@ export const Odds = (props: OddsProps) => {
       const events = Array<number>(drawsPerWeek).fill(prizeOdds.percent)
       const value = 1 / calculateUnionProbability(events)
       const formattedValue = formatNumberForDisplay(value, { maximumSignificantDigits: 3 })
-      return intl?.('oneInXChance', { number: formattedValue }) ?? `1 in ${formattedValue}`
+      return t('oneInXChance', { number: formattedValue })
     }
   }, [prizeOdds, drawPeriod])
 
   return (
     <div className='flex flex-col items-center gap-2 font-semibold'>
-      <span className='text-xs text-pt-purple-100 md:text-sm'>
-        {intl?.('weeklyChances') ?? 'Weekly Chance of Winning'}
-      </span>
+      <span className='text-xs text-pt-purple-100 md:text-sm'>{t('weeklyChances')}</span>
       <span className='text-pt-purple-50 md:text-xl'>
         {weeklyChance !== undefined ? formTokenAmount !== '0' ? weeklyChance : '-' : <Spinner />}
       </span>

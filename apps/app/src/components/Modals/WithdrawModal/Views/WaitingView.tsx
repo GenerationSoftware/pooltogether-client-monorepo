@@ -1,22 +1,24 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useVaultTokenData } from '@generationsoftware/hyperstructure-react-hooks'
-import { Intl } from '@shared/types'
+import { PrizePoolBadge } from '@shared/react-components'
 import { Button, Spinner } from '@shared/ui'
 import { formatNumberForDisplay } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
-import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
-import { depositFormTokenAmountAtom } from '../../../Form/DepositForm'
+import { useTranslations } from 'next-intl'
+import { withdrawFormTokenAmountAtom } from '../WithdrawForm'
 
 interface WaitingViewProps {
   vault: Vault
   closeModal: () => void
-  intl?: { base?: Intl<'confirmNotice' | 'depositing'>; common?: Intl<'prizePool' | 'close'> }
 }
 
 export const WaitingView = (props: WaitingViewProps) => {
-  const { vault, closeModal, intl } = props
+  const { vault, closeModal } = props
 
-  const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
+  const t_common = useTranslations('Common')
+  const t_modals = useTranslations('TxModals')
+
+  const formTokenAmount = useAtomValue(withdrawFormTokenAmountAtom)
 
   const { data: tokenData } = useVaultTokenData(vault)
 
@@ -24,22 +26,20 @@ export const WaitingView = (props: WaitingViewProps) => {
 
   return (
     <div className='flex flex-col gap-4 md:gap-6'>
-      <span className='text-lg font-semibold text-center'>
-        {intl?.base?.('confirmNotice') ?? 'Confirm Transaction in Wallet'}
-      </span>
+      <span className='text-lg font-semibold text-center'>{t_modals('confirmNotice')}</span>
       <PrizePoolBadge
         chainId={vault.chainId}
         hideBorder={true}
-        intl={intl?.common}
+        intl={t_common}
         className='!py-1 mx-auto'
       />
       <span className='text-sm text-center md:text-base'>
-        {intl?.base?.('depositing', { tokens }) ?? `Depositing ${tokens}...`}
+        {t_modals('withdrawing', { tokens })}
       </span>
       <Spinner size='lg' className='mx-auto after:border-y-pt-teal' />
       <div className='flex items-end h-24 md:h-36'>
         <Button fullSized={true} color='transparent' onClick={closeModal}>
-          {intl?.common?.('close') ?? 'Close'}
+          {t_common('close')}
         </Button>
       </div>
     </div>

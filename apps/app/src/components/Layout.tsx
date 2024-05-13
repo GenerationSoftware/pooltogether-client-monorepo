@@ -16,10 +16,8 @@ import {
   CaptchaModal,
   CheckPrizesModal,
   DelegateModal,
-  DepositModal,
   DrawModal,
-  SettingsModal,
-  WithdrawModal
+  SettingsModal
 } from '@shared/react-components'
 import { ExternalLink, Footer, FooterItem, Navbar, SocialIcon, toast } from '@shared/ui'
 import { getDiscordInvite, LINKS, NETWORK } from '@shared/utilities'
@@ -39,6 +37,8 @@ import { useSelectedPrizePool } from '@hooks/useSelectedPrizePool'
 import { useSettingsModalView } from '@hooks/useSettingsModalView'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { MigrationPopup } from './MigrationPopup'
+import { DepositModal } from './Modals/DepositModal'
+import { WithdrawModal } from './Modals/WithdrawModal'
 import { drawIdAtom } from './Prizes/PrizePoolWinners'
 import { VaultListHandler } from './VaultListHandler'
 
@@ -57,9 +57,7 @@ export const Layout = (props: LayoutProps) => {
   const t_settings = useTranslations('Settings')
   const t_footer = useTranslations('Footer')
   const t_txModals = useTranslations('TxModals')
-  const t_txFees = useTranslations('TxModals.fees')
   const t_txToasts = useTranslations('Toasts.transactions')
-  const t_tooltips = useTranslations('Tooltips')
   const t_drawModal = useTranslations('Prizes.drawModal')
   const t_errors = useTranslations('Error')
   const t_prizeChecking = useTranslations('Account.prizeChecking')
@@ -271,51 +269,23 @@ export const Layout = (props: LayoutProps) => {
 
       <DepositModal
         prizePools={prizePoolsArray}
-        openConnectModal={openConnectModal}
-        openChainModal={openChainModal}
-        addRecentTransaction={addRecentTransaction}
-        onGoToAccount={() => router.push('/account')}
         refetchUserBalances={refetchUserBalances}
         onSuccessfulApproval={() => fathom.trackEvent(FATHOM_EVENTS.approvedExact)}
         onSuccessfulDeposit={() => fathom.trackEvent(FATHOM_EVENTS.deposited)}
         onSuccessfulDepositWithPermit={() => fathom.trackEvent(FATHOM_EVENTS.depositedWithPermit)}
-        intl={{
-          base: t_txModals,
-          common: t_common,
-          fees: t_txFees,
-          tooltips: t_tooltips,
-          txToast: t_txToasts,
-          errors: t_errors
-        }}
       />
 
       <WithdrawModal
-        openConnectModal={openConnectModal}
-        openChainModal={openChainModal}
-        addRecentTransaction={addRecentTransaction}
         onGoToAccount={() => router.push('/account')}
         refetchUserBalances={refetchUserBalances}
         onSuccessfulWithdrawal={() => fathom.trackEvent(FATHOM_EVENTS.redeemed)}
-        intl={{
-          base: t_txModals,
-          common: t_common,
-          fees: t_txFees,
-          txToast: t_txToasts,
-          errors: t_errors
-        }}
       />
 
       <DelegateModal
         openChainModal={openChainModal}
         addRecentTransaction={addRecentTransaction}
         onSuccessfulDelegation={() => fathom.trackEvent(FATHOM_EVENTS.delegated)}
-        intl={{
-          base: t_txModals,
-          common: t_common,
-          fees: t_txFees,
-          txToast: t_txToasts,
-          errors: t_errors
-        }}
+        intl={{ base: t_txModals, common: t_common, txToast: t_txToasts, errors: t_errors }}
       />
 
       <DrawModal

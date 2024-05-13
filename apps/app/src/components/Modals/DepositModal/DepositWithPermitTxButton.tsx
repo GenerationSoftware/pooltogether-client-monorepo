@@ -10,38 +10,25 @@ import {
   useVaultBalance,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { Intl } from '@shared/types'
+import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
+import { TransactionButton } from '@shared/react-components'
 import { Button } from '@shared/ui'
 import { useAtomValue } from 'jotai'
+import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { Address, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { DepositModalView } from '.'
-import { TransactionButton } from '../../Buttons/TransactionButton'
-import { depositFormTokenAmountAtom } from '../../Form/DepositForm'
-import { isValidFormInput } from '../../Form/TxFormInput'
+import { isValidFormInput } from '../TxFormInput'
+import { depositFormTokenAmountAtom } from './DepositForm'
 
 interface DepositWithPermitTxButtonProps {
   vault: Vault
   modalView: string
   setModalView: (view: DepositModalView) => void
   setDepositTxHash: (txHash: string) => void
-  openConnectModal?: () => void
-  openChainModal?: () => void
-  addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
   onSuccessfulDepositWithPermit?: () => void
-  intl?: {
-    base?: Intl<
-      | 'enterAnAmount'
-      | 'reviewDeposit'
-      | 'confirmDeposit'
-      | 'depositTx'
-      | 'switchNetwork'
-      | 'switchingNetwork'
-    >
-    common?: Intl<'connectWallet'>
-  }
 }
 
 export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps) => {
@@ -50,13 +37,16 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
     modalView,
     setModalView,
     setDepositTxHash,
-    openConnectModal,
-    openChainModal,
-    addRecentTransaction,
     refetchUserBalances,
-    onSuccessfulDepositWithPermit,
-    intl
+    onSuccessfulDepositWithPermit
   } = props
+
+  const t_common = useTranslations('Common')
+  const t_modals = useTranslations('TxModals')
+
+  const { openConnectModal } = useConnectModal()
+  const { openChainModal } = useChainModal()
+  const addRecentTransaction = useAddRecentTransaction()
 
   const { address: userAddress, chain, isDisconnected } = useAccount()
 
@@ -219,7 +209,7 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
   if (depositAmount === 0n) {
     return (
       <Button color='transparent' fullSized={true} disabled={true}>
-        {intl?.base?.('enterAnAmount') ?? 'Enter an amount'}
+        {t_modals('enterAnAmount')}
       </Button>
     )
   }
@@ -228,7 +218,7 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
   if (isDataFetched && modalView === 'main') {
     return (
       <Button onClick={() => setModalView('review')} fullSized={true} disabled={!depositEnabled}>
-        {intl?.base?.('reviewDeposit') ?? 'Review Deposit'}
+        {t_modals('reviewDeposit')}
       </Button>
     )
   }
@@ -242,18 +232,15 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
         isTxSuccess={isSuccessfulDeposit}
         write={sendDepositTransaction}
         txHash={depositTxHash}
-        txDescription={
-          intl?.base?.('depositTx', { symbol: tokenData?.symbol ?? '?' }) ??
-          `${tokenData?.symbol} Deposit`
-        }
+        txDescription={t_modals('depositTx', { symbol: tokenData?.symbol ?? '?' })}
         fullSized={true}
         disabled={!depositEnabled}
         openConnectModal={openConnectModal}
         openChainModal={openChainModal}
         addRecentTransaction={addRecentTransaction}
-        intl={intl}
+        intl={{ base: t_modals, common: t_common }}
       >
-        {intl?.base?.('confirmDeposit') ?? 'Confirm Deposit'}
+        {t_modals('confirmDeposit')}
       </TransactionButton>
     )
   }
@@ -266,18 +253,15 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
       isTxSuccess={isSuccessfulDepositWithPermit}
       write={isApproved ? sendDepositWithPermitTransaction : signApprove}
       txHash={depositWithPermitTxHash}
-      txDescription={
-        intl?.base?.('depositTx', { symbol: tokenData?.symbol ?? '?' }) ??
-        `${tokenData?.symbol} Deposit`
-      }
+      txDescription={t_modals('depositTx', { symbol: tokenData?.symbol ?? '?' })}
       fullSized={true}
       disabled={!depositEnabled}
       openConnectModal={openConnectModal}
       openChainModal={openChainModal}
       addRecentTransaction={addRecentTransaction}
-      intl={intl}
+      intl={{ base: t_modals, common: t_common }}
     >
-      {intl?.base?.('confirmDeposit') ?? 'Confirm Deposit'}
+      {t_modals('confirmDeposit')}
     </TransactionButton>
   )
 }

@@ -5,37 +5,27 @@ import {
   useVaultShareData,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { Intl, RichIntl } from '@shared/types'
+import { PrizePoolBadge } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import { getNiceNetworkNameByChainId } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
+import { useTranslations } from 'next-intl'
 import { Address } from 'viem'
-import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
-import { DepositForm, depositFormShareAmountAtom } from '../../../Form/DepositForm'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
+import { DepositForm, depositFormShareAmountAtom } from '../DepositForm'
 import { LpSource } from '../LpSource'
 
 interface MainViewProps {
   vault: Vault
   prizePool: PrizePool
-  intl?: {
-    base?: Intl<
-      'depositTo' | 'depositToShort' | 'balance' | 'max' | 'weeklyChances' | 'oneInXChance'
-    >
-    common?: Intl<'prizePool' | 'getTokenAt'>
-    fees?: NetworkFeesProps['intl']
-    errors?: RichIntl<
-      | 'formErrors.notEnoughTokens'
-      | 'formErrors.invalidNumber'
-      | 'formErrors.negativeNumber'
-      | 'formErrors.tooManyDecimals'
-    >
-  }
 }
 
 export const MainView = (props: MainViewProps) => {
-  const { vault, prizePool, intl } = props
+  const { vault, prizePool } = props
+
+  const t_common = useTranslations('Common')
+  const t_modals = useTranslations('TxModals')
 
   const { data: shareData } = useVaultShareData(vault)
   const { data: tokenData } = useVaultTokenData(vault)
@@ -62,13 +52,12 @@ export const MainView = (props: MainViewProps) => {
       <span className='text-lg font-semibold text-center'>
         {!!vaultName && (
           <span className='hidden md:inline-block'>
-            {intl?.base?.('depositTo', { name: vaultName, network: networkName }) ??
-              `Deposit to ${vaultName} on ${networkName}`}
+            {t_modals('depositTo', { name: vaultName, network: networkName })}
           </span>
         )}
         {!!vaultName && (
           <span className='inline-block md:hidden'>
-            {intl?.base?.('depositToShort', { name: vaultName }) ?? `Deposit to ${vaultName}`}
+            {t_modals('depositToShort', { name: vaultName })}
           </span>
         )}
         {!vaultName && <Spinner />}
@@ -76,18 +65,18 @@ export const MainView = (props: MainViewProps) => {
       <PrizePoolBadge
         chainId={vault.chainId}
         hideBorder={true}
-        intl={intl?.common}
+        intl={t_common}
         className='!py-1 mx-auto'
       />
       {/* TODO: add flow for when exchange rate cannot be found */}
       {!!vaultExchangeRate && (
         <>
-          <LpSource vault={vault} intl={intl?.common} />
-          <DepositForm vault={vault} showInputInfoRows={true} intl={intl} />
+          <LpSource vault={vault} />
+          <DepositForm vault={vault} showInputInfoRows={true} />
           {!!formShareAmount && (
             <div className='flex flex-col gap-4 mx-auto md:flex-row md:gap-9'>
-              <Odds vault={vault} prizePool={prizePool} intl={intl?.base} />
-              <NetworkFees vault={vault} show={feesToShow} intl={intl?.fees} />
+              <Odds vault={vault} prizePool={prizePool} />
+              <NetworkFees vault={vault} show={feesToShow} />
             </div>
           )}
         </>

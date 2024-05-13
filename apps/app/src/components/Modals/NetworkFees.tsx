@@ -3,7 +3,7 @@ import {
   useGasCostEstimates,
   useVaultTokenAddress
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { Intl } from '@shared/types'
+import { CurrencyValue, TX_GAS_ESTIMATES } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import {
   erc20ABI,
@@ -13,19 +13,19 @@ import {
   twabControllerABI,
   vaultABI
 } from '@shared/utilities'
+import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { useAccount } from 'wagmi'
-import { TX_GAS_ESTIMATES } from '../../constants'
-import { CurrencyValue } from '../Currency/CurrencyValue'
 
 export interface NetworkFeesProps {
   vault: Vault
   show?: ('approve' | 'deposit' | 'depositWithPermit' | 'withdraw' | 'delegation')[]
-  intl?: Intl<'title' | 'approval' | 'deposit' | 'withdrawal' | 'delegation'>
 }
 
 export const NetworkFees = (props: NetworkFeesProps) => {
-  const { vault, show, intl } = props
+  const { vault, show } = props
+
+  const t = useTranslations('TxModals.fees')
 
   const { address: userAddress } = useAccount()
 
@@ -38,14 +38,12 @@ export const NetworkFees = (props: NetworkFeesProps) => {
 
   return (
     <div className='flex flex-col items-center gap-2 font-semibold'>
-      <span className='text-xs text-pt-purple-100 md:text-sm'>
-        {intl?.('title') ?? 'Estimated Network Fees'}
-      </span>
+      <span className='text-xs text-pt-purple-100 md:text-sm'>{t('title')}</span>
       {!!vault && !!tokenAddress ? (
         <div className='flex flex-col text-xs'>
           {(!show || show.includes('approve')) && (
             <TXFeeEstimate
-              name={intl?.('approval') ?? 'Approval'}
+              name={t('approval')}
               chainId={vault.chainId}
               tx={{
                 address: tokenAddress,
@@ -58,7 +56,7 @@ export const NetworkFees = (props: NetworkFeesProps) => {
           )}
           {(!show || show.includes('deposit')) && (
             <TXFeeEstimate
-              name={intl?.('deposit') ?? 'Deposit'}
+              name={t('deposit')}
               chainId={vault.chainId}
               tx={{
                 address: vault.address,
@@ -72,7 +70,7 @@ export const NetworkFees = (props: NetworkFeesProps) => {
           )}
           {show?.includes('depositWithPermit') && (
             <TXFeeEstimate
-              name={intl?.('deposit') ?? 'Deposit'}
+              name={t('deposit')}
               chainId={vault.chainId}
               tx={{
                 address: vault.address,
@@ -93,7 +91,7 @@ export const NetworkFees = (props: NetworkFeesProps) => {
           )}
           {(!show || show.includes('withdraw')) && (
             <TXFeeEstimate
-              name={intl?.('withdrawal') ?? 'Withdrawal'}
+              name={t('withdrawal')}
               chainId={vault.chainId}
               tx={{
                 address: vault.address,
@@ -107,7 +105,7 @@ export const NetworkFees = (props: NetworkFeesProps) => {
           )}
           {(!show || show.includes('delegation')) && !!twabControllerAddress && (
             <TXFeeEstimate
-              name={intl?.('delegation') ?? 'Delegation'}
+              name={t('delegation')}
               chainId={vault.chainId}
               tx={{
                 address: twabControllerAddress,
