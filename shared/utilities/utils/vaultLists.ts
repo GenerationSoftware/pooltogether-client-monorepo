@@ -37,7 +37,6 @@ export const getVaultList = async (src: string, publicClient?: PublicClient) => 
   return isValidVaultList(vaultList) ? vaultList : undefined
 }
 
-// TODO: check optional params as well
 /**
  * Returns true if the given vault list object is valid
  * @param vaultList a vault list to check for validity
@@ -68,8 +67,33 @@ export const isValidVaultList = (vaultList?: VaultList) => {
           !!vault.address &&
           typeof vault.address === 'string'
       )
+    const isValidKeywords =
+      !vaultList.keywords ||
+      (typeof vaultList.keywords === 'object' &&
+        vaultList.keywords.every((keyword) => typeof keyword === 'string'))
+    const isValidTags =
+      !vaultList.tags ||
+      (typeof vaultList.tags === 'object' &&
+        Object.entries(vaultList.tags).every(
+          ([tagId, tag]) =>
+            typeof tagId === 'string' &&
+            typeof tag === 'object' &&
+            !!tag.name &&
+            typeof tag.name === 'string' &&
+            !!tag.description &&
+            typeof tag.description === 'string'
+        ))
+    const isValidLogoURI = !vaultList.logoURI || typeof vaultList.logoURI === 'string'
 
-    return isValidName && isValidVersion && isValidTimestamp && isValidTokens
+    return (
+      isValidName &&
+      isValidVersion &&
+      isValidTimestamp &&
+      isValidTokens &&
+      isValidKeywords &&
+      isValidTags &&
+      isValidLogoURI
+    )
   } else {
     return false
   }

@@ -1,7 +1,7 @@
 import { useCoingeckoTokenData } from '@shared/generic-react-hooks'
 import { TokenWithLogo } from '@shared/types'
 import { BasicIcon, Spinner } from '@shared/ui'
-import { COINGECKO_PLATFORMS, NETWORK } from '@shared/utilities'
+import { COINGECKO_PLATFORMS, lower, NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
 import { TOKEN_LOGO_OVERRIDES } from '../../constants'
 
@@ -32,10 +32,7 @@ export const TokenIcon = (props: TokenIconProps) => {
   }
 
   if (!!token.chainId && !!token.address) {
-    const logoOverride =
-      TOKEN_LOGO_OVERRIDES[token.chainId as NETWORK]?.[
-        token.address.toLowerCase() as Lowercase<string>
-      ]
+    const logoOverride = TOKEN_LOGO_OVERRIDES[token.chainId as NETWORK]?.[lower(token.address)]
 
     if (!!logoOverride) {
       return <Icon logoURI={logoOverride} />
