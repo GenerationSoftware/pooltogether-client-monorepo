@@ -185,7 +185,7 @@ export const getUserSubgraphPrizes = async (
 
     const body = JSON.stringify({
       query: `query($id: Bytes, $numPrizes: Int, $offsetPrizes: Int, $orderDirection: OrderDirection, $orderBy: PrizeClaim_orderBy) {
-        prizeClaims(where: { recipient: $id }, first: $numPrizes, skip: $offsetPrizes, orderDirection: $orderDirection, orderBy: $orderBy) {
+        prizeClaims(where: { winner: $id }, first: $numPrizes, skip: $offsetPrizes, orderDirection: $orderDirection, orderBy: $orderBy) {
           id
           draw { drawId }
           prizeVault { address }
