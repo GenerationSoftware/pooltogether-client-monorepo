@@ -8,3 +8,10 @@ route = { pattern = "<YOUR_URL_HERE>", zone_id = "<YOUR_ZONE_ID_HERE>", custom_d
 kv_namespaces = [
   { binding = "DEPOSITS", id = "<YOUR_KV_ID_HERE>", preview_id = "<YOUR_PREVIEW_KV_ID_HERE>" }
 ]
+
+services = [
+  { binding = "TOKEN_PRICES", service = "<YOUR_TOKEN_PRICES_WORKER_NAME_HERE>" }
+]
+
+[vars]
+OPTIMISM_RPC_URL = "<YOUR_RPC_URL_HERE>"

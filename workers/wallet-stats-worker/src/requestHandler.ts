@@ -1,27 +1,36 @@
 import { DEFAULT_HEADERS } from './constants'
 import { updateHandler } from './updateHandler'
-import { getAllWalletData, getRequestBody, getWalletData, isValidDeposit } from './utils'
+import {
+  getAllWalletData,
+  getDeposit,
+  getRequestBody,
+  getWalletData,
+  isValidDepositData
+} from './utils'
 
 export const handleRequest = async (event: FetchEvent): Promise<Response> => {
   try {
     const url = new URL(event.request.url)
 
     if (url.pathname === '/addDeposit' && event.request.method === 'POST') {
-      const deposit = await getRequestBody(event.request)
+      const depositData = await getRequestBody(event.request)
 
-      // TODO: get txhash, chainId and walletId
-      // TODO: check that events includes deposit or depositwithpermit (or some underlying event)
-      // TODO: get user address from recipient there
-      // TODO: check that the tx occurred in the last X mins or 1 hour
-      // TODO: what if rpc didnt pick up the tx yet? maybe wait a few seconds and retry
+      if (isValidDepositData(depositData)) {
+        const deposit = await getDeposit(depositData)
 
-      if (isValidDeposit(deposit)) {
-        await updateHandler(event, deposit)
+        if (!!deposit) {
+          await updateHandler(event, deposit)
 
-        return new Response(JSON.stringify({ message: 'Added deposit.' }), {
-          ...DEFAULT_HEADERS,
-          status: 200
-        })
+          return new Response(JSON.stringify(deposit), {
+            ...DEFAULT_HEADERS,
+            status: 200
+          })
+        } else {
+          return new Response(null, {
+            ...DEFAULT_HEADERS,
+            status: 500
+          })
+        }
       }
     }
 
