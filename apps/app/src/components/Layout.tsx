@@ -282,6 +282,7 @@ export const Layout = (props: LayoutProps) => {
       />
 
       <DelegateModal
+        openConnectModal={openConnectModal}
         openChainModal={openChainModal}
         addRecentTransaction={addRecentTransaction}
         onSuccessfulDelegation={() => fathom.trackEvent(FATHOM_EVENTS.delegated)}
