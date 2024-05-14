@@ -5,7 +5,7 @@ import { testnetVaults } from './testnet'
 const defaultVaultList: VaultList = {
   name: 'Cabana Vault List',
   keywords: ['pooltogether', 'cabana', 'g9', 'optimism'],
-  version: { major: 2, minor: 4, patch: 0 },
+  version: { major: 2, minor: 4, patch: 1 },
   timestamp: '2024-05-02T18:46:23Z',
   logoURI: `${DOMAINS.app}/pooltogether-token-logo.svg`,
   tokens: [
@@ -145,7 +145,7 @@ const defaultVaultList: VaultList = {
       decimals: 18,
       symbol: 'przOP',
       logoURI: `${DOMAINS.app}/icons/przOP.svg`,
-      tags: ['beefy', 'sonne'],
+      tags: ['beefy', 'sonne', 'deprecated'],
       yieldSourceURI: 'https://app.beefy.finance/vault/sonne-op-op',
       extensions: {
         underlyingAsset: {
