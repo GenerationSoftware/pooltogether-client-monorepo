@@ -1031,6 +1031,28 @@ importers:
         specifier: ^5.0.4
         version: 5.0.4
 
+  workers/wallet-stats-worker:
+    dependencies:
+      viem:
+        specifier: ^2.7.9
+        version: 2.7.9(typescript@5.0.4)
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: ^4.20230518.0
+        version: 4.20230717.0
+      '@types/node':
+        specifier: ^17.0.45
+        version: 17.0.45
+      tslib:
+        specifier: ^2.6.0
+        version: 2.6.2
+      tsup:
+        specifier: ^6.6.3
+        version: 6.7.0(postcss@8.4.31)(typescript@5.0.4)
+      typescript:
+        specifier: ^5.0.4
+        version: 5.0.4
+
 packages:
 
   /@adraffy/ens-normalize@1.10.0:
