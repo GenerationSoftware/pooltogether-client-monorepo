@@ -133,9 +133,13 @@ export const getMessages = async (locale?: string) => {
 }
 
 export const trackDeposit = async (chainId: number, txHash: `0x${string}`, walletId: string) => {
-  await fetch(WALLET_STATS_API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chainId, txHash, walletId })
-  })
+  try {
+    await fetch(`${WALLET_STATS_API_URL}/addDeposit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chainId, txHash, walletId })
+    })
+  } catch (e) {
+    console.error(e)
+  }
 }
