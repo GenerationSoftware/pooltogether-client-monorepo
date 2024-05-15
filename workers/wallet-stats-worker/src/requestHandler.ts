@@ -3,6 +3,7 @@ import { updateHandler } from './updateHandler'
 import {
   getAllWalletData,
   getDeposit,
+  getExistingTxHashes,
   getRequestBody,
   getWalletData,
   isValidDepositData
@@ -16,6 +17,15 @@ export const handleRequest = async (event: FetchEvent): Promise<Response> => {
       const depositData = await getRequestBody(event.request)
 
       if (isValidDepositData(depositData)) {
+        const existingTxHashes = await getExistingTxHashes()
+
+        if (existingTxHashes.has(depositData.txHash.toLowerCase() as Lowercase<`0x${string}`>)) {
+          return new Response(JSON.stringify({ message: `Already added.` }), {
+            ...DEFAULT_HEADERS,
+            status: 400
+          })
+        }
+
         const deposit = await getDeposit(depositData)
 
         if (!!deposit) {

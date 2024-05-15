@@ -85,6 +85,28 @@ export const getRequestBody = async (req: Request): Promise<Partial<AddDepositDa
   return await req.json()
 }
 
+export const getExistingTxHashes = async () => {
+  const _walletIds = await DEPOSITS.get(KV_KEYS.walletIds)
+  const walletIds = !!_walletIds ? (JSON.parse(_walletIds) as string[]) : []
+
+  const txHashes = new Set<Lowercase<`0x${string}`>>()
+
+  await Promise.allSettled(
+    walletIds.map((walletId) =>
+      (async () => {
+        const _deposits = await DEPOSITS.get(walletId)
+        const deposits = !!_deposits ? (JSON.parse(_deposits) as Deposit[]) : []
+
+        deposits.forEach(({ txHash }) => {
+          txHashes.add(txHash.toLowerCase() as Lowercase<`0x${string}`>)
+        })
+      })()
+    )
+  )
+
+  return txHashes
+}
+
 export const isValidDepositData = (
   depositData: Partial<AddDepositData>
 ): depositData is AddDepositData => {
