@@ -15,20 +15,66 @@ export const getWalletData = async (walletId: string) => {
   const _deposits = await DEPOSITS.get(walletId)
   const deposits = !!_deposits ? (JSON.parse(_deposits) as Deposit[]) : []
 
-  // TODO: convert deposits into useful stats
-  // TODO: users, user count, deposit count, avg deposit amount
+  const users = new Set<Lowercase<Address>>()
+  const depositValues: number[] = []
+  let sumDepositValues = 0
 
-  return {}
+  deposits.forEach(({ user, ethValue }) => {
+    users.add(user.toLowerCase() as Lowercase<Address>)
+
+    if (!!ethValue) {
+      depositValues.push(ethValue)
+      sumDepositValues += ethValue
+    }
+  })
+
+  const avgDepositValue = depositValues.length > 0 ? sumDepositValues / depositValues.length : 0
+
+  return {
+    numDeposits: deposits.length,
+    avgDepositValue,
+    numUsers: users.size,
+    users: [...users]
+  }
 }
 
 export const getAllWalletData = async () => {
   const _walletIds = await DEPOSITS.get(KV_KEYS.walletIds)
   const walletIds = !!_walletIds ? (JSON.parse(_walletIds) as string[]) : []
 
-  // TODO: query and aggregate all wallet data into useful stats
-  // TODO: users, user count, deposit count, avg deposit amount, walletIds
+  const users = new Set<Lowercase<Address>>()
+  const depositValues: number[] = []
+  let numDeposits = 0
+  let sumDepositValues = 0
 
-  return {}
+  await Promise.allSettled(
+    walletIds.map((walletId) =>
+      (async () => {
+        const _deposits = await DEPOSITS.get(walletId)
+        const deposits = !!_deposits ? (JSON.parse(_deposits) as Deposit[]) : []
+
+        deposits.forEach(({ user, ethValue }) => {
+          users.add(user.toLowerCase() as Lowercase<Address>)
+
+          if (!!ethValue) {
+            depositValues.push(ethValue)
+            sumDepositValues += ethValue
+          }
+
+          numDeposits++
+        })
+      })()
+    )
+  )
+
+  const avgDepositValue = depositValues.length > 0 ? sumDepositValues / depositValues.length : 0
+
+  return {
+    walletIds,
+    numDeposits,
+    avgDepositValue,
+    numUsers: users.size
+  }
 }
 
 export const getRequestBody = async (req: Request): Promise<Partial<AddDepositData>> => {
