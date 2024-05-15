@@ -183,5 +183,65 @@ export const testnetVaults: VaultList['tokens'] = [
         name: 'Wrapped Ether'
       }
     }
+  },
+  {
+    chainId: NETWORK.arbitrum_sepolia,
+    address: '0xaab8f5125451c7cc6f9e2d4bd381415e8e38fa29',
+    name: 'Prize POOL',
+    decimals: 18,
+    symbol: 'pPOOL',
+    logoURI: 'https://etherscan.io/token/images/pooltogether_32.png',
+    extensions: {
+      underlyingAsset: {
+        address: '0xE02919b18388C666297D24d56CB794C440d33245',
+        symbol: 'POOL',
+        name: 'PoolTogether'
+      }
+    }
+  },
+  {
+    chainId: NETWORK.arbitrum_sepolia,
+    address: '0xaa7b1d6a8aaf3ec564c071a9ed9f0d4bcb96a797',
+    name: 'Prize DAI',
+    decimals: 18,
+    symbol: 'pDAI',
+    logoURI: 'https://assets.coingecko.com/coins/images/9956/small/4943.png?1636636734',
+    extensions: {
+      underlyingAsset: {
+        address: '0x837F6ec55793c49B2994BA703a3D2331649B09EA',
+        symbol: 'DAI',
+        name: 'Dai Stablecoin'
+      }
+    }
+  },
+  {
+    chainId: NETWORK.arbitrum_sepolia,
+    address: '0x748c49421687017b9159e32f14d439cd38a156f7',
+    name: 'Prize USDC',
+    decimals: 6,
+    symbol: 'pUSDC',
+    logoURI: 'https://etherscan.io/token/images/centre-usdc_28.png',
+    extensions: {
+      underlyingAsset: {
+        address: '0x45B32D0C3Cf487e11C3b80AF564878bea83cCe67',
+        symbol: 'USDC',
+        name: 'USD Coin'
+      }
+    }
+  },
+  {
+    chainId: NETWORK.arbitrum_sepolia,
+    address: '0x6528c06563fa390ec67ac13973cd10089aa1d58f',
+    name: 'Prize WETH',
+    decimals: 18,
+    symbol: 'pWETH',
+    logoURI: 'https://etherscan.io/token/images/weth_28.png',
+    extensions: {
+      underlyingAsset: {
+        address: '0x1A586a874f7C6ca5C3220C434fb5096dDe2ec3f0',
+        symbol: 'WETH',
+        name: 'Wrapped Ether'
+      }
+    }
   }
 ]

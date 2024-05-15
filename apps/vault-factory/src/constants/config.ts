@@ -20,7 +20,7 @@ import {
 import { DEFAULT_CLAIMER_ADDRESSES, NETWORK, SECONDS_PER_HOUR } from '@shared/utilities'
 import { SupportedNetwork, YieldSourceVaultTag } from 'src/types'
 import { Address } from 'viem'
-import { baseSepolia, mainnet, optimism, optimismSepolia } from 'viem/chains'
+import { arbitrumSepolia, baseSepolia, mainnet, optimism, optimismSepolia } from 'viem/chains'
 
 /**
  * Supported networks
@@ -28,6 +28,7 @@ import { baseSepolia, mainnet, optimism, optimismSepolia } from 'viem/chains'
 export const SUPPORTED_NETWORKS = [
   NETWORK.optimism,
   NETWORK.optimism_sepolia,
+  NETWORK.arbitrum_sepolia,
   NETWORK.base_sepolia
 ] as const
 
@@ -38,6 +39,7 @@ export const WAGMI_CHAINS = {
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism,
   [NETWORK.optimism_sepolia]: optimismSepolia,
+  [NETWORK.arbitrum_sepolia]: arbitrumSepolia,
   [NETWORK.base_sepolia]: baseSepolia
 } as const
 
@@ -70,6 +72,7 @@ export const RPC_URLS = {
   [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
   [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
+  [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL,
   [NETWORK.base_sepolia]: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL
 } as const
 
@@ -135,6 +138,25 @@ export const NETWORK_CONFIG: Record<
           { address: '0x14A1EDBB4723AA163A11742Df934C53C43feEC23', tags: ['stablecoin'] },
           { address: '0xaF9Ad81aB225Fe2d24dD2067a38A4CE69Ec07784' },
           { address: '0xDD41e571f0f7614Ae37935538f92589363843266' }
+        ]
+      }
+    ]
+  },
+  [NETWORK.arbitrum_sepolia]: {
+    description: 'Sepolia testnet for the Arbitrum network.',
+    prizePool: '0xdBBC646D78Ca1752F2DB6EA76DC467F740f9f816',
+    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.arbitrum_sepolia],
+    lp: { targetAuctionPeriod: SECONDS_PER_HOUR * 6, targetAuctionPriceUsd: 10 },
+    yieldSources: [
+      {
+        id: 'aave',
+        name: 'Faux Aave',
+        href: 'https://aave.com/',
+        description: 'Lending and borrowing protocol',
+        vaults: [
+          { address: '0x67d5B5b7912e1E06633cCbF1344215a2Cd6668D7', tags: ['stablecoin'] },
+          { address: '0xFB63e2ff4252a14BA3946B978884A163A1ACDf2b', tags: ['stablecoin'] },
+          { address: '0x62546aEbd1cadC0A178DCB97757e6BF436048A79' }
         ]
       }
     ]

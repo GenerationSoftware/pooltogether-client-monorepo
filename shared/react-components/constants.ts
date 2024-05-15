@@ -73,7 +73,12 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   [NETWORK.celo]: {},
   [NETWORK.celo_testnet]: {},
   [NETWORK.arbitrum]: {},
-  [NETWORK.arbitrum_sepolia]: {},
+  [NETWORK.arbitrum_sepolia]: {
+    [POOL_TOKEN_ADDRESSES[NETWORK.arbitrum_sepolia].toLowerCase()]: tokenLogoUrls.pool,
+    [USDC_TOKEN_ADDRESSES[NETWORK.arbitrum_sepolia]]: tokenLogoUrls.usdc,
+    '0x837f6ec55793c49b2994ba703a3d2331649b09ea': tokenLogoUrls.dai,
+    '0x1a586a874f7c6ca5c3220c434fb5096dde2ec3f0': tokenLogoUrls.weth
+  },
   [NETWORK.base]: {},
   [NETWORK.base_sepolia]: {
     [POOL_TOKEN_ADDRESSES[NETWORK.base_sepolia].toLowerCase()]: tokenLogoUrls.pool,
