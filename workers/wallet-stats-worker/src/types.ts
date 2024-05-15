@@ -14,8 +14,8 @@ export interface Deposit {
   vault: Address
   walletId: string
   chainId: Network
-  ethValue: number
   txHash: `0x${string}`
+  ethValue?: number
 }
 
 export interface TokenPricesApiResponse {

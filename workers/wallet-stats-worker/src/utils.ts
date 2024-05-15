@@ -1,5 +1,14 @@
-import { createPublicClient, http, isHash } from 'viem'
-import { KV_KEYS, NETWORKS, RPC_URLS, VIEM_CHAINS } from './constants'
+import {
+  Address,
+  createPublicClient,
+  decodeEventLog,
+  erc20Abi,
+  formatUnits,
+  http,
+  isHash
+} from 'viem'
+import { KV_KEYS, NETWORKS, RPC_URLS, VAULT_ABI, VIEM_CHAINS } from './constants'
+import { getTokenPrices } from './prices'
 import { AddDepositData, Deposit, Network } from './types'
 
 export const getWalletData = async (walletId: string) => {
@@ -42,36 +51,72 @@ export const isValidDepositData = (
   )
 }
 
-export const getDeposit = async (depositData: AddDepositData) => {
+export const getDeposit = async ({ chainId, txHash, walletId }: AddDepositData) => {
   const publicClient = createPublicClient({
-    chain: VIEM_CHAINS[depositData.chainId],
-    transport: http(RPC_URLS[depositData.chainId])
+    chain: VIEM_CHAINS[chainId],
+    transport: http(RPC_URLS[chainId])
   })
 
-  let txReceipt = await publicClient.getTransactionReceipt({ hash: depositData.txHash })
+  let txReceipt = await publicClient.getTransactionReceipt({ hash: txHash })
 
   if (!txReceipt) {
     await new Promise(() =>
       setTimeout(async () => {
-        txReceipt = await publicClient.getTransactionReceipt({ hash: depositData.txHash })
+        txReceipt = await publicClient.getTransactionReceipt({ hash: txHash })
       }, 30 * 1_000)
     )
   }
 
   if (!!txReceipt && txReceipt.status === 'success') {
-    // TODO: check that events includes deposit
-    // TODO: get user address from recipient there
+    const txLogs = txReceipt.logs.toReversed()
+
+    for (let i = 0; i < txLogs.length; i++) {
+      try {
+        const { data, topics, address } = txLogs[i]
+
+        const { args: eventArgs } = decodeEventLog({
+          abi: VAULT_ABI,
+          eventName: 'Deposit',
+          data,
+          topics
+        })
+
+        if (!!eventArgs) {
+          const tokenAddress = await publicClient.readContract({
+            address,
+            abi: VAULT_ABI,
+            functionName: 'asset'
+          })
+
+          if (!!tokenAddress) {
+            const deposit: Deposit = {
+              user: eventArgs.owner,
+              vault: address,
+              walletId: walletId,
+              chainId: chainId,
+              txHash: txHash
+            }
+
+            const tokenPrices = await getTokenPrices(chainId, [tokenAddress])
+            const tokenPrice = tokenPrices[tokenAddress.toLowerCase() as Lowercase<Address>]
+
+            if (!!tokenPrice) {
+              const tokenDecimals = await publicClient.readContract({
+                address: tokenAddress,
+                abi: erc20Abi,
+                functionName: 'decimals'
+              })
+
+              deposit.ethValue =
+                parseFloat(formatUnits(eventArgs.assets, tokenDecimals)) * tokenPrice
+            }
+
+            return deposit
+          }
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    }
   }
 }
-
-// {
-//   anonymous: false,
-//   inputs: [
-//     { indexed: true, internalType: 'address', name: 'sender', type: 'address' },
-//     { indexed: true, internalType: 'address', name: 'owner', type: 'address' },
-//     { indexed: false, internalType: 'uint256', name: 'assets', type: 'uint256' },
-//     { indexed: false, internalType: 'uint256', name: 'shares', type: 'uint256' }
-//   ],
-//   name: 'Deposit',
-//   type: 'event'
-// }

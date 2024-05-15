@@ -28,3 +28,23 @@ export const DEFAULT_HEADERS = {
 export const KV_KEYS = {
   walletIds: 'walletIds'
 }
+
+export const VAULT_ABI = [
+  {
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'sender', type: 'address' },
+      { indexed: true, internalType: 'address', name: 'owner', type: 'address' },
+      { indexed: false, internalType: 'uint256', name: 'assets', type: 'uint256' },
+      { indexed: false, internalType: 'uint256', name: 'shares', type: 'uint256' }
+    ],
+    name: 'Deposit',
+    type: 'event'
+  },
+  {
+    inputs: [],
+    name: 'asset',
+    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    stateMutability: 'view',
+    type: 'function'
+  }
+] as const
