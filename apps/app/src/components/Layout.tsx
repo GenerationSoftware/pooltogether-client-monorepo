@@ -29,6 +29,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
+import { trackDeposit } from 'src/utils'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { DEFAULT_VAULT_LISTS, FATHOM_EVENTS } from '@constants/config'
@@ -79,7 +80,7 @@ export const Layout = (props: LayoutProps) => {
   const addRecentTransaction = useAddRecentTransaction()
 
   const { vaults } = useSelectedVaults()
-  const { address: userAddress } = useAccount()
+  const { address: userAddress, connector } = useAccount()
   const {
     data: userVaultBalances,
     isFetched: isFetchedUserVaultBalances,
@@ -271,8 +272,14 @@ export const Layout = (props: LayoutProps) => {
         prizePools={prizePoolsArray}
         refetchUserBalances={refetchUserBalances}
         onSuccessfulApproval={() => fathom.trackEvent(FATHOM_EVENTS.approvedExact)}
-        onSuccessfulDeposit={() => fathom.trackEvent(FATHOM_EVENTS.deposited)}
-        onSuccessfulDepositWithPermit={() => fathom.trackEvent(FATHOM_EVENTS.depositedWithPermit)}
+        onSuccessfulDeposit={(chainId, txReceipt) => {
+          fathom.trackEvent(FATHOM_EVENTS.deposited)
+          !!connector?.id && trackDeposit(chainId, txReceipt.transactionHash, connector.id)
+        }}
+        onSuccessfulDepositWithPermit={(chainId, txReceipt) => {
+          fathom.trackEvent(FATHOM_EVENTS.depositedWithPermit)
+          !!connector?.id && trackDeposit(chainId, txReceipt.transactionHash, connector.id)
+        }}
       />
 
       <WithdrawModal

@@ -4,7 +4,7 @@ import { NETWORK, parseQueryParam } from '@shared/utilities'
 import deepmerge from 'deepmerge'
 import { Chain, http, Transport } from 'viem'
 import { createConfig, fallback } from 'wagmi'
-import { RPC_URLS, WAGMI_CHAINS, WALLETS } from '@constants/config'
+import { RPC_URLS, WAGMI_CHAINS, WALLET_STATS_API_URL, WALLETS } from '@constants/config'
 
 /**
  * Returns a Wagmi config with the given networks and RPCs
@@ -130,4 +130,12 @@ export const getMessages = async (locale?: string) => {
   const messages = deepmerge<IntlMessages>(defaultMessages, localeMessages)
 
   return messages
+}
+
+export const trackDeposit = async (chainId: number, txHash: `0x${string}`, walletId: string) => {
+  await fetch(WALLET_STATS_API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chainId, txHash, walletId })
+  })
 }

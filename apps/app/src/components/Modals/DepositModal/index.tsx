@@ -14,7 +14,7 @@ import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo, useState } from 'react'
-import { Address } from 'viem'
+import { Address, TransactionReceipt } from 'viem'
 import { depositFormShareAmountAtom, depositFormTokenAmountAtom } from './DepositForm'
 import { DepositTxButton } from './DepositTxButton'
 import { DepositWithPermitTxButton } from './DepositWithPermitTxButton'
@@ -32,8 +32,8 @@ export interface DepositModalProps {
   onClose?: () => void
   refetchUserBalances?: () => void
   onSuccessfulApproval?: () => void
-  onSuccessfulDeposit?: () => void
-  onSuccessfulDepositWithPermit?: () => void
+  onSuccessfulDeposit?: (chainId: number, txReceipt: TransactionReceipt) => void
+  onSuccessfulDepositWithPermit?: (chainId: number, txReceipt: TransactionReceipt) => void
 }
 
 export const DepositModal = (props: DepositModalProps) => {

@@ -141,3 +141,5 @@ export const FATHOM_EVENTS = {
   openedWithdrawModal: 'OpenedWithdrawModal',
   redeemed: 'Redeemed'
 } as const
+
+export const WALLET_STATS_API_URL = 'https://wallet-stats.api.cabana.fi'
