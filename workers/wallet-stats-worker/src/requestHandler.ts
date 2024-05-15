@@ -11,6 +11,10 @@ import {
 
 export const handleRequest = async (event: FetchEvent): Promise<Response> => {
   try {
+    if (event.request.method === 'OPTIONS') {
+      return new Response(null, { ...DEFAULT_HEADERS, status: 200 })
+    }
+
     const url = new URL(event.request.url)
 
     if (url.pathname === '/addDeposit' && event.request.method === 'POST') {

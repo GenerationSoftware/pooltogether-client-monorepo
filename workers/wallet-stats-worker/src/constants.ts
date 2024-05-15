@@ -17,7 +17,7 @@ export const USE_TOKEN_PRICES_BOUND_WORKER = true
 export const DEFAULT_HEADERS = {
   headers: {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
+    'Access-Control-Allow-Methods': 'POST, GET, HEAD, OPTIONS',
     'Access-Control-Request-Method': '*',
     'Vary': 'Accept-Encoding, Origin',
     'Access-Control-Allow-Headers': '*',
