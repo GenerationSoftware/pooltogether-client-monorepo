@@ -77,7 +77,7 @@ export const V4_TICKETS: Record<
 
 export const V5_SUBGRAPH_API_URLS: Record<(typeof V5_NETWORKS)[number], `https://${string}`> = {
   [NETWORK.optimism]: 'https://api.studio.thegraph.com/query/63100/pt-v5-optimism/version/latest',
-  [NETWORK.base]: '' // TODO: add subgraph url
+  [NETWORK.base]: 'https://api.studio.thegraph.com/query/41211/pt-v5-base/version/latest'
 }
 
 export const V4_TWAB_SUBGRAPH_API_URLS: Record<(typeof V4_NETWORKS)[number], `https://${string}`> =
