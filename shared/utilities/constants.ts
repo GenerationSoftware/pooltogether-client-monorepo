@@ -342,6 +342,11 @@ export const TOKEN_PRICE_REDIRECTS: {
     [POOL_TOKEN_ADDRESSES[NETWORK.base].toLowerCase()]: {
       chainId: NETWORK.mainnet,
       address: lower(POOL_TOKEN_ADDRESSES[NETWORK.mainnet])
+    },
+    /* wstETH */
+    '0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452': {
+      chainId: NETWORK.mainnet,
+      address: '0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0'
     }
   },
   [NETWORK.polygon]: {
