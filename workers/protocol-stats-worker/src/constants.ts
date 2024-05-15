@@ -38,7 +38,7 @@ export const VIEM_CHAINS: Record<NETWORK, Chain> = {
   [NETWORK.base]: base
 }
 
-export const V5_NETWORKS = [NETWORK.optimism] as const satisfies NETWORK[]
+export const V5_NETWORKS = [NETWORK.optimism, NETWORK.base] as const satisfies NETWORK[]
 
 export const V4_NETWORKS = [
   NETWORK.mainnet,
@@ -60,6 +60,7 @@ export const RPC_URLS: Record<
   [NETWORK.mainnet]: MAINNET_RPC_URL,
   [NETWORK.polygon]: POLYGON_RPC_URL,
   [NETWORK.optimism]: OPTIMISM_RPC_URL,
+  [NETWORK.base]: BASE_RPC_URL,
   [NETWORK.avalanche]: AVALANCHE_RPC_URL,
   [NETWORK.celo]: CELO_RPC_URL
 }
@@ -74,29 +75,32 @@ export const V4_TICKETS: Record<
   [NETWORK.avalanche]: { address: '0xb27f379c050f6ed0973a01667458af6ecebc1d90', decimals: 6 }
 }
 
-export const V5_SUBGRAPH_API_URLS: Record<(typeof V5_NETWORKS)[number], string> = {
-  [NETWORK.optimism]: 'https://api.studio.thegraph.com/query/63100/pt-v5-optimism/version/latest'
+export const V5_SUBGRAPH_API_URLS: Record<(typeof V5_NETWORKS)[number], `https://${string}`> = {
+  [NETWORK.optimism]: 'https://api.studio.thegraph.com/query/63100/pt-v5-optimism/version/latest',
+  [NETWORK.base]: '' // TODO: add subgraph url
 }
 
-export const V4_TWAB_SUBGRAPH_API_URLS: Record<(typeof V4_NETWORKS)[number], string> = {
-  [NETWORK.mainnet]: 'https://api.thegraph.com/subgraphs/name/pooltogether/mainnet-twab',
-  [NETWORK.polygon]: 'https://api.thegraph.com/subgraphs/name/pooltogether/polygon-twab',
-  [NETWORK.optimism]: 'https://api.thegraph.com/subgraphs/name/pooltogether/optimism-twab',
-  [NETWORK.avalanche]: 'https://api.thegraph.com/subgraphs/name/pooltogether/avalanche-twab'
-}
+export const V4_TWAB_SUBGRAPH_API_URLS: Record<(typeof V4_NETWORKS)[number], `https://${string}`> =
+  {
+    [NETWORK.mainnet]: 'https://api.thegraph.com/subgraphs/name/pooltogether/mainnet-twab',
+    [NETWORK.polygon]: 'https://api.thegraph.com/subgraphs/name/pooltogether/polygon-twab',
+    [NETWORK.optimism]: 'https://api.thegraph.com/subgraphs/name/pooltogether/optimism-twab',
+    [NETWORK.avalanche]: 'https://api.thegraph.com/subgraphs/name/pooltogether/avalanche-twab'
+  }
 
-export const V4_PRIZE_SUBGRAPH_API_URLS: Record<(typeof V4_NETWORKS)[number], string> = {
-  [NETWORK.mainnet]:
-    'https://api.thegraph.com/subgraphs/name/pooltogether/mainnet-v4-prizes-claimed',
-  [NETWORK.polygon]:
-    'https://api.thegraph.com/subgraphs/name/pooltogether/polygon-v4-prizes-claimed',
-  [NETWORK.optimism]:
-    'https://api.thegraph.com/subgraphs/name/pooltogether/optimism-v4-prizes-claimed',
-  [NETWORK.avalanche]:
-    'https://api.thegraph.com/subgraphs/name/pooltogether/avalanche-v4-prizes-claimed'
-}
+export const V4_PRIZE_SUBGRAPH_API_URLS: Record<(typeof V4_NETWORKS)[number], `https://${string}`> =
+  {
+    [NETWORK.mainnet]:
+      'https://api.thegraph.com/subgraphs/name/pooltogether/mainnet-v4-prizes-claimed',
+    [NETWORK.polygon]:
+      'https://api.thegraph.com/subgraphs/name/pooltogether/polygon-v4-prizes-claimed',
+    [NETWORK.optimism]:
+      'https://api.thegraph.com/subgraphs/name/pooltogether/optimism-v4-prizes-claimed',
+    [NETWORK.avalanche]:
+      'https://api.thegraph.com/subgraphs/name/pooltogether/avalanche-v4-prizes-claimed'
+  }
 
-export const V3_SUBGRAPH_API_URLS: Record<(typeof V3_NETWORKS)[number], string> = {
+export const V3_SUBGRAPH_API_URLS: Record<(typeof V3_NETWORKS)[number], `https://${string}`> = {
   [NETWORK.mainnet]: 'https://api.thegraph.com/subgraphs/name/pooltogether/pooltogether-v3_4_3',
   [NETWORK.polygon]: 'https://api.thegraph.com/subgraphs/name/pooltogether/polygon-v3_4_3',
   [NETWORK.celo]: 'https://api.thegraph.com/subgraphs/name/pooltogether/celo-v3_4_5'
