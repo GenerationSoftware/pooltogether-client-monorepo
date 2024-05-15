@@ -1,8 +1,6 @@
-import { Button } from '@shared/ui'
 import { SECONDS_PER_DAY } from '@shared/utilities'
 import { GetStaticProps } from 'next'
 import { useTranslations } from 'next-intl'
-import Link from 'next/link'
 import { getMessages } from 'src/utils'
 import { Layout } from '@components/Layout'
 import { LargestPrizeHeader } from '@components/Prizes/LargestPrizeHeader'
@@ -27,9 +25,6 @@ export default function HomePage() {
   return (
     <Layout className='gap-8'>
       <LargestPrizeHeader />
-      <Link href='/vaults' passHref={true}>
-        <Button>{t('depositToWin')}</Button>
-      </Link>
       <PrizePoolCards />
     </Layout>
   )

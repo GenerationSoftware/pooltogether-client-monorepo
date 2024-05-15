@@ -68,7 +68,6 @@ A React componponent library utilizing some simpler components from the internal
 
 ### Prize Pool
 
-- `PrizePoolCard`
 - `PrizePoolDropdown`
 
 ### Toasts

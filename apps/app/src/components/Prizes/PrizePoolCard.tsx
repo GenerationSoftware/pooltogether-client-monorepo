@@ -1,27 +1,30 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { useGrandPrize } from '@generationsoftware/hyperstructure-react-hooks'
-import { useSelectedCurrency } from '@shared/generic-react-hooks'
-import { Intl } from '@shared/types'
-import { Card, Spinner } from '@shared/ui'
+import { useScreenSize, useSelectedCurrency } from '@shared/generic-react-hooks'
+import { PrizePoolBadge, TokenAmount, TokenValue } from '@shared/react-components'
+import { Button, Card, Spinner } from '@shared/ui'
 import { NETWORK, WRAPPED_NATIVE_ASSETS } from '@shared/utilities'
+import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { useMemo } from 'react'
-import { PrizePoolBadge } from '../Badges/PrizePoolBadge'
-import { TokenAmount } from '../Currency/TokenAmount'
-import { TokenValue } from '../Currency/TokenValue'
 
 export interface PrizePoolCardProps {
   prizePool: PrizePool
-  intl?: Intl<'prizePool' | 'grandPrize'>
+  className?: string
 }
 
 export const PrizePoolCard = (props: PrizePoolCardProps) => {
-  const { prizePool, intl } = props
+  const { prizePool, className } = props
+
+  const t_common = useTranslations('Common')
 
   const { data: grandPrize, isFetched: isFetchedGrandPrize } = useGrandPrize(prizePool, {
     useCurrentPrizeSizes: true
   })
 
   const { selectedCurrency } = useSelectedCurrency()
+
+  const { isMobile } = useScreenSize()
 
   const isTokenEquivalentHidden = useMemo(() => {
     const wethTokenAddress =
@@ -36,30 +39,26 @@ export const PrizePoolCard = (props: PrizePoolCardProps) => {
   }, [prizePool, selectedCurrency])
 
   return (
-    <Card
-      wrapperClassName='hover:bg-pt-purple-50/20'
-      className='gap-3 items-center md:gap-16 md:items-start'
-    >
-      <PrizePoolBadge
-        chainId={prizePool.chainId}
-        hideBg={true}
-        intl={intl}
-        className='gap-2 !p-0 md:w-full'
-        iconClassName='h-8 w-8'
-        textClassName='text-2xl font-grotesk font-medium whitespace-nowrap overflow-hidden overflow-ellipsis md:text-3xl'
-      />
-      <div className='flex flex-col gap-0.5 text-center text-pt-purple-100 md:text-start'>
-        <span className='text-xs uppercase md:text-sm'>
-          {intl?.('grandPrize') ?? 'Grand Prize'}
-        </span>
+    <Card wrapperClassName={className} className='gap-3 items-center md:gap-4'>
+      <Link href={`/prizes?network=${prizePool.chainId}`}>
+        <PrizePoolBadge
+          chainId={prizePool.chainId}
+          onClick={() => {}}
+          hideBg={isMobile}
+          intl={t_common}
+          textClassName='whitespace-nowrap overflow-hidden overflow-ellipsis'
+        />
+      </Link>
+      <div className='flex flex-col gap-0.5 items-center text-center text-pt-purple-200 font-grotesk'>
+        <span className='text-2xl'>{t_common('grandPrize')}</span>
         {isFetchedGrandPrize ? (
           !!grandPrize ? (
             <>
-              <span className='text-2xl text-pt-teal md:text-4xl'>
+              <span className='text-7xl text-pt-teal font-bold'>
                 <TokenValue token={grandPrize} hideZeroes={true} fallback={<></>} />
               </span>
               {!isTokenEquivalentHidden && (
-                <span className='hidden font-light md:block'>
+                <span className='hidden text-2xl font-light md:block'>
                   ≈ <TokenAmount token={grandPrize} maximumFractionDigits={2} />
                 </span>
               )}
@@ -71,6 +70,9 @@ export const PrizePoolCard = (props: PrizePoolCardProps) => {
           <Spinner />
         )}
       </div>
+      <Link href={`/vaults?network=${prizePool.chainId}`} passHref={true}>
+        <Button className='mt-8 md:mt-0'>{t_common('depositToWin')}</Button>
+      </Link>
     </Card>
   )
 }
