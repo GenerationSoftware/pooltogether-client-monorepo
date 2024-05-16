@@ -13,7 +13,8 @@ const tokenLogoUrls = {
   lusd: 'https://etherscan.io/token/images/liquitylusd_32.png',
   ageur: 'https://etherscan.io/token/images/ageur_32.png?=v982',
   op: 'https://optimistic.etherscan.io/token/images/optimism_32.png',
-  veloLP: `${LINKS.app}/icons/przVELO.svg`
+  przVELO: `${LINKS.app}/icons/przVELO.svg`,
+  steth: 'https://etherscan.io/token/images/lido-steth_32.png'
 } as const
 
 /**
@@ -55,8 +56,8 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0xc40f949f8a4e094d1b49a23ea9241d289b7b2819': tokenLogoUrls.lusd,
     '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': tokenLogoUrls.ageur,
     '0x4200000000000000000000000000000000000042': tokenLogoUrls.op,
-    '0x9b53ef6f13077727d22cb4acad1119c79a97be17': tokenLogoUrls.veloLP,
-    '0x9b4c0de59628c64b02d7ce86f21db9a579539d5a': tokenLogoUrls.veloLP
+    '0x9b53ef6f13077727d22cb4acad1119c79a97be17': tokenLogoUrls.przVELO,
+    '0x9b4c0de59628c64b02d7ce86f21db9a579539d5a': tokenLogoUrls.przVELO
   },
   [NETWORK.optimism_sepolia]: {
     [POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia].toLowerCase()]: tokenLogoUrls.pool,
@@ -84,7 +85,8 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913': tokenLogoUrls.usdc,
     '0x50c5725949a6f0c72e6c4a641f24049a917db0cb': tokenLogoUrls.dai,
     '0x4200000000000000000000000000000000000006': tokenLogoUrls.weth,
-    '0x368181499736d0c0cc614dbb145e2ec1ac86b8c6': tokenLogoUrls.lusd
+    '0x368181499736d0c0cc614dbb145e2ec1ac86b8c6': tokenLogoUrls.lusd,
+    '0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452': tokenLogoUrls.steth
   },
   [NETWORK.base_sepolia]: {
     [POOL_TOKEN_ADDRESSES[NETWORK.base_sepolia].toLowerCase()]: tokenLogoUrls.pool,
