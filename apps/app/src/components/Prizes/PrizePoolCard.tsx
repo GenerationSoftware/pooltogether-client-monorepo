@@ -40,15 +40,12 @@ export const PrizePoolCard = (props: PrizePoolCardProps) => {
 
   return (
     <Card wrapperClassName={className} className='gap-3 items-center md:gap-4'>
-      <Link href={`/prizes?network=${prizePool.chainId}`}>
-        <PrizePoolBadge
-          chainId={prizePool.chainId}
-          onClick={() => {}}
-          hideBg={isMobile}
-          intl={t_common}
-          textClassName='whitespace-nowrap overflow-hidden overflow-ellipsis'
-        />
-      </Link>
+      <PrizePoolBadge
+        chainId={prizePool.chainId}
+        hideBg={isMobile}
+        intl={t_common}
+        textClassName='whitespace-nowrap overflow-hidden overflow-ellipsis'
+      />
       <div className='flex flex-col gap-0.5 items-center text-center text-pt-purple-200 font-grotesk'>
         <span className='text-2xl'>{t_common('grandPrize')}</span>
         {isFetchedGrandPrize ? (
@@ -70,9 +67,6 @@ export const PrizePoolCard = (props: PrizePoolCardProps) => {
           <Spinner />
         )}
       </div>
-      <Link href={`/vaults?network=${prizePool.chainId}`} passHref={true}>
-        <Button className='mt-8 md:mt-0'>{t_common('depositToWin')}</Button>
-      </Link>
     </Card>
   )
 }
