@@ -78,7 +78,8 @@ export const VaultFilters = (props: VaultFiltersProps) => {
 
   // Getting filter ID from URL query:
   useEffect(() => {
-    const rawUrlNetwork = router.query['network']
+    const rawUrlNetwork =
+      router.query['network'] || router.asPath.match(/(?<=[?&]network=)(\d*?)(?=(&|$))/)?.[0]
     const chainId =
       !!rawUrlNetwork && typeof rawUrlNetwork === 'string' ? parseInt(rawUrlNetwork) : undefined
     !!chainId && chainId in NETWORK && setFilterId(chainId.toString())
