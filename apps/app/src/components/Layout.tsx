@@ -37,7 +37,7 @@ import { useNetworks } from '@hooks/useNetworks'
 import { useSelectedPrizePool } from '@hooks/useSelectedPrizePool'
 import { useSettingsModalView } from '@hooks/useSettingsModalView'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
-import { MigrationPopup } from './MigrationPopup'
+//import { MigrationPopup } from './MigrationPopup'
 import { DepositModal } from './Modals/DepositModal'
 import { WithdrawModal } from './Modals/WithdrawModal'
 import { drawIdAtom } from './Prizes/PrizePoolWinners'
@@ -117,33 +117,6 @@ export const Layout = (props: LayoutProps) => {
       toast(alert.content, { id: alert.id })
     })
   })
-
-  // TODO: remove this whole block a while after launch
-  const [needsMigrationToastCheck, setNeedsMigrationToastCheck] = useState<boolean>(false)
-  useEffect(() => {
-    setNeedsMigrationToastCheck(true)
-  })
-  useEffect(() => {
-    if (needsMigrationToastCheck && isFetchedUserVaultBalances) {
-      setNeedsMigrationToastCheck(false)
-
-      const positiveBalances = Object.values(userVaultBalances ?? {})
-        .map((b) => b.amount)
-        .filter((b) => b > 0n)
-      if (!positiveBalances.length) {
-        toast(
-          <div className='flex flex-col gap-2 items-center text-center text-base'>
-            <span>Is your account missing some deposits?</span>
-            <span>You might have been deposited in an older version of PoolTogether.</span>
-            <ExternalLink href={LINKS.migrations} className='text-pt-teal'>
-              Check the migration app
-            </ExternalLink>
-          </div>,
-          { id: 'migrationAppNudge' }
-        )
-      }
-    }
-  }, [userVaultBalances, isFetchedUserVaultBalances])
 
   const footerItems: FooterItem[] = [
     {
@@ -318,9 +291,6 @@ export const Layout = (props: LayoutProps) => {
       />
 
       <VaultListHandler />
-
-      {/* TODO: remove a while after launch */}
-      <MigrationPopup />
 
       <main
         className={classNames(

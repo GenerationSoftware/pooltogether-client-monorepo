@@ -20,22 +20,22 @@ module.exports = {
       colors: {
         pt: {
           purple: {
-            50: '#F5F0FF',
-            100: '#DECEFF',
-            200: '#C8ADFF',
-            300: '#B18CFF',
-            400: '#9B6AFF',
-            500: '#8050E3',
-            600: '#6538C1',
-            700: '#4C249F',
-            800: '#36147D',
-            900: '#24095B',
-            DEFAULT: '#8050E3'
+            50: '#E6F6FF',  // Lightest blue
+            100: '#0076FF',
+            200: '#0076FF',
+            300: '#002C66',
+            400: '#00428F',
+            500: '#0076FF',  // Default blue
+            600: '#002C66',
+            700: '#00428F',
+            800: '#002C66',
+            900: '#001940',  // Darkest blue
+            DEFAULT: '#0076FF'
           },
           teal: {
-            light: '#35F0D0',
-            dark: '#0DC5A5',
-            DEFAULT: '#35F0D0'
+            light: '#FA48E8',  // Light pink
+            dark: '#ec008c',   // Darker pink
+            DEFAULT: '#FA48E8' // Default pink
           },
           pink: {
             light: '#FA48E8',
@@ -44,10 +44,10 @@ module.exports = {
           },
           bg: {
             purple: {
-              light: '#5D3A97',
-              dark: '#2D0C66',
-              darker: '#21064E',
-              DEFAULT: '#2D0C66'
+              light: '#002C66',
+              dark: '##002C66',
+              darker: '#001940',
+              DEFAULT: '#002C66'
             }
           },
           warning: {

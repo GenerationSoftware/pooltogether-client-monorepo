@@ -31,8 +31,8 @@ export default function PrizesPage() {
       <Image
         src='/partyEmoji.svg'
         alt='Cabana Party Emoji'
-        width={180}
-        height={180}
+        width={380}
+        height={380}
         priority={true}
         className='hidden w-auto h-24 md:block'
       />

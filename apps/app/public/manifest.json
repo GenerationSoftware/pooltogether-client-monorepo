@@ -1,11 +1,11 @@
 {
-  "short_name": "Cabana App",
-  "name": "Cabana App",
+  "short_name": "Good Together",
+  "name": "Good Together",
   "description": "Browse, deposit into and withdraw from any number of PoolTogether vaults.",
   "start_url": "/",
   "scope": "/",
-  "theme_color": "#8050E3",
-  "background_color": "#21064E",
+  "theme_color": "#00428F",
+  "background_color": "#001940",
   "display": "fullscreen",
   "icons": [
     {

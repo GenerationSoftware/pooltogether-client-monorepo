@@ -3,7 +3,7 @@ import Document, { Head, Html, Main, NextScript } from 'next/document'
 
 class MyDocument extends Document {
   render() {
-    const title = 'Cabana App'
+    const title = 'Good Together'
     const description = 'Browse, deposit into and withdraw from any number of PoolTogether vaults.'
     const keywords =
       'pooltogether prize savings win save protocol blockchain vault vaultlist 4626 ethereum'
@@ -17,10 +17,10 @@ class MyDocument extends Document {
           <link rel='apple-touch-icon' href='/apple-touch-icon.png' />
           <link rel='manifest' href='/manifest.json' />
 
-          <meta name='theme-color' content='#21064e' />
+          <meta name='theme-color' content='#005BBF' />
           <meta name='description' content={description} />
           <meta name='keywords' content={keywords} />
-          <meta name='author' content='Generation Software' />
+          <meta name='author' content='Generation Software Forked By MyEVM.xyz' />
 
           <meta property='og:title' content={title} />
           <meta property='og:description' content={description} />
