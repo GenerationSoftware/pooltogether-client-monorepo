@@ -34,6 +34,10 @@ export const VaultPrizeYield = (props: VaultPrizeYieldProps) => {
     return <>?</>
   }
 
+  if (prizeYield === 0) {
+    return <>-</>
+  }
+
   return (
     <div className={classNames('inline-flex gap-1 items-center', className)}>
       <span className={valueClassName}>
