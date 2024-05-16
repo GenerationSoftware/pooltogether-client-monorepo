@@ -11,7 +11,7 @@ export const useEstimatedNextNumTiers = (
   const publicClient = usePublicClient({ chainId: prizePool?.chainId })
 
   return useQuery({
-    queryKey: ['estimatedNextNumTiers'],
+    queryKey: ['estimatedNextNumTiers', prizePool?.chainId],
     queryFn: async () => {
       if (!!publicClient) {
         return await publicClient.readContract({
