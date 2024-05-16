@@ -20,13 +20,13 @@ import {
 import { NETWORK, POOL_TOKEN_ADDRESSES, USDC_TOKEN_ADDRESSES } from '@shared/utilities'
 import defaultVaultList from '@vaultLists/default'
 import { Address } from 'viem'
-import { arbitrumSepolia, baseSepolia, mainnet, optimism, optimismSepolia } from 'viem/chains'
+import { arbitrumSepolia, base, baseSepolia, mainnet, optimism, optimismSepolia } from 'viem/chains'
 
 /**
  * Supported networks
  */
 export const SUPPORTED_NETWORKS = {
-  mainnets: [NETWORK.mainnet, NETWORK.optimism],
+  mainnets: [NETWORK.mainnet, NETWORK.optimism, NETWORK.base],
   testnets: [NETWORK.optimism_sepolia, NETWORK.arbitrum_sepolia, NETWORK.base_sepolia]
 } as const
 
@@ -36,6 +36,7 @@ export const SUPPORTED_NETWORKS = {
 export const WAGMI_CHAINS = {
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism,
+  [NETWORK.base]: base,
   [NETWORK.optimism_sepolia]: optimismSepolia,
   [NETWORK.arbitrum_sepolia]: arbitrumSepolia,
   [NETWORK.base_sepolia]: baseSepolia
@@ -69,6 +70,7 @@ export const WALLETS: { [wallet: string]: CreateWalletFn } = {
 export const RPC_URLS = {
   [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
+  [NETWORK.base]: process.env.NEXT_PUBLIC_BASE_RPC_URL,
   [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL,
   [NETWORK.base_sepolia]: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL
@@ -98,6 +100,16 @@ export const TWAB_REWARDS_SETTINGS: {
       '0x395Ae52bB17aef68C2888d941736A71dC6d4e125' // POOL
     ],
     fromBlock: 118_900_000n
+  },
+  [NETWORK.base]: {
+    tokenAddresses: [
+      '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913', // USDC
+      '0x4200000000000000000000000000000000000006', // WETH
+      '0x50c5725949a6f0c72e6c4a641f24049a917db0cb', // DAI
+      '0xd652C5425aea2Afd5fb142e120FeCf79e18fafc3', // POOL
+      '0xA88594D404727625A9437C3f886C7643872296AE' // WELL
+    ],
+    fromBlock: 14_506_800n
   },
   [NETWORK.optimism_sepolia]: {
     tokenAddresses: [

@@ -83,6 +83,19 @@ export const PRIZE_POOLS: {
     }
   },
   {
+    chainId: NETWORK.base,
+    address: '0x45b2010d8A4f08b53c9fa7544C51dFd9733732cb',
+    options: {
+      prizeTokenAddress: '0x4200000000000000000000000000000000000006',
+      drawManagerAddress: '0x8A2782bedC79982EBFa3b68B315a2eE40DAF6aB0',
+      twabControllerAddress: '0x7e63601F7e28C758Feccf8CDF02F6598694f44C6',
+      drawPeriodInSeconds: 86_400,
+      drawAuctionDurationInSeconds: 10_800,
+      tierShares: 100,
+      reserveShares: 30
+    }
+  },
+  {
     chainId: NETWORK.optimism_sepolia,
     address: '0x122FecA66c2b1Ba8Fa9C39E88152592A5496Bc99',
     options: {
@@ -162,7 +175,11 @@ export const STABLECOINS: Record<NETWORK, { [address: Lowercase<Address>]: strin
     '0x45b32d0c3cf487e11c3b80af564878bea83cce67': 'usd', // USDC
     '0x837f6ec55793c49b2994ba703a3d2331649b09ea': 'usd' // DAI
   },
-  [NETWORK.base]: {},
+  [NETWORK.base]: {
+    '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913': 'usd', // USDC
+    '0x50c5725949a6f0c72e6c4a641f24049a917db0cb': 'usd', // DAI
+    '0x368181499736d0c0cc614dbb145e2ec1ac86b8c6': 'usd' // LUSD
+  },
   [NETWORK.base_sepolia]: {
     '0xc88130e55db4a3ba162984d6efe4ff982bc0e227': 'usd', // USDC
     '0x82557c5157fcbeddd80ae09647ec018a0083a638': 'usd', // DAI
@@ -198,6 +215,7 @@ export const WRAPPED_NATIVE_ASSETS: Record<NETWORK, Lowercase<Address> | null> =
  */
 export const TWAB_REWARDS_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.optimism]: '0x90D383dEA4dcE52D3e5D3C93dE75eF36da3Ea9Ea',
+  [NETWORK.base]: '0x86f0923d20810441efc593eb0f2825c6bff2dc09',
   [NETWORK.optimism_sepolia]: '0x505E334544689C7A4BF4c6A0CF8d52A5fB6F0A4A',
   [NETWORK.arbitrum_sepolia]: '0xaB342FCf99A71EF54B9f3C0CD24d851AB0E3D6EC',
   [NETWORK.base_sepolia]: '0x61F3c11BDef3f460626789f6252617aA5b011AF1'
@@ -208,6 +226,7 @@ export const TWAB_REWARDS_ADDRESSES: { [chainId: number]: Address } = {
  */
 export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.optimism]: '0x0c379e9b71ba7079084ada0d1c1aeb85d24dfd39',
+  [NETWORK.base]: '0xe32f6344875494ca3643198d87524519dc396ddf',
   [NETWORK.optimism_sepolia]: '0x5ecc83b1a0ba255713b69154451826a937702435',
   [NETWORK.arbitrum_sepolia]: '0xFeE52eb76262E9C0e97a28ab9f2e0309B2D30CC7',
   [NETWORK.base_sepolia]: '0x039846bae81b6ad824188b090d6f0f808a9686ba'
@@ -218,6 +237,7 @@ export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
  */
 export const LIQUIDATION_PAIR_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.optimism]: '0x80F86691632d9863E6bCaa472e5c34574F77c7D1',
+  [NETWORK.base]: '0x8557a9a33b573dc4403708c5a8746a52648374ea',
   [NETWORK.optimism_sepolia]: '0x99e05e2346885D1c1Ce714c9e794A7ca6E3634b4',
   [NETWORK.arbitrum_sepolia]: '0xdDa8b566bA8456992BE1E470dd1e237D525677BD',
   [NETWORK.base_sepolia]: '0xEBBF939223aDB7145e823daD6Cee87DB79424b1C'
@@ -228,6 +248,7 @@ export const LIQUIDATION_PAIR_FACTORY_ADDRESSES: { [chainId: number]: Address } 
  */
 export const DEFAULT_CLAIMER_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.optimism]: '0x0b5a1dc536D5A67C66D00B337E6b189385BD8438',
+  [NETWORK.base]: '0x5ffeee76d1e2d2d1d18ba0bc77d8d047b85e1e87',
   [NETWORK.optimism_sepolia]: '0xac2be4D9C0d8841c1f0Af43A564BDF2EF3Df3954',
   [NETWORK.arbitrum_sepolia]: '0x57EfbAE195ee330cc92206C458c738a18eBb0402',
   [NETWORK.base_sepolia]: '0x86E975c177F8C2d1351e5A469e01ee86993B45D3'
@@ -238,6 +259,7 @@ export const DEFAULT_CLAIMER_ADDRESSES: { [chainId: number]: Address } = {
  */
 export const LIQUIDATION_ROUTER_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.optimism]: '0x7766b5E6839a1a218Fc861b0810C504490876136',
+  [NETWORK.base]: '0xa9c937a0d1d22ad79099aea10efa62a270dfc22c',
   [NETWORK.optimism_sepolia]: '0x4694F3CD7fedD269aaF2a168e12C544f829a6b50',
   [NETWORK.arbitrum_sepolia]: '0xF1cc7c16Df4E7C2BA62EDcbe634a90dfff9DF3e4',
   [NETWORK.base_sepolia]: '0x926F4777c583f0C0BB11F25B3EBB0A32ed3107aA'
@@ -263,6 +285,7 @@ export const OP_GAS_ORACLE_ADDRESS = '0x420000000000000000000000000000000000000f
  */
 export const SUBGRAPH_API_URLS = {
   [NETWORK.optimism]: 'https://api.studio.thegraph.com/query/63100/pt-v5-optimism/version/latest',
+  [NETWORK.base]: 'https://api.studio.thegraph.com/query/41211/pt-v5-base/version/latest',
   [NETWORK.optimism_sepolia]:
     'https://api.studio.thegraph.com/query/63100/pt-v5-op-sepolia/version/latest',
   [NETWORK.arbitrum_sepolia]:
@@ -283,6 +306,7 @@ export const TOKEN_PRICE_API_SUPPORTED_NETWORKS: NETWORK[] = [
   NETWORK.mainnet,
   NETWORK.optimism,
   NETWORK.arbitrum,
+  NETWORK.base,
   NETWORK.polygon
 ]
 
@@ -296,7 +320,7 @@ export const TOKEN_PRICE_REDIRECTS: {
 } = {
   [NETWORK.optimism]: {
     /* POOL */
-    '0x395ae52bb17aef68c2888d941736a71dc6d4e125': {
+    [POOL_TOKEN_ADDRESSES[NETWORK.optimism].toLowerCase()]: {
       chainId: NETWORK.mainnet,
       address: lower(POOL_TOKEN_ADDRESSES[NETWORK.mainnet])
     },
@@ -304,6 +328,25 @@ export const TOKEN_PRICE_REDIRECTS: {
     '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': {
       chainId: NETWORK.mainnet,
       address: '0x1a7e4e63778b4f12a199c062f3efdd288afcbce8'
+    }
+  },
+  [NETWORK.arbitrum]: {
+    /* POOL */
+    [POOL_TOKEN_ADDRESSES[NETWORK.arbitrum].toLowerCase()]: {
+      chainId: NETWORK.mainnet,
+      address: lower(POOL_TOKEN_ADDRESSES[NETWORK.mainnet])
+    }
+  },
+  [NETWORK.base]: {
+    /* POOL */
+    [POOL_TOKEN_ADDRESSES[NETWORK.base].toLowerCase()]: {
+      chainId: NETWORK.mainnet,
+      address: lower(POOL_TOKEN_ADDRESSES[NETWORK.mainnet])
+    },
+    /* wstETH */
+    '0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452': {
+      chainId: NETWORK.mainnet,
+      address: '0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0'
     }
   },
   [NETWORK.polygon]: {
@@ -559,7 +602,8 @@ export const COINGECKO_PLATFORMS = {
   [NETWORK.optimism]: 'optimistic-ethereum',
   [NETWORK.avalanche]: 'avalanche',
   [NETWORK.celo]: 'celo',
-  [NETWORK.arbitrum]: 'arbitrum-one'
+  [NETWORK.arbitrum]: 'arbitrum-one',
+  [NETWORK.base]: 'base'
 } as const
 export type COINGECKO_PLATFORM = keyof typeof COINGECKO_PLATFORMS
 

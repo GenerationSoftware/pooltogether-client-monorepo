@@ -24,6 +24,7 @@
     "apr": "APR",
     "warning": "Warning",
     "getTokenAt": "Get {token} at",
+    "cabanaPoweredBy": "Cabana is powered by",
     "greatMigration": {
       "joinTitle": "Join the Great <highlight>Pooly</highlight> Migration",
       "joinButton": "Join the Migration",

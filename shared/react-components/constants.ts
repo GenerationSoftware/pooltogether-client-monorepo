@@ -79,7 +79,13 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x837f6ec55793c49b2994ba703a3d2331649b09ea': tokenLogoUrls.dai,
     '0x1a586a874f7c6ca5c3220c434fb5096dde2ec3f0': tokenLogoUrls.weth
   },
-  [NETWORK.base]: {},
+  [NETWORK.base]: {
+    [POOL_TOKEN_ADDRESSES[NETWORK.base].toLowerCase()]: tokenLogoUrls.pool,
+    '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913': tokenLogoUrls.usdc,
+    '0x50c5725949a6f0c72e6c4a641f24049a917db0cb': tokenLogoUrls.dai,
+    '0x4200000000000000000000000000000000000006': tokenLogoUrls.weth,
+    '0x368181499736d0c0cc614dbb145e2ec1ac86b8c6': tokenLogoUrls.lusd
+  },
   [NETWORK.base_sepolia]: {
     [POOL_TOKEN_ADDRESSES[NETWORK.base_sepolia].toLowerCase()]: tokenLogoUrls.pool,
     [USDC_TOKEN_ADDRESSES[NETWORK.base_sepolia]]: tokenLogoUrls.usdc,

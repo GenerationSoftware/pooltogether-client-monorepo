@@ -1,14 +1,11 @@
-import { PrizePoolCard } from '@shared/react-components'
 import classNames from 'classnames'
-import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
+import { PrizePoolCard } from './PrizePoolCard'
 
 export const PrizePoolCards = () => {
   const prizePools = useSupportedPrizePools()
   const numPrizePools = Object.keys(prizePools).length
-
-  const t = useTranslations('Common')
 
   return (
     <div
@@ -21,17 +18,18 @@ export const PrizePoolCards = () => {
         }
       )}
     >
-      {Object.values(prizePools).map((prizePool) => {
-        return (
-          <Link
-            key={`pp-${prizePool.id}`}
-            href={`/prizes?network=${prizePool.chainId}`}
-            className='w-full'
-          >
-            <PrizePoolCard prizePool={prizePool} intl={t} />
-          </Link>
-        )
-      })}
+      {Object.values(prizePools).map((prizePool) => (
+        <Link
+          key={`pp-${prizePool.id}`}
+          href={`/prizes?network=${prizePool.chainId}`}
+          className='w-full'
+        >
+          <PrizePoolCard
+            prizePool={prizePool}
+            className='w-full hover:bg-pt-purple-50/20 md:w-auto md:min-w-[22rem]'
+          />
+        </Link>
+      ))}
     </div>
   )
 }

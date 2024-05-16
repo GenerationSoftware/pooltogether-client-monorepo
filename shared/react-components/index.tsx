@@ -56,7 +56,6 @@ export * from './components/Modals/SettingsModal'
 /**
  * Prize Pool
  */
-export * from './components/PrizePool/PrizePoolCard'
 export * from './components/PrizePool/PrizePoolDropdown'
 
 /**
