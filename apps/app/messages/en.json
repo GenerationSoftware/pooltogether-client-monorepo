@@ -85,7 +85,7 @@
     "clearFilters": "Clear Filters",
     "disclaimer": "PoolTogether prize vaults can be deployed by anyone. <link>Know what you are depositing into</link>",
     "headers": {
-      "token": "Token",
+      "prizeVault": "Prize Vault",
       "prizeYield": "Prize Yield",
       "bonusRewards": "Bonus Rewards",
       "totalDeposits": "Total Deposits",
@@ -148,7 +148,7 @@
       "moreInfo": "More Info"
     },
     "bonusRewardHeaders": {
-      "token": "Token",
+      "prizeVault": "Prize Vault",
       "rewardToken": "Reward Token",
       "rewardsEarned": "Rewards Earned",
       "rewardsClaimed": "Claimed Rewards",

@@ -42,7 +42,7 @@ export const AccountPromotionsTable = (props: AccountPromotionsTableProps) => {
 
   const tableHeaders = useMemo(() => {
     const headers: TableProps['data']['headers'] = {
-      token: { content: t_headers('token') },
+      token: { content: t_headers('prizeVault') },
       rewardToken: {
         content: t_headers('rewardToken'),
         position: 'center'

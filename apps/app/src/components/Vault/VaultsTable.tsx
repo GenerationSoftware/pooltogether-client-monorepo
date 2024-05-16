@@ -107,7 +107,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
 
   const tableData: TableProps['data'] = {
     headers: {
-      token: { content: t_vaults('headers.token') },
+      token: { content: t_vaults('headers.prizeVault') },
       prizeYield: {
         content: (
           <SortableHeader
