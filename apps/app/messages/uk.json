@@ -9,7 +9,6 @@
     "manage": "Керувати",
     "deposit": "Депозит",
     "withdraw": "Зняття",
-    "delegate": "Delegate",
     "learnMore": "Дізнатись Більше",
     "back": "Назад",
     "connectWallet": "Під'єднати Гаманець",
@@ -18,19 +17,7 @@
     "close": "Закрити",
     "learnAboutRisks": "Дізнатися про ризики",
     "readDocs": "Прочитати Документи",
-    "termsOfService": "Умови Використання",
-    "bonusRewards": "Bonus Rewards",
-    "claim": "Claim",
-    "apr": "APR",
-    "warning": "Warning",
-    "getTokenAt": "Get {token} at",
-    "greatMigration": {
-      "joinTitle": "Join the Great <highlight>Pooly</highlight> Migration",
-      "joinButton": "Join the Migration",
-      "migrateTo": "Migrate to the new PoolTogether",
-      "earnUpTo": "and earn up to <highlight>{apr}% APR</highlight> in OP Bonus Rewards",
-      "skipForNow": "Skip for now"
-    }
+    "termsOfService": "Умови Використання"
   },
   "Navigation": {
     "home": "Головна",
@@ -84,9 +71,7 @@
     "clearFilters": "Очистити фільтри",
     "disclaimer": "Призові сховища PoolTogether можуть бути розгорнуті будь-ким. <link>Знайте куди ви вкладаєте</link>",
     "headers": {
-      "token": "Токен",
       "prizeYield": "Дохід від Призів",
-      "bonusRewards": "Bonus Rewards",
       "totalDeposits": "Всього депозитів",
       "yourBalance": "Ваш Баланс"
     }
@@ -98,7 +83,6 @@
       "balance": "Баланс",
       "winChance": "Шанс Виграшу",
       "prizeYield": "Дохід від Призів",
-      "bonusRewards": "Bonus Rewards",
       "tvl": "TVL",
       "contributions": "{number}д Внесок в Призовий Фонд",
       "depositToken": "Токен Депозиту",
@@ -107,9 +91,7 @@
       "delegatedAmount": "Делегована Кількість",
       "vaultFee": "Комісія Сховища",
       "feeRecipient": "Одержувач Комісії",
-      "yieldSource": "Джерело Доходу",
-      "lpSource": "Liquidity Pair Source",
-      "vaultOwner": "Vault Owner"
+      "yieldSource": "Джерело Доходу"
     },
     "returnToVaults": "Повернутися до Сховищ",
     "learnAboutVault": "Дізнатися про {vaultName}",
@@ -137,22 +119,10 @@
     "oneInXChance": "1 на {number}",
     "noPrizesRecently": "Останнім часом ви не виграли жодних призів.",
     "learnHowItWorks": "Дізнайтеся, як працює PoolTogether",
-    "claimRewardsTx": "{symbol} Rewards Claim",
-    "claimAllRewardsTx": "{network} Multi-Rewards Claim",
-    "claimAllOnNetwork": "Claim all on {network}",
     "winHeaders": {
       "date": "Дата",
-      "prizePool": "Призовий Фонд",
       "winnings": "Виграші",
       "moreInfo": "Детальніше"
-    },
-    "bonusRewardHeaders": {
-      "token": "Токен",
-      "rewardToken": "Reward Token",
-      "rewardsEarned": "Rewards Earned",
-      "rewardsClaimed": "Claimed Rewards",
-      "rewardsClaimable": "Unclaimed Rewards",
-      "claims": "Claims"
     },
     "prizeChecking": {
       "eligibleDraws": "Ви мали право на участь в {number, plural, one {# розіграші} other {# розіграшах}}",
@@ -173,20 +143,11 @@
     "depositToShort": "Поповнити {name}",
     "withdrawFrom": "Вийти з {name} використовуючи {network}",
     "withdrawFromShort": "Вийти з {name}",
-    "delegateFrom": "Delegate your {name} on {network}",
-    "delegateFromShort": "Delegate your {name}",
-    "delegateSelfDescription": "You are delegating to yourself. Any prize your {tokens} deposit wins will go to your wallet.",
-    "delegateDescription": "The delegated address receives any prizes your {tokens} deposit wins.",
-    "delegatedAddress": "Delegated Address",
-    "changeDelegateAddress": "Change delegate address",
-    "changeDelegateAddressShort": "Edit Delegate",
-    "updateDelegatedAddress": "Update delegated address",
     "fees": {
       "title": "Орієнтовна Комісія Мережі",
       "approval": "Підтвердження",
       "deposit": "Депозит",
-      "withdrawal": "Зняття",
-      "delegation": "Delegation"
+      "withdrawal": "Зняття"
     },
     "dailyChances": "Щоденний Шанс Перемоги",
     "weeklyChances": "Щотижневий Шанс Перемоги",
@@ -195,30 +156,23 @@
     "balance": "Баланс:",
     "enterAnAmount": "Введіть суму",
     "approvalButton": "Схвалити {symbol}",
-    "approvalTx": "{symbol} Approval",
-    "reviewDelegation": "Review Delegation",
     "reviewDeposit": "Перегляд Депозиту",
     "reviewWithdrawal": "Перегляд Зняття",
     "confirmDeposit": "Підтвердити Депозит",
     "confirmWithdrawal": "Підтвердити Зняття",
     "depositTx": "Депозит {symbol}",
     "withdrawTx": "Зняття {symbol}",
-    "delegateTx": "{symbol} Delegation",
     "switchNetwork": "Перемикнути на {network}",
     "switchingNetwork": "Перемикання на {network}...",
     "confirmNotice": "Підтвердьте Транзакцію в Гаманці",
     "submissionNotice": "Транзакцію Надіслано",
     "depositing": "Поповнення {tokens}...",
     "withdrawing": "Зняття {tokens}...",
-    "delegating": "Delegating {tokens}...",
     "success": "Готово!",
     "deposited": "Ви внесли {tokens}",
     "withdrew": "Ви зняли {tokens}",
-    "delegated": "You delegated {tokens}",
     "nowEligible": "Тепер ви маєте право на всі майбутні розіграші у цьому пулі.",
-    "shareOn": "Share on",
     "viewAccount": "Переглянути Рахунок",
-    "waiting": "Waiting for Transaction",
     "uhOh": "Ой!",
     "failedTx": "Щось пішло не так....",
     "tryAgain": "Спробуйте ще",
@@ -249,7 +203,6 @@
     "changeLanguage": "Змінити Мову",
     "viewEcosystem": "Перегляд Екосистеми",
     "manageVaultLists": "Керувати Списками Сховищ",
-    "setCustomRPCs": "Set Custom RPCs",
     "getHelp": "Отримати Допомогу",
     "getHelpWithCabana": "Отримати Допомогу з Cabana",
     "vaultListsDescription": "Списки сховищ визначають, які призові сховища відображаються у додатку. Будьте уважні під час взаємодії з імпортованими списками.",
@@ -257,15 +210,7 @@
     "urlInput": "https:// або ipfs:// або ENS ім'я",
     "addVaultList": "Додати Список Сховищ",
     "clearImportedVaultLists": "Очистити всі імпортовані списки сховищ",
-    "numVaults": "{number, plural, one {# vault} other {# vaults}}",
-    "numTestnetVaults": "{number, plural, one {# testnet vault} other {# testnet vaults}}",
-    "imported": "Імпортовані",
-    "customRpcDescription": "Route the app's onchain queries through RPCs of your choosing. These are stored locally on your browser.",
-    "customNetworkRpc": "Custom {network} RPC",
-    "override": "override",
-    "default": "Default",
-    "set": "Set",
-    "refreshToUpdateRPCs": "Refresh the page to see changes"
+    "imported": "Імпортовані"
   },
   "Abbreviations": {
     "days": "днів",
@@ -286,30 +231,22 @@
   },
   "Tooltips": {
     "prizeYield": "Нещодавній середній показник внесків сховища до призового фонду",
-    "bonusRewards": "An estimate of current extra incentives for depositors",
     "winChance": "Ваш шанс виграти приз в будь-яку розіграші",
     "approval": "Ви підтверджуєте внесення депозиту на певну кількість {symbol}",
     "vaultFee": "Відсоток прибутковості, який йде не на призи, та визначається особою що розгорнула сховище",
     "importedVault": "Це сховище походить з наступних імпортованих списків:",
-    "vaultContribution": "Кількість {symbol}, що внесено в призовий фонд за останні {days} днів",
-    "deprecatedVault": "This vault has been deprecated. It may still be eligible to win prizes, but we encourage users to migrate to other vaults.",
-    "wrongPrizePoolVault": "This vault is connected to a prize pool not supported by this interface.",
-    "badPrecisionPerDollar": "This vault is likely to have rounding errors which may lead to lossy withdrawals.",
-    "delegateDescription": "By default the prize token holder is the delegated address. That can be overridden with delegation."
+    "vaultContribution": "Кількість {symbol}, що внесено в призовий фонд за останні {days} днів"
   },
   "Toasts": {
     "transactions": {
       "deposit": "Депозит",
       "withdrawal": "Зняття",
-      "delegate": "Delegate",
       "depositing": "Зарахування {tokens}...",
       "withdrawing": "Зняття {tokens}...",
-      "delegating": "Delegating {tokens}...",
       "viewOn": "Переглянути {name}",
       "success": "Готово!",
       "deposited": "Ви внесли {tokens} на {network}",
       "withdrew": "Ви зняли {tokens} на {network}",
-      "delegated": "You delegated {tokens} on {network}",
       "uhOh": "Ой!",
       "failedTx": "Щось пішло не так....",
       "tryAgain": "Спробуйте ще"
@@ -333,22 +270,13 @@
     "hmmm": "Гмм...",
     "pageNotFound": "Нам не вдалося знайти сторінку, яку ви шукаєте.",
     "return": "Повернутися до Пулу",
-    "aaveCollateralizationError": {
-      "issue": "This vault is experiencing issues due to using a high percentage of Aave's supply. <link>Learn more</link>",
-      "recommendation": "It is not recommended to withdraw at this time",
-      "moreInfo": "You may be able to swap out via <uniLink>Uniswap</uniLink>, or wait for the vault to normalize. For further updates, visit PoolTogether's <discordLink>Discord</discordLink>"
-    },
     "formErrors": {
       "invalidSrc": "Недійсні URL-адреса або домен ENS",
       "invalidVaultList": "Дійсного списку сховищ не знайдено",
       "notEnoughTokens": "Недостатньо {symbol} у гаманці",
       "invalidNumber": "Введіть коректну кількість",
-      "invalidAddress": "Enter a valid EVM address",
-      "sameAsDelegate": "Entered address is same as current delegate",
       "negativeNumber": "Введіть додатне число",
-      "tooManyDecimals": "Забагато десяткових",
-      "invalidRpcNetwork": "This RPC doesn't seem to be for the {network} network",
-      "invalidRpcUrl": "Not a valid RPC URL"
+      "tooManyDecimals": "Забагато десяткових"
     }
   }
 }

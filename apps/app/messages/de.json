@@ -23,13 +23,13 @@
     "claim": "Beanspruchen",
     "apr": "Jahreszins",
     "warning": "Warnung",
-    "getTokenAt": "Get {token} at",
+    "getTokenAt": "Erhalte {token} bei",
     "greatMigration": {
-      "joinTitle": "Join the Great <highlight>Pooly</highlight> Migration",
-      "joinButton": "Join the Migration",
-      "migrateTo": "Migrate to the new PoolTogether",
-      "earnUpTo": "and earn up to <highlight>{apr}% APR</highlight> in OP Bonus Rewards",
-      "skipForNow": "Skip for now"
+      "joinTitle": "Trete der großen <highlight>Pooly</highlight> Migration bei",
+      "joinButton": "Nimm an der Migration teil",
+      "migrateTo": "Migriere zum neuen PoolTogether",
+      "earnUpTo": "und verdiene bis zu <highlight>{apr}% APR</highlight> in OP Bonus Belohnungen",
+      "skipForNow": "Vorerst überspringen"
     }
   },
   "Navigation": {
@@ -84,7 +84,6 @@
     "clearFilters": "Filter löschen",
     "disclaimer": "PoolTogether Preis Vaults können von jedem erstellt werden. <link>Zahle nur in Dir bekannte Vaults ein</link>",
     "headers": {
-      "token": "Token",
       "prizeYield": "Preisrendite",
       "bonusRewards": "Bonusbelohnung",
       "totalDeposits": "Gesamteinzahlungen",
@@ -108,7 +107,7 @@
       "vaultFee": "Vault Gebühr",
       "feeRecipient": "Gebührenempfänger",
       "yieldSource": "Yield Quelle",
-      "lpSource": "Liquidity Pair Source",
+      "lpSource": "Quelle des Liquiditätspaars",
       "vaultOwner": "Vault Eigentümer"
     },
     "returnToVaults": "Zurück zu Vaults",
@@ -142,16 +141,14 @@
     "claimAllOnNetwork": "Alle auf {network} beanspruchen",
     "winHeaders": {
       "date": "Datum",
-      "prizePool": "Preis Pool",
       "winnings": "Gewinne",
       "moreInfo": "Weitere Informationen"
     },
     "bonusRewardHeaders": {
-      "token": "Token",
       "rewardToken": "Belohnungstoken",
       "rewardsEarned": "Verdiente Belohnungen",
-      "rewardsClaimed": "Claimed Rewards",
-      "rewardsClaimable": "Unclaimed Rewards",
+      "rewardsClaimed": "Beanspruchte Belohnungen",
+      "rewardsClaimable": "Nicht beanspruchte Belohnungen",
       "claims": "Ansprüche"
     },
     "prizeChecking": {
@@ -293,8 +290,8 @@
     "importedVault": "Dieses Vault stammt von der(n) folgenden importierten Liste(n):",
     "vaultContribution": "Die Gesamtzahl von {symbol} hat in den letzten {days} Tagen zum Preispool beigetragen",
     "deprecatedVault": "Dieser Vault ist nicht mehr aktuell. Evtl. ist er noch berechtigt, Preise zu gewinnen, aber wir ermutigen Nutzer, in andere Vaults zu migrieren.",
-    "wrongPrizePoolVault": "This vault is connected to a prize pool not supported by this interface.",
-    "badPrecisionPerDollar": "This vault is likely to have rounding errors which may lead to lossy withdrawals.",
+    "wrongPrizePoolVault": "Dieser Vault ist mit einem Preispool verbunden, der nicht von diesem Interface unterstützt wird.",
+    "badPrecisionPerDollar": "Dieser Vault hat wahrscheinlich Rundungsfehler, die zu verlustreichen Auszahlungen führen können.",
     "delegateDescription": "Standardmäßig ist der Inhaber des Preistokens die delegierte Adresse. Dies kann mit der Delegation überschrieben werden."
   },
   "Toasts": {

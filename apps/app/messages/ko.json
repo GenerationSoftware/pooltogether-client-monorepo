@@ -9,7 +9,6 @@
     "manage": "관리하기",
     "deposit": "입금",
     "withdraw": "출금",
-    "delegate": "Delegate",
     "learnMore": "더 알아보기",
     "back": "뒤로",
     "connectWallet": "지갑 연결",
@@ -18,19 +17,7 @@
     "close": "닫기",
     "learnAboutRisks": "위험에 대해 알아보기",
     "readDocs": "문서 읽기",
-    "termsOfService": "서비스 약관",
-    "bonusRewards": "Bonus Rewards",
-    "claim": "Claim",
-    "apr": "APR",
-    "warning": "Warning",
-    "getTokenAt": "Get {token} at",
-    "greatMigration": {
-      "joinTitle": "Join the Great <highlight>Pooly</highlight> Migration",
-      "joinButton": "Join the Migration",
-      "migrateTo": "Migrate to the new PoolTogether",
-      "earnUpTo": "and earn up to <highlight>{apr}% APR</highlight> in OP Bonus Rewards",
-      "skipForNow": "Skip for now"
-    }
+    "termsOfService": "서비스 약관"
   },
   "Navigation": {
     "home": "홈",
@@ -84,9 +71,7 @@
     "clearFilters": "필터 지우기",
     "disclaimer": "PoolTogether 상금 금고는 누구나 배포할 수 있습니다. <link>당신이 입금하는 것이 무엇인지 알아보세요</link>",
     "headers": {
-      "token": "토큰",
       "prizeYield": "상금 수익",
-      "bonusRewards": "Bonus Rewards",
       "totalDeposits": "총 입금",
       "yourBalance": "당신의 잔액"
     }
@@ -98,7 +83,6 @@
       "balance": "잔액",
       "winChance": "당첨 확률",
       "prizeYield": "상금 수익",
-      "bonusRewards": "Bonus Rewards",
       "tvl": "TVL",
       "contributions": "{number}D 상금 풀 기여",
       "depositToken": "입금 토큰",
@@ -107,9 +91,7 @@
       "delegatedAmount": "위임된 금액",
       "vaultFee": "금고 수수료",
       "feeRecipient": "수수료 수령인",
-      "yieldSource": "수익 소스",
-      "lpSource": "Liquidity Pair Source",
-      "vaultOwner": "Vault Owner"
+      "yieldSource": "수익 소스"
     },
     "returnToVaults": "금고로 돌아가기",
     "learnAboutVault": "{vaultName} 에 대해 알아보기",
@@ -137,22 +119,10 @@
     "oneInXChance": "{number} 중 1의 확률",
     "noPrizesRecently": "최근에 당첨된 상품이 없습니다.",
     "learnHowItWorks": "PoolTogether 가 어떻게 작동하는지 알아보기",
-    "claimRewardsTx": "{symbol} Rewards Claim",
-    "claimAllRewardsTx": "{network} Multi-Rewards Claim",
-    "claimAllOnNetwork": "Claim all on {network}",
     "winHeaders": {
       "date": "날짜",
-      "prizePool": "상금 풀",
       "winnings": "당첨금",
       "moreInfo": "더 많은 정보"
-    },
-    "bonusRewardHeaders": {
-      "token": "토큰",
-      "rewardToken": "Reward Token",
-      "rewardsEarned": "Rewards Earned",
-      "rewardsClaimed": "Claimed Rewards",
-      "rewardsClaimable": "Unclaimed Rewards",
-      "claims": "Claims"
     },
     "prizeChecking": {
       "eligibleDraws": "{number, plural, one {# 추첨} other {# 추첨들}} 에 참여할 자격이 있었습니다",
@@ -173,20 +143,11 @@
     "depositToShort": "{name} 에 입금하기",
     "withdrawFrom": "{name} 에서 {network} 로 출금하기",
     "withdrawFromShort": "{name} 에서 출금",
-    "delegateFrom": "Delegate your {name} on {network}",
-    "delegateFromShort": "Delegate your {name}",
-    "delegateSelfDescription": "You are delegating to yourself. Any prize your {tokens} deposit wins will go to your wallet.",
-    "delegateDescription": "The delegated address receives any prizes your {tokens} deposit wins.",
-    "delegatedAddress": "Delegated Address",
-    "changeDelegateAddress": "Change delegate address",
-    "changeDelegateAddressShort": "Edit Delegate",
-    "updateDelegatedAddress": "Update delegated address",
     "fees": {
       "title": "예상 네트워크 수수료",
       "approval": "승인",
       "deposit": "입금",
-      "withdrawal": "출금",
-      "delegation": "Delegation"
+      "withdrawal": "출금"
     },
     "dailyChances": "일일 당첨 확률",
     "weeklyChances": "주간 당첨 확률",
@@ -195,30 +156,23 @@
     "balance": "잔액:",
     "enterAnAmount": "금액 입력",
     "approvalButton": "{symbol} 승인",
-    "approvalTx": "{symbol} Approval",
-    "reviewDelegation": "Review Delegation",
     "reviewDeposit": "입금 검토",
     "reviewWithdrawal": "출금 검토",
     "confirmDeposit": "입금 확인",
     "confirmWithdrawal": "출금 확인",
     "depositTx": "{symbol} 입금",
     "withdrawTx": "{symbol} 출금",
-    "delegateTx": "{symbol} Delegation",
     "switchNetwork": "{network} 로 전환",
     "switchingNetwork": "{network} 로 전환 중...",
     "confirmNotice": "지갑에서 거래 확인",
     "submissionNotice": "거래 제출됨",
     "depositing": "{tokens} 입금 중...",
     "withdrawing": "{tokens} 출금 중...",
-    "delegating": "Delegating {tokens}...",
     "success": "성공!",
     "deposited": "{tokens} 를 입금했습니다",
     "withdrew": "{tokens} 를 출금했습니다",
-    "delegated": "You delegated {tokens}",
     "nowEligible": "이제 이 풀의 모든 미래 추첨에 참여할 수 있습니다.",
-    "shareOn": "Share on",
     "viewAccount": "계정 보기",
-    "waiting": "Waiting for Transaction",
     "uhOh": "이런!",
     "failedTx": "문제가 발생했습니다....",
     "tryAgain": "다시 시도",
@@ -249,7 +203,6 @@
     "changeLanguage": "언어 변경",
     "viewEcosystem": "생태계 보기",
     "manageVaultLists": "금고 목록 관리",
-    "setCustomRPCs": "Set Custom RPCs",
     "getHelp": "도움 받기",
     "getHelpWithCabana": "Cabana 사용 도움 받기",
     "vaultListsDescription": "금고 목록은 앱 전체에 표시되는 상금 금고를 결정합니다. 가져온 목록과 상호 작용할 때 주의하세요.",
@@ -257,15 +210,7 @@
     "urlInput": "https:// 또는 ipfs:// 또는 ENS 이름",
     "addVaultList": "금고 목록 추가",
     "clearImportedVaultLists": "가져온 모든 금고 목록 지우기",
-    "numVaults": "{number, plural, one {# vault} other {# vaults}}",
-    "numTestnetVaults": "{number, plural, one {# testnet vault} other {# testnet vaults}}",
-    "imported": "가져온 것",
-    "customRpcDescription": "Route the app's onchain queries through RPCs of your choosing. These are stored locally on your browser.",
-    "customNetworkRpc": "Custom {network} RPC",
-    "override": "override",
-    "default": "Default",
-    "set": "Set",
-    "refreshToUpdateRPCs": "Refresh the page to see changes"
+    "imported": "가져온 것"
   },
   "Abbreviations": {
     "days": "일",
@@ -286,30 +231,22 @@
   },
   "Tooltips": {
     "prizeYield": "금고가 상금 풀에 기여한 최근 평균",
-    "bonusRewards": "An estimate of current extra incentives for depositors",
     "winChance": "어떤 추첨에서 상을 받을 확률",
     "approval": "{symbol} 의 특정 금액 입금에 대한 승인을 줄 것입니다",
     "vaultFee": "상금으로 가지 않는 수익의 비율로, 금고 배포자가 결정합니다",
     "importedVault": "이 금고는 다음과 같은 가져온 목록에서 왔습니다:",
-    "vaultContribution": "지난 {days} 일 동안 상금 풀에 기여한 {symbol} 의 금액",
-    "deprecatedVault": "This vault has been deprecated. It may still be eligible to win prizes, but we encourage users to migrate to other vaults.",
-    "wrongPrizePoolVault": "This vault is connected to a prize pool not supported by this interface.",
-    "badPrecisionPerDollar": "This vault is likely to have rounding errors which may lead to lossy withdrawals.",
-    "delegateDescription": "By default the prize token holder is the delegated address. That can be overridden with delegation."
+    "vaultContribution": "지난 {days} 일 동안 상금 풀에 기여한 {symbol} 의 금액"
   },
   "Toasts": {
     "transactions": {
       "deposit": "입금",
       "withdrawal": "출금",
-      "delegate": "Delegate",
       "depositing": "{tokens} 입금 중...",
       "withdrawing": "{tokens} 출금 중...",
-      "delegating": "Delegating {tokens}...",
       "viewOn": "{name} 에서 보기",
       "success": "성공!",
       "deposited": "{tokens} 를 {network} 에 입금했습니다",
       "withdrew": "{tokens} 를 {network} 에서 출금했습니다",
-      "delegated": "You delegated {tokens} on {network}",
       "uhOh": "이런!",
       "failedTx": "문제가 발생했습니다....",
       "tryAgain": "다시 시도하기"
@@ -333,22 +270,13 @@
     "hmmm": "음...",
     "pageNotFound": "찾고 있는 페이지를 찾을 수 없습니다.",
     "return": "풀로 돌아가기",
-    "aaveCollateralizationError": {
-      "issue": "This vault is experiencing issues due to using a high percentage of Aave's supply. <link>Learn more</link>",
-      "recommendation": "It is not recommended to withdraw at this time",
-      "moreInfo": "You may be able to swap out via <uniLink>Uniswap</uniLink>, or wait for the vault to normalize. For further updates, visit PoolTogether's <discordLink>Discord</discordLink>"
-    },
     "formErrors": {
       "invalidSrc": "유효한 URL 또는 ENS 도메인이 아닙니다",
       "invalidVaultList": "유효한 금고 목록을 찾을 수 없습니다",
       "notEnoughTokens": "지갑에 충분한 {symbol} 이 없습니다",
       "invalidNumber": "유효한 숫자를 입력하세요",
-      "invalidAddress": "Enter a valid EVM address",
-      "sameAsDelegate": "Entered address is same as current delegate",
       "negativeNumber": "양수를 입력하세요",
-      "tooManyDecimals": "소수점이 너무 많습니다",
-      "invalidRpcNetwork": "This RPC doesn't seem to be for the {network} network",
-      "invalidRpcUrl": "Not a valid RPC URL"
+      "tooManyDecimals": "소수점이 너무 많습니다"
     }
   }
 }

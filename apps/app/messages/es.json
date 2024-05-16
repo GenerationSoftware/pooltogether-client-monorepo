@@ -9,7 +9,6 @@
     "manage": "Gestionar",
     "deposit": "Depositar",
     "withdraw": "Retirar",
-    "delegate": "Delegate",
     "learnMore": "Más información",
     "back": "Atrás",
     "connectWallet": "Conectar billetera",
@@ -22,15 +21,7 @@
     "bonusRewards": "Recompensas Extras",
     "claim": "Reclamar",
     "apr": "APR",
-    "warning": "Advertencia",
-    "getTokenAt": "Get {token} at",
-    "greatMigration": {
-      "joinTitle": "Join the Great <highlight>Pooly</highlight> Migration",
-      "joinButton": "Join the Migration",
-      "migrateTo": "Migrate to the new PoolTogether",
-      "earnUpTo": "and earn up to <highlight>{apr}% APR</highlight> in OP Bonus Rewards",
-      "skipForNow": "Skip for now"
-    }
+    "warning": "Advertencia"
   },
   "Navigation": {
     "home": "Inicio",
@@ -84,7 +75,6 @@
     "clearFilters": "Borrar filtros",
     "disclaimer": "Las bóvedas del premio PoolTogether pueden ser desplegadas por cualquiera. <link>Sepa lo que deposita en</link>",
     "headers": {
-      "token": "Token",
       "prizeYield": "Rendimiento de premios",
       "bonusRewards": "Recompensas Extras",
       "totalDeposits": "Total de depósitos",
@@ -107,9 +97,7 @@
       "delegatedAmount": "Cantidad Delegada",
       "vaultFee": "Tarifa de bóveda",
       "feeRecipient": "Cuota de destinatario",
-      "yieldSource": "Fuente de Rendimientos",
-      "lpSource": "Liquidity Pair Source",
-      "vaultOwner": "Vault Owner"
+      "yieldSource": "Fuente de Rendimientos"
     },
     "returnToVaults": "Volver a los Cofres",
     "learnAboutVault": "Aprender acerca de {vaultName}",
@@ -138,20 +126,14 @@
     "noPrizesRecently": "No has ganado ningún premio recientemente.",
     "learnHowItWorks": "Aprende cómo funciona PoolTogether",
     "claimRewardsTx": "Reclamación de recompensas {symbol}",
-    "claimAllRewardsTx": "{network} Multi-Rewards Claim",
-    "claimAllOnNetwork": "Claim all on {network}",
     "winHeaders": {
       "date": "Fecha",
-      "prizePool": "Herramienta de premios",
       "winnings": "Ganancias",
       "moreInfo": "Más información"
     },
     "bonusRewardHeaders": {
-      "token": "Token",
       "rewardToken": "Token de recompensa",
       "rewardsEarned": "Recompensas ganadas",
-      "rewardsClaimed": "Claimed Rewards",
-      "rewardsClaimable": "Unclaimed Rewards",
       "claims": "Reclamar"
     },
     "prizeChecking": {
@@ -173,20 +155,11 @@
     "depositToShort": "Depositar a {name} en",
     "withdrawFrom": "Retirar de {name} en {network}",
     "withdrawFromShort": "Retirar de {name} en",
-    "delegateFrom": "Delegate your {name} on {network}",
-    "delegateFromShort": "Delegate your {name}",
-    "delegateSelfDescription": "You are delegating to yourself. Any prize your {tokens} deposit wins will go to your wallet.",
-    "delegateDescription": "The delegated address receives any prizes your {tokens} deposit wins.",
-    "delegatedAddress": "Delegated Address",
-    "changeDelegateAddress": "Change delegate address",
-    "changeDelegateAddressShort": "Edit Delegate",
-    "updateDelegatedAddress": "Update delegated address",
     "fees": {
       "title": "Tarifas de red estimadas",
       "approval": "Aprobación",
       "deposit": "Depositar",
-      "withdrawal": "Retirar",
-      "delegation": "Delegation"
+      "withdrawal": "Retirar"
     },
     "dailyChances": "Oportunidad Diaria de Ganar",
     "weeklyChances": "Oportunidad Semanal de Ganar",
@@ -195,30 +168,23 @@
     "balance": "Balance:",
     "enterAnAmount": "Introduzca un monto",
     "approvalButton": "Aprobar {symbol}",
-    "approvalTx": "{symbol} Approval",
-    "reviewDelegation": "Review Delegation",
     "reviewDeposit": "Revisar Depósito",
     "reviewWithdrawal": "Revisión del Retiro",
     "confirmDeposit": "Confirmar depósito",
     "confirmWithdrawal": "Confirmar retiro",
     "depositTx": "Depósitos de {symbol}",
     "withdrawTx": "Retiro {symbol}",
-    "delegateTx": "{symbol} Delegation",
     "switchNetwork": "Cambiar a {network}",
     "switchingNetwork": "Cambiando a {network}...",
     "confirmNotice": "Confirmar transacción en cartera",
     "submissionNotice": "Transacción Enviada",
     "depositing": "Depositando {tokens}...",
     "withdrawing": "Retirando {tokens}...",
-    "delegating": "Delegating {tokens}...",
     "success": "¡Listo!",
     "deposited": "Has depositado {tokens} en",
     "withdrew": "Has retirado {tokens}",
-    "delegated": "You delegated {tokens}",
     "nowEligible": "Ahora eres elegible para todos los sorteos futuros en esta piscina.",
-    "shareOn": "Share on",
     "viewAccount": "Ver tu cuenta",
-    "waiting": "Waiting for Transaction",
     "uhOh": "Uh oh!",
     "failedTx": "Algo salió mal....",
     "tryAgain": "Vuelve a intentarlo",
@@ -249,7 +215,6 @@
     "changeLanguage": "Cambiar idioma",
     "viewEcosystem": "Ver Ecosistema",
     "manageVaultLists": "Administrar listas de bóveda",
-    "setCustomRPCs": "Set Custom RPCs",
     "getHelp": "Obtener ayuda",
     "getHelpWithCabana": "Obtén ayuda con el uso de Cabana",
     "vaultListsDescription": "Las listas de bóvedas determinan qué bóvedas de premios se muestran en toda la aplicación. Tenga cuidado al interactuar con las listas importadas.",
@@ -257,15 +222,7 @@
     "urlInput": "https:// o ipfs:// o nombre ENS",
     "addVaultList": "Todas las listas de bóveda",
     "clearImportedVaultLists": "Borrar todas las listas de bóveda importadas",
-    "numVaults": "{number, plural, one {# vault} other {# vaults}}",
-    "numTestnetVaults": "{number, plural, one {# testnet vault} other {# testnet vaults}}",
-    "imported": "Importado",
-    "customRpcDescription": "Route the app's onchain queries through RPCs of your choosing. These are stored locally on your browser.",
-    "customNetworkRpc": "Custom {network} RPC",
-    "override": "override",
-    "default": "Default",
-    "set": "Set",
-    "refreshToUpdateRPCs": "Refresh the page to see changes"
+    "imported": "Importado"
   },
   "Abbreviations": {
     "days": "días",
@@ -292,24 +249,18 @@
     "vaultFee": "Un porcentaje de rendimiento que no va hacia los premios, y está determinado por el desplegador de la bóveda",
     "importedVault": "Esta bóveda es de las siguientes lista(s) importadas:",
     "vaultContribution": "La cantidad de {symbol} ha contribuido al bote de premios en los últimos {days} días",
-    "deprecatedVault": "Esta bóveda ha sido obsoleta. Todavía puede ser elegible para ganar premios, pero animamos a los usuarios a migrar a otras bóvedas.",
-    "wrongPrizePoolVault": "This vault is connected to a prize pool not supported by this interface.",
-    "badPrecisionPerDollar": "This vault is likely to have rounding errors which may lead to lossy withdrawals.",
-    "delegateDescription": "By default the prize token holder is the delegated address. That can be overridden with delegation."
+    "deprecatedVault": "Esta bóveda ha sido obsoleta. Todavía puede ser elegible para ganar premios, pero animamos a los usuarios a migrar a otras bóvedas."
   },
   "Toasts": {
     "transactions": {
       "deposit": "Depositar",
       "withdrawal": "Retirar",
-      "delegate": "Delegate",
       "depositing": "Depositando {tokens}...",
       "withdrawing": "Retirando {tokens}...",
-      "delegating": "Delegating {tokens}...",
       "viewOn": "Ver en la {name}",
       "success": "¡Listo!",
       "deposited": "Has depositado {tokens} en {network}",
       "withdrew": "Has depositado {tokens} en {network}",
-      "delegated": "You delegated {tokens} on {network}",
       "uhOh": "Uh oh!",
       "failedTx": "Algo salió mal....",
       "tryAgain": "Vuelve a intentarlo"
@@ -343,12 +294,8 @@
       "invalidVaultList": "No se encontró una lista de bóveda válida",
       "notEnoughTokens": "No hay suficiente {symbol} en la cartera",
       "invalidNumber": "Ingrese un número válido",
-      "invalidAddress": "Enter a valid EVM address",
-      "sameAsDelegate": "Entered address is same as current delegate",
       "negativeNumber": "Ingrese un número positivo",
-      "tooManyDecimals": "Demasiados decimales",
-      "invalidRpcNetwork": "This RPC doesn't seem to be for the {network} network",
-      "invalidRpcUrl": "Not a valid RPC URL"
+      "tooManyDecimals": "Demasiados decimales"
     }
   }
 }
