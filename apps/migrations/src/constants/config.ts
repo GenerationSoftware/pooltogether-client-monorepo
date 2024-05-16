@@ -426,6 +426,18 @@ export const V3_POOLS: Record<
       tokenAddress: '0x85cb0bab616fe88a89a35080516a8928f38b518b',
       migrateTo: MIGRATION_DESTINATIONS.wethVault,
       rewardsAddress: '0x9a29401ef1856b669f55ae5b24505b3b6faeb370'
+    },
+    {
+      address: '0xea7eaecbff99ce2412e794437325f3bd225ee78f',
+      ticketAddress: '0x32957733c65b586c411b2b2a6f95b2577398adf5',
+      tokenAddress: '0x0391d2021f89dc339f60fff84546ea23e337750f',
+      migrateTo: MIGRATION_DESTINATIONS.wethVault
+    },
+    {
+      address: '0xf6d6b30d31077db8590fe1bea7a293e1515f8152',
+      ticketAddress: '0xfdd99dd78fec6abb94f4c2435886de9f8359ae60',
+      tokenAddress: '0x03ab458634910aad20ef5f1c8ee96f1d6ac54919',
+      migrateTo: MIGRATION_DESTINATIONS.daiVault
     }
   ],
   [NETWORK.optimism]: [],
