@@ -40,15 +40,11 @@ export const useSendDepositWithPermitTransaction = (
 } => {
   const { address: userAddress, chain } = useAccount()
 
-  const { data: tokenAddress, isFetched: isFetchedTokenAddress } = useVaultTokenAddress(vault)
-
   const enabled =
     !!amount &&
     !!vault &&
     !!signature &&
     !!deadline &&
-    isFetchedTokenAddress &&
-    !!tokenAddress &&
     !!userAddress &&
     isAddress(userAddress) &&
     chain?.id === vault.chainId
