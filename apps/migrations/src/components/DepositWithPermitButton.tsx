@@ -3,7 +3,8 @@ import {
   useApproveSignature,
   useSendDepositTransaction,
   useSendDepositWithPermitTransaction,
-  useTokenAllowance
+  useTokenAllowance,
+  useTokenBalance
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { TokenWithAmount } from '@shared/types'
 import { ButtonProps } from '@shared/ui'
@@ -26,6 +27,12 @@ export const DepositWithPermitButton = (props: DepositWithPermitButtonProps) => 
     isFetched: isFetchedAllowance,
     refetch: refetchAllowance
   } = useTokenAllowance(vault.chainId, userAddress, vault.address, token.address)
+
+  const { data: balance, isFetched: isFetchedBalance } = useTokenBalance(
+    token.chainId,
+    userAddress,
+    token.address
+  )
 
   const [isApproved, setIsApproved] = useState<boolean>(false)
   const [isReadyToSendTxAfterSigning, setIsReadyToSendTxAfterSigning] = useState<boolean>(false)
@@ -83,7 +90,19 @@ export const DepositWithPermitButton = (props: DepositWithPermitButtonProps) => 
     }
   }, [isReadyToSendTxAfterSigning, isApproved, sendDepositWithPermitTransaction])
 
-  if (isFetchedAllowance && allowance !== undefined && allowance >= token.amount) {
+  const isDataFetched =
+    !!userAddress &&
+    !!vault &&
+    !!token &&
+    allowance !== undefined &&
+    isFetchedAllowance &&
+    balance !== undefined &&
+    isFetchedBalance
+
+  const depositEnabled =
+    isDataFetched && !!token.amount && !!balance.amount && balance.amount >= token.amount
+
+  if (isDataFetched && allowance >= token.amount) {
     return (
       <TransactionButton
         chainId={vault.chainId}
@@ -92,26 +111,26 @@ export const DepositWithPermitButton = (props: DepositWithPermitButtonProps) => 
         write={sendDepositTransaction}
         txHash={depositTxHash}
         txDescription={`${token.symbol} Deposit`}
-        {...rest}
-      >
-        Deposit {token.symbol}
-      </TransactionButton>
-    )
-  } else {
-    return (
-      <TransactionButton
-        chainId={vault.chainId}
-        isTxLoading={
-          isWaitingApproval || isWaitingDepositWithPermit || isConfirmingDepositWithPermit
-        }
-        isTxSuccess={isSuccessfulDepositWithPermit}
-        write={isApproved ? sendDepositWithPermitTransaction : signApprove}
-        txHash={depositWithPermitTxHash}
-        txDescription={`${token.symbol} Deposit`}
+        disabled={!depositEnabled}
         {...rest}
       >
         Deposit {token.symbol}
       </TransactionButton>
     )
   }
+
+  return (
+    <TransactionButton
+      chainId={vault.chainId}
+      isTxLoading={isWaitingApproval || isWaitingDepositWithPermit || isConfirmingDepositWithPermit}
+      isTxSuccess={isSuccessfulDepositWithPermit}
+      write={isApproved ? sendDepositWithPermitTransaction : signApprove}
+      txHash={depositWithPermitTxHash}
+      txDescription={`${token.symbol} Deposit`}
+      disabled={!depositEnabled}
+      {...rest}
+    >
+      Deposit {token.symbol}
+    </TransactionButton>
+  )
 }

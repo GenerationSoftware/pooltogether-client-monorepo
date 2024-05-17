@@ -1,4 +1,5 @@
 import {
+  useTokenBalance,
   useTokenPermitSupport,
   useVault,
   useVaultTokenData
@@ -7,6 +8,7 @@ import { NetworkBadge, TokenIcon } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import { formatBigIntForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
+import { useEffect } from 'react'
 import { Address } from 'viem'
 import { DepositButton } from './DepositButton'
 import { DepositGasEstimate } from './DepositGasEstimate'
@@ -29,6 +31,19 @@ export const DepositContent = (props: DepositContentProps) => {
 
   const { data: tokenPermitSupport, isFetched: isFetchedTokenPermitSupport } =
     useTokenPermitSupport(token?.chainId as number, token?.address as Address)
+
+  const { refetch: refetchTokenBalance } = useTokenBalance(
+    token?.chainId as number,
+    userAddress,
+    token?.address as Address,
+    { refetchOnWindowFocus: true }
+  )
+
+  useEffect(() => {
+    if (!!token) {
+      refetchTokenBalance()
+    }
+  }, [token])
 
   if (!isFetchedToken || !isFetchedTokenPermitSupport || !token || !depositAmount) {
     return <Spinner />
