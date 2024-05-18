@@ -135,6 +135,18 @@ export const TWAB_REWARDS_SETTINGS: {
 }
 
 /**
+ * Zap settings
+ */
+export const ZAP_SETTINGS: {
+  [chainId: number]: { zapRouterAddress: Address; zapTokenManager: Address }
+} = {
+  [NETWORK.optimism]: {
+    zapRouterAddress: '0xE82343A116d2179F197111D92f9B53611B43C01c',
+    zapTokenManager: '0x5a32F67C5eD74dc1b2e031b1bc2c3E965073424F'
+  }
+}
+
+/**
  * Fathom events
  */
 export const FATHOM_EVENTS = {
