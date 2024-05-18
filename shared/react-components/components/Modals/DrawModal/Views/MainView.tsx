@@ -7,7 +7,7 @@ import {
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Intl, SubgraphDraw } from '@shared/types'
 import { Spinner } from '@shared/ui'
-import { formatBigIntForDisplay, shorten, sortByBigIntDesc, sToMs } from '@shared/utilities'
+import { formatBigIntForDisplay, lower, shorten, sortByBigIntDesc, sToMs } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
@@ -219,7 +219,10 @@ const DrawWinnersTable = (props: DrawWinnersTableProps) => {
                     onClick={() => handleAddressClick(winner)}
                     className='hover:text-pt-purple-100'
                   >
-                    {shorten(winner)}
+                    {/* TODO: remove hardcoded address once booster is no longer relevant (or put in config if this modal is moved to app repo) */}
+                    {lower(winner) === '0x327b2ea9668a552fe5dec8e3c6e47e540a0a58c6'
+                      ? 'GP Booster'
+                      : shorten(winner)}
                   </button>
                 </span>
                 <span className='w-1/2 text-right whitespace-nowrap md:text-center'>
