@@ -7,6 +7,7 @@ import {
   useAllVaultSharePrices,
   useAllVaultTotalSupplyTwabs,
   useDrawPeriod,
+  useLastAwardedDrawId,
   usePrizeTokenPrice
 } from '..'
 
@@ -43,6 +44,8 @@ export const useAllVaultPrizeYields = (
 
   const { data: drawPeriod, isFetched: isFetchedDrawPeriod } = useDrawPeriod(prizePool)
 
+  const { data: lastDrawId, isFetched: isFetchedLastDrawId } = useLastAwardedDrawId(prizePool)
+
   const data = useMemo(() => {
     const prizeYields: { [vaultId: string]: number } = {}
 
@@ -57,6 +60,7 @@ export const useAllVaultPrizeYields = (
         const totalSupplyTwab = totalSupplyTwabs[vaultId]
         const shareToken = allShareTokens[vaultId]
         const yearlyDraws = SECONDS_PER_YEAR / drawPeriod
+        const numDrawsConsidered = Math.min(options?.numDraws ?? 7, lastDrawId || 1)
 
         if (
           vaultContribution === 0n ||
@@ -73,7 +77,7 @@ export const useAllVaultPrizeYields = (
         ) {
           const yearlyContribution =
             parseFloat(formatUnits(vaultContribution, prizeToken.decimals)) *
-            (yearlyDraws / (options?.numDraws ?? 7))
+            (yearlyDraws / numDrawsConsidered)
           const yearlyContributionValue = yearlyContribution * prizeToken.price
           const tvl =
             parseFloat(formatUnits(totalSupplyTwab, shareToken.decimals)) * shareToken.price
@@ -84,14 +88,15 @@ export const useAllVaultPrizeYields = (
     }
 
     return prizeYields
-  }, [vaultContributions, totalSupplyTwabs, allShareTokens, prizeToken, drawPeriod])
+  }, [vaultContributions, totalSupplyTwabs, allShareTokens, prizeToken, drawPeriod, lastDrawId])
 
   const isFetched =
     isFetchedVaultContributions &&
     isFetchedTotalSupplyTwabs &&
     isFetchedAllShareTokens &&
     isFetchedPrizeToken &&
-    isFetchedDrawPeriod
+    isFetchedDrawPeriod &&
+    isFetchedLastDrawId
 
   const refetch = () => {
     refetchVaultContributions()
