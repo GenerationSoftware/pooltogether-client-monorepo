@@ -1,5 +1,5 @@
 import { Button } from '@shared/ui'
-import { SECONDS_PER_DAY } from '@shared/utilities'
+import { LINKS, SECONDS_PER_DAY } from '@shared/utilities'
 import classNames from 'classnames'
 import { GetStaticProps } from 'next'
 import { useTranslations } from 'next-intl'
@@ -46,13 +46,15 @@ const CabanaPoweredBy = (props: { className?: string }) => {
   return (
     <div className={classNames('flex gap-2 items-center', className)}>
       {t('cabanaPoweredBy')}
-      <Image
-        src='/pooltogether-logo.svg'
-        alt='PoolTogether Logo'
-        width={183}
-        height={72}
-        className='w-24 h-auto'
-      />
+      <Link href={LINKS.protocolLandingPage} target='_blank'>
+        <Image
+          src='/pooltogether-logo.svg'
+          alt='PoolTogether Logo'
+          width={183}
+          height={72}
+          className='w-24 h-auto'
+        />
+      </Link>
     </div>
   )
 }
