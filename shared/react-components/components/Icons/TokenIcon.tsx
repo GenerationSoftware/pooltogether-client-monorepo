@@ -42,6 +42,10 @@ export const TokenIcon = (props: TokenIconProps) => {
       return <Icon logoURI='https://optimistic.etherscan.io/token/images/velodromefinance_32.png' />
     }
 
+    if (token.chainId === NETWORK.base && token.symbol?.startsWith('vAMM-')) {
+      return <Icon logoURI='https://basescan.org/token/images/aerodrome_32.png' />
+    }
+
     if (token.chainId in COINGECKO_PLATFORMS) {
       return (
         <CoingeckoTokenIcon

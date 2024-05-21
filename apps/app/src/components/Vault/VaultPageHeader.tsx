@@ -1,7 +1,7 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useVaultShareData,
-  useVaultTokenAddress
+  useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { ImportedVaultTooltip, PrizePoolBadge, TokenIcon } from '@shared/react-components'
@@ -21,8 +21,8 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
   const t_common = useTranslations('Common')
   const t_tooltips = useTranslations('Tooltips')
 
-  const { data: shareData } = useVaultShareData(vault as Vault)
-  const { data: tokenAddress } = useVaultTokenAddress(vault as Vault)
+  const { data: share } = useVaultShareData(vault as Vault)
+  const { data: token } = useVaultTokenData(vault as Vault)
 
   const importedSrcs = useVaultImportedListSrcs(vault as Vault)
 
@@ -33,13 +33,14 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
           <BackButton />
           {!!vault && (
             <div className='w-full max-w-[85%] inline-flex justify-center gap-2 items-center md:max-w-none'>
-              {(vault.logoURI || tokenAddress) && (
+              {(!!vault.logoURI || !!token?.address) && (
                 <TokenIcon
                   token={{
                     chainId: vault.chainId,
-                    address: tokenAddress,
+                    address: token?.address,
                     name: vault.name,
-                    logoURI: vault.logoURI
+                    logoURI: vault.logoURI,
+                    symbol: vault.logoURI ? share?.symbol : token?.symbol
                   }}
                   className='h-6 w-6 md:h-8 md:w-8'
                 />
@@ -51,7 +52,7 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
                   { 'text-center': !vault.logoURI }
                 )}
               >
-                {vault.name ?? shareData?.name}
+                {vault.name ?? share?.name}
               </span>
               {importedSrcs.length > 0 && (
                 <ImportedVaultTooltip
@@ -62,7 +63,7 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
             </div>
           )}
         </div>
-        {!!vault && (!!vault.name || !!shareData?.name) && (
+        {!!vault && (!!vault.name || !!share?.name) && (
           <Link href={`/prizes?network=${vault.chainId}`}>
             <PrizePoolBadge chainId={vault.chainId} onClick={() => {}} intl={t_common} />
           </Link>
