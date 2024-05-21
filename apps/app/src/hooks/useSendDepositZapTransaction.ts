@@ -2,7 +2,7 @@ import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useGasAmountEstimate,
   useTokenAllowance,
-  useVaultTokenAddress
+  useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { calculatePercentageOfBigInt, vaultABI } from '@shared/utilities'
 import { useEffect, useMemo } from 'react'
@@ -11,7 +11,6 @@ import {
   ContractFunctionArgs,
   encodeFunctionData,
   isAddress,
-  parseUnits,
   TransactionReceipt,
   zeroAddress
 } from 'viem'
@@ -36,8 +35,7 @@ import { useSwapTx } from './useSwapTx'
  * @returns
  */
 export const useSendDepositZapTransaction = (
-  inputTokenAddress: Address,
-  amount: bigint,
+  inputToken: { address: Address; decimals: number; amount: bigint },
   vault: Vault,
   options?: {
     onSend?: (txHash: `0x${string}`) => void
@@ -55,8 +53,7 @@ export const useSendDepositZapTransaction = (
 } => {
   const { address: userAddress, chain } = useAccount()
 
-  const { data: vaultTokenAddress, isFetched: isFetchedVaultTokenAddress } =
-    useVaultTokenAddress(vault)
+  const { data: vaultToken, isFetched: isFetchedVaultToken } = useVaultTokenData(vault)
 
   const { zapRouterAddress, zapTokenManager } = ZAP_SETTINGS[vault?.chainId] ?? {}
 
@@ -64,59 +61,63 @@ export const useSendDepositZapTransaction = (
     vault?.chainId,
     userAddress as Address,
     zapTokenManager,
-    inputTokenAddress
+    inputToken?.address
   )
 
   const { data: swapTx, isFetched: isFetchedSwapTx } = useSwapTx({
     chainId: vault?.chainId,
-    from: { address: inputTokenAddress, amount },
-    to: { address: vaultTokenAddress as Address },
-    sender: zapTokenManager,
-    receiver: zapTokenManager
+    from: {
+      address: inputToken?.address,
+      decimals: inputToken?.decimals,
+      amount: inputToken?.amount
+    },
+    to: { address: vaultToken?.address as Address, decimals: vaultToken?.decimals as number },
+    sender: zapTokenManager
   })
 
+  const depositTx = useMemo(() => {
+    return {
+      target: vault.address,
+      value: 0n,
+      data: encodeFunctionData({
+        abi: vaultABI,
+        functionName: 'deposit',
+        args: [0n, zapRouterAddress]
+      })
+    }
+  }, [zapRouterAddress])
+
   const enabled =
-    !!inputTokenAddress &&
-    !!amount &&
+    !!inputToken &&
+    !!inputToken.address &&
+    inputToken.decimals !== undefined &&
+    !!inputToken.amount &&
     !!vault &&
     !!userAddress &&
     isAddress(userAddress) &&
-    !!vaultTokenAddress &&
-    isFetchedVaultTokenAddress &&
+    !!vaultToken &&
+    !!vaultToken?.address &&
+    vaultToken.decimals !== undefined &&
+    isFetchedVaultToken &&
     chain?.id === vault.chainId &&
     !!zapRouterAddress &&
     !!zapTokenManager &&
     isFetchedAllowance &&
     !!allowance &&
-    allowance >= amount &&
+    allowance >= inputToken.amount &&
     isFetchedSwapTx &&
-    !!swapTx
-
-  // example WETH -> USDC -> przUSDC
-  // ^ inputs: [{ wethadress, inputamount }]
-  // ^ outputs: [{ przusdcaddress, minAmountOut (or check exchange rate) }]
-  // ^ relay: { target: 0x00000..., value: 0n, data: 0x0 }
-  // ^ user: userAddress
-  // ^ recipient: userAddress
-  // ^ route: [{ target: swaptarget aka lp, value: 0, data: customSwapCallData, tokens: [{ wethAddress, byteIndexInCustomData }] }, { target: przusdc, value: 0, data: customDepositCallData, tokens: [{ usdcAddress, byteIndexInCustomData }] }]
-
-  // customSwapCallData is calldata for swap but without input amount (uint256 -> 32 bytes, 2ch per byte so usually 64ch, set to 00000000000000...)
-  // customDepositCallData is calldata for deposit (no minamount) but without input amount (000000000...)
-  // byteIndexInCustomData is start (check) index of where token amount is inside calldata
-  // ^ if we are using an aggregator with a swap router that always has the same sig this is much easier
-
-  // TODO: get swap route from inputToken to vaultToken from some external api
-  // TODO: should include a slippage or minAmountOut indicator
-  const swapMinAmountOut = 1n // TODO: get swapMinAmountOut
-  const zapMinAmountOut = swapMinAmountOut // TODO: should consider the vault's exchange rate just in case
+    !!swapTx &&
+    !!depositTx
 
   const zapArgs = useMemo(():
     | ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>
     | undefined => {
     if (enabled) {
+      const zapMinAmountOut = swapTx.minAmountOut // TODO: should consider the vault's exchange rate just in case
+
       return [
         {
-          inputs: [{ token: inputTokenAddress, amount }],
+          inputs: [{ token: inputToken.address, amount: inputToken.amount }],
           outputs: [{ token: vault.address, minOutputAmount: zapMinAmountOut }],
           relay: { target: zeroAddress, value: 0n, data: '0x0' },
           user: userAddress,
@@ -124,26 +125,17 @@ export const useSendDepositZapTransaction = (
         },
         [
           {
-            target: swapTx.to,
-            value: swapTx.value,
-            data: swapTx.data,
-            tokens: [{ token: inputTokenAddress, index: -1 }]
+            ...swapTx.tx,
+            tokens: [{ token: inputToken.address, index: -1 }]
           },
           {
-            target: vault.address,
-            value: 0n,
-            data: encodeFunctionData({
-              abi: vaultABI,
-              functionName: 'deposit',
-              args: [0n, zapRouterAddress]
-            }),
-            tokens: [{ token: vaultTokenAddress, index: 4 }] // TODO: check index logic
+            ...depositTx,
+            tokens: [{ token: vaultToken.address, index: 4 }] // TODO: check index logic
           }
         ]
       ]
     }
-  }, [enabled, inputTokenAddress, amount, vault, swapTx, swapMinAmountOut, zapMinAmountOut])
-  console.log('🍪 ~ zapArgs:', zapArgs)
+  }, [enabled, inputToken, vault, vaultToken, swapTx, depositTx])
 
   const { data: gasEstimate } = useGasAmountEstimate(
     vault?.chainId,
@@ -157,7 +149,7 @@ export const useSendDepositZapTransaction = (
     { enabled }
   )
 
-  const { data, failureReason } = useSimulateContract({
+  const { data } = useSimulateContract({
     chainId: vault?.chainId,
     address: zapRouterAddress,
     abi: zapRouterABI,
@@ -166,7 +158,6 @@ export const useSendDepositZapTransaction = (
     gas: !!gasEstimate ? calculatePercentageOfBigInt(gasEstimate, 1.2) : undefined,
     query: { enabled }
   })
-  console.log('🍪 ~ simulation:', data, failureReason)
 
   const {
     data: txHash,

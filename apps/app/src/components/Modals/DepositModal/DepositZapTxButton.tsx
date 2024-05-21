@@ -132,24 +132,32 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
     isSuccess: isSuccessfulDepositZap,
     txHash: depositZapTxHash,
     sendDepositZapTransaction
-  } = useSendDepositZapTransaction(inputTokenAddress as Address, depositAmount, vault, {
-    onSend: () => {
-      setModalView('waiting')
+  } = useSendDepositZapTransaction(
+    {
+      address: inputToken?.address as Address,
+      decimals: inputToken?.decimals as number,
+      amount: depositAmount
     },
-    onSuccess: (txReceipt) => {
-      refetchUserInputTokenBalance()
-      refetchUserVaultTokenBalance()
-      refetchUserVaultDelegationBalance()
-      refetchVaultBalance()
-      refetchTokenAllowance()
-      refetchUserBalances?.()
-      onSuccessfulDeposit?.(vault.chainId, txReceipt)
-      setModalView('success')
-    },
-    onError: () => {
-      setModalView('error')
+    vault,
+    {
+      onSend: () => {
+        setModalView('waiting')
+      },
+      onSuccess: (txReceipt) => {
+        refetchUserInputTokenBalance()
+        refetchUserVaultTokenBalance()
+        refetchUserVaultDelegationBalance()
+        refetchVaultBalance()
+        refetchTokenAllowance()
+        refetchUserBalances?.()
+        onSuccessfulDeposit?.(vault.chainId, txReceipt)
+        setModalView('success')
+      },
+      onError: () => {
+        setModalView('error')
+      }
     }
-  })
+  )
 
   useEffect(() => {
     if (

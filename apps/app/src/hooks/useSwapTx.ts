@@ -3,57 +3,79 @@ import { useQuery } from '@tanstack/react-query'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
 
-interface DecentRequest {
-  actionType: 'swap-action'
-  sender: Address
-  srcChainId: number
-  srcToken: Address
-  dstChainId: number
-  dstToken: Address
-  slippage: number
-  actionConfig: {
-    chainId: number
-    amount: bigint
-    swapDirection: 'exact-amount-in'
-    receiverAddress: Address
+interface ParaSwapPricesResponse {
+  priceRoute: {
+    bestRoute: object[]
+    blockNumber: number
+    contractAddress: Address
+    contractMethod: string
+    destAmount: string
+    destDecimals: number
+    destToken: string
+    destUSD?: string
+    gasCost: string
+    gasCostL1Wei?: string
+    gasCostUSD?: string
+    hmac: string
+    maxImpactReached: boolean
+    network: number
+    partner: 'cabana'
+    partnerFee: number
+    side: 'SELL'
+    srcAmount: string
+    srcDecimals: number
+    srcToken: Address
+    srcUSD?: string
+    tokenTransferProxy: Address
+    version: string
   }
 }
 
-interface DecentResponse {
-  tx: { chainId: number; to: Address; data: `0x${string}`; value: bigint }
-  tokenPayment: DecentToken
-  amountOut: DecentToken
+interface ParaSwapTxRequestBody {
+  srcToken: Address
+  srcDecimals: number
+  srcAmount: string
+  destToken: Address
+  destDecimals: number
+  slippage: number
+  userAddress: Address
+  partner: 'cabana'
 }
 
-interface DecentToken {
+interface ParaSwapTxResponse {
   chainId: number
-  tokenAddress: Address
-  decimals: number
-  name: string
-  symbol: string
-  amount: bigint
-  isNative: boolean
+  data: `0x${string}`
+  to: Address
+  value: string
+}
+
+interface SwapTx {
+  target: Address
+  value: bigint
+  data: `0x${string}`
 }
 
 export const useSwapTx = (swapData: {
   chainId: number
-  from: { address: Address; amount: bigint }
-  to: { address: Address }
+  from: { address: Address; decimals: number; amount: bigint }
+  to: { address: Address; decimals: number }
   sender: Address
-  receiver: Address
   options?: { slippage?: number }
 }) => {
-  const { chainId, from, to, sender, receiver, options } = swapData ?? {}
+  const { chainId, from, to, sender, options } = swapData ?? {}
 
   const publicClient = usePublicClient({ chainId })
 
   const enabled =
     !!chainId &&
-    !!from?.address &&
-    !!from?.amount &&
-    !!to?.address &&
+    !!from &&
+    !!from.address &&
+    from.decimals !== undefined &&
+    !!from.amount &&
+    !!to &&
+    !!to.address &&
+    to.decimals !== undefined &&
     !!sender &&
-    !!receiver &&
     !!publicClient &&
     !!process.env.NEXT_PUBLIC_DECENT_API_KEY
 
@@ -61,10 +83,11 @@ export const useSwapTx = (swapData: {
     'swapTx',
     chainId,
     from?.address,
+    from?.decimals,
     from?.amount.toString(),
     to?.address,
+    to?.decimals,
     sender,
-    receiver,
     options?.slippage
   ]
 
@@ -72,45 +95,60 @@ export const useSwapTx = (swapData: {
     queryKey,
     queryFn: async () => {
       if (!!publicClient) {
-        const txConfig: DecentRequest = {
-          actionType: 'swap-action',
-          sender,
-          srcChainId: chainId,
+        const pricesApiUrl = new URL('https://apiv5.paraswap.io/prices')
+        pricesApiUrl.searchParams.set('srcToken', from.address)
+        pricesApiUrl.searchParams.set('srcDecimals', from.decimals.toString())
+        pricesApiUrl.searchParams.set('destToken', to.address)
+        pricesApiUrl.searchParams.set('destDecimals', to.decimals.toString())
+        pricesApiUrl.searchParams.set('amount', from.amount.toString())
+        pricesApiUrl.searchParams.set('side', 'SELL')
+        pricesApiUrl.searchParams.set('network', chainId.toString())
+        pricesApiUrl.searchParams.set('userAddress', sender)
+        pricesApiUrl.searchParams.set('partner', 'cabana')
+
+        const pricesApiResponse: ParaSwapPricesResponse = await fetch(pricesApiUrl.toString(), {
+          method: 'get'
+        })
+          .then((r) => r.text())
+          .then((t) => JSON.parse(t))
+
+        const txApiUrl = new URL(`https://apiv5.paraswap.io/transactions/${chainId}`)
+        txApiUrl.searchParams.set('ignoreChecks', 'true')
+        txApiUrl.searchParams.set('ignoreGasEstimate', 'true')
+
+        const txApiRequestBody: ParaSwapTxRequestBody = {
           srcToken: from.address,
-          dstChainId: chainId,
-          dstToken: to.address,
-          slippage: options?.slippage ?? 1,
-          actionConfig: {
-            chainId,
-            amount: from.amount,
-            swapDirection: 'exact-amount-in',
-            receiverAddress: receiver
-          }
+          srcDecimals: from.decimals,
+          srcAmount: from.amount.toString(),
+          destToken: to.address,
+          destDecimals: to.decimals,
+          slippage: options?.slippage ?? 100,
+          userAddress: sender,
+          partner: 'cabana',
+          ...pricesApiResponse
         }
 
-        const apiUrl = new URL('https://box-v2.api.decent.xyz/api/getBoxAction')
-        apiUrl.searchParams.set('arguments', JSON.stringify(txConfig, bigintSerializer))
+        const txApiResponse: ParaSwapTxResponse = await fetch(txApiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(txApiRequestBody)
+        })
+          .then((r) => r.text())
+          .then((t) => JSON.parse(t))
 
-        const rawApiResponse = await fetch(apiUrl.toString(), {
-          method: 'get',
-          headers: { 'x-api-key': process.env.NEXT_PUBLIC_DECENT_API_KEY as string }
-        }).then((r) => r.text())
-        const apiResponse: DecentResponse = JSON.parse(rawApiResponse, bigintDeserializer)
+        const tx: SwapTx = {
+          target: txApiResponse.to,
+          value: BigInt(txApiResponse.value),
+          data: txApiResponse.data
+        }
 
-        return apiResponse.tx
+        // TODO: check that this actually corresponds to min amount out
+        const minAmountOut = BigInt(pricesApiResponse.priceRoute.destAmount)
+
+        return { tx, minAmountOut }
       }
     },
     enabled,
     staleTime: sToMs(60)
   })
-}
-
-const bigintSerializer = (_key: string, value: unknown): unknown => {
-  if (typeof value === 'bigint') return value.toString() + 'n'
-  return value
-}
-
-const bigintDeserializer = (_key: string, value: unknown): unknown => {
-  if (typeof value === 'string' && /^-?\d+n$/.test(value)) return BigInt(value.slice(0, -1))
-  return value
 }
