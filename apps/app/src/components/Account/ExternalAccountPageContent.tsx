@@ -1,3 +1,4 @@
+import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Spinner } from '@shared/ui'
 import { NETWORK } from '@shared/utilities'
 import { useRouter } from 'next/router'
@@ -19,6 +20,8 @@ export const ExternalAccountPageContent = (props: ExternalAccountPageContentProp
   const { queryParams } = props
 
   const router = useRouter()
+
+  const { setIsModalOpen } = useIsModalOpen(MODAL_KEYS.drawWinners)
 
   const user =
     !!queryParams.user &&
@@ -42,6 +45,10 @@ export const ExternalAccountPageContent = (props: ExternalAccountPageContentProp
       router.replace('/account')
     }
   }, [user])
+
+  useEffect(() => {
+    setIsModalOpen(false)
+  }, [])
 
   if (!!isEnsUser && !isFetchedAddressFromEns) {
     return <Spinner />

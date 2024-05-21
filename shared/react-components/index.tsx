@@ -50,7 +50,6 @@ export * from './components/Icons/TokenIcon'
 export * from './components/Modals/CaptchaModal'
 export * from './components/Modals/CheckPrizesModal'
 export * from './components/Modals/DelegateModal'
-export * from './components/Modals/DrawModal'
 export * from './components/Modals/SettingsModal'
 
 /**

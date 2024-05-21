@@ -63,7 +63,6 @@ A React componponent library utilizing some simpler components from the internal
 - `CaptchaModal`
 - `CheckPrizesModal`
 - `DelegateModal`
-- `DrawModal`
 - `SettingsModal`
 
 ### Prize Pool

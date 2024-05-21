@@ -5,60 +5,46 @@ import {
   useLastAwardedDrawTimestamps,
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { Intl, SubgraphDraw } from '@shared/types'
+import { PrizePoolBadge, TokenValue } from '@shared/react-components'
+import { SubgraphDraw } from '@shared/types'
 import { Spinner } from '@shared/ui'
 import { formatBigIntForDisplay, lower, shorten, sortByBigIntDesc, sToMs } from '@shared/utilities'
+import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
-import { PrizePoolBadge } from '../../../Badges/PrizePoolBadge'
-import { TokenValue } from '../../../Currency/TokenValue'
+import { WALLET_NAMES } from '@constants/config'
 
 interface MainViewProps {
   draw: SubgraphDraw
   prizePool: PrizePool
-  onGoToAccount: (address: Address) => void
-  onClose?: () => void
-  intl?: {
-    base?: Intl<'prizePool' | 'drawId'>
-    prizes?: Intl<
-      | 'drawTotal.beforeValue'
-      | 'drawTotal.afterValue'
-      | 'drawTotal.afterValueOngoing'
-      | 'winner'
-      | 'prize'
-      | 'youWereEligible'
-    >
-  }
 }
 
 export const MainView = (props: MainViewProps) => {
-  const { draw, prizePool, onGoToAccount, onClose, intl } = props
+  const { draw, prizePool } = props
+
+  const t_common = useTranslations('Common')
 
   return (
     <div className='flex flex-col gap-6 mb-6'>
-      <MainViewHeader draw={draw} intl={intl?.base} />
-      <PrizePoolBadge chainId={prizePool.chainId} intl={intl?.base} className='mx-auto' />
-      <EligibilityInfo draw={draw} prizePool={prizePool} intl={intl?.prizes} />
-      <DrawTotals draw={draw} prizePool={prizePool} intl={intl?.prizes} />
-      <DrawWinnersTable
-        draw={draw}
-        prizePool={prizePool}
-        onGoToAccount={onGoToAccount}
-        onClose={onClose}
-        intl={intl?.prizes}
-      />
+      <MainViewHeader draw={draw} />
+      <PrizePoolBadge chainId={prizePool.chainId} intl={t_common} className='mx-auto' />
+      <EligibilityInfo draw={draw} prizePool={prizePool} />
+      <DrawTotals draw={draw} prizePool={prizePool} />
+      <DrawWinnersTable draw={draw} prizePool={prizePool} />
     </div>
   )
 }
 
 interface MainViewHeaderProps {
   draw: SubgraphDraw
-  intl?: Intl<'drawId'>
 }
 
 const MainViewHeader = (props: MainViewHeaderProps) => {
-  const { draw, intl } = props
+  const { draw } = props
+
+  const t_common = useTranslations('Common')
 
   const drawDate = new Date(sToMs(draw.prizeClaims[0].timestamp))
   const formattedDrawDate = drawDate.toLocaleTimeString(undefined, {
@@ -73,9 +59,7 @@ const MainViewHeader = (props: MainViewHeaderProps) => {
 
   return (
     <div className='flex flex-col mx-auto text-center'>
-      <span className='text-xl font-semibold'>
-        {intl?.('drawId', { id: draw.id }) ?? `Draw #${draw.id}`}
-      </span>
+      <span className='text-xl font-semibold'>{t_common('drawId', { id: draw.id })}</span>
       <span className='text-sm text-pt-purple-200'>{formattedDrawDate}</span>
     </div>
   )
@@ -84,11 +68,12 @@ const MainViewHeader = (props: MainViewHeaderProps) => {
 interface EligibilityInfoProps {
   draw: SubgraphDraw
   prizePool: PrizePool
-  intl?: Intl<'youWereEligible'>
 }
 
 const EligibilityInfo = (props: EligibilityInfoProps) => {
-  const { draw, prizePool, intl } = props
+  const { draw, prizePool } = props
+
+  const t = useTranslations('Prizes.drawModal')
 
   const { address: userAddress } = useAccount()
 
@@ -104,11 +89,7 @@ const EligibilityInfo = (props: EligibilityInfoProps) => {
   }, [userAddress, allUserEligibleDraws])
 
   if (!!userAddress && isEligible) {
-    return (
-      <span className='text-center font-semibold text-pt-teal'>
-        {intl?.('youWereEligible') ?? `You were eligible for this draw.`}
-      </span>
-    )
+    return <span className='text-center font-semibold text-pt-teal'>{t('youWereEligible')}</span>
   }
 
   return <></>
@@ -117,11 +98,12 @@ const EligibilityInfo = (props: EligibilityInfoProps) => {
 interface DrawTotalsProps {
   draw: SubgraphDraw
   prizePool: PrizePool
-  intl?: Intl<'drawTotal.beforeValue' | 'drawTotal.afterValue' | 'drawTotal.afterValueOngoing'>
 }
 
 const DrawTotals = (props: DrawTotalsProps) => {
-  const { draw, prizePool, intl } = props
+  const { draw, prizePool } = props
+
+  const t = useTranslations('Prizes.drawModal')
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
@@ -152,12 +134,11 @@ const DrawTotals = (props: DrawTotalsProps) => {
 
   return (
     <span className='text-center'>
-      {intl?.('drawTotal.beforeValue', { numWallets: uniqueWallets.size }) ??
-        `This draw had ${uniqueWallets.size} unique wallets winning a total of`}{' '}
+      {t('drawTotal.beforeValue', { numWallets: uniqueWallets.size })}{' '}
       <TokenValue token={{ ...prizeToken, amount: totalPrizeAmount }} />{' '}
       {isOngoing
-        ? intl?.('drawTotal.afterValueOngoing') ?? `in prizes so far.`
-        : intl?.('drawTotal.afterValue') ?? `in prizes.`}
+        ? t('drawTotal.afterValueOngoing') ?? `in prizes so far.`
+        : t('drawTotal.afterValue') ?? `in prizes.`}
     </span>
   )
 }
@@ -165,14 +146,13 @@ const DrawTotals = (props: DrawTotalsProps) => {
 interface DrawWinnersTableProps {
   draw: SubgraphDraw
   prizePool: PrizePool
-  onGoToAccount: (address: Address) => void
-  onClose?: () => void
-  intl?: Intl<'winner' | 'prize'>
 }
 
 // TODO: highlight grand prizes
 const DrawWinnersTable = (props: DrawWinnersTableProps) => {
-  const { draw, prizePool, onGoToAccount, onClose, intl } = props
+  const { draw, prizePool } = props
+
+  const t = useTranslations('Prizes.drawModal')
 
   const { data: tokenData } = usePrizeTokenData(prizePool)
 
@@ -192,21 +172,20 @@ const DrawWinnersTable = (props: DrawWinnersTableProps) => {
     return Object.entries(groupedWins).sort((a, b) => sortByBigIntDesc(a[1], b[1]))
   }, [draw])
 
-  const handleAddressClick = (address: Address) => {
-    onGoToAccount(address)
-    onClose?.()
-  }
-
   return (
     <div className='flex flex-col w-full gap-2 md:text-center'>
       <div className='flex w-full text-pt-purple-100 font-semibold'>
-        <span className='w-1/2'>{intl?.('winner') ?? 'Winner'}</span>
-        <span className='w-1/2 text-right md:text-center'>{intl?.('prize') ?? 'Prize'}</span>
+        <span className='w-1/2'>{t('winner')}</span>
+        <span className='w-1/2 text-right md:text-center'>{t('prize')}</span>
       </div>
       {!!tokenData ? (
         <div className='flex flex-col w-full max-h-52 gap-3 overflow-y-auto'>
           {wins.map((win) => {
             const winner = win[0] as Address
+            const winnerName = !!prizePool
+              ? WALLET_NAMES[prizePool.chainId]?.[lower(winner)]
+              : undefined
+
             const formattedPrize = formatBigIntForDisplay(win[1], tokenData.decimals, {
               minimumFractionDigits: 4,
               maximumFractionDigits: 4
@@ -215,15 +194,11 @@ const DrawWinnersTable = (props: DrawWinnersTableProps) => {
             return (
               <div key={`prize-${winner}`} className='flex w-full items-center'>
                 <span className='w-1/2'>
-                  <button
-                    onClick={() => handleAddressClick(winner)}
-                    className='hover:text-pt-purple-100'
-                  >
-                    {/* TODO: remove hardcoded address once booster is no longer relevant (or put in config if this modal is moved to app repo) */}
-                    {lower(winner) === '0x327b2ea9668a552fe5dec8e3c6e47e540a0a58c6'
-                      ? 'GP Booster'
-                      : shorten(winner)}
-                  </button>
+                  <Link href={`/account/${winner}`}>
+                    <button className='hover:text-pt-purple-100'>
+                      {winnerName ?? shorten(winner)}
+                    </button>
+                  </Link>
                 </span>
                 <span className='w-1/2 text-right whitespace-nowrap md:text-center'>
                   {!!tokenData ? (

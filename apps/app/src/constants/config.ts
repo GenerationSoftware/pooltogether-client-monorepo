@@ -134,6 +134,12 @@ export const TWAB_REWARDS_SETTINGS: {
   }
 }
 
+export const WALLET_NAMES: { [chainId: number]: { [address: Lowercase<Address>]: string } } = {
+  [NETWORK.base]: {
+    '0x327b2ea9668a552fe5dec8e3c6e47e540a0a58c6': 'GP Booster'
+  }
+}
+
 /**
  * Fathom events
  */
