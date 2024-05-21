@@ -23,6 +23,7 @@ import {
 } from 'wagmi'
 import { ZAP_SETTINGS } from '@constants/config'
 import { zapRouterABI } from '@constants/zapRouterABI'
+import { useSwapTx } from './useSwapTx'
 
 // TODO: handle native tokens (include payable amount and add wrap step in route first)
 
@@ -66,6 +67,14 @@ export const useSendDepositZapTransaction = (
     inputTokenAddress
   )
 
+  const { data: swapTx, isFetched: isFetchedSwapTx } = useSwapTx({
+    chainId: vault?.chainId,
+    from: { address: inputTokenAddress, amount },
+    to: { address: vaultTokenAddress as Address },
+    sender: zapTokenManager,
+    receiver: zapTokenManager
+  })
+
   const enabled =
     !!inputTokenAddress &&
     !!amount &&
@@ -79,7 +88,9 @@ export const useSendDepositZapTransaction = (
     !!zapTokenManager &&
     isFetchedAllowance &&
     !!allowance &&
-    allowance >= amount
+    allowance >= amount &&
+    isFetchedSwapTx &&
+    !!swapTx
 
   // example WETH -> USDC -> przUSDC
   // ^ inputs: [{ wethadress, inputamount }]
@@ -96,10 +107,9 @@ export const useSendDepositZapTransaction = (
 
   // TODO: get swap route from inputToken to vaultToken from some external api
   // TODO: should include a slippage or minAmountOut indicator
-  const swapMinAmountOut = parseUnits('1', 18)
+  const swapMinAmountOut = 1n // TODO: get swapMinAmountOut
   const zapMinAmountOut = swapMinAmountOut // TODO: should consider the vault's exchange rate just in case
 
-  // TODO: include swap route
   const zapArgs = useMemo(():
     | ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>
     | undefined => {
@@ -114,19 +124,25 @@ export const useSendDepositZapTransaction = (
         },
         [
           {
+            target: swapTx.to,
+            value: swapTx.value,
+            data: swapTx.data,
+            tokens: [{ token: inputTokenAddress, index: -1 }]
+          },
+          {
             target: vault.address,
             value: 0n,
             data: encodeFunctionData({
               abi: vaultABI,
               functionName: 'deposit',
-              args: [swapMinAmountOut, zapRouterAddress]
+              args: [0n, zapRouterAddress]
             }),
-            tokens: [{ token: vaultTokenAddress, index: -1 }]
+            tokens: [{ token: vaultTokenAddress, index: 4 }] // TODO: check index logic
           }
         ]
       ]
     }
-  }, [enabled, inputTokenAddress, amount, vault, swapMinAmountOut, zapMinAmountOut])
+  }, [enabled, inputTokenAddress, amount, vault, swapTx, swapMinAmountOut, zapMinAmountOut])
   console.log('🍪 ~ zapArgs:', zapArgs)
 
   const { data: gasEstimate } = useGasAmountEstimate(
