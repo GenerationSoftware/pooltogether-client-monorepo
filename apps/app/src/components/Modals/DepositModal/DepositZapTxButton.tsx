@@ -6,7 +6,8 @@ import {
   useTokenBalance,
   useUserVaultDelegationBalance,
   useUserVaultTokenBalance,
-  useVaultBalance
+  useVaultBalance,
+  useVaultTokenAddress
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { ApprovalTooltip, TransactionButton } from '@shared/react-components'
@@ -14,17 +15,16 @@ import { Button } from '@shared/ui'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
-import { Address, parseUnits, TransactionReceipt } from 'viem'
+import { Address, isAddress, parseUnits, TransactionReceipt } from 'viem'
 import { useAccount } from 'wagmi'
 import { ZAP_SETTINGS } from '@constants/config'
 import { useSendDepositZapTransaction } from '@hooks/useSendDepositZapTransaction'
 import { DepositModalView } from '.'
 import { isValidFormInput } from '../TxFormInput'
-import { depositFormTokenAmountAtom } from './DepositForm'
+import { depositFormTokenAddressAtom, depositFormTokenAmountAtom } from './DepositForm'
 
 interface DepositZapTxButtonProps {
   vault: Vault
-  inputTokenAddress: Address
   modalView: string
   setModalView: (view: DepositModalView) => void
   setDepositTxHash: (txHash: string) => void
@@ -36,7 +36,6 @@ interface DepositZapTxButtonProps {
 export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
   const {
     vault,
-    inputTokenAddress,
     modalView,
     setModalView,
     setDepositTxHash,
@@ -55,9 +54,18 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
 
   const { address: userAddress, chain, isDisconnected } = useAccount()
 
-  const { data: inputToken } = useToken(vault.chainId, inputTokenAddress)
+  const formInputTokenAddress = useAtomValue(depositFormTokenAddressAtom)
 
-  const zapTokenManager = ZAP_SETTINGS[vault.chainId].zapTokenManager
+  const { data: vaultTokenAddress } = useVaultTokenAddress(vault)
+
+  const inputTokenAddress =
+    !!formInputTokenAddress && isAddress(formInputTokenAddress)
+      ? formInputTokenAddress
+      : vaultTokenAddress
+
+  const { data: inputToken } = useToken(vault.chainId, inputTokenAddress as Address)
+
+  const zapTokenManager = ZAP_SETTINGS[vault.chainId]?.zapTokenManager
 
   const {
     data: allowance,
@@ -124,7 +132,7 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
     isSuccess: isSuccessfulDepositZap,
     txHash: depositZapTxHash,
     sendDepositZapTransaction
-  } = useSendDepositZapTransaction(inputTokenAddress, depositAmount, vault, {
+  } = useSendDepositZapTransaction(inputTokenAddress as Address, depositAmount, vault, {
     onSend: () => {
       setModalView('waiting')
     },

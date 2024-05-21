@@ -57,7 +57,7 @@ export const useSendDepositZapTransaction = (
   const { data: vaultTokenAddress, isFetched: isFetchedVaultTokenAddress } =
     useVaultTokenAddress(vault)
 
-  const { zapRouterAddress, zapTokenManager } = ZAP_SETTINGS[vault?.chainId]
+  const { zapRouterAddress, zapTokenManager } = ZAP_SETTINGS[vault?.chainId] ?? {}
 
   const { data: allowance, isFetched: isFetchedAllowance } = useTokenAllowance(
     vault?.chainId,
@@ -75,6 +75,8 @@ export const useSendDepositZapTransaction = (
     !!vaultTokenAddress &&
     isFetchedVaultTokenAddress &&
     chain?.id === vault.chainId &&
+    !!zapRouterAddress &&
+    !!zapTokenManager &&
     isFetchedAllowance &&
     !!allowance &&
     allowance >= amount
@@ -117,7 +119,7 @@ export const useSendDepositZapTransaction = (
             data: encodeFunctionData({
               abi: vaultABI,
               functionName: 'deposit',
-              args: [swapMinAmountOut, userAddress as Address]
+              args: [swapMinAmountOut, zapRouterAddress]
             }),
             tokens: [{ token: vaultTokenAddress, index: -1 }]
           }
@@ -126,13 +128,6 @@ export const useSendDepositZapTransaction = (
     }
   }, [enabled, inputTokenAddress, amount, vault, swapMinAmountOut, zapMinAmountOut])
   console.log('🍪 ~ zapArgs:', zapArgs)
-
-  const rawCallDataTest = encodeFunctionData({
-    abi: zapRouterABI,
-    functionName: 'executeOrder',
-    args: zapArgs as ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>
-  })
-  console.log('🍪 ~ rawCallDataTest:', rawCallDataTest)
 
   const { data: gasEstimate } = useGasAmountEstimate(
     vault?.chainId,

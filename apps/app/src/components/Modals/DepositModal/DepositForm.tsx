@@ -15,6 +15,7 @@ import { Address, formatUnits, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { isValidFormInput, TxFormInput, TxFormValues } from '../TxFormInput'
 
+export const depositFormTokenAddressAtom = atom<Address | undefined>(undefined)
 export const depositFormTokenAmountAtom = atom<string>('')
 export const depositFormShareAmountAtom = atom<string>('')
 
