@@ -84,6 +84,7 @@ export const DepositForm = (props: DepositFormProps) => {
       ? parseUnits(formTokenAmount, token?.decimals as number)
       : 0n
 
+  // TODO: need some sort of debounced effect here as to not spam api
   const { data: swapTx, isFetching: isFetchingSwapTx } = useSwapTx({
     chainId: vault.chainId,
     from: {
@@ -137,6 +138,13 @@ export const DepositForm = (props: DepositFormProps) => {
       })
     }
   }, [swapTx])
+
+  useEffect(() => {
+    if (!!tokenData) {
+      handleTokenAmountChange(formTokenAmount)
+      formMethods.trigger('tokenAmount')
+    }
+  }, [tokenData])
 
   const handleShareAmountChange = (shareAmount: string) => {
     if (
