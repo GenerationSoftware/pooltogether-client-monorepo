@@ -4,7 +4,7 @@ import {
   useTokenAllowance,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { calculatePercentageOfBigInt, vaultABI } from '@shared/utilities'
+import { calculatePercentageOfBigInt, erc20ABI, MAX_UINT_256, vaultABI } from '@shared/utilities'
 import { useEffect, useMemo } from 'react'
 import {
   Address,
@@ -124,6 +124,17 @@ export const useSendDepositZapTransaction = (
           recipient: userAddress
         },
         [
+          // TODO: if usdt include a 0 approval first (like wtf tether)
+          {
+            target: inputToken.address,
+            value: 0n,
+            data: encodeFunctionData({
+              abi: erc20ABI,
+              functionName: 'approve',
+              args: [swapTx.allowanceProxy, MAX_UINT_256]
+            }),
+            tokens: [{ token: inputToken.address, index: -1 }]
+          },
           {
             ...swapTx.tx,
             tokens: [{ token: inputToken.address, index: -1 }]

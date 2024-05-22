@@ -145,7 +145,9 @@ export const useSwapTx = (swapData: {
         // TODO: check that this actually corresponds to min amount out
         const minAmountOut = BigInt(pricesApiResponse.priceRoute.destAmount)
 
-        return { tx, minAmountOut }
+        const allowanceProxy = pricesApiResponse.priceRoute.tokenTransferProxy
+
+        return { tx, minAmountOut, allowanceProxy }
       }
     },
     enabled,
