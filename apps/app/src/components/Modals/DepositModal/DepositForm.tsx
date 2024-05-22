@@ -210,12 +210,7 @@ export const DepositForm = (props: DepositFormProps) => {
         shareInputData.decimals !== undefined && (
           <>
             <FormProvider {...formMethods}>
-              {/* TODO: clean this select up (maybe place in txforminput component) */}
-              <Select onChange={(e) => setFormTokenAddress(e.target.value as Address)}>
-                {!!vaultToken && <option value={vaultToken.address}>{vaultToken?.symbol}</option>}
-                <option value='0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1'>dai</option>
-                <option value='0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85'>usdc</option>
-              </Select>
+              {/* TODO: pass token input options and enable token picker */}
               <TxFormInput
                 token={tokenInputData}
                 formKey='tokenAmount'
@@ -232,8 +227,6 @@ export const DepositForm = (props: DepositFormProps) => {
                 showMaxButton={true}
                 className='mb-0.5'
               />
-              {/* TODO: show loading while `isFetchingSwapTx` */}
-              {/* TODO: improve disabled styling */}
               <TxFormInput
                 token={shareInputData}
                 formKey='shareAmount'
@@ -241,6 +234,7 @@ export const DepositForm = (props: DepositFormProps) => {
                 showInfoRow={showInputInfoRows}
                 className='my-0.5'
                 disabled={isZapping}
+                isLoading={isFetchingSwapTx}
               />
             </FormProvider>
           </>

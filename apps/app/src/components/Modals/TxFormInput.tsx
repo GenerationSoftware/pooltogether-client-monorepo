@@ -1,5 +1,6 @@
 import { CurrencyValue, TokenIcon } from '@shared/react-components'
 import { TokenWithAmount, TokenWithLogo, TokenWithPrice } from '@shared/types'
+import { Dropdown, DropdownItem, Spinner } from '@shared/ui'
 import { formatBigIntForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -16,15 +17,29 @@ export interface TxFormInputProps {
   formKey: keyof TxFormValues
   validate?: { [rule: string]: (v: any) => true | string }
   disabled?: boolean
+  isLoading?: boolean
   onChange?: (v: string) => void
   showInfoRow?: boolean
   showMaxButton?: boolean
+  showTokenPicker?: boolean
+  tokenPickerOptions?: DropdownItem[]
   className?: string
 }
 
 export const TxFormInput = (props: TxFormInputProps) => {
-  const { token, formKey, validate, disabled, onChange, showInfoRow, showMaxButton, className } =
-    props
+  const {
+    token,
+    formKey,
+    validate,
+    disabled,
+    isLoading,
+    onChange,
+    showInfoRow,
+    showMaxButton,
+    showTokenPicker,
+    tokenPickerOptions,
+    className
+  } = props
 
   const t = useTranslations('TxModals')
 
@@ -61,11 +76,19 @@ export const TxFormInput = (props: TxFormInputProps) => {
     }
   }
 
+  const TokenBadge = (props: { className?: string }) => (
+    <div className={classNames('flex shrink-0 items-center gap-1', props.className)}>
+      <TokenIcon token={token} />
+      <span className='text-lg font-semibold md:text-2xl'>{token.symbol}</span>
+    </div>
+  )
+
   return (
     <div
       className={classNames(
         'relative bg-pt-transparent p-3 rounded-lg md:p-4',
         'border border-transparent focus-within:border-pt-transparent',
+        'isolate',
         className
       )}
     >
@@ -76,15 +99,33 @@ export const TxFormInput = (props: TxFormInputProps) => {
           validate={validate}
           disabled={disabled}
           onChange={onChange}
+          className={classNames({ '-z-20': disabled || isLoading })}
         />
-        <div className='flex shrink-0 items-center gap-1'>
-          <TokenIcon token={token} />
-          <span className='text-lg font-semibold md:text-2xl'>{token.symbol}</span>
-        </div>
+        {(disabled || isLoading) && (
+          <div
+            className={classNames('absolute inset-0 rounded-lg backdrop-brightness-75 -z-10', {
+              'flex items-center pl-4 backdrop-blur-sm': isLoading
+            })}
+          >
+            <Spinner className={classNames({ hidden: !isLoading })} />
+          </div>
+        )}
+        {showTokenPicker && !!tokenPickerOptions?.length ? (
+          <Dropdown
+            label={<TokenBadge />}
+            items={tokenPickerOptions}
+            inline={true}
+            placement='bottom'
+          />
+        ) : (
+          <TokenBadge />
+        )}
       </div>
       {showInfoRow && (
         <div className='flex justify-between gap-6 text-xs text-pt-purple-100 md:text-base'>
-          <CurrencyValue baseValue={amountValue} fallback={<></>} />
+          <div className={classNames({ '-z-20': disabled || isLoading })}>
+            <CurrencyValue baseValue={amountValue} fallback={<></>} />
+          </div>
           <div className='flex gap-1 ml-auto'>
             <span>
               {t('balance')} {formattedBalance}
@@ -111,10 +152,11 @@ interface InputProps {
   validate?: { [rule: string]: (v: any) => true | string }
   disabled?: boolean
   onChange?: (v: string) => void
+  className?: string
 }
 
 const Input = (props: InputProps) => {
-  const { formKey, decimals, validate, disabled, onChange } = props
+  const { formKey, decimals, validate, disabled, onChange, className } = props
 
   const t = useTranslations('Error.formErrors')
 
@@ -135,7 +177,11 @@ const Input = (props: InputProps) => {
         onChange: (e) => onChange?.(e.target.value as string)
       })}
       placeholder='0'
-      className='min-w-0 flex-grow text-lg font-semibold bg-transparent text-pt-purple-50 focus:outline-none md:text-2xl'
+      className={classNames(
+        'min-w-0 flex-grow text-lg font-semibold bg-transparent text-pt-purple-50',
+        'focus:outline-none md:text-2xl',
+        className
+      )}
       disabled={disabled}
     />
   )
