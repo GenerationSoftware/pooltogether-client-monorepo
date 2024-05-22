@@ -11,7 +11,7 @@ import { AlertIcon, createDepositTxToast } from '@shared/react-components'
 import { Modal } from '@shared/ui'
 import { formatNumberForDisplay, LINKS, lower } from '@shared/utilities'
 import classNames from 'classnames'
-import { useAtomValue } from 'jotai'
+import { useAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo, useState } from 'react'
 import { Address, TransactionReceipt } from 'viem'
@@ -63,9 +63,9 @@ export const DepositModal = (props: DepositModalProps) => {
 
   const [depositTxHash, setDepositTxHash] = useState<string>()
 
-  const formTokenAddress = useAtomValue(depositFormTokenAddressAtom)
-  const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
-  const formShareAmount = useAtomValue(depositFormShareAmountAtom)
+  const [formTokenAddress, setFormTokenAddress] = useAtom(depositFormTokenAddressAtom)
+  const [formTokenAmount, setFormTokenAmount] = useAtom(depositFormTokenAmountAtom)
+  const [formShareAmount, setFormShareAmount] = useAtom(depositFormShareAmountAtom)
 
   const { data: vaultToken } = useVaultTokenData(vault as Vault)
 
@@ -99,6 +99,9 @@ export const DepositModal = (props: DepositModalProps) => {
     createToast()
     setIsModalOpen(false)
     setView('main')
+    setFormTokenAddress(undefined)
+    setFormTokenAmount('')
+    setFormShareAmount('')
   }
 
   if (isModalOpen && !!vault) {

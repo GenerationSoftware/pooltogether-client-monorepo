@@ -75,14 +75,17 @@ export const DepositForm = (props: DepositFormProps) => {
   const setFormShareAmount = useSetAtom(depositFormShareAmountAtom)
 
   useEffect(() => {
+    setFormTokenAddress(undefined)
     setFormTokenAmount('')
     setFormShareAmount('')
+    formMethods.reset()
   }, [])
 
-  const depositAmount =
-    !!formTokenAmount && !!token && token.decimals !== undefined
+  const depositAmount = useMemo(() => {
+    return !!formTokenAmount && !!token && token.decimals !== undefined
       ? parseUnits(formTokenAmount, token?.decimals as number)
       : 0n
+  }, [formTokenAmount, token])
 
   // TODO: need some sort of debounced effect here as to not spam api
   const { data: swapTx, isFetching: isFetchingSwapTx } = useSwapTx({
@@ -98,6 +101,21 @@ export const DepositForm = (props: DepositFormProps) => {
 
   const isZapping =
     !!vaultToken && !!formTokenAddress && lower(vaultToken.address) !== lower(formTokenAddress)
+
+  useEffect(() => {
+    if (isZapping && !!swapTx && share?.decimals !== undefined) {
+      const formattedShares = formatUnits(swapTx.minAmountOut, share.decimals)
+      const slicedShares = formattedShares.endsWith('.0')
+        ? formattedShares.slice(0, -2)
+        : formattedShares
+
+      setFormShareAmount(slicedShares)
+
+      formMethods.setValue('shareAmount', slicedShares, {
+        shouldValidate: true
+      })
+    }
+  }, [swapTx])
 
   const handleTokenAmountChange = (tokenAmount: string) => {
     if (!!vaultExchangeRate && token?.decimals !== undefined && share?.decimals !== undefined) {
@@ -119,28 +137,13 @@ export const DepositForm = (props: DepositFormProps) => {
           })
         }
       } else {
-        setFormToErroredState()
+        setFormTokenAmount('0')
       }
     }
   }
 
   useEffect(() => {
-    if (isZapping && !!swapTx && share?.decimals !== undefined) {
-      const formattedShares = formatUnits(swapTx.minAmountOut, share.decimals)
-      const slicedShares = formattedShares.endsWith('.0')
-        ? formattedShares.slice(0, -2)
-        : formattedShares
-
-      setFormShareAmount(slicedShares)
-
-      formMethods.setValue('shareAmount', slicedShares, {
-        shouldValidate: true
-      })
-    }
-  }, [swapTx])
-
-  useEffect(() => {
-    if (!!tokenData) {
+    if (!!tokenData && isValidFormInput(formTokenAmount, tokenData.decimals)) {
       handleTokenAmountChange(formTokenAmount)
       formMethods.trigger('tokenAmount')
     }
@@ -169,13 +172,9 @@ export const DepositForm = (props: DepositFormProps) => {
           shouldValidate: true
         })
       } else {
-        setFormToErroredState()
+        setFormTokenAmount('0')
       }
     }
-  }
-
-  const setFormToErroredState = () => {
-    setFormTokenAmount('0')
   }
 
   const tokenInputData = useMemo(() => {
