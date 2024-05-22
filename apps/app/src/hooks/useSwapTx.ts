@@ -55,6 +55,11 @@ interface SwapTx {
   data: `0x${string}`
 }
 
+/**
+ * Returns transaction data and basic stats about a possible swap transaction
+ * @param swapData data necessary to format swap transaction
+ * @returns
+ */
 export const useSwapTx = (swapData: {
   chainId: number
   from: { address: Address; decimals: number; amount: bigint }
