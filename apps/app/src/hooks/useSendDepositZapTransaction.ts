@@ -72,7 +72,7 @@ export const useSendDepositZapTransaction = (
       amount: inputToken?.amount
     },
     to: { address: vaultToken?.address as Address, decimals: vaultToken?.decimals as number },
-    sender: zapTokenManager
+    sender: zapRouterAddress
   })
 
   const depositTx = useMemo(() => {
@@ -141,7 +141,7 @@ export const useSendDepositZapTransaction = (
           },
           {
             ...depositTx,
-            tokens: [{ token: vaultToken.address, index: 4 }] // TODO: check index logic
+            tokens: [{ token: vaultToken.address, index: 4 }]
           }
         ]
       ]

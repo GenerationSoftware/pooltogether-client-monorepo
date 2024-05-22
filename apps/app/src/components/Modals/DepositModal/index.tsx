@@ -9,15 +9,20 @@ import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { AlertIcon, createDepositTxToast } from '@shared/react-components'
 import { Modal } from '@shared/ui'
-import { formatNumberForDisplay, LINKS } from '@shared/utilities'
+import { formatNumberForDisplay, LINKS, lower } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo, useState } from 'react'
 import { Address, TransactionReceipt } from 'viem'
-import { depositFormShareAmountAtom, depositFormTokenAmountAtom } from './DepositForm'
+import {
+  depositFormShareAmountAtom,
+  depositFormTokenAddressAtom,
+  depositFormTokenAmountAtom
+} from './DepositForm'
 import { DepositTxButton } from './DepositTxButton'
 import { DepositWithPermitTxButton } from './DepositWithPermitTxButton'
+import { DepositZapTxButton } from './DepositZapTxButton'
 import { ConfirmingView } from './Views/ConfirmingView'
 import { ErrorView } from './Views/ErrorView'
 import { MainView } from './Views/MainView'
@@ -58,14 +63,15 @@ export const DepositModal = (props: DepositModalProps) => {
 
   const [depositTxHash, setDepositTxHash] = useState<string>()
 
-  const formShareAmount = useAtomValue(depositFormShareAmountAtom)
+  const formTokenAddress = useAtomValue(depositFormTokenAddressAtom)
   const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
+  const formShareAmount = useAtomValue(depositFormShareAmountAtom)
 
-  const { data: tokenData } = useVaultTokenData(vault as Vault)
+  const { data: vaultToken } = useVaultTokenData(vault as Vault)
 
   const { data: tokenPermitSupport } = useTokenPermitSupport(
-    tokenData?.chainId as number,
-    tokenData?.address as Address
+    vaultToken?.chainId as number,
+    vaultToken?.address as Address
   )
 
   const { data: vaultExchangeRate } = useVaultExchangeRate(vault as Vault)
@@ -105,6 +111,9 @@ export const DepositModal = (props: DepositModalProps) => {
       error: <ErrorView setModalView={setView} />
     }
 
+    const isZapping =
+      !!vaultToken && !!formTokenAddress && lower(vaultToken.address) !== lower(formTokenAddress)
+
     const modalFooterContent = !!vaultExchangeRate ? (
       <div
         className={classNames('flex flex-col items-center gap-6', {
@@ -112,7 +121,18 @@ export const DepositModal = (props: DepositModalProps) => {
         })}
       >
         {view === 'main' && !formShareAmount && <RisksDisclaimer vault={vault} />}
-        {tokenPermitSupport === 'eip2612' ? (
+        {/* TODO: add support for permits on zaps */}
+        {isZapping ? (
+          <DepositZapTxButton
+            vault={vault}
+            modalView={view}
+            setModalView={setView}
+            setDepositTxHash={setDepositTxHash}
+            refetchUserBalances={refetchUserBalances}
+            onSuccessfulApproval={onSuccessfulApproval}
+            onSuccessfulDeposit={onSuccessfulDeposit}
+          />
+        ) : tokenPermitSupport === 'eip2612' ? (
           <DepositWithPermitTxButton
             vault={vault}
             modalView={view}

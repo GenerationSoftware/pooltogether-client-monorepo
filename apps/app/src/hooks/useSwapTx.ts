@@ -1,4 +1,4 @@
-import { sToMs } from '@shared/utilities'
+import { lower, sToMs } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
@@ -75,6 +75,7 @@ export const useSwapTx = (swapData: {
     !!to &&
     !!to.address &&
     to.decimals !== undefined &&
+    lower(from.address) !== lower(to.address) &&
     !!sender &&
     !!publicClient &&
     !!process.env.NEXT_PUBLIC_DECENT_API_KEY
