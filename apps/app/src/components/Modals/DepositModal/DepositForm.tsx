@@ -8,7 +8,7 @@ import {
   useVaultSharePrice,
   useVaultTokenPrice
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { CurrencyValue } from '@shared/react-components'
+import { TokenIcon } from '@shared/react-components'
 import { Token, TokenWithAmount, TokenWithPrice, TokenWithSupply } from '@shared/types'
 import { DropdownItem } from '@shared/ui'
 import {
@@ -304,9 +304,20 @@ const TokenPickerOption = (props: TokenPickerOptionProps) => {
   const { token, className } = props
 
   return (
-    <div className={classNames('', className)}>
-      {token.symbol} {formatBigIntForDisplay(token.amount, token.decimals)}{' '}
-      <CurrencyValue baseValue={token.value} />
+    <div
+      className={classNames(
+        'w-full min-w-[10rem]',
+        'flex items-center justify-between gap-1',
+        'px-2 py-1 rounded-lg',
+        'text-pt-purple-50 md:text-pt-purple-600',
+        'hover:bg-pt-purple-200',
+        className
+      )}
+    >
+      <span className='flex items-center gap-1'>
+        <TokenIcon token={token} /> {token.symbol}
+      </span>
+      <span>{formatBigIntForDisplay(token.amount, token.decimals)}</span>
     </div>
   )
 }

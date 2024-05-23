@@ -116,6 +116,7 @@ export const TxFormInput = (props: TxFormInputProps) => {
             items={tokenPickerOptions}
             inline={true}
             placement='bottom'
+            className='!pr-0 border-0'
           />
         ) : (
           <TokenBadge />
