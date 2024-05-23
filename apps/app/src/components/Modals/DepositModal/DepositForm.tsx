@@ -6,11 +6,18 @@ import {
   useUserVaultShareBalance,
   useVaultExchangeRate,
   useVaultSharePrice,
-  useVaultTokenData
+  useVaultTokenPrice
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { TokenWithPrice, TokenWithSupply } from '@shared/types'
-import { getAssetsFromShares, getSharesFromAssets, lower } from '@shared/utilities'
-import { Select } from 'flowbite-react'
+import { CurrencyValue } from '@shared/react-components'
+import { Token, TokenWithAmount, TokenWithPrice, TokenWithSupply } from '@shared/types'
+import { DropdownItem } from '@shared/ui'
+import {
+  formatBigIntForDisplay,
+  getAssetsFromShares,
+  getSharesFromAssets,
+  lower
+} from '@shared/utilities'
+import classNames from 'classnames'
 import { atom, useAtom, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo } from 'react'
@@ -18,6 +25,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { Address, formatUnits, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { ZAP_SETTINGS } from '@constants/config'
+import { useSwapTokenOptions } from '@hooks/useSwapTokenOptions'
 import { useSwapTx } from '@hooks/useSwapTx'
 import { isValidFormInput, TxFormInput, TxFormValues } from '../TxFormInput'
 
@@ -38,7 +46,13 @@ export const DepositForm = (props: DepositFormProps) => {
   const { address: userAddress } = useAccount()
 
   const { data: vaultExchangeRate } = useVaultExchangeRate(vault)
-  const { data: vaultToken } = useVaultTokenData(vault)
+  const { data: vaultToken } = useVaultTokenPrice(vault)
+  const { data: vaultTokenWithAmount } = useTokenBalance(
+    vault.chainId,
+    userAddress as Address,
+    vaultToken?.address as Address,
+    { refetchOnWindowFocus: true }
+  )
 
   const { data: share } = useVaultSharePrice(vault)
 
@@ -202,15 +216,51 @@ export const DepositForm = (props: DepositFormProps) => {
     }
   }, [vault, share, shareBalance])
 
+  const swapTokenOptions = useSwapTokenOptions(vault.chainId)
+
+  const tokenPickerOptions = useMemo(() => {
+    const getOptionId = (option: Token) => `swapToken-${option.chainId}-${option.address}`
+
+    let options = swapTokenOptions.map(
+      (tokenOption): DropdownItem => ({
+        id: getOptionId(tokenOption),
+        content: <TokenPickerOption token={tokenOption} />,
+        onClick: () => setFormTokenAddress(tokenOption.address)
+      })
+    )
+
+    if (!!vaultToken) {
+      const isVaultToken = (id: string) => lower(id.split('-')[2]) === lower(vaultToken.address)
+
+      const vaultTokenOption = options.find((option) => isVaultToken(option.id))
+
+      if (!!vaultTokenOption) {
+        options = options.filter((option) => !isVaultToken(option.id))
+        options.unshift(vaultTokenOption)
+      } else {
+        const amount = vaultTokenWithAmount?.amount ?? 0n
+        const price = vaultToken.price ?? 0
+        const value = parseFloat(formatUnits(amount, vaultToken.decimals)) * price
+
+        options.unshift({
+          id: getOptionId(vaultToken),
+          content: <TokenPickerOption token={{ ...vaultToken, amount, price, value }} />,
+          onClick: () => setFormTokenAddress(vaultToken.address)
+        })
+      }
+    }
+
+    return options
+  }, [swapTokenOptions, vaultToken, vaultTokenWithAmount])
+
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col isolate'>
       {!!tokenInputData &&
         !!shareInputData &&
         tokenInputData.decimals !== undefined &&
         shareInputData.decimals !== undefined && (
           <>
             <FormProvider {...formMethods}>
-              {/* TODO: pass token input options and enable token picker */}
               <TxFormInput
                 token={tokenInputData}
                 formKey='tokenAmount'
@@ -225,20 +275,38 @@ export const DepositForm = (props: DepositFormProps) => {
                 onChange={handleTokenAmountChange}
                 showInfoRow={showInputInfoRows}
                 showMaxButton={true}
-                className='mb-0.5'
+                showTokenPicker={true}
+                tokenPickerOptions={tokenPickerOptions}
+                className='mb-0.5 z-20'
               />
               <TxFormInput
                 token={shareInputData}
                 formKey='shareAmount'
                 onChange={handleShareAmountChange}
                 showInfoRow={showInputInfoRows}
-                className='my-0.5'
+                className='my-0.5 z-10'
                 disabled={isZapping}
                 isLoading={isFetchingSwapTx}
               />
             </FormProvider>
           </>
         )}
+    </div>
+  )
+}
+
+interface TokenPickerOptionProps {
+  token: TokenWithAmount & Required<TokenWithPrice> & { value: number }
+  className?: string
+}
+
+const TokenPickerOption = (props: TokenPickerOptionProps) => {
+  const { token, className } = props
+
+  return (
+    <div className={classNames('', className)}>
+      {token.symbol} {formatBigIntForDisplay(token.amount, token.decimals)}{' '}
+      <CurrencyValue baseValue={token.value} />
     </div>
   )
 }

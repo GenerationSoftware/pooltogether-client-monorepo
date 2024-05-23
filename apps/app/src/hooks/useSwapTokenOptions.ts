@@ -6,7 +6,7 @@ import {
 import { TokenWithAmount, TokenWithPrice } from '@shared/types'
 import { lower, NETWORK } from '@shared/utilities'
 import { useMemo } from 'react'
-import { Address } from 'viem'
+import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
 // TODO: should not hardcode token options (fetch from some existing tokenlist - paraswap would be ideal)
@@ -51,15 +51,18 @@ export const useSwapTokenOptions = (chainId: number) => {
   const { data: tokenPrices } = useTokenPrices(chainId, tokenAddresses)
 
   const tokenOptions = useMemo(() => {
-    const options: (TokenWithAmount & TokenWithPrice)[] = []
+    const options: (TokenWithAmount & Required<TokenWithPrice> & { value: number })[] = []
 
     if (!!tokens) {
       Object.values(tokens).forEach((token) => {
         const amount = tokenBalances?.[token.address]?.amount ?? 0n
         const price = tokenPrices?.[lower(token.address)] ?? 0
+        const value = parseFloat(formatUnits(amount, token.decimals)) * price
 
-        options.push({ ...token, amount, price })
+        options.push({ ...token, amount, price, value })
       })
+
+      options.sort((a, b) => b.value - a.value)
     }
 
     return options
