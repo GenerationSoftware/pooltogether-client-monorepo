@@ -1,4 +1,5 @@
 import { Address } from 'viem'
+import { Token } from '../types'
 import { lower } from './utils/addresses'
 
 /**
@@ -188,6 +189,146 @@ export const STABLECOINS: Record<NETWORK, { [address: Lowercase<Address>]: strin
 }
 
 /**
+ * Dolphin address
+ */
+export const DOLPHIN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+
+/**
+ * Dead address
+ */
+export const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead'
+
+/**
+ * Optimism gas oracle address
+ */
+export const OP_GAS_ORACLE_ADDRESS = '0x420000000000000000000000000000000000000f'
+
+/**
+ * Native assets' info
+ */
+export const NATIVE_ASSETS: Record<NETWORK, Token> = {
+  [NETWORK.mainnet]: {
+    chainId: NETWORK.mainnet,
+    address: DOLPHIN_ADDRESS,
+    symbol: 'ETH',
+    name: 'Ether',
+    decimals: 18
+  },
+  [NETWORK.sepolia]: {
+    chainId: NETWORK.sepolia,
+    address: DOLPHIN_ADDRESS,
+    symbol: 'ETH',
+    name: 'Ether',
+    decimals: 18
+  },
+  [NETWORK.bsc]: {
+    chainId: NETWORK.bsc,
+    address: DOLPHIN_ADDRESS,
+    symbol: 'BNB',
+    name: 'BNB',
+    decimals: 18
+  },
+  [NETWORK.bsc_testnet]: {
+    chainId: NETWORK.bsc_testnet,
+    address: DOLPHIN_ADDRESS,
+    symbol: 'BNB',
+    name: 'BNB',
+    decimals: 18
+  },
+  [NETWORK.xdai]: {
+    chainId: NETWORK.xdai,
+    address: DOLPHIN_ADDRESS,
+    symbol: 'XDAI',
+    name: 'XDAI',
+    decimals: 18
+  },
+  [NETWORK.polygon]: {
+    chainId: NETWORK.polygon,
+    address: DOLPHIN_ADDRESS,
+    symbol: 'MATIC',
+    name: 'Polygon',
+    decimals: 18
+  },
+  [NETWORK.mumbai]: {
+    chainId: NETWORK.mumbai,
+    address: DOLPHIN_ADDRESS,
+    symbol: 'MATIC',
+    name: 'Polygon',
+    decimals: 18
+  },
+  [NETWORK.optimism]: {
+    chainId: NETWORK.optimism,
+    address: DOLPHIN_ADDRESS,
+    symbol: 'ETH',
+    name: 'Ether',
+    decimals: 18
+  },
+  [NETWORK.optimism_sepolia]: {
+    chainId: NETWORK.optimism_sepolia,
+    address: DOLPHIN_ADDRESS,
+    symbol: 'ETH',
+    name: 'Ether',
+    decimals: 18
+  },
+  [NETWORK.avalanche]: {
+    chainId: NETWORK.avalanche,
+    address: DOLPHIN_ADDRESS,
+    symbol: 'AVAX',
+    name: 'Avalanche',
+    decimals: 18
+  },
+  [NETWORK.fuji]: {
+    chainId: NETWORK.fuji,
+    address: DOLPHIN_ADDRESS,
+    symbol: 'AVAX',
+    name: 'Avalanche',
+    decimals: 18
+  },
+  [NETWORK.celo]: {
+    chainId: NETWORK.celo,
+    address: DOLPHIN_ADDRESS,
+    symbol: 'CELO',
+    name: 'Celo',
+    decimals: 18
+  },
+  [NETWORK.celo_testnet]: {
+    chainId: NETWORK.celo_testnet,
+    address: DOLPHIN_ADDRESS,
+    symbol: 'CELO',
+    name: 'Celo',
+    decimals: 18
+  },
+  [NETWORK.arbitrum]: {
+    chainId: NETWORK.arbitrum,
+    address: DOLPHIN_ADDRESS,
+    symbol: 'ETH',
+    name: 'Ether',
+    decimals: 18
+  },
+  [NETWORK.arbitrum_sepolia]: {
+    chainId: NETWORK.arbitrum_sepolia,
+    address: DOLPHIN_ADDRESS,
+    symbol: 'ETH',
+    name: 'Ether',
+    decimals: 18
+  },
+  [NETWORK.base]: {
+    chainId: NETWORK.base,
+    address: DOLPHIN_ADDRESS,
+    symbol: 'ETH',
+    name: 'Ether',
+    decimals: 18
+  },
+  [NETWORK.base_sepolia]: {
+    chainId: NETWORK.base_sepolia,
+    address: DOLPHIN_ADDRESS,
+    symbol: 'ETH',
+    name: 'Ether',
+    decimals: 18
+  }
+}
+
+/**
  * Wrapped native asset addresses (example: WETH, WMATIC, etc.)
  */
 export const WRAPPED_NATIVE_ASSETS: Record<NETWORK, Lowercase<Address> | null> = {
@@ -264,21 +405,6 @@ export const LIQUIDATION_ROUTER_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.arbitrum_sepolia]: '0xF1cc7c16Df4E7C2BA62EDcbe634a90dfff9DF3e4',
   [NETWORK.base_sepolia]: '0x926F4777c583f0C0BB11F25B3EBB0A32ed3107aA'
 }
-
-/**
- * Dolphin address
- */
-export const DOLPHIN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-
-/**
- * Dead address
- */
-export const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead'
-
-/**
- * Optimism gas oracle address
- */
-export const OP_GAS_ORACLE_ADDRESS = '0x420000000000000000000000000000000000000f'
 
 /**
  * Subgraph API URLs
