@@ -1,9 +1,16 @@
-import { LINKS, NETWORK, POOL_TOKEN_ADDRESSES, USDC_TOKEN_ADDRESSES } from '@shared/utilities'
+import {
+  DOLPHIN_ADDRESS,
+  LINKS,
+  NETWORK,
+  POOL_TOKEN_ADDRESSES,
+  USDC_TOKEN_ADDRESSES
+} from '@shared/utilities'
 
 /**
  * Token Logo URLs
  */
 const tokenLogoUrls = {
+  eth: `${LINKS.app}/icons/ether.svg`,
   pool: 'https://etherscan.io/token/images/pooltogether_32.png',
   usdc: 'https://etherscan.io/token/images/centre-usdc_28.png',
   dai: 'https://assets.coingecko.com/coins/images/9956/small/4943.png?1636636734',
@@ -19,11 +26,10 @@ const tokenLogoUrls = {
 
 /**
  * Token Logo Overrides
- *
- * NOTE: All addresses are lowercase
  */
 export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>]: string }> = {
   [NETWORK.mainnet]: {
+    [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,
     [POOL_TOKEN_ADDRESSES[NETWORK.mainnet].toLowerCase()]: tokenLogoUrls.pool,
     '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48': tokenLogoUrls.usdc,
     '0x6b175474e89094c44da98b954eedeac495271d0f': tokenLogoUrls.dai,
@@ -32,7 +38,9 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599': tokenLogoUrls.wbtc,
     '0x5f98805a4e8be255a32880fdec7f6728c6568ba0': tokenLogoUrls.lusd
   },
-  [NETWORK.sepolia]: {},
+  [NETWORK.sepolia]: {
+    [DOLPHIN_ADDRESS]: tokenLogoUrls.eth
+  },
   [NETWORK.bsc]: {},
   [NETWORK.bsc_testnet]: {},
   [NETWORK.xdai]: {},
@@ -47,6 +55,7 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   },
   [NETWORK.mumbai]: {},
   [NETWORK.optimism]: {
+    [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,
     [POOL_TOKEN_ADDRESSES[NETWORK.optimism].toLowerCase()]: tokenLogoUrls.pool,
     '0x7f5c764cbc14f9669b88837ca1490cca17c31607': tokenLogoUrls.usdc,
     '0x0b2c639c533813f4aa9d7837caf62653d097ff85': tokenLogoUrls.usdc,
@@ -60,6 +69,7 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x9b4c0de59628c64b02d7ce86f21db9a579539d5a': tokenLogoUrls.przVELO
   },
   [NETWORK.optimism_sepolia]: {
+    [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,
     [POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia].toLowerCase()]: tokenLogoUrls.pool,
     [USDC_TOKEN_ADDRESSES[NETWORK.optimism_sepolia]]: tokenLogoUrls.usdc,
     '0xef38f21ec5477f6e3d4b7e9f0dea44a788c669b0': tokenLogoUrls.dai,
@@ -73,14 +83,18 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   [NETWORK.fuji]: {},
   [NETWORK.celo]: {},
   [NETWORK.celo_testnet]: {},
-  [NETWORK.arbitrum]: {},
+  [NETWORK.arbitrum]: {
+    [DOLPHIN_ADDRESS]: tokenLogoUrls.eth
+  },
   [NETWORK.arbitrum_sepolia]: {
+    [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,
     [POOL_TOKEN_ADDRESSES[NETWORK.arbitrum_sepolia].toLowerCase()]: tokenLogoUrls.pool,
     [USDC_TOKEN_ADDRESSES[NETWORK.arbitrum_sepolia]]: tokenLogoUrls.usdc,
     '0x837f6ec55793c49b2994ba703a3d2331649b09ea': tokenLogoUrls.dai,
     '0x1a586a874f7c6ca5c3220c434fb5096dde2ec3f0': tokenLogoUrls.weth
   },
   [NETWORK.base]: {
+    [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,
     [POOL_TOKEN_ADDRESSES[NETWORK.base].toLowerCase()]: tokenLogoUrls.pool,
     '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913': tokenLogoUrls.usdc,
     '0x50c5725949a6f0c72e6c4a641f24049a917db0cb': tokenLogoUrls.dai,
@@ -89,6 +103,7 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452': tokenLogoUrls.steth
   },
   [NETWORK.base_sepolia]: {
+    [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,
     [POOL_TOKEN_ADDRESSES[NETWORK.base_sepolia].toLowerCase()]: tokenLogoUrls.pool,
     [USDC_TOKEN_ADDRESSES[NETWORK.base_sepolia]]: tokenLogoUrls.usdc,
     '0x82557c5157fcbeddd80ae09647ec018a0083a638': tokenLogoUrls.dai,
