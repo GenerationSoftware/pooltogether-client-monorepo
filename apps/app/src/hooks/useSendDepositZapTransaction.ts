@@ -2,9 +2,16 @@ import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useGasAmountEstimate,
   useTokenAllowance,
+  useVaultExchangeRate,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { calculatePercentageOfBigInt, erc20ABI, MAX_UINT_256, vaultABI } from '@shared/utilities'
+import {
+  calculatePercentageOfBigInt,
+  erc20ABI,
+  getSharesFromAssets,
+  MAX_UINT_256,
+  vaultABI
+} from '@shared/utilities'
 import { useEffect, useMemo } from 'react'
 import {
   Address,
@@ -54,6 +61,7 @@ export const useSendDepositZapTransaction = (
   const { address: userAddress, chain } = useAccount()
 
   const { data: vaultToken, isFetched: isFetchedVaultToken } = useVaultTokenData(vault)
+  const { data: exchangeRate, isFetched: isFetchedExchangeRate } = useVaultExchangeRate(vault)
 
   const { zapRouterAddress, zapTokenManager } = ZAP_SETTINGS[vault?.chainId] ?? {}
 
@@ -98,6 +106,8 @@ export const useSendDepositZapTransaction = (
     !!vaultToken &&
     !!vaultToken?.address &&
     vaultToken.decimals !== undefined &&
+    isFetchedExchangeRate &&
+    !!exchangeRate &&
     isFetchedVaultToken &&
     chain?.id === vault.chainId &&
     !!zapRouterAddress &&
@@ -113,7 +123,11 @@ export const useSendDepositZapTransaction = (
     | ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>
     | undefined => {
     if (enabled) {
-      const zapMinAmountOut = swapTx.minAmountOut // TODO: should consider the vault's exchange rate just in case
+      const zapMinAmountOut = getSharesFromAssets(
+        swapTx.minAmountOut,
+        exchangeRate,
+        vaultToken.decimals
+      )
 
       return [
         {
