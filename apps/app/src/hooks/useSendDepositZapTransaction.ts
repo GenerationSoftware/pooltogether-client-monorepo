@@ -5,13 +5,7 @@ import {
   useVaultExchangeRate,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import {
-  calculatePercentageOfBigInt,
-  erc20ABI,
-  getSharesFromAssets,
-  MAX_UINT_256,
-  vaultABI
-} from '@shared/utilities'
+import { calculatePercentageOfBigInt, getSharesFromAssets, vaultABI } from '@shared/utilities'
 import { useEffect, useMemo } from 'react'
 import {
   Address,
@@ -129,6 +123,26 @@ export const useSendDepositZapTransaction = (
         vaultToken.decimals
       )
 
+      /**
+       * Note: this is an arbitrary call to the swap router's token proxy, so that the zap contract makes an allowance to it
+       */
+      const arbitraryProxyTx = {
+        target: swapTx.allowanceProxy,
+        value: 0n,
+        data: encodeFunctionData({
+          abi: [
+            {
+              inputs: [],
+              name: 'owner',
+              outputs: [{ internalType: 'address', name: '', type: 'address' }],
+              stateMutability: 'view',
+              type: 'function'
+            }
+          ],
+          functionName: 'owner'
+        })
+      }
+
       return [
         {
           inputs: [{ token: inputToken.address, amount: inputToken.amount }],
@@ -138,15 +152,8 @@ export const useSendDepositZapTransaction = (
           recipient: userAddress
         },
         [
-          // TODO: if usdt include a 0 approval first (like wtf tether)
           {
-            target: inputToken.address,
-            value: 0n,
-            data: encodeFunctionData({
-              abi: erc20ABI,
-              functionName: 'approve',
-              args: [swapTx.allowanceProxy, MAX_UINT_256]
-            }),
+            ...arbitraryProxyTx,
             tokens: [{ token: inputToken.address, index: -1 }]
           },
           {
