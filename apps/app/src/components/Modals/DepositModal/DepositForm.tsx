@@ -8,7 +8,7 @@ import {
   useVaultSharePrice,
   useVaultTokenPrice
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { TokenIcon } from '@shared/react-components'
+import { CurrencyValue, TokenIcon } from '@shared/react-components'
 import { Token, TokenWithAmount, TokenWithPrice, TokenWithSupply } from '@shared/types'
 import { DropdownItem } from '@shared/ui'
 import {
@@ -275,7 +275,7 @@ export const DepositForm = (props: DepositFormProps) => {
                 onChange={handleTokenAmountChange}
                 showInfoRow={showInputInfoRows}
                 showMaxButton={true}
-                showTokenPicker={true}
+                showTokenPicker={!!ZAP_SETTINGS[vault.chainId]}
                 tokenPickerOptions={tokenPickerOptions}
                 className='mb-0.5 z-20'
               />
@@ -307,7 +307,7 @@ const TokenPickerOption = (props: TokenPickerOptionProps) => {
     <div
       className={classNames(
         'w-full min-w-[10rem]',
-        'flex items-center justify-between gap-1',
+        'flex items-center justify-between gap-4',
         'px-2 py-1 rounded-lg',
         'text-pt-purple-50 md:text-pt-purple-600',
         'hover:bg-pt-purple-200',
@@ -315,9 +315,18 @@ const TokenPickerOption = (props: TokenPickerOptionProps) => {
       )}
     >
       <span className='flex items-center gap-1'>
-        <TokenIcon token={token} /> {token.symbol}
+        <TokenIcon token={token} />
+        <span>{token.symbol}</span>
       </span>
-      <span>{formatBigIntForDisplay(token.amount, token.decimals)}</span>
+      <span className='flex items-center gap-1'>
+        <span>{formatBigIntForDisplay(token.amount, token.decimals)}</span>
+
+        {!!token.value && (
+          <span>
+            (<CurrencyValue baseValue={token.value} hideZeroes={true} />)
+          </span>
+        )}
+      </span>
     </div>
   )
 }
