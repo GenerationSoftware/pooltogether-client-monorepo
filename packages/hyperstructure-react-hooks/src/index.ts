@@ -69,6 +69,7 @@ export * from './prizes/usePrizeTokenPrice'
  * Signature Hooks
  */
 export * from './signatures/useApproveSignature'
+export * from './signatures/useGenericApproveSignature'
 
 /**
  * Token Hooks
