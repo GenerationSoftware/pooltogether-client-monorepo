@@ -143,6 +143,10 @@ export const ZAP_SETTINGS: {
   [NETWORK.optimism]: {
     zapRouterAddress: '0xE82343A116d2179F197111D92f9B53611B43C01c',
     zapTokenManager: '0x5a32F67C5eD74dc1b2e031b1bc2c3E965073424F'
+  },
+  [NETWORK.base]: {
+    zapRouterAddress: '0x6F19Da51d488926C007B9eBaa5968291a2eC6a63',
+    zapTokenManager: '0x3fBD1da78369864c67d62c242d30983d6900c0f0'
   }
 }
 
