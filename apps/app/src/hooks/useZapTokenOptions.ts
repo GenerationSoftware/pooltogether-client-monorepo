@@ -10,7 +10,7 @@ import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
 // TODO: should not hardcode token options (fetch from some existing tokenlist - paraswap would be ideal)
-const swapTokenOptions: { [chainId: number]: Address[] } = {
+const zapTokenOptions: { [chainId: number]: Address[] } = {
   [NETWORK.optimism]: [
     DOLPHIN_ADDRESS, // ETH
     '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85', // USDC
@@ -34,12 +34,12 @@ const swapTokenOptions: { [chainId: number]: Address[] } = {
 }
 
 /**
- * Returns token options to use for swap transactions
- * @param chainId the chain ID the swap is to be made in
+ * Returns token options to use for zap transactions
+ * @param chainId the chain ID the zap is to be made in
  * @returns
  */
-export const useSwapTokenOptions = (chainId: number) => {
-  const tokenAddresses = swapTokenOptions[chainId] ?? []
+export const useZapTokenOptions = (chainId: number) => {
+  const tokenAddresses = zapTokenOptions[chainId] ?? []
 
   const { address: userAddress } = useAccount()
 

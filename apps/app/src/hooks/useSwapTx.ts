@@ -4,7 +4,7 @@ import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
 
 interface ParaSwapPricesResponse {
-  priceRoute: {
+  priceRoute?: {
     bestRoute: object[]
     blockNumber: number
     contractAddress: Address
@@ -29,6 +29,7 @@ interface ParaSwapPricesResponse {
     tokenTransferProxy: Address
     version: string
   }
+  error?: string
 }
 
 interface ParaSwapTxRequestBody {
@@ -123,42 +124,48 @@ export const useSwapTx = (swapData: {
           .then((r) => r.text())
           .then((t) => JSON.parse(t))
 
-        const txApiUrl = new URL(`https://apiv5.paraswap.io/transactions/${chainId}`)
-        txApiUrl.searchParams.set('ignoreChecks', 'true')
-        txApiUrl.searchParams.set('ignoreGasEstimate', 'true')
+        if (!!pricesApiResponse?.priceRoute) {
+          const txApiUrl = new URL(`https://apiv5.paraswap.io/transactions/${chainId}`)
+          txApiUrl.searchParams.set('ignoreChecks', 'true')
+          txApiUrl.searchParams.set('ignoreGasEstimate', 'true')
 
-        const txApiRequestBody: ParaSwapTxRequestBody = {
-          srcToken: from.address,
-          srcDecimals: from.decimals,
-          srcAmount: from.amount.toString(),
-          destToken: to.address,
-          destDecimals: to.decimals,
-          slippage,
-          userAddress,
-          partner,
-          ...pricesApiResponse
+          const txApiRequestBody: ParaSwapTxRequestBody = {
+            srcToken: from.address,
+            srcDecimals: from.decimals,
+            srcAmount: from.amount.toString(),
+            destToken: to.address,
+            destDecimals: to.decimals,
+            slippage,
+            userAddress,
+            partner,
+            ...pricesApiResponse
+          }
+
+          const txApiResponse: ParaSwapTxResponse = await fetch(txApiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(txApiRequestBody)
+          })
+            .then((r) => r.text())
+            .then((t) => JSON.parse(t))
+
+          const tx: SwapTx = {
+            target: txApiResponse.to,
+            value: BigInt(txApiResponse.value),
+            data: txApiResponse.data
+          }
+
+          const expectedAmountOut = BigInt(pricesApiResponse.priceRoute.destAmount)
+          const minAmountOut = calculatePercentageOfBigInt(expectedAmountOut, 1 - slippage / 1e4)
+          const amountOut = { expected: expectedAmountOut, min: minAmountOut }
+          const allowanceProxy = pricesApiResponse.priceRoute.tokenTransferProxy
+
+          return { tx, amountOut, allowanceProxy }
+        } else {
+          const errorMsg = `Error: "${pricesApiResponse?.error}" (${chainId} - ${from.address} -> ${to.address})`
+          console.error(errorMsg)
+          throw new Error(errorMsg)
         }
-
-        const txApiResponse: ParaSwapTxResponse = await fetch(txApiUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(txApiRequestBody)
-        })
-          .then((r) => r.text())
-          .then((t) => JSON.parse(t))
-
-        const tx: SwapTx = {
-          target: txApiResponse.to,
-          value: BigInt(txApiResponse.value),
-          data: txApiResponse.data
-        }
-
-        const expectedAmountOut = BigInt(pricesApiResponse.priceRoute.destAmount)
-        const minAmountOut = calculatePercentageOfBigInt(expectedAmountOut, 1 - slippage / 1e4)
-        const amountOut = { expected: expectedAmountOut, min: minAmountOut }
-        const allowanceProxy = pricesApiResponse.priceRoute.tokenTransferProxy
-
-        return { tx, amountOut, allowanceProxy }
       }
     },
     enabled,

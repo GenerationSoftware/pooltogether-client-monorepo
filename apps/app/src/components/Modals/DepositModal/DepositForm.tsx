@@ -12,24 +12,21 @@ import { CurrencyValue, TokenIcon } from '@shared/react-components'
 import { Token, TokenWithAmount, TokenWithPrice, TokenWithSupply } from '@shared/types'
 import { DropdownItem } from '@shared/ui'
 import {
-  DOLPHIN_ADDRESS,
   formatBigIntForDisplay,
   getAssetsFromShares,
   getSharesFromAssets,
-  lower,
-  NETWORK,
-  WRAPPED_NATIVE_ASSETS
+  lower
 } from '@shared/utilities'
 import classNames from 'classnames'
 import { atom, useAtom, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Address, formatUnits, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { ZAP_SETTINGS } from '@constants/config'
-import { useSwapTokenOptions } from '@hooks/useSwapTokenOptions'
-import { useSwapTx } from '@hooks/useSwapTx'
+import { useSendDepositZapTransaction } from '@hooks/useSendDepositZapTransaction'
+import { useZapTokenOptions } from '@hooks/useZapTokenOptions'
 import { isValidFormInput, TxFormInput, TxFormValues } from '../TxFormInput'
 
 export const depositFormTokenAddressAtom = atom<Address | undefined>(undefined)
@@ -91,10 +88,14 @@ export const DepositForm = (props: DepositFormProps) => {
   const [formTokenAmount, setFormTokenAmount] = useAtom(depositFormTokenAmountAtom)
   const setFormShareAmount = useSetAtom(depositFormShareAmountAtom)
 
+  const [cachedZapAmountOut, setCachedZapAmountOut] =
+    useState<ReturnType<typeof useSendDepositZapTransaction>['amountOut']>()
+
   useEffect(() => {
     setFormTokenAddress(undefined)
     setFormTokenAmount('')
     setFormShareAmount('')
+    setCachedZapAmountOut(undefined)
     formMethods.reset()
   }, [])
 
@@ -104,28 +105,30 @@ export const DepositForm = (props: DepositFormProps) => {
       : 0n
   }, [formTokenAmount, token])
 
-  // TODO: need some sort of debounced effect here as to not spam api
-  const { data: swapTx, isFetching: isFetchingSwapTx } = useSwapTx({
-    chainId: vault.chainId,
-    from: {
-      address:
-        !!token && lower(token.address) === DOLPHIN_ADDRESS
-          ? (WRAPPED_NATIVE_ASSETS[vault.chainId as NETWORK] as Lowercase<Address>)
-          : (token?.address as Address),
+  const { amountOut: zapAmountOut, isFetchingSwapTx } = useSendDepositZapTransaction(
+    {
+      address: token?.address as Address,
       decimals: token?.decimals as number,
       amount: depositAmount
     },
-    to: { address: vaultToken?.address as Address, decimals: vaultToken?.decimals as number },
-    userAddress: ZAP_SETTINGS[vault.chainId]?.zapRouterAddress
-  })
+    vault
+  )
 
   const isZapping =
     !!vaultToken && !!formTokenAddress && lower(vaultToken.address) !== lower(formTokenAddress)
 
-  // TODO: display min amount out (swapTx.amountOut.min)
+  // TODO: display min amount out (zapAmountOut.min)
   useEffect(() => {
-    if (isZapping && !!swapTx && share?.decimals !== undefined) {
-      const formattedShares = formatUnits(swapTx.amountOut.expected, share.decimals)
+    if (
+      isZapping &&
+      share?.decimals !== undefined &&
+      !!zapAmountOut &&
+      (cachedZapAmountOut?.expected !== zapAmountOut.expected ||
+        cachedZapAmountOut?.min !== zapAmountOut.min)
+    ) {
+      setCachedZapAmountOut(zapAmountOut)
+
+      const formattedShares = formatUnits(zapAmountOut.expected, share.decimals)
       const slicedShares = formattedShares.endsWith('.0')
         ? formattedShares.slice(0, -2)
         : formattedShares
@@ -136,7 +139,7 @@ export const DepositForm = (props: DepositFormProps) => {
         shouldValidate: true
       })
     }
-  }, [swapTx])
+  }, [isZapping, share, zapAmountOut])
 
   const handleTokenAmountChange = (tokenAmount: string) => {
     if (!!vaultExchangeRate && token?.decimals !== undefined && share?.decimals !== undefined) {
@@ -223,12 +226,12 @@ export const DepositForm = (props: DepositFormProps) => {
     }
   }, [vault, share, shareBalance])
 
-  const swapTokenOptions = useSwapTokenOptions(vault.chainId)
+  const zapTokenOptions = useZapTokenOptions(vault.chainId)
 
   const tokenPickerOptions = useMemo(() => {
-    const getOptionId = (option: Token) => `swapToken-${option.chainId}-${option.address}`
+    const getOptionId = (option: Token) => `zapToken-${option.chainId}-${option.address}`
 
-    let options = swapTokenOptions.map(
+    let options = zapTokenOptions.map(
       (tokenOption): DropdownItem => ({
         id: getOptionId(tokenOption),
         content: <TokenPickerOption token={tokenOption} />,
@@ -258,7 +261,7 @@ export const DepositForm = (props: DepositFormProps) => {
     }
 
     return options
-  }, [swapTokenOptions, vaultToken, vaultTokenWithAmount])
+  }, [zapTokenOptions, vaultToken, vaultTokenWithAmount])
 
   return (
     <div className='flex flex-col isolate'>

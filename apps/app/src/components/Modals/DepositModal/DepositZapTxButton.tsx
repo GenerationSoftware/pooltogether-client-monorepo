@@ -132,7 +132,10 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
     isConfirming: isConfirmingDepositZap,
     isSuccess: isSuccessfulDepositZap,
     txHash: depositZapTxHash,
-    sendDepositZapTransaction
+    sendDepositZapTransaction,
+    isSwapNecessary,
+    swapTx,
+    isFetchingSwapTx
   } = useSendDepositZapTransaction(
     {
       address: inputToken?.address as Address,
@@ -183,7 +186,8 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
     allowance !== undefined &&
     !!depositAmount &&
     inputToken.decimals !== undefined &&
-    chain?.id === vault.chainId
+    chain?.id === vault.chainId &&
+    (!isSwapNecessary || !!swapTx)
 
   const approvalEnabled =
     isDataFetched && userInputTokenBalance.amount >= depositAmount && isValidFormInputTokenAmount
@@ -238,6 +242,28 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
         {t_modals('reviewDeposit')}
       </Button>
     )
+  }
+
+  if (isSwapNecessary) {
+    // Fetching swap params
+    if (isFetchingSwapTx) {
+      return (
+        <Button fullSized={true} disabled={true}>
+          {/* TODO: localization */}
+          Calculating zap route...
+        </Button>
+      )
+    }
+
+    // Swap route unavailable
+    if (!swapTx) {
+      return (
+        <Button fullSized={true} disabled={true}>
+          {/* TODO: localization */}
+          No zap route available (select another input token)
+        </Button>
+      )
+    }
   }
 
   // Deposit button

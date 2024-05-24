@@ -56,6 +56,11 @@ export const useSendDepositZapTransaction = (
   txHash?: Address
   txReceipt?: TransactionReceipt
   sendDepositZapTransaction?: () => void
+  amountOut?: { expected: bigint; min: bigint }
+  isSwapNecessary: boolean
+  swapTx: ReturnType<typeof useSwapTx>['data']
+  isFetchedSwapTx: boolean
+  isFetchingSwapTx: boolean
 } => {
   const { address: userAddress, chain } = useAccount()
 
@@ -74,7 +79,11 @@ export const useSendDepositZapTransaction = (
   const wrappedNativeTokenAddress =
     !!vault && (WRAPPED_NATIVE_ASSETS[vault.chainId as NETWORK] as Lowercase<Address>)
 
-  const { data: swapTx, isFetched: isFetchedSwapTx } = useSwapTx({
+  const {
+    data: swapTx,
+    isFetched: isFetchedSwapTx,
+    isFetching: isFetchingSwapTx
+  } = useSwapTx({
     chainId: vault?.chainId,
     from: {
       address: isDolphinAddress(inputToken?.address)
@@ -99,6 +108,13 @@ export const useSendDepositZapTransaction = (
     }
   }, [zapRouterAddress])
 
+  const isSwapNecessary =
+    !!inputToken?.address &&
+    !!vaultToken &&
+    lower(vaultToken.address) !== lower(inputToken.address) &&
+    (!isDolphinAddress(inputToken.address) ||
+      lower(vaultToken.address) !== wrappedNativeTokenAddress)
+
   const enabled =
     !!inputToken &&
     !!inputToken.address &&
@@ -120,27 +136,47 @@ export const useSendDepositZapTransaction = (
     allowance !== undefined &&
     (isDolphinAddress(inputToken.address) || allowance >= inputToken.amount) &&
     !!wrappedNativeTokenAddress &&
-    ((isDolphinAddress(inputToken.address) &&
-      lower(vaultToken.address) === wrappedNativeTokenAddress) ||
-      (isFetchedSwapTx && !!swapTx)) &&
+    (!isSwapNecessary || (isFetchedSwapTx && !!swapTx)) &&
     !!depositTx
+
+  const amountOut = useMemo(() => {
+    if (!!inputToken?.address && !!vaultToken && !!exchangeRate) {
+      if (isSwapNecessary) {
+        if (!!swapTx) {
+          return {
+            expected: getSharesFromAssets(
+              swapTx.amountOut.expected,
+              exchangeRate,
+              vaultToken.decimals
+            ),
+            min: getSharesFromAssets(swapTx.amountOut.min, exchangeRate, vaultToken.decimals)
+          }
+        }
+      } else {
+        const simpleAmountOut = getSharesFromAssets(
+          inputToken.amount,
+          exchangeRate,
+          vaultToken.decimals
+        )
+
+        return {
+          expected: simpleAmountOut,
+          min: simpleAmountOut
+        }
+      }
+    }
+  }, [inputToken, vaultToken, exchangeRate, isSwapNecessary, swapTx])
 
   const zapArgs = useMemo(():
     | ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>
     | undefined => {
-    if (enabled) {
-      const zapMinAmountOut = getSharesFromAssets(
-        !!swapTx ? swapTx.amountOut.min : inputToken.amount,
-        exchangeRate,
-        vaultToken.decimals
-      )
-
+    if (enabled && !!amountOut) {
       type ZapType = ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>
 
       let zapInputs: ZapType[0]['inputs'] = []
 
       let zapOutputs: ZapType[0]['outputs'] = [
-        { token: vault.address, minOutputAmount: zapMinAmountOut }
+        { token: vault.address, minOutputAmount: amountOut.min }
       ]
 
       let zapRoute: ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>[1] = [
@@ -209,7 +245,17 @@ export const useSendDepositZapTransaction = (
 
       return [zapConfig, zapRoute]
     }
-  }, [inputToken, vault, userAddress, vaultToken, exchangeRate, swapTx, depositTx, enabled])
+  }, [
+    inputToken,
+    vault,
+    userAddress,
+    vaultToken,
+    exchangeRate,
+    swapTx,
+    depositTx,
+    amountOut,
+    enabled
+  ])
 
   const value = isDolphinAddress(inputToken?.address) ? inputToken.amount : 0n
 
@@ -285,7 +331,12 @@ export const useSendDepositZapTransaction = (
     isError,
     txHash,
     txReceipt,
-    sendDepositZapTransaction
+    sendDepositZapTransaction,
+    amountOut,
+    isSwapNecessary,
+    swapTx,
+    isFetchedSwapTx,
+    isFetchingSwapTx
   }
 }
 
