@@ -224,7 +224,9 @@
     "failedTx": "Something went wrong....",
     "tryAgain": "Try Again",
     "risksDisclaimer": "PoolTogether is a permissionless protocol. Prize vaults can be deployed by anyone. Make sure you know what you are depositing into. <vaultLink>Learn more about this prize vault.</vaultLink>",
-    "depositDisclaimer": "By clicking \"Confirm Deposit\", you agree to Cabana's <tosLink>Terms of Service</tosLink>. Click <vaultLink>here</vaultLink> to learn more about the vault you're depositing into."
+    "depositDisclaimer": "By clicking \"Confirm Deposit\", you agree to Cabana's <tosLink>Terms of Service</tosLink>. Click <vaultLink>here</vaultLink> to learn more about the vault you're depositing into.",
+    "findingZapRoute": "Finding zap route...",
+    "noZapRouteFound": "No zap route available"
   },
   "Footer": {
     "titles": {

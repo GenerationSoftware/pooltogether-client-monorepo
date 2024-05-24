@@ -249,8 +249,7 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
     if (isFetchingSwapTx) {
       return (
         <Button fullSized={true} disabled={true}>
-          {/* TODO: localization */}
-          Calculating zap route...
+          {t_modals('findingZapRoute')}
         </Button>
       )
     }
@@ -259,8 +258,7 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
     if (!swapTx) {
       return (
         <Button fullSized={true} disabled={true}>
-          {/* TODO: localization */}
-          No zap route available (select another input token)
+          {t_modals('noZapRouteFound')}
         </Button>
       )
     }
