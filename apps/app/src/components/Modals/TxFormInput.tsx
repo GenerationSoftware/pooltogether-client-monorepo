@@ -1,11 +1,12 @@
 import { CurrencyValue, TokenIcon } from '@shared/react-components'
 import { TokenWithAmount, TokenWithLogo, TokenWithPrice } from '@shared/types'
 import { Dropdown, DropdownItem, Spinner } from '@shared/ui'
-import { formatBigIntForDisplay } from '@shared/utilities'
+import { DOLPHIN_ADDRESS, formatBigIntForDisplay, lower } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useFormContext } from 'react-hook-form'
 import { formatUnits } from 'viem'
+import { NATIVE_ASSET_IGNORE_AMOUNT } from '@constants/config'
 
 export interface TxFormValues {
   tokenAmount: string
@@ -63,17 +64,20 @@ export const TxFormInput = (props: TxFormInputProps) => {
       : null
 
   const setFormAmountToMax = () => {
-    const formattedAmount = formatUnits(token.amount, token.decimals)
-    setValue(
-      formKey,
-      formattedAmount.endsWith('.0') ? formattedAmount.slice(0, -2) : formattedAmount,
-      {
-        shouldValidate: true
-      }
-    )
-    if (!!onChange) {
-      onChange(formattedAmount)
-    }
+    const maxAmount =
+      lower(token.address) === DOLPHIN_ADDRESS
+        ? token.amount > NATIVE_ASSET_IGNORE_AMOUNT[token.chainId]
+          ? token.amount - NATIVE_ASSET_IGNORE_AMOUNT[token.chainId]
+          : 0n
+        : token.amount
+
+    const formattedAmount = formatUnits(maxAmount, token.decimals)
+    const slicedAmount = formattedAmount.endsWith('.0')
+      ? formattedAmount.slice(0, -2)
+      : formattedAmount
+
+    setValue(formKey, slicedAmount, { shouldValidate: true })
+    onChange?.(formattedAmount)
   }
 
   const TokenBadge = (props: { className?: string }) => (
