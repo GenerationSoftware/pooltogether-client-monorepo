@@ -162,11 +162,19 @@ export const useSwapTx = (swapData: {
 
           return { tx, amountOut, allowanceProxy }
         } else {
-          const errorMsg = `Error: "${pricesApiResponse?.error}" (${chainId} - ${from.address} -> ${to.address})`
-          console.error(errorMsg)
-          throw new Error(errorMsg)
+          throw new Error(pricesApiResponse?.error)
         }
       }
+    },
+    retry: (failureCount, error) => {
+      if (failureCount >= 2) return false
+
+      if (error.message.startsWith('No routes found')) {
+        console.error(`"${error.message}" (${chainId} - ${from.address} -> ${to.address})`)
+        return false
+      }
+
+      return true
     },
     enabled,
     refetchInterval: sToMs(30)
