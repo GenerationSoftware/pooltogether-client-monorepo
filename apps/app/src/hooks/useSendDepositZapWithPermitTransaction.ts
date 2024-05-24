@@ -1,13 +1,11 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useGasAmountEstimate,
-  useTokenAllowance,
   useVaultExchangeRate,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import {
   calculatePercentageOfBigInt,
-  DOLPHIN_ADDRESS,
   getSharesFromAssets,
   lower,
   NETWORK,
@@ -15,7 +13,7 @@ import {
   WRAPPED_NATIVE_ASSETS
 } from '@shared/utilities'
 import { useEffect, useMemo } from 'react'
-import { getArbitraryProxyTx, getWrapTx } from 'src/utils'
+import { getArbitraryProxyTx } from 'src/utils'
 import {
   Address,
   ContractFunctionArgs,
@@ -34,19 +32,26 @@ import { ZAP_SETTINGS } from '@constants/config'
 import { zapRouterABI } from '@constants/zapRouterABI'
 import { useSwapTx } from './useSwapTx'
 
-type ZapConfig = ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>[0]
-type ZapRoute = ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>[1]
+type ZapPermit = ContractFunctionArgs<typeof zapRouterABI, 'nonpayable', 'executeOrder'>[0]
+type ZapConfig = ContractFunctionArgs<typeof zapRouterABI, 'nonpayable', 'executeOrder'>[1]
+type ZapRoute = ContractFunctionArgs<typeof zapRouterABI, 'nonpayable', 'executeOrder'>[3]
 
 /**
- * Prepares and submits a zap transaction that includes swapping and depositing into a vault
+ * Prepares and submits a zap transaction with a permit that includes swapping and depositing into a vault
  * @param inputToken the token the user is providing
  * @param vault the vault to deposit into
+ * @param signature a valid EIP-2612 signature to approve token expenditure
+ * @param deadline the deadline for which the signature is valid for
+ * @param nonce the token's nonce for which the signature is set to
  * @param options optional callbacks
  * @returns
  */
-export const useSendDepositZapTransaction = (
+export const useSendDepositZapWithPermitTransaction = (
   inputToken: { address: Address; decimals: number; amount: bigint },
   vault: Vault,
+  signature: `0x${string}`,
+  deadline: bigint,
+  nonce: bigint,
   options?: {
     onSend?: (txHash: `0x${string}`) => void
     onSuccess?: (txReceipt: TransactionReceipt) => void
@@ -59,7 +64,7 @@ export const useSendDepositZapTransaction = (
   isError: boolean
   txHash?: Address
   txReceipt?: TransactionReceipt
-  sendDepositZapTransaction?: () => void
+  sendDepositZapWithPermitTransaction?: () => void
   amountOut?: { expected: bigint; min: bigint }
   isSwapNecessary: boolean
   swapTx: ReturnType<typeof useSwapTx>['data']
@@ -73,13 +78,6 @@ export const useSendDepositZapTransaction = (
 
   const { zapRouterAddress, zapTokenManager } = ZAP_SETTINGS[vault?.chainId] ?? {}
 
-  const { data: allowance, isFetched: isFetchedAllowance } = useTokenAllowance(
-    vault?.chainId,
-    userAddress as Address,
-    zapTokenManager,
-    inputToken?.address
-  )
-
   const wrappedNativeTokenAddress =
     !!vault && (WRAPPED_NATIVE_ASSETS[vault.chainId as NETWORK] as Lowercase<Address>)
 
@@ -90,9 +88,7 @@ export const useSendDepositZapTransaction = (
   } = useSwapTx({
     chainId: vault?.chainId,
     from: {
-      address: isDolphinAddress(inputToken?.address)
-        ? wrappedNativeTokenAddress
-        : inputToken?.address,
+      address: inputToken?.address,
       decimals: inputToken?.decimals,
       amount: inputToken?.amount
     },
@@ -113,11 +109,7 @@ export const useSendDepositZapTransaction = (
   }, [zapRouterAddress])
 
   const isSwapNecessary =
-    !!inputToken?.address &&
-    !!vaultToken &&
-    lower(vaultToken.address) !== lower(inputToken.address) &&
-    (!isDolphinAddress(inputToken.address) ||
-      lower(vaultToken.address) !== wrappedNativeTokenAddress)
+    !!inputToken?.address && !!vaultToken && lower(vaultToken.address) !== lower(inputToken.address)
 
   const enabled =
     !!inputToken &&
@@ -125,6 +117,10 @@ export const useSendDepositZapTransaction = (
     inputToken.decimals !== undefined &&
     !!inputToken.amount &&
     !!vault &&
+    !!signature &&
+    !!deadline &&
+    nonce !== undefined &&
+    nonce !== -1n &&
     !!userAddress &&
     isAddress(userAddress) &&
     !!vaultToken &&
@@ -136,9 +132,6 @@ export const useSendDepositZapTransaction = (
     chain?.id === vault.chainId &&
     !!zapRouterAddress &&
     !!zapTokenManager &&
-    isFetchedAllowance &&
-    allowance !== undefined &&
-    (isDolphinAddress(inputToken.address) || allowance >= inputToken.amount) &&
     !!wrappedNativeTokenAddress &&
     (!isSwapNecessary || (isFetchedSwapTx && !!swapTx)) &&
     !!depositTx
@@ -171,77 +164,37 @@ export const useSendDepositZapTransaction = (
     }
   }, [inputToken, vaultToken, exchangeRate, isSwapNecessary, swapTx])
 
-  const zapArgs = useMemo((): [ZapConfig, ZapRoute] | undefined => {
+  const zapArgs = useMemo((): [ZapPermit, ZapConfig, `0x${string}`, ZapRoute] | undefined => {
     if (enabled && !!amountOut) {
-      let zapInputs: ZapConfig['inputs'] = []
-
-      let zapOutputs: ZapConfig['outputs'] = [
-        { token: vault.address, minOutputAmount: amountOut.min }
-      ]
-
-      let zapRoute: ZapRoute = [{ ...depositTx, tokens: [{ token: vaultToken.address, index: 4 }] }]
-
-      if (isDolphinAddress(inputToken.address)) {
-        zapInputs = [{ token: zeroAddress, amount: inputToken.amount }]
-        zapOutputs = [
-          ...zapOutputs,
-          { token: zeroAddress, minOutputAmount: 0n },
-          { token: wrappedNativeTokenAddress, minOutputAmount: 0n }
-        ]
-
-        if (!!swapTx) {
-          zapRoute = [
-            {
-              ...getWrapTx(vault.chainId, inputToken.amount),
-              tokens: [{ token: zeroAddress, index: -1 }]
-            },
-            {
-              ...getArbitraryProxyTx(swapTx.allowanceProxy),
-              tokens: [{ token: wrappedNativeTokenAddress, index: -1 }]
-            },
-            {
-              ...swapTx.tx,
-              tokens: [{ token: wrappedNativeTokenAddress, index: -1 }]
-            },
-            ...zapRoute
-          ]
-        } else {
-          zapRoute = [
-            {
-              ...getWrapTx(vault.chainId, inputToken.amount),
-              tokens: [{ token: zeroAddress, index: -1 }]
-            },
-            ...zapRoute
-          ]
-        }
-      } else {
-        zapInputs = [{ token: inputToken.address, amount: inputToken.amount }]
-        zapOutputs = [...zapOutputs, { token: inputToken.address, minOutputAmount: 0n }]
-
-        if (!!swapTx) {
-          zapRoute = [
-            {
-              ...getArbitraryProxyTx(swapTx.allowanceProxy),
-              tokens: [{ token: inputToken.address, index: -1 }]
-            },
-            {
-              ...swapTx.tx,
-              tokens: [{ token: inputToken.address, index: -1 }]
-            },
-            ...zapRoute
-          ]
-        }
+      const zapPermit: ZapPermit = {
+        permitted: [{ token: inputToken.address, amount: inputToken.amount }],
+        nonce,
+        deadline
       }
 
       const zapConfig: ZapConfig = {
-        inputs: zapInputs,
-        outputs: zapOutputs,
+        inputs: [{ token: inputToken.address, amount: inputToken.amount }],
+        outputs: [
+          { token: vault.address, minOutputAmount: amountOut.min },
+          { token: inputToken.address, minOutputAmount: 0n }
+        ],
         relay: { target: zeroAddress, value: 0n, data: '0x0' },
         user: userAddress,
         recipient: userAddress
       }
 
-      return [zapConfig, zapRoute]
+      const zapRoute: ZapRoute = !!swapTx
+        ? [
+            {
+              ...getArbitraryProxyTx(swapTx.allowanceProxy),
+              tokens: [{ token: inputToken.address, index: -1 }]
+            },
+            { ...swapTx.tx, tokens: [{ token: inputToken.address, index: -1 }] },
+            { ...depositTx, tokens: [{ token: vaultToken.address, index: 4 }] }
+          ]
+        : [{ ...depositTx, tokens: [{ token: vaultToken.address, index: 4 }] }]
+
+      return [zapPermit, zapConfig, signature, zapRoute]
     }
   }, [
     inputToken,
@@ -255,8 +208,6 @@ export const useSendDepositZapTransaction = (
     enabled
   ])
 
-  const value = isDolphinAddress(inputToken?.address) ? inputToken.amount : 0n
-
   const { data: gasEstimate } = useGasAmountEstimate(
     vault?.chainId,
     {
@@ -264,8 +215,6 @@ export const useSendDepositZapTransaction = (
       abi: zapRouterABI,
       functionName: 'executeOrder',
       args: zapArgs,
-      // @ts-ignore
-      value,
       account: userAddress as Address
     },
     { enabled }
@@ -277,8 +226,6 @@ export const useSendDepositZapTransaction = (
     abi: zapRouterABI,
     functionName: 'executeOrder',
     args: zapArgs,
-    // @ts-ignore
-    value,
     gas: !!gasEstimate ? calculatePercentageOfBigInt(gasEstimate, 1.2) : undefined,
     query: { enabled }
   })
@@ -288,11 +235,11 @@ export const useSendDepositZapTransaction = (
     isPending: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
-    writeContract: _sendDepositZapTransaction
+    writeContract: _sendDepositZapWithPermitTransaction
   } = useWriteContract()
 
-  const sendDepositZapTransaction = !!data
-    ? () => _sendDepositZapTransaction(data.request)
+  const sendDepositZapWithPermitTransaction = !!data
+    ? () => _sendDepositZapWithPermitTransaction(data.request)
     : undefined
 
   useEffect(() => {
@@ -329,7 +276,7 @@ export const useSendDepositZapTransaction = (
     isError,
     txHash,
     txReceipt,
-    sendDepositZapTransaction,
+    sendDepositZapWithPermitTransaction,
     amountOut,
     isSwapNecessary,
     swapTx,
@@ -337,5 +284,3 @@ export const useSendDepositZapTransaction = (
     isFetchingSwapTx
   }
 }
-
-const isDolphinAddress = (address?: Address) => !!address && lower(address) === DOLPHIN_ADDRESS

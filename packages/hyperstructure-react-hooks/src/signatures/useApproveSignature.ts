@@ -47,7 +47,7 @@ export const useApproveSignature = (
   )
 
   const [isInvalidSignature, setIsInvalidSignature] = useState<boolean>(false)
-  const [deadline, setDeadline] = useState<bigint>(0n)
+  const [deadline, setDeadline] = useState<bigint | undefined>()
 
   const message = useMemo(() => {
     if (tokenPermitSupport === 'eip2612') {
@@ -116,9 +116,9 @@ export const useApproveSignature = (
 
   const signTypedData = () => {
     if (tokenPermitSupport === 'eip2612') {
-      setDeadline(message.deadline as bigint)
+      setDeadline(message.deadline)
     } else if (tokenPermitSupport === 'daiPermit') {
-      setDeadline(message.expiry as bigint)
+      setDeadline(message.expiry)
     }
 
     _signTypedData(

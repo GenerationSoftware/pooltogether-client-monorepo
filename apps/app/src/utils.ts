@@ -1,8 +1,8 @@
 import { connectorsForWallets, WalletList } from '@rainbow-me/rainbowkit'
 import { getInitialCustomRPCs } from '@shared/generic-react-hooks'
-import { NETWORK, parseQueryParam } from '@shared/utilities'
+import { NETWORK, parseQueryParam, WRAPPED_NATIVE_ASSETS } from '@shared/utilities'
 import deepmerge from 'deepmerge'
-import { Chain, http, Transport } from 'viem'
+import { Address, Chain, encodeFunctionData, http, Transport } from 'viem'
 import { createConfig, fallback } from 'wagmi'
 import { RPC_URLS, WAGMI_CHAINS, WALLET_STATS_API_URL, WALLETS } from '@constants/config'
 
@@ -141,5 +141,56 @@ export const trackDeposit = async (chainId: number, txHash: `0x${string}`, walle
     })
   } catch (e) {
     console.error(e)
+  }
+}
+
+/**
+ * Returns a `deposit` call to the network's wrapped native token contract
+ * @param chainId the chain ID of the network to make the transaction in
+ * @param amount the amount of native tokens to wrap
+ * @returns
+ */
+export const getWrapTx = (chainId: number, amount: bigint) => {
+  return {
+    target: WRAPPED_NATIVE_ASSETS[chainId as NETWORK] as Lowercase<Address>,
+    value: amount,
+    data: encodeFunctionData({
+      abi: [
+        {
+          constant: false,
+          inputs: [],
+          name: 'deposit',
+          outputs: [],
+          payable: true,
+          stateMutability: 'payable',
+          type: 'function'
+        }
+      ],
+      functionName: 'deposit'
+    })
+  }
+}
+
+/**
+ * Returns an arbitrary call to the swap router's token proxy, in order for the zap contract to make an allowance to it
+ * @param proxyAddress the address of the swap router's token proxy
+ * @returns
+ */
+export const getArbitraryProxyTx = (proxyAddress: Address) => {
+  return {
+    target: proxyAddress,
+    value: 0n,
+    data: encodeFunctionData({
+      abi: [
+        {
+          inputs: [],
+          name: 'owner',
+          outputs: [{ internalType: 'address', name: '', type: 'address' }],
+          stateMutability: 'view',
+          type: 'function'
+        }
+      ],
+      functionName: 'owner'
+    })
   }
 }

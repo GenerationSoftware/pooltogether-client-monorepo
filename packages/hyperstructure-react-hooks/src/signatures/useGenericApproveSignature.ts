@@ -22,6 +22,7 @@ export const useGenericApproveSignature = (
 ): {
   signature?: `0x${string}`
   deadline?: bigint
+  nonce?: bigint
   isWaiting: boolean
   isSuccess: boolean
   isError: boolean
@@ -38,7 +39,8 @@ export const useGenericApproveSignature = (
   })
 
   const [isInvalidSignature, setIsInvalidSignature] = useState<boolean>(false)
-  const [deadline, setDeadline] = useState<bigint>(0n)
+  const [deadline, setDeadline] = useState<bigint | undefined>()
+  const [nonce, setNonce] = useState<bigint | undefined>()
 
   const message = useMemo(() => {
     if (tokenPermitSupport === 'eip2612') {
@@ -107,10 +109,12 @@ export const useGenericApproveSignature = (
 
   const signTypedData = () => {
     if (tokenPermitSupport === 'eip2612') {
-      setDeadline(message.deadline as bigint)
+      setDeadline(message.deadline)
     } else if (tokenPermitSupport === 'daiPermit') {
-      setDeadline(message.expiry as bigint)
+      setDeadline(message.expiry)
     }
+
+    setNonce(message.nonce)
 
     _signTypedData(
       { domain: tokenDomain, message, types, primaryType: 'Permit' },
@@ -135,5 +139,5 @@ export const useGenericApproveSignature = (
   const isError = isSigningError || isInvalidSignature
   const isSuccess = isSigningSuccess && !isError
 
-  return { signature, deadline, isWaiting, isSuccess, isError, signApprove }
+  return { signature, deadline, nonce, isWaiting, isSuccess, isError, signApprove }
 }
