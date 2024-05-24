@@ -12,10 +12,13 @@ import { CurrencyValue, TokenIcon } from '@shared/react-components'
 import { Token, TokenWithAmount, TokenWithPrice, TokenWithSupply } from '@shared/types'
 import { DropdownItem } from '@shared/ui'
 import {
+  DOLPHIN_ADDRESS,
   formatBigIntForDisplay,
   getAssetsFromShares,
   getSharesFromAssets,
-  lower
+  lower,
+  NETWORK,
+  WRAPPED_NATIVE_ASSETS
 } from '@shared/utilities'
 import classNames from 'classnames'
 import { atom, useAtom, useSetAtom } from 'jotai'
@@ -105,20 +108,24 @@ export const DepositForm = (props: DepositFormProps) => {
   const { data: swapTx, isFetching: isFetchingSwapTx } = useSwapTx({
     chainId: vault.chainId,
     from: {
-      address: token?.address as Address,
+      address:
+        !!token && lower(token.address) === DOLPHIN_ADDRESS
+          ? (WRAPPED_NATIVE_ASSETS[vault.chainId as NETWORK] as Lowercase<Address>)
+          : (token?.address as Address),
       decimals: token?.decimals as number,
       amount: depositAmount
     },
     to: { address: vaultToken?.address as Address, decimals: vaultToken?.decimals as number },
-    sender: ZAP_SETTINGS[vault.chainId]?.zapRouterAddress
+    userAddress: ZAP_SETTINGS[vault.chainId]?.zapRouterAddress
   })
 
   const isZapping =
     !!vaultToken && !!formTokenAddress && lower(vaultToken.address) !== lower(formTokenAddress)
 
+  // TODO: display min amount out (swapTx.amountOut.min)
   useEffect(() => {
     if (isZapping && !!swapTx && share?.decimals !== undefined) {
-      const formattedShares = formatUnits(swapTx.minAmountOut, share.decimals)
+      const formattedShares = formatUnits(swapTx.amountOut.expected, share.decimals)
       const slicedShares = formattedShares.endsWith('.0')
         ? formattedShares.slice(0, -2)
         : formattedShares

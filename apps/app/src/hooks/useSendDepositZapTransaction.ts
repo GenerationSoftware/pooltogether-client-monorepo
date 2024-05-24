@@ -33,8 +33,6 @@ import { ZAP_SETTINGS } from '@constants/config'
 import { zapRouterABI } from '@constants/zapRouterABI'
 import { useSwapTx } from './useSwapTx'
 
-// TODO: handle native tokens (include payable amount and add wrap step in route first)
-
 /**
  * Prepares and submits a zap transaction that includes swapping and depositing into a vault
  * @param inputToken the token the user is providing
@@ -86,7 +84,7 @@ export const useSendDepositZapTransaction = (
       amount: inputToken?.amount
     },
     to: { address: vaultToken?.address as Address, decimals: vaultToken?.decimals as number },
-    sender: zapRouterAddress
+    userAddress: zapRouterAddress
   })
 
   const depositTx = useMemo(() => {
@@ -132,7 +130,7 @@ export const useSendDepositZapTransaction = (
     | undefined => {
     if (enabled) {
       const zapMinAmountOut = getSharesFromAssets(
-        !!swapTx ? swapTx.minAmountOut : inputToken.amount,
+        !!swapTx ? swapTx.amountOut.min : inputToken.amount,
         exchangeRate,
         vaultToken.decimals
       )

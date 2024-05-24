@@ -1,4 +1,4 @@
-import { lower, sToMs } from '@shared/utilities'
+import { calculatePercentageOfBigInt, lower, sToMs } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
@@ -64,12 +64,14 @@ export const useSwapTx = (swapData: {
   chainId: number
   from: { address: Address; decimals: number; amount: bigint }
   to: { address: Address; decimals: number }
-  sender: Address
+  userAddress: Address
   options?: { slippage?: number }
 }) => {
-  const { chainId, from, to, sender, options } = swapData ?? {}
+  const { chainId, from, to, userAddress, options } = swapData ?? {}
 
   const publicClient = usePublicClient({ chainId })
+
+  const slippage = options?.slippage ?? 100
 
   const enabled =
     !!chainId &&
@@ -81,8 +83,9 @@ export const useSwapTx = (swapData: {
     !!to.address &&
     to.decimals !== undefined &&
     lower(from.address) !== lower(to.address) &&
-    !!sender &&
+    !!userAddress &&
     !!publicClient &&
+    slippage !== undefined &&
     !!process.env.NEXT_PUBLIC_DECENT_API_KEY
 
   const queryKey = [
@@ -93,14 +96,16 @@ export const useSwapTx = (swapData: {
     from?.amount.toString(),
     to?.address,
     to?.decimals,
-    sender,
-    options?.slippage
+    userAddress,
+    slippage
   ]
 
   return useQuery({
     queryKey,
     queryFn: async () => {
       if (!!publicClient) {
+        const partner = 'cabana'
+
         const pricesApiUrl = new URL('https://apiv5.paraswap.io/prices')
         pricesApiUrl.searchParams.set('srcToken', from.address)
         pricesApiUrl.searchParams.set('srcDecimals', from.decimals.toString())
@@ -109,8 +114,8 @@ export const useSwapTx = (swapData: {
         pricesApiUrl.searchParams.set('amount', from.amount.toString())
         pricesApiUrl.searchParams.set('side', 'SELL')
         pricesApiUrl.searchParams.set('network', chainId.toString())
-        pricesApiUrl.searchParams.set('userAddress', sender)
-        pricesApiUrl.searchParams.set('partner', 'cabana')
+        pricesApiUrl.searchParams.set('userAddress', userAddress)
+        pricesApiUrl.searchParams.set('partner', partner)
 
         const pricesApiResponse: ParaSwapPricesResponse = await fetch(pricesApiUrl.toString(), {
           method: 'get'
@@ -128,9 +133,9 @@ export const useSwapTx = (swapData: {
           srcAmount: from.amount.toString(),
           destToken: to.address,
           destDecimals: to.decimals,
-          slippage: options?.slippage ?? 100,
-          userAddress: sender,
-          partner: 'cabana',
+          slippage,
+          userAddress,
+          partner,
           ...pricesApiResponse
         }
 
@@ -148,12 +153,12 @@ export const useSwapTx = (swapData: {
           data: txApiResponse.data
         }
 
-        // TODO: check that this actually corresponds to min amount out
-        const minAmountOut = BigInt(pricesApiResponse.priceRoute.destAmount)
-
+        const expectedAmountOut = BigInt(pricesApiResponse.priceRoute.destAmount)
+        const minAmountOut = calculatePercentageOfBigInt(expectedAmountOut, 1 - slippage / 1e4)
+        const amountOut = { expected: expectedAmountOut, min: minAmountOut }
         const allowanceProxy = pricesApiResponse.priceRoute.tokenTransferProxy
 
-        return { tx, minAmountOut, allowanceProxy }
+        return { tx, amountOut, allowanceProxy }
       }
     },
     enabled,
