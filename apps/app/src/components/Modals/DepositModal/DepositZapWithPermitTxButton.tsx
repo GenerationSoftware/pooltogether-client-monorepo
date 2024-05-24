@@ -110,6 +110,7 @@ export const DepositZapWithPermitTxButton = (props: DepositZapWithPermitTxButton
   const [isApproved, setIsApproved] = useState<boolean>(false)
   const [isReadyToSendTxAfterSigning, setIsReadyToSendTxAfterSigning] = useState<boolean>(false)
 
+  // TODO: the zap contract requires Permit2 signatures, not 2612
   const {
     signature,
     deadline,

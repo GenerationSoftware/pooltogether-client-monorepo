@@ -125,18 +125,20 @@ export const DepositModal = (props: DepositModalProps) => {
         })}
       >
         {view === 'main' && !formShareAmount && <RisksDisclaimer vault={vault} />}
-        {isZapping &&
-          (tokenPermitSupport === 'eip2612' ? (
-            <DepositZapWithPermitTxButton
-              vault={vault}
-              modalView={view}
-              setModalView={setView}
-              setDepositTxHash={setDepositTxHash}
-              refetchUserBalances={refetchUserBalances}
-              onSuccessfulDeposit={onSuccessfulDeposit}
-              onSuccessfulDepositWithPermit={onSuccessfulDepositWithPermit}
-            />
-          ) : (
+        {/* TODO: re-enable permit zaps once permit2 sigs are implemented in DepositZapWithPermitTxButton */}
+        {
+          isZapping && (
+            // (tokenPermitSupport === 'eip2612' ? (
+            //   <DepositZapWithPermitTxButton
+            //     vault={vault}
+            //     modalView={view}
+            //     setModalView={setView}
+            //     setDepositTxHash={setDepositTxHash}
+            //     refetchUserBalances={refetchUserBalances}
+            //     onSuccessfulDeposit={onSuccessfulDeposit}
+            //     onSuccessfulDepositWithPermit={onSuccessfulDepositWithPermit}
+            //   />
+            // ) : (
             <DepositZapTxButton
               vault={vault}
               modalView={view}
@@ -146,7 +148,9 @@ export const DepositModal = (props: DepositModalProps) => {
               onSuccessfulApproval={onSuccessfulApproval}
               onSuccessfulDeposit={onSuccessfulDeposit}
             />
-          ))}
+          )
+          // ))
+        }
         {!isZapping &&
           (tokenPermitSupport === 'eip2612' ? (
             <DepositWithPermitTxButton
