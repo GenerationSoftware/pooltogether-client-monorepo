@@ -157,6 +157,6 @@ export const useSwapTx = (swapData: {
       }
     },
     enabled,
-    staleTime: sToMs(60)
+    refetchInterval: sToMs(30)
   })
 }

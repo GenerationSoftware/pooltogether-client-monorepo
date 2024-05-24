@@ -4,7 +4,7 @@ import {
   useTokens
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { TokenWithAmount, TokenWithPrice } from '@shared/types'
-import { lower, NETWORK } from '@shared/utilities'
+import { DOLPHIN_ADDRESS, lower, NETWORK } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
@@ -12,6 +12,7 @@ import { useAccount } from 'wagmi'
 // TODO: should not hardcode token options (fetch from some existing tokenlist - paraswap would be ideal)
 const swapTokenOptions: { [chainId: number]: Address[] } = {
   [NETWORK.optimism]: [
+    DOLPHIN_ADDRESS, // ETH
     '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85', // USDC
     '0x4200000000000000000000000000000000000006', // WETH
     '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1', // DAI
@@ -20,6 +21,7 @@ const swapTokenOptions: { [chainId: number]: Address[] } = {
     '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58' // USDT
   ],
   [NETWORK.base]: [
+    DOLPHIN_ADDRESS, // ETH
     '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', // USDC
     '0x940181a94A35A4569E4529A3CDfB74e38FD98631', // AERO
     '0xd652C5425aea2Afd5fb142e120FeCf79e18fafc3', // POOL
@@ -67,7 +69,7 @@ export const useSwapTokenOptions = (chainId: number) => {
     }
 
     return options
-  }, [tokens, tokenPrices])
+  }, [tokens, tokenBalances, tokenPrices])
 
   return tokenOptions
 }

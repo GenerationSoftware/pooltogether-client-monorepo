@@ -5,7 +5,15 @@ import {
   useVaultExchangeRate,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { calculatePercentageOfBigInt, getSharesFromAssets, vaultABI } from '@shared/utilities'
+import {
+  calculatePercentageOfBigInt,
+  DOLPHIN_ADDRESS,
+  getSharesFromAssets,
+  lower,
+  NETWORK,
+  vaultABI,
+  WRAPPED_NATIVE_ASSETS
+} from '@shared/utilities'
 import { useEffect, useMemo } from 'react'
 import {
   Address,
@@ -29,8 +37,7 @@ import { useSwapTx } from './useSwapTx'
 
 /**
  * Prepares and submits a zap transaction that includes swapping and depositing into a vault
- * @param inputTokenAddress the token the user is providing
- * @param amount the amount of tokens the user is providing
+ * @param inputToken the token the user is providing
  * @param vault the vault to deposit into
  * @param options optional callbacks
  * @returns
@@ -66,10 +73,15 @@ export const useSendDepositZapTransaction = (
     inputToken?.address
   )
 
+  const wrappedNativeTokenAddress =
+    !!vault && (WRAPPED_NATIVE_ASSETS[vault.chainId as NETWORK] as Lowercase<Address>)
+
   const { data: swapTx, isFetched: isFetchedSwapTx } = useSwapTx({
     chainId: vault?.chainId,
     from: {
-      address: inputToken?.address,
+      address: isDolphinAddress(inputToken?.address)
+        ? wrappedNativeTokenAddress
+        : inputToken?.address,
       decimals: inputToken?.decimals,
       amount: inputToken?.amount
     },
@@ -107,10 +119,12 @@ export const useSendDepositZapTransaction = (
     !!zapRouterAddress &&
     !!zapTokenManager &&
     isFetchedAllowance &&
-    !!allowance &&
-    allowance >= inputToken.amount &&
-    isFetchedSwapTx &&
-    !!swapTx &&
+    allowance !== undefined &&
+    (isDolphinAddress(inputToken.address) || allowance >= inputToken.amount) &&
+    !!wrappedNativeTokenAddress &&
+    ((isDolphinAddress(inputToken.address) &&
+      lower(vaultToken.address) === wrappedNativeTokenAddress) ||
+      (isFetchedSwapTx && !!swapTx)) &&
     !!depositTx
 
   const zapArgs = useMemo(():
@@ -118,56 +132,88 @@ export const useSendDepositZapTransaction = (
     | undefined => {
     if (enabled) {
       const zapMinAmountOut = getSharesFromAssets(
-        swapTx.minAmountOut,
+        !!swapTx ? swapTx.minAmountOut : inputToken.amount,
         exchangeRate,
         vaultToken.decimals
       )
 
-      /**
-       * Note: this is an arbitrary call to the swap router's token proxy, so that the zap contract makes an allowance to it
-       */
-      const arbitraryProxyTx = {
-        target: swapTx.allowanceProxy,
-        value: 0n,
-        data: encodeFunctionData({
-          abi: [
+      type ZapType = ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>
+
+      let zapInputs: ZapType[0]['inputs'] = []
+
+      let zapOutputs: ZapType[0]['outputs'] = [
+        { token: vault.address, minOutputAmount: zapMinAmountOut }
+      ]
+
+      let zapRoute: ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>[1] = [
+        { ...depositTx, tokens: [{ token: vaultToken.address, index: 4 }] }
+      ]
+
+      if (isDolphinAddress(inputToken.address)) {
+        zapInputs = [{ token: zeroAddress, amount: inputToken.amount }]
+        zapOutputs = [
+          ...zapOutputs,
+          { token: zeroAddress, minOutputAmount: 0n },
+          { token: wrappedNativeTokenAddress, minOutputAmount: 0n }
+        ]
+
+        if (!!swapTx) {
+          zapRoute = [
             {
-              inputs: [],
-              name: 'owner',
-              outputs: [{ internalType: 'address', name: '', type: 'address' }],
-              stateMutability: 'view',
-              type: 'function'
-            }
-          ],
-          functionName: 'owner'
-        })
+              ...getWrapTx(vault.chainId, inputToken.amount),
+              tokens: [{ token: zeroAddress, index: -1 }]
+            },
+            {
+              ...getArbitraryProxyTx(swapTx.allowanceProxy),
+              tokens: [{ token: wrappedNativeTokenAddress, index: -1 }]
+            },
+            {
+              ...swapTx.tx,
+              tokens: [{ token: wrappedNativeTokenAddress, index: -1 }]
+            },
+            ...zapRoute
+          ]
+        } else {
+          zapRoute = [
+            {
+              ...getWrapTx(vault.chainId, inputToken.amount),
+              tokens: [{ token: zeroAddress, index: -1 }]
+            },
+            ...zapRoute
+          ]
+        }
+      } else {
+        zapInputs = [{ token: inputToken.address, amount: inputToken.amount }]
+        zapOutputs = [...zapOutputs, { token: inputToken.address, minOutputAmount: 0n }]
+
+        if (!!swapTx) {
+          zapRoute = [
+            {
+              ...getArbitraryProxyTx(swapTx.allowanceProxy),
+              tokens: [{ token: inputToken.address, index: -1 }]
+            },
+            {
+              ...swapTx.tx,
+              tokens: [{ token: inputToken.address, index: -1 }]
+            },
+            ...zapRoute
+          ]
+        }
       }
 
-      return [
-        {
-          inputs: [{ token: inputToken.address, amount: inputToken.amount }],
-          outputs: [{ token: vault.address, minOutputAmount: zapMinAmountOut }],
-          relay: { target: zeroAddress, value: 0n, data: '0x0' },
-          user: userAddress,
-          recipient: userAddress
-        },
-        [
-          {
-            ...arbitraryProxyTx,
-            tokens: [{ token: inputToken.address, index: -1 }]
-          },
-          {
-            ...swapTx.tx,
-            tokens: [{ token: inputToken.address, index: -1 }]
-          },
-          {
-            ...depositTx,
-            tokens: [{ token: vaultToken.address, index: 4 }]
-          }
-        ]
-      ]
+      const zapConfig: ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>[0] = {
+        inputs: zapInputs,
+        outputs: zapOutputs,
+        relay: { target: zeroAddress, value: 0n, data: '0x0' },
+        user: userAddress,
+        recipient: userAddress
+      }
+
+      return [zapConfig, zapRoute]
     }
-  }, [enabled, inputToken, vault, vaultToken, swapTx, depositTx])
+  }, [inputToken, vault, userAddress, vaultToken, exchangeRate, swapTx, depositTx, enabled])
+
+  const value = isDolphinAddress(inputToken?.address) ? inputToken.amount : 0n
 
   const { data: gasEstimate } = useGasAmountEstimate(
     vault?.chainId,
@@ -176,6 +222,8 @@ export const useSendDepositZapTransaction = (
       abi: zapRouterABI,
       functionName: 'executeOrder',
       args: zapArgs,
+      // @ts-ignore
+      value,
       account: userAddress as Address
     },
     { enabled }
@@ -187,6 +235,8 @@ export const useSendDepositZapTransaction = (
     abi: zapRouterABI,
     functionName: 'executeOrder',
     args: zapArgs,
+    // @ts-ignore
+    value,
     gas: !!gasEstimate ? calculatePercentageOfBigInt(gasEstimate, 1.2) : undefined,
     query: { enabled }
   })
@@ -238,5 +288,58 @@ export const useSendDepositZapTransaction = (
     txHash,
     txReceipt,
     sendDepositZapTransaction
+  }
+}
+
+const isDolphinAddress = (address?: Address) => !!address && lower(address) === DOLPHIN_ADDRESS
+
+/**
+ * Returns a `deposit` call to the network's wrapped native token contract
+ * @param chainId the chain ID of the network to make the transaction in
+ * @param amount the amount of native tokens to wrap
+ * @returns
+ */
+const getWrapTx = (chainId: number, amount: bigint) => {
+  return {
+    target: WRAPPED_NATIVE_ASSETS[chainId as NETWORK] as Lowercase<Address>,
+    value: amount,
+    data: encodeFunctionData({
+      abi: [
+        {
+          constant: false,
+          inputs: [],
+          name: 'deposit',
+          outputs: [],
+          payable: true,
+          stateMutability: 'payable',
+          type: 'function'
+        }
+      ],
+      functionName: 'deposit'
+    })
+  }
+}
+
+/**
+ * Returns an arbitrary call to the swap router's token proxy, in order for the zap contract to make an allowance to it
+ * @param proxyAddress the address of the swap router's token proxy
+ * @returns
+ */
+const getArbitraryProxyTx = (proxyAddress: Address) => {
+  return {
+    target: proxyAddress,
+    value: 0n,
+    data: encodeFunctionData({
+      abi: [
+        {
+          inputs: [],
+          name: 'owner',
+          outputs: [{ internalType: 'address', name: '', type: 'address' }],
+          stateMutability: 'view',
+          type: 'function'
+        }
+      ],
+      functionName: 'owner'
+    })
   }
 }

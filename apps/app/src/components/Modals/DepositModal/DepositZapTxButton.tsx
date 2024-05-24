@@ -12,6 +12,7 @@ import {
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { ApprovalTooltip, TransactionButton } from '@shared/react-components'
 import { Button } from '@shared/ui'
+import { DOLPHIN_ADDRESS, lower } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
@@ -174,6 +175,7 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
   const isDataFetched =
     !isDisconnected &&
     !!userAddress &&
+    !!inputTokenAddress &&
     !!inputToken &&
     isFetchedUserInputTokenBalance &&
     !!userInputTokenBalance &&
@@ -189,7 +191,7 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
   const depositEnabled =
     isDataFetched &&
     userInputTokenBalance.amount >= depositAmount &&
-    allowance >= depositAmount &&
+    (lower(inputTokenAddress) === DOLPHIN_ADDRESS || allowance >= depositAmount) &&
     isValidFormInputTokenAmount
 
   // No deposit amount set
@@ -202,7 +204,7 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
   }
 
   // Needs approval
-  if (isDataFetched && allowance < depositAmount) {
+  if (isDataFetched && lower(inputTokenAddress) !== DOLPHIN_ADDRESS && allowance < depositAmount) {
     return (
       <TransactionButton
         chainId={vault.chainId}
