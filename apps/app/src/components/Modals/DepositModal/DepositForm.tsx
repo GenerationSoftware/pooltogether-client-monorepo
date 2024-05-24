@@ -124,19 +124,22 @@ export const DepositForm = (props: DepositFormProps) => {
     share?.decimals ??
     shareWithAmount?.decimals
 
-  // TODO: display min amount out (zapAmountOut.min)
   useEffect(() => {
     if (
       isZapping &&
       !!zapAmountOut?.expected &&
       !!zapAmountOut.min &&
       (cachedZapAmountOut?.expected !== zapAmountOut.expected ||
-        cachedZapAmountOut?.min !== zapAmountOut.min) &&
-      vaultDecimals !== undefined
+        cachedZapAmountOut?.min !== zapAmountOut.min)
     ) {
       setCachedZapAmountOut(zapAmountOut)
+    }
+  }, [isZapping, zapAmountOut])
 
-      const formattedShares = formatUnits(zapAmountOut.expected, vaultDecimals)
+  // TODO: display min amount out (cachedZapAmountOut.min)
+  useEffect(() => {
+    if (isZapping && !!cachedZapAmountOut && vaultDecimals !== undefined) {
+      const formattedShares = formatUnits(cachedZapAmountOut.expected, vaultDecimals)
       const slicedShares = formattedShares.endsWith('.0')
         ? formattedShares.slice(0, -2)
         : formattedShares
@@ -147,7 +150,7 @@ export const DepositForm = (props: DepositFormProps) => {
         shouldValidate: true
       })
     }
-  }, [isZapping, zapAmountOut])
+  }, [cachedZapAmountOut])
 
   const handleTokenAmountChange = (tokenAmount: string) => {
     if (!!vaultExchangeRate && token?.decimals !== undefined && share?.decimals !== undefined) {
