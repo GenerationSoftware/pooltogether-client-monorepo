@@ -41,10 +41,7 @@
     "account": "Account"
   },
   "Home": {
-    "winUpTo": {
-      "beforeValue": "Deposit for a daily chance to win up to",
-      "afterValue": ""
-    },
+    "winUpTo": "Deposit <token></token> to win up to <amount></amount>",
     "withdrawAnyTime": "You can withdraw your full deposit at any time"
   },
   "Prizes": {
