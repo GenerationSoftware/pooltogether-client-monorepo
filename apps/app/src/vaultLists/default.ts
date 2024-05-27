@@ -5,8 +5,8 @@ import { testnetVaults } from './testnet'
 const defaultVaultList: VaultList = {
   name: 'Cabana Vault List',
   keywords: ['pooltogether', 'cabana', 'g9', 'optimism'],
-  version: { major: 2, minor: 6, patch: 0 },
-  timestamp: '2024-05-15T22:07:48Z',
+  version: { major: 2, minor: 6, patch: 1 },
+  timestamp: '2024-05-27T16:06:00Z',
   logoURI: `${DOMAINS.app}/pooltogether-token-logo.svg`,
   tokens: [
     {
@@ -99,7 +99,7 @@ const defaultVaultList: VaultList = {
     {
       chainId: NETWORK.optimism,
       address: '0x9b53ef6f13077727d22cb4acad1119c79a97be17',
-      name: 'Prize POOL/WETH - Beefy',
+      name: 'Prize POOL/WETH',
       decimals: 18,
       symbol: 'przPOOLWETH',
       logoURI: `${DOMAINS.app}/icons/przVELO.svg`,
@@ -120,7 +120,7 @@ const defaultVaultList: VaultList = {
     {
       chainId: NETWORK.optimism,
       address: '0x9b4c0de59628c64b02d7ce86f21db9a579539d5a',
-      name: 'Prize WSTETH-ETH - Beefy',
+      name: 'Prize WSTETH/ETH',
       decimals: 18,
       symbol: 'przWSTETH-ETH',
       logoURI: `${DOMAINS.app}/icons/przVELO.svg`,
@@ -141,7 +141,7 @@ const defaultVaultList: VaultList = {
     {
       chainId: NETWORK.optimism,
       address: '0xF1d934D5A3c6E530ac1450c92Af5Ba01eb90d4dE',
-      name: 'Prize OP - Beefy Sonne',
+      name: 'Prize OP',
       decimals: 18,
       symbol: 'przOP',
       logoURI: `${DOMAINS.app}/icons/przOP.svg`,
@@ -177,7 +177,7 @@ const defaultVaultList: VaultList = {
       decimals: 6,
       symbol: 'przUSDC',
       logoURI: `${DOMAINS.app}/icons/przUSDC.svg`,
-      tags: ['moonwell', 'compound'],
+      tags: ['moonwell'],
       yieldSourceURI: 'https://moonwell.fi/markets/supply/base/usdc',
       extensions: {
         underlyingAsset: {
@@ -194,7 +194,7 @@ const defaultVaultList: VaultList = {
       decimals: 18,
       symbol: 'przAERO',
       logoURI: `${DOMAINS.app}/icons/przAERO.svg`,
-      tags: ['moonwell', 'compound'],
+      tags: ['moonwell'],
       yieldSourceURI: 'https://moonwell.fi/markets/supply/base/aero',
       extensions: {
         underlyingAsset: {
@@ -211,7 +211,7 @@ const defaultVaultList: VaultList = {
       decimals: 18,
       symbol: 'przCBETH',
       logoURI: `${DOMAINS.app}/icons/przCBETH.svg`,
-      tags: ['moonwell', 'compound'],
+      tags: ['moonwell'],
       yieldSourceURI: 'https://moonwell.fi/markets/supply/base/cbeth',
       extensions: {
         underlyingAsset: {
@@ -228,7 +228,7 @@ const defaultVaultList: VaultList = {
       decimals: 18,
       symbol: 'przWSTETH',
       logoURI: `${DOMAINS.app}/icons/przSTETH.svg`,
-      tags: ['moonwell', 'compound'],
+      tags: ['moonwell'],
       yieldSourceURI: 'https://moonwell.fi/markets/supply/base/wsteth',
       extensions: {
         underlyingAsset: {
