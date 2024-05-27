@@ -171,9 +171,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
                     vault={vault}
                     onClick={() => {}}
                     className='max-w-full'
-                    symbolClassName={
-                      !!vault.name?.length && vault.name.length > 20 ? 'hidden' : undefined
-                    }
+                    symbolClassName={!!vault.name && vault.name.length >= 15 ? 'hidden' : undefined}
                   />
                 </Link>
                 {importedSrcs.length > 0 && (
