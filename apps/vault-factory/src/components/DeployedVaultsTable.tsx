@@ -123,7 +123,7 @@ const VaultNameItem = (props: ItemProps) => {
 
   return (
     <Link href={`${LINKS.app}/vault/${vault.chainId}/${vault.address}`} target='_blank'>
-      <VaultBadge vault={vault} onClick={() => {}} symbolClassName='hidden' />
+      <VaultBadge vault={vault} onClick={() => {}} />
     </Link>
   )
 }

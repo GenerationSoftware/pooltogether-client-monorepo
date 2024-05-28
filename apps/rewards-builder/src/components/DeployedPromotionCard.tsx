@@ -75,7 +75,7 @@ const VaultItem = (props: { vault: Vault }) => {
       target='_blank'
       className='inline-flex items-center justify-between'
     >
-      <VaultBadge vault={vault} onClick={() => {}} symbolClassName='hidden' />
+      <VaultBadge vault={vault} onClick={() => {}} />
       {isTestnet(vault.chainId) && <span className='text-xs text-pt-warning-light'>TESTNET</span>}
     </Link>
   )

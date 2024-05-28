@@ -162,7 +162,7 @@ const VaultItem = (props: { vault: Vault }) => {
       target='_blank'
       className='relative'
     >
-      <VaultBadge vault={vault} onClick={() => {}} symbolClassName='hidden' />
+      <VaultBadge vault={vault} onClick={() => {}} />
       {isTestnet(vault.chainId) && (
         <span className='absolute right-1 bottom-0 text-[.6em] leading-4 text-pt-warning-light'>
           TESTNET

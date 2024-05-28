@@ -156,12 +156,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
             content: (
               <>
                 <Link href={`/vault/${vault.chainId}/${vault.address}`}>
-                  <VaultBadge
-                    vault={vault}
-                    onClick={() => {}}
-                    className='max-w-full'
-                    symbolClassName={!!vault.name && vault.name.length >= 15 ? 'hidden' : undefined}
-                  />
+                  <VaultBadge vault={vault} onClick={() => {}} className='max-w-full' />
                 </Link>
                 {importedSrcs.length > 0 && (
                   <ImportedVaultTooltip
