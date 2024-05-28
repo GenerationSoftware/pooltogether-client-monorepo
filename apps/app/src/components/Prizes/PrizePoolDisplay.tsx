@@ -25,6 +25,7 @@ export const PrizePoolDisplay = (props: PrizePoolDisplayProps) => {
       </span>
       <PrizePoolCarousel className='mt-8 mb-4' />
       <span>
+        *
         {t.rich('learnMore', {
           link: (chunks) => (
             <ExternalLink
@@ -79,6 +80,11 @@ const PrizePoolCarousel = (props: PrizePoolCarouselProps) => {
       handleNetworkChange(chainId)
     }
   }, [router])
+
+  useEffect(() => {
+    const chainId = prizePoolsArray[prizePoolIndex]?.chainId
+    !!chainId && handleNetworkChange(chainId)
+  }, [prizePoolIndex])
 
   const prevPrizePoolIndex = prizePoolIndex === 0 ? prizePoolsArray.length - 1 : prizePoolIndex - 1
   const nextPrizePoolIndex = prizePoolIndex === prizePoolsArray.length - 1 ? 0 : prizePoolIndex + 1
