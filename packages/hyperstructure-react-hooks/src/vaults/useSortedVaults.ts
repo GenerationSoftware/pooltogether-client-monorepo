@@ -1,26 +1,17 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import { TokenWithAmount, TokenWithPrice, TokenWithSupply } from '@shared/types'
-import { TWAB_REWARDS_ADDRESSES } from '@shared/utilities'
 import { useMemo, useState } from 'react'
 import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
-import {
-  useAllUserVaultBalances,
-  useAllVaultPrizeYields,
-  useAllVaultPromotionsApr,
-  useAllVaultSharePrices,
-  useVaults
-} from '..'
+import { useAllPrizeValue, useAllUserVaultBalances, useAllVaultSharePrices, useVaults } from '..'
 
-export type SortId = 'prizeYield' | 'twabRewards' | 'totalBalance' | 'userBalance'
+export type SortId = 'prizes' | 'winChance' | 'totalBalance' | 'userBalance'
 export type SortDirection = 'asc' | 'desc'
 
 /**
  * Returns a sorted array of vaults
  *
- * NOTE: In order to sort by prize yield, provide a prize pool in `options`.
- *
- * NOTE: In order to sort by twab rewards APR, provide a prize pool and twab reward settings in `options`.
+ * NOTE: In order to sort by prizes and/or win chance, provide prize pools in `options`
  * @param vaultsArray an unsorted array of vaults
  * @param options optional settings
  * @returns
@@ -28,13 +19,7 @@ export type SortDirection = 'asc' | 'desc'
 export const useSortedVaults = (
   vaultsArray: Vault[],
   options?: {
-    prizePool?: PrizePool
-    twabRewards?: {
-      rewardTokenAddresses: Address[]
-      numDraws?: number
-      fromBlock?: bigint
-      contractAddress?: Address
-    }
+    prizePools?: PrizePool[]
     defaultSortId?: SortId
     defaultSortDirection?: SortDirection
   }
@@ -54,43 +39,25 @@ export const useSortedVaults = (
   const { data: allUserVaultBalances, isFetched: isFetchedAllUserVaultBalances } =
     useAllUserVaultBalances(vaults, userAddress as Address)
 
-  const { data: allPrizeYields, isFetched: isFetchedAllPrizeYields } = useAllVaultPrizeYields(
-    vaults,
-    options?.prizePool as PrizePool
+  const { data: allPrizeValue, isFetched: isFetchedAllPrizeValue } = useAllPrizeValue(
+    options?.prizePools ?? []
   )
-
-  const { data: allVaultPromotionsApr, isFetched: isFetchedAllVaultPromotionsApr } =
-    useAllVaultPromotionsApr(
-      vaults,
-      options?.prizePool as PrizePool,
-      options?.twabRewards?.rewardTokenAddresses ?? [],
-      {
-        numDraws: options?.twabRewards?.numDraws,
-        fromBlock: options?.twabRewards?.fromBlock,
-        twabRewardsAddress: options?.twabRewards?.contractAddress
-      }
-    )
 
   const isFetched =
     !!vaults &&
     isFetchedAllVaultShareTokens &&
     (isFetchedAllUserVaultBalances || !userAddress) &&
-    (isFetchedAllPrizeYields || !options?.prizePool) &&
-    (isFetchedAllVaultPromotionsApr ||
-      !options?.prizePool ||
-      !options?.twabRewards ||
-      (!!options?.prizePool &&
-        !TWAB_REWARDS_ADDRESSES[options.prizePool.chainId] &&
-        !options?.twabRewards?.contractAddress))
+    (isFetchedAllPrizeValue || !options?.prizePools?.length)
 
   const sortedVaults = useMemo(() => {
     if (isFetched && !!allVaultShareTokens) {
       let sortedVaults = sortVaultsByTotalDeposits(vaultsArray, allVaultShareTokens)
-      if (sortVaultsBy === 'prizeYield') {
-        sortedVaults = sortVaultsByPrizeYield(sortedVaults, allPrizeYields)
-      } else if (sortVaultsBy === 'twabRewards') {
-        sortedVaults = sortVaultsByTwabRewards(sortedVaults, allVaultPromotionsApr)
-      } else if (sortVaultsBy === 'userBalance' && !!allUserVaultBalances && allVaultShareTokens) {
+
+      if (sortVaultsBy === 'prizes' && !!options?.prizePools) {
+        sortedVaults = sortVaultsByPrizes(sortedVaults, options.prizePools, allPrizeValue)
+      } else if (sortVaultsBy === 'winChance') {
+        sortedVaults = sortVaultsByWinChance(sortedVaults)
+      } else if (sortVaultsBy === 'userBalance' && !!allUserVaultBalances) {
         sortedVaults = sortVaultsByUserBalances(
           sortedVaults,
           allVaultShareTokens,
@@ -123,22 +90,25 @@ export const useSortedVaults = (
   }
 }
 
-const sortVaultsByPrizeYield = (vaults: Vault[], prizeYields?: { [vaultId: string]: number }) => {
-  if (!!prizeYields) {
-    const prizeYield = (v: Vault) => prizeYields[v.id] ?? 0
-    return [...vaults].sort((a, b) => prizeYield(b) - prizeYield(a))
-  } else {
-    return vaults
-  }
+const sortVaultsByPrizes = (
+  vaults: Vault[],
+  prizePools: PrizePool[],
+  prizeValue: { [prizePoolId: string]: number }
+) => {
+  return [...vaults].sort((a, b) => {
+    const prizes = (v: Vault) => {
+      const prizePool = prizePools.find((pool) => pool.chainId === v.chainId)
+      if (!prizePool) return 0
+      return prizeValue[prizePool.id] ?? 0
+    }
+
+    return prizes(b) - prizes(a)
+  })
 }
 
-const sortVaultsByTwabRewards = (vaults: Vault[], twabRewards?: { [vaultId: string]: number }) => {
-  if (!!twabRewards) {
-    const rewards = (v: Vault) => twabRewards[v.id] ?? 0
-    return [...vaults].sort((a, b) => rewards(b) - rewards(a))
-  } else {
-    return vaults
-  }
+const sortVaultsByWinChance = (vaults: Vault[]) => {
+  // TODO
+  return vaults
 }
 
 const sortVaultsByTotalDeposits = (

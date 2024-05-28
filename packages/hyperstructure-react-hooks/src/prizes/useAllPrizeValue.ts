@@ -30,11 +30,13 @@ export const useAllPrizeValue = (prizePools: PrizePool[]) => {
   }
 
   const data = useMemo(() => {
-    if (isFetched) {
-      let totalValue = 0
+    const totalPrizeValue: { [prizePoolId: string]: number } = {}
 
+    if (isFetched) {
       const prizePoolIds = prizePools.map((pool) => pool.id)
       prizePoolIds.forEach((prizePoolId) => {
+        let totalValue = 0
+
         const prizes = allPrizeInfo[prizePoolId]
         const prizeToken = prizeTokens[prizePoolId]
 
@@ -46,10 +48,14 @@ export const useAllPrizeValue = (prizePools: PrizePool[]) => {
             totalValue += prizeValue * Math.pow(4, i)
           })
         }
-      })
 
-      return totalValue
+        if (!!totalValue) {
+          totalPrizeValue[prizePoolId] = totalValue
+        }
+      })
     }
+
+    return totalPrizeValue
   }, [allPrizeInfo, prizeTokens, isFetched])
 
   return { data, isFetched, refetch }

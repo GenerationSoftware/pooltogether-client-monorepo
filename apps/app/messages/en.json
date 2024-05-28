@@ -86,6 +86,8 @@
       "prizeVault": "Prize Vault",
       "prizeYield": "Prize Yield",
       "bonusRewards": "Bonus Rewards",
+      "prizes": "Prizes",
+      "winChance": "Win Chance",
       "totalDeposits": "Total Deposits",
       "yourBalance": "Your Balance"
     }

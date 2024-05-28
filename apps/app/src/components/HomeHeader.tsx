@@ -17,7 +17,11 @@ export const HomeHeader = () => {
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
 
-  const { data: totalPrizeValue } = useAllPrizeValue(prizePoolsArray)
+  const { data: allPrizeValue, isFetched: isFetchedAllPrizeValue } =
+    useAllPrizeValue(prizePoolsArray)
+  const totalPrizeValue = isFetchedAllPrizeValue
+    ? Object.values(allPrizeValue).reduce((a, b) => a + b, 0)
+    : undefined
 
   const TotalPrizeValue = () =>
     !!totalPrizeValue ? (

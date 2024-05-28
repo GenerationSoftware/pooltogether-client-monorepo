@@ -18,9 +18,8 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { ReactNode } from 'react'
-import { VaultBonusRewards } from './VaultBonusRewards'
 import { VaultButtons } from './VaultButtons'
-import { VaultPrizeYield } from './VaultPrizeYield'
+import { VaultPrizes } from './VaultPrizes'
 import { VaultTotalDeposits } from './VaultTotalDeposits'
 
 interface VaultsTableProps {
@@ -95,14 +94,15 @@ export const VaultsTable = (props: VaultsTableProps) => {
 
   const tableData: TableProps['data'] = {
     headers: {
-      token: { content: t_vaults('headers.prizeVault') },
-      prizeYield: {
+      vault: { content: t_vaults('headers.prizeVault') },
+      prizes: {
         content: (
           <SortableHeader
-            id='prizeYield'
+            id='prizes'
             onClick={handleHeaderClick}
-            direction={getDirection('prizeYield')}
+            direction={getDirection('prizes')}
             append={
+              // TODO: add prizes tooltip
               <PrizeYieldTooltip
                 iconSize='lg'
                 intl={{ text: t_tooltips('prizeYield'), learnMore: t_common('learnMore') }}
@@ -112,13 +112,16 @@ export const VaultsTable = (props: VaultsTableProps) => {
         ),
         position: 'center'
       },
-      bonusRewards: {
+      winChance: {
         content: (
           <SortableHeader
-            id='twabRewards'
+            id='winChance'
             onClick={handleHeaderClick}
-            direction={getDirection('twabRewards')}
-            append={<BonusRewardsTooltip iconSize='lg' intl={t_tooltips('bonusRewards')} />}
+            direction={getDirection('winChance')}
+            append={
+              // TODO: add win chance tooltip
+              <BonusRewardsTooltip iconSize='lg' intl={t_tooltips('bonusRewards')} />
+            }
           />
         ),
         position: 'center'
@@ -141,7 +144,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
       return {
         id: vault.id,
         cells: {
-          token: {
+          vault: {
             content: (
               <>
                 <Link href={`/vault/${vault.chainId}/${vault.address}`}>
@@ -157,26 +160,17 @@ export const VaultsTable = (props: VaultsTableProps) => {
             ),
             className: 'gap-2 pr-0'
           },
-          prizeYield: {
+          prizes: {
             content: (
-              <VaultPrizeYield
-                vault={vault}
-                label={t_common('apr')}
-                valueClassName='text-xl font-semibold text-pt-purple-100'
-                labelClassName='text-sm text-pt-purple-400'
-              />
+              // TODO: add bonus rewards
+              <VaultPrizes vault={vault} className='text-center' />
             ),
             position: 'center'
           },
-          bonusRewards: {
-            content: (
-              <VaultBonusRewards
-                vault={vault}
-                label={t_common('apr')}
-                valueClassName='text-xl font-semibold text-pt-purple-100'
-                labelClassName='text-sm text-pt-purple-400'
-              />
-            ),
+          winChance: {
+            content:
+              // TODO: add win chance content (normalized rating)
+              'TODO',
             position: 'center'
           },
           totalDeposits: {
@@ -200,7 +194,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
       innerClassName='!gap-3'
       headerClassName='px-4'
       rowClassName='!px-4 py-4 rounded-3xl'
-      gridColsClassName='grid-cols-[minmax(0,6fr)_repeat(3,minmax(0,4fr))_minmax(0,5fr)]'
+      gridColsClassName='grid-cols-[minmax(0,5fr)_repeat(3,minmax(0,4fr))_minmax(0,5fr)]'
     />
   )
 }
@@ -218,8 +212,8 @@ const SortableHeader = (props: SortableHeaderProps) => {
   const t = useTranslations('Vaults')
 
   const names: Record<SortId, string> = {
-    prizeYield: t('headers.prizeYield'),
-    twabRewards: t('headers.bonusRewards'),
+    prizes: t('headers.prizes'),
+    winChance: t('headers.winChance'),
     totalBalance: t('headers.totalDeposits'),
     userBalance: t('headers.yourBalance')
   }
