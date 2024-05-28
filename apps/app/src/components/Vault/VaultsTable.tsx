@@ -19,35 +19,24 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
-import { TWAB_REWARDS_SETTINGS } from '@constants/config'
-import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { VaultBonusRewards } from './VaultBonusRewards'
 import { VaultButtons } from './VaultButtons'
 import { VaultPrizeYield } from './VaultPrizeYield'
 import { VaultTotalDeposits } from './VaultTotalDeposits'
 
 interface VaultsTableProps {
-  chainId: number
   vaults: Vault[]
   className?: string
 }
 
 export const VaultsTable = (props: VaultsTableProps) => {
-  const { chainId, vaults, className } = props
+  const { vaults, className } = props
 
   const t_common = useTranslations('Common')
   const t_vaults = useTranslations('Vaults')
   const t_tooltips = useTranslations('Tooltips')
 
-  const prizePools = useSupportedPrizePools()
-  const prizePool = Object.values(prizePools).find((prizePool) => prizePool.chainId === chainId)
-
-  const twabRewards = TWAB_REWARDS_SETTINGS[chainId]
-    ? {
-        rewardTokenAddresses: TWAB_REWARDS_SETTINGS[chainId].tokenAddresses,
-        fromBlock: TWAB_REWARDS_SETTINGS[chainId].fromBlock
-      }
-    : undefined
+  // TODO: fix this hook (currently requires passing prizepool and twabrewards to fully sort)
   const {
     sortedVaults,
     sortVaultsBy,
@@ -56,7 +45,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
     setSortDirection,
     toggleSortDirection,
     isFetched
-  } = useSortedVaults(vaults, { prizePool, twabRewards })
+  } = useSortedVaults(vaults)
 
   const { localVaultLists, importedVaultLists } = useSelectedVaultLists()
 

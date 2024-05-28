@@ -22,7 +22,7 @@ import { useNetworks } from '@hooks/useNetworks'
 export const filterIdAtom = atom<string>('all')
 export const vaultListFilterIdAtom = atom<string>('all')
 
-export const filteredVaultsAtom = atom<{ [chainId: number]: Vault[] }>({})
+export const filteredVaultsAtom = atom<Vault[]>([])
 
 interface VaultFiltersProps {
   className?: string
@@ -80,8 +80,7 @@ export const VaultFilters = (props: VaultFiltersProps) => {
 
   const filterOnClick = (vaults: Vault[], filter: (vaults: Vault[]) => Vault[] | undefined) => {
     const filteredVaultsArray = filter(vaults.filter((vault) => !!vault.tokenAddress)) ?? []
-    const filteredVaultsByChain = formatVaultsByChain(networks, filteredVaultsArray)
-    setFilteredVaults(filteredVaultsByChain)
+    setFilteredVaults(filteredVaultsArray)
   }
 
   const filterAll = () => {
@@ -172,23 +171,6 @@ export const VaultFilters = (props: VaultFiltersProps) => {
   }
 
   return <></>
-}
-
-const formatVaultsByChain = (
-  networks: NETWORK[],
-  vaultsArray: Vault[]
-): { [chainId: number]: Vault[] } => {
-  const vaultsByChain: { [chainId: number]: Vault[] } = {}
-
-  networks.forEach((network) => {
-    vaultsByChain[network] = []
-  })
-
-  vaultsArray.forEach((vault) => {
-    vaultsByChain[vault.chainId]?.push(vault)
-  })
-
-  return vaultsByChain
 }
 
 const getVaultListIdFilteredVaults = (

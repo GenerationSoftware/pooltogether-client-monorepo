@@ -3,21 +3,14 @@ import {
   useSelectedVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
-import { PrizePoolBadge } from '@shared/react-components'
 import { Button, Spinner } from '@shared/ui'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
-import Link from 'next/link'
-import { useNetworks } from '@hooks/useNetworks'
 import { VaultCards } from './VaultCards'
 import { filteredVaultsAtom, filterIdAtom, vaultListFilterIdAtom } from './VaultFilters'
 import { VaultsTable } from './VaultsTable'
 
 export const VaultsDisplay = () => {
-  const t_common = useTranslations('Common')
-
-  const networks = useNetworks()
-
   const { isFetched: isFetchedVaultData } = useSelectedVaults()
 
   const { localIds, importedIds } = useSelectedVaultListIds()
@@ -34,37 +27,14 @@ export const VaultsDisplay = () => {
     return <NoSelectedVaultListsCard />
   }
 
-  const noValidVaults =
-    Object.keys(filteredVaults).length === 0 ||
-    Object.values(filteredVaults).every((array) => array.length === 0)
-
-  if (noValidVaults) {
+  if (!filteredVaults.length) {
     return <NoValidVaultsCard />
   }
 
   return (
     <>
-      {networks.map((network) => {
-        if (filteredVaults[network] === undefined || filteredVaults[network].length === 0) return
-        return (
-          <div key={`pp-${network}`} className='w-full flex flex-col items-center gap-4 lg:gap-6'>
-            <Link href={`/prizes?network=${network}`}>
-              <PrizePoolBadge
-                chainId={network}
-                textClassName='text-lg font-medium'
-                onClick={() => {}}
-                intl={t_common}
-              />
-            </Link>
-            <VaultsTable
-              chainId={network}
-              vaults={filteredVaults[network]}
-              className='hidden lg:block'
-            />
-            <VaultCards chainId={network} vaults={filteredVaults[network]} className='lg:hidden' />
-          </div>
-        )
-      })}
+      <VaultsTable vaults={filteredVaults} className='hidden lg:block' />
+      <VaultCards vaults={filteredVaults} className='lg:hidden' />
     </>
   )
 }
