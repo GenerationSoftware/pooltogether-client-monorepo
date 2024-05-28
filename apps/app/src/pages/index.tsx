@@ -6,8 +6,8 @@ import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
 import { getMessages } from 'src/utils'
+import { HomeHeader } from '@components/HomeHeader'
 import { Layout } from '@components/Layout'
-import { LargestPrizeHeader } from '@components/Prizes/LargestPrizeHeader'
 import { PrizePoolCards } from '@components/Prizes/PrizePoolCards'
 
 interface HomePageProps {
@@ -28,7 +28,7 @@ export default function HomePage() {
 
   return (
     <Layout className='gap-8'>
-      <LargestPrizeHeader />
+      <HomeHeader />
       <Link href='/vaults' passHref={true}>
         <Button>{t('depositToWin')}</Button>
       </Link>

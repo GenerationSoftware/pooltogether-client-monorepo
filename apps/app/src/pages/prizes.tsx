@@ -1,13 +1,14 @@
-import { ExternalLink } from '@shared/ui'
-import { LINKS, SECONDS_PER_DAY } from '@shared/utilities'
+import { Button } from '@shared/ui'
+import { SECONDS_PER_DAY } from '@shared/utilities'
 import { GetStaticProps } from 'next'
 import { useTranslations } from 'next-intl'
-import Image from 'next/image'
+import Link from 'next/link'
 import { getMessages } from 'src/utils'
 import { CheckPrizesBanner } from '@components/Account/CheckPrizesBanner'
 import { Layout } from '@components/Layout'
 import { PrizePoolDisplay } from '@components/Prizes/PrizePoolDisplay'
 import { PrizePoolWinners } from '@components/Prizes/PrizePoolWinners'
+import { PrizesHeader } from '@components/Prizes/PrizesHeader'
 
 interface PrizesPageProps {
   messages: IntlMessages
@@ -23,29 +24,17 @@ export const getStaticProps: GetStaticProps<PrizesPageProps> = async ({ locale }
 }
 
 export default function PrizesPage() {
-  const t = useTranslations('Prizes')
+  const t = useTranslations('Common')
 
   return (
     <Layout className='gap-8'>
       <CheckPrizesBanner />
-      <Image
-        src='/partyEmoji.svg'
-        alt='Cabana Party Emoji'
-        width={180}
-        height={180}
-        priority={true}
-        className='hidden w-auto h-24 md:block'
-      />
-      <PrizePoolDisplay />
-      <ExternalLink
-        href={LINKS.protocolBasicsDocs}
-        size='xs'
-        className='text-pt-purple-300 md:text-base'
-        iconClassName='md:h-5 md:w-5'
-      >
-        {t('learnMore')}
-      </ExternalLink>
-      <PrizePoolWinners />
+      <PrizesHeader />
+      <Link href='/vaults' passHref={true}>
+        <Button>{t('depositToWin')}</Button>
+      </Link>
+      <PrizePoolDisplay className='mt-8' />
+      <PrizePoolWinners className='mt-8' />
     </Layout>
   )
 }

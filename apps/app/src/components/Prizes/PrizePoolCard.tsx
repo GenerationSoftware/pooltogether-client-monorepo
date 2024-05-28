@@ -1,11 +1,10 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { useGrandPrize } from '@generationsoftware/hyperstructure-react-hooks'
 import { useScreenSize, useSelectedCurrency } from '@shared/generic-react-hooks'
-import { PrizePoolBadge, TokenAmount, TokenValue } from '@shared/react-components'
-import { Button, Card, Spinner } from '@shared/ui'
+import { NetworkBadge, TokenAmount, TokenValue } from '@shared/react-components'
+import { Card, Spinner } from '@shared/ui'
 import { NETWORK, WRAPPED_NATIVE_ASSETS } from '@shared/utilities'
 import { useTranslations } from 'next-intl'
-import Link from 'next/link'
 import { useMemo } from 'react'
 
 export interface PrizePoolCardProps {
@@ -40,12 +39,7 @@ export const PrizePoolCard = (props: PrizePoolCardProps) => {
 
   return (
     <Card wrapperClassName={className} className='gap-3 items-center md:gap-4'>
-      <PrizePoolBadge
-        chainId={prizePool.chainId}
-        hideBg={isMobile}
-        intl={t_common}
-        textClassName='whitespace-nowrap overflow-hidden overflow-ellipsis'
-      />
+      <NetworkBadge chainId={prizePool.chainId} hideBg={isMobile} />
       <div className='flex flex-col gap-0.5 items-center text-center text-pt-purple-200 font-grotesk'>
         <span className='text-2xl'>{t_common('grandPrize')}</span>
         {isFetchedGrandPrize ? (

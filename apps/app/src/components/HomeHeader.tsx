@@ -11,7 +11,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Address } from 'viem'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 
-export const LargestPrizeHeader = () => {
+export const HomeHeader = () => {
   const t = useTranslations('Home')
 
   const prizePools = useSupportedPrizePools()
@@ -21,12 +21,14 @@ export const LargestPrizeHeader = () => {
 
   const GrandPrizeValue = () =>
     !!gpData ? (
-      <TokenValue
-        token={gpData.token}
-        hideZeroes={true}
-        countUp={true}
-        fallback={<TokenAmount token={gpData.token} hideZeroes={true} />}
-      />
+      <span className='ml-2 text-pt-teal'>
+        <TokenValue
+          token={gpData.token}
+          hideZeroes={true}
+          countUp={true}
+          fallback={<TokenAmount token={gpData.token} hideZeroes={true} />}
+        />
+      </span>
     ) : (
       <Spinner />
     )
@@ -36,13 +38,12 @@ export const LargestPrizeHeader = () => {
       <div className='flex flex-col items-center gap-3'>
         <span
           className={classNames(
-            'w-2/3 justify-center text-center text-[1.75rem] font-grotesk font-medium',
-            'min-[400px]:flex min-[400px]:whitespace-nowrap',
+            'w-2/3 flex flex-wrap justify-center text-center text-[1.75rem] font-grotesk font-bold',
             'md:w-full md:text-4xl lg:text-5xl'
           )}
         >
           {t.rich('winUpTo', {
-            token: () => <TokenFlipper className='hidden my-auto mx-2 min-[400px]:block' />,
+            token: () => <TokenFlipper className='my-auto mx-3' />,
             amount: () => <GrandPrizeValue />
           })}
         </span>
@@ -119,14 +120,14 @@ const TokenFlipper = (props: { className?: string }) => {
   //   i === tokenIndex + 1 || (i === 0 && tokenIndex === tokens.length - 1)
 
   return (
-    <div className={classNames('w-10 h-10 shrink-0 isolate', className)}>
+    <div className={classNames('w-8 h-8 shrink-0 isolate md:w-10 md:h-10', className)}>
       {tokens.map((token, i) => (
         <TokenIcon
           key={`${token.chainId}-${token.address}`}
           token={token}
           className={classNames(
-            'absolute !w-10 !h-10',
-            // 'absolute !w-10 !h-10 [transform:perspective(1000px)] [transform-style:preserve-3d]',
+            'absolute !w-8 !h-8 md:!w-10 md:!h-10',
+            // 'absolute !w-8 !h-8 md:!w-10 md:!h-10 [transform:perspective(1000px)] [transform-style:preserve-3d]',
             {
               invisible: i !== tokenIndex
               // 'animate-[flip_0.5s_linear]': isFlipping && i === tokenIndex,

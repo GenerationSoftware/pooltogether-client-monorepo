@@ -45,19 +45,19 @@
     "withdrawAnyTime": "You can withdraw your full deposit at any time"
   },
   "Prizes": {
-    "learnMore": "Learn more about how prizes work",
-    "switchPrizePool": "Switch prize pool",
-    "estPrizeValue": "Estimated Prize Value",
-    "estPrizeFreq": "Estimated Frequency",
-    "recentWinners": "Recent Prize Pool Winners",
+    "winUpTo": "Keep your deposit. Win up to <amount></amount>",
+    "currentPrizes": "Current Prizes",
+    "learnMore": "Prizes and frequencies are estimations. <link>Learn how PoolTogether works</link>",
+    "prize": "Prize",
+    "frequency": "Frequency",
+    "recentWinners": "Recent Winners",
     "drawWinners": {
-      "beforeValue": "{numWallets, plural, one {# wallet} other {# wallets}} won",
+      "beforeValue": "{numPeople, plural, one {# person} other {# people}} won",
       "afterValue": {
         "today": "today",
         "yesterday": "yesterday",
         "onXDate": "on {date}"
-      },
-      "drawIsOngoing": "Draw is ongoing"
+      }
     },
     "drawModal": {
       "drawTotal": {

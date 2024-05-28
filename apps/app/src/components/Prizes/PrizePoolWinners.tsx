@@ -10,6 +10,7 @@ import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { TokenValue } from '@shared/react-components'
 import { SubgraphDraw } from '@shared/types'
 import { getSecondsSinceEpoch, getSimpleDate, SECONDS_PER_DAY } from '@shared/utilities'
+import classNames from 'classnames'
 import * as fathom from 'fathom-client'
 import { atom, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
@@ -20,7 +21,13 @@ import { useSelectedPrizePool } from '@hooks/useSelectedPrizePool'
 
 export const drawIdAtom = atom<number>(0)
 
-export const PrizePoolWinners = () => {
+interface PrizePoolWinnersProps {
+  className?: string
+}
+
+export const PrizePoolWinners = (props: PrizePoolWinnersProps) => {
+  const { className } = props
+
   const t_common = useTranslations('Common')
   const t_prizes = useTranslations('Prizes')
 
@@ -50,7 +57,13 @@ export const PrizePoolWinners = () => {
 
   if (!!selectedPrizePool && !!draws && draws.length > 0) {
     return (
-      <div className='flex flex-col w-full max-w-2xl gap-4 items-center px-6 py-8 bg-pt-transparent rounded-lg md:px-11'>
+      <div
+        className={classNames(
+          'flex flex-col w-full max-w-2xl gap-4 items-center bg-pt-transparent rounded-lg',
+          'px-6 py-8 md:px-11',
+          className
+        )}
+      >
         <span className='font-semibold md:text-xl'>{t_prizes('recentWinners')}</span>
         <ul className='flex flex-col w-full max-w-2xl pl-2 md:pl-1'>
           {[...draws]
