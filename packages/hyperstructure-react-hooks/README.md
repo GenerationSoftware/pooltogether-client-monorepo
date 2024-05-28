@@ -88,6 +88,9 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useAllFirstDrawOpenedAt`
 - `useAllPrizeDrawWinners`
 - `useAllPrizeInfo`
+- `useAllPrizeTokenData`
+- `useAllPrizeTokenPrices`
+- `useAllPrizeValue`
 - `useAllUserBalanceUpdates`
 - `useAllUserEligibleDraws`
 - `useAllUserPrizeOdds`

@@ -1,5 +1,5 @@
-import { useLargestGrandPrize } from '@generationsoftware/hyperstructure-react-hooks'
-import { TokenAmount, TokenValue } from '@shared/react-components'
+import { useAllPrizeValue } from '@generationsoftware/hyperstructure-react-hooks'
+import { CurrencyValue } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -12,17 +12,12 @@ export const PrizesHeader = () => {
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
 
-  const { data: gpData } = useLargestGrandPrize(prizePoolsArray, { useCurrentPrizeSizes: true })
+  const { data: totalPrizeValue } = useAllPrizeValue(prizePoolsArray)
 
-  const GrandPrizeValue = () =>
-    !!gpData ? (
+  const TotalPrizeValue = () =>
+    !!totalPrizeValue ? (
       <span className='ml-2 text-pt-teal'>
-        <TokenValue
-          token={gpData.token}
-          hideZeroes={true}
-          countUp={true}
-          fallback={<TokenAmount token={gpData.token} hideZeroes={true} />}
-        />
+        <CurrencyValue baseValue={totalPrizeValue} hideZeroes={true} countUp={true} />
       </span>
     ) : (
       <Spinner />
@@ -44,7 +39,7 @@ export const PrizesHeader = () => {
             'md:w-full md:text-4xl lg:text-5xl'
           )}
         >
-          {t.rich('winUpTo', { amount: () => <GrandPrizeValue /> })}
+          {t.rich('winUpTo', { amount: () => <TotalPrizeValue /> })}
         </span>
         {/* TODO: add animated text with recent big winners (need luck script/calc) */}
       </div>

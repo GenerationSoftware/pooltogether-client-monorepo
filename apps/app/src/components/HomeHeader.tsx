@@ -1,8 +1,8 @@
 import {
-  useCachedVaultLists,
-  useLargestGrandPrize
+  useAllPrizeValue,
+  useCachedVaultLists
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { TokenAmount, TokenIcon, TokenValue } from '@shared/react-components'
+import { CurrencyValue, TokenIcon } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import { isTestnet, lower, NETWORK, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
@@ -17,17 +17,12 @@ export const HomeHeader = () => {
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
 
-  const { data: gpData } = useLargestGrandPrize(prizePoolsArray, { useCurrentPrizeSizes: true })
+  const { data: totalPrizeValue } = useAllPrizeValue(prizePoolsArray)
 
-  const GrandPrizeValue = () =>
-    !!gpData ? (
+  const TotalPrizeValue = () =>
+    !!totalPrizeValue ? (
       <span className='ml-2 text-pt-teal'>
-        <TokenValue
-          token={gpData.token}
-          hideZeroes={true}
-          countUp={true}
-          fallback={<TokenAmount token={gpData.token} hideZeroes={true} />}
-        />
+        <CurrencyValue baseValue={totalPrizeValue} hideZeroes={true} countUp={true} />
       </span>
     ) : (
       <Spinner />
@@ -44,7 +39,7 @@ export const HomeHeader = () => {
         >
           {t.rich('winUpTo', {
             token: () => <TokenFlipper className='my-auto mx-3' />,
-            amount: () => <GrandPrizeValue />
+            amount: () => <TotalPrizeValue />
           })}
         </span>
         <span className='text-center text-pt-purple-100'>{t('withdrawAnyTime')}</span>
