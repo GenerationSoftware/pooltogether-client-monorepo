@@ -5,8 +5,6 @@ import {
   useSelectedVaults,
   useTokenBalancesAcrossChains
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { Cog6ToothIcon } from '@heroicons/react/24/outline'
-import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { NetworkIcon } from '@shared/react-components'
 import { VaultList } from '@shared/types'
 import { TokenWithAmount } from '@shared/types'
@@ -20,8 +18,6 @@ import { useEffect, useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useNetworks } from '@hooks/useNetworks'
-import { useSettingsModalView } from '@hooks/useSettingsModalView'
-import { VaultListFilterSelect } from './VaultListFilterSelect'
 
 export const filterIdAtom = atom<string>('all')
 export const vaultListFilterIdAtom = atom<string>('all')
@@ -72,9 +68,6 @@ export const VaultFilters = (props: VaultFiltersProps) => {
   const [filterId, setFilterId] = useAtom(filterIdAtom)
 
   const setFilteredVaults = useSetAtom(filteredVaultsAtom)
-
-  const { setIsModalOpen: setIsSettingsModalOpen } = useIsModalOpen(MODAL_KEYS.settings)
-  const { setView: setSettingsModalView } = useSettingsModalView()
 
   // Getting filter ID from URL query:
   useEffect(() => {
@@ -167,25 +160,12 @@ export const VaultFilters = (props: VaultFiltersProps) => {
       <div className='w-full flex justify-center'>
         <div
           className={classNames(
-            'w-screen max-w-[36rem] flex justify-between items-center -mx-4 px-4 rounded-lg overflow-x-auto no-scrollbar',
-            'lg:w-full lg:max-w-none lg:bg-pt-bg-purple-dark lg:mx-0 lg:px-6 lg:py-5',
+            'flex justify-between items-center overflow-x-auto no-scrollbar',
+            'lg:bg-pt-bg-purple-dark lg:py-4 lg:px-8 lg:rounded-3xl',
             className
           )}
         >
-          <div className='flex items-center gap-8 py-0.5'>
-            <span className='hidden text-lg lg:block'>{t('filter')}</span>
-            <Selection items={filterItems} activeItem={filterId} buttonColor='purple' />
-          </div>
-          <div className='hidden gap-2 items-center lg:flex'>
-            <Cog6ToothIcon
-              onClick={() => {
-                setSettingsModalView('vaultLists')
-                setIsSettingsModalOpen(true)
-              }}
-              className='h-6 w-6 text-pt-purple-100 cursor-pointer'
-            />
-            <VaultListFilterSelect />
-          </div>
+          <Selection items={filterItems} activeItem={filterId} buttonColor='purple' />
         </div>
       </div>
     )
