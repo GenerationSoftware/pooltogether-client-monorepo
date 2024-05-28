@@ -18,6 +18,7 @@ export const useVault = (vaultInfo: VaultInfo): Vault => {
     logoURI: vaultInfo.logoURI,
     tags: vaultInfo.tags,
     tokenLogoURI: vaultInfo.extensions?.underlyingAsset?.logoURI,
-    yieldSourceURI: vaultInfo.yieldSourceURI
+    yieldSourceName: vaultInfo.extensions?.yieldSource?.name,
+    yieldSourceURI: vaultInfo.extensions?.yieldSource?.appURI
   })
 }

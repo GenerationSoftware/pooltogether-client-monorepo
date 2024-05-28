@@ -55,7 +55,8 @@ export class Vaults {
           logoURI: vault.logoURI,
           tags: vault.tags,
           tokenLogoURI: vault.extensions?.underlyingAsset?.logoURI,
-          yieldSourceURI: vault.yieldSourceURI
+          yieldSourceName: vault.extensions?.yieldSource?.name,
+          yieldSourceURI: vault.extensions?.yieldSource?.appURI
         })
         this.vaults[newVault.id] = newVault
       })
