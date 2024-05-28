@@ -2,8 +2,7 @@ import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useAllUserVaultBalances,
   useSelectedVaultLists,
-  useSelectedVaults,
-  useTokenBalancesAcrossChains
+  useSelectedVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { NetworkIcon } from '@shared/react-components'
 import { VaultList } from '@shared/types'
@@ -45,14 +44,6 @@ export const VaultFilters = (props: VaultFiltersProps) => {
 
   const { address: userAddress } = useAccount()
 
-  const { data: userTokenBalances, isFetched: isFetchedUserTokenBalances } =
-    useTokenBalancesAcrossChains(
-      networks,
-      userAddress as Address,
-      vaults.underlyingTokenAddresses?.byChain ?? {},
-      { refetchOnWindowFocus: true }
-    )
-
   const { data: userVaultBalances, isFetched: isFetchedUserVaultBalances } =
     useAllUserVaultBalances(vaults, userAddress as Address)
 
@@ -87,18 +78,6 @@ export const VaultFilters = (props: VaultFiltersProps) => {
     filterOnClick(vaultsArray, (vaults) => vaults)
   }
 
-  const filterUserWallet = () => {
-    filterOnClick(vaultsArray, (vaults) =>
-      vaults.filter((vault) => {
-        const userWalletBalance = !!vault.tokenAddress
-          ? userTokenBalances?.[vault.chainId]?.[vault.tokenAddress]?.amount ?? 0n
-          : 0n
-        const userDepositedBalance = userVaultBalances?.[vault.id]?.amount ?? 0n
-        return userWalletBalance > 0n || userDepositedBalance > 0n
-      })
-    )
-  }
-
   const filterStablecoins = () => {
     filterOnClick(vaultsArray, (vaults) =>
       vaults.filter((vault) =>
@@ -123,14 +102,6 @@ export const VaultFilters = (props: VaultFiltersProps) => {
         className: 'whitespace-nowrap'
       },
       {
-        id: 'userWallet',
-        content: t('filters.inWallet'),
-        disabled: !isFetchedUserTokenBalances || !isFetchedUserVaultBalances,
-        onClick: () => setFilterId('userWallet'),
-        filter: filterUserWallet,
-        className: 'whitespace-nowrap'
-      },
-      {
         id: 'stablecoin',
         content: t('filters.stablecoins'),
         onClick: () => setFilterId('stablecoin'),
@@ -146,7 +117,7 @@ export const VaultFilters = (props: VaultFiltersProps) => {
         }
       })
     ],
-    [networks, isFetchedUserTokenBalances, isFetchedUserVaultBalances, vaultsArray]
+    [networks, isFetchedUserVaultBalances, vaultsArray]
   )
 
   useEffect(() => {

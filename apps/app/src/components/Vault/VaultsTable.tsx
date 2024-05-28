@@ -18,7 +18,6 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { ReactNode } from 'react'
-import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
 import { VaultBonusRewards } from './VaultBonusRewards'
 import { VaultButtons } from './VaultButtons'
 import { VaultPrizeYield } from './VaultPrizeYield'
@@ -134,16 +133,6 @@ export const VaultsTable = (props: VaultsTableProps) => {
         ),
         position: 'center'
       },
-      balance: {
-        content: (
-          <SortableHeader
-            id='userBalance'
-            onClick={handleHeaderClick}
-            direction={getDirection('userBalance')}
-          />
-        ),
-        position: 'center'
-      },
       manage: { content: <ManageHeader />, position: 'right' }
     },
     rows: sortedVaults.map((vault) => {
@@ -194,10 +183,6 @@ export const VaultsTable = (props: VaultsTableProps) => {
             content: <VaultTotalDeposits vault={vault} className='text-center' />,
             position: 'center'
           },
-          balance: {
-            content: <AccountVaultBalance vault={vault} className='text-center' />,
-            position: 'center'
-          },
           manage: {
             content: <VaultButtons vault={vault} forceHide={['delegate']} />,
             position: 'right'
@@ -215,7 +200,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
       innerClassName='!gap-3'
       headerClassName='px-4'
       rowClassName='!px-4 py-4 rounded-3xl'
-      gridColsClassName='grid-cols-[minmax(0,6fr)_repeat(4,minmax(0,4fr))_minmax(0,5fr)]'
+      gridColsClassName='grid-cols-[minmax(0,6fr)_repeat(3,minmax(0,4fr))_minmax(0,5fr)]'
     />
   )
 }
