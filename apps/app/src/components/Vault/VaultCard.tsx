@@ -73,11 +73,11 @@ export const VaultCard = (props: VaultCardProps) => {
             {t_vaults('headers.bonusRewards')}
             <BonusRewardsTooltip intl={t_tooltips('bonusRewards')} className='text-xs' />
           </span>
+          {/* TODO: append tokens that rewards are in */}
           <VaultBonusRewards
             vault={vault}
-            label={t_common('apr')}
+            append={<span className='text-xs text-pt-purple-200'>{t_common('apr')}</span>}
             valueClassName='text-sm'
-            labelClassName='text-xs text-pt-purple-200'
           />
         </div>
         <div className='flex items-center justify-between'>

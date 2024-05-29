@@ -18,6 +18,7 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { ReactNode } from 'react'
+import { VaultBonusRewards } from './VaultBonusRewards'
 import { VaultButtons } from './VaultButtons'
 import { VaultPrizes } from './VaultPrizes'
 import { VaultTotalDeposits } from './VaultTotalDeposits'
@@ -162,10 +163,20 @@ export const VaultsTable = (props: VaultsTableProps) => {
           },
           prizes: {
             content: (
-              // TODO: add bonus rewards
-              <VaultPrizes vault={vault} className='text-center' />
+              <>
+                <VaultPrizes vault={vault} />
+                {/* TODO: append tokens that rewards are in */}
+                <VaultBonusRewards
+                  vault={vault}
+                  prepend='+'
+                  append={<span className='text-pt-purple-200'>{t_common('apr')}</span>}
+                  hideUnlessPresent={true}
+                  className='text-sm'
+                />
+              </>
             ),
-            position: 'center'
+            position: 'center',
+            className: 'flex-col text-center'
           },
           winChance: {
             content:
