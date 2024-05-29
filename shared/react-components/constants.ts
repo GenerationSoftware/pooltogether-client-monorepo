@@ -14,7 +14,8 @@ const tokenLogoUrls = {
   ageur: 'https://etherscan.io/token/images/ageur_32.png?=v982',
   op: 'https://optimistic.etherscan.io/token/images/optimism_32.png',
   przVELO: `${LINKS.app}/icons/przVELO.svg`,
-  steth: 'https://assets.coingecko.com/coins/images/13442/standard/steth_logo.png?1696513206'
+  steth: 'https://assets.coingecko.com/coins/images/13442/standard/steth_logo.png?1696513206',
+  usdt: 'https://assets.coingecko.com/coins/images/325/standard/Tether.png?1696501661'
 } as const
 
 /**
@@ -73,7 +74,13 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   [NETWORK.fuji]: {},
   [NETWORK.celo]: {},
   [NETWORK.celo_testnet]: {},
-  [NETWORK.arbitrum]: {},
+  [NETWORK.arbitrum]: {
+    [POOL_TOKEN_ADDRESSES[NETWORK.arbitrum].toLowerCase()]: tokenLogoUrls.pool,
+    '0xaf88d065e77c8cc2239327c5edb3a432268e5831': tokenLogoUrls.usdc,
+    '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8': tokenLogoUrls.usdc,
+    '0x82af49447d8a07e3bd95bd0d56f35241523fbab1': tokenLogoUrls.weth,
+    '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9': tokenLogoUrls.usdt
+  },
   [NETWORK.arbitrum_sepolia]: {
     [POOL_TOKEN_ADDRESSES[NETWORK.arbitrum_sepolia].toLowerCase()]: tokenLogoUrls.pool,
     [USDC_TOKEN_ADDRESSES[NETWORK.arbitrum_sepolia]]: tokenLogoUrls.usdc,
