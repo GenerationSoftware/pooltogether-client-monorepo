@@ -8,7 +8,6 @@ import {
 import {
   BonusRewardsTooltip,
   ImportedVaultTooltip,
-  PrizeYieldTooltip,
   SortIcon,
   VaultBadge
 } from '@shared/react-components'
@@ -22,6 +21,7 @@ import { VaultBonusRewards } from './VaultBonusRewards'
 import { VaultButtons } from './VaultButtons'
 import { VaultPrizes } from './VaultPrizes'
 import { VaultTotalDeposits } from './VaultTotalDeposits'
+import { VaultWinChance } from './VaultWinChance'
 
 interface VaultsTableProps {
   vaults: Vault[]
@@ -102,13 +102,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
             id='prizes'
             onClick={handleHeaderClick}
             direction={getDirection('prizes')}
-            append={
-              // TODO: add prizes tooltip
-              <PrizeYieldTooltip
-                iconSize='lg'
-                intl={{ text: t_tooltips('prizeYield'), learnMore: t_common('learnMore') }}
-              />
-            }
+            // TODO: add prizes tooltip
           />
         ),
         position: 'center'
@@ -119,10 +113,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
             id='winChance'
             onClick={handleHeaderClick}
             direction={getDirection('winChance')}
-            append={
-              // TODO: add win chance tooltip
-              <BonusRewardsTooltip iconSize='lg' intl={t_tooltips('bonusRewards')} />
-            }
+            // TODO: add win chance tooltip
           />
         ),
         position: 'center'
@@ -179,9 +170,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
             className: 'flex-col text-center'
           },
           winChance: {
-            content:
-              // TODO: add win chance content (normalized rating)
-              'TODO',
+            content: <VaultWinChance vault={vault} />,
             position: 'center'
           },
           totalDeposits: {
