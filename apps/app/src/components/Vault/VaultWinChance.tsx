@@ -7,10 +7,11 @@ import { useVaultWinChance } from '@hooks/useVaultWinChance'
 interface VaultWinChanceProps {
   vault: Vault
   className?: string
+  tooltipClassName?: string
 }
 
 export const VaultWinChance = (props: VaultWinChanceProps) => {
-  const { vault, className } = props
+  const { vault, className, tooltipClassName } = props
 
   const { data: winChance, isFetched: isFetchedWinChance } = useVaultWinChance(vault)
 
@@ -22,16 +23,23 @@ export const VaultWinChance = (props: VaultWinChanceProps) => {
     return <>?</>
   }
 
-  return <WinChanceGraphic winChance={winChance} className={className} />
+  return (
+    <WinChanceGraphic
+      winChance={winChance}
+      className={className}
+      tooltipClassName={tooltipClassName}
+    />
+  )
 }
 
 interface WinChanceGraphicProps {
   winChance: number
   className?: string
+  tooltipClassName?: string
 }
 
 const WinChanceGraphic = (props: WinChanceGraphicProps) => {
-  const { winChance, className } = props
+  const { winChance, className, tooltipClassName } = props
 
   const t = useTranslations('Tooltips.winChanceChart')
 
@@ -56,7 +64,7 @@ const WinChanceGraphic = (props: WinChanceGraphicProps) => {
   }, [winChance])
 
   return (
-    <Tooltip content={tooltipContent}>
+    <Tooltip content={<span className={tooltipClassName}>{tooltipContent}</span>}>
       <svg
         width='54'
         height='30'

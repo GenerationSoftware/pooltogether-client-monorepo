@@ -8,10 +8,11 @@ import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 interface VaultPrizesProps {
   vault: Vault
   className?: string
+  amountClassName?: string
 }
 
 export const VaultPrizes = (props: VaultPrizesProps) => {
-  const { vault, className } = props
+  const { vault, className, amountClassName } = props
 
   const prizePools = useSupportedPrizePools()
   const prizePool = Object.values(prizePools).find((pool) => pool.chainId === vault.chainId)
@@ -26,7 +27,7 @@ export const VaultPrizes = (props: VaultPrizesProps) => {
   return (
     <div className={classNames('text-sm text-pt-purple-100', className)}>
       up to{' '}
-      <span className='text-lg font-semibold'>
+      <span className={classNames('text-lg font-semibold', amountClassName)}>
         <CurrencyValue baseValue={prizeValue} hideZeroes={true} />
       </span>
     </div>
