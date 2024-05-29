@@ -20,13 +20,22 @@ import {
 import { DEFAULT_CLAIMER_ADDRESSES, NETWORK, SECONDS_PER_HOUR } from '@shared/utilities'
 import { SupportedNetwork, YieldSourceVaultTag } from 'src/types'
 import { Address } from 'viem'
-import { arbitrumSepolia, base, baseSepolia, mainnet, optimism, optimismSepolia } from 'viem/chains'
+import {
+  arbitrum,
+  arbitrumSepolia,
+  base,
+  baseSepolia,
+  mainnet,
+  optimism,
+  optimismSepolia
+} from 'viem/chains'
 
 /**
  * Supported networks
  */
 export const SUPPORTED_NETWORKS = [
   NETWORK.optimism,
+  NETWORK.arbitrum,
   NETWORK.base,
   NETWORK.optimism_sepolia,
   NETWORK.arbitrum_sepolia,
@@ -39,6 +48,7 @@ export const SUPPORTED_NETWORKS = [
 export const WAGMI_CHAINS = {
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism,
+  [NETWORK.arbitrum]: arbitrum,
   [NETWORK.base]: base,
   [NETWORK.optimism_sepolia]: optimismSepolia,
   [NETWORK.arbitrum_sepolia]: arbitrumSepolia,
@@ -73,6 +83,7 @@ export const WALLETS: { [wallet: string]: CreateWalletFn } = {
 export const RPC_URLS = {
   [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
+  [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
   [NETWORK.base]: process.env.NEXT_PUBLIC_BASE_RPC_URL,
   [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL,
@@ -123,6 +134,13 @@ export const NETWORK_CONFIG: Record<
         ]
       }
     ]
+  },
+  [NETWORK.arbitrum]: {
+    description: `Arbitrum's flagship optimistic rollup on Ethereum.`,
+    prizePool: '0x52E7910C4C287848C8828e8b17b8371f4Ebc5D42',
+    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.arbitrum],
+    lp: { targetAuctionPeriod: SECONDS_PER_HOUR * 6, targetAuctionPriceUsd: 10 },
+    yieldSources: []
   },
   [NETWORK.base]: {
     description: `Coinbase's optimistic rollup on Ethereum.`,

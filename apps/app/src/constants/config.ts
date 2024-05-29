@@ -20,13 +20,21 @@ import {
 import { NETWORK, POOL_TOKEN_ADDRESSES, USDC_TOKEN_ADDRESSES } from '@shared/utilities'
 import defaultVaultList from '@vaultLists/default'
 import { Address } from 'viem'
-import { arbitrumSepolia, base, baseSepolia, mainnet, optimism, optimismSepolia } from 'viem/chains'
+import {
+  arbitrum,
+  arbitrumSepolia,
+  base,
+  baseSepolia,
+  mainnet,
+  optimism,
+  optimismSepolia
+} from 'viem/chains'
 
 /**
  * Supported networks
  */
 export const SUPPORTED_NETWORKS = {
-  mainnets: [NETWORK.mainnet, NETWORK.optimism, NETWORK.base],
+  mainnets: [NETWORK.mainnet, NETWORK.optimism, NETWORK.base, NETWORK.arbitrum],
   testnets: [NETWORK.optimism_sepolia, NETWORK.arbitrum_sepolia, NETWORK.base_sepolia]
 } as const
 
@@ -36,6 +44,7 @@ export const SUPPORTED_NETWORKS = {
 export const WAGMI_CHAINS = {
   [NETWORK.mainnet]: mainnet,
   [NETWORK.optimism]: optimism,
+  [NETWORK.arbitrum]: arbitrum,
   [NETWORK.base]: base,
   [NETWORK.optimism_sepolia]: optimismSepolia,
   [NETWORK.arbitrum_sepolia]: arbitrumSepolia,
@@ -70,6 +79,7 @@ export const WALLETS: { [wallet: string]: CreateWalletFn } = {
 export const RPC_URLS = {
   [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_RPC_URL,
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
+  [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
   [NETWORK.base]: process.env.NEXT_PUBLIC_BASE_RPC_URL,
   [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL,
@@ -100,6 +110,16 @@ export const TWAB_REWARDS_SETTINGS: {
       '0x395Ae52bB17aef68C2888d941736A71dC6d4e125' // POOL
     ],
     fromBlock: 118_900_000n
+  },
+  [NETWORK.arbitrum]: {
+    tokenAddresses: [
+      '0xaf88d065e77c8cC2239327C5EDb3A432268e5831', // USDC
+      '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8', // USDC.e
+      '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1', // WETH
+      '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1', // DAI
+      '0xCF934E2402A5e072928a39a956964eb8F2B5B79C' // POOL
+    ],
+    fromBlock: 216_345_400n
   },
   [NETWORK.base]: {
     tokenAddresses: [
@@ -140,6 +160,9 @@ export const TWAB_REWARDS_SETTINGS: {
 export const WALLET_NAMES: { [chainId: number]: { [address: Lowercase<Address>]: string } } = {
   [NETWORK.base]: {
     '0x327b2ea9668a552fe5dec8e3c6e47e540a0a58c6': 'GP Booster'
+  },
+  [NETWORK.arbitrum]: {
+    '0x1dcfb8b47c2f05ce86c21580c167485de1202e12': 'GP Booster'
   }
 }
 
