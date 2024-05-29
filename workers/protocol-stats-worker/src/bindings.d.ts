@@ -8,4 +8,5 @@ declare global {
   const BASE_RPC_URL: string
   const AVALANCHE_RPC_URL: string
   const CELO_RPC_URL: string
+  const ARBITRUM_RPC_URL: string
 }
