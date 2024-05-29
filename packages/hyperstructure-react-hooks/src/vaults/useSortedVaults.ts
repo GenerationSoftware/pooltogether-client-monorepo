@@ -3,7 +3,13 @@ import { TokenWithAmount, TokenWithPrice, TokenWithSupply } from '@shared/types'
 import { useMemo, useState } from 'react'
 import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
-import { useAllPrizeValue, useAllUserVaultBalances, useAllVaultSharePrices, useVaults } from '..'
+import {
+  useAllPrizeValue,
+  useAllUserVaultBalances,
+  useAllVaultPrizeYields,
+  useAllVaultSharePrices,
+  useVaults
+} from '..'
 
 export type SortId = 'prizes' | 'winChance' | 'totalBalance' | 'userBalance'
 export type SortDirection = 'asc' | 'desc'
@@ -43,20 +49,24 @@ export const useSortedVaults = (
     options?.prizePools ?? []
   )
 
+  const { data: allVaultPrizeYields, isFetched: isFetchedAllVaultPrizeYields } =
+    useAllVaultPrizeYields(vaults, options?.prizePools ?? [])
+
   const isFetched =
     !!vaults &&
     isFetchedAllVaultShareTokens &&
     (isFetchedAllUserVaultBalances || !userAddress) &&
-    (isFetchedAllPrizeValue || !options?.prizePools?.length)
+    (isFetchedAllPrizeValue || !options?.prizePools?.length) &&
+    (isFetchedAllVaultPrizeYields || !options?.prizePools?.length)
 
   const sortedVaults = useMemo(() => {
     if (isFetched && !!allVaultShareTokens) {
       let sortedVaults = sortVaultsByTotalDeposits(vaultsArray, allVaultShareTokens)
 
-      if (sortVaultsBy === 'prizes' && !!options?.prizePools) {
+      if (sortVaultsBy === 'prizes' && !!options?.prizePools?.length) {
         sortedVaults = sortVaultsByPrizes(sortedVaults, options.prizePools, allPrizeValue)
       } else if (sortVaultsBy === 'winChance') {
-        sortedVaults = sortVaultsByWinChance(sortedVaults)
+        sortedVaults = sortVaultsByWinChance(sortedVaults, allVaultPrizeYields)
       } else if (sortVaultsBy === 'userBalance' && !!allUserVaultBalances) {
         sortedVaults = sortVaultsByUserBalances(
           sortedVaults,
@@ -106,9 +116,17 @@ const sortVaultsByPrizes = (
   })
 }
 
-const sortVaultsByWinChance = (vaults: Vault[]) => {
-  // TODO
-  return vaults
+const sortVaultsByWinChance = (
+  vaults: Vault[],
+  prizeYields: {
+    [vaultId: string]: number
+  }
+) => {
+  return [...vaults].sort((a, b) => {
+    const winChance = (v: Vault) => prizeYields[v.id] ?? 0
+
+    return winChance(b) - winChance(a)
+  })
 }
 
 const sortVaultsByTotalDeposits = (

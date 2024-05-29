@@ -2,6 +2,7 @@ import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useSortedVaults } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import classNames from 'classnames'
+import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { VaultCard } from './VaultCard'
 
 interface VaultsCardsProps {
@@ -12,8 +13,10 @@ interface VaultsCardsProps {
 export const VaultCards = (props: VaultsCardsProps) => {
   const { vaults, className } = props
 
-  // TODO: fix this hook (currently requires passing prizepool and twabrewards to fully sort)
-  const { sortedVaults, isFetched } = useSortedVaults(vaults)
+  const prizePools = useSupportedPrizePools()
+  const prizePoolsArray = Object.values(prizePools)
+
+  const { sortedVaults, isFetched } = useSortedVaults(vaults, { prizePools: prizePoolsArray })
 
   if (!isFetched) {
     return <Spinner className={className} />

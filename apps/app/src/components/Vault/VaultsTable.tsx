@@ -5,18 +5,14 @@ import {
   useSelectedVaultLists,
   useSortedVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
-import {
-  BonusRewardsTooltip,
-  ImportedVaultTooltip,
-  SortIcon,
-  VaultBadge
-} from '@shared/react-components'
+import { ImportedVaultTooltip, SortIcon, VaultBadge } from '@shared/react-components'
 import { Spinner, Table, TableProps } from '@shared/ui'
 import { getVaultId } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { ReactNode } from 'react'
+import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { VaultBonusRewards } from './VaultBonusRewards'
 import { VaultButtons } from './VaultButtons'
 import { VaultPrizes } from './VaultPrizes'
@@ -35,7 +31,9 @@ export const VaultsTable = (props: VaultsTableProps) => {
   const t_vaults = useTranslations('Vaults')
   const t_tooltips = useTranslations('Tooltips')
 
-  // TODO: fix this hook (currently requires passing prizepool and twabrewards to fully sort)
+  const prizePools = useSupportedPrizePools()
+  const prizePoolsArray = Object.values(prizePools)
+
   const {
     sortedVaults,
     sortVaultsBy,
@@ -44,7 +42,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
     setSortDirection,
     toggleSortDirection,
     isFetched
-  } = useSortedVaults(vaults)
+  } = useSortedVaults(vaults, { prizePools: prizePoolsArray })
 
   const { localVaultLists, importedVaultLists } = useSelectedVaultLists()
 
