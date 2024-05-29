@@ -5,7 +5,13 @@ import {
   useSelectedVaultLists,
   useSortedVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { ImportedVaultTooltip, SortIcon, VaultBadge } from '@shared/react-components'
+import {
+  ImportedVaultTooltip,
+  PrizesTooltip,
+  RelativeWinChanceTooltip,
+  SortIcon,
+  VaultBadge
+} from '@shared/react-components'
 import { Spinner, Table, TableProps } from '@shared/ui'
 import { getVaultId } from '@shared/utilities'
 import classNames from 'classnames'
@@ -100,7 +106,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
             id='prizes'
             onClick={handleHeaderClick}
             direction={getDirection('prizes')}
-            // TODO: add prizes tooltip
+            append={<PrizesTooltip iconSize='lg' intl={t_tooltips('prizes')} />}
           />
         ),
         position: 'center'
@@ -111,7 +117,9 @@ export const VaultsTable = (props: VaultsTableProps) => {
             id='winChance'
             onClick={handleHeaderClick}
             direction={getDirection('winChance')}
-            // TODO: add win chance tooltip
+            append={
+              <RelativeWinChanceTooltip iconSize='lg' intl={t_tooltips('relativeWinChance')} />
+            }
           />
         ),
         position: 'center'

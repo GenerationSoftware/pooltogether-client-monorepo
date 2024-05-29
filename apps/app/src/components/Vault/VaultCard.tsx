@@ -1,6 +1,12 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useVaultPromotionsApr } from '@generationsoftware/hyperstructure-react-hooks'
-import { BonusRewardsTooltip, ImportedVaultTooltip, VaultBadge } from '@shared/react-components'
+import {
+  BonusRewardsTooltip,
+  ImportedVaultTooltip,
+  PrizesTooltip,
+  RelativeWinChanceTooltip,
+  VaultBadge
+} from '@shared/react-components'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { TWAB_REWARDS_SETTINGS } from '@constants/config'
@@ -52,14 +58,14 @@ export const VaultCard = (props: VaultCardProps) => {
         <div className='flex items-center justify-between'>
           <span className='flex gap-1 items-center text-sm text-pt-purple-200'>
             {t_vaults('headers.winChance')}
-            {/* TODO: add win chance tooltip */}
+            <RelativeWinChanceTooltip intl={t_tooltips('relativeWinChance')} className='text-xs' />
           </span>
           <VaultWinChance vault={vault} className='w-11' tooltipClassName='text-xs' />
         </div>
         <div className='flex items-center justify-between'>
           <span className='flex gap-1 items-center text-sm text-pt-purple-200'>
             {t_vaults('headers.prizes')}
-            {/* TODO: add prizes tooltip */}
+            <PrizesTooltip intl={t_tooltips('prizes')} className='text-xs' />
           </span>
           <VaultPrizes vault={vault} className='text-xs' amountClassName='!text-base' />
         </div>

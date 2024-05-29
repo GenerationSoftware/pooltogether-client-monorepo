@@ -286,6 +286,8 @@
     "xPrizesYearly": "{number, plural, one {# prize} other {# prizes}} yearly"
   },
   "Tooltips": {
+    "prizes": "Prizes you can win while deposited in a vault",
+    "relativeWinChance": "A vault's relative win chance compared to other vaults",
     "prizeYield": "A recent average of a vault's contributions to the prize pool",
     "bonusRewards": "An estimate of current extra incentives for depositors",
     "winChance": "Your chance to win a prize in any given draw",
