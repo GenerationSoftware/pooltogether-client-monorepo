@@ -123,14 +123,14 @@ export const TWAB_REWARDS_SETTINGS: {
       USDC_TOKEN_ADDRESSES[NETWORK.arbitrum_sepolia],
       POOL_TOKEN_ADDRESSES[NETWORK.arbitrum_sepolia]
     ],
-    fromBlock: 42_351_000n
+    fromBlock: 48_888_900n
   },
   [NETWORK.base_sepolia]: {
     tokenAddresses: [
       USDC_TOKEN_ADDRESSES[NETWORK.base_sepolia],
       POOL_TOKEN_ADDRESSES[NETWORK.base_sepolia]
     ],
-    fromBlock: 9_156_200n
+    fromBlock: 10_578_500n
   }
 }
 

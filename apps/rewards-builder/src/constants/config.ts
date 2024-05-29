@@ -88,6 +88,6 @@ export const PROMOTION_FILTERS: {
   [NETWORK.optimism]: { fromBlock: 118_900_000n },
   [NETWORK.base]: { fromBlock: 14_506_800n },
   [NETWORK.optimism_sepolia]: { fromBlock: 10_793_300n },
-  [NETWORK.arbitrum_sepolia]: { fromBlock: 42_351_000n },
-  [NETWORK.base_sepolia]: { fromBlock: 9_156_200n }
+  [NETWORK.arbitrum_sepolia]: { fromBlock: 48_888_900n },
+  [NETWORK.base_sepolia]: { fromBlock: 10_578_500n }
 }

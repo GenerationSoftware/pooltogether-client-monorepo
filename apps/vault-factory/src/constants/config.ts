@@ -154,7 +154,7 @@ export const NETWORK_CONFIG: Record<
   },
   [NETWORK.arbitrum_sepolia]: {
     description: 'Sepolia testnet for the Arbitrum network.',
-    prizePool: '0xdBBC646D78Ca1752F2DB6EA76DC467F740f9f816',
+    prizePool: '0x51211a6b7aa15b3f1063f151ec3343898cd7bd75',
     claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.arbitrum_sepolia],
     lp: { targetAuctionPeriod: SECONDS_PER_HOUR * 6, targetAuctionPriceUsd: 10 },
     yieldSources: [
@@ -164,16 +164,16 @@ export const NETWORK_CONFIG: Record<
         href: 'https://aave.com/',
         description: 'Lending and borrowing protocol',
         vaults: [
-          { address: '0x67d5B5b7912e1E06633cCbF1344215a2Cd6668D7', tags: ['stablecoin'] },
-          { address: '0xFB63e2ff4252a14BA3946B978884A163A1ACDf2b', tags: ['stablecoin'] },
-          { address: '0x62546aEbd1cadC0A178DCB97757e6BF436048A79' }
+          { address: '0x6Cfe985a336bCA7356b73dE6a83d2dA1B1ddC234', tags: ['stablecoin'] },
+          { address: '0x3d7A9ab3744259C20019972b09c661fb9F9aEdfd', tags: ['stablecoin'] },
+          { address: '0xE96dA2357f5A6fD3ECd7E3436ea10726394CB99d' }
         ]
       }
     ]
   },
   [NETWORK.base_sepolia]: {
     description: 'Sepolia testnet for the Base network.',
-    prizePool: '0xC90625047f206f525a811a54BbEc05C23E08B58b',
+    prizePool: '0xcb514c0847a9eb30aaa05fc290ddb40afdd44bdb',
     claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.base_sepolia],
     lp: { targetAuctionPeriod: SECONDS_PER_HOUR * 6, targetAuctionPriceUsd: 10 },
     yieldSources: [
@@ -183,11 +183,9 @@ export const NETWORK_CONFIG: Record<
         href: 'https://aave.com/',
         description: 'Lending and borrowing protocol',
         vaults: [
-          { address: '0x8D2F084f97E38EB1d630D0C341aC6281E0Dca41C', tags: ['stablecoin'] },
-          { address: '0x6787Cb862802a0C422FD89564f5e7b6403347451', tags: ['stablecoin'] },
-          { address: '0x61B32C1df62586B6286f866C465bD5aE0b6020dB', tags: ['stablecoin'] },
-          { address: '0xe3944bb9129ac6e117a838a4e4b3A97c80b389ED' },
-          { address: '0x2755e45642f88b3F2d1E007119d29914CE8D1A99' }
+          { address: '0x1E72B8abA9ef584a6E68e0128F7e05b453e96d43', tags: ['stablecoin'] },
+          { address: '0xBF8D45B7b07cD0AEAE37ba4369Be1768aaC23569', tags: ['stablecoin'] },
+          { address: '0xbbbEDC3689aA47D5410e247135fa817AB9754106' }
         ]
       }
     ]
