@@ -1,16 +1,18 @@
-import { base, Chain, optimism } from 'viem/chains'
+import { arbitrum, base, Chain, optimism } from 'viem/chains'
 import { Network } from './types'
 
-export const NETWORKS = [optimism.id, base.id]
+export const NETWORKS = [optimism.id, base.id, arbitrum.id]
 
 export const VIEM_CHAINS: Record<Network, Chain> = {
   [optimism.id]: optimism,
-  [base.id]: base
+  [base.id]: base,
+  [arbitrum.id]: arbitrum
 }
 
 export const RPC_URLS: Record<Network, string> = {
   [optimism.id]: OPTIMISM_RPC_URL,
-  [base.id]: BASE_RPC_URL
+  [base.id]: BASE_RPC_URL,
+  [arbitrum.id]: ARBITRUM_RPC_URL
 }
 
 export const TOKEN_PRICES_API_URL = 'https://token-prices.api.cabana.fi'
