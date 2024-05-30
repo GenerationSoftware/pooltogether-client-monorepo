@@ -66,9 +66,6 @@ const PrizePoolCarousel = (props: PrizePoolCarouselProps) => {
       const vaultsArray = Object.values(vaults.vaults)
       const firstVaultInChain = vaultsArray.find((vault) => vault.chainId === chainId)
       !!firstVaultInChain && setSelectedVaultById(firstVaultInChain.id)
-
-      const prizePoolIndex = prizePoolsArray.findIndex((pool) => pool.chainId === chainId)
-      prizePoolIndex !== -1 && setPrizePoolIndex(prizePoolIndex)
     }
   }
 
@@ -78,6 +75,8 @@ const PrizePoolCarousel = (props: PrizePoolCarouselProps) => {
       !!rawUrlNetwork && typeof rawUrlNetwork === 'string' ? parseInt(rawUrlNetwork) : undefined
     if (!!chainId) {
       handleNetworkChange(chainId)
+      const prizePoolIndex = prizePoolsArray.findIndex((pool) => pool.chainId === chainId)
+      prizePoolIndex !== -1 && setPrizePoolIndex(prizePoolIndex)
     }
   }, [router])
 
