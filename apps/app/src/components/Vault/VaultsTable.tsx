@@ -176,7 +176,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
             className: 'flex-col text-center'
           },
           winChance: {
-            content: <VaultWinChance vault={vault} />,
+            content: <VaultWinChance vault={vault} className='w-14' />,
             position: 'center'
           },
           totalDeposits: {
