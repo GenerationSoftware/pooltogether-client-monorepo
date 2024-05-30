@@ -31,9 +31,9 @@
     "tslib": "^2.6.0",
     "tsup": "^6.6.3",
     "typescript": "^5.0.4",
-    "viem": "^2.7.9"
+    "viem": "2.13.2"
   },
   "peerDependencies": {
-    "viem": "^2.7.9"
+    "viem": "^2"
   }
 }
