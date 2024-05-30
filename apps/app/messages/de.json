@@ -40,26 +40,16 @@
     "account": "Konto"
   },
   "Home": {
-    "winUpTo": {
-      "beforeValue": "Einzahlung für eine tägliche Chance auf einen Gewinn von bis zu",
-      "afterValue": ""
-    },
     "withdrawAnyTime": "Du kannst Deine gesamte Einzahlung jederzeit abheben"
   },
   "Prizes": {
-    "learnMore": "Erfahre mehr über die Funktionsweise von Preisen",
-    "switchPrizePool": "Preis Pool wechseln",
-    "estPrizeValue": "Geschätzter Preiswert",
-    "estPrizeFreq": "Geschätzte Häufigkeit",
-    "recentWinners": "Neueste Preis Pool Gewinner",
     "drawWinners": {
-      "beforeValue": "{numWallets, plural, one {# Wallet} other {# Wallets}} gewonnen",
+      "beforeValue": "{numPeople, plural, one {# wallet} other {# wallets}} gewonnen",
       "afterValue": {
         "today": "heute",
         "yesterday": "gestern",
         "onXDate": "am {date}"
-      },
-      "drawIsOngoing": "Auslosung findet gerade statt"
+      }
     },
     "drawModal": {
       "drawTotal": {

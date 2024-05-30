@@ -27,27 +27,9 @@
     "account": "Счет"
   },
   "Home": {
-    "winUpTo": {
-      "beforeValue": "Вносите депозит, чтобы получить ежедневный шанс выиграть до",
-      "afterValue": ""
-    },
     "withdrawAnyTime": "Вы можете снять весь депозит в любое время"
   },
   "Prizes": {
-    "learnMore": "Узнайте больше о том, как работают призы",
-    "switchPrizePool": "Переключение призового фонда",
-    "estPrizeValue": "Оценочная стоимость приза",
-    "estPrizeFreq": "Расчетная частота",
-    "recentWinners": "Последние победители призового фонда",
-    "drawWinners": {
-      "beforeValue": "{numWallets, plural, one {# кошелек} other {# кошельки}} выиграл",
-      "afterValue": {
-        "today": "сегодня",
-        "yesterday": "вчера",
-        "onXDate": "на {date}"
-      },
-      "drawIsOngoing": "Розыгрыш продолжается"
-    },
     "drawModal": {
       "drawTotal": {
         "beforeValue": "В этом розыгрыше на {numWallets} уникальных кошельков было выиграно в общей сложности",

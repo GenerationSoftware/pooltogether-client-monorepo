@@ -31,27 +31,9 @@
     "account": "Cuenta"
   },
   "Home": {
-    "winUpTo": {
-      "beforeValue": "Deposite para tener la oportunidad diaria de ganar hasta",
-      "afterValue": ""
-    },
     "withdrawAnyTime": "Puedes retirar tu depósito completo en cualquier momento"
   },
   "Prizes": {
-    "learnMore": "Más información sobre cómo funcionan los premios",
-    "switchPrizePool": "Cambiar fondo de premios",
-    "estPrizeValue": "Valor estimado del premio",
-    "estPrizeFreq": "Frecuencia estimada",
-    "recentWinners": "Ganadores de premios recientes",
-    "drawWinners": {
-      "beforeValue": "{numWallets, plural, one {# monedero} other {# monederos}} ganados",
-      "afterValue": {
-        "today": "hoy",
-        "yesterday": "ayer",
-        "onXDate": "en {date}"
-      },
-      "drawIsOngoing": "Sorteo en curso"
-    },
     "drawModal": {
       "drawTotal": {
         "beforeValue": "Este sorteo tenía monederos únicos {numWallets} ganando un total de",

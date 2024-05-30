@@ -30,27 +30,9 @@
     "account": "खाता"
   },
   "Home": {
-    "winUpTo": {
-      "beforeValue": "जीतने के दैनिक अवसर के लिए जमा करें",
-      "afterValue": ""
-    },
     "withdrawAnyTime": "आप किसी भी समय अपनी पूरी जमा राशि निकाल सकते हैं"
   },
   "Prizes": {
-    "learnMore": "पुरस्कार कैसे काम करते हैं इसके बारे में और जानें",
-    "switchPrizePool": "पुरस्कार पूल बदलें",
-    "estPrizeValue": "अनुमानित पुरस्कार मूल्य",
-    "estPrizeFreq": "अनुमानित आवृत्ति",
-    "recentWinners": "हाल के पुरस्कार पूल विजेता",
-    "drawWinners": {
-      "beforeValue": "{numWallets, plural, one {# बटुआ} other {# बटुए}} जीत गया",
-      "afterValue": {
-        "today": "आज",
-        "yesterday": "कल",
-        "onXDate": "{date} पर"
-      },
-      "drawIsOngoing": "ड्रा जारी है"
-    },
     "drawModal": {
       "drawTotal": {
         "beforeValue": "इस ड्रा में {numWallets} के अद्वितीय वॉलेट ने कुल मिलाकर जीत हासिल की",
