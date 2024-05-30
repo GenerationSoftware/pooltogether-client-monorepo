@@ -18,14 +18,15 @@ export const PrizesHeader = () => {
     ? Object.values(allPrizeValue).reduce((a, b) => a + b, 0)
     : undefined
 
-  const TotalPrizeValue = () =>
-    !!totalPrizeValue ? (
-      <span className='ml-2 text-pt-teal'>
+  const TotalPrizeValue = () => (
+    <span className='ml-2 text-pt-teal'>
+      {!!totalPrizeValue ? (
         <CurrencyValue baseValue={totalPrizeValue} hideZeroes={true} countUp={true} />
-      </span>
-    ) : (
-      <Spinner />
-    )
+      ) : (
+        <Spinner />
+      )}
+    </span>
+  )
 
   return (
     <>
