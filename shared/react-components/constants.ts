@@ -14,7 +14,8 @@ const tokenLogoUrls = {
   ageur: 'https://etherscan.io/token/images/ageur_32.png?=v982',
   op: 'https://optimistic.etherscan.io/token/images/optimism_32.png',
   przVELO: `${LINKS.app}/icons/przVELO.svg`,
-  steth: 'https://assets.coingecko.com/coins/images/13442/standard/steth_logo.png?1696513206'
+  steth: 'https://assets.coingecko.com/coins/images/13442/standard/steth_logo.png?1696513206',
+  usdt: 'https://assets.coingecko.com/coins/images/325/standard/Tether.png?1696501661'
 } as const
 
 /**
@@ -73,12 +74,18 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   [NETWORK.fuji]: {},
   [NETWORK.celo]: {},
   [NETWORK.celo_testnet]: {},
-  [NETWORK.arbitrum]: {},
+  [NETWORK.arbitrum]: {
+    [POOL_TOKEN_ADDRESSES[NETWORK.arbitrum].toLowerCase()]: tokenLogoUrls.pool,
+    '0xaf88d065e77c8cc2239327c5edb3a432268e5831': tokenLogoUrls.usdc,
+    '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8': tokenLogoUrls.usdc,
+    '0x82af49447d8a07e3bd95bd0d56f35241523fbab1': tokenLogoUrls.weth,
+    '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9': tokenLogoUrls.usdt
+  },
   [NETWORK.arbitrum_sepolia]: {
     [POOL_TOKEN_ADDRESSES[NETWORK.arbitrum_sepolia].toLowerCase()]: tokenLogoUrls.pool,
     [USDC_TOKEN_ADDRESSES[NETWORK.arbitrum_sepolia]]: tokenLogoUrls.usdc,
-    '0x837f6ec55793c49b2994ba703a3d2331649b09ea': tokenLogoUrls.dai,
-    '0x1a586a874f7c6ca5c3220c434fb5096dde2ec3f0': tokenLogoUrls.weth
+    '0xfe045beefda06606fc5f441ccca2fe8c903e9725': tokenLogoUrls.dai,
+    '0x060fad1bca90e5b1efca0d93febec96e638fd8a6': tokenLogoUrls.weth
   },
   [NETWORK.base]: {
     [POOL_TOKEN_ADDRESSES[NETWORK.base].toLowerCase()]: tokenLogoUrls.pool,
@@ -91,10 +98,8 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   [NETWORK.base_sepolia]: {
     [POOL_TOKEN_ADDRESSES[NETWORK.base_sepolia].toLowerCase()]: tokenLogoUrls.pool,
     [USDC_TOKEN_ADDRESSES[NETWORK.base_sepolia]]: tokenLogoUrls.usdc,
-    '0x82557c5157fcbeddd80ae09647ec018a0083a638': tokenLogoUrls.dai,
-    '0x431bf0fe8acb5c79c4f4fbc63f6de0756e928dd3': tokenLogoUrls.gusd,
-    '0x41d7ddf285a08c74a4cb9fdc979c703b10c30ab1': tokenLogoUrls.weth,
-    '0x214e35ca60a828cc44fae2f2b97d37c116b02229': tokenLogoUrls.wbtc
+    '0xe4b4a71923aecb4b8924bda8c31941a8ab50ff86': tokenLogoUrls.dai,
+    '0x019aa44d02715e4042b1ba3b4d2fa9bcef33c002': tokenLogoUrls.weth
   }
 }
 

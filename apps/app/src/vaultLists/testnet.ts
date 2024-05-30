@@ -95,14 +95,14 @@ export const testnetVaults: VaultList['tokens'] = [
   },
   {
     chainId: NETWORK.base_sepolia,
-    address: '0x52e119Db61648df0680616f2E9Bd59a8B470bF1e',
+    address: '0x8Ec8328d3281F8275d6b44ffAdA9DF002B928AEa',
     name: 'Prize POOL',
     decimals: 18,
     symbol: 'pPOOL',
     logoURI: 'https://etherscan.io/token/images/pooltogether_32.png',
     extensions: {
       underlyingAsset: {
-        address: '0x71B271952c3335e7258fBdCAE5CD3a57E76b5b51',
+        address: '0x50Ac98a0CA373a3935069A8755D895663d2F4A16',
         symbol: 'POOL',
         name: 'PoolTogether'
       }
@@ -110,14 +110,14 @@ export const testnetVaults: VaultList['tokens'] = [
   },
   {
     chainId: NETWORK.base_sepolia,
-    address: '0x01F6351FE2651C411cD98910AAe2ADEfCD034c59',
+    address: '0x513cd9e4d06e86acfda1c5e7b93c4a3400d240d7',
     name: 'Prize DAI',
     decimals: 18,
     symbol: 'pDAI',
     logoURI: 'https://assets.coingecko.com/coins/images/9956/small/4943.png?1636636734',
     extensions: {
       underlyingAsset: {
-        address: '0x82557c5157fcBEddD80aE09647Ec018a0083a638',
+        address: '0xe4B4A71923AecB4b8924bDA8C31941a8Ab50FF86',
         symbol: 'DAI',
         name: 'Dai Stablecoin'
       }
@@ -125,14 +125,14 @@ export const testnetVaults: VaultList['tokens'] = [
   },
   {
     chainId: NETWORK.base_sepolia,
-    address: '0xA51D2A8dd481800E9576aeb341340411b2B28679',
+    address: '0xb974ba187814913d0415d1d0feda77febd3f2b32',
     name: 'Prize USDC',
     decimals: 6,
     symbol: 'pUSDC',
     logoURI: 'https://etherscan.io/token/images/centre-usdc_28.png',
     extensions: {
       underlyingAsset: {
-        address: '0xC88130e55Db4a3BA162984d6EFE4fF982BC0E227',
+        address: '0x034109D90E70B972617e96b33295E724FfF5887a',
         symbol: 'USDC',
         name: 'USD Coin'
       }
@@ -140,45 +140,14 @@ export const testnetVaults: VaultList['tokens'] = [
   },
   {
     chainId: NETWORK.base_sepolia,
-    address: '0xeD665c4c6ec4315131ea5266dA4c3Be4694D0615',
-    name: 'Prize GUSD',
-    decimals: 2,
-    symbol: 'pGUSD',
-    logoURI:
-      'https://assets.coingecko.com/coins/images/5992/small/gemini-dollar-gusd.png?1536745278',
-    extensions: {
-      underlyingAsset: {
-        address: '0x431bf0FE8acB5C79C4f4FBc63f6De0756e928Dd3',
-        symbol: 'GUSD',
-        name: 'Gemini Dollar'
-      }
-    }
-  },
-  {
-    chainId: NETWORK.base_sepolia,
-    address: '0x7BA33795f824c3494a7D8285E7cc20b83A7d7dBa',
-    name: 'Prize WBTC',
-    decimals: 8,
-    symbol: 'pWBTC',
-    logoURI: 'https://etherscan.io/token/images/wbtc_28.png?v=1',
-    extensions: {
-      underlyingAsset: {
-        address: '0x214e35Ca60a828cC44Fae2f2b97D37C116B02229',
-        symbol: 'WBTC',
-        name: 'Wrapped Bitcoin'
-      }
-    }
-  },
-  {
-    chainId: NETWORK.base_sepolia,
-    address: '0x137a5E9cF386eA09bE2304f17052613609D24660',
+    address: '0xb948ad19895b36833c52ba1da5a77320d040ddbd',
     name: 'Prize WETH',
     decimals: 18,
     symbol: 'pWETH',
     logoURI: 'https://etherscan.io/token/images/weth_28.png',
     extensions: {
       underlyingAsset: {
-        address: '0x41D7dDF285A08C74A4cB9FDc979C703B10c30ab1',
+        address: '0x019Aa44D02715e4042b1BA3b4D2FA9bCEF33c002',
         symbol: 'WETH',
         name: 'Wrapped Ether'
       }
@@ -186,14 +155,14 @@ export const testnetVaults: VaultList['tokens'] = [
   },
   {
     chainId: NETWORK.arbitrum_sepolia,
-    address: '0xaab8f5125451c7cc6f9e2d4bd381415e8e38fa29',
+    address: '0xB608C0F9d37B14BDFEfc654B1FC8F38b34541a01',
     name: 'Prize POOL',
     decimals: 18,
     symbol: 'pPOOL',
     logoURI: 'https://etherscan.io/token/images/pooltogether_32.png',
     extensions: {
       underlyingAsset: {
-        address: '0xE02919b18388C666297D24d56CB794C440d33245',
+        address: '0x02A32F041C16158bcC1CaA90e22B230958eD5c4b',
         symbol: 'POOL',
         name: 'PoolTogether'
       }
@@ -201,14 +170,14 @@ export const testnetVaults: VaultList['tokens'] = [
   },
   {
     chainId: NETWORK.arbitrum_sepolia,
-    address: '0xaa7b1d6a8aaf3ec564c071a9ed9f0d4bcb96a797',
+    address: '0xca45845b69c441a5d319e36c8aacd99df806e95d',
     name: 'Prize DAI',
     decimals: 18,
     symbol: 'pDAI',
     logoURI: 'https://assets.coingecko.com/coins/images/9956/small/4943.png?1636636734',
     extensions: {
       underlyingAsset: {
-        address: '0x837F6ec55793c49B2994BA703a3D2331649B09EA',
+        address: '0xFE045BEEfdA06606fc5f441ccCa2fE8C903e9725',
         symbol: 'DAI',
         name: 'Dai Stablecoin'
       }
@@ -216,14 +185,14 @@ export const testnetVaults: VaultList['tokens'] = [
   },
   {
     chainId: NETWORK.arbitrum_sepolia,
-    address: '0x748c49421687017b9159e32f14d439cd38a156f7',
+    address: '0xba9926560c2161761f1d438b3eb7884df02436bb',
     name: 'Prize USDC',
     decimals: 6,
     symbol: 'pUSDC',
     logoURI: 'https://etherscan.io/token/images/centre-usdc_28.png',
     extensions: {
       underlyingAsset: {
-        address: '0x45B32D0C3Cf487e11C3b80AF564878bea83cCe67',
+        address: '0x7B2E0BD66ef04d26db132391b5600aF3887E9f9F',
         symbol: 'USDC',
         name: 'USD Coin'
       }
@@ -231,14 +200,14 @@ export const testnetVaults: VaultList['tokens'] = [
   },
   {
     chainId: NETWORK.arbitrum_sepolia,
-    address: '0x6528c06563fa390ec67ac13973cd10089aa1d58f',
+    address: '0x9b47c08d066184e65efb82828e53c0ad1729f992',
     name: 'Prize WETH',
     decimals: 18,
     symbol: 'pWETH',
     logoURI: 'https://etherscan.io/token/images/weth_28.png',
     extensions: {
       underlyingAsset: {
-        address: '0x1A586a874f7C6ca5C3220C434fb5096dDe2ec3f0',
+        address: '0x060faD1bCA90E5b1EFca0d93FEBeC96E638fD8A6',
         symbol: 'WETH',
         name: 'Wrapped Ether'
       }
