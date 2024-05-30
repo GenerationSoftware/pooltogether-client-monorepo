@@ -18,7 +18,7 @@ import {
   DelegateModal,
   SettingsModal
 } from '@shared/react-components'
-import { ExternalLink, Footer, FooterItem, Navbar, SocialIcon, toast } from '@shared/ui'
+import { Footer, FooterItem, Navbar, SocialIcon, toast } from '@shared/ui'
 import { getDiscordInvite, LINKS, NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
 import * as fathom from 'fathom-client'
@@ -80,11 +80,11 @@ export const Layout = (props: LayoutProps) => {
 
   const { vaults } = useSelectedVaults()
   const { address: userAddress, connector } = useAccount()
-  const {
-    data: userVaultBalances,
-    isFetched: isFetchedUserVaultBalances,
-    refetch: refetchUserVaultBalances
-  } = useAllUserVaultBalances(vaults, userAddress as Address, { refetchOnWindowFocus: true })
+  const { refetch: refetchUserVaultBalances } = useAllUserVaultBalances(
+    vaults,
+    userAddress as Address,
+    { refetchOnWindowFocus: true }
+  )
   const { refetch: refetchUserVaultDelegationBalances } = useAllUserVaultDelegationBalances(
     vaults,
     userAddress as Address,
@@ -116,33 +116,6 @@ export const Layout = (props: LayoutProps) => {
       toast(alert.content, { id: alert.id })
     })
   })
-
-  // TODO: remove this whole block a while after launch
-  const [needsMigrationToastCheck, setNeedsMigrationToastCheck] = useState<boolean>(false)
-  useEffect(() => {
-    setNeedsMigrationToastCheck(true)
-  })
-  useEffect(() => {
-    if (needsMigrationToastCheck && isFetchedUserVaultBalances) {
-      setNeedsMigrationToastCheck(false)
-
-      const positiveBalances = Object.values(userVaultBalances ?? {})
-        .map((b) => b.amount)
-        .filter((b) => b > 0n)
-      if (!positiveBalances.length) {
-        toast(
-          <div className='flex flex-col gap-2 items-center text-center text-base'>
-            <span>Is your account missing some deposits?</span>
-            <span>You might have been deposited in an older version of PoolTogether.</span>
-            <ExternalLink href={LINKS.migrations} className='text-pt-teal'>
-              Check the migration app
-            </ExternalLink>
-          </div>,
-          { id: 'migrationAppNudge' }
-        )
-      }
-    }
-  }, [userVaultBalances, isFetchedUserVaultBalances])
 
   const footerItems: FooterItem[] = [
     {

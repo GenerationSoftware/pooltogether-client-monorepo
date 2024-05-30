@@ -88,7 +88,9 @@ A React componponent library utilizing some simpler components from the internal
 - `DelegationDescriptionTooltip`
 - `DeprecatedVaultTooltip`
 - `ImportedVaultTooltip`
+- `PrizesTooltip`
 - `PrizeYieldTooltip`
+- `RelativeWinChanceTooltip`
 - `VaultContributionsTooltip`
 - `VaultFeeTooltip`
 - `WinChanceTooltip`

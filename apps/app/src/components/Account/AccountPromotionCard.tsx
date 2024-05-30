@@ -62,12 +62,12 @@ export const AccountPromotionCard = (props: AccountPromotionCardProps) => {
         </div>
         <div className='w-full flex flex-col gap-1 px-3'>
           <div className='flex items-center justify-between'>
-            <span className='text-xs text-pt-purple-200'>{t('rewardToken')}</span>
+            <span className='text-sm text-pt-purple-200'>{t('rewardToken')}</span>
             <AccountPromotionToken chainId={chainId} tokenAddress={promotionInfo.token} />
           </div>
           {!!claimed && (
             <div className='flex items-center justify-between'>
-              <span className='text-xs text-pt-purple-200'>{t('rewardsClaimed')}</span>
+              <span className='text-sm text-pt-purple-200'>{t('rewardsClaimed')}</span>
               <AccountPromotionClaimedRewards
                 chainId={chainId}
                 promotionId={promotionId}
@@ -78,7 +78,7 @@ export const AccountPromotionCard = (props: AccountPromotionCardProps) => {
           )}
           {!!claimable && (
             <div className='flex items-center justify-between'>
-              <span className='text-xs text-pt-purple-200'>{t('rewardsClaimable')}</span>
+              <span className='text-sm text-pt-purple-200'>{t('rewardsClaimable')}</span>
               <AccountPromotionClaimableRewards
                 chainId={chainId}
                 promotionId={promotionId}

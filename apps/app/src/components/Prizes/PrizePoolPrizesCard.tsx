@@ -1,16 +1,17 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { useAllPrizeInfo, usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
-import { TokenAmount, TokenValue } from '@shared/react-components'
-import { Spinner } from '@shared/ui'
+import { NetworkBadge, TokenAmount, TokenValue } from '@shared/react-components'
+import { Card, Spinner } from '@shared/ui'
 import { formatDailyCountToFrequency, getPrizeTextFromFrequency } from '@shared/utilities'
 import { useTranslations } from 'next-intl'
 
-interface PrizesTableProps {
+export interface PrizePoolPrizesCardProps {
   prizePool: PrizePool
+  className?: string
 }
 
-export const PrizesTable = (props: PrizesTableProps) => {
-  const { prizePool } = props
+export const PrizePoolPrizesCard = (props: PrizePoolPrizesCardProps) => {
+  const { prizePool, className } = props
 
   const t_prizes = useTranslations('Prizes')
   const t_freq = useTranslations('Frequency')
@@ -19,13 +20,19 @@ export const PrizesTable = (props: PrizesTableProps) => {
   const { data: tokenData, isFetched: isFetchedTokenData } = usePrizeTokenData(prizePool)
 
   return (
-    <>
-      <div className='flex w-full max-w-[36rem] text-xs text-pt-purple-100 pb-4 border-b-[0.5px] border-b-current md:text-sm md:text-pt-purple-100/50 md:mt-8 md:pb-2'>
-        <span className='flex-grow pl-6 text-left md:pl-16'>{t_prizes('estPrizeValue')}</span>
-        <span className='flex-grow pr-6 text-right md:pr-16'>{t_prizes('estPrizeFreq')}</span>
+    <Card wrapperClassName={className} className='gap-3 items-center !justify-start md:gap-4'>
+      <NetworkBadge
+        chainId={prizePool.chainId}
+        hideBg={true}
+        iconClassName='w-6 h-6'
+        textClassName='text-xl font-semibold'
+      />
+      <div className='w-full flex text-xs text-pt-purple-100/50 pb-2 border-b-[0.5px] border-b-current md:text-sm'>
+        <span className='flex-grow pl-8 text-left md:pl-16'>{t_prizes('prize')}</span>
+        <span className='flex-grow pr-8 text-right md:pr-16'>{t_prizes('frequency')}</span>
       </div>
       {isFetchedAllPrizeInfo && isFetchedTokenData && !!tokenData ? (
-        <div className='flex flex-col w-full max-w-[36rem] gap-3'>
+        <div className='w-full flex flex-col gap-3'>
           {Object.values(allPrizeInfo)[0]
             .slice(0, -2)
             .map((prize, i) => {
@@ -34,9 +41,9 @@ export const PrizesTable = (props: PrizesTableProps) => {
               return (
                 <div
                   key={`pp-prizes-${prizePool.chainId}-${i}`}
-                  className='flex w-full items-center'
+                  className='w-full flex items-center'
                 >
-                  <span className='flex-grow text-lg text-pt-teal pl-8 text-left md:text-3xl md:pl-16'>
+                  <span className='flex-grow pl-6 text-left text-lg text-pt-teal/90 md:text-3xl md:pl-12'>
                     <TokenValue
                       token={{ ...tokenData, amount: prize.amount.current }}
                       hideZeroes={true}
@@ -48,7 +55,7 @@ export const PrizesTable = (props: PrizesTableProps) => {
                       }
                     />
                   </span>
-                  <span className='flex-grow text-pt-purple-100 pr-8 text-right md:text-xl md:pr-16'>
+                  <span className='flex-grow pr-6 text-right text-pt-purple-100 md:text-xl md:pr-12'>
                     {getPrizeTextFromFrequency(frequency, 'everyXdays', t_freq)}
                   </span>
                 </div>
@@ -58,6 +65,6 @@ export const PrizesTable = (props: PrizesTableProps) => {
       ) : (
         <Spinner />
       )}
-    </>
+    </Card>
   )
 }

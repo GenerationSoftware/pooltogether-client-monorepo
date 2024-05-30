@@ -42,13 +42,13 @@ export const AccountDepositsCard = (props: AccountDepositsCardProps) => {
       </div>
       <div className='w-full flex flex-col gap-1 px-3'>
         <div className='flex items-center justify-between'>
-          <span className='text-xs text-pt-purple-200'>
+          <span className='text-sm text-pt-purple-200'>
             {isExternalUser ? t_vault('headers.balance') : t_vault('headers.yourBalance')}
           </span>
           <AccountVaultBalance vault={vault} address={userAddress} className='!items-end' />
         </div>
         <div className='flex items-center justify-between'>
-          <span className='flex gap-1 items-center text-xs text-pt-purple-200'>
+          <span className='flex gap-1 items-center text-sm text-pt-purple-200'>
             {isExternalUser ? t_vault('headers.winChance') : t_vault('headers.yourWinChance')}
             <WinChanceTooltip intl={{ text: t_tooltips('winChance') }} className='text-xs' />
           </span>

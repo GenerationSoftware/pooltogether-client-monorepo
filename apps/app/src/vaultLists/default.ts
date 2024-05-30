@@ -5,8 +5,8 @@ import { testnetVaults } from './testnet'
 const defaultVaultList: VaultList = {
   name: 'Cabana Vault List',
   keywords: ['pooltogether', 'cabana', 'g9', 'optimism'],
-  version: { major: 2, minor: 6, patch: 1 },
-  timestamp: '2024-05-27T16:06:00Z',
+  version: { major: 2, minor: 6, patch: 2 },
+  timestamp: '2024-05-28T19:56:39Z',
   logoURI: `${DOMAINS.app}/pooltogether-token-logo.svg`,
   tokens: [
     {
@@ -32,13 +32,16 @@ const defaultVaultList: VaultList = {
       symbol: 'przUSDC',
       logoURI: `${DOMAINS.app}/icons/przUSDC.svg`,
       tags: ['aave'],
-      yieldSourceURI:
-        'https://app.aave.com/reserve-overview/?underlyingAsset=0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85&marketName=proto_optimism_v3',
       extensions: {
         underlyingAsset: {
           address: '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85',
           symbol: 'USDC',
           name: 'USD Coin'
+        },
+        yieldSource: {
+          name: 'Aave',
+          appURI:
+            'https://app.aave.com/reserve-overview/?underlyingAsset=0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85&marketName=proto_optimism_v3'
         }
       }
     },
@@ -50,13 +53,16 @@ const defaultVaultList: VaultList = {
       symbol: 'przWETH',
       logoURI: `${DOMAINS.app}/icons/przWETH.svg`,
       tags: ['aave'],
-      yieldSourceURI:
-        'https://app.aave.com/reserve-overview/?underlyingAsset=0x4200000000000000000000000000000000000006&marketName=proto_optimism_v3',
       extensions: {
         underlyingAsset: {
           address: '0x4200000000000000000000000000000000000006',
           symbol: 'WETH',
           name: 'Wrapped Ether'
+        },
+        yieldSource: {
+          name: 'Aave',
+          appURI:
+            'https://app.aave.com/reserve-overview/?underlyingAsset=0x4200000000000000000000000000000000000006&marketName=proto_optimism_v3'
         }
       }
     },
@@ -68,13 +74,16 @@ const defaultVaultList: VaultList = {
       symbol: 'przDAI',
       logoURI: `${DOMAINS.app}/icons/przDAI.svg`,
       tags: ['aave'],
-      yieldSourceURI:
-        'https://app.aave.com/reserve-overview/?underlyingAsset=0xda10009cbd5d07dd0cecc66161fc93d7c9000da1&marketName=proto_optimism_v3',
       extensions: {
         underlyingAsset: {
           address: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
           symbol: 'DAI',
           name: 'Dai Stablecoin'
+        },
+        yieldSource: {
+          name: 'Aave',
+          appURI:
+            'https://app.aave.com/reserve-overview/?underlyingAsset=0xda10009cbd5d07dd0cecc66161fc93d7c9000da1&marketName=proto_optimism_v3'
         }
       }
     },
@@ -86,13 +95,16 @@ const defaultVaultList: VaultList = {
       symbol: 'przLUSD',
       logoURI: `${DOMAINS.app}/icons/przLUSD.svg`,
       tags: ['aave'],
-      yieldSourceURI:
-        'https://app.aave.com/reserve-overview/?underlyingAsset=0xc40f949f8a4e094d1b49a23ea9241d289b7b2819&marketName=proto_optimism_v3',
       extensions: {
         underlyingAsset: {
           address: '0xc40F949F8a4e094D1b49a23ea9241D289B7b2819',
           symbol: 'LUSD',
           name: 'LUSD Stablecoin'
+        },
+        yieldSource: {
+          name: 'Aave',
+          appURI:
+            'https://app.aave.com/reserve-overview/?underlyingAsset=0xc40f949f8a4e094d1b49a23ea9241d289b7b2819&marketName=proto_optimism_v3'
         }
       }
     },
@@ -104,12 +116,15 @@ const defaultVaultList: VaultList = {
       symbol: 'przPOOLWETH',
       logoURI: `${DOMAINS.app}/icons/przVELO.svg`,
       tags: ['beefy', 'lp', 'velodrome'],
-      yieldSourceURI: 'https://app.beefy.finance/vault/velodrome-v2-pool-weth',
       extensions: {
         underlyingAsset: {
           address: '0xDB1FE6DA83698885104DA02A6e0b3b65c0B0dE80',
           symbol: 'vAMMV2-POOL/WETH',
           name: 'VolatileV2 AMM - POOL/WETH'
+        },
+        yieldSource: {
+          name: 'Beefy',
+          appURI: 'https://app.beefy.finance/vault/velodrome-v2-pool-weth'
         },
         lp: {
           appURI:
@@ -125,12 +140,15 @@ const defaultVaultList: VaultList = {
       symbol: 'przWSTETH-ETH',
       logoURI: `${DOMAINS.app}/icons/przVELO.svg`,
       tags: ['beefy', 'lp', 'velodrome'],
-      yieldSourceURI: 'https://app.beefy.finance/vault/velodrome-v2-wsteth-weth',
       extensions: {
         underlyingAsset: {
           address: '0x6dA98Bde0068d10DDD11b468b197eA97D96F96Bc',
           symbol: 'vAMMV2-wstETH/WETH',
           name: 'VolatileV2 AMM - wstETH/WETH'
+        },
+        yieldSource: {
+          name: 'Beefy',
+          appURI: 'https://app.beefy.finance/vault/velodrome-v2-wsteth-weth'
         },
         lp: {
           appURI:
@@ -146,12 +164,15 @@ const defaultVaultList: VaultList = {
       symbol: 'przOP',
       logoURI: `${DOMAINS.app}/icons/przOP.svg`,
       tags: ['beefy', 'sonne', 'deprecated'],
-      yieldSourceURI: 'https://app.beefy.finance/vault/sonne-op-op',
       extensions: {
         underlyingAsset: {
           address: '0x4200000000000000000000000000000000000042',
           symbol: 'OP',
           name: 'Optimism'
+        },
+        yieldSource: {
+          name: 'Beefy',
+          appURI: 'https://app.beefy.finance/vault/sonne-op-op'
         }
       }
     },
@@ -178,12 +199,15 @@ const defaultVaultList: VaultList = {
       symbol: 'przUSDC',
       logoURI: `${DOMAINS.app}/icons/przUSDC.svg`,
       tags: ['moonwell'],
-      yieldSourceURI: 'https://moonwell.fi/markets/supply/base/usdc',
       extensions: {
         underlyingAsset: {
           address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
           symbol: 'USDC',
           name: 'USD Coin'
+        },
+        yieldSource: {
+          name: 'Moonwell',
+          appURI: 'https://moonwell.fi/markets/supply/base/usdc'
         }
       }
     },
@@ -195,12 +219,15 @@ const defaultVaultList: VaultList = {
       symbol: 'przAERO',
       logoURI: `${DOMAINS.app}/icons/przAERO.svg`,
       tags: ['moonwell'],
-      yieldSourceURI: 'https://moonwell.fi/markets/supply/base/aero',
       extensions: {
         underlyingAsset: {
           address: '0x940181a94A35A4569E4529A3CDfB74e38FD98631',
           symbol: 'AERO',
           name: 'Aerodrome'
+        },
+        yieldSource: {
+          name: 'Moonwell',
+          appURI: 'https://moonwell.fi/markets/supply/base/aero'
         }
       }
     },
@@ -212,12 +239,15 @@ const defaultVaultList: VaultList = {
       symbol: 'przCBETH',
       logoURI: `${DOMAINS.app}/icons/przCBETH.svg`,
       tags: ['moonwell'],
-      yieldSourceURI: 'https://moonwell.fi/markets/supply/base/cbeth',
       extensions: {
         underlyingAsset: {
           address: '0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22',
           symbol: 'cbETH',
           name: 'Coinbase Wrapped Staked ETH'
+        },
+        yieldSource: {
+          name: 'Moonwell',
+          appURI: 'https://moonwell.fi/markets/supply/base/cbeth'
         }
       }
     },
@@ -229,12 +259,15 @@ const defaultVaultList: VaultList = {
       symbol: 'przWSTETH',
       logoURI: `${DOMAINS.app}/icons/przSTETH.svg`,
       tags: ['moonwell'],
-      yieldSourceURI: 'https://moonwell.fi/markets/supply/base/wsteth',
       extensions: {
         underlyingAsset: {
           address: '0xc1CBa3fCea344f92D9239c08C0568f6F2F0ee452',
           symbol: 'wstETH',
           name: 'Wrapped Staked Ether'
+        },
+        yieldSource: {
+          name: 'Moonwell',
+          appURI: 'https://moonwell.fi/markets/supply/base/wsteth'
         }
       }
     },

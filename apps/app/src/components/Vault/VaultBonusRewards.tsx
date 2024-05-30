@@ -3,19 +3,21 @@ import { useVaultPromotionsApr } from '@generationsoftware/hyperstructure-react-
 import { Spinner } from '@shared/ui'
 import { formatNumberForDisplay, TWAB_REWARDS_ADDRESSES } from '@shared/utilities'
 import classNames from 'classnames'
+import { ReactNode } from 'react'
 import { TWAB_REWARDS_SETTINGS } from '@constants/config'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 
 interface VaultBonusRewardsProps {
   vault: Vault
-  label?: string
+  prepend?: ReactNode
+  append?: ReactNode
+  hideUnlessPresent?: boolean
   className?: string
   valueClassName?: string
-  labelClassName?: string
 }
 
 export const VaultBonusRewards = (props: VaultBonusRewardsProps) => {
-  const { vault, label, className, valueClassName, labelClassName } = props
+  const { vault, prepend, append, hideUnlessPresent, className, valueClassName } = props
 
   const prizePools = useSupportedPrizePools()
 
@@ -31,19 +33,20 @@ export const VaultBonusRewards = (props: VaultBonusRewardsProps) => {
     (!!vault && TWAB_REWARDS_ADDRESSES[vault.chainId] === undefined) ||
     vaultPromotionsApr === 0
   ) {
-    return <>-</>
+    return hideUnlessPresent ? <></> : <>-</>
   }
 
   if (!isFetchedVaultPromotionsApr) {
-    return <Spinner />
+    return hideUnlessPresent ? <></> : <Spinner />
   }
 
   if (vaultPromotionsApr === undefined) {
-    return <>?</>
+    return hideUnlessPresent ? <></> : <>?</>
   }
 
   return (
     <div className={classNames('inline-flex gap-1 items-center', className)}>
+      {prepend}
       <span className={valueClassName}>
         {formatNumberForDisplay(vaultPromotionsApr, {
           minimumFractionDigits: 1,
@@ -51,7 +54,7 @@ export const VaultBonusRewards = (props: VaultBonusRewardsProps) => {
         })}
         %
       </span>
-      <span className={labelClassName}>{label}</span>
+      {append}
     </div>
   )
 }

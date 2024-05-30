@@ -1,34 +1,74 @@
 import { useSelectedVault, useSelectedVaults } from '@generationsoftware/hyperstructure-react-hooks'
-import { PrizePoolDropdown } from '@shared/react-components'
-import { Button } from '@shared/ui'
-import { NETWORK } from '@shared/utilities'
+import { ArrowLongLeftIcon, ArrowLongRightIcon } from '@heroicons/react/24/outline'
+import { ExternalLink } from '@shared/ui'
+import { LINKS, NETWORK } from '@shared/utilities'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
-import { useNetworks } from '@hooks/useNetworks'
-import { useSelectedPrizePool } from '@hooks/useSelectedPrizePool'
-import { PrizesTable } from './PrizesTable'
+import { useEffect, useState } from 'react'
+import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
+import { PrizePoolPrizesCard } from './PrizePoolPrizesCard'
 
-export const PrizePoolDisplay = () => {
+interface PrizePoolDisplayProps {
+  className?: string
+}
+
+export const PrizePoolDisplay = (props: PrizePoolDisplayProps) => {
+  const { className } = props
+
+  const t = useTranslations('Prizes')
+
+  return (
+    <div className={classNames('flex flex-col items-center text-center', className)}>
+      <span className='text-2xl font-grotesk text-pt-teal-dark font-medium md:text-4xl'>
+        {t('currentPrizes')}
+      </span>
+      <PrizePoolCarousel className='mt-8 mb-4' />
+      <span>
+        *
+        {t.rich('learnMore', {
+          link: (chunks) => (
+            <ExternalLink
+              href={LINKS.protocolBasicsDocs}
+              size='xs'
+              className='text-pt-purple-200 md:text-base'
+              iconClassName='md:h-5 md:w-5'
+            >
+              {chunks}
+            </ExternalLink>
+          )
+        })}
+      </span>
+    </div>
+  )
+}
+
+interface PrizePoolCarouselProps {
+  className?: string
+}
+
+// TODO: animate between different prize pools
+const PrizePoolCarousel = (props: PrizePoolCarouselProps) => {
+  const { className } = props
+
   const router = useRouter()
 
-  const t_common = useTranslations('Common')
-  const t_prizes = useTranslations('Prizes')
+  const [prizePoolIndex, setPrizePoolIndex] = useState<number>(0)
 
-  const networks = useNetworks()
+  const prizePools = useSupportedPrizePools()
+  const prizePoolsArray = Object.values(prizePools)
 
   const { vaults } = useSelectedVaults()
   const { setSelectedVaultById } = useSelectedVault()
 
-  const { selectedPrizePool } = useSelectedPrizePool()
-
   const handleNetworkChange = (chainId: number) => {
     if (!!chainId && chainId in NETWORK) {
-      const firstVaultInChain = Object.values(vaults.vaults).find(
-        (vault) => vault.chainId === chainId
-      )
+      const vaultsArray = Object.values(vaults.vaults)
+      const firstVaultInChain = vaultsArray.find((vault) => vault.chainId === chainId)
       !!firstVaultInChain && setSelectedVaultById(firstVaultInChain.id)
+
+      const prizePoolIndex = prizePoolsArray.findIndex((pool) => pool.chainId === chainId)
+      prizePoolIndex !== -1 && setPrizePoolIndex(prizePoolIndex)
     }
   }
 
@@ -41,18 +81,49 @@ export const PrizePoolDisplay = () => {
     }
   }, [router])
 
+  useEffect(() => {
+    const chainId = prizePoolsArray[prizePoolIndex]?.chainId
+    !!chainId && handleNetworkChange(chainId)
+  }, [prizePoolIndex])
+
+  const prevPrizePoolIndex = prizePoolIndex === 0 ? prizePoolsArray.length - 1 : prizePoolIndex - 1
+  const nextPrizePoolIndex = prizePoolIndex === prizePoolsArray.length - 1 ? 0 : prizePoolIndex + 1
+
   return (
-    <>
-      <PrizePoolDropdown
-        networks={networks}
-        selectedNetwork={selectedPrizePool?.chainId as NETWORK}
-        onSelect={handleNetworkChange}
-        intl={{ common: t_common, switchPrizePool: t_prizes('switchPrizePool') }}
+    <div
+      className={classNames(
+        'relative w-screen flex justify-center gap-8 overflow-hidden',
+        className
+      )}
+    >
+      <PrizePoolPrizesCard
+        prizePool={prizePoolsArray[prevPrizePoolIndex]}
+        className='hidden w-[calc(100vw-4rem)] shrink-0 lg:w-[38rem] lg:flex'
       />
-      <Link href={`/vaults?network=${selectedPrizePool?.chainId}`} passHref={true}>
-        <Button>{t_common('depositToWin')}</Button>
-      </Link>
-      {!!selectedPrizePool && <PrizesTable prizePool={selectedPrizePool} />}
-    </>
+      <PrizePoolPrizesCard
+        prizePool={prizePoolsArray[prizePoolIndex]}
+        className='w-[calc(100vw-4rem)] shrink-0 lg:w-[38rem]'
+      />
+      <PrizePoolPrizesCard
+        prizePool={prizePoolsArray[nextPrizePoolIndex]}
+        className='hidden w-[calc(100vw-4rem)] shrink-0 lg:w-[38rem] lg:flex'
+      />
+      <div className='absolute w-full h-full pointer-events-none lg:bg-[linear-gradient(90deg,#21064E_15%,transparent_35%,transparent_65%,#21064E_85%)]'>
+        <div className='relative w-full h-full max-w-screen-xl mx-auto'>
+          <button
+            onClick={() => setPrizePoolIndex(prevPrizePoolIndex)}
+            className='absolute top-[calc(50%-0.75rem)] left-4 p-1 bg-pt-purple-600 rounded-full pointer-events-auto lg:top-[calc(50%-1rem)] lg:bg-pt-transparent'
+          >
+            <ArrowLongLeftIcon className='w-6 text-pt-purple-200 stroke-2 lg:w-8' />
+          </button>
+          <button
+            onClick={() => setPrizePoolIndex(nextPrizePoolIndex)}
+            className='absolute top-[calc(50%-0.75rem)] right-4 p-1 bg-pt-purple-600 rounded-full pointer-events-auto lg:top-[calc(50%-1rem)] lg:bg-pt-transparent'
+          >
+            <ArrowLongRightIcon className='w-6 text-pt-purple-200 stroke-2 lg:w-8' />
+          </button>
+        </div>
+      </div>
+    </div>
   )
 }

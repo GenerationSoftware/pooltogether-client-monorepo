@@ -58,6 +58,16 @@ module.exports = {
           gold: '#FFB636',
           transparent: '#F5F0FF1A'
         }
+      },
+      keyframes: {
+        flip: {
+          '0%': { transform: 'rotateX(0deg)' },
+          '100%': { transform: 'rotateX(180deg)' }
+        },
+        unflip: {
+          '0%': { transform: 'rotateX(180deg)' },
+          '100%': { transform: 'rotateX(360deg)' }
+        }
       }
     },
     screens: {

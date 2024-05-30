@@ -24,12 +24,7 @@ export const AccountWinCard = (props: AccountWinCardProps) => {
   return (
     <div className='flex items-center gap-3 bg-pt-transparent rounded-lg p-3'>
       <Link href={`/vault/${vault.chainId}/${vault.address}`}>
-        <VaultBadge
-          vault={vault}
-          onClick={() => {}}
-          nameClassName='max-[500px]:hidden'
-          symbolClassName='max-[380px]:hidden'
-        />
+        <VaultBadge vault={vault} onClick={() => {}} />
       </Link>
       <span className='hidden text-sm sm:block'>{getSimpleDate(win.timestamp)}</span>
       <ExternalLink

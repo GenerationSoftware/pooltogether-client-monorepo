@@ -8,10 +8,11 @@ import { TOKEN_LOGO_OVERRIDES } from '../../constants'
 export interface TokenIconProps {
   token: Partial<TokenWithLogo>
   className?: string
+  showSpinner?: boolean
 }
 
 export const TokenIcon = (props: TokenIconProps) => {
-  const { token, className } = props
+  const { token, className, showSpinner } = props
 
   const altText = !!token.symbol
     ? `${token.symbol} Logo`
@@ -54,6 +55,7 @@ export const TokenIcon = (props: TokenIconProps) => {
           altText={altText}
           symbol={token.symbol}
           className={className}
+          showSpinner={showSpinner}
         />
       )
     }
@@ -68,10 +70,11 @@ interface CoingeckoTokenIconProps {
   altText?: string
   symbol?: string
   className?: string
+  showSpinner?: boolean
 }
 
 const CoingeckoTokenIcon = (props: CoingeckoTokenIconProps) => {
-  const { chainId, tokenAddress, altText, symbol, className } = props
+  const { chainId, tokenAddress, altText, symbol, className, showSpinner } = props
 
   const { data: tokenData, isFetched: isFetchedTokenData } = useCoingeckoTokenData(
     chainId,
@@ -79,7 +82,7 @@ const CoingeckoTokenIcon = (props: CoingeckoTokenIconProps) => {
   )
 
   if (!isFetchedTokenData) {
-    return <Spinner />
+    return showSpinner === false ? <></> : <Spinner />
   }
 
   if (!!tokenData?.image?.small) {

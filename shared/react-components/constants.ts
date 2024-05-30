@@ -4,17 +4,17 @@ import { LINKS, NETWORK, POOL_TOKEN_ADDRESSES, USDC_TOKEN_ADDRESSES } from '@sha
  * Token Logo URLs
  */
 const tokenLogoUrls = {
-  pool: 'https://etherscan.io/token/images/pooltogether_32.png',
-  usdc: 'https://etherscan.io/token/images/centre-usdc_28.png',
-  dai: 'https://assets.coingecko.com/coins/images/9956/small/4943.png?1636636734',
-  gusd: 'https://assets.coingecko.com/coins/images/5992/small/gemini-dollar-gusd.png?1536745278',
-  weth: 'https://etherscan.io/token/images/weth_28.png',
-  wbtc: 'https://etherscan.io/token/images/wbtc_28.png?v=1',
-  lusd: 'https://etherscan.io/token/images/liquitylusd_32.png',
+  pool: 'https://assets.coingecko.com/coins/images/14003/standard/PoolTogether.png?1696513732',
+  usdc: 'https://assets.coingecko.com/coins/images/6319/standard/usdc.png?1696506694',
+  dai: 'https://assets.coingecko.com/coins/images/9956/standard/Badge_Dai.png?1696509996',
+  gusd: 'https://assets.coingecko.com/coins/images/5992/standard/gemini-dollar-gusd.png?1696506408',
+  weth: 'https://assets.coingecko.com/coins/images/2518/standard/weth.png?1696503332',
+  wbtc: 'https://assets.coingecko.com/coins/images/7598/standard/wrapped_bitcoin_wbtc.png?1696507857',
+  lusd: 'https://assets.coingecko.com/coins/images/14666/standard/Group_3.png?1696514341',
   ageur: 'https://etherscan.io/token/images/ageur_32.png?=v982',
   op: 'https://optimistic.etherscan.io/token/images/optimism_32.png',
   przVELO: `${LINKS.app}/icons/przVELO.svg`,
-  steth: 'https://etherscan.io/token/images/lido-steth_32.png'
+  steth: 'https://assets.coingecko.com/coins/images/13442/standard/steth_logo.png?1696513206'
 } as const
 
 /**

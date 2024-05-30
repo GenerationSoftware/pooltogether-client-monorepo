@@ -3,24 +3,24 @@ import { SECONDS_PER_YEAR } from '@shared/utilities'
 import { useMemo } from 'react'
 import { formatUnits } from 'viem'
 import {
+  useAllDrawPeriods,
+  useAllLastAwardedDrawIds,
+  useAllPrizeTokenPrices,
   useAllVaultContributionAmounts,
   useAllVaultSharePrices,
-  useAllVaultTotalSupplyTwabs,
-  useDrawPeriod,
-  useLastAwardedDrawId,
-  usePrizeTokenPrice
+  useAllVaultTotalSupplyTwabs
 } from '..'
 
 /**
- * Returns each vault's prize yield percentage on a given prize pool
+ * Returns each vault's prize yield percentage on their respective prize pool
  * @param vaults instance of the `Vaults` class
- * @param prizePool instance of the `PrizePool` class
+ * @param prizePools instances of the `PrizePool` class
  * @param options optional settings
  * @returns
  */
 export const useAllVaultPrizeYields = (
   vaults: Vaults,
-  prizePool: PrizePool,
+  prizePools: PrizePool[],
   options?: {
     numDraws?: number
   }
@@ -29,74 +29,90 @@ export const useAllVaultPrizeYields = (
     data: vaultContributions,
     isFetched: isFetchedVaultContributions,
     refetch: refetchVaultContributions
-  } = useAllVaultContributionAmounts([prizePool], vaults, options?.numDraws)
+  } = useAllVaultContributionAmounts(prizePools, vaults, options?.numDraws)
 
   const {
     data: totalSupplyTwabs,
     isFetched: isFetchedTotalSupplyTwabs,
     refetch: refetchTotalSupplyTwabs
-  } = useAllVaultTotalSupplyTwabs(vaults, prizePool, options?.numDraws)
+  } = useAllVaultTotalSupplyTwabs(vaults, prizePools, options?.numDraws)
 
   const { data: allShareTokens, isFetched: isFetchedAllShareTokens } =
     useAllVaultSharePrices(vaults)
 
-  const { data: prizeToken, isFetched: isFetchedPrizeToken } = usePrizeTokenPrice(prizePool)
+  const { data: prizeTokens, isFetched: isFetchedPrizeTokens } = useAllPrizeTokenPrices(prizePools)
 
-  const { data: drawPeriod, isFetched: isFetchedDrawPeriod } = useDrawPeriod(prizePool)
+  const { data: drawPeriods, isFetched: isFetchedDrawPeriods } = useAllDrawPeriods(prizePools)
 
-  const { data: lastDrawId, isFetched: isFetchedLastDrawId } = useLastAwardedDrawId(prizePool)
-
-  const data = useMemo(() => {
-    const prizeYields: { [vaultId: string]: number } = {}
-
-    if (
-      !!vaultContributions &&
-      !!totalSupplyTwabs &&
-      !!allShareTokens &&
-      !!prizeToken &&
-      !!drawPeriod
-    ) {
-      Object.entries(vaultContributions).forEach(([vaultId, vaultContribution]) => {
-        const totalSupplyTwab = totalSupplyTwabs[vaultId]
-        const shareToken = allShareTokens[vaultId]
-        const yearlyDraws = SECONDS_PER_YEAR / drawPeriod
-        const numDrawsConsidered = Math.min(options?.numDraws ?? 7, lastDrawId || 1)
-
-        if (
-          vaultContribution === 0n ||
-          totalSupplyTwab === 0n ||
-          shareToken?.price === 0 ||
-          prizeToken.price === 0
-        ) {
-          prizeYields[vaultId] = 0
-        } else if (
-          !!vaultContribution &&
-          !!totalSupplyTwab &&
-          !!shareToken?.price &&
-          !!prizeToken.price
-        ) {
-          const yearlyContribution =
-            parseFloat(formatUnits(vaultContribution, prizeToken.decimals)) *
-            (yearlyDraws / numDrawsConsidered)
-          const yearlyContributionValue = yearlyContribution * prizeToken.price
-          const tvl =
-            parseFloat(formatUnits(totalSupplyTwab, shareToken.decimals)) * shareToken.price
-
-          prizeYields[vaultId] = (yearlyContributionValue / tvl) * 100
-        }
-      })
-    }
-
-    return prizeYields
-  }, [vaultContributions, totalSupplyTwabs, allShareTokens, prizeToken, drawPeriod, lastDrawId])
+  const { data: lastDrawIds, isFetched: isFetchedLastDrawIds } =
+    useAllLastAwardedDrawIds(prizePools)
 
   const isFetched =
     isFetchedVaultContributions &&
     isFetchedTotalSupplyTwabs &&
     isFetchedAllShareTokens &&
-    isFetchedPrizeToken &&
-    isFetchedDrawPeriod &&
-    isFetchedLastDrawId
+    isFetchedPrizeTokens &&
+    isFetchedDrawPeriods &&
+    isFetchedLastDrawIds
+
+  const data = useMemo(() => {
+    const prizeYields: { [vaultId: string]: number } = {}
+
+    if (isFetched && !!allShareTokens) {
+      Object.values(vaults.vaults).forEach((vault) => {
+        const prizePool = prizePools.find((pool) => pool.chainId === vault.chainId)
+
+        if (!!prizePool) {
+          const prizeToken = prizeTokens[prizePool.id]
+          const drawPeriod = drawPeriods[prizePool.id]
+
+          if (!!prizeToken && !!drawPeriod) {
+            const vaultContribution = vaultContributions[vault.id]
+            const totalSupplyTwab = totalSupplyTwabs[vault.id]
+            const shareToken = allShareTokens[vault.id]
+            const yearlyDraws = SECONDS_PER_YEAR / drawPeriod
+            const numDrawsConsidered = Math.min(
+              options?.numDraws ?? 7,
+              lastDrawIds[prizePool.id] || 1
+            )
+
+            if (
+              vaultContribution === 0n ||
+              totalSupplyTwab === 0n ||
+              shareToken?.price === 0 ||
+              prizeToken.price === 0
+            ) {
+              prizeYields[vault.id] = 0
+            } else if (
+              !!vaultContribution &&
+              !!totalSupplyTwab &&
+              !!shareToken?.price &&
+              !!prizeToken.price
+            ) {
+              const yearlyContribution =
+                parseFloat(formatUnits(vaultContribution, prizeToken.decimals)) *
+                (yearlyDraws / numDrawsConsidered)
+              const yearlyContributionValue = yearlyContribution * prizeToken.price
+              const tvl =
+                parseFloat(formatUnits(totalSupplyTwab, shareToken.decimals)) * shareToken.price
+
+              prizeYields[vault.id] = (yearlyContributionValue / tvl) * 100
+            }
+          }
+        }
+      })
+    }
+
+    return prizeYields
+  }, [
+    vaultContributions,
+    totalSupplyTwabs,
+    allShareTokens,
+    prizeTokens,
+    drawPeriods,
+    lastDrawIds,
+    isFetched
+  ])
 
   const refetch = () => {
     refetchVaultContributions()

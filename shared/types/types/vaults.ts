@@ -22,7 +22,6 @@ export interface VaultInfo {
   readonly extensions?: VaultExtensions
   readonly tags?: string[]
   readonly logoURI?: string
-  readonly yieldSourceURI?: string
 }
 
 export interface VaultExtensions {
@@ -31,6 +30,10 @@ export interface VaultExtensions {
     readonly symbol?: string
     readonly name?: string
     readonly logoURI?: string
+  }
+  readonly yieldSource?: {
+    readonly name?: string
+    readonly appURI?: string
   }
   readonly lp?: {
     readonly appURI?: string

@@ -15,6 +15,7 @@ import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { VaultButtons } from '@components/Vault/VaultButtons'
+import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { AccountVaultBalance } from './AccountVaultBalance'
 import { AccountVaultOdds } from './AccountVaultOdds'
 
@@ -37,7 +38,11 @@ export const AccountDepositsTable = (props: AccountDepositsTableProps) => {
 
   const { data: vaultBalances } = useAllUserVaultBalances(vaults, userAddress as Address)
 
+  const prizePools = useSupportedPrizePools()
+  const prizePoolsArray = Object.values(prizePools)
+
   const { sortedVaults } = useSortedVaults(Object.values(vaults.vaults), {
+    prizePools: prizePoolsArray,
     defaultSortId: 'userBalance'
   })
 

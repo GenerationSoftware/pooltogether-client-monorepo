@@ -35,6 +35,7 @@ export class Vault {
   logoURI: string | undefined
   tags: string[] | undefined
   tokenLogoURI: string | undefined
+  yieldSourceName: string | undefined
   yieldSourceURI: string | undefined
 
   /**
@@ -58,6 +59,7 @@ export class Vault {
       logoURI?: string
       tags?: string[]
       tokenLogoURI?: string
+      yieldSourceName?: string
       yieldSourceURI?: string
     }
   ) {
@@ -70,6 +72,7 @@ export class Vault {
     this.logoURI = options?.logoURI
     this.tags = options?.tags
     this.tokenLogoURI = options?.tokenLogoURI
+    this.yieldSourceName = options?.yieldSourceName
     this.yieldSourceURI = options?.yieldSourceURI
   }
 
