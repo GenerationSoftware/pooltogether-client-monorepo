@@ -105,8 +105,8 @@ const NewFallbackGraphic = (props: NewFallbackGraphicProps) => {
     <svg
       xmlns='http://www.w3.org/2000/svg'
       viewBox='0 0 140 140'
-      shape-rendering='geometricPrecision'
-      text-rendering='geometricPrecision'
+      shapeRendering='geometricPrecision'
+      textRendering='geometricPrecision'
       className={className}
     >
       <g transform='translate(-44.1485-38.3109)'>
