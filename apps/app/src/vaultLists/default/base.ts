@@ -96,5 +96,25 @@ export const baseVaults: VaultList['tokens'] = [
         appURI: 'https://moonwell.fi/markets/supply/base/wsteth'
       }
     }
+  },
+  {
+    chainId: NETWORK.base,
+    address: '0x6Bb041d7E70b7040611ef688b5e707a799ADe60A',
+    name: 'Prize USDA',
+    decimals: 18,
+    symbol: 'przUSDA',
+    logoURI: `${DOMAINS.app}/icons/przUSDA.svg`,
+    tags: ['angle'],
+    extensions: {
+      underlyingAsset: {
+        address: '0x0000206329b97DB379d5E1Bf586BbDB969C63274',
+        symbol: 'USDA',
+        name: 'USDA'
+      },
+      yieldSource: {
+        name: 'Angle',
+        appURI: 'https://angle.money/stusd'
+      }
+    }
   }
 ]

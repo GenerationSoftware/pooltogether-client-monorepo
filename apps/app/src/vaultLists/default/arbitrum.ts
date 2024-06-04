@@ -79,5 +79,25 @@ export const arbitrumVaults: VaultList['tokens'] = [
           'https://app.aave.com/reserve-overview/?underlyingAsset=0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9&marketName=proto_arbitrum_v3'
       }
     }
+  },
+  {
+    chainId: NETWORK.arbitrum,
+    address: '0x8653084e01Bd8c9e24B9a8fEb2036251Ee0C16A9',
+    name: 'Prize USDA',
+    decimals: 18,
+    symbol: 'przUSDA',
+    logoURI: `${DOMAINS.app}/icons/przUSDA.svg`,
+    tags: ['angle'],
+    extensions: {
+      underlyingAsset: {
+        address: '0x0000206329b97DB379d5E1Bf586BbDB969C63274',
+        symbol: 'USDA',
+        name: 'USDA'
+      },
+      yieldSource: {
+        name: 'Angle',
+        appURI: 'https://angle.money/stusd'
+      }
+    }
   }
 ]
