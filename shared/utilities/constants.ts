@@ -347,7 +347,12 @@ export const TOKEN_PRICE_REDIRECTS: {
       chainId: NETWORK.mainnet,
       address: lower(POOL_TOKEN_ADDRESSES[NETWORK.mainnet])
     },
-    /* agEUR */
+    /* USDA */
+    '0x0000206329b97db379d5e1bf586bbdb969c63274': {
+      chainId: NETWORK.mainnet,
+      address: '0x0000206329b97db379d5e1bf586bbdb969c63274'
+    },
+    /* EURA */
     '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': {
       chainId: NETWORK.mainnet,
       address: '0x1a7e4e63778b4f12a199c062f3efdd288afcbce8'
@@ -358,6 +363,16 @@ export const TOKEN_PRICE_REDIRECTS: {
     [POOL_TOKEN_ADDRESSES[NETWORK.arbitrum].toLowerCase()]: {
       chainId: NETWORK.mainnet,
       address: lower(POOL_TOKEN_ADDRESSES[NETWORK.mainnet])
+    },
+    /* USDA */
+    '0x0000206329b97db379d5e1bf586bbdb969c63274': {
+      chainId: NETWORK.mainnet,
+      address: '0x0000206329b97db379d5e1bf586bbdb969c63274'
+    },
+    /* EURA */
+    '0xfa5ed56a203466cbbc2430a43c66b9d8723528e7': {
+      chainId: NETWORK.mainnet,
+      address: '0x1a7e4e63778b4f12a199c062f3efdd288afcbce8'
     }
   },
   [NETWORK.base]: {
@@ -370,6 +385,16 @@ export const TOKEN_PRICE_REDIRECTS: {
     '0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452': {
       chainId: NETWORK.mainnet,
       address: '0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0'
+    },
+    /* USDA */
+    '0x0000206329b97db379d5e1bf586bbdb969c63274': {
+      chainId: NETWORK.mainnet,
+      address: '0x0000206329b97db379d5e1bf586bbdb969c63274'
+    },
+    /* EURA */
+    '0xa61beb4a3d02decb01039e378237032b351125b4': {
+      chainId: NETWORK.mainnet,
+      address: '0x1a7e4e63778b4f12a199c062f3efdd288afcbce8'
     }
   },
   [NETWORK.polygon]: {
@@ -377,6 +402,16 @@ export const TOKEN_PRICE_REDIRECTS: {
     [DOLPHIN_ADDRESS]: {
       chainId: NETWORK.polygon,
       address: '0x0000000000000000000000000000000000001010'
+    },
+    /* USDA */
+    '0x0000206329b97db379d5e1bf586bbdb969c63274': {
+      chainId: NETWORK.mainnet,
+      address: '0x0000206329b97db379d5e1bf586bbdb969c63274'
+    },
+    /* EURA */
+    '0xe0b52e49357fd4daf2c15e02058dce6bc0057db4': {
+      chainId: NETWORK.mainnet,
+      address: '0x1a7e4e63778b4f12a199c062f3efdd288afcbce8'
     }
   },
   [NETWORK.optimism_sepolia]: {
