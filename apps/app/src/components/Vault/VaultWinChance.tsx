@@ -1,5 +1,8 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
-import { useLastAwardedDrawId } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useLastAwardedDrawId,
+  useVaultContributionAmount
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner, Tooltip } from '@shared/ui'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -22,6 +25,12 @@ export const VaultWinChance = (props: VaultWinChanceProps) => {
 
   const { data: lastAwardedDrawId } = useLastAwardedDrawId(prizePool as PrizePool)
 
+  const { data: totalContributions } = useVaultContributionAmount(
+    prizePool as PrizePool,
+    vault,
+    lastAwardedDrawId
+  )
+
   if (!isFetchedWinChance) {
     return <Spinner />
   }
@@ -30,7 +39,7 @@ export const VaultWinChance = (props: VaultWinChanceProps) => {
     return <>?</>
   }
 
-  if (lastAwardedDrawId === 0) {
+  if (lastAwardedDrawId === 0 || (lastAwardedDrawId !== undefined && totalContributions === 0n)) {
     return <NewFallbackGraphic className={className} />
   }
 
