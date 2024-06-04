@@ -65,6 +65,7 @@ export const arbitrumVaults: VaultList['tokens'] = [
     name: 'Prize USDT',
     decimals: 6,
     symbol: 'przUSDT',
+    logoURI: `${DOMAINS.app}/icons/przUSDT.svg`,
     tags: ['aave'],
     extensions: {
       underlyingAsset: {
