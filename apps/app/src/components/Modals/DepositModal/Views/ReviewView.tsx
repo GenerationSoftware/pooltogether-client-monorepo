@@ -1,17 +1,23 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
+  useToken,
   useTokenPermitSupport,
   useVaultShareData,
-  useVaultTokenData
+  useVaultTokenAddress
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { PrizePoolBadge, TokenIcon } from '@shared/react-components'
 import { Token, TokenWithLogo } from '@shared/types'
+import { lower } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { Address } from 'viem'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
-import { depositFormShareAmountAtom, depositFormTokenAmountAtom } from '../DepositForm'
+import {
+  depositFormShareAmountAtom,
+  depositFormTokenAddressAtom,
+  depositFormTokenAmountAtom
+} from '../DepositForm'
 
 interface ReviewViewProps {
   vault: Vault
@@ -24,16 +30,17 @@ export const ReviewView = (props: ReviewViewProps) => {
   const t_common = useTranslations('Common')
   const t_modals = useTranslations('TxModals')
 
+  const formTokenAddress = useAtomValue(depositFormTokenAddressAtom)
   const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
   const formShareAmount = useAtomValue(depositFormShareAmountAtom)
 
-  const { data: shareData } = useVaultShareData(vault)
-  const { data: tokenData } = useVaultTokenData(vault)
+  const { data: share } = useVaultShareData(vault)
+  const { data: vaultTokenAddress } = useVaultTokenAddress(vault)
 
-  const { data: tokenPermitSupport } = useTokenPermitSupport(
-    tokenData?.chainId as number,
-    tokenData?.address as Address
-  )
+  const tokenAddress = formTokenAddress ?? vaultTokenAddress
+  const { data: token } = useToken(vault.chainId, tokenAddress as Address)
+
+  const { data: tokenPermitSupport } = useTokenPermitSupport(vault.chainId, tokenAddress as Address)
 
   const feesToShow: NetworkFeesProps['show'] =
     tokenPermitSupport === 'eip2612'
@@ -49,14 +56,21 @@ export const ReviewView = (props: ReviewViewProps) => {
         intl={t_common}
         className='!py-1 mx-auto'
       />
-      {!!shareData && !!tokenData && (
+      {!!share && !!token && (
         <div className='flex flex-col w-full gap-1'>
           <BasicDepositFormInput
-            token={{ ...tokenData, amount: formTokenAmount, logoURI: vault.tokenLogoURI }}
+            token={{
+              ...token,
+              amount: formTokenAmount,
+              logoURI:
+                !!vaultTokenAddress && lower(token.address) === lower(vaultTokenAddress)
+                  ? vault.tokenLogoURI
+                  : undefined
+            }}
           />
           <BasicDepositFormInput
             token={{
-              ...shareData,
+              ...share,
               amount: formShareAmount,
               logoURI: vault.logoURI ?? vault.tokenLogoURI
             }}

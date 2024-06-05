@@ -1,11 +1,12 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { useVaultTokenData } from '@generationsoftware/hyperstructure-react-hooks'
+import { useToken, useVaultTokenAddress } from '@generationsoftware/hyperstructure-react-hooks'
 import { PrizePoolBadge } from '@shared/react-components'
 import { Button, Spinner } from '@shared/ui'
 import { formatNumberForDisplay } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
-import { depositFormTokenAmountAtom } from '../DepositForm'
+import { Address } from 'viem'
+import { depositFormTokenAddressAtom, depositFormTokenAmountAtom } from '../DepositForm'
 
 interface WaitingViewProps {
   vault: Vault
@@ -18,11 +19,15 @@ export const WaitingView = (props: WaitingViewProps) => {
   const t_common = useTranslations('Common')
   const t_modals = useTranslations('TxModals')
 
+  const { data: vaultTokenAddress } = useVaultTokenAddress(vault)
+
+  const formTokenAddress = useAtomValue(depositFormTokenAddressAtom)
   const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
 
-  const { data: tokenData } = useVaultTokenData(vault)
+  const tokenAddress = formTokenAddress ?? vaultTokenAddress
+  const { data: token } = useToken(vault.chainId, tokenAddress as Address)
 
-  const tokens = `${formatNumberForDisplay(formTokenAmount)} ${tokenData?.symbol}`
+  const tokens = `${formatNumberForDisplay(formTokenAmount)} ${token?.symbol}`
 
   return (
     <div className='flex flex-col gap-4 md:gap-6'>

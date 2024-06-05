@@ -1,5 +1,9 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { useVaultTokenData } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useToken,
+  useVaultTokenAddress,
+  useVaultTokenData
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { PrizePoolBadge, SocialShareButton, SuccessPooly } from '@shared/react-components'
 import { ExternalLink } from '@shared/ui'
 import {
@@ -11,7 +15,8 @@ import {
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
-import { depositFormTokenAmountAtom } from '../DepositForm'
+import { Address } from 'viem'
+import { depositFormTokenAddressAtom, depositFormTokenAmountAtom } from '../DepositForm'
 
 interface SuccessViewProps {
   vault: Vault
@@ -24,11 +29,15 @@ export const SuccessView = (props: SuccessViewProps) => {
   const t_common = useTranslations('Common')
   const t_modals = useTranslations('TxModals')
 
+  const { data: vaultTokenAddress } = useVaultTokenAddress(vault)
+
+  const formTokenAddress = useAtomValue(depositFormTokenAddressAtom)
   const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
 
-  const { data: tokenData } = useVaultTokenData(vault)
+  const tokenAddress = formTokenAddress ?? vaultTokenAddress
+  const { data: token } = useToken(vault.chainId, tokenAddress as Address)
 
-  const tokens = `${formatNumberForDisplay(formTokenAmount)} ${tokenData?.symbol}`
+  const tokens = `${formatNumberForDisplay(formTokenAmount)} ${token?.symbol}`
   const name = getBlockExplorerName(vault.chainId)
 
   return (
@@ -70,22 +79,22 @@ const ShareButtons = (props: ShareButtonsProps) => {
 
   const t = useTranslations('TxModals')
 
-  const { data: tokenData } = useVaultTokenData(vault)
+  const { data: vaultToken } = useVaultTokenData(vault)
 
   const network = getNiceNetworkNameByChainId(vault.chainId)
   const hashTags = ['PoolTogether', network]
 
   const text = useMemo(() => {
-    if (!!tokenData) {
+    if (!!vaultToken) {
       return {
-        twitter: getShareText(tokenData.symbol, 'twitter'),
-        warpcast: getShareText(tokenData.symbol, 'warpcast'),
-        hey: getShareText(tokenData.symbol, 'hey')
+        twitter: getShareText(vaultToken.symbol, 'twitter'),
+        warpcast: getShareText(vaultToken.symbol, 'warpcast'),
+        hey: getShareText(vaultToken.symbol, 'hey')
       }
     } else {
       return {}
     }
-  }, [tokenData])
+  }, [vaultToken])
 
   return (
     <div className='flex flex-col items-center'>

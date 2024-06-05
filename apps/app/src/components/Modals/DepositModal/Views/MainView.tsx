@@ -3,7 +3,7 @@ import {
   useTokenPermitSupport,
   useVaultExchangeRate,
   useVaultShareData,
-  useVaultTokenData
+  useVaultTokenAddress
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { PrizePoolBadge } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
@@ -13,7 +13,11 @@ import { useTranslations } from 'next-intl'
 import { Address } from 'viem'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
-import { DepositForm, depositFormShareAmountAtom } from '../DepositForm'
+import {
+  DepositForm,
+  depositFormShareAmountAtom,
+  depositFormTokenAddressAtom
+} from '../DepositForm'
 import { LpSource } from '../LpSource'
 
 interface MainViewProps {
@@ -27,19 +31,19 @@ export const MainView = (props: MainViewProps) => {
   const t_common = useTranslations('Common')
   const t_modals = useTranslations('TxModals')
 
-  const { data: shareData } = useVaultShareData(vault)
-  const { data: tokenData } = useVaultTokenData(vault)
+  const { data: share } = useVaultShareData(vault)
+  const { data: vaultTokenAddress } = useVaultTokenAddress(vault)
 
-  const { data: tokenPermitSupport } = useTokenPermitSupport(
-    tokenData?.chainId as number,
-    tokenData?.address as Address
-  )
+  const formTokenAddress = useAtomValue(depositFormTokenAddressAtom)
+  const formShareAmount = useAtomValue(depositFormShareAmountAtom)
+
+  const tokenAddress = formTokenAddress ?? vaultTokenAddress
+
+  const { data: tokenPermitSupport } = useTokenPermitSupport(vault.chainId, tokenAddress as Address)
 
   const { data: vaultExchangeRate } = useVaultExchangeRate(vault)
 
-  const formShareAmount = useAtomValue(depositFormShareAmountAtom)
-
-  const vaultName = vault.name ?? `"${shareData?.name}"`
+  const vaultName = vault.name ?? share?.name
   const networkName = getNiceNetworkNameByChainId(vault.chainId)
 
   const feesToShow: NetworkFeesProps['show'] =

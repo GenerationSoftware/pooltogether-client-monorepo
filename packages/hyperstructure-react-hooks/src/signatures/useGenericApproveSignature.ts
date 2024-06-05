@@ -1,20 +1,19 @@
-import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { EIP2612_PERMIT_TYPES, getSecondsSinceEpoch, OLD_DAI_PERMIT_TYPES } from '@shared/utilities'
 import { useMemo, useState } from 'react'
 import { Address, verifyTypedData, zeroAddress } from 'viem'
 import { useAccount, useSignTypedData } from 'wagmi'
-import { useTokenDomain, useTokenNonces, useTokenPermitSupport, useVaultTokenData } from '..'
+import { useTokenDomain, useTokenNonces, useTokenPermitSupport } from '..'
 
 /**
- * Requests an EIP-2612 signature for a vault to spend tokens
- * @param amount the amount to be approved
- * @param vault the vault to approve spending to
+ * Requests an EIP-2612 signature for any contract to spend any token
+ * @param token the token to approve
+ * @param spender the contract to approve spending to
  * @param options optional settings or callbacks
  * @returns
  */
-export const useApproveSignature = (
-  amount: bigint,
-  vault: Vault,
+export const useGenericApproveSignature = (
+  token: { chainId: number; address: Address; amount: bigint },
+  spender: Address,
   options?: {
     deadline?: bigint
     onSuccess?: (signature: `0x${string}`) => void
@@ -23,6 +22,7 @@ export const useApproveSignature = (
 ): {
   signature?: `0x${string}`
   deadline?: bigint
+  nonce?: bigint
   isWaiting: boolean
   isSuccess: boolean
   isError: boolean
@@ -30,38 +30,31 @@ export const useApproveSignature = (
 } => {
   const { address: userAddress } = useAccount()
 
-  const { data: token } = useVaultTokenData(vault)
+  const { data: tokenPermitSupport } = useTokenPermitSupport(token?.chainId, token?.address)
 
-  const { data: tokenPermitSupport } = useTokenPermitSupport(
-    token?.chainId as number,
-    token?.address as Address
-  )
+  const { data: tokenDomain } = useTokenDomain(token?.chainId, token?.address)
 
-  const { data: tokenDomain } = useTokenDomain(token?.chainId as number, token?.address as Address)
-
-  const { data: nonces } = useTokenNonces(
-    token?.chainId as number,
-    userAddress as Address,
-    token?.address as Address,
-    { refetchOnWindowFocus: true }
-  )
+  const { data: nonces } = useTokenNonces(token?.chainId, userAddress as Address, token?.address, {
+    refetchOnWindowFocus: true
+  })
 
   const [isInvalidSignature, setIsInvalidSignature] = useState<boolean>(false)
   const [deadline, setDeadline] = useState<bigint | undefined>()
+  const [nonce, setNonce] = useState<bigint | undefined>()
 
   const message = useMemo(() => {
     if (tokenPermitSupport === 'eip2612') {
       return {
         owner: userAddress ?? zeroAddress,
-        spender: vault.address,
-        value: amount,
+        spender,
+        value: token?.amount ?? 0n,
         nonce: nonces ?? 0n,
         deadline: options?.deadline ?? BigInt(getSecondsSinceEpoch() + 600)
       }
     } else if (tokenPermitSupport === 'daiPermit') {
       return {
         holder: userAddress ?? zeroAddress,
-        spender: vault.address,
+        spender,
         nonce: nonces ?? 0n,
         expiry: options?.deadline ?? BigInt(getSecondsSinceEpoch() + 600),
         allowed: true
@@ -69,7 +62,7 @@ export const useApproveSignature = (
     } else {
       return {}
     }
-  }, [amount, vault, userAddress, tokenPermitSupport, nonces])
+  }, [token, spender, userAddress, tokenPermitSupport, nonces])
 
   const types = useMemo(() => {
     if (tokenPermitSupport === 'eip2612') {
@@ -86,7 +79,7 @@ export const useApproveSignature = (
 
     const isValid =
       !!message.value &&
-      message.value === amount &&
+      message.value === token?.amount &&
       (await verifyTypedData({
         address: userAddress as Address,
         domain: tokenDomain,
@@ -121,6 +114,8 @@ export const useApproveSignature = (
       setDeadline(message.expiry)
     }
 
+    setNonce(message.nonce)
+
     _signTypedData(
       { domain: tokenDomain, message, types, primaryType: 'Permit' },
       { onSuccess: verifySignature, onError: options?.onError }
@@ -129,14 +124,14 @@ export const useApproveSignature = (
 
   const enabled =
     !!userAddress &&
-    !!token &&
+    !!token?.amount &&
     tokenPermitSupport !== undefined &&
     tokenPermitSupport !== 'none' &&
     !!tokenDomain &&
     nonces !== undefined &&
     nonces !== -1n &&
     !!message.value &&
-    message.value === amount &&
+    message.value === token.amount &&
     !!types.Permit.length
 
   const signApprove = enabled ? signTypedData : undefined
@@ -144,5 +139,5 @@ export const useApproveSignature = (
   const isError = isSigningError || isInvalidSignature
   const isSuccess = isSigningSuccess && !isError
 
-  return { signature, deadline, isWaiting, isSuccess, isError, signApprove }
+  return { signature, deadline, nonce, isWaiting, isSuccess, isError, signApprove }
 }

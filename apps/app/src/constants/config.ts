@@ -19,7 +19,7 @@ import {
 } from '@rainbow-me/rainbowkit/wallets'
 import { NETWORK, POOL_TOKEN_ADDRESSES, USDC_TOKEN_ADDRESSES } from '@shared/utilities'
 import defaultVaultList from '@vaultLists/default'
-import { Address } from 'viem'
+import { Address, parseUnits } from 'viem'
 import {
   arbitrum,
   arbitrumSepolia,
@@ -165,6 +165,30 @@ export const WALLET_NAMES: { [chainId: number]: { [address: Lowercase<Address>]:
   [NETWORK.arbitrum]: {
     '0x1dcfb8b47c2f05ce86c21580c167485de1202e12': 'GP Booster'
   }
+}
+
+/**
+ * Zap settings
+ */
+export const ZAP_SETTINGS: {
+  [chainId: number]: { zapRouterAddress: Address; zapTokenManager: Address }
+} = {
+  [NETWORK.optimism]: {
+    zapRouterAddress: '0xE82343A116d2179F197111D92f9B53611B43C01c',
+    zapTokenManager: '0x5a32F67C5eD74dc1b2e031b1bc2c3E965073424F'
+  },
+  [NETWORK.base]: {
+    zapRouterAddress: '0x6F19Da51d488926C007B9eBaa5968291a2eC6a63',
+    zapTokenManager: '0x3fBD1da78369864c67d62c242d30983d6900c0f0'
+  }
+}
+
+/**
+ * Amount of native assets to suggest not spending (for gas purposes)
+ */
+export const NATIVE_ASSET_IGNORE_AMOUNT: { [chainId: number]: bigint } = {
+  [NETWORK.optimism]: parseUnits('0.002', 18),
+  [NETWORK.base]: parseUnits('0.002', 18)
 }
 
 /**

@@ -9,7 +9,7 @@ import {
 } from 'viem'
 import { erc20ABI } from '../abis/erc20'
 import { erc20OldPermitABI } from '../abis/erc20-oldPermit'
-import { TOKEN_DATA_REDIRECTS } from '../constants'
+import { DOLPHIN_ADDRESS, NATIVE_ASSETS, NETWORK, TOKEN_DATA_REDIRECTS } from '../constants'
 import { lower } from './addresses'
 import { getMulticallResults } from './multicall'
 
@@ -25,17 +25,26 @@ export const getTokenInfo = async (
 ): Promise<{ [tokenAddress: Address]: TokenWithSupply }> => {
   const formattedResult: { [tokenAddress: Address]: TokenWithSupply } = {}
 
-  if (tokenAddresses?.length > 0) {
-    const multicallResults = await getMulticallResults(publicClient, tokenAddresses, erc20ABI, [
-      { functionName: 'symbol' },
-      { functionName: 'name' },
-      { functionName: 'decimals' },
-      { functionName: 'totalSupply' }
-    ])
+  const filteredTokenAddresses = tokenAddresses.filter(
+    (address) => lower(address) !== DOLPHIN_ADDRESS && address !== zeroAddress
+  )
+
+  if (filteredTokenAddresses?.length > 0) {
+    const multicallResults = await getMulticallResults(
+      publicClient,
+      filteredTokenAddresses,
+      erc20ABI,
+      [
+        { functionName: 'symbol' },
+        { functionName: 'name' },
+        { functionName: 'decimals' },
+        { functionName: 'totalSupply' }
+      ]
+    )
 
     const chainId = await publicClient.getChainId()
 
-    tokenAddresses.forEach((address) => {
+    filteredTokenAddresses.forEach((address) => {
       const redirect = TOKEN_DATA_REDIRECTS[chainId]?.[lower(address)]
       const symbol: string = redirect?.symbol ?? multicallResults[address]?.['symbol']
       const name: string = redirect?.name ?? multicallResults[address]?.['name']
@@ -48,6 +57,17 @@ export const getTokenInfo = async (
 
       formattedResult[address] = { chainId, address, symbol, name, decimals, totalSupply }
     })
+  }
+
+  if (Object.keys(formattedResult).length < tokenAddresses.length) {
+    const lowerCaseTokenAddresses = tokenAddresses.map((address) => lower(address))
+
+    if (lowerCaseTokenAddresses.includes(DOLPHIN_ADDRESS)) {
+      const chainId = await publicClient.getChainId()
+      const nativeToken = NATIVE_ASSETS[chainId as NETWORK] ?? {}
+
+      formattedResult[DOLPHIN_ADDRESS] = { ...nativeToken, totalSupply: 0n }
+    }
   }
 
   return formattedResult
@@ -69,14 +89,29 @@ export const getTokenAllowances = async (
 ): Promise<{ [tokenAddress: Address]: bigint }> => {
   const formattedResult: { [tokenAddress: Address]: bigint } = {}
 
-  if (tokenAddresses?.length > 0) {
-    const multicallResults = await getMulticallResults(publicClient, tokenAddresses, erc20ABI, [
-      { functionName: 'allowance', args: [address, spenderAddress] }
-    ])
+  const filteredTokenAddresses = tokenAddresses.filter(
+    (address) => lower(address) !== DOLPHIN_ADDRESS && address !== zeroAddress
+  )
 
-    tokenAddresses.forEach((tokenAddress) => {
+  if (filteredTokenAddresses?.length > 0) {
+    const multicallResults = await getMulticallResults(
+      publicClient,
+      filteredTokenAddresses,
+      erc20ABI,
+      [{ functionName: 'allowance', args: [address, spenderAddress] }]
+    )
+
+    filteredTokenAddresses.forEach((tokenAddress) => {
       formattedResult[tokenAddress] = multicallResults[tokenAddress]?.['allowance'] ?? 0n
     })
+  }
+
+  if (Object.keys(formattedResult).length < tokenAddresses.length) {
+    const lowerCaseTokenAddresses = tokenAddresses.map((address) => lower(address))
+
+    if (lowerCaseTokenAddresses.includes(DOLPHIN_ADDRESS)) {
+      formattedResult[DOLPHIN_ADDRESS] = 0n
+    }
   }
 
   return formattedResult
@@ -96,17 +131,26 @@ export const getTokenBalances = async (
 ): Promise<{ [tokenAddress: Address]: TokenWithAmount }> => {
   const formattedResult: { [tokenAddress: Address]: TokenWithAmount } = {}
 
-  if (tokenAddresses?.length > 0) {
-    const multicallResults = await getMulticallResults(publicClient, tokenAddresses, erc20ABI, [
-      { functionName: 'symbol' },
-      { functionName: 'name' },
-      { functionName: 'decimals' },
-      { functionName: 'balanceOf', args: [address] }
-    ])
+  const filteredTokenAddresses = tokenAddresses.filter(
+    (address) => lower(address) !== DOLPHIN_ADDRESS && address !== zeroAddress
+  )
+
+  if (filteredTokenAddresses?.length > 0) {
+    const multicallResults = await getMulticallResults(
+      publicClient,
+      filteredTokenAddresses,
+      erc20ABI,
+      [
+        { functionName: 'symbol' },
+        { functionName: 'name' },
+        { functionName: 'decimals' },
+        { functionName: 'balanceOf', args: [address] }
+      ]
+    )
 
     const chainId = await publicClient.getChainId()
 
-    tokenAddresses.forEach((tokenAddress) => {
+    filteredTokenAddresses.forEach((tokenAddress) => {
       const symbol: string = multicallResults[tokenAddress]?.['symbol']
       const name: string = multicallResults[tokenAddress]?.['name']
       const decimals = Number(multicallResults[tokenAddress]?.['decimals'])
@@ -125,6 +169,18 @@ export const getTokenBalances = async (
         amount
       }
     })
+  }
+
+  if (Object.keys(formattedResult).length < tokenAddresses.length) {
+    const lowerCaseTokenAddresses = tokenAddresses.map((address) => lower(address))
+
+    if (lowerCaseTokenAddresses.includes(DOLPHIN_ADDRESS)) {
+      const chainId = await publicClient.getChainId()
+      const nativeToken = NATIVE_ASSETS[chainId as NETWORK] ?? {}
+      const amount = await publicClient.getBalance({ address })
+
+      formattedResult[DOLPHIN_ADDRESS] = { ...nativeToken, amount }
+    }
   }
 
   return formattedResult
@@ -210,6 +266,8 @@ export const getTokenPermitSupport = async (
   publicClient: PublicClient,
   tokenAddress: Address
 ): Promise<'eip2612' | 'daiPermit' | 'none'> => {
+  if (lower(tokenAddress) === DOLPHIN_ADDRESS) return 'none'
+
   try {
     await publicClient.simulateContract({
       address: tokenAddress,

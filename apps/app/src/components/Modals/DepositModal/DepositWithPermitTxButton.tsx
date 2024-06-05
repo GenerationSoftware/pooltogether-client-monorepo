@@ -28,6 +28,7 @@ interface DepositWithPermitTxButtonProps {
   setModalView: (view: DepositModalView) => void
   setDepositTxHash: (txHash: string) => void
   refetchUserBalances?: () => void
+  onSuccessfulDeposit?: (chainId: number, txReceipt: TransactionReceipt) => void
   onSuccessfulDepositWithPermit?: (chainId: number, txReceipt: TransactionReceipt) => void
 }
 
@@ -38,6 +39,7 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
     setModalView,
     setDepositTxHash,
     refetchUserBalances,
+    onSuccessfulDeposit,
     onSuccessfulDepositWithPermit
   } = props
 
@@ -149,13 +151,14 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
     onSend: () => {
       setModalView('waiting')
     },
-    onSuccess: () => {
+    onSuccess: (txReceipt) => {
       refetchUserTokenBalance()
       refetchUserVaultTokenBalance()
       refetchUserVaultDelegationBalance()
       refetchVaultBalance()
       refetchTokenAllowance()
       refetchUserBalances?.()
+      onSuccessfulDeposit?.(vault.chainId, txReceipt)
       setModalView('success')
     },
     onError: () => {

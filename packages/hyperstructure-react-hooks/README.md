@@ -115,6 +115,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 ### Signature Hooks
 
 - `useApproveSignature`
+- `useGenericApproveSignature`
 
 ### Token Hooks
 
