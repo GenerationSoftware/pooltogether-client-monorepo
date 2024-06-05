@@ -7,7 +7,6 @@ import {
 import {
   calculatePercentageOfBigInt,
   getSharesFromAssets,
-  lower,
   NETWORK,
   vaultABI,
   WRAPPED_NATIVE_ASSETS
@@ -66,7 +65,6 @@ export const useSendDepositZapWithPermitTransaction = (
   txReceipt?: TransactionReceipt
   sendDepositZapWithPermitTransaction?: () => void
   amountOut?: { expected: bigint; min: bigint }
-  isSwapNecessary: boolean
   swapTx: ReturnType<typeof useSwapTx>['data']
   isFetchedSwapTx: boolean
   isFetchingSwapTx: boolean
@@ -108,9 +106,6 @@ export const useSendDepositZapWithPermitTransaction = (
     }
   }, [zapRouterAddress])
 
-  const isSwapNecessary =
-    !!inputToken?.address && !!vaultToken && lower(vaultToken.address) !== lower(inputToken.address)
-
   const enabled =
     !!inputToken &&
     !!inputToken.address &&
@@ -133,36 +128,18 @@ export const useSendDepositZapWithPermitTransaction = (
     !!zapRouterAddress &&
     !!zapTokenManager &&
     !!wrappedNativeTokenAddress &&
-    (!isSwapNecessary || (isFetchedSwapTx && !!swapTx)) &&
+    isFetchedSwapTx &&
+    !!swapTx &&
     !!depositTx
 
   const amountOut = useMemo(() => {
-    if (!!inputToken?.address && !!vaultToken && !!exchangeRate) {
-      if (isSwapNecessary) {
-        if (!!swapTx) {
-          return {
-            expected: getSharesFromAssets(
-              swapTx.amountOut.expected,
-              exchangeRate,
-              vaultToken.decimals
-            ),
-            min: getSharesFromAssets(swapTx.amountOut.min, exchangeRate, vaultToken.decimals)
-          }
-        }
-      } else {
-        const simpleAmountOut = getSharesFromAssets(
-          inputToken.amount,
-          exchangeRate,
-          vaultToken.decimals
-        )
-
-        return {
-          expected: simpleAmountOut,
-          min: simpleAmountOut
-        }
+    if (!!inputToken?.address && !!vaultToken && !!exchangeRate && !!swapTx) {
+      return {
+        expected: getSharesFromAssets(swapTx.amountOut.expected, exchangeRate, vaultToken.decimals),
+        min: getSharesFromAssets(swapTx.amountOut.min, exchangeRate, vaultToken.decimals)
       }
     }
-  }, [inputToken, vaultToken, exchangeRate, isSwapNecessary, swapTx])
+  }, [inputToken, vaultToken, exchangeRate, swapTx])
 
   const zapArgs = useMemo((): [ZapPermit, ZapConfig, `0x${string}`, ZapRoute] | undefined => {
     if (enabled && !!amountOut) {
@@ -176,7 +153,8 @@ export const useSendDepositZapWithPermitTransaction = (
         inputs: [{ token: inputToken.address, amount: inputToken.amount }],
         outputs: [
           { token: vault.address, minOutputAmount: amountOut.min },
-          { token: inputToken.address, minOutputAmount: 0n }
+          { token: inputToken.address, minOutputAmount: 0n },
+          { token: vaultToken.address, minOutputAmount: 0n }
         ],
         relay: { target: zeroAddress, value: 0n, data: '0x0' },
         user: userAddress,
@@ -278,7 +256,6 @@ export const useSendDepositZapWithPermitTransaction = (
     txReceipt,
     sendDepositZapWithPermitTransaction,
     amountOut,
-    isSwapNecessary,
     swapTx,
     isFetchedSwapTx,
     isFetchingSwapTx

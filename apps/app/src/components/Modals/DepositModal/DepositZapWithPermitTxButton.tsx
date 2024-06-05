@@ -135,7 +135,6 @@ export const DepositZapWithPermitTxButton = (props: DepositZapWithPermitTxButton
     isSuccess: isSuccessfulDepositZapWithPermit,
     txHash: depositZapWithPermitTxHash,
     sendDepositZapWithPermitTransaction,
-    isSwapNecessary,
     swapTx,
     isFetchingSwapTx
   } = useSendDepositZapWithPermitTransaction(
@@ -246,7 +245,7 @@ export const DepositZapWithPermitTxButton = (props: DepositZapWithPermitTxButton
     !!depositAmount &&
     inputToken.decimals !== undefined &&
     chain?.id === vault.chainId &&
-    (!isSwapNecessary || !!swapTx)
+    !!swapTx
 
   const depositEnabled =
     isDataFetched && userInputTokenBalance.amount >= depositAmount && isValidFormInputTokenAmount
@@ -269,24 +268,13 @@ export const DepositZapWithPermitTxButton = (props: DepositZapWithPermitTxButton
     )
   }
 
-  if (isSwapNecessary) {
-    // Fetching swap params
-    if (isFetchingSwapTx) {
-      return (
-        <Button fullSized={true} disabled={true}>
-          {t_modals('findingZapRoute')}
-        </Button>
-      )
-    }
-
-    // Swap route unavailable
-    if (!swapTx) {
-      return (
-        <Button fullSized={true} disabled={true}>
-          {t_modals('noZapRouteFound')}
-        </Button>
-      )
-    }
+  // Fetching swap params
+  if (isFetchingSwapTx) {
+    return (
+      <Button fullSized={true} disabled={true}>
+        {t_modals('findingZapRoute')}
+      </Button>
+    )
   }
 
   // Deposit button

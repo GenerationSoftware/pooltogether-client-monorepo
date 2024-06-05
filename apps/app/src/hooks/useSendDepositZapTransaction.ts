@@ -176,20 +176,19 @@ export const useSendDepositZapTransaction = (
       let zapInputs: ZapConfig['inputs'] = []
 
       let zapOutputs: ZapConfig['outputs'] = [
-        { token: vault.address, minOutputAmount: amountOut.min }
+        { token: vault.address, minOutputAmount: amountOut.min },
+        { token: vaultToken.address, minOutputAmount: 0n }
       ]
 
       let zapRoute: ZapRoute = [{ ...depositTx, tokens: [{ token: vaultToken.address, index: 4 }] }]
 
       if (isDolphinAddress(inputToken.address)) {
         zapInputs = [{ token: zeroAddress, amount: inputToken.amount }]
-        zapOutputs = [
-          ...zapOutputs,
-          { token: zeroAddress, minOutputAmount: 0n },
-          { token: wrappedNativeTokenAddress, minOutputAmount: 0n }
-        ]
+        zapOutputs = [...zapOutputs, { token: zeroAddress, minOutputAmount: 0n }]
 
         if (!!swapTx) {
+          zapOutputs = [...zapOutputs, { token: wrappedNativeTokenAddress, minOutputAmount: 0n }]
+
           zapRoute = [
             {
               ...getWrapTx(vault.chainId, inputToken.amount),
