@@ -86,8 +86,7 @@ export const useSwapTx = (swapData: {
     lower(from.address) !== lower(to.address) &&
     !!userAddress &&
     !!publicClient &&
-    slippage !== undefined &&
-    !!process.env.NEXT_PUBLIC_DECENT_API_KEY
+    slippage !== undefined
 
   const queryKey = [
     'swapTx',
