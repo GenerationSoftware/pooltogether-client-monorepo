@@ -2,8 +2,11 @@ import { TokenWithAmount, TokenWithSupply } from '@shared/types'
 import {
   Address,
   ContractFunctionExecutionError,
+  encodeAbiParameters,
+  keccak256,
   pad,
   PublicClient,
+  toHex,
   TypedDataDomain,
   zeroAddress
 } from 'viem'
@@ -205,13 +208,49 @@ export const getTokenDomain = async (publicClient: PublicClient, tokenAddress: A
  * Returns the type of permit a token supports
  * @param publicClient a public Viem client to query through
  * @param tokenAddress token address to check permit support for
+ * @param options optional settings
  */
 export const getTokenPermitSupport = async (
   publicClient: PublicClient,
-  tokenAddress: Address
+  tokenAddress: Address,
+  options?: { domain?: TypedDataDomain }
 ): Promise<'eip2612' | 'daiPermit' | 'none'> => {
-  // TODO: remove once domain separator check is in place
-  if (lower(tokenAddress) === '0x0000206329b97db379d5e1bf586bbdb969c63274') return 'none'
+  if (!!options?.domain?.chainId && !!options?.domain?.name && !!options?.domain?.version) {
+    try {
+      const domainSeparator = await publicClient.readContract({
+        address: tokenAddress,
+        abi: erc20ABI,
+        functionName: 'DOMAIN_SEPARATOR'
+      })
+
+      const domainSeparatorType = [
+        { name: 'typeHash', type: 'bytes32' },
+        { name: 'nameHash', type: 'bytes32' },
+        { name: 'versionHash', type: 'bytes32' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'verifierAddress', type: 'address' }
+      ] as const
+
+      const typeHash = keccak256(
+        toHex('EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)')
+      )
+      const nameHash = keccak256(toHex(options.domain.name))
+      const versionHash = keccak256(toHex(options.domain.version))
+      const chainId = BigInt(options.domain.chainId)
+
+      const computedDomainSeparator = keccak256(
+        encodeAbiParameters(domainSeparatorType, [
+          typeHash,
+          nameHash,
+          versionHash,
+          chainId,
+          tokenAddress
+        ])
+      )
+
+      if (domainSeparator !== computedDomainSeparator) return 'none'
+    } catch {}
+  }
 
   try {
     await publicClient.simulateContract({
