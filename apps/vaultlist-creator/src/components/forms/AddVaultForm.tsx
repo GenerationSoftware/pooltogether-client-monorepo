@@ -44,7 +44,7 @@ export const AddVaultForm = (props: AddVaultFormProps) => {
       chainId: parseInt(data.vaultChainId),
       address: data.vaultAddress.trim() as Address,
       name: vaultName.name,
-      yieldSourceURI: data.vaultYieldSourceURI
+      extensions: { yieldSource: { appURI: data.vaultYieldSourceURI } }
     }
 
     const existingVault = vaultInfo.find(

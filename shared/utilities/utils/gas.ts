@@ -10,7 +10,6 @@ import { opGasOracleABI } from '../abis/opGasOracle'
 import { DOLPHIN_ADDRESS, OP_GAS_ORACLE_ADDRESS } from '../constants'
 import { isOpStack } from './networks'
 
-// TODO: add arbitrum logic for accurately calculating L1 + L2 fees
 /**
  * Returns an estimated gas fee (in wei) for a given contract transaction
  * @dev if your transaction is expected to fail, manually pass in a `gasAmount`

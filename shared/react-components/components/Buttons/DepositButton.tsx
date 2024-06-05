@@ -60,7 +60,7 @@ export const DepositButton = (props: DepositButtonProps) => {
         const precision = 10 ** token.decimals / tokenPrice
         const usdcPrecision = 10 ** 6 / usdcPrice // TODO: this assumes all USDC tokens have 6 decimals
 
-        return precision < usdcPrecision
+        return precision < usdcPrecision * 0.8
       }
     }
   }, [token, tokenPrices])

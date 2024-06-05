@@ -25,6 +25,7 @@
     "warning": "Warning",
     "getTokenAt": "Get {token} at",
     "cabanaPoweredBy": "Cabana is powered by",
+    "new": "New",
     "greatMigration": {
       "joinTitle": "Join the Great <highlight>Pooly</highlight> Migration",
       "joinButton": "Join the Migration",
@@ -41,26 +42,23 @@
     "account": "Account"
   },
   "Home": {
-    "winUpTo": {
-      "beforeValue": "Deposit for a daily chance to win up to",
-      "afterValue": ""
-    },
+    "winUpTo": "Deposit <token></token> to win up to <amount></amount>",
     "withdrawAnyTime": "You can withdraw your full deposit at any time"
   },
   "Prizes": {
-    "learnMore": "Learn more about how prizes work",
-    "switchPrizePool": "Switch prize pool",
-    "estPrizeValue": "Estimated Prize Value",
-    "estPrizeFreq": "Estimated Frequency",
-    "recentWinners": "Recent Prize Pool Winners",
+    "winUpTo": "Keep your deposit. Win up to <amount></amount>",
+    "currentPrizes": "Current Prizes",
+    "learnMore": "Prizes and frequencies are estimations. <link>Learn how PoolTogether works</link>",
+    "prize": "Prize",
+    "frequency": "Frequency",
+    "recentWinners": "Recent Winners",
     "drawWinners": {
-      "beforeValue": "{numWallets, plural, one {# wallet} other {# wallets}} won",
+      "beforeValue": "{numPeople, plural, one {# person} other {# people}} won",
       "afterValue": {
         "today": "today",
         "yesterday": "yesterday",
         "onXDate": "on {date}"
-      },
-      "drawIsOngoing": "Draw is ongoing"
+      }
     },
     "drawModal": {
       "drawTotal": {
@@ -74,6 +72,7 @@
     }
   },
   "Vaults": {
+    "depositAndWin": "Deposit tokens, <highlight>win prizes</highlight>. Withdraw anytime, <highlight>no loss</highlight>",
     "filter": "Filter",
     "filters": {
       "showAll": "Show All",
@@ -88,6 +87,8 @@
       "prizeVault": "Prize Vault",
       "prizeYield": "Prize Yield",
       "bonusRewards": "Bonus Rewards",
+      "prizes": "Prizes",
+      "winChance": "Win Chance",
       "totalDeposits": "Total Deposits",
       "yourBalance": "Your Balance"
     }
@@ -288,6 +289,8 @@
     "xPrizesYearly": "{number, plural, one {# prize} other {# prizes}} yearly"
   },
   "Tooltips": {
+    "prizes": "Prizes you can win while deposited in a vault",
+    "relativeWinChance": "A vault's relative win chance compared to other vaults",
     "prizeYield": "A recent average of a vault's contributions to the prize pool",
     "bonusRewards": "An estimate of current extra incentives for depositors",
     "winChance": "Your chance to win a prize in any given draw",
@@ -298,7 +301,15 @@
     "deprecatedVault": "This vault has been deprecated. It may still be eligible to win prizes, but we encourage users to migrate to other vaults.",
     "wrongPrizePoolVault": "This vault is connected to a prize pool not supported by this interface.",
     "badPrecisionPerDollar": "This vault is likely to have rounding errors which may lead to lossy withdrawals.",
-    "delegateDescription": "By default the prize token holder is the delegated address. That can be overridden with delegation."
+    "delegateDescription": "By default the prize token holder is the delegated address. That can be overridden with delegation.",
+    "winChanceChart": {
+      "none": "No win chance",
+      "lowest": "Lowest win chance",
+      "low": "Low win chance",
+      "average": "Average win chance",
+      "high": "High win chance",
+      "highest": "Highest win chance"
+    }
   },
   "Toasts": {
     "transactions": {

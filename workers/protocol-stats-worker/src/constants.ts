@@ -38,7 +38,11 @@ export const VIEM_CHAINS: Record<NETWORK, Chain> = {
   [NETWORK.base]: base
 }
 
-export const V5_NETWORKS = [NETWORK.optimism, NETWORK.base] as const satisfies NETWORK[]
+export const V5_NETWORKS = [
+  NETWORK.optimism,
+  NETWORK.base,
+  NETWORK.arbitrum
+] as const satisfies NETWORK[]
 
 export const V4_NETWORKS = [
   NETWORK.mainnet,
@@ -62,7 +66,8 @@ export const RPC_URLS: Record<
   [NETWORK.optimism]: OPTIMISM_RPC_URL,
   [NETWORK.base]: BASE_RPC_URL,
   [NETWORK.avalanche]: AVALANCHE_RPC_URL,
-  [NETWORK.celo]: CELO_RPC_URL
+  [NETWORK.celo]: CELO_RPC_URL,
+  [NETWORK.arbitrum]: ARBITRUM_RPC_URL
 }
 
 export const V4_TICKETS: Record<
@@ -77,7 +82,8 @@ export const V4_TICKETS: Record<
 
 export const V5_SUBGRAPH_API_URLS: Record<(typeof V5_NETWORKS)[number], `https://${string}`> = {
   [NETWORK.optimism]: 'https://api.studio.thegraph.com/query/63100/pt-v5-optimism/version/latest',
-  [NETWORK.base]: 'https://api.studio.thegraph.com/query/41211/pt-v5-base/version/latest'
+  [NETWORK.base]: 'https://api.studio.thegraph.com/query/41211/pt-v5-base/version/latest',
+  [NETWORK.arbitrum]: 'https://api.studio.thegraph.com/query/63100/pt-v5-arbitrum/version/latest'
 }
 
 export const V4_TWAB_SUBGRAPH_API_URLS: Record<(typeof V4_NETWORKS)[number], `https://${string}`> =

@@ -25,13 +25,12 @@ export type WithdrawModalView = 'main' | 'review' | 'waiting' | 'confirming' | '
 
 export interface WithdrawModalProps {
   onClose?: () => void
-  onGoToAccount?: () => void
   refetchUserBalances?: () => void
   onSuccessfulWithdrawal?: () => void
 }
 
 export const WithdrawModal = (props: WithdrawModalProps) => {
-  const { onClose, onGoToAccount, refetchUserBalances, onSuccessfulWithdrawal } = props
+  const { onClose, refetchUserBalances, onSuccessfulWithdrawal } = props
 
   const t_toasts = useTranslations('Toasts.transactions')
 
@@ -74,14 +73,7 @@ export const WithdrawModal = (props: WithdrawModalProps) => {
       review: <ReviewView vault={vault} />,
       waiting: <WaitingView vault={vault} closeModal={handleClose} />,
       confirming: <ConfirmingView vault={vault} txHash={withdrawTxHash} closeModal={handleClose} />,
-      success: (
-        <SuccessView
-          vault={vault}
-          txHash={withdrawTxHash}
-          closeModal={handleClose}
-          goToAccount={onGoToAccount}
-        />
-      ),
+      success: <SuccessView vault={vault} txHash={withdrawTxHash} closeModal={handleClose} />,
       error: <ErrorView setModalView={setView} />
     }
 

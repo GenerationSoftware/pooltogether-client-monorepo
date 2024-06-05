@@ -43,7 +43,7 @@ export const AccountDeposits = (props: AccountDepositsProps) => {
 
   if (typeof window !== 'undefined' && userAddress === undefined) {
     return (
-      <div className='flex flex-col h-[80vh] w-full items-center justify-evenly'>
+      <div className='w-full flex flex-col items-center gap-8'>
         <NoWalletCard />
         <PrizePoolCards />
       </div>

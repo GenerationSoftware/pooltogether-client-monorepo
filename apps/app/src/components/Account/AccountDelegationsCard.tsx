@@ -35,7 +35,7 @@ export const AccountDelegationsCard = (props: AccountDelegationsCardProps) => {
       </span>
       <div className='w-full flex flex-col gap-1 px-3'>
         <div className='flex items-center justify-between'>
-          <span className='text-xs text-pt-purple-200'>{t_vault('headers.delegatedAmount')}</span>
+          <span className='text-sm text-pt-purple-200'>{t_vault('headers.delegatedAmount')}</span>
           <AccountVaultDelegationAmount
             vault={vault}
             address={userAddress}
@@ -43,7 +43,7 @@ export const AccountDelegationsCard = (props: AccountDelegationsCardProps) => {
           />
         </div>
         <div className='flex items-center justify-between'>
-          <span className='flex gap-1 items-center text-xs text-pt-purple-200'>
+          <span className='flex gap-1 items-center text-sm text-pt-purple-200'>
             {isExternalUser ? t_vault('headers.winChance') : t_vault('headers.yourWinChance')}
             <WinChanceTooltip intl={{ text: t_tooltips('winChance') }} className='text-xs' />
           </span>

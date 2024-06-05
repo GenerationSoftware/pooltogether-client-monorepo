@@ -16,10 +16,9 @@ import {
   CaptchaModal,
   CheckPrizesModal,
   DelegateModal,
-  DrawModal,
   SettingsModal
 } from '@shared/react-components'
-import { ExternalLink, Footer, FooterItem, Navbar, SocialIcon, toast } from '@shared/ui'
+import { Footer, FooterItem, Navbar, SocialIcon, toast } from '@shared/ui'
 import { getDiscordInvite, LINKS, NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
 import * as fathom from 'fathom-client'
@@ -39,6 +38,7 @@ import { useSettingsModalView } from '@hooks/useSettingsModalView'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { MigrationPopup } from './MigrationPopup'
 import { DepositModal } from './Modals/DepositModal'
+import { DrawModal } from './Modals/DrawModal'
 import { WithdrawModal } from './Modals/WithdrawModal'
 import { drawIdAtom } from './Prizes/PrizePoolWinners'
 import { VaultListHandler } from './VaultListHandler'
@@ -59,7 +59,6 @@ export const Layout = (props: LayoutProps) => {
   const t_footer = useTranslations('Footer')
   const t_txModals = useTranslations('TxModals')
   const t_txToasts = useTranslations('Toasts.transactions')
-  const t_drawModal = useTranslations('Prizes.drawModal')
   const t_errors = useTranslations('Error')
   const t_prizeChecking = useTranslations('Account.prizeChecking')
 
@@ -81,11 +80,11 @@ export const Layout = (props: LayoutProps) => {
 
   const { vaults } = useSelectedVaults()
   const { address: userAddress, connector } = useAccount()
-  const {
-    data: userVaultBalances,
-    isFetched: isFetchedUserVaultBalances,
-    refetch: refetchUserVaultBalances
-  } = useAllUserVaultBalances(vaults, userAddress as Address, { refetchOnWindowFocus: true })
+  const { refetch: refetchUserVaultBalances } = useAllUserVaultBalances(
+    vaults,
+    userAddress as Address,
+    { refetchOnWindowFocus: true }
+  )
   const { refetch: refetchUserVaultDelegationBalances } = useAllUserVaultDelegationBalances(
     vaults,
     userAddress as Address,
@@ -117,33 +116,6 @@ export const Layout = (props: LayoutProps) => {
       toast(alert.content, { id: alert.id })
     })
   })
-
-  // TODO: remove this whole block a while after launch
-  const [needsMigrationToastCheck, setNeedsMigrationToastCheck] = useState<boolean>(false)
-  useEffect(() => {
-    setNeedsMigrationToastCheck(true)
-  })
-  useEffect(() => {
-    if (needsMigrationToastCheck && isFetchedUserVaultBalances) {
-      setNeedsMigrationToastCheck(false)
-
-      const positiveBalances = Object.values(userVaultBalances ?? {})
-        .map((b) => b.amount)
-        .filter((b) => b > 0n)
-      if (!positiveBalances.length) {
-        toast(
-          <div className='flex flex-col gap-2 items-center text-center text-base'>
-            <span>Is your account missing some deposits?</span>
-            <span>You might have been deposited in an older version of PoolTogether.</span>
-            <ExternalLink href={LINKS.migrations} className='text-pt-teal'>
-              Check the migration app
-            </ExternalLink>
-          </div>,
-          { id: 'migrationAppNudge' }
-        )
-      }
-    }
-  }, [userVaultBalances, isFetchedUserVaultBalances])
 
   const footerItems: FooterItem[] = [
     {
@@ -283,7 +255,6 @@ export const Layout = (props: LayoutProps) => {
       />
 
       <WithdrawModal
-        onGoToAccount={() => router.push('/account')}
         refetchUserBalances={refetchUserBalances}
         onSuccessfulWithdrawal={() => fathom.trackEvent(FATHOM_EVENTS.redeemed)}
       />
@@ -296,12 +267,7 @@ export const Layout = (props: LayoutProps) => {
         intl={{ base: t_txModals, common: t_common, txToast: t_txToasts, errors: t_errors }}
       />
 
-      <DrawModal
-        draw={selectedDraw}
-        prizePool={selectedPrizePool}
-        onGoToAccount={(address) => router.push(`/account/${address}`)}
-        intl={{ base: t_common, prizes: t_drawModal }}
-      />
+      <DrawModal draw={selectedDraw} prizePool={selectedPrizePool} />
 
       <CheckPrizesModal
         prizePools={prizePoolsArray}

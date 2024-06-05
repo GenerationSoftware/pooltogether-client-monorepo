@@ -6,9 +6,9 @@ import {
   useSortedVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
 import {
-  BonusRewardsTooltip,
   ImportedVaultTooltip,
-  PrizeYieldTooltip,
+  PrizesTooltip,
+  RelativeWinChanceTooltip,
   SortIcon,
   VaultBadge
 } from '@shared/react-components'
@@ -18,36 +18,28 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { ReactNode } from 'react'
-import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
-import { TWAB_REWARDS_SETTINGS } from '@constants/config'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { VaultBonusRewards } from './VaultBonusRewards'
 import { VaultButtons } from './VaultButtons'
-import { VaultPrizeYield } from './VaultPrizeYield'
+import { VaultPrizes } from './VaultPrizes'
 import { VaultTotalDeposits } from './VaultTotalDeposits'
+import { VaultWinChance } from './VaultWinChance'
 
 interface VaultsTableProps {
-  chainId: number
   vaults: Vault[]
   className?: string
 }
 
 export const VaultsTable = (props: VaultsTableProps) => {
-  const { chainId, vaults, className } = props
+  const { vaults, className } = props
 
   const t_common = useTranslations('Common')
   const t_vaults = useTranslations('Vaults')
   const t_tooltips = useTranslations('Tooltips')
 
   const prizePools = useSupportedPrizePools()
-  const prizePool = Object.values(prizePools).find((prizePool) => prizePool.chainId === chainId)
+  const prizePoolsArray = Object.values(prizePools)
 
-  const twabRewards = TWAB_REWARDS_SETTINGS[chainId]
-    ? {
-        rewardTokenAddresses: TWAB_REWARDS_SETTINGS[chainId].tokenAddresses,
-        fromBlock: TWAB_REWARDS_SETTINGS[chainId].fromBlock
-      }
-    : undefined
   const {
     sortedVaults,
     sortVaultsBy,
@@ -56,7 +48,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
     setSortDirection,
     toggleSortDirection,
     isFetched
-  } = useSortedVaults(vaults, { prizePool, twabRewards })
+  } = useSortedVaults(vaults, { prizePools: prizePoolsArray })
 
   const { localVaultLists, importedVaultLists } = useSelectedVaultLists()
 
@@ -107,30 +99,27 @@ export const VaultsTable = (props: VaultsTableProps) => {
 
   const tableData: TableProps['data'] = {
     headers: {
-      token: { content: t_vaults('headers.prizeVault') },
-      prizeYield: {
+      vault: { content: t_vaults('headers.prizeVault') },
+      prizes: {
         content: (
           <SortableHeader
-            id='prizeYield'
+            id='prizes'
             onClick={handleHeaderClick}
-            direction={getDirection('prizeYield')}
-            append={
-              <PrizeYieldTooltip
-                iconSize='lg'
-                intl={{ text: t_tooltips('prizeYield'), learnMore: t_common('learnMore') }}
-              />
-            }
+            direction={getDirection('prizes')}
+            append={<PrizesTooltip iconSize='lg' intl={t_tooltips('prizes')} />}
           />
         ),
         position: 'center'
       },
-      bonusRewards: {
+      winChance: {
         content: (
           <SortableHeader
-            id='twabRewards'
+            id='winChance'
             onClick={handleHeaderClick}
-            direction={getDirection('twabRewards')}
-            append={<BonusRewardsTooltip iconSize='lg' intl={t_tooltips('bonusRewards')} />}
+            direction={getDirection('winChance')}
+            append={
+              <RelativeWinChanceTooltip iconSize='lg' intl={t_tooltips('relativeWinChance')} />
+            }
           />
         ),
         position: 'center'
@@ -145,16 +134,6 @@ export const VaultsTable = (props: VaultsTableProps) => {
         ),
         position: 'center'
       },
-      balance: {
-        content: (
-          <SortableHeader
-            id='userBalance'
-            onClick={handleHeaderClick}
-            direction={getDirection('userBalance')}
-          />
-        ),
-        position: 'center'
-      },
       manage: { content: <ManageHeader />, position: 'right' }
     },
     rows: sortedVaults.map((vault) => {
@@ -163,18 +142,11 @@ export const VaultsTable = (props: VaultsTableProps) => {
       return {
         id: vault.id,
         cells: {
-          token: {
+          vault: {
             content: (
               <>
                 <Link href={`/vault/${vault.chainId}/${vault.address}`}>
-                  <VaultBadge
-                    vault={vault}
-                    onClick={() => {}}
-                    className='max-w-full'
-                    symbolClassName={
-                      !!vault.name?.length && vault.name.length > 20 ? 'hidden' : undefined
-                    }
-                  />
+                  <VaultBadge vault={vault} onClick={() => {}} className='max-w-full' />
                 </Link>
                 {importedSrcs.length > 0 && (
                   <ImportedVaultTooltip
@@ -186,34 +158,29 @@ export const VaultsTable = (props: VaultsTableProps) => {
             ),
             className: 'gap-2 pr-0'
           },
-          prizeYield: {
+          prizes: {
             content: (
-              <VaultPrizeYield
-                vault={vault}
-                label={t_common('apr')}
-                valueClassName='text-xl font-semibold text-pt-purple-100'
-                labelClassName='text-sm text-pt-purple-400'
-              />
+              <>
+                <VaultPrizes vault={vault} />
+                {/* TODO: append tokens that rewards are in */}
+                <VaultBonusRewards
+                  vault={vault}
+                  prepend='+'
+                  append={<span className='text-pt-purple-200'>{t_common('apr')}</span>}
+                  hideUnlessPresent={true}
+                  className='text-sm'
+                />
+              </>
             ),
-            position: 'center'
+            position: 'center',
+            className: 'flex-col text-center'
           },
-          bonusRewards: {
-            content: (
-              <VaultBonusRewards
-                vault={vault}
-                label={t_common('apr')}
-                valueClassName='text-xl font-semibold text-pt-purple-100'
-                labelClassName='text-sm text-pt-purple-400'
-              />
-            ),
+          winChance: {
+            content: <VaultWinChance vault={vault} className='w-14' />,
             position: 'center'
           },
           totalDeposits: {
             content: <VaultTotalDeposits vault={vault} className='text-center' />,
-            position: 'center'
-          },
-          balance: {
-            content: <AccountVaultBalance vault={vault} className='text-center' />,
             position: 'center'
           },
           manage: {
@@ -233,7 +200,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
       innerClassName='!gap-3'
       headerClassName='px-4'
       rowClassName='!px-4 py-4 rounded-3xl'
-      gridColsClassName='grid-cols-[minmax(0,6fr)_repeat(4,minmax(0,4fr))_minmax(0,5fr)]'
+      gridColsClassName='grid-cols-[minmax(0,5fr)_repeat(3,minmax(0,4fr))_minmax(0,5fr)]'
     />
   )
 }
@@ -251,8 +218,8 @@ const SortableHeader = (props: SortableHeaderProps) => {
   const t = useTranslations('Vaults')
 
   const names: Record<SortId, string> = {
-    prizeYield: t('headers.prizeYield'),
-    twabRewards: t('headers.bonusRewards'),
+    prizes: t('headers.prizes'),
+    winChance: t('headers.winChance'),
     totalBalance: t('headers.totalDeposits'),
     userBalance: t('headers.yourBalance')
   }

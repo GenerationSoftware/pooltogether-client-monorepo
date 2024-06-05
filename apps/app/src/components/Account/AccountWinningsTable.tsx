@@ -1,6 +1,6 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import { usePublicClientsByChain } from '@generationsoftware/hyperstructure-react-hooks'
-import { PrizePoolBadge, SortIcon, VaultBadge } from '@shared/react-components'
+import { SortIcon, VaultBadge } from '@shared/react-components'
 import { Win } from '@shared/types'
 import { Table, TableProps } from '@shared/ui'
 import { getSimpleDate, sortByBigIntDesc } from '@shared/utilities'

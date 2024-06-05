@@ -9,17 +9,19 @@ import {
 } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/router'
 import { withdrawFormTokenAmountAtom } from '../WithdrawForm'
 
 interface SuccessViewProps {
   vault: Vault
   closeModal: () => void
   txHash?: string
-  goToAccount?: () => void
 }
 
 export const SuccessView = (props: SuccessViewProps) => {
-  const { vault, txHash, closeModal, goToAccount } = props
+  const { vault, txHash, closeModal } = props
+
+  const router = useRouter()
 
   const t_common = useTranslations('Common')
   const t_modals = useTranslations('TxModals')
@@ -55,18 +57,16 @@ export const SuccessView = (props: SuccessViewProps) => {
           {t_common('viewOn', { name })}
         </ExternalLink>
       )}
-      {!!goToAccount && (
-        <Button
-          fullSized={true}
-          color='transparent'
-          onClick={() => {
-            goToAccount()
-            closeModal()
-          }}
-        >
-          {t_modals('viewAccount')}
-        </Button>
-      )}
+      <Button
+        fullSized={true}
+        color='transparent'
+        onClick={() => {
+          router.push(`/account`)
+          closeModal()
+        }}
+      >
+        {t_modals('viewAccount')}
+      </Button>
     </div>
   )
 }

@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import { formatUnits } from 'viem'
 import {
   useDrawPeriod,
+  useLastAwardedDrawId,
   usePrizeTokenPrice,
   useVaultContributionAmount,
   useVaultSharePrice,
@@ -41,6 +42,8 @@ export const useVaultPrizeYield = (
 
   const { data: drawPeriod, isFetched: isFetchedDrawPeriod } = useDrawPeriod(prizePool)
 
+  const { data: lastDrawId, isFetched: isFetchedLastDrawId } = useLastAwardedDrawId(prizePool)
+
   const data = useMemo(() => {
     if (
       vaultContribution === 0n ||
@@ -59,22 +62,24 @@ export const useVaultPrizeYield = (
       !!drawPeriod
     ) {
       const yearlyDraws = SECONDS_PER_YEAR / drawPeriod
+      const numDrawsConsidered = Math.min(options?.numDraws ?? 7, lastDrawId || 1)
       const yearlyContribution =
         parseFloat(formatUnits(vaultContribution, prizeToken.decimals)) *
-        (yearlyDraws / (options?.numDraws ?? 7))
+        (yearlyDraws / numDrawsConsidered)
       const yearlyContributionValue = yearlyContribution * prizeToken.price
       const tvl = parseFloat(formatUnits(totalSupplyTwab, shareToken.decimals)) * shareToken.price
 
       return (yearlyContributionValue / tvl) * 100
     }
-  }, [vaultContribution, totalSupplyTwab, shareToken, prizeToken, drawPeriod])
+  }, [vaultContribution, totalSupplyTwab, shareToken, prizeToken, drawPeriod, lastDrawId])
 
   const isFetched =
     isFetchedVaultContribution &&
     isFetchedTotalSupplyTwab &&
     isFetchedShareToken &&
     isFetchedPrizeToken &&
-    isFetchedDrawPeriod
+    isFetchedDrawPeriod &&
+    isFetchedLastDrawId
 
   const refetch = () => {
     refetchVaultContribution()

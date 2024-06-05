@@ -27,26 +27,9 @@
     "account": "Account"
   },
   "Home": {
-    "winUpTo": {
-      "beforeValue": "Deposita per partecipare all'estrazione giornaliera e vincere fino a",
-      "afterValue": ""
-    },
     "withdrawAnyTime": "Puoi prelevare il tuo deposito in qualsiasi momento"
   },
   "Prizes": {
-    "learnMore": "Scopri di più su come funzionano i premi",
-    "estPrizeValue": "Stima del Valore del Premio",
-    "estPrizeFreq": "Frequenza Stimata",
-    "recentWinners": "Vincitori recenti",
-    "drawWinners": {
-      "beforeValue": "",
-      "afterValue": {
-        "today": "oggi",
-        "yesterday": "ieri",
-        "onXDate": "il {date}"
-      },
-      "drawIsOngoing": "Estrazione in corso"
-    },
     "drawModal": {
       "drawTotal": {
         "beforeValue": "Questa estrazione ha visto vincere {numWallets} portafogli unici per un totale di",

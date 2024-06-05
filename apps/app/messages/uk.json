@@ -27,27 +27,9 @@
     "account": "Рахунок"
   },
   "Home": {
-    "winUpTo": {
-      "beforeValue": "Поповніть для щоденного шансу виграти до",
-      "afterValue": ""
-    },
     "withdrawAnyTime": "Ви можете зняти ваш депозит в повному обсязі у будь-який час"
   },
   "Prizes": {
-    "learnMore": "Дізнатися більше про те, як працюють призи",
-    "switchPrizePool": "Змінити призовий фонд",
-    "estPrizeValue": "Орієнтовна Вартість Призу",
-    "estPrizeFreq": "Орієнтовна Частота",
-    "recentWinners": "Нещодавні Переможці Призового Фонду",
-    "drawWinners": {
-      "beforeValue": "{numWallets, plural, one {# гаманець} few {# гаманців} many {# гаманців} other {# гаманці}} виграли",
-      "afterValue": {
-        "today": "сьогодні",
-        "yesterday": "вчора",
-        "onXDate": "{date}"
-      },
-      "drawIsOngoing": "Триває розіграш"
-    },
     "drawModal": {
       "drawTotal": {
         "beforeValue": "В цьому розіграші {numWallets} унікальних гаманців загалом виграли",

@@ -6,6 +6,7 @@ import {
 import classNames from 'classnames'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
+import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { AccountDepositsCard } from './AccountDepositsCard'
 
 interface AccountDepositsCardsProps {
@@ -23,7 +24,11 @@ export const AccountDepositsCards = (props: AccountDepositsCardsProps) => {
 
   const { data: vaultBalances } = useAllUserVaultBalances(vaults, userAddress as Address)
 
+  const prizePools = useSupportedPrizePools()
+  const prizePoolsArray = Object.values(prizePools)
+
   const { sortedVaults } = useSortedVaults(Object.values(vaults.vaults), {
+    prizePools: prizePoolsArray,
     defaultSortId: 'userBalance'
   })
 

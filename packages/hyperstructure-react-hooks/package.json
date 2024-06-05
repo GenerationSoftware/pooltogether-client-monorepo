@@ -1,7 +1,7 @@
 {
   "name": "@generationsoftware/hyperstructure-react-hooks",
   "description": "React hooks library for interacting with PoolTogether contracts",
-  "version": "1.16.15",
+  "version": "1.17.2",
   "license": "MIT",
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -36,15 +36,15 @@
     "react-dom": "^18.2.0",
     "tsup": "^6.6.3",
     "typescript": "^5.0.4",
-    "viem": "^2.7.9",
-    "wagmi": "2.5.6"
+    "viem": "2.13.2",
+    "wagmi": "2.9.8"
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5.20.5",
     "jotai": "^1.13.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "viem": "^2.7.9",
-    "wagmi": "2.5.6"
+    "viem": "^2",
+    "wagmi": "2"
   }
 }

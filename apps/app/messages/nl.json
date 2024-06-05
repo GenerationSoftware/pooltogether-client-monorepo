@@ -32,27 +32,9 @@
     "account": "Account"
   },
   "Home": {
-    "winUpTo": {
-      "beforeValue": "Leg bij voor een dagelijkse winkans van tot wel",
-      "afterValue": ""
-    },
     "withdrawAnyTime": "Je kunt je inleg op elk moment weer opnemen"
   },
   "Prizes": {
-    "learnMore": "Leer meer over hoe prijzen werken",
-    "switchPrizePool": "Verander prijzenpoel",
-    "estPrizeValue": "Geschatte Prijs Waarde",
-    "estPrizeFreq": "Geschatte Frequentie",
-    "recentWinners": "Recente Winnaars",
-    "drawWinners": {
-      "beforeValue": "{numWallets, plural, one {# wallet} other {# wallets}} gewonnen",
-      "afterValue": {
-        "today": "vandaag",
-        "yesterday": "gisteren",
-        "onXDate": "op {date}"
-      },
-      "drawIsOngoing": "Trekking wordt momenteel uitgevoerd"
-    },
     "drawModal": {
       "drawTotal": {
         "beforeValue": "Deze trekking had {numWallets} unieke winnaars met een totale winst van",

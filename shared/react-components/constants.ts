@@ -11,17 +11,19 @@ import {
  */
 const tokenLogoUrls = {
   eth: `${LINKS.app}/icons/ether.svg`,
-  pool: 'https://etherscan.io/token/images/pooltogether_32.png',
-  usdc: 'https://etherscan.io/token/images/centre-usdc_28.png',
-  dai: 'https://assets.coingecko.com/coins/images/9956/small/4943.png?1636636734',
-  gusd: 'https://assets.coingecko.com/coins/images/5992/small/gemini-dollar-gusd.png?1536745278',
-  weth: 'https://etherscan.io/token/images/weth_28.png',
-  wbtc: 'https://etherscan.io/token/images/wbtc_28.png?v=1',
-  lusd: 'https://etherscan.io/token/images/liquitylusd_32.png',
-  ageur: 'https://etherscan.io/token/images/ageur_32.png?=v982',
+  pool: 'https://assets.coingecko.com/coins/images/14003/standard/PoolTogether.png?1696513732',
+  usdc: 'https://assets.coingecko.com/coins/images/6319/standard/usdc.png?1696506694',
+  dai: 'https://assets.coingecko.com/coins/images/9956/standard/Badge_Dai.png?1696509996',
+  gusd: 'https://assets.coingecko.com/coins/images/5992/standard/gemini-dollar-gusd.png?1696506408',
+  weth: 'https://assets.coingecko.com/coins/images/2518/standard/weth.png?1696503332',
+  wbtc: 'https://assets.coingecko.com/coins/images/7598/standard/wrapped_bitcoin_wbtc.png?1696507857',
+  lusd: 'https://assets.coingecko.com/coins/images/14666/standard/Group_3.png?1696514341',
   op: 'https://optimistic.etherscan.io/token/images/optimism_32.png',
   przVELO: `${LINKS.app}/icons/przVELO.svg`,
-  steth: 'https://etherscan.io/token/images/lido-steth_32.png'
+  steth: 'https://assets.coingecko.com/coins/images/13442/standard/steth_logo.png?1696513206',
+  usdt: 'https://assets.coingecko.com/coins/images/325/standard/Tether.png?1696501661',
+  usda: 'https://raw.githubusercontent.com/AngleProtocol/angle-token-list/main/src/assets/tokens/stUSD.svg',
+  eura: 'https://raw.githubusercontent.com/AngleProtocol/angle-token-list/main/src/assets/tokens/stEUR.svg'
 } as const
 
 /**
@@ -36,7 +38,9 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x056fd409e1d7a124bd7017459dfea2f387b6d5cd': tokenLogoUrls.gusd,
     '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2': tokenLogoUrls.weth,
     '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599': tokenLogoUrls.wbtc,
-    '0x5f98805a4e8be255a32880fdec7f6728c6568ba0': tokenLogoUrls.lusd
+    '0x5f98805a4e8be255a32880fdec7f6728c6568ba0': tokenLogoUrls.lusd,
+    '0x0000206329b97db379d5e1bf586bbdb969c63274': tokenLogoUrls.usda,
+    '0x1a7e4e63778b4f12a199c062f3efdd288afcbce8': tokenLogoUrls.eura
   },
   [NETWORK.sepolia]: {
     [DOLPHIN_ADDRESS]: tokenLogoUrls.eth
@@ -51,7 +55,9 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063': tokenLogoUrls.dai,
     '0xc8a94a3d3d2dabc3c1caffffdca6a7543c3e3e65': tokenLogoUrls.gusd,
     '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619': tokenLogoUrls.weth,
-    '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6': tokenLogoUrls.wbtc
+    '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6': tokenLogoUrls.wbtc,
+    '0x0000206329b97db379d5e1bf586bbdb969c63274': tokenLogoUrls.usda,
+    '0xe0b52e49357fd4daf2c15e02058dce6bc0057db4': tokenLogoUrls.eura
   },
   [NETWORK.mumbai]: {},
   [NETWORK.optimism]: {
@@ -63,10 +69,11 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x4200000000000000000000000000000000000006': tokenLogoUrls.weth,
     '0x68f180fcce6836688e9084f035309e29bf0a2095': tokenLogoUrls.wbtc,
     '0xc40f949f8a4e094d1b49a23ea9241d289b7b2819': tokenLogoUrls.lusd,
-    '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': tokenLogoUrls.ageur,
     '0x4200000000000000000000000000000000000042': tokenLogoUrls.op,
     '0x9b53ef6f13077727d22cb4acad1119c79a97be17': tokenLogoUrls.przVELO,
-    '0x9b4c0de59628c64b02d7ce86f21db9a579539d5a': tokenLogoUrls.przVELO
+    '0x9b4c0de59628c64b02d7ce86f21db9a579539d5a': tokenLogoUrls.przVELO,
+    '0x0000206329b97db379d5e1bf586bbdb969c63274': tokenLogoUrls.usda,
+    '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': tokenLogoUrls.eura
   },
   [NETWORK.optimism_sepolia]: {
     [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,
@@ -84,14 +91,21 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   [NETWORK.celo]: {},
   [NETWORK.celo_testnet]: {},
   [NETWORK.arbitrum]: {
-    [DOLPHIN_ADDRESS]: tokenLogoUrls.eth
+    [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,
+    [POOL_TOKEN_ADDRESSES[NETWORK.arbitrum].toLowerCase()]: tokenLogoUrls.pool,
+    '0xaf88d065e77c8cc2239327c5edb3a432268e5831': tokenLogoUrls.usdc,
+    '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8': tokenLogoUrls.usdc,
+    '0x82af49447d8a07e3bd95bd0d56f35241523fbab1': tokenLogoUrls.weth,
+    '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9': tokenLogoUrls.usdt,
+    '0x0000206329b97db379d5e1bf586bbdb969c63274': tokenLogoUrls.usda,
+    '0xfa5ed56a203466cbbc2430a43c66b9d8723528e7': tokenLogoUrls.eura
   },
   [NETWORK.arbitrum_sepolia]: {
     [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,
     [POOL_TOKEN_ADDRESSES[NETWORK.arbitrum_sepolia].toLowerCase()]: tokenLogoUrls.pool,
     [USDC_TOKEN_ADDRESSES[NETWORK.arbitrum_sepolia]]: tokenLogoUrls.usdc,
-    '0x837f6ec55793c49b2994ba703a3d2331649b09ea': tokenLogoUrls.dai,
-    '0x1a586a874f7c6ca5c3220c434fb5096dde2ec3f0': tokenLogoUrls.weth
+    '0xfe045beefda06606fc5f441ccca2fe8c903e9725': tokenLogoUrls.dai,
+    '0x060fad1bca90e5b1efca0d93febec96e638fd8a6': tokenLogoUrls.weth
   },
   [NETWORK.base]: {
     [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,
@@ -100,16 +114,16 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x50c5725949a6f0c72e6c4a641f24049a917db0cb': tokenLogoUrls.dai,
     '0x4200000000000000000000000000000000000006': tokenLogoUrls.weth,
     '0x368181499736d0c0cc614dbb145e2ec1ac86b8c6': tokenLogoUrls.lusd,
-    '0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452': tokenLogoUrls.steth
+    '0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452': tokenLogoUrls.steth,
+    '0x0000206329b97db379d5e1bf586bbdb969c63274': tokenLogoUrls.usda,
+    '0xa61beb4a3d02decb01039e378237032b351125b4': tokenLogoUrls.eura
   },
   [NETWORK.base_sepolia]: {
     [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,
     [POOL_TOKEN_ADDRESSES[NETWORK.base_sepolia].toLowerCase()]: tokenLogoUrls.pool,
     [USDC_TOKEN_ADDRESSES[NETWORK.base_sepolia]]: tokenLogoUrls.usdc,
-    '0x82557c5157fcbeddd80ae09647ec018a0083a638': tokenLogoUrls.dai,
-    '0x431bf0fe8acb5c79c4f4fbc63f6de0756e928dd3': tokenLogoUrls.gusd,
-    '0x41d7ddf285a08c74a4cb9fdc979c703b10c30ab1': tokenLogoUrls.weth,
-    '0x214e35ca60a828cc44fae2f2b97d37c116b02229': tokenLogoUrls.wbtc
+    '0xe4b4a71923aecb4b8924bda8c31941a8ab50ff86': tokenLogoUrls.dai,
+    '0x019aa44d02715e4042b1ba3b4d2fa9bcef33c002': tokenLogoUrls.weth
   }
 }
 

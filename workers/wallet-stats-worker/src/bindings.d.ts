@@ -4,4 +4,5 @@ declare global {
   const TOKEN_PRICES: ServiceWorkerGlobalScope
   const OPTIMISM_RPC_URL: string
   const BASE_RPC_URL: string
+  const ARBITRUM_RPC_URL: string
 }
