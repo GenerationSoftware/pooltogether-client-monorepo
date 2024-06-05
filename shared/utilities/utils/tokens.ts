@@ -210,6 +210,9 @@ export const getTokenPermitSupport = async (
   publicClient: PublicClient,
   tokenAddress: Address
 ): Promise<'eip2612' | 'daiPermit' | 'none'> => {
+  // TODO: remove once domain separator check is in place
+  if (lower(tokenAddress) === '0x0000206329b97db379d5e1bf586bbdb969c63274') return 'none'
+
   try {
     await publicClient.simulateContract({
       address: tokenAddress,
