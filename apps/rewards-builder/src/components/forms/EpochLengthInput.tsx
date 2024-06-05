@@ -3,9 +3,8 @@ import { SECONDS_PER_DAY, SECONDS_PER_HOUR, SECONDS_PER_WEEK } from '@shared/uti
 import classNames from 'classnames'
 import { useFormContext, useWatch } from 'react-hook-form'
 
-type LengthType = 'hour' | 'day' | 'week'
+type LengthType = 'day' | 'week'
 const lengthTypes: Record<LengthType, number> = {
-  hour: SECONDS_PER_HOUR,
   day: SECONDS_PER_DAY,
   week: SECONDS_PER_WEEK
 }

@@ -76,7 +76,6 @@ export const EpochsForm = (props: EpochsFormProps) => {
         <div className='w-full max-w-md flex flex-col gap-4'>
           <span className='text-sm font-medium text-pt-purple-100'>Epoch Length</span>
           <div className='w-full flex flex-wrap gap-4'>
-            <EpochLengthInput type='hour' className='flex-grow' />
             <EpochLengthInput type='day' className='flex-grow' />
             <EpochLengthInput type='week' className='flex-grow' />
           </div>
