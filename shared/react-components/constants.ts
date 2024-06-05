@@ -91,7 +91,7 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   [NETWORK.celo]: {},
   [NETWORK.celo_testnet]: {},
   [NETWORK.arbitrum]: {
-    [DOLPHIN_ADDRESS]: tokenLogoUrls.eth
+    [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,
     [POOL_TOKEN_ADDRESSES[NETWORK.arbitrum].toLowerCase()]: tokenLogoUrls.pool,
     '0xaf88d065e77c8cc2239327c5edb3a432268e5831': tokenLogoUrls.usdc,
     '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8': tokenLogoUrls.usdc,
