@@ -1,5 +1,6 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useVaultTokenData } from '@generationsoftware/hyperstructure-react-hooks'
+import { Token } from '@shared/types'
 import { vaultABI } from '@shared/utilities'
 import { useMemo } from 'react'
 import { getArbitraryProxyTx } from 'src/utils'
@@ -7,6 +8,8 @@ import { Address, ContractFunctionArgs, encodeFunctionData, zeroAddress } from '
 import { useAccount } from 'wagmi'
 import { ZAP_SETTINGS } from '@constants/config'
 import { zapRouterABI } from '@constants/zapRouterABI'
+import { useIsVelodromeLp } from './useIsVelodromeLp'
+import { useLpToken } from './useLpToken'
 import { useSendDepositZapTransaction } from './useSendDepositZapTransaction'
 import { useSwapTx } from './useSwapTx'
 
@@ -58,6 +61,13 @@ export const useDepositZapWithPermitArgs = ({
     }
   }, [vault, zapRouterAddress])
 
+  const { data: isVaultTokenVelodromeLp, isFetched: isFetchedVaultTokenVelodromeLp } =
+    useIsVelodromeLp(vaultToken as Token)
+
+  const { data: lpVaultToken } = useLpToken(vaultToken as Token, {
+    enabled: isVaultTokenVelodromeLp ?? false
+  })
+
   const isFetched =
     !!inputToken &&
     !!vault &&
@@ -69,8 +79,11 @@ export const useDepositZapWithPermitArgs = ({
     enabled &&
     !!userAddress &&
     !!vaultToken &&
-    !!depositTx
+    !!depositTx &&
+    isFetchedVaultTokenVelodromeLp &&
+    (!isVaultTokenVelodromeLp || !!lpVaultToken)
 
+  // TODO: if token is a velodrome lp token, add appropriate swaps + addLiquidity call
   const data = useMemo((): [ZapPermit, ZapConfig, `0x${string}`, ZapRoute] | undefined => {
     if (isFetched) {
       const zapPermit: ZapPermit = {
@@ -115,6 +128,8 @@ export const useDepositZapWithPermitArgs = ({
     userAddress,
     vaultToken,
     depositTx,
+    isVaultTokenVelodromeLp,
+    lpVaultToken,
     isFetched
   ])
 
