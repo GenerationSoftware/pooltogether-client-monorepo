@@ -15,7 +15,7 @@ type ZapConfig = ContractFunctionArgs<typeof zapRouterABI, 'nonpayable', 'execut
 type ZapRoute = ContractFunctionArgs<typeof zapRouterABI, 'nonpayable', 'executeOrder'>[3]
 
 /**
- * Returns deposit zap args
+ * Returns deposit zap with permit args
  * @param data input token, vault, signature, deadline, nonce, swapTx, amountOut, enabled
  * @returns
  */
