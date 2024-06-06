@@ -4,23 +4,9 @@ import {
   useVaultExchangeRate,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import {
-  calculatePercentageOfBigInt,
-  getSharesFromAssets,
-  NETWORK,
-  vaultABI,
-  WRAPPED_NATIVE_ASSETS
-} from '@shared/utilities'
+import { calculatePercentageOfBigInt, getSharesFromAssets } from '@shared/utilities'
 import { useEffect, useMemo } from 'react'
-import { getArbitraryProxyTx } from 'src/utils'
-import {
-  Address,
-  ContractFunctionArgs,
-  encodeFunctionData,
-  isAddress,
-  TransactionReceipt,
-  zeroAddress
-} from 'viem'
+import { Address, isAddress, TransactionReceipt } from 'viem'
 import {
   useAccount,
   useSimulateContract,
@@ -29,11 +15,8 @@ import {
 } from 'wagmi'
 import { ZAP_SETTINGS } from '@constants/config'
 import { zapRouterABI } from '@constants/zapRouterABI'
+import { useDepositZapWithPermitArgs } from './useDepositZapWithPermitArgs'
 import { useSwapTx } from './useSwapTx'
-
-type ZapPermit = ContractFunctionArgs<typeof zapRouterABI, 'nonpayable', 'executeOrder'>[0]
-type ZapConfig = ContractFunctionArgs<typeof zapRouterABI, 'nonpayable', 'executeOrder'>[1]
-type ZapRoute = ContractFunctionArgs<typeof zapRouterABI, 'nonpayable', 'executeOrder'>[3]
 
 /**
  * Prepares and submits a zap transaction with a permit that includes swapping and depositing into a vault
@@ -74,10 +57,7 @@ export const useSendDepositZapWithPermitTransaction = (
   const { data: vaultToken, isFetched: isFetchedVaultToken } = useVaultTokenData(vault)
   const { data: exchangeRate, isFetched: isFetchedExchangeRate } = useVaultExchangeRate(vault)
 
-  const { zapRouterAddress, zapTokenManager } = ZAP_SETTINGS[vault?.chainId] ?? {}
-
-  const wrappedNativeTokenAddress =
-    !!vault && (WRAPPED_NATIVE_ASSETS[vault.chainId as NETWORK] as Lowercase<Address>)
+  const zapRouterAddress = ZAP_SETTINGS[vault?.chainId]?.zapRouterAddress as Address | undefined
 
   const {
     data: swapTx,
@@ -90,21 +70,9 @@ export const useSendDepositZapWithPermitTransaction = (
       decimals: inputToken?.decimals,
       amount: inputToken?.amount
     },
-    to: { address: vaultToken?.address as Address, decimals: vaultToken?.decimals as number },
-    userAddress: zapRouterAddress
+    to: { address: vaultToken?.address!, decimals: vaultToken?.decimals! },
+    userAddress: zapRouterAddress!
   })
-
-  const depositTx = useMemo(() => {
-    return {
-      target: vault.address,
-      value: 0n,
-      data: encodeFunctionData({
-        abi: vaultABI,
-        functionName: 'deposit',
-        args: [0n, zapRouterAddress]
-      })
-    }
-  }, [zapRouterAddress])
 
   const enabled =
     !!inputToken &&
@@ -126,11 +94,8 @@ export const useSendDepositZapWithPermitTransaction = (
     isFetchedVaultToken &&
     chain?.id === vault.chainId &&
     !!zapRouterAddress &&
-    !!zapTokenManager &&
-    !!wrappedNativeTokenAddress &&
     isFetchedSwapTx &&
-    !!swapTx &&
-    !!depositTx
+    !!swapTx
 
   const amountOut = useMemo(() => {
     if (!!inputToken?.address && !!vaultToken && !!exchangeRate && !!swapTx) {
@@ -141,61 +106,27 @@ export const useSendDepositZapWithPermitTransaction = (
     }
   }, [inputToken, vaultToken, exchangeRate, swapTx])
 
-  const zapArgs = useMemo((): [ZapPermit, ZapConfig, `0x${string}`, ZapRoute] | undefined => {
-    if (enabled && !!amountOut) {
-      const zapPermit: ZapPermit = {
-        permitted: [{ token: inputToken.address, amount: inputToken.amount }],
-        nonce,
-        deadline
-      }
-
-      const zapConfig: ZapConfig = {
-        inputs: [{ token: inputToken.address, amount: inputToken.amount }],
-        outputs: [
-          { token: vault.address, minOutputAmount: amountOut.min },
-          { token: inputToken.address, minOutputAmount: 0n },
-          { token: vaultToken.address, minOutputAmount: 0n }
-        ],
-        relay: { target: zeroAddress, value: 0n, data: '0x0' },
-        user: userAddress,
-        recipient: userAddress
-      }
-
-      const zapRoute: ZapRoute = !!swapTx
-        ? [
-            {
-              ...getArbitraryProxyTx(swapTx.allowanceProxy),
-              tokens: [{ token: inputToken.address, index: -1 }]
-            },
-            { ...swapTx.tx, tokens: [{ token: inputToken.address, index: -1 }] },
-            { ...depositTx, tokens: [{ token: vaultToken.address, index: 4 }] }
-          ]
-        : [{ ...depositTx, tokens: [{ token: vaultToken.address, index: 4 }] }]
-
-      return [zapPermit, zapConfig, signature, zapRoute]
-    }
-  }, [
+  const { data: zapArgs } = useDepositZapWithPermitArgs({
     inputToken,
     vault,
-    userAddress,
-    vaultToken,
-    exchangeRate,
+    signature,
+    deadline,
+    nonce,
     swapTx,
-    depositTx,
     amountOut,
     enabled
-  ])
+  })
 
   const { data: gasEstimate } = useGasAmountEstimate(
     vault?.chainId,
     {
-      address: zapRouterAddress,
+      address: zapRouterAddress as Address,
       abi: zapRouterABI,
       functionName: 'executeOrder',
       args: zapArgs,
       account: userAddress as Address
     },
-    { enabled }
+    { enabled: enabled && !!zapArgs }
   )
 
   const { data } = useSimulateContract({
@@ -205,7 +136,7 @@ export const useSendDepositZapWithPermitTransaction = (
     functionName: 'executeOrder',
     args: zapArgs,
     gas: !!gasEstimate ? calculatePercentageOfBigInt(gasEstimate, 1.2) : undefined,
-    query: { enabled }
+    query: { enabled: enabled && !!zapArgs }
   })
 
   const {

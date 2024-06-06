@@ -1,6 +1,12 @@
 import { connectorsForWallets, WalletList } from '@rainbow-me/rainbowkit'
 import { getInitialCustomRPCs } from '@shared/generic-react-hooks'
-import { NETWORK, parseQueryParam, WRAPPED_NATIVE_ASSETS } from '@shared/utilities'
+import {
+  DOLPHIN_ADDRESS,
+  lower,
+  NETWORK,
+  parseQueryParam,
+  WRAPPED_NATIVE_ASSETS
+} from '@shared/utilities'
 import deepmerge from 'deepmerge'
 import { Address, Chain, encodeFunctionData, http, Transport } from 'viem'
 import { createConfig, fallback } from 'wagmi'
@@ -200,3 +206,11 @@ export const getArbitraryProxyTx = (proxyAddress: Address) => {
     })
   }
 }
+
+/**
+ * Checks if an address is the dolphin address (0xeeee...)
+ * @param address the address to check
+ * @returns
+ */
+export const isDolphinAddress = (address?: Address) =>
+  !!address && lower(address) === DOLPHIN_ADDRESS
