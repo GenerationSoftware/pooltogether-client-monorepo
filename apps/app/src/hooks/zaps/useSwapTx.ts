@@ -66,7 +66,7 @@ export const useSwapTx = (swapData: {
   from: { address: Address; decimals: number; amount: bigint }
   to: { address: Address; decimals: number }
   userAddress: Address
-  options?: { slippage?: number }
+  options?: { slippage?: number; enabled?: boolean }
 }) => {
   const { chainId, from, to, userAddress, options } = swapData ?? {}
 
@@ -86,7 +86,8 @@ export const useSwapTx = (swapData: {
     lower(from.address) !== lower(to.address) &&
     !!userAddress &&
     !!publicClient &&
-    slippage !== undefined
+    slippage !== undefined &&
+    options?.enabled !== false
 
   const queryKey = [
     'swapTx',

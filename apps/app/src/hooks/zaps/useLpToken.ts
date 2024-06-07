@@ -1,5 +1,5 @@
 import { NO_REFETCH } from '@shared/generic-react-hooks'
-import { getSimpleMulticallResults } from '@shared/utilities'
+import { getSimpleMulticallResults, getTokenInfo } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
@@ -18,7 +18,7 @@ export const useLpToken = (
   const publicClient = usePublicClient({ chainId: lpToken?.chainId })
 
   return useQuery({
-    queryKey: ['lpToken', lpToken?.chainId, lpToken?.address],
+    queryKey: ['lpTokenData', lpToken?.chainId, lpToken?.address],
     queryFn: async () => {
       if (!!publicClient) {
         const multicallResults = await getSimpleMulticallResults(
@@ -36,21 +36,20 @@ export const useLpToken = (
           ]
         )
 
+        const token0Address: Address = multicallResults[3]
+        const token1Address: Address = multicallResults[4]
+
+        const underlyingTokenInfo = await getTokenInfo(publicClient, [token0Address, token1Address])
+
+        const token0Amount: bigint = multicallResults[5]
+        const token1Amount: bigint = multicallResults[6]
+
+        const token0 = { ...underlyingTokenInfo[token0Address], amount: token0Amount }
+        const token1 = { ...underlyingTokenInfo[token1Address], amount: token1Amount }
+
         const decimals: number = multicallResults[0]
         const name: string = multicallResults[1]
         const symbol: string = multicallResults[2]
-
-        const token0: { chainId: number; address: Address; amount: bigint } = {
-          chainId: lpToken.chainId,
-          address: multicallResults[3],
-          amount: multicallResults[5]
-        }
-
-        const token1: { chainId: number; address: Address; amount: bigint } = {
-          chainId: lpToken.chainId,
-          address: multicallResults[4],
-          amount: multicallResults[6]
-        }
 
         return { decimals, name, symbol, ...lpToken, token0, token1 }
       }

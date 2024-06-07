@@ -1,7 +1,9 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { useVaultTokenData } from '@generationsoftware/hyperstructure-react-hooks'
-import { Token } from '@shared/types'
-import { vaultABI } from '@shared/utilities'
+import {
+  useVaultExchangeRate,
+  useVaultTokenData
+} from '@generationsoftware/hyperstructure-react-hooks'
+import { getSharesFromAssets, lower, vaultABI } from '@shared/utilities'
 import { useMemo } from 'react'
 import { getArbitraryProxyTx } from 'src/utils'
 import { Address, ContractFunctionArgs, encodeFunctionData, zeroAddress } from 'viem'
@@ -19,7 +21,7 @@ type ZapRoute = ContractFunctionArgs<typeof zapRouterABI, 'nonpayable', 'execute
 
 /**
  * Returns deposit zap with permit args
- * @param data input token, vault, signature, deadline, nonce, swapTx, amountOut, enabled
+ * @param data input token, vault, signature, deadline, nonce, enabled
  * @returns
  */
 export const useDepositZapWithPermitArgs = ({
@@ -28,8 +30,6 @@ export const useDepositZapWithPermitArgs = ({
   signature,
   deadline,
   nonce,
-  swapTx,
-  amountOut,
   enabled
 }: {
   inputToken: Parameters<typeof useSendDepositZapTransaction>['0']
@@ -37,15 +37,117 @@ export const useDepositZapWithPermitArgs = ({
   signature: `0x${string}`
   deadline: bigint
   nonce: bigint
-  swapTx: ReturnType<typeof useSwapTx>['data']
-  amountOut?: { expected: bigint; min: bigint }
   enabled?: boolean
 }) => {
   const zapRouterAddress = ZAP_SETTINGS[vault?.chainId]?.zapRouterAddress as Address | undefined
 
   const { address: userAddress } = useAccount()
 
-  const { data: vaultToken } = useVaultTokenData(vault)
+  const { data: vaultToken, isFetched: isFetchedVaultToken } = useVaultTokenData(vault)
+
+  const { data: exchangeRate, isFetched: isFetchedExchangeRate } = useVaultExchangeRate(vault)
+
+  const { data: isLpSwapTxsNecessary, isFetched: isFetchedVaultTokenVelodromeLp } =
+    useIsVelodromeLp(vaultToken!)
+
+  const { data: lpVaultToken, isFetched: isFetchedLpVaultToken } = useLpToken(vaultToken!, {
+    enabled: isLpSwapTxsNecessary ?? false
+  })
+
+  const swapInputToken: Parameters<typeof useSwapTx>['0']['from'] = {
+    address: inputToken?.address,
+    decimals: inputToken?.decimals,
+    amount: inputToken?.amount
+  }
+
+  const isSwapTxNecessary = isFetchedVaultTokenVelodromeLp && !isLpSwapTxsNecessary
+
+  const isFirstLpSwapTxNecessary =
+    isFetchedVaultTokenVelodromeLp &&
+    isLpSwapTxsNecessary &&
+    !!swapInputToken?.address &&
+    isFetchedLpVaultToken &&
+    !!lpVaultToken?.token0?.address &&
+    lower(swapInputToken.address) !== lower(lpVaultToken.token0.address)
+
+  const isSecondLpSwapTxNecessary =
+    isFetchedVaultTokenVelodromeLp &&
+    isLpSwapTxsNecessary &&
+    !!swapInputToken?.address &&
+    isFetchedLpVaultToken &&
+    !!lpVaultToken?.token1?.address &&
+    lower(swapInputToken.address) !== lower(lpVaultToken.token1.address)
+
+  const {
+    data: swapTx,
+    isFetched: isFetchedSwapTx,
+    isFetching: isFetchingSwapTx
+  } = useSwapTx({
+    chainId: vault?.chainId,
+    from: {
+      address: inputToken?.address,
+      decimals: inputToken?.decimals,
+      amount: inputToken?.amount
+    },
+    to: { address: vaultToken?.address!, decimals: vaultToken?.decimals! },
+    userAddress: zapRouterAddress!,
+    options: { enabled: isSwapTxNecessary }
+  })
+
+  const {
+    data: firstLpSwapTx,
+    isFetched: isFetchedFirstLpSwapTx,
+    isFetching: isFetchingFirstLpSwapTx
+  } = useSwapTx({
+    chainId: vault?.chainId,
+    from: swapInputToken,
+    to: { address: lpVaultToken?.token0?.address!, decimals: lpVaultToken?.token0?.decimals! },
+    userAddress: zapRouterAddress!,
+    options: { enabled: isFirstLpSwapTxNecessary }
+  })
+
+  const {
+    data: secondLpSwapTx,
+    isFetched: isFetchedSecondLpSwapTx,
+    isFetching: isFetchingSecondLpSwapTx
+  } = useSwapTx({
+    chainId: vault?.chainId,
+    from: swapInputToken,
+    to: { address: lpVaultToken?.token1?.address!, decimals: lpVaultToken?.token1?.decimals! },
+    userAddress: zapRouterAddress!,
+    options: { enabled: isSecondLpSwapTxNecessary }
+  })
+
+  const amountOut = useMemo(() => {
+    if (!!inputToken?.address && !!vaultToken && !!exchangeRate && !!swapTx) {
+      if (isSwapTxNecessary) {
+        if (!!swapTx) {
+          return {
+            expected: getSharesFromAssets(
+              swapTx.amountOut.expected,
+              exchangeRate,
+              vaultToken.decimals
+            ),
+            min: getSharesFromAssets(swapTx.amountOut.min, exchangeRate, vaultToken.decimals)
+          }
+        }
+      } else if (isLpSwapTxsNecessary) {
+        if (!!lpVaultToken) {
+          // TODO: get ratio from lpVaultToken
+          // TODO: calculate amount out somehow (consider 1 swaptx or 2 swaptxs)
+        }
+      }
+    }
+  }, [
+    inputToken,
+    vaultToken,
+    exchangeRate,
+    isLpSwapTxsNecessary,
+    swapTx,
+    firstLpSwapTx,
+    secondLpSwapTx,
+    lpVaultToken
+  ])
 
   const depositTx = useMemo(() => {
     if (!!vault && !!zapRouterAddress) {
@@ -61,13 +163,6 @@ export const useDepositZapWithPermitArgs = ({
     }
   }, [vault, zapRouterAddress])
 
-  const { data: isVaultTokenVelodromeLp, isFetched: isFetchedVaultTokenVelodromeLp } =
-    useIsVelodromeLp(vaultToken as Token)
-
-  const { data: lpVaultToken } = useLpToken(vaultToken as Token, {
-    enabled: isVaultTokenVelodromeLp ?? false
-  })
-
   const isFetched =
     !!inputToken &&
     !!vault &&
@@ -75,16 +170,25 @@ export const useDepositZapWithPermitArgs = ({
     !!deadline &&
     nonce !== undefined &&
     nonce !== -1n &&
-    !!amountOut &&
-    enabled &&
+    enabled !== false &&
     !!userAddress &&
+    isFetchedVaultToken &&
     !!vaultToken &&
-    !!depositTx &&
+    isFetchedExchangeRate &&
+    !!exchangeRate &&
     isFetchedVaultTokenVelodromeLp &&
-    (!isVaultTokenVelodromeLp || !!lpVaultToken)
+    (!isSwapTxNecessary || (isFetchedSwapTx && !!swapTx)) &&
+    (!isLpSwapTxsNecessary || (isFetchedLpVaultToken && !!lpVaultToken)) &&
+    (!isFirstLpSwapTxNecessary || (isFetchedFirstLpSwapTx && !!firstLpSwapTx)) &&
+    (!isSecondLpSwapTxNecessary || (isFetchedSecondLpSwapTx && !!secondLpSwapTx)) &&
+    !!amountOut &&
+    !!depositTx
+
+  const isFetching =
+    !isFetched && (isFetchingSwapTx || isFetchingFirstLpSwapTx || isFetchingSecondLpSwapTx)
 
   // TODO: if token is a velodrome lp token, add appropriate swaps + addLiquidity call
-  const data = useMemo((): [ZapPermit, ZapConfig, `0x${string}`, ZapRoute] | undefined => {
+  const zapArgs = useMemo((): [ZapPermit, ZapConfig, `0x${string}`, ZapRoute] | undefined => {
     if (isFetched) {
       const zapPermit: ZapPermit = {
         permitted: [{ token: inputToken.address, amount: inputToken.amount }],
@@ -126,15 +230,14 @@ export const useDepositZapWithPermitArgs = ({
     signature,
     deadline,
     nonce,
-    swapTx,
-    amountOut,
     userAddress,
     vaultToken,
-    depositTx,
-    isVaultTokenVelodromeLp,
     lpVaultToken,
+    swapTx,
+    amountOut,
+    depositTx,
     isFetched
   ])
 
-  return { data, isFetched }
+  return { zapArgs, amountOut, isFetched, isFetching }
 }
