@@ -31,11 +31,10 @@ export const VaultBadge = (props: VaultBadgeProps) => {
 
   const { cachedVaultLists } = useCachedVaultLists()
 
-  const yieldSourceName = useMemo(() => {
+  const vaultInfo = useMemo(() => {
     const vaultLists = Object.values(cachedVaultLists).filter((list) => !!list) as VaultList[]
     const allVaultInfo = vaultLists.map((list) => list.tokens).reduce((a, b) => [...a, ...b], [])
-    const vaultInfo = allVaultInfo.find((vaultInfo) => getVaultId(vaultInfo) === vault.id)
-    return vaultInfo?.extensions?.yieldSource?.name
+    return allVaultInfo.find((vaultInfo) => getVaultId(vaultInfo) === vault.id)
   }, [vault, cachedVaultLists])
 
   const isLogoOverridden = !!TOKEN_LOGO_OVERRIDES[vault.chainId as NETWORK]?.[lower(vault.address)]
@@ -57,10 +56,10 @@ export const VaultBadge = (props: VaultBadgeProps) => {
             ...shareData,
             ...vault,
             address:
-              !!vault.logoURI || isLogoOverridden
+              !!vault.logoURI || !!vaultInfo?.logoURI || isLogoOverridden
                 ? vault.address
                 : vault.tokenAddress ?? tokenAddress,
-            logoURI: vault.logoURI ?? vault.tokenLogoURI
+            logoURI: vault.logoURI ?? vaultInfo?.logoURI ?? vault.tokenLogoURI
           }}
         />
         <NetworkIcon chainId={vault.chainId} className='absolute top-3 left-3 h-4 w-4' />
@@ -73,15 +72,19 @@ export const VaultBadge = (props: VaultBadgeProps) => {
               nameClassName
             )}
           >
-            {vault.name ?? shareData?.name}
+            {vaultInfo?.name ?? vault.name ?? shareData?.name}
           </span>
           {showSymbol && (
             <span className={classNames('text-xs text-pt-purple-200', symbolClassName)}>
-              {vault.shareData?.symbol ?? shareData?.symbol}
+              {vaultInfo?.symbol ?? vault.shareData?.symbol ?? shareData?.symbol}
             </span>
           )}
         </div>
-        {!!yieldSourceName && <span className='text-xs text-pt-purple-200'>{yieldSourceName}</span>}
+        {!!vaultInfo?.extensions?.yieldSource?.name && (
+          <span className='text-xs text-pt-purple-200'>
+            {vaultInfo.extensions.yieldSource.name}
+          </span>
+        )}
       </div>
     </div>
   )
