@@ -31,12 +31,10 @@ type ZapRoute = ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrd
  */
 export const useDepositZapArgs = ({
   inputToken,
-  vault,
-  enabled
+  vault
 }: {
   inputToken: Parameters<typeof useSendDepositZapTransaction>['0']
   vault: Vault
-  enabled?: boolean
 }) => {
   const zapRouterAddress = ZAP_SETTINGS[vault?.chainId]?.zapRouterAddress as Address | undefined
   const wrappedNativeTokenAddress = WRAPPED_NATIVE_ASSETS[vault?.chainId as NETWORK]
@@ -183,7 +181,6 @@ export const useDepositZapArgs = ({
   const isFetched =
     !!inputToken &&
     !!vault &&
-    enabled !== false &&
     !!userAddress &&
     isFetchedVaultToken &&
     !!vaultToken &&

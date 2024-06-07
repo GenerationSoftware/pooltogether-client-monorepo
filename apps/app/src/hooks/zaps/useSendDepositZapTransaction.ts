@@ -55,6 +55,13 @@ export const useSendDepositZapTransaction = (
     inputToken?.address
   )
 
+  const {
+    zapArgs,
+    amountOut,
+    isFetched: isFetchedZapArgs,
+    isFetching: isFetchingZapArgs
+  } = useDepositZapArgs({ inputToken, vault })
+
   const enabled =
     !!inputToken?.address &&
     inputToken.decimals !== undefined &&
@@ -68,13 +75,6 @@ export const useSendDepositZapTransaction = (
     isFetchedAllowance &&
     allowance !== undefined &&
     (isDolphinAddress(inputToken.address) || allowance >= inputToken.amount)
-
-  const {
-    zapArgs,
-    amountOut,
-    isFetched: isFetchedZapArgs,
-    isFetching: isFetchingZapArgs
-  } = useDepositZapArgs({ inputToken, vault, enabled })
 
   const { data: gasEstimate } = useGasAmountEstimate(
     vault?.chainId,

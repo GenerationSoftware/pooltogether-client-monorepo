@@ -29,15 +29,13 @@ export const useDepositZapWithPermitArgs = ({
   vault,
   signature,
   deadline,
-  nonce,
-  enabled
+  nonce
 }: {
   inputToken: Parameters<typeof useSendDepositZapTransaction>['0']
   vault: Vault
   signature: `0x${string}`
   deadline: bigint
   nonce: bigint
-  enabled?: boolean
 }) => {
   const zapRouterAddress = ZAP_SETTINGS[vault?.chainId]?.zapRouterAddress as Address | undefined
 
@@ -170,7 +168,6 @@ export const useDepositZapWithPermitArgs = ({
     !!deadline &&
     nonce !== undefined &&
     nonce !== -1n &&
-    enabled !== false &&
     !!userAddress &&
     isFetchedVaultToken &&
     !!vaultToken &&

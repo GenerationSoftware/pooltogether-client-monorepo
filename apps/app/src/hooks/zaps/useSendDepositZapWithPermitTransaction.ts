@@ -50,6 +50,19 @@ export const useSendDepositZapWithPermitTransaction = (
 
   const zapRouterAddress = ZAP_SETTINGS[vault?.chainId]?.zapRouterAddress as Address | undefined
 
+  const {
+    zapArgs,
+    amountOut,
+    isFetched: isFetchedZapArgs,
+    isFetching: isFetchingZapArgs
+  } = useDepositZapWithPermitArgs({
+    inputToken,
+    vault,
+    signature,
+    deadline,
+    nonce
+  })
+
   const enabled =
     !!inputToken?.address &&
     inputToken.decimals !== undefined &&
@@ -63,20 +76,6 @@ export const useSendDepositZapWithPermitTransaction = (
     isAddress(userAddress) &&
     chain?.id === vault.chainId &&
     !!zapRouterAddress
-
-  const {
-    zapArgs,
-    amountOut,
-    isFetched: isFetchedZapArgs,
-    isFetching: isFetchingZapArgs
-  } = useDepositZapWithPermitArgs({
-    inputToken,
-    vault,
-    signature,
-    deadline,
-    nonce,
-    enabled
-  })
 
   const { data: gasEstimate } = useGasAmountEstimate(
     vault?.chainId,
