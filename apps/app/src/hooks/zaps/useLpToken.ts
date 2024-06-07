@@ -29,6 +29,7 @@ export const useLpToken = (
             { functionName: 'decimals' },
             { functionName: 'name' },
             { functionName: 'symbol' },
+            { functionName: 'totalSupply' },
             { functionName: 'token0' },
             { functionName: 'token1' },
             { functionName: 'reserve0' },
@@ -36,13 +37,13 @@ export const useLpToken = (
           ]
         )
 
-        const token0Address: Address = multicallResults[3]
-        const token1Address: Address = multicallResults[4]
+        const token0Address: Address = multicallResults[4]
+        const token1Address: Address = multicallResults[5]
 
         const underlyingTokenInfo = await getTokenInfo(publicClient, [token0Address, token1Address])
 
-        const token0Amount: bigint = multicallResults[5]
-        const token1Amount: bigint = multicallResults[6]
+        const token0Amount: bigint = multicallResults[6]
+        const token1Amount: bigint = multicallResults[7]
 
         const token0 = { ...underlyingTokenInfo[token0Address], amount: token0Amount }
         const token1 = { ...underlyingTokenInfo[token1Address], amount: token1Amount }
@@ -50,8 +51,9 @@ export const useLpToken = (
         const decimals: number = multicallResults[0]
         const name: string = multicallResults[1]
         const symbol: string = multicallResults[2]
+        const totalSupply: bigint = multicallResults[3]
 
-        return { decimals, name, symbol, ...lpToken, token0, token1 }
+        return { decimals, name, symbol, totalSupply, ...lpToken, token0, token1 }
       }
     },
     enabled:
