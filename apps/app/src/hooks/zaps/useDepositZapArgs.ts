@@ -4,6 +4,8 @@ import {
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import {
+  calculatePercentageOfBigInt,
+  divideBigInts,
   getSharesFromAssets,
   lower,
   NETWORK,
@@ -52,13 +54,9 @@ export const useDepositZapArgs = ({
     enabled: isLpSwapTxsNecessary ?? false
   })
 
-  const swapInputToken: Parameters<typeof useSwapTx>['0']['from'] = {
-    address: isDolphinAddress(inputToken?.address)
-      ? wrappedNativeTokenAddress!
-      : inputToken?.address,
-    decimals: inputToken?.decimals,
-    amount: inputToken?.amount
-  }
+  const swapInputTokenAddress = isDolphinAddress(inputToken?.address)
+    ? wrappedNativeTokenAddress!
+    : inputToken?.address
 
   const isSwapTxNecessary =
     !!inputToken?.address &&
@@ -72,18 +70,18 @@ export const useDepositZapArgs = ({
   const isFirstLpSwapTxNecessary =
     isFetchedVaultTokenVelodromeLp &&
     isLpSwapTxsNecessary &&
-    !!swapInputToken?.address &&
+    !!swapInputTokenAddress &&
     isFetchedLpVaultToken &&
     !!lpVaultToken?.token0?.address &&
-    lower(swapInputToken.address) !== lower(lpVaultToken.token0.address)
+    lower(swapInputTokenAddress) !== lower(lpVaultToken.token0.address)
 
   const isSecondLpSwapTxNecessary =
     isFetchedVaultTokenVelodromeLp &&
     isLpSwapTxsNecessary &&
-    !!swapInputToken?.address &&
+    !!swapInputTokenAddress &&
     isFetchedLpVaultToken &&
     !!lpVaultToken?.token1?.address &&
-    lower(swapInputToken.address) !== lower(lpVaultToken.token1.address)
+    lower(swapInputTokenAddress) !== lower(lpVaultToken.token1.address)
 
   const {
     data: swapTx,
@@ -91,7 +89,11 @@ export const useDepositZapArgs = ({
     isFetching: isFetchingSwapTx
   } = useSwapTx({
     chainId: vault?.chainId,
-    from: swapInputToken,
+    from: {
+      address: swapInputTokenAddress,
+      decimals: inputToken?.decimals,
+      amount: inputToken?.amount
+    },
     to: { address: vaultToken?.address!, decimals: vaultToken?.decimals! },
     userAddress: zapRouterAddress!,
     options: { enabled: isSwapTxNecessary }
@@ -103,7 +105,11 @@ export const useDepositZapArgs = ({
     isFetching: isFetchingFirstLpSwapTx
   } = useSwapTx({
     chainId: vault?.chainId,
-    from: swapInputToken,
+    from: {
+      address: swapInputTokenAddress,
+      decimals: inputToken?.decimals,
+      amount: (inputToken?.amount ?? 0n) / 2n
+    },
     to: { address: lpVaultToken?.token0?.address!, decimals: lpVaultToken?.token0?.decimals! },
     userAddress: zapRouterAddress!,
     options: { enabled: isFirstLpSwapTxNecessary }
@@ -115,14 +121,18 @@ export const useDepositZapArgs = ({
     isFetching: isFetchingSecondLpSwapTx
   } = useSwapTx({
     chainId: vault?.chainId,
-    from: swapInputToken,
+    from: {
+      address: swapInputTokenAddress,
+      decimals: inputToken?.decimals,
+      amount: (inputToken?.amount ?? 0n) / 2n
+    },
     to: { address: lpVaultToken?.token1?.address!, decimals: lpVaultToken?.token1?.decimals! },
     userAddress: zapRouterAddress!,
     options: { enabled: isSecondLpSwapTxNecessary }
   })
 
   const amountOut = useMemo(() => {
-    if (!!inputToken?.address && !!vaultToken && !!exchangeRate) {
+    if (!!inputToken?.address && !!inputToken.amount && !!vaultToken && !!exchangeRate) {
       if (isSwapTxNecessary) {
         if (!!swapTx) {
           return {
@@ -135,9 +145,65 @@ export const useDepositZapArgs = ({
           }
         }
       } else if (isLpSwapTxsNecessary) {
-        if (!!lpVaultToken) {
-          // TODO: get ratio from lpVaultToken
-          // TODO: calculate amount out somehow (consider 1 swaptx or 2 swaptxs)
+        if (
+          !!lpVaultToken &&
+          (!isFirstLpSwapTxNecessary || !!firstLpSwapTx) &&
+          (!isSecondLpSwapTxNecessary || !!secondLpSwapTx)
+        ) {
+          const token0AmountOut = { expected: 0n, min: 0n }
+          const token1AmountOut = { expected: 0n, min: 0n }
+
+          if (isFirstLpSwapTxNecessary) {
+            token0AmountOut.expected = firstLpSwapTx!.amountOut.expected
+            token0AmountOut.min = firstLpSwapTx!.amountOut.min
+          } else {
+            token0AmountOut.expected = inputToken.amount / 2n
+            token0AmountOut.min = inputToken.amount / 2n
+          }
+
+          if (isSecondLpSwapTxNecessary) {
+            token1AmountOut.expected = secondLpSwapTx!.amountOut.expected
+            token1AmountOut.min = secondLpSwapTx!.amountOut.min
+          } else {
+            token1AmountOut.expected = inputToken.amount / 2n
+            token1AmountOut.min = inputToken.amount / 2n
+          }
+
+          const token0Percentage = {
+            expected: divideBigInts(
+              token0AmountOut.expected,
+              lpVaultToken.token0.amount,
+              lpVaultToken.token0.decimals
+            ),
+            min: divideBigInts(
+              token0AmountOut.min,
+              lpVaultToken.token0.amount,
+              lpVaultToken.token0.decimals
+            )
+          }
+          const token1Percentage = {
+            expected: divideBigInts(
+              token1AmountOut.expected,
+              lpVaultToken.token1.amount,
+              lpVaultToken.token1.decimals
+            ),
+            min: divideBigInts(
+              token1AmountOut.min,
+              lpVaultToken.token1.amount,
+              lpVaultToken.token1.decimals
+            )
+          }
+
+          return {
+            expected: calculatePercentageOfBigInt(
+              lpVaultToken.totalSupply,
+              Math.min(token0Percentage.expected, token1Percentage.expected)
+            ),
+            min: calculatePercentageOfBigInt(
+              lpVaultToken.totalSupply,
+              Math.min(token0Percentage.min, token1Percentage.min)
+            )
+          }
         }
       } else {
         const simpleAmountOut = getSharesFromAssets(
@@ -158,6 +224,8 @@ export const useDepositZapArgs = ({
     exchangeRate,
     isSwapTxNecessary,
     isLpSwapTxsNecessary,
+    isFirstLpSwapTxNecessary,
+    isSecondLpSwapTxNecessary,
     swapTx,
     firstLpSwapTx,
     secondLpSwapTx,
