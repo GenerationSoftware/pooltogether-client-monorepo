@@ -122,6 +122,7 @@ export const useSendDepositZapTransaction = (
     if (!!inputToken?.address && !!vaultToken && !!exchangeRate) {
       if (isSwapNecessary) {
         if (!!swapTx) {
+          // TODO: this is not accurate for lp tokens, need some refactoring (pass amountOut logic into useDepositZapArgs?)
           return {
             expected: getSharesFromAssets(
               swapTx.amountOut.expected,

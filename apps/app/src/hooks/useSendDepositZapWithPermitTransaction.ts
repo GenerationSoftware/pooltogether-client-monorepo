@@ -99,6 +99,7 @@ export const useSendDepositZapWithPermitTransaction = (
 
   const amountOut = useMemo(() => {
     if (!!inputToken?.address && !!vaultToken && !!exchangeRate && !!swapTx) {
+      // TODO: this is not accurate for lp tokens, need some refactoring (pass amountOut logic into useDepositZapWithPermitArgs?)
       return {
         expected: getSharesFromAssets(swapTx.amountOut.expected, exchangeRate, vaultToken.decimals),
         min: getSharesFromAssets(swapTx.amountOut.min, exchangeRate, vaultToken.decimals)
