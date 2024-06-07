@@ -92,6 +92,7 @@ export const useDepositZapArgs = ({
         if (!!swapTx && !!wrappedNativeTokenAddress) {
           zapOutputs = [...zapOutputs, { token: wrappedNativeTokenAddress, minOutputAmount: 0n }]
 
+          // Wrap ETH -> Swap for vault token -> Deposit
           zapRoute = [
             {
               ...getWrapTx(vault.chainId, inputToken.amount),
@@ -108,6 +109,7 @@ export const useDepositZapArgs = ({
             ...zapRoute
           ]
         } else {
+          // Wrap ETH -> Deposit
           zapRoute = [
             {
               ...getWrapTx(vault.chainId, inputToken.amount),
@@ -121,6 +123,7 @@ export const useDepositZapArgs = ({
         zapOutputs = [...zapOutputs, { token: inputToken.address, minOutputAmount: 0n }]
 
         if (!!swapTx) {
+          // Swap for vault token -> Deposit
           zapRoute = [
             {
               ...getArbitraryProxyTx(swapTx.allowanceProxy),

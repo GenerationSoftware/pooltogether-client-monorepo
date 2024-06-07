@@ -104,16 +104,19 @@ export const useDepositZapWithPermitArgs = ({
         recipient: userAddress
       }
 
-      const zapRoute: ZapRoute = !!swapTx
-        ? [
-            {
-              ...getArbitraryProxyTx(swapTx.allowanceProxy),
-              tokens: [{ token: inputToken.address, index: -1 }]
-            },
-            { ...swapTx.tx, tokens: [{ token: inputToken.address, index: -1 }] },
-            { ...depositTx, tokens: [{ token: vaultToken.address, index: 4 }] }
-          ]
-        : [{ ...depositTx, tokens: [{ token: vaultToken.address, index: 4 }] }]
+      let zapRoute: ZapRoute = [{ ...depositTx, tokens: [{ token: vaultToken.address, index: 4 }] }]
+
+      if (!!swapTx) {
+        // Swap for vault token -> Deposit
+        zapRoute = [
+          {
+            ...getArbitraryProxyTx(swapTx.allowanceProxy),
+            tokens: [{ token: inputToken.address, index: -1 }]
+          },
+          { ...swapTx.tx, tokens: [{ token: inputToken.address, index: -1 }] },
+          ...zapRoute
+        ]
+      }
 
       return [zapPermit, zapConfig, signature, zapRoute]
     }
