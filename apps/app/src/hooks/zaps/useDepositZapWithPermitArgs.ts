@@ -21,7 +21,7 @@ type ZapRoute = ContractFunctionArgs<typeof zapRouterABI, 'nonpayable', 'execute
 
 /**
  * Returns deposit zap with permit args
- * @param data input token, vault, signature, deadline, nonce, enabled
+ * @param data input token, vault, signature, deadline, nonce
  * @returns
  */
 export const useDepositZapWithPermitArgs = ({

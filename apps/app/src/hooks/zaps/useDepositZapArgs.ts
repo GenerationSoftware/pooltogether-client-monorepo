@@ -13,10 +13,15 @@ import {
   WRAPPED_NATIVE_ASSETS
 } from '@shared/utilities'
 import { useMemo } from 'react'
-import { getArbitraryProxyTx, getWrapTx, isDolphinAddress } from 'src/utils'
+import {
+  getArbitraryProxyTx,
+  getVelodromeAddLiquidityTx,
+  getWrapTx,
+  isDolphinAddress
+} from 'src/utils'
 import { Address, ContractFunctionArgs, encodeFunctionData, zeroAddress } from 'viem'
 import { useAccount } from 'wagmi'
-import { ZAP_SETTINGS } from '@constants/config'
+import { VELODROME_ADDRESSES, ZAP_SETTINGS } from '@constants/config'
 import { zapRouterABI } from '@constants/zapRouterABI'
 import { useIsVelodromeLp } from './useIsVelodromeLp'
 import { useLpToken } from './useLpToken'
@@ -28,7 +33,7 @@ type ZapRoute = ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrd
 
 /**
  * Returns deposit zap args
- * @param data input token, vault, enabled
+ * @param data input token, vault
  * @returns
  */
 export const useDepositZapArgs = ({
@@ -158,7 +163,7 @@ export const useDepositZapArgs = ({
             token0AmountOut.min = firstLpSwapTx!.amountOut.min
           } else {
             token0AmountOut.expected = inputToken.amount / 2n
-            token0AmountOut.min = inputToken.amount / 2n
+            token0AmountOut.min = calculatePercentageOfBigInt(inputToken.amount / 2n, 0.99)
           }
 
           if (isSecondLpSwapTxNecessary) {
@@ -166,7 +171,7 @@ export const useDepositZapArgs = ({
             token1AmountOut.min = secondLpSwapTx!.amountOut.min
           } else {
             token1AmountOut.expected = inputToken.amount / 2n
-            token1AmountOut.min = inputToken.amount / 2n
+            token1AmountOut.min = calculatePercentageOfBigInt(inputToken.amount / 2n, 0.99)
           }
 
           const token0Percentage = {
@@ -265,7 +270,6 @@ export const useDepositZapArgs = ({
   const isFetching =
     !isFetched && (isFetchingSwapTx || isFetchingFirstLpSwapTx || isFetchingSecondLpSwapTx)
 
-  // TODO: if token is a velodrome lp token, add appropriate swaps + addLiquidity call
   const zapArgs = useMemo((): [ZapConfig, ZapRoute] | undefined => {
     if (isFetched) {
       let zapInputs: ZapConfig['inputs'] = []
@@ -280,6 +284,10 @@ export const useDepositZapArgs = ({
       if (isDolphinAddress(inputToken.address)) {
         zapInputs = [{ token: zeroAddress, amount: inputToken.amount }]
         zapOutputs = [...zapOutputs, { token: zeroAddress, minOutputAmount: 0n }]
+
+        // TODO: Wrap ETH -> Swap half for token0 -> Swap half for token1 -> Add liquidity -> Deposit
+        // TODO: Wrap ETH -> Swap half for token0 -> Add liquidity -> Deposit
+        // TODO: Wrap ETH -> Swap half for token1 -> Add liquidity -> Deposit
 
         if (!!swapTx && !!wrappedNativeTokenAddress) {
           zapOutputs = [...zapOutputs, { token: wrappedNativeTokenAddress, minOutputAmount: 0n }]
@@ -327,6 +335,111 @@ export const useDepositZapArgs = ({
             },
             ...zapRoute
           ]
+        } else if (!!firstLpSwapTx && !!secondLpSwapTx && !!lpVaultToken) {
+          zapOutputs = [
+            ...zapOutputs,
+            { token: lpVaultToken.token0.address, minOutputAmount: 0n },
+            { token: lpVaultToken.token1.address, minOutputAmount: 0n }
+          ]
+
+          // Swap half for token0 -> Swap half for token1 -> Add liquidity -> Deposit
+          zapRoute = [
+            {
+              ...getArbitraryProxyTx(firstLpSwapTx.allowanceProxy),
+              tokens: [{ token: inputToken.address, index: -1 }]
+            },
+            {
+              ...firstLpSwapTx.tx,
+              tokens: [{ token: inputToken.address, index: -1 }]
+            },
+            {
+              ...getArbitraryProxyTx(secondLpSwapTx.allowanceProxy), // TODO: if this is the same address could save some gas here
+              tokens: [{ token: inputToken.address, index: -1 }]
+            },
+            {
+              ...secondLpSwapTx.tx,
+              tokens: [{ token: inputToken.address, index: -1 }]
+            },
+            {
+              ...getVelodromeAddLiquidityTx(
+                VELODROME_ADDRESSES[vault.chainId]?.router,
+                { address: lpVaultToken.token0.address, amount: firstLpSwapTx.amountOut },
+                { address: lpVaultToken.token1.address, amount: secondLpSwapTx.amountOut },
+                zapRouterAddress!
+              ),
+              tokens: [
+                { token: lpVaultToken.token0.address, index: 100 },
+                { token: lpVaultToken.token1.address, index: 132 }
+              ]
+            },
+            ...zapRoute
+          ]
+        } else if (!!firstLpSwapTx && !!lpVaultToken) {
+          zapOutputs = [...zapOutputs, { token: lpVaultToken.token0.address, minOutputAmount: 0n }]
+
+          // Swap half for token0 -> Add liquidity -> Deposit
+          zapRoute = [
+            {
+              ...getArbitraryProxyTx(firstLpSwapTx.allowanceProxy),
+              tokens: [{ token: inputToken.address, index: -1 }]
+            },
+            {
+              ...firstLpSwapTx.tx,
+              tokens: [{ token: inputToken.address, index: -1 }]
+            },
+            {
+              ...getVelodromeAddLiquidityTx(
+                VELODROME_ADDRESSES[vault.chainId]?.router,
+                { address: lpVaultToken.token0.address, amount: firstLpSwapTx.amountOut },
+                {
+                  address: lpVaultToken.token1.address,
+                  amount: {
+                    expected: inputToken.amount / 2n,
+                    min: calculatePercentageOfBigInt(inputToken.amount / 2n, 0.99)
+                  }
+                },
+                zapRouterAddress!
+              ),
+              tokens: [
+                { token: lpVaultToken.token0.address, index: 100 },
+                { token: lpVaultToken.token1.address, index: 132 }
+              ]
+            },
+            ...zapRoute
+          ]
+        } else if (!!secondLpSwapTx && !!lpVaultToken) {
+          zapOutputs = [...zapOutputs, { token: lpVaultToken.token1.address, minOutputAmount: 0n }]
+
+          // Swap half for token1 -> Add liquidity -> Deposit
+          zapRoute = [
+            {
+              ...getArbitraryProxyTx(secondLpSwapTx.allowanceProxy),
+              tokens: [{ token: inputToken.address, index: -1 }]
+            },
+            {
+              ...secondLpSwapTx.tx,
+              tokens: [{ token: inputToken.address, index: -1 }]
+            },
+            {
+              ...getVelodromeAddLiquidityTx(
+                VELODROME_ADDRESSES[vault.chainId]?.router,
+                {
+                  address: lpVaultToken.token0.address,
+                  amount: {
+                    expected: inputToken.amount / 2n,
+                    min: calculatePercentageOfBigInt(inputToken.amount / 2n, 0.99)
+                  }
+                },
+                { address: lpVaultToken.token1.address, amount: secondLpSwapTx.amountOut },
+                zapRouterAddress!
+              ),
+              tokens: [
+                { token: lpVaultToken.token0.address, index: 100 },
+                { token: lpVaultToken.token1.address, index: 132 }
+              ]
+            },
+            ...zapRoute
+          ]
         }
       }
 
@@ -347,6 +460,8 @@ export const useDepositZapArgs = ({
     vaultToken,
     lpVaultToken,
     swapTx,
+    firstLpSwapTx,
+    secondLpSwapTx,
     amountOut,
     depositTx,
     isFetched
