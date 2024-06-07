@@ -105,7 +105,7 @@ export const DepositForm = (props: DepositFormProps) => {
       : 0n
   }, [formTokenAmount, token])
 
-  const { amountOut: zapAmountOut, isFetchingSwapTx } = useSendDepositZapTransaction(
+  const { amountOut: zapAmountOut, isFetchingZapArgs } = useSendDepositZapTransaction(
     {
       address: token?.address as Address,
       decimals: token?.decimals as number,
@@ -307,7 +307,7 @@ export const DepositForm = (props: DepositFormProps) => {
                 showInfoRow={showInputInfoRows}
                 className='my-0.5 z-10'
                 disabled={isZapping}
-                isLoading={isFetchingSwapTx}
+                isLoading={isFetchingZapArgs}
               />
             </FormProvider>
           </>
