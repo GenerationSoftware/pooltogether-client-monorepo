@@ -25,8 +25,8 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { Address, formatUnits, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { ZAP_SETTINGS } from '@constants/config'
-import { useSendDepositZapTransaction } from '@hooks/useSendDepositZapTransaction'
-import { useZapTokenOptions } from '@hooks/useZapTokenOptions'
+import { useSendDepositZapTransaction } from '@hooks/zaps/useSendDepositZapTransaction'
+import { useZapTokenOptions } from '@hooks/zaps/useZapTokenOptions'
 import { isValidFormInput, TxFormInput, TxFormValues } from '../TxFormInput'
 
 export const depositFormTokenAddressAtom = atom<Address | undefined>(undefined)
