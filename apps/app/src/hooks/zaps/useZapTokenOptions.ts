@@ -1,11 +1,13 @@
 import {
   useAllUserVaultBalances,
   useAllVaultSharePrices,
+  useCachedVaultLists,
   useSelectedVault,
   useSelectedVaults,
   useTokenBalances,
   useTokenPrices,
-  useTokens
+  useTokens,
+  useVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { TokenWithAmount, TokenWithPrice } from '@shared/types'
 import { DOLPHIN_ADDRESS, getVaultId, lower, NETWORK } from '@shared/utilities'
@@ -65,9 +67,14 @@ export const useZapTokenOptions = (chainId: number) => {
   const { data: tokenPrices } = useTokenPrices(chainId, tokenAddresses)
 
   const { vault } = useSelectedVault()
-  const { vaults } = useSelectedVaults()
-  const { data: allVaultBalances } = useAllUserVaultBalances(vaults, userAddress as Address)
-  const { data: allVaultSharePrices } = useAllVaultSharePrices(vaults)
+  const { cachedVaultLists } = useCachedVaultLists()
+  const vaults = useVaults(
+    cachedVaultLists['default']?.tokens.filter((t) => t.chainId === chainId) ?? []
+  )
+  const { data: vaultBalances } = useAllUserVaultBalances(vaults, userAddress as Address, {
+    refetchOnWindowFocus: true
+  })
+  const { data: sharePrices } = useAllVaultSharePrices(vaults)
 
   const tokenOptions = useMemo(() => {
     const options: (TokenWithAmount & Required<TokenWithPrice> & { value: number })[] = []
@@ -82,12 +89,12 @@ export const useZapTokenOptions = (chainId: number) => {
       })
     }
 
-    if (!!allVaultBalances) {
-      Object.values(allVaultBalances)
+    if (!!vaultBalances) {
+      Object.values(vaultBalances)
         .filter((v) => v.chainId === chainId && !!v.amount && v.address !== vault?.address)
         .forEach((share) => {
           const vaultId = getVaultId(share)
-          const price = allVaultSharePrices?.[vaultId]?.price ?? 0
+          const price = sharePrices?.[vaultId]?.price ?? 0
           const value = parseFloat(formatUnits(share.amount, share.decimals)) * price
 
           options.push({ ...share, amount: share.amount, price, value })
@@ -95,7 +102,7 @@ export const useZapTokenOptions = (chainId: number) => {
     }
 
     return options.sort((a, b) => b.value - a.value)
-  }, [tokens, tokenBalances, tokenPrices, vault, allVaultBalances, allVaultSharePrices])
+  }, [tokens, tokenBalances, tokenPrices, vault, vaultBalances, sharePrices])
 
   return tokenOptions
 }

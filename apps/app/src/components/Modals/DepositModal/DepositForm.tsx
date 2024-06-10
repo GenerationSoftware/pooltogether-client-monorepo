@@ -1,5 +1,6 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
+  useCachedVaultLists,
   useToken,
   useTokenBalance,
   useTokenPrices,
@@ -15,6 +16,7 @@ import {
   formatBigIntForDisplay,
   getAssetsFromShares,
   getSharesFromAssets,
+  getVaultId,
   lower
 } from '@shared/utilities'
 import classNames from 'classnames'
@@ -324,6 +326,15 @@ interface TokenPickerOptionProps {
 const TokenPickerOption = (props: TokenPickerOptionProps) => {
   const { token, className } = props
 
+  const { cachedVaultLists } = useCachedVaultLists()
+
+  const tokenInVaultList = useMemo(() => {
+    const vaultId = getVaultId(token)
+    const vaults = cachedVaultLists['default']?.tokens ?? []
+
+    return vaults.find((v) => getVaultId(v) === vaultId)
+  }, [token, cachedVaultLists])
+
   return (
     <div
       className={classNames(
@@ -336,7 +347,7 @@ const TokenPickerOption = (props: TokenPickerOptionProps) => {
       )}
     >
       <span className='flex items-center gap-1'>
-        <TokenIcon token={token} />
+        <TokenIcon token={{ logoURI: tokenInVaultList?.logoURI, ...token }} />
         <span>{token.symbol}</span>
       </span>
       <span className='flex items-center gap-1'>
