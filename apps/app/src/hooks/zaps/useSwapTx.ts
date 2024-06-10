@@ -76,12 +76,10 @@ export const useSwapTx = (swapData: {
 
   const enabled =
     !!chainId &&
-    !!from &&
-    !!from.address &&
+    !!from?.address &&
     from.decimals !== undefined &&
     !!from.amount &&
-    !!to &&
-    !!to.address &&
+    !!to?.address &&
     to.decimals !== undefined &&
     lower(from.address) !== lower(to.address) &&
     !!userAddress &&
