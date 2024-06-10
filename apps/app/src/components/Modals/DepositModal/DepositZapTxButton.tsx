@@ -66,7 +66,7 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
 
   const { data: inputToken } = useToken(vault.chainId, inputTokenAddress as Address)
 
-  const zapTokenManager = ZAP_SETTINGS[vault.chainId]?.zapTokenManager
+  const zapTokenManagerAddress = ZAP_SETTINGS[vault.chainId]?.zapTokenManager
 
   const {
     data: allowance,
@@ -75,7 +75,7 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
   } = useTokenAllowance(
     vault.chainId,
     userAddress as Address,
-    zapTokenManager,
+    zapTokenManagerAddress,
     inputToken?.address as Address
   )
 
@@ -117,7 +117,7 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
   } = useSendGenericApproveTransaction(
     vault.chainId,
     inputToken?.address as Address,
-    zapTokenManager,
+    zapTokenManagerAddress,
     depositAmount,
     {
       onSuccess: () => {

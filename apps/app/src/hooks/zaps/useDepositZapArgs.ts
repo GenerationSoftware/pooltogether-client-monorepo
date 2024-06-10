@@ -40,7 +40,7 @@ export const useDepositZapArgs = ({
   inputToken: Parameters<typeof useSendDepositZapTransaction>['0']
   vault: Vault
 }) => {
-  const zapRouterAddress = ZAP_SETTINGS[vault?.chainId]?.zapRouterAddress as Address | undefined
+  const zapRouterAddress = ZAP_SETTINGS[vault?.chainId]?.zapRouter as Address | undefined
   const wrappedNativeTokenAddress = WRAPPED_NATIVE_ASSETS[vault?.chainId as NETWORK]
 
   const { address: userAddress } = useAccount()
@@ -58,7 +58,8 @@ export const useDepositZapArgs = ({
 
   const { vaults: _vaults } = useSelectedVaults()
   const vaults = Object.values(_vaults.vaults).filter((v) => v.chainId === vault?.chainId)
-  const inputVault = vaults.find((v) => lower(v.address) === inputToken.address)
+  const inputVault =
+    !!inputToken?.address && vaults.find((v) => lower(v.address) === lower(inputToken.address))
 
   const { data: inputVaultToken, isFetched: isFetchedInputVaultToken } = useVaultTokenData(
     inputVault as Vault
@@ -281,7 +282,7 @@ export const useDepositZapArgs = ({
         zapRoute = getSwapZapRoute(inputToken, vault, swapTx, vaultToken.address, {
           redeem:
             !!inputVaultToken && !!inputVaultExchangeRate
-              ? { asset: inputVaultToken, exchangeRate: inputVaultExchangeRate, userAddress }
+              ? { asset: inputVaultToken, exchangeRate: inputVaultExchangeRate }
               : undefined
         })
       } else if (!!lpVaultToken) {
@@ -303,15 +304,13 @@ export const useDepositZapArgs = ({
           {
             redeem:
               !!inputVaultToken && !!inputVaultExchangeRate
-                ? { asset: inputVaultToken, exchangeRate: inputVaultExchangeRate, userAddress }
+                ? { asset: inputVaultToken, exchangeRate: inputVaultExchangeRate }
                 : undefined
           }
         )
       } else {
         zapRoute = getSimpleZapRoute(inputToken, vault, vaultToken.address, {
-          redeem: !!inputVaultExchangeRate
-            ? { exchangeRate: inputVaultExchangeRate, userAddress }
-            : undefined
+          redeem: !!inputVaultExchangeRate ? { exchangeRate: inputVaultExchangeRate } : undefined
         })
       }
 

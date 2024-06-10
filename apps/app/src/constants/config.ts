@@ -171,18 +171,18 @@ export const WALLET_NAMES: { [chainId: number]: { [address: Lowercase<Address>]:
  * Zap settings
  */
 export const ZAP_SETTINGS: {
-  [chainId: number]: { zapRouterAddress: Address; zapTokenManager: Address }
+  [chainId: number]: { zapRouter: Address; zapTokenManager: Address }
 } = {
   [NETWORK.optimism]: {
-    zapRouterAddress: '0xE82343A116d2179F197111D92f9B53611B43C01c',
+    zapRouter: '0xE82343A116d2179F197111D92f9B53611B43C01c',
     zapTokenManager: '0x5a32F67C5eD74dc1b2e031b1bc2c3E965073424F'
   },
   [NETWORK.base]: {
-    zapRouterAddress: '0x6F19Da51d488926C007B9eBaa5968291a2eC6a63',
+    zapRouter: '0x6F19Da51d488926C007B9eBaa5968291a2eC6a63',
     zapTokenManager: '0x3fBD1da78369864c67d62c242d30983d6900c0f0'
   },
   [NETWORK.arbitrum]: {
-    zapRouterAddress: '0xf49F7bB6F4F50d272A0914a671895c4384696E5A',
+    zapRouter: '0xf49F7bB6F4F50d272A0914a671895c4384696E5A',
     zapTokenManager: '0x3395BDAE49853Bc7Ab9377d2A93f42BC3A18680e'
   }
 }

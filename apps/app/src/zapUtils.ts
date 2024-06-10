@@ -210,7 +210,6 @@ export const getDepositTx = (vaultAddress: Address, zapRouterAddress: Address) =
 export const getRedeemTx = (
   vaultAddress: Address,
   zapRouterAddress: Address,
-  userAddress: Address,
   amount: bigint,
   exchangeRate: bigint,
   decimals: number
@@ -223,7 +222,7 @@ export const getRedeemTx = (
     data: encodeFunctionData({
       abi: vaultABI,
       functionName: 'redeem',
-      args: [amount, zapRouterAddress, userAddress, minAssets]
+      args: [amount, zapRouterAddress, zapRouterAddress, minAssets]
     })
   }
 }
@@ -233,7 +232,7 @@ export const getSwapZapRoute = (
   vault: Vault,
   swapTx: NonNullable<ReturnType<typeof useSwapTx>['data']>,
   vaultTokenAddress: Address,
-  options?: { redeem?: { asset: Token; exchangeRate: bigint; userAddress: Address } }
+  options?: { redeem?: { asset: Token; exchangeRate: bigint } }
 ) => {
   const route: Mutable<ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>[1]> = []
 
@@ -243,7 +242,7 @@ export const getSwapZapRoute = (
     ? options.redeem.asset.address
     : inputToken.address
 
-  const zapRouterAddress = ZAP_SETTINGS[vault.chainId]?.zapRouterAddress as Address | undefined
+  const zapRouterAddress = ZAP_SETTINGS[vault.chainId]?.zapRouter as Address | undefined
 
   if (!!swapInputTokenAddress && !!zapRouterAddress) {
     if (isDolphinAddress(inputToken.address)) {
@@ -256,7 +255,6 @@ export const getSwapZapRoute = (
         ...getRedeemTx(
           inputToken.address,
           zapRouterAddress,
-          options.redeem.userAddress,
           inputToken.amount,
           options.redeem.exchangeRate,
           inputToken.decimals
@@ -291,7 +289,7 @@ export const getLpSwapZapRoute = (
   firstLpSwapTx: ReturnType<typeof useSwapTx>['data'],
   secondLpSwapTx: ReturnType<typeof useSwapTx>['data'],
   vaultTokenAddress: Address,
-  options?: { redeem?: { asset: Token; exchangeRate: bigint; userAddress: Address } }
+  options?: { redeem?: { asset: Token; exchangeRate: bigint } }
 ) => {
   const route: Mutable<ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>[1]> = []
 
@@ -301,7 +299,7 @@ export const getLpSwapZapRoute = (
     ? options.redeem.asset.address
     : inputToken.address
 
-  const zapRouterAddress = ZAP_SETTINGS[vault.chainId]?.zapRouterAddress as Address | undefined
+  const zapRouterAddress = ZAP_SETTINGS[vault.chainId]?.zapRouter as Address | undefined
 
   const velodromeRouterAddress = VELODROME_ADDRESSES[vault.chainId]?.router as Address | undefined
 
@@ -316,7 +314,6 @@ export const getLpSwapZapRoute = (
         ...getRedeemTx(
           inputToken.address,
           zapRouterAddress,
-          options.redeem.userAddress,
           inputToken.amount,
           options.redeem.exchangeRate,
           inputToken.decimals
@@ -383,11 +380,11 @@ export const getSimpleZapRoute = (
   inputToken: Parameters<typeof useSendDepositZapTransaction>['0'],
   vault: Vault,
   vaultTokenAddress: Address,
-  options?: { redeem?: { exchangeRate: bigint; userAddress: Address } }
+  options?: { redeem?: { exchangeRate: bigint } }
 ) => {
   const route: Mutable<ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>[1]> = []
 
-  const zapRouterAddress = ZAP_SETTINGS[vault.chainId]?.zapRouterAddress as Address | undefined
+  const zapRouterAddress = ZAP_SETTINGS[vault.chainId]?.zapRouter as Address | undefined
 
   if (!!zapRouterAddress) {
     if (isDolphinAddress(inputToken.address)) {
@@ -400,7 +397,6 @@ export const getSimpleZapRoute = (
         ...getRedeemTx(
           inputToken.address,
           zapRouterAddress,
-          options.redeem.userAddress,
           inputToken.amount,
           options.redeem.exchangeRate,
           inputToken.decimals

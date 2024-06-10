@@ -46,7 +46,7 @@ export const useSendDepositZapTransaction = (
 } => {
   const { address: userAddress, chain } = useAccount()
 
-  const { zapRouterAddress, zapTokenManager } = ZAP_SETTINGS[vault?.chainId] ?? {}
+  const { zapRouter, zapTokenManager } = ZAP_SETTINGS[vault?.chainId] ?? {}
 
   const { data: allowance, isFetched: isFetchedAllowance } = useTokenAllowance(
     vault?.chainId,
@@ -70,7 +70,7 @@ export const useSendDepositZapTransaction = (
     !!userAddress &&
     isAddress(userAddress) &&
     chain?.id === vault.chainId &&
-    !!zapRouterAddress &&
+    !!zapRouter &&
     !!zapTokenManager &&
     isFetchedAllowance &&
     allowance !== undefined &&
@@ -79,7 +79,7 @@ export const useSendDepositZapTransaction = (
   const { data: gasEstimate } = useGasAmountEstimate(
     vault?.chainId,
     {
-      address: zapRouterAddress,
+      address: zapRouter,
       abi: [zapRouterABI['15']],
       functionName: 'executeOrder',
       args: zapArgs!,
@@ -91,7 +91,7 @@ export const useSendDepositZapTransaction = (
 
   const { data } = useSimulateContract({
     chainId: vault?.chainId,
-    address: zapRouterAddress,
+    address: zapRouter,
     abi: [zapRouterABI['15']],
     functionName: 'executeOrder',
     args: zapArgs,
