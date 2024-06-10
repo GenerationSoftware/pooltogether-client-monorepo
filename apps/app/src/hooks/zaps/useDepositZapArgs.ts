@@ -6,17 +6,22 @@ import {
 import { Mutable } from '@shared/types'
 import {
   calculatePercentageOfBigInt,
-  divideBigInts,
-  getSecondsSinceEpoch,
-  getSharesFromAssets,
   lower,
   NETWORK,
-  vaultABI,
   WRAPPED_NATIVE_ASSETS
 } from '@shared/utilities'
 import { useMemo } from 'react'
-import { isDolphinAddress } from 'src/utils'
-import { Address, ContractFunctionArgs, encodeFunctionData, zeroAddress } from 'viem'
+import {
+  getArbitraryProxyTx,
+  getDepositTx,
+  getLpSwapAmountOut,
+  getSimpleAmountOut,
+  getSwapAmountOut,
+  getVelodromeAddLiquidityTx,
+  getWrapTx,
+  isDolphinAddress
+} from 'src/zapUtils'
+import { Address, ContractFunctionArgs, zeroAddress } from 'viem'
 import { useAccount } from 'wagmi'
 import { VELODROME_ADDRESSES, ZAP_SETTINGS } from '@constants/config'
 import { zapRouterABI } from '@constants/zapRouterABI'
@@ -71,7 +76,7 @@ export const useDepositZapArgs = ({
 
   const isFirstLpSwapTxNecessary =
     isFetchedVaultTokenVelodromeLp &&
-    isLpSwapTxsNecessary &&
+    !!isLpSwapTxsNecessary &&
     !!swapInputTokenAddress &&
     isFetchedLpVaultToken &&
     !!lpVaultToken?.token0?.address &&
@@ -79,7 +84,7 @@ export const useDepositZapArgs = ({
 
   const isSecondLpSwapTxNecessary =
     isFetchedVaultTokenVelodromeLp &&
-    isLpSwapTxsNecessary &&
+    !!isLpSwapTxsNecessary &&
     !!swapInputTokenAddress &&
     isFetchedLpVaultToken &&
     !!lpVaultToken?.token1?.address &&
@@ -134,17 +139,10 @@ export const useDepositZapArgs = ({
   })
 
   const amountOut = useMemo(() => {
-    if (!!inputToken?.address && !!inputToken.amount && !!vaultToken && !!exchangeRate) {
+    if (!!inputToken?.amount && !!vaultToken && !!exchangeRate) {
       if (isSwapTxNecessary) {
         if (!!swapTx) {
-          return {
-            expected: getSharesFromAssets(
-              swapTx.amountOut.expected,
-              exchangeRate,
-              vaultToken.decimals
-            ),
-            min: getSharesFromAssets(swapTx.amountOut.min, exchangeRate, vaultToken.decimals)
-          }
+          return getSwapAmountOut(swapTx, exchangeRate, vaultToken.decimals)
         }
       } else if (isLpSwapTxsNecessary) {
         if (
@@ -152,72 +150,15 @@ export const useDepositZapArgs = ({
           (!isFirstLpSwapTxNecessary || !!firstLpSwapTx) &&
           (!isSecondLpSwapTxNecessary || !!secondLpSwapTx)
         ) {
-          const token0AmountOut = { expected: 0n, min: 0n }
-          const token1AmountOut = { expected: 0n, min: 0n }
-
-          if (isFirstLpSwapTxNecessary) {
-            token0AmountOut.expected = firstLpSwapTx!.amountOut.expected
-            token0AmountOut.min = firstLpSwapTx!.amountOut.min
-          } else {
-            token0AmountOut.expected = inputToken.amount / 2n
-            token0AmountOut.min = calculatePercentageOfBigInt(inputToken.amount / 2n, 0.99)
-          }
-
-          if (isSecondLpSwapTxNecessary) {
-            token1AmountOut.expected = secondLpSwapTx!.amountOut.expected
-            token1AmountOut.min = secondLpSwapTx!.amountOut.min
-          } else {
-            token1AmountOut.expected = inputToken.amount / 2n
-            token1AmountOut.min = calculatePercentageOfBigInt(inputToken.amount / 2n, 0.99)
-          }
-
-          const token0Percentage = {
-            expected: divideBigInts(
-              token0AmountOut.expected,
-              lpVaultToken.token0.amount,
-              lpVaultToken.token0.decimals
-            ),
-            min: divideBigInts(
-              token0AmountOut.min,
-              lpVaultToken.token0.amount,
-              lpVaultToken.token0.decimals
-            )
-          }
-          const token1Percentage = {
-            expected: divideBigInts(
-              token1AmountOut.expected,
-              lpVaultToken.token1.amount,
-              lpVaultToken.token1.decimals
-            ),
-            min: divideBigInts(
-              token1AmountOut.min,
-              lpVaultToken.token1.amount,
-              lpVaultToken.token1.decimals
-            )
-          }
-
-          return {
-            expected: calculatePercentageOfBigInt(
-              lpVaultToken.totalSupply,
-              Math.min(token0Percentage.expected, token1Percentage.expected)
-            ),
-            min: calculatePercentageOfBigInt(
-              lpVaultToken.totalSupply,
-              Math.min(token0Percentage.min, token1Percentage.min)
-            )
-          }
+          return getLpSwapAmountOut(
+            inputToken,
+            lpVaultToken,
+            { tx: firstLpSwapTx, isNecessary: isFirstLpSwapTxNecessary },
+            { tx: secondLpSwapTx, isNecessary: isSecondLpSwapTxNecessary }
+          )
         }
       } else {
-        const simpleAmountOut = getSharesFromAssets(
-          inputToken.amount,
-          exchangeRate,
-          vaultToken.decimals
-        )
-
-        return {
-          expected: simpleAmountOut,
-          min: simpleAmountOut
-        }
+        return getSimpleAmountOut(inputToken, exchangeRate, vaultToken.decimals)
       }
     }
   }, [
@@ -234,23 +175,10 @@ export const useDepositZapArgs = ({
     lpVaultToken
   ])
 
-  const depositTx = useMemo(() => {
-    if (!!vault && !!zapRouterAddress) {
-      return {
-        target: vault.address,
-        value: 0n,
-        data: encodeFunctionData({
-          abi: vaultABI,
-          functionName: 'deposit',
-          args: [0n, zapRouterAddress]
-        })
-      }
-    }
-  }, [vault, zapRouterAddress])
-
   const isFetched =
     !!inputToken &&
     !!vault &&
+    !!zapRouterAddress &&
     !!userAddress &&
     isFetchedVaultToken &&
     !!vaultToken &&
@@ -261,8 +189,7 @@ export const useDepositZapArgs = ({
     (!isLpSwapTxsNecessary || (isFetchedLpVaultToken && !!lpVaultToken)) &&
     (!isFirstLpSwapTxNecessary || (isFetchedFirstLpSwapTx && !!firstLpSwapTx)) &&
     (!isSecondLpSwapTxNecessary || (isFetchedSecondLpSwapTx && !!secondLpSwapTx)) &&
-    !!amountOut &&
-    !!depositTx
+    !!amountOut
 
   const isFetching =
     !isFetched && (isFetchingSwapTx || isFetchingFirstLpSwapTx || isFetchingSecondLpSwapTx)
@@ -296,7 +223,12 @@ export const useDepositZapArgs = ({
         }
       }
 
-      let zapRoute: ZapRoute = [{ ...depositTx, tokens: [{ token: vaultToken.address, index: 4 }] }]
+      let zapRoute: ZapRoute = [
+        {
+          ...getDepositTx(vault.address, zapRouterAddress),
+          tokens: [{ token: vaultToken.address, index: 4 }]
+        }
+      ]
 
       if (isDolphinAddress(inputToken.address)) {
         addZapInput({ token: zeroAddress, amount: inputToken.amount })
@@ -355,7 +287,7 @@ export const useDepositZapArgs = ({
                   VELODROME_ADDRESSES[vault.chainId]?.router,
                   { address: lpVaultToken.token0.address, amount: firstLpSwapTx.amountOut },
                   { address: lpVaultToken.token1.address, amount: secondLpSwapTx.amountOut },
-                  zapRouterAddress!
+                  zapRouterAddress
                 ),
                 tokens: [
                   { token: lpVaultToken.token0.address, index: 100 },
@@ -392,7 +324,7 @@ export const useDepositZapArgs = ({
                       min: calculatePercentageOfBigInt(inputToken.amount / 2n, 0.99)
                     }
                   },
-                  zapRouterAddress!
+                  zapRouterAddress
                 ),
                 tokens: [
                   { token: lpVaultToken.token0.address, index: 100 },
@@ -429,7 +361,7 @@ export const useDepositZapArgs = ({
                     }
                   },
                   { address: lpVaultToken.token1.address, amount: secondLpSwapTx.amountOut },
-                  zapRouterAddress!
+                  zapRouterAddress
                 ),
                 tokens: [
                   { token: lpVaultToken.token0.address, index: 100 },
@@ -494,7 +426,7 @@ export const useDepositZapArgs = ({
                   VELODROME_ADDRESSES[vault.chainId]?.router,
                   { address: lpVaultToken.token0.address, amount: firstLpSwapTx.amountOut },
                   { address: lpVaultToken.token1.address, amount: secondLpSwapTx.amountOut },
-                  zapRouterAddress!
+                  zapRouterAddress
                 ),
                 tokens: [
                   { token: lpVaultToken.token0.address, index: 100 },
@@ -527,7 +459,7 @@ export const useDepositZapArgs = ({
                       min: calculatePercentageOfBigInt(inputToken.amount / 2n, 0.99)
                     }
                   },
-                  zapRouterAddress!
+                  zapRouterAddress
                 ),
                 tokens: [
                   { token: lpVaultToken.token0.address, index: 100 },
@@ -560,7 +492,7 @@ export const useDepositZapArgs = ({
                     }
                   },
                   { address: lpVaultToken.token1.address, amount: secondLpSwapTx.amountOut },
-                  zapRouterAddress!
+                  zapRouterAddress
                 ),
                 tokens: [
                   { token: lpVaultToken.token0.address, index: 100 },
@@ -593,115 +525,8 @@ export const useDepositZapArgs = ({
     firstLpSwapTx,
     secondLpSwapTx,
     amountOut,
-    depositTx,
     isFetched
   ])
 
   return { zapArgs, amountOut, isFetched, isFetching }
-}
-
-/**
- * Returns a `deposit` call to the network's wrapped native token contract
- * @param chainId the chain ID of the network to make the transaction in
- * @param amount the amount of native tokens to wrap
- * @returns
- */
-const getWrapTx = (chainId: number, amount: bigint) => {
-  return {
-    target: WRAPPED_NATIVE_ASSETS[chainId as NETWORK]!,
-    value: amount,
-    data: encodeFunctionData({
-      abi: [
-        {
-          constant: false,
-          inputs: [],
-          name: 'deposit',
-          outputs: [],
-          payable: true,
-          stateMutability: 'payable',
-          type: 'function'
-        }
-      ],
-      functionName: 'deposit'
-    })
-  }
-}
-
-/**
- * Returns an arbitrary call to the swap router's token proxy, in order for the zap contract to make an allowance to it
- * @param proxyAddress the address of the swap router's token proxy
- * @returns
- */
-const getArbitraryProxyTx = (proxyAddress: Address) => {
-  return {
-    target: proxyAddress,
-    value: 0n,
-    data: encodeFunctionData({
-      abi: [
-        {
-          inputs: [],
-          name: 'owner',
-          outputs: [{ internalType: 'address', name: '', type: 'address' }],
-          stateMutability: 'view',
-          type: 'function'
-        }
-      ],
-      functionName: 'owner'
-    })
-  }
-}
-
-/**
- * Returns an `addLiquidity` call to a velodrome-like router contract
- * @param routerAddress the address of the router contract
- * @returns
- */
-const getVelodromeAddLiquidityTx = (
-  routerAddress: Address,
-  tokenA: { address: Address; amount: { expected: bigint; min: bigint } },
-  tokenB: { address: Address; amount: { expected: bigint; min: bigint } },
-  to: Address,
-  options?: { stable?: boolean; deadline?: bigint }
-) => {
-  return {
-    target: routerAddress,
-    value: 0n,
-    data: encodeFunctionData({
-      abi: [
-        {
-          inputs: [
-            { internalType: 'address', name: 'tokenA', type: 'address' },
-            { internalType: 'address', name: 'tokenB', type: 'address' },
-            { internalType: 'bool', name: 'stable', type: 'bool' },
-            { internalType: 'uint256', name: 'amountADesired', type: 'uint256' },
-            { internalType: 'uint256', name: 'amountBDesired', type: 'uint256' },
-            { internalType: 'uint256', name: 'amountAMin', type: 'uint256' },
-            { internalType: 'uint256', name: 'amountBMin', type: 'uint256' },
-            { internalType: 'address', name: 'to', type: 'address' },
-            { internalType: 'uint256', name: 'deadline', type: 'uint256' }
-          ],
-          name: 'addLiquidity',
-          outputs: [
-            { internalType: 'uint256', name: 'amountA', type: 'uint256' },
-            { internalType: 'uint256', name: 'amountB', type: 'uint256' },
-            { internalType: 'uint256', name: 'liquidity', type: 'uint256' }
-          ],
-          stateMutability: 'nonpayable',
-          type: 'function'
-        }
-      ],
-      functionName: 'addLiquidity',
-      args: [
-        tokenA.address,
-        tokenB.address,
-        options?.stable ?? false,
-        tokenA.amount.expected,
-        tokenB.amount.expected,
-        tokenA.amount.min,
-        tokenB.amount.min,
-        to,
-        options?.deadline ?? BigInt(getSecondsSinceEpoch() + 300)
-      ]
-    })
-  }
 }

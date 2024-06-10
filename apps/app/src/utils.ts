@@ -149,11 +149,3 @@ export const trackDeposit = async (chainId: number, txHash: `0x${string}`, walle
     console.error(e)
   }
 }
-
-/**
- * Checks if an address is the dolphin address (0xeeee...)
- * @param address the address to check
- * @returns
- */
-export const isDolphinAddress = (address?: Address) =>
-  !!address && lower(address) === DOLPHIN_ADDRESS

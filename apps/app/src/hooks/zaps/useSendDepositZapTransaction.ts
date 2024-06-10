@@ -5,7 +5,7 @@ import {
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { calculatePercentageOfBigInt } from '@shared/utilities'
 import { useEffect } from 'react'
-import { isDolphinAddress } from 'src/utils'
+import { isDolphinAddress } from 'src/zapUtils'
 import { Address, isAddress, TransactionReceipt } from 'viem'
 import {
   useAccount,
