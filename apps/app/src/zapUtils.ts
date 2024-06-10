@@ -1,3 +1,5 @@
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
+import { Mutable } from '@shared/types'
 import {
   calculatePercentageOfBigInt,
   divideBigInts,
@@ -9,7 +11,9 @@ import {
   vaultABI,
   WRAPPED_NATIVE_ASSETS
 } from '@shared/utilities'
-import { Address, encodeFunctionData } from 'viem'
+import { Address, ContractFunctionArgs, encodeFunctionData, zeroAddress } from 'viem'
+import { VELODROME_ADDRESSES, ZAP_SETTINGS } from '@constants/config'
+import { zapRouterABI } from '@constants/zapRouterABI'
 import { useLpToken } from '@hooks/zaps/useLpToken'
 import { useSendDepositZapTransaction } from '@hooks/zaps/useSendDepositZapTransaction'
 import { useSwapTx } from '@hooks/zaps/useSwapTx'
@@ -200,4 +204,142 @@ export const getDepositTx = (vaultAddress: Address, zapRouterAddress: Address) =
       args: [0n, zapRouterAddress]
     })
   }
+}
+
+export const getRedeemTx = (
+  vaultAddress: Address,
+  zapRouterAddress: Address,
+  userAddress: Address,
+  amount: bigint
+) => {
+  return {
+    target: vaultAddress,
+    value: 0n,
+    data: encodeFunctionData({
+      abi: vaultABI,
+      functionName: 'redeem',
+      args: [amount, zapRouterAddress, userAddress]
+    })
+  }
+}
+
+export const getSwapZapRoute = (
+  inputToken: { address: Address; amount: bigint },
+  vault: Vault,
+  swapTx: NonNullable<ReturnType<typeof useSwapTx>['data']>,
+  vaultTokenAddress: Address
+) => {
+  const route: Mutable<ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>[1]> = []
+
+  const swapInputTokenAddress = isDolphinAddress(inputToken.address)
+    ? WRAPPED_NATIVE_ASSETS[vault.chainId as NETWORK]
+    : inputToken.address
+
+  const zapRouterAddress = ZAP_SETTINGS[vault.chainId]?.zapRouterAddress as Address | undefined
+
+  if (!!swapInputTokenAddress && !!zapRouterAddress) {
+    if (isDolphinAddress(inputToken.address)) {
+      route.push({
+        ...getWrapTx(vault.chainId, inputToken.amount),
+        tokens: [{ token: zeroAddress, index: -1 }]
+      })
+    }
+
+    route.push(
+      {
+        ...getArbitraryProxyTx(swapTx.allowanceProxy),
+        tokens: [{ token: swapInputTokenAddress, index: -1 }]
+      },
+      {
+        ...swapTx.tx,
+        tokens: [{ token: swapInputTokenAddress, index: -1 }]
+      },
+      {
+        ...getDepositTx(vault.address, zapRouterAddress),
+        tokens: [{ token: vaultTokenAddress, index: 4 }]
+      }
+    )
+  }
+
+  return route
+}
+
+export const getLpSwapZapRoute = (
+  inputToken: { address: Address; amount: bigint },
+  vault: Vault,
+  lpVaultToken: NonNullable<ReturnType<typeof useLpToken>['data']>,
+  firstLpSwapTx: ReturnType<typeof useSwapTx>['data'],
+  secondLpSwapTx: ReturnType<typeof useSwapTx>['data'],
+  vaultTokenAddress: Address
+) => {
+  const route: Mutable<ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>[1]> = []
+
+  const swapInputTokenAddress = isDolphinAddress(inputToken.address)
+    ? WRAPPED_NATIVE_ASSETS[vault.chainId as NETWORK]
+    : inputToken.address
+
+  const zapRouterAddress = ZAP_SETTINGS[vault.chainId]?.zapRouterAddress as Address | undefined
+
+  const velodromeRouterAddress = VELODROME_ADDRESSES[vault.chainId]?.router as Address | undefined
+
+  if (!!swapInputTokenAddress && !!zapRouterAddress && !!velodromeRouterAddress) {
+    if (isDolphinAddress(inputToken.address)) {
+      route.push({
+        ...getWrapTx(vault.chainId, inputToken.amount),
+        tokens: [{ token: zeroAddress, index: -1 }]
+      })
+    }
+
+    if (!!firstLpSwapTx) {
+      route.push(
+        {
+          ...getArbitraryProxyTx(firstLpSwapTx.allowanceProxy),
+          tokens: [{ token: swapInputTokenAddress, index: -1 }]
+        },
+        {
+          ...firstLpSwapTx.tx,
+          tokens: [{ token: swapInputTokenAddress, index: -1 }]
+        }
+      )
+    }
+
+    if (!!secondLpSwapTx) {
+      route.push(
+        {
+          ...getArbitraryProxyTx(secondLpSwapTx.allowanceProxy),
+          tokens: [{ token: swapInputTokenAddress, index: -1 }]
+        },
+        {
+          ...secondLpSwapTx.tx,
+          tokens: [{ token: swapInputTokenAddress, index: -1 }]
+        }
+      )
+    }
+
+    const halfAmount = {
+      expected: inputToken.amount / 2n,
+      min: calculatePercentageOfBigInt(inputToken.amount / 2n, 0.99)
+    }
+
+    route.push(
+      {
+        ...getVelodromeAddLiquidityTx(
+          velodromeRouterAddress,
+          { address: lpVaultToken.token0.address, amount: firstLpSwapTx?.amountOut ?? halfAmount },
+          { address: lpVaultToken.token1.address, amount: secondLpSwapTx?.amountOut ?? halfAmount },
+          zapRouterAddress
+        ),
+        tokens: [
+          { token: lpVaultToken.token0.address, index: 100 },
+          { token: lpVaultToken.token1.address, index: 132 }
+        ]
+      },
+      {
+        ...getDepositTx(vault.address, zapRouterAddress),
+        tokens: [{ token: vaultTokenAddress, index: 4 }]
+      }
+    )
+  }
+
+  return route
 }

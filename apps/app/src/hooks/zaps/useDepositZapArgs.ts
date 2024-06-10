@@ -4,26 +4,19 @@ import {
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Mutable } from '@shared/types'
-import {
-  calculatePercentageOfBigInt,
-  lower,
-  NETWORK,
-  WRAPPED_NATIVE_ASSETS
-} from '@shared/utilities'
+import { lower, NETWORK, WRAPPED_NATIVE_ASSETS } from '@shared/utilities'
 import { useMemo } from 'react'
 import {
-  getArbitraryProxyTx,
-  getDepositTx,
   getLpSwapAmountOut,
+  getLpSwapZapRoute,
   getSimpleAmountOut,
   getSwapAmountOut,
-  getVelodromeAddLiquidityTx,
-  getWrapTx,
+  getSwapZapRoute,
   isDolphinAddress
 } from 'src/zapUtils'
 import { Address, ContractFunctionArgs, zeroAddress } from 'viem'
 import { useAccount } from 'wagmi'
-import { VELODROME_ADDRESSES, ZAP_SETTINGS } from '@constants/config'
+import { ZAP_SETTINGS } from '@constants/config'
 import { zapRouterABI } from '@constants/zapRouterABI'
 import { useIsVelodromeLp } from './useIsVelodromeLp'
 import { useLpToken } from './useLpToken'
@@ -196,22 +189,21 @@ export const useDepositZapArgs = ({
 
   const zapArgs = useMemo((): [ZapConfig, ZapRoute] | undefined => {
     if (isFetched) {
-      const zapInputs: Mutable<ZapConfig['inputs']> = []
+      const zapInputs: ZapConfig['inputs'] = [
+        {
+          token: isDolphinAddress(inputToken.address) ? zeroAddress : inputToken.address,
+          amount: inputToken.amount
+        }
+      ]
       const zapOutputs: Mutable<ZapConfig['outputs']> = [
-        { token: vault.address, minOutputAmount: amountOut.min },
-        { token: vaultToken.address, minOutputAmount: 0n }
+        {
+          token: isDolphinAddress(inputToken.address) ? zeroAddress : inputToken.address,
+          minOutputAmount: 0n
+        },
+        { token: vaultToken.address, minOutputAmount: 0n },
+        { token: vault.address, minOutputAmount: amountOut.min }
       ]
 
-      const addZapInput = (newInput: (typeof zapInputs)[number]) => {
-        const existingInputIndex = zapInputs.findIndex(
-          (input) => lower(input.token) === lower(newInput.token)
-        )
-        if (existingInputIndex === -1) {
-          zapInputs.push(newInput)
-        } else if (zapInputs[existingInputIndex].amount !== newInput.amount) {
-          zapInputs[existingInputIndex].amount = newInput.amount
-        }
-      }
       const addZapOutput = (newOutput: (typeof zapOutputs)[number]) => {
         const existingOutputIndex = zapOutputs.findIndex(
           (output) => lower(output.token) === lower(newOutput.token)
@@ -223,286 +215,31 @@ export const useDepositZapArgs = ({
         }
       }
 
-      let zapRoute: ZapRoute = [
-        {
-          ...getDepositTx(vault.address, zapRouterAddress),
-          tokens: [{ token: vaultToken.address, index: 4 }]
+      if (isDolphinAddress(inputToken.address) && !!wrappedNativeTokenAddress) {
+        addZapOutput({ token: wrappedNativeTokenAddress, minOutputAmount: 0n })
+      }
+
+      let zapRoute: ZapRoute = []
+
+      if (!!swapTx) {
+        zapRoute = getSwapZapRoute(inputToken, vault, swapTx, vaultToken.address)
+      } else if (!!lpVaultToken) {
+        if (!!firstLpSwapTx) {
+          addZapOutput({ token: lpVaultToken.token0.address, minOutputAmount: 0n })
         }
-      ]
 
-      if (isDolphinAddress(inputToken.address)) {
-        addZapInput({ token: zeroAddress, amount: inputToken.amount })
-        addZapOutput({ token: zeroAddress, minOutputAmount: 0n })
-
-        if (!!swapTx && !!wrappedNativeTokenAddress) {
-          addZapOutput({ token: wrappedNativeTokenAddress, minOutputAmount: 0n })
-
-          // Wrap ETH -> Swap for vault token -> Deposit
-          zapRoute = [
-            {
-              ...getWrapTx(vault.chainId, inputToken.amount),
-              tokens: [{ token: zeroAddress, index: -1 }]
-            },
-            {
-              ...getArbitraryProxyTx(swapTx.allowanceProxy),
-              tokens: [{ token: wrappedNativeTokenAddress, index: -1 }]
-            },
-            {
-              ...swapTx.tx,
-              tokens: [{ token: wrappedNativeTokenAddress, index: -1 }]
-            },
-            ...zapRoute
-          ]
-        } else if (!!lpVaultToken && !!wrappedNativeTokenAddress) {
-          addZapOutput({ token: wrappedNativeTokenAddress, minOutputAmount: 0n })
-
-          if (!!firstLpSwapTx && !!secondLpSwapTx) {
-            addZapOutput({ token: lpVaultToken.token0.address, minOutputAmount: 0n })
-            addZapOutput({ token: lpVaultToken.token1.address, minOutputAmount: 0n })
-
-            // Wrap ETH -> Swap half for token0 -> Swap half for token1 -> Add liquidity -> Deposit
-            zapRoute = [
-              {
-                ...getWrapTx(vault.chainId, inputToken.amount),
-                tokens: [{ token: zeroAddress, index: -1 }]
-              },
-              {
-                ...getArbitraryProxyTx(firstLpSwapTx.allowanceProxy),
-                tokens: [{ token: wrappedNativeTokenAddress, index: -1 }]
-              },
-              {
-                ...firstLpSwapTx.tx,
-                tokens: [{ token: wrappedNativeTokenAddress, index: -1 }]
-              },
-              {
-                ...getArbitraryProxyTx(secondLpSwapTx.allowanceProxy), // TODO: if this is the same address could save some gas here
-                tokens: [{ token: wrappedNativeTokenAddress, index: -1 }]
-              },
-              {
-                ...secondLpSwapTx.tx,
-                tokens: [{ token: wrappedNativeTokenAddress, index: -1 }]
-              },
-              {
-                ...getVelodromeAddLiquidityTx(
-                  VELODROME_ADDRESSES[vault.chainId]?.router,
-                  { address: lpVaultToken.token0.address, amount: firstLpSwapTx.amountOut },
-                  { address: lpVaultToken.token1.address, amount: secondLpSwapTx.amountOut },
-                  zapRouterAddress
-                ),
-                tokens: [
-                  { token: lpVaultToken.token0.address, index: 100 },
-                  { token: lpVaultToken.token1.address, index: 132 }
-                ]
-              },
-              ...zapRoute
-            ]
-          } else if (!!firstLpSwapTx) {
-            addZapOutput({ token: lpVaultToken.token0.address, minOutputAmount: 0n })
-
-            // Wrap ETH -> Swap half for token0 -> Add liquidity -> Deposit
-            zapRoute = [
-              {
-                ...getWrapTx(vault.chainId, inputToken.amount),
-                tokens: [{ token: zeroAddress, index: -1 }]
-              },
-              {
-                ...getArbitraryProxyTx(firstLpSwapTx.allowanceProxy),
-                tokens: [{ token: wrappedNativeTokenAddress, index: -1 }]
-              },
-              {
-                ...firstLpSwapTx.tx,
-                tokens: [{ token: wrappedNativeTokenAddress, index: -1 }]
-              },
-              {
-                ...getVelodromeAddLiquidityTx(
-                  VELODROME_ADDRESSES[vault.chainId]?.router,
-                  { address: lpVaultToken.token0.address, amount: firstLpSwapTx.amountOut },
-                  {
-                    address: lpVaultToken.token1.address,
-                    amount: {
-                      expected: inputToken.amount / 2n,
-                      min: calculatePercentageOfBigInt(inputToken.amount / 2n, 0.99)
-                    }
-                  },
-                  zapRouterAddress
-                ),
-                tokens: [
-                  { token: lpVaultToken.token0.address, index: 100 },
-                  { token: lpVaultToken.token1.address, index: 132 }
-                ]
-              },
-              ...zapRoute
-            ]
-          } else if (!!secondLpSwapTx) {
-            addZapOutput({ token: lpVaultToken.token1.address, minOutputAmount: 0n })
-
-            // Wrap ETH -> Swap half for token1 -> Add liquidity -> Deposit
-            zapRoute = [
-              {
-                ...getWrapTx(vault.chainId, inputToken.amount),
-                tokens: [{ token: zeroAddress, index: -1 }]
-              },
-              {
-                ...getArbitraryProxyTx(secondLpSwapTx.allowanceProxy),
-                tokens: [{ token: wrappedNativeTokenAddress, index: -1 }]
-              },
-              {
-                ...secondLpSwapTx.tx,
-                tokens: [{ token: wrappedNativeTokenAddress, index: -1 }]
-              },
-              {
-                ...getVelodromeAddLiquidityTx(
-                  VELODROME_ADDRESSES[vault.chainId]?.router,
-                  {
-                    address: lpVaultToken.token0.address,
-                    amount: {
-                      expected: inputToken.amount / 2n,
-                      min: calculatePercentageOfBigInt(inputToken.amount / 2n, 0.99)
-                    }
-                  },
-                  { address: lpVaultToken.token1.address, amount: secondLpSwapTx.amountOut },
-                  zapRouterAddress
-                ),
-                tokens: [
-                  { token: lpVaultToken.token0.address, index: 100 },
-                  { token: lpVaultToken.token1.address, index: 132 }
-                ]
-              },
-              ...zapRoute
-            ]
-          }
-        } else {
-          // Wrap ETH -> Deposit
-          zapRoute = [
-            {
-              ...getWrapTx(vault.chainId, inputToken.amount),
-              tokens: [{ token: zeroAddress, index: -1 }]
-            },
-            ...zapRoute
-          ]
+        if (!!secondLpSwapTx) {
+          addZapOutput({ token: lpVaultToken.token1.address, minOutputAmount: 0n })
         }
-      } else {
-        addZapInput({ token: inputToken.address, amount: inputToken.amount })
-        addZapOutput({ token: inputToken.address, minOutputAmount: 0n })
 
-        if (!!swapTx) {
-          // Swap for vault token -> Deposit
-          zapRoute = [
-            {
-              ...getArbitraryProxyTx(swapTx.allowanceProxy),
-              tokens: [{ token: inputToken.address, index: -1 }]
-            },
-            {
-              ...swapTx.tx,
-              tokens: [{ token: inputToken.address, index: -1 }]
-            },
-            ...zapRoute
-          ]
-        } else if (!!lpVaultToken) {
-          if (!!firstLpSwapTx && !!secondLpSwapTx) {
-            addZapOutput({ token: lpVaultToken.token0.address, minOutputAmount: 0n })
-            addZapOutput({ token: lpVaultToken.token1.address, minOutputAmount: 0n })
-
-            // Swap half for token0 -> Swap half for token1 -> Add liquidity -> Deposit
-            zapRoute = [
-              {
-                ...getArbitraryProxyTx(firstLpSwapTx.allowanceProxy),
-                tokens: [{ token: inputToken.address, index: -1 }]
-              },
-              {
-                ...firstLpSwapTx.tx,
-                tokens: [{ token: inputToken.address, index: -1 }]
-              },
-              {
-                ...getArbitraryProxyTx(secondLpSwapTx.allowanceProxy), // TODO: if this is the same address could save some gas here
-                tokens: [{ token: inputToken.address, index: -1 }]
-              },
-              {
-                ...secondLpSwapTx.tx,
-                tokens: [{ token: inputToken.address, index: -1 }]
-              },
-              {
-                ...getVelodromeAddLiquidityTx(
-                  VELODROME_ADDRESSES[vault.chainId]?.router,
-                  { address: lpVaultToken.token0.address, amount: firstLpSwapTx.amountOut },
-                  { address: lpVaultToken.token1.address, amount: secondLpSwapTx.amountOut },
-                  zapRouterAddress
-                ),
-                tokens: [
-                  { token: lpVaultToken.token0.address, index: 100 },
-                  { token: lpVaultToken.token1.address, index: 132 }
-                ]
-              },
-              ...zapRoute
-            ]
-          } else if (!!firstLpSwapTx) {
-            addZapOutput({ token: lpVaultToken.token0.address, minOutputAmount: 0n })
-
-            // Swap half for token0 -> Add liquidity -> Deposit
-            zapRoute = [
-              {
-                ...getArbitraryProxyTx(firstLpSwapTx.allowanceProxy),
-                tokens: [{ token: inputToken.address, index: -1 }]
-              },
-              {
-                ...firstLpSwapTx.tx,
-                tokens: [{ token: inputToken.address, index: -1 }]
-              },
-              {
-                ...getVelodromeAddLiquidityTx(
-                  VELODROME_ADDRESSES[vault.chainId]?.router,
-                  { address: lpVaultToken.token0.address, amount: firstLpSwapTx.amountOut },
-                  {
-                    address: lpVaultToken.token1.address,
-                    amount: {
-                      expected: inputToken.amount / 2n,
-                      min: calculatePercentageOfBigInt(inputToken.amount / 2n, 0.99)
-                    }
-                  },
-                  zapRouterAddress
-                ),
-                tokens: [
-                  { token: lpVaultToken.token0.address, index: 100 },
-                  { token: lpVaultToken.token1.address, index: 132 }
-                ]
-              },
-              ...zapRoute
-            ]
-          } else if (!!secondLpSwapTx) {
-            addZapOutput({ token: lpVaultToken.token1.address, minOutputAmount: 0n })
-
-            // Swap half for token1 -> Add liquidity -> Deposit
-            zapRoute = [
-              {
-                ...getArbitraryProxyTx(secondLpSwapTx.allowanceProxy),
-                tokens: [{ token: inputToken.address, index: -1 }]
-              },
-              {
-                ...secondLpSwapTx.tx,
-                tokens: [{ token: inputToken.address, index: -1 }]
-              },
-              {
-                ...getVelodromeAddLiquidityTx(
-                  VELODROME_ADDRESSES[vault.chainId]?.router,
-                  {
-                    address: lpVaultToken.token0.address,
-                    amount: {
-                      expected: inputToken.amount / 2n,
-                      min: calculatePercentageOfBigInt(inputToken.amount / 2n, 0.99)
-                    }
-                  },
-                  { address: lpVaultToken.token1.address, amount: secondLpSwapTx.amountOut },
-                  zapRouterAddress
-                ),
-                tokens: [
-                  { token: lpVaultToken.token0.address, index: 100 },
-                  { token: lpVaultToken.token1.address, index: 132 }
-                ]
-              },
-              ...zapRoute
-            ]
-          }
-        }
+        zapRoute = getLpSwapZapRoute(
+          inputToken,
+          vault,
+          lpVaultToken,
+          firstLpSwapTx,
+          secondLpSwapTx,
+          vaultToken.address
+        )
       }
 
       const zapConfig: ZapConfig = {
