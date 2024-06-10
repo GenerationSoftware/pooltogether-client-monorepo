@@ -39,6 +39,7 @@ export interface DepositModalProps {
   onSuccessfulApproval?: () => void
   onSuccessfulDeposit?: (chainId: number, txReceipt: TransactionReceipt) => void
   onSuccessfulDepositWithPermit?: (chainId: number, txReceipt: TransactionReceipt) => void
+  onSuccessfulDepositWithZap?: (chainId: number, txReceipt: TransactionReceipt) => void
 }
 
 export const DepositModal = (props: DepositModalProps) => {
@@ -48,7 +49,8 @@ export const DepositModal = (props: DepositModalProps) => {
     refetchUserBalances,
     onSuccessfulApproval,
     onSuccessfulDeposit,
-    onSuccessfulDepositWithPermit
+    onSuccessfulDepositWithPermit,
+    onSuccessfulDepositWithZap
   } = props
 
   const t_toasts = useTranslations('Toasts.transactions')
@@ -132,7 +134,7 @@ export const DepositModal = (props: DepositModalProps) => {
             setDepositTxHash={setDepositTxHash}
             refetchUserBalances={refetchUserBalances}
             onSuccessfulApproval={onSuccessfulApproval}
-            onSuccessfulDeposit={onSuccessfulDeposit}
+            onSuccessfulDepositWithZap={onSuccessfulDepositWithZap}
           />
         ) : tokenPermitSupport === 'eip2612' ? (
           <DepositWithPermitTxButton

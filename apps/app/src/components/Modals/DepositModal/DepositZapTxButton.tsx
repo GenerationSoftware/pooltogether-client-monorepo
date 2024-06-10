@@ -31,7 +31,7 @@ interface DepositZapTxButtonProps {
   setDepositTxHash: (txHash: string) => void
   refetchUserBalances?: () => void
   onSuccessfulApproval?: () => void
-  onSuccessfulDeposit?: (chainId: number, txReceipt: TransactionReceipt) => void
+  onSuccessfulDepositWithZap?: (chainId: number, txReceipt: TransactionReceipt) => void
 }
 
 export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
@@ -42,7 +42,7 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
     setDepositTxHash,
     refetchUserBalances,
     onSuccessfulApproval,
-    onSuccessfulDeposit
+    onSuccessfulDepositWithZap
   } = props
 
   const t_common = useTranslations('Common')
@@ -154,7 +154,7 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
         refetchVaultBalance()
         refetchTokenAllowance()
         refetchUserBalances?.()
-        onSuccessfulDeposit?.(vault.chainId, txReceipt)
+        onSuccessfulDepositWithZap?.(vault.chainId, txReceipt)
         setModalView('success')
       },
       onError: () => {

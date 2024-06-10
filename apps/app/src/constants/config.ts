@@ -235,6 +235,7 @@ export const FATHOM_EVENTS = {
   delegated: 'Delegated',
   deposited: 'Deposited',
   depositedWithPermit: 'DepositedWithPermit',
+  depositedWithZap: 'DepositedWithZap',
   importedVaultList: 'ImportedVaultList',
   openedDelegateModal: 'OpenedDelegateModal',
   openedDepositModal: 'OpenedDepositModal',
