@@ -23,7 +23,6 @@ import {
 import { DepositTxButton } from './DepositTxButton'
 import { DepositWithPermitTxButton } from './DepositWithPermitTxButton'
 import { DepositZapTxButton } from './DepositZapTxButton'
-import { DepositZapWithPermitTxButton } from './DepositZapWithPermitTxButton'
 import { ConfirmingView } from './Views/ConfirmingView'
 import { ErrorView } from './Views/ErrorView'
 import { MainView } from './Views/MainView'
@@ -125,54 +124,37 @@ export const DepositModal = (props: DepositModalProps) => {
         })}
       >
         {view === 'main' && !formShareAmount && <RisksDisclaimer vault={vault} />}
-        {/* TODO: re-enable permit zaps once permit2 sigs are implemented in DepositZapWithPermitTxButton */}
-        {
-          isZapping && (
-            // (tokenPermitSupport === 'eip2612' ? (
-            //   <DepositZapWithPermitTxButton
-            //     vault={vault}
-            //     modalView={view}
-            //     setModalView={setView}
-            //     setDepositTxHash={setDepositTxHash}
-            //     refetchUserBalances={refetchUserBalances}
-            //     onSuccessfulDeposit={onSuccessfulDeposit}
-            //     onSuccessfulDepositWithPermit={onSuccessfulDepositWithPermit}
-            //   />
-            // ) : (
-            <DepositZapTxButton
-              vault={vault}
-              modalView={view}
-              setModalView={setView}
-              setDepositTxHash={setDepositTxHash}
-              refetchUserBalances={refetchUserBalances}
-              onSuccessfulApproval={onSuccessfulApproval}
-              onSuccessfulDeposit={onSuccessfulDeposit}
-            />
-          )
-          // ))
-        }
-        {!isZapping &&
-          (tokenPermitSupport === 'eip2612' ? (
-            <DepositWithPermitTxButton
-              vault={vault}
-              modalView={view}
-              setModalView={setView}
-              setDepositTxHash={setDepositTxHash}
-              refetchUserBalances={refetchUserBalances}
-              onSuccessfulDeposit={onSuccessfulDeposit}
-              onSuccessfulDepositWithPermit={onSuccessfulDepositWithPermit}
-            />
-          ) : (
-            <DepositTxButton
-              vault={vault}
-              modalView={view}
-              setModalView={setView}
-              setDepositTxHash={setDepositTxHash}
-              refetchUserBalances={refetchUserBalances}
-              onSuccessfulApproval={onSuccessfulApproval}
-              onSuccessfulDeposit={onSuccessfulDeposit}
-            />
-          ))}
+        {isZapping ? (
+          <DepositZapTxButton
+            vault={vault}
+            modalView={view}
+            setModalView={setView}
+            setDepositTxHash={setDepositTxHash}
+            refetchUserBalances={refetchUserBalances}
+            onSuccessfulApproval={onSuccessfulApproval}
+            onSuccessfulDeposit={onSuccessfulDeposit}
+          />
+        ) : tokenPermitSupport === 'eip2612' ? (
+          <DepositWithPermitTxButton
+            vault={vault}
+            modalView={view}
+            setModalView={setView}
+            setDepositTxHash={setDepositTxHash}
+            refetchUserBalances={refetchUserBalances}
+            onSuccessfulDeposit={onSuccessfulDeposit}
+            onSuccessfulDepositWithPermit={onSuccessfulDepositWithPermit}
+          />
+        ) : (
+          <DepositTxButton
+            vault={vault}
+            modalView={view}
+            setModalView={setView}
+            setDepositTxHash={setDepositTxHash}
+            refetchUserBalances={refetchUserBalances}
+            onSuccessfulApproval={onSuccessfulApproval}
+            onSuccessfulDeposit={onSuccessfulDeposit}
+          />
+        )}
         {view === 'review' && <DepositDisclaimer vault={vault} />}
       </div>
     ) : undefined
