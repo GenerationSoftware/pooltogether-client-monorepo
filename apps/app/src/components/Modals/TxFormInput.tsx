@@ -14,7 +14,7 @@ export interface TxFormValues {
 }
 
 export interface TxFormInputProps {
-  token: TokenWithAmount & TokenWithPrice & Partial<TokenWithLogo>
+  token?: TokenWithAmount & TokenWithPrice & Partial<TokenWithLogo>
   formKey: keyof TxFormValues
   validate?: { [rule: string]: (v: any) => true | string }
   disabled?: boolean
@@ -51,6 +51,27 @@ export const TxFormInput = (props: TxFormInputProps) => {
   } = useFormContext<TxFormValues>()
 
   const formAmount = watch(formKey, '0')
+
+  if (!token) {
+    return (
+      <div
+        className={classNames(
+          'relative bg-pt-transparent rounded-lg',
+          'border border-transparent focus-within:border-pt-transparent',
+          {
+            'h-[4.375rem] md:h-[5.625rem]': showInfoRow,
+            'h-[3.375rem] md:h-[4.125rem]': !showInfoRow
+          },
+          className
+        )}
+      >
+        <div className='absolute inset-0 flex items-center pl-4 rounded-lg backdrop-brightness-75 backdrop-blur-sm'>
+          <Spinner />
+        </div>
+      </div>
+    )
+  }
+
   const amountValue =
     isValidFormInput(formAmount, token.decimals) && !!token.price
       ? Number(formAmount) * token.price

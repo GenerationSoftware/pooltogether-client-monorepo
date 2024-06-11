@@ -92,13 +92,14 @@ export const DepositForm = (props: DepositFormProps) => {
   const { data: tokenPrices } = useTokenPrices(vault.chainId, !!tokenAddress ? [tokenAddress] : [])
   const { data: inputVaultWithPrice } = useVaultSharePrice(inputVault!)
   const token: (TokenWithSupply & TokenWithPrice & Partial<TokenWithLogo>) | undefined =
-    !!tokenAddress && !!tokenData
+    !!tokenAddress && (!!tokenData || !!inputVaultWithPrice)
       ? {
           logoURI:
             !!vaultToken && lower(tokenAddress) === lower(vaultToken.address)
               ? vault.tokenLogoURI
               : inputVault?.logoURI,
-          ...tokenData,
+          ...tokenData!,
+          ...inputVaultWithPrice!,
           price: tokenPrices?.[lower(tokenAddress)] ?? inputVaultWithPrice?.price
         }
       : undefined
@@ -309,42 +310,36 @@ export const DepositForm = (props: DepositFormProps) => {
 
   return (
     <div className='flex flex-col isolate'>
-      {!!tokenInputData &&
-        !!shareInputData &&
-        tokenInputData.decimals !== undefined &&
-        shareInputData.decimals !== undefined && (
-          <>
-            <FormProvider {...formMethods}>
-              <TxFormInput
-                token={tokenInputData}
-                formKey='tokenAmount'
-                validate={{
-                  isNotGreaterThanBalance: (v) =>
-                    parseFloat(formatUnits(tokenInputData.amount, tokenInputData.decimals)) >=
-                      parseFloat(v) ||
-                    !isFetchedTokenBalance ||
-                    !tokenWithAmount ||
-                    t_errors('notEnoughTokens', { symbol: tokenInputData.symbol ?? '?' })
-                }}
-                onChange={handleTokenAmountChange}
-                showInfoRow={showInputInfoRows}
-                showMaxButton={true}
-                showTokenPicker={!!ZAP_SETTINGS[vault.chainId]}
-                tokenPickerOptions={tokenPickerOptions}
-                className='mb-0.5 z-20'
-              />
-              <TxFormInput
-                token={shareInputData}
-                formKey='shareAmount'
-                onChange={handleShareAmountChange}
-                showInfoRow={showInputInfoRows}
-                className='my-0.5 z-10'
-                disabled={isZapping}
-                isLoading={isFetchingZapArgs}
-              />
-            </FormProvider>
-          </>
-        )}
+      <FormProvider {...formMethods}>
+        <TxFormInput
+          token={tokenInputData}
+          formKey='tokenAmount'
+          validate={{
+            isNotGreaterThanBalance: (v) =>
+              (!!tokenInputData &&
+                parseFloat(formatUnits(tokenInputData.amount, tokenInputData.decimals)) >=
+                  parseFloat(v)) ||
+              !isFetchedTokenBalance ||
+              !tokenWithAmount ||
+              t_errors('notEnoughTokens', { symbol: tokenInputData?.symbol ?? '?' })
+          }}
+          onChange={handleTokenAmountChange}
+          showInfoRow={showInputInfoRows}
+          showMaxButton={true}
+          showTokenPicker={!!ZAP_SETTINGS[vault.chainId]}
+          tokenPickerOptions={tokenPickerOptions}
+          className='mb-0.5 z-20'
+        />
+        <TxFormInput
+          token={shareInputData}
+          formKey='shareAmount'
+          onChange={handleShareAmountChange}
+          showInfoRow={showInputInfoRows}
+          className='my-0.5 z-10'
+          disabled={isZapping}
+          isLoading={isFetchingZapArgs}
+        />
+      </FormProvider>
     </div>
   )
 }
