@@ -18,11 +18,20 @@ export interface DropdownProps extends Omit<FlowbiteDropdownProps, 'label'> {
   label: ReactNode
   items: DropdownItem[]
   header?: ReactNode
+  floatingContentClassName?: string
   itemWrapperClassName?: string
 }
 
 export const Dropdown = (props: DropdownProps) => {
-  const { label, items, header, className, itemWrapperClassName, ...rest } = props
+  const {
+    label,
+    items,
+    header,
+    className,
+    floatingContentClassName,
+    itemWrapperClassName,
+    ...rest
+  } = props
 
   const { isDesktop } = useScreenSize()
 
@@ -37,7 +46,10 @@ export const Dropdown = (props: DropdownProps) => {
           floating: {
             content: 'p-2',
             style: {
-              auto: 'bg-pt-purple-100'
+              auto: classNames(
+                'bg-pt-purple-100 border border-pt-purple-200 rounded-lg shadow-xl',
+                floatingContentClassName
+              )
             }
           },
           arrowIcon: 'ml-2 h-4 w-4 stroke-[4]'

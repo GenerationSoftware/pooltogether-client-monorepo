@@ -373,25 +373,20 @@ const TokenPickerOption = (props: TokenPickerOptionProps) => {
     <div
       className={classNames(
         'w-full min-w-[10rem]',
-        'flex items-center justify-between gap-4',
-        'px-2 py-1 rounded-lg',
-        'text-pt-purple-50 md:text-pt-purple-600',
+        'flex items-center justify-between gap-8',
+        'px-2 py-1 font-semibold rounded-lg',
         'hover:bg-pt-purple-200',
         className
       )}
     >
       <span className='flex items-center gap-1'>
         <TokenIcon token={{ logoURI: tokenInVaultList?.logoURI, ...token }} />
-        <span>{token.symbol}</span>
+        <span className='text-lg text-pt-purple-50 md:text-2xl md:text-pt-purple-600'>
+          {token.symbol}
+        </span>
       </span>
-      <span className='flex items-center gap-1'>
-        <span>{formatBigIntForDisplay(token.amount, token.decimals)}</span>
-
-        {!!token.value && (
-          <span>
-            (<CurrencyValue baseValue={token.value} hideZeroes={true} />)
-          </span>
-        )}
+      <span className='text-sm text-gray-700 md:text-lg'>
+        {formatBigIntForDisplay(token.amount, token.decimals)}
       </span>
     </div>
   )

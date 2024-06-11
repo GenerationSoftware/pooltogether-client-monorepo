@@ -140,8 +140,8 @@ export const TxFormInput = (props: TxFormInputProps) => {
             label={<TokenBadge />}
             items={tokenPickerOptions}
             inline={true}
-            placement='bottom'
-            className='!pr-0 border-0'
+            className='pl-1 pr-1 border-0 rounded-lg hover:bg-pt-transparent'
+            floatingContentClassName='md:!fixed md:-mx-[calc(0.5rem+1px)] md:-my-[calc(3rem+1px)]'
           />
         ) : (
           <TokenBadge />
