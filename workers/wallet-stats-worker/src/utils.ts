@@ -30,9 +30,19 @@ export const getWalletData = async (walletId: string) => {
 
   const avgDepositValue = depositValues.length > 0 ? sumDepositValues / depositValues.length : 0
 
+  const sortedDepositValues = [...depositValues].sort((a, b) => a - b)
+  const middleIndex = Math.floor(sortedDepositValues.length / 2)
+  const medianDepositValue =
+    sortedDepositValues.length > 0
+      ? sortedDepositValues.length % 2
+        ? sortedDepositValues[middleIndex]
+        : (sortedDepositValues[middleIndex - 1] + sortedDepositValues[middleIndex]) / 2
+      : 0
+
   return {
     numDeposits: deposits.length,
     avgDepositValue,
+    medianDepositValue,
     numUsers: users.size,
     users: [...users]
   }
@@ -69,10 +79,20 @@ export const getAllWalletData = async () => {
 
   const avgDepositValue = depositValues.length > 0 ? sumDepositValues / depositValues.length : 0
 
+  const sortedDepositValues = [...depositValues].sort((a, b) => a - b)
+  const middleIndex = Math.floor(sortedDepositValues.length / 2)
+  const medianDepositValue =
+    sortedDepositValues.length > 0
+      ? sortedDepositValues.length % 2
+        ? sortedDepositValues[middleIndex]
+        : (sortedDepositValues[middleIndex - 1] + sortedDepositValues[middleIndex]) / 2
+      : 0
+
   return {
     walletIds,
     numDeposits,
     avgDepositValue,
+    medianDepositValue,
     numUsers: users.size
   }
 }
