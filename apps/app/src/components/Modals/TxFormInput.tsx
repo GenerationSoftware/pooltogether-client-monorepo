@@ -136,13 +136,15 @@ export const TxFormInput = (props: TxFormInputProps) => {
           </div>
         )}
         {showTokenPicker && !!tokenPickerOptions?.length ? (
-          <Dropdown
-            label={<TokenBadge />}
-            items={tokenPickerOptions}
-            inline={true}
-            className='pl-1 pr-1 border-0 rounded-lg hover:bg-pt-transparent'
-            floatingContentClassName='md:!fixed md:-mx-[calc(0.5rem+1px)] md:-my-[calc(3rem+1px)]'
-          />
+          <div className='relative shrink-0'>
+            <Dropdown
+              label={<TokenBadge />}
+              items={tokenPickerOptions}
+              inline={true}
+              className='pl-1 pr-1 border-0 rounded-lg hover:bg-pt-transparent'
+              floatingContentClassName='md:!fixed md:!inset-auto md:!transform-none md:-mx-[calc(0.5rem+1px)] md:-my-[calc(2.5rem+1px)]'
+            />
+          </div>
         ) : (
           <TokenBadge />
         )}
