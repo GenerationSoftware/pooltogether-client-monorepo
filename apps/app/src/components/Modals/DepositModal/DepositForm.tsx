@@ -10,7 +10,13 @@ import {
   useVaultTokenPrice
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { CurrencyValue, TokenIcon } from '@shared/react-components'
-import { Token, TokenWithAmount, TokenWithPrice, TokenWithSupply } from '@shared/types'
+import {
+  Token,
+  TokenWithAmount,
+  TokenWithLogo,
+  TokenWithPrice,
+  TokenWithSupply
+} from '@shared/types'
 import { DropdownItem } from '@shared/ui'
 import {
   formatBigIntForDisplay,
@@ -25,7 +31,7 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Address, formatUnits, parseUnits } from 'viem'
-import { useAccount } from 'wagmi'
+import { useAccount, usePublicClient } from 'wagmi'
 import { ZAP_SETTINGS } from '@constants/config'
 import { useSendDepositZapTransaction } from '@hooks/zaps/useSendDepositZapTransaction'
 import { useZapTokenOptions } from '@hooks/zaps/useZapTokenOptions'
@@ -47,12 +53,14 @@ export const DepositForm = (props: DepositFormProps) => {
 
   const { address: userAddress } = useAccount()
 
+  const publicClient = usePublicClient({ chainId: vault.chainId })
+
   const { data: vaultExchangeRate } = useVaultExchangeRate(vault)
   const { data: vaultToken } = useVaultTokenPrice(vault)
   const { data: vaultTokenWithAmount } = useTokenBalance(
     vault.chainId,
-    userAddress as Address,
-    vaultToken?.address as Address,
+    userAddress!,
+    vaultToken?.address!,
     { refetchOnWindowFocus: true }
   )
 
@@ -61,24 +69,51 @@ export const DepositForm = (props: DepositFormProps) => {
   const [formTokenAddress, setFormTokenAddress] = useAtom(depositFormTokenAddressAtom)
 
   const tokenAddress = formTokenAddress ?? vaultToken?.address
-  const { data: tokenData } = useToken(vault.chainId, tokenAddress as Address)
+
+  const { cachedVaultLists } = useCachedVaultLists()
+
+  const inputVault = useMemo(() => {
+    if (!!vault && !!publicClient && !!tokenAddress) {
+      const vaultId = getVaultId({ chainId: vault.chainId, address: tokenAddress })
+      const vaults = cachedVaultLists['default']?.tokens ?? []
+      const vaultInfo = vaults.find((v) => getVaultId(v) === vaultId)
+
+      if (!!vaultInfo) {
+        return new Vault(vaultInfo.chainId, vaultInfo.address, publicClient, {
+          decimals: vaultInfo.decimals,
+          name: vaultInfo.name,
+          logoURI: vaultInfo.logoURI
+        })
+      }
+    }
+  }, [vault, publicClient, tokenAddress, cachedVaultLists])
+
+  const { data: tokenData } = useToken(vault.chainId, tokenAddress!)
   const { data: tokenPrices } = useTokenPrices(vault.chainId, !!tokenAddress ? [tokenAddress] : [])
-  const token: (TokenWithSupply & TokenWithPrice) | undefined =
+  const { data: inputVaultWithPrice } = useVaultSharePrice(inputVault!)
+  const token: (TokenWithSupply & TokenWithPrice & Partial<TokenWithLogo>) | undefined =
     !!tokenAddress && !!tokenData
-      ? { ...tokenData, price: tokenPrices?.[lower(tokenAddress)] }
+      ? {
+          logoURI:
+            !!vaultToken && lower(tokenAddress) === lower(vaultToken.address)
+              ? vault.tokenLogoURI
+              : inputVault?.logoURI,
+          ...tokenData,
+          price: tokenPrices?.[lower(tokenAddress)] ?? inputVaultWithPrice?.price
+        }
       : undefined
 
   const { data: tokenWithAmount, isFetched: isFetchedTokenBalance } = useTokenBalance(
     vault.chainId,
-    userAddress as Address,
-    tokenAddress as Address,
+    userAddress!,
+    tokenAddress!,
     { refetchOnWindowFocus: true }
   )
   const tokenBalance = isFetchedTokenBalance && !!tokenWithAmount ? tokenWithAmount.amount : 0n
 
   const { data: shareWithAmount, isFetched: isFetchedShareWithAmount } = useUserVaultShareBalance(
     vault,
-    userAddress as Address
+    userAddress!
   )
   const shareBalance = isFetchedShareWithAmount && !!shareWithAmount ? shareWithAmount.amount : 0n
 
@@ -103,14 +138,14 @@ export const DepositForm = (props: DepositFormProps) => {
 
   const depositAmount = useMemo(() => {
     return !!formTokenAmount && !!token && token.decimals !== undefined
-      ? parseUnits(formTokenAmount, token?.decimals as number)
+      ? parseUnits(formTokenAmount, token?.decimals!)
       : 0n
   }, [formTokenAmount, token])
 
   const { amountOut: zapAmountOut, isFetchingZapArgs } = useSendDepositZapTransaction(
     {
-      address: token?.address as Address,
-      decimals: token?.decimals as number,
+      address: token?.address!,
+      decimals: token?.decimals!,
       amount: depositAmount
     },
     vault
@@ -219,11 +254,7 @@ export const DepositForm = (props: DepositFormProps) => {
       return {
         ...token,
         amount: tokenBalance,
-        price: token.price ?? 0,
-        logoURI:
-          !!vaultToken && lower(token.address) === lower(vaultToken.address)
-            ? vault.tokenLogoURI
-            : undefined
+        price: token.price ?? 0
       }
     }
   }, [vault, vaultToken, tokenBalance])
