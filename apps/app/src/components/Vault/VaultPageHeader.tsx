@@ -1,13 +1,16 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
+  useCachedVaultLists,
   useVaultShareData,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { ImportedVaultTooltip, PrizePoolBadge, TokenIcon } from '@shared/react-components'
+import { getVaultId } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
+import { useMemo } from 'react'
 import { useVaultImportedListSrcs } from '@hooks/useVaultImportedListSrcs'
 
 interface VaultPageHeaderProps {
@@ -24,6 +27,16 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
   const { data: share } = useVaultShareData(vault as Vault)
   const { data: token } = useVaultTokenData(vault as Vault)
 
+  const { cachedVaultLists } = useCachedVaultLists()
+
+  const logoURI = useMemo(() => {
+    if (!!vault) {
+      const defaultVaults = cachedVaultLists['default']?.tokens ?? []
+      const cachedLogoURI = defaultVaults.find((v) => getVaultId(v) === vault.id)?.logoURI
+      return vault.logoURI ?? cachedLogoURI
+    }
+  }, [vault, cachedVaultLists])
+
   const importedSrcs = useVaultImportedListSrcs(vault as Vault)
 
   return (
@@ -33,14 +46,14 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
           <BackButton />
           {!!vault && (
             <div className='w-full max-w-[85%] inline-flex justify-center gap-2 items-center md:max-w-none'>
-              {(!!vault.logoURI || !!token?.address) && (
+              {(!!logoURI || !!token?.address) && (
                 <TokenIcon
                   token={{
                     chainId: vault.chainId,
-                    address: token?.address,
-                    name: vault.name,
-                    logoURI: vault.logoURI,
-                    symbol: vault.logoURI ? share?.symbol : token?.symbol
+                    address: !!logoURI ? vault.address : token?.address,
+                    name: !!logoURI ? vault.name : token?.name,
+                    logoURI: logoURI ?? vault.tokenLogoURI,
+                    symbol: !!logoURI ? share?.symbol : token?.symbol
                   }}
                   className='h-6 w-6 md:h-8 md:w-8'
                 />
@@ -49,7 +62,7 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
                 className={classNames(
                   'text-[1.75rem] font-medium font-grotesk line-clamp-2 overflow-hidden overflow-ellipsis',
                   'md:max-w-[65%] md:text-4xl',
-                  { 'text-center': !vault.logoURI }
+                  { 'text-center': !logoURI }
                 )}
               >
                 {vault.name ?? share?.name}

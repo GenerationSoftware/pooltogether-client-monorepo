@@ -88,6 +88,14 @@ export const DepositForm = (props: DepositFormProps) => {
     }
   }, [vault, publicClient, tokenAddress, cachedVaultLists])
 
+  const shareLogoURI = useMemo(() => {
+    if (!!vault) {
+      const defaultVaults = cachedVaultLists['default']?.tokens ?? []
+      const cachedLogoURI = defaultVaults.find((v) => getVaultId(v) === vault.id)?.logoURI
+      return vault.logoURI ?? cachedLogoURI
+    }
+  }, [vault, cachedVaultLists])
+
   const { data: tokenData } = useToken(vault.chainId, tokenAddress!)
   const { data: tokenPrices } = useTokenPrices(vault.chainId, !!tokenAddress ? [tokenAddress] : [])
   const { data: inputVaultWithPrice } = useVaultSharePrice(inputVault!)
@@ -266,7 +274,7 @@ export const DepositForm = (props: DepositFormProps) => {
         ...share,
         amount: shareBalance,
         price: share.price ?? 0,
-        logoURI: vault.logoURI ?? vault.tokenLogoURI
+        logoURI: shareLogoURI ?? vault.tokenLogoURI
       }
     }
   }, [vault, share, shareBalance])
