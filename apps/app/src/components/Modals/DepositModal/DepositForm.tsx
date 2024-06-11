@@ -385,7 +385,7 @@ const TokenPickerOption = (props: TokenPickerOptionProps) => {
           {token.symbol}
         </span>
       </span>
-      <span className='text-sm text-gray-700 md:text-lg'>
+      <span className='text-sm text-gray-300 md:text-lg md:text-gray-700'>
         {formatBigIntForDisplay(token.amount, token.decimals)}
       </span>
     </div>

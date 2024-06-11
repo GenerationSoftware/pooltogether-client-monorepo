@@ -3,7 +3,6 @@ import {
   useAllVaultSharePrices,
   useCachedVaultLists,
   useSelectedVault,
-  useSelectedVaults,
   useTokenBalances,
   useTokenPrices,
   useTokens,
@@ -89,9 +88,11 @@ export const useZapTokenOptions = (chainId: number) => {
       })
     }
 
-    if (!!vaultBalances) {
+    if (!!vault && !!vaultBalances) {
       Object.values(vaultBalances)
-        .filter((v) => v.chainId === chainId && !!v.amount && v.address !== vault?.address)
+        .filter(
+          (v) => v.chainId === chainId && !!v.amount && lower(v.address) !== lower(vault.address)
+        )
         .forEach((share) => {
           const vaultId = getVaultId(share)
           const price = sharePrices?.[vaultId]?.price ?? 0
