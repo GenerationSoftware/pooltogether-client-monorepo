@@ -25,26 +25,6 @@ export interface V5SubgraphPrizeData {
   payout: bigint
 }
 
-export interface V4SubgraphUserData {
-  id: string
-}
-
-export interface V4SubgraphPrizeData {
-  totalClaimed: bigint
-}
-
-export interface V3SubgraphUserData {
-  id: string
-}
-
-export interface V3SubgraphPoolData {
-  id: string
-  underlyingCollateralToken: `0x${string}`
-  underlyingCollateralDecimals: number
-  cumulativePrizeGross: bigint
-  controlledTokens: { totalSupply: bigint }[]
-}
-
 export interface TokenPricesApiResponse {
   [address: `0x${string}`]: [{ date: string; price: number }]
 }
