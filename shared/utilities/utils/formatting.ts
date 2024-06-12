@@ -157,5 +157,5 @@ export const formatCurrencyNumberForDisplay = (
  * @returns
  */
 export const getMaxPrecision = (val: number) => {
-  return val.toString().split('.')[1]?.length || 0
+  return val.toString().includes('e') ? 18 : val.toString().split('.')[1]?.length || 0
 }
