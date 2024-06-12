@@ -186,7 +186,6 @@ export const DepositForm = (props: DepositFormProps) => {
     }
   }, [isZapping, zapAmountOut])
 
-  // TODO: display min amount out (cachedZapAmountOut.min)
   useEffect(() => {
     if (isZapping && !!cachedZapAmountOut && vaultDecimals !== undefined) {
       const formattedShares = formatUnits(cachedZapAmountOut.expected, vaultDecimals)
@@ -270,7 +269,7 @@ export const DepositForm = (props: DepositFormProps) => {
         price: token.price ?? 0
       }
     }
-  }, [vault, vaultToken, tokenBalance])
+  }, [token, tokenBalance])
 
   const shareInputData = useMemo(() => {
     if (!!share) {
@@ -281,7 +280,7 @@ export const DepositForm = (props: DepositFormProps) => {
         logoURI: shareLogoURI ?? vault.tokenLogoURI
       }
     }
-  }, [vault, share, shareBalance])
+  }, [vault, share, shareBalance, shareLogoURI])
 
   const zapTokenOptions = useZapTokenOptions(vault.chainId)
 

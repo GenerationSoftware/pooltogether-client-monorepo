@@ -1,20 +1,28 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
+  useCachedVaultLists,
   useDrawPeriod,
   usePrizeOdds,
-  useVaultShareData
+  useVaultShareData,
+  useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import {
   calculateUnionProbability,
   formatNumberForDisplay,
+  getVaultId,
   SECONDS_PER_WEEK
 } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { parseUnits } from 'viem'
-import { depositFormShareAmountAtom, depositFormTokenAmountAtom } from './DepositModal/DepositForm'
+import { usePublicClient } from 'wagmi'
+import {
+  depositFormShareAmountAtom,
+  depositFormTokenAddressAtom,
+  depositFormTokenAmountAtom
+} from './DepositModal/DepositForm'
 
 interface OddsProps {
   vault: Vault
@@ -24,38 +32,108 @@ interface OddsProps {
 export const Odds = (props: OddsProps) => {
   const { vault, prizePool } = props
 
-  const t = useTranslations('TxModals')
+  const t_common = useTranslations('Common')
+  const t_txModals = useTranslations('TxModals')
 
+  const publicClient = usePublicClient({ chainId: vault.chainId })
+
+  const formTokenAddress = useAtomValue(depositFormTokenAddressAtom)
   const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
   const formShareAmount = useAtomValue(depositFormShareAmountAtom)
 
-  const { data: shareData } = useVaultShareData(vault)
+  const { data: share } = useVaultShareData(vault)
+  const { data: vaultToken } = useVaultTokenData(vault)
 
-  const { data: prizeOdds } = usePrizeOdds(
+  const inputTokenAddress = formTokenAddress ?? vaultToken?.address
+
+  const { cachedVaultLists } = useCachedVaultLists()
+
+  const inputVault = useMemo(() => {
+    if (!!vault && !!publicClient && !!inputTokenAddress) {
+      const vaultId = getVaultId({ chainId: vault.chainId, address: inputTokenAddress })
+      const vaults = cachedVaultLists['default']?.tokens ?? []
+      const vaultInfo = vaults.find((v) => getVaultId(v) === vaultId)
+
+      if (!!vaultInfo) {
+        return new Vault(vaultInfo.chainId, vaultInfo.address, publicClient, {
+          decimals: vaultInfo.decimals,
+          name: vaultInfo.name,
+          logoURI: vaultInfo.logoURI
+        })
+      }
+    }
+  }, [vault, publicClient, inputTokenAddress, cachedVaultLists])
+
+  const { data: inputShare } = useVaultShareData(inputVault!)
+
+  const { data: inputPrizeOdds } = usePrizeOdds(
+    prizePool,
+    inputVault!,
+    !!inputShare && !!formTokenAmount ? parseUnits(formTokenAmount, inputShare.decimals) : 0n
+  )
+
+  const { data: outputPrizeOdds } = usePrizeOdds(
     prizePool,
     vault,
-    !!shareData && !!formShareAmount ? parseUnits(formShareAmount, shareData.decimals) : 0n,
+    !!share && !!formShareAmount ? parseUnits(formShareAmount, share.decimals) : 0n,
     { isCumulative: true }
   )
 
   const { data: drawPeriod } = useDrawPeriod(prizePool)
 
   const weeklyChance = useMemo(() => {
-    if (!!prizeOdds && !!drawPeriod) {
-      const drawsPerWeek = SECONDS_PER_WEEK / drawPeriod
-      const events = Array<number>(drawsPerWeek).fill(prizeOdds.percent)
-      const value = 1 / calculateUnionProbability(events)
-      const formattedValue = formatNumberForDisplay(value, { maximumSignificantDigits: 3 })
-      return t('oneInXChance', { number: formattedValue })
+    if (!!outputPrizeOdds && !!drawPeriod) {
+      const input = !!inputPrizeOdds
+        ? t_txModals('oneInXChance', { number: calculateWeeklyChanceX(inputPrizeOdds, drawPeriod) })
+        : undefined
+      const output = t_txModals('oneInXChance', {
+        number: calculateWeeklyChanceX(outputPrizeOdds, drawPeriod)
+      })
+      return { input, output }
     }
-  }, [prizeOdds, drawPeriod])
+  }, [inputPrizeOdds, outputPrizeOdds, drawPeriod])
 
   return (
-    <div className='flex flex-col items-center gap-2 font-semibold'>
-      <span className='text-xs text-pt-purple-100 md:text-sm'>{t('weeklyChances')}</span>
-      <span className='text-pt-purple-50 md:text-xl'>
-        {weeklyChance !== undefined ? formTokenAmount !== '0' ? weeklyChance : '-' : <Spinner />}
+    <div className='flex flex-col items-center font-semibold'>
+      <span className='mb-2 text-xs text-pt-purple-100 md:text-sm'>
+        {t_txModals('weeklyChances')}
       </span>
+      {!!weeklyChance ? (
+        <>
+          {!!weeklyChance.input ? (
+            <>
+              <div className='flex gap-2 items-center'>
+                <span className='text-xs text-pt-purple-100'>{t_common('before')}</span>
+                <span className='text-pt-purple-50 md:text-xl'>
+                  {formTokenAmount !== '0' ? weeklyChance.input : '-'}
+                </span>
+              </div>
+              <div className='flex gap-2 items-center'>
+                <span className='text-xs text-pt-purple-100'>{t_common('after')}</span>
+                <span className='text-pt-purple-50 md:text-xl'>
+                  {formTokenAmount !== '0' ? weeklyChance.output : '-'}
+                </span>
+              </div>
+            </>
+          ) : (
+            <span className='text-pt-purple-50 md:text-xl'>
+              {formTokenAmount !== '0' ? weeklyChance.output : '-'}
+            </span>
+          )}
+        </>
+      ) : (
+        <Spinner />
+      )}
     </div>
   )
+}
+
+const calculateWeeklyChanceX = (
+  odds: NonNullable<ReturnType<typeof usePrizeOdds>['data']>,
+  drawPeriod: number
+) => {
+  const drawsPerWeek = SECONDS_PER_WEEK / drawPeriod
+  const events = Array<number>(drawsPerWeek).fill(odds.percent)
+  const value = 1 / calculateUnionProbability(events)
+  return formatNumberForDisplay(value, { maximumSignificantDigits: 3 })
 }

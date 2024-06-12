@@ -32,7 +32,9 @@
       "migrateTo": "Migrate to the new PoolTogether",
       "earnUpTo": "and earn up to <highlight>{apr}% APR</highlight> in OP Bonus Rewards",
       "skipForNow": "Skip for now"
-    }
+    },
+    "before": "Before",
+    "after": "After"
   },
   "Navigation": {
     "home": "Home",
