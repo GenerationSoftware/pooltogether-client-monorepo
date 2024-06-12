@@ -1,7 +1,12 @@
 import { CurrencyValue, TokenIcon } from '@shared/react-components'
 import { TokenWithAmount, TokenWithLogo, TokenWithPrice } from '@shared/types'
 import { Dropdown, DropdownItem, Spinner } from '@shared/ui'
-import { DOLPHIN_ADDRESS, formatBigIntForDisplay, lower } from '@shared/utilities'
+import {
+  DOLPHIN_ADDRESS,
+  formatBigIntForDisplay,
+  formatNumberForDisplay,
+  lower
+} from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useFormContext } from 'react-hook-form'
@@ -24,6 +29,7 @@ export interface TxFormInputProps {
   showMaxButton?: boolean
   showTokenPicker?: boolean
   tokenPickerOptions?: DropdownItem[]
+  priceImpact?: number
   className?: string
 }
 
@@ -39,6 +45,7 @@ export const TxFormInput = (props: TxFormInputProps) => {
     showMaxButton,
     showTokenPicker,
     tokenPickerOptions,
+    priceImpact,
     className
   } = props
 
@@ -108,6 +115,12 @@ export const TxFormInput = (props: TxFormInputProps) => {
     </div>
   )
 
+  const formattedPriceImpact =
+    priceImpact !== undefined &&
+    `${priceImpact > 0 ? '+' : ''}${formatNumberForDisplay(priceImpact, {
+      maximumFractionDigits: 2
+    })}%`
+
   return (
     <div
       className={classNames(
@@ -152,7 +165,10 @@ export const TxFormInput = (props: TxFormInputProps) => {
       {showInfoRow && (
         <div className='flex justify-between gap-6 text-xs text-pt-purple-100 md:text-base'>
           <div className={classNames({ '-z-20': disabled || isLoading })}>
-            <CurrencyValue baseValue={amountValue} fallback={<></>} />
+            <CurrencyValue baseValue={amountValue} fallback={<></>} />{' '}
+            {priceImpact !== undefined && (
+              <span className='text-pt-purple-300'>({formattedPriceImpact})</span>
+            )}
           </div>
           <div className='flex gap-1 ml-auto'>
             <span>

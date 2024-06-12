@@ -9,7 +9,7 @@ import {
   useVaultSharePrice,
   useVaultTokenPrice
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { CurrencyValue, TokenIcon } from '@shared/react-components'
+import { TokenIcon } from '@shared/react-components'
 import {
   Token,
   TokenWithAmount,
@@ -17,9 +17,10 @@ import {
   TokenWithPrice,
   TokenWithSupply
 } from '@shared/types'
-import { DropdownItem } from '@shared/ui'
+import { DropdownItem, Spinner } from '@shared/ui'
 import {
   formatBigIntForDisplay,
+  formatNumberForDisplay,
   getAssetsFromShares,
   getSharesFromAssets,
   getVaultId,
@@ -49,6 +50,7 @@ export interface DepositFormProps {
 export const DepositForm = (props: DepositFormProps) => {
   const { vault, showInputInfoRows } = props
 
+  const t_txModals = useTranslations('TxModals')
   const t_errors = useTranslations('Error.formErrors')
 
   const { address: userAddress } = useAccount()
@@ -162,6 +164,8 @@ export const DepositForm = (props: DepositFormProps) => {
 
   const isZapping =
     !!vaultToken && !!formTokenAddress && lower(vaultToken.address) !== lower(formTokenAddress)
+  const isZappingAndSwapping =
+    isZapping && !!cachedZapAmountOut && cachedZapAmountOut.expected !== cachedZapAmountOut.min
 
   const vaultDecimals =
     vault.decimals ??
@@ -316,6 +320,25 @@ export const DepositForm = (props: DepositFormProps) => {
     return options
   }, [zapTokenOptions, vaultToken, vaultTokenWithAmount])
 
+  const priceImpact = useMemo(() => {
+    if (
+      isZappingAndSwapping &&
+      !!zapAmountOut &&
+      tokenInputData?.decimals !== undefined &&
+      shareInputData?.decimals !== undefined
+    ) {
+      const inputValue =
+        parseFloat(formatUnits(depositAmount, tokenInputData.decimals)) * tokenInputData.price
+      const outputValue =
+        parseFloat(formatUnits(zapAmountOut.expected, shareInputData.decimals)) *
+        shareInputData.price
+
+      if (!!inputValue && !!outputValue) {
+        return (1 - inputValue / outputValue) * 100
+      }
+    }
+  }, [depositAmount, zapAmountOut, tokenInputData, shareInputData])
+
   return (
     <div className='flex flex-col isolate'>
       <FormProvider {...formMethods}>
@@ -343,10 +366,40 @@ export const DepositForm = (props: DepositFormProps) => {
           formKey='shareAmount'
           onChange={handleShareAmountChange}
           showInfoRow={showInputInfoRows}
-          className='my-0.5 z-10'
+          priceImpact={priceImpact}
           disabled={isZapping}
           isLoading={isFetchingZapArgs}
+          className='my-0.5 z-10'
         />
+        {isZappingAndSwapping && (
+          <div className='flex flex-col p-2 text-xs text-pt-purple-100'>
+            <div className='flex gap-2 items-center'>
+              <span className='font-semibold'>{t_txModals('priceImpact')}</span>
+              <span className='h-3 grow border-b border-dashed border-pt-purple-50/30' />
+              {priceImpact !== undefined ? (
+                <span>{`${priceImpact > 0 ? '+' : ''}${formatNumberForDisplay(priceImpact, {
+                  maximumFractionDigits: 2
+                })}%`}</span>
+              ) : (
+                <Spinner />
+              )}
+            </div>
+            <div className='flex gap-2 items-center'>
+              <span className='font-semibold'>{t_txModals('minimumReceived')}</span>
+              <span className='h-3 grow border-b border-dashed border-pt-purple-50/30' />
+              {!!zapAmountOut && !!shareInputData ? (
+                <span>
+                  {formatBigIntForDisplay(zapAmountOut.min, shareInputData.decimals, {
+                    maximumFractionDigits: 5
+                  })}{' '}
+                  {shareInputData.symbol}
+                </span>
+              ) : (
+                <Spinner />
+              )}
+            </div>
+          </div>
+        )}
       </FormProvider>
     </div>
   )
