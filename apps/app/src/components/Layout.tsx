@@ -252,6 +252,10 @@ export const Layout = (props: LayoutProps) => {
           fathom.trackEvent(FATHOM_EVENTS.depositedWithPermit)
           !!connector?.id && trackDeposit(chainId, txReceipt.transactionHash, connector.id)
         }}
+        onSuccessfulDepositWithZap={(chainId, txReceipt) => {
+          fathom.trackEvent(FATHOM_EVENTS.depositedWithZap)
+          !!connector?.id && trackDeposit(chainId, txReceipt.transactionHash, connector.id)
+        }}
       />
 
       <WithdrawModal
