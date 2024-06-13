@@ -150,7 +150,7 @@ const getShareText = (tokenSymbol: string, platform: SharePlatform) => {
 const getSharesReceived = (userAddress: Address, share: Token, txReceipt: TransactionReceipt) => {
   if (txReceipt.status !== 'success') return undefined
 
-  const txLogs = txReceipt.logs.toReversed()
+  const txLogs = [...txReceipt.logs].reverse()
 
   for (let i = 0; i < txLogs.length; i++) {
     try {
