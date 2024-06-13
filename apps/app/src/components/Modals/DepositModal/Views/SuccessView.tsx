@@ -168,8 +168,6 @@ const getSharesReceived = (userAddress: Address, share: Token, txReceipt: Transa
           return eventArgs.value
         }
       }
-    } catch (e) {
-      console.error(e)
-    }
+    } catch {}
   }
 }

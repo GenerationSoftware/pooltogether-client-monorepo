@@ -31,6 +31,8 @@ export interface TxFormInputProps {
   tokenPickerOptions?: DropdownItem[]
   priceImpact?: number
   className?: string
+  inputClassName?: string
+  disabledCoverClassName?: string
 }
 
 export const TxFormInput = (props: TxFormInputProps) => {
@@ -46,7 +48,9 @@ export const TxFormInput = (props: TxFormInputProps) => {
     showTokenPicker,
     tokenPickerOptions,
     priceImpact,
-    className
+    className,
+    inputClassName,
+    disabledCoverClassName
   } = props
 
   const t = useTranslations('TxModals')
@@ -135,15 +139,17 @@ export const TxFormInput = (props: TxFormInputProps) => {
           formKey={formKey}
           decimals={token.decimals}
           validate={validate}
-          disabled={disabled}
+          disabled={disabled || isLoading}
           onChange={onChange}
-          className={classNames({ '-z-20': disabled || isLoading })}
+          className={classNames(inputClassName, { '-z-20': disabled || isLoading })}
         />
         {(disabled || isLoading) && (
           <div
-            className={classNames('absolute inset-0 rounded-lg backdrop-brightness-75 -z-10', {
-              'flex items-center pl-4 backdrop-blur-sm': isLoading
-            })}
+            className={classNames(
+              'absolute inset-0 rounded-lg backdrop-brightness-75 -z-10',
+              disabled && !isLoading ? disabledCoverClassName : '',
+              { 'flex items-center pl-4 backdrop-blur-sm': isLoading }
+            )}
           >
             <Spinner className={classNames({ hidden: !isLoading })} />
           </div>

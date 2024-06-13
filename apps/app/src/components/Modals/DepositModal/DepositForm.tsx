@@ -380,6 +380,8 @@ export const DepositForm = (props: DepositFormProps) => {
           disabled={isZapping}
           isLoading={isFetchingZapArgs}
           className='my-0.5 z-10'
+          inputClassName={classNames({ '!text-pt-purple-200': isZapping })}
+          disabledCoverClassName={classNames({ 'backdrop-brightness-100': isZapping })}
         />
         {isZappingAndSwapping && (
           <div className='flex flex-col p-2 text-xs text-pt-purple-100'>
