@@ -5,6 +5,7 @@ import {
   useUserVaultShareBalance,
   useUserVaultTokenBalance,
   useVaultBalance,
+  useVaultShareData,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { XMarkIcon } from '@heroicons/react/24/outline'
@@ -25,11 +26,17 @@ import { SuccessPooly } from '../Graphics/SuccessPooly'
 export interface DepositTxToastProps {
   vault: Vault
   txHash: string
-  formattedAmount: string
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
   intl?: Intl<
-    'deposit' | 'depositing' | 'viewOn' | 'success' | 'deposited' | 'uhOh' | 'failedTx' | 'tryAgain'
+    | 'deposit'
+    | 'depositingInto'
+    | 'viewOn'
+    | 'success'
+    | 'depositedInto'
+    | 'uhOh'
+    | 'failedTx'
+    | 'tryAgain'
   >
 }
 
@@ -43,7 +50,7 @@ export const createDepositTxToast = (data: DepositTxToastProps) => {
 }
 
 export const DepositTxToast = (props: DepositTxToastProps) => {
-  const { vault, txHash, formattedAmount, addRecentTransaction, refetchUserBalances, intl } = props
+  const { vault, txHash, addRecentTransaction, refetchUserBalances, intl } = props
 
   const { data: tokenData } = useVaultTokenData(vault)
 
@@ -95,7 +102,7 @@ export const DepositTxToast = (props: DepositTxToastProps) => {
   if (!isFetching && isSuccess) {
     toast(
       <ToastLayout id={txHash}>
-        <SuccessView vault={vault} txHash={txHash} formattedAmount={formattedAmount} intl={intl} />
+        <SuccessView vault={vault} txHash={txHash} intl={intl} />
       </ToastLayout>,
       { id: txHash }
     )
@@ -112,7 +119,7 @@ export const DepositTxToast = (props: DepositTxToastProps) => {
 
   return (
     <ToastLayout id={txHash}>
-      <ConfirmingView vault={vault} txHash={txHash} formattedAmount={formattedAmount} intl={intl} />
+      <ConfirmingView vault={vault} txHash={txHash} intl={intl} />
     </ToastLayout>
   )
 }
@@ -139,23 +146,22 @@ const ToastLayout = (props: ToastLayoutProps) => {
 interface ConfirmingViewProps {
   vault: Vault
   txHash: string
-  formattedAmount: string
-  intl?: Intl<'depositing' | 'viewOn'>
+  intl?: Intl<'depositingInto' | 'viewOn'>
 }
 
 const ConfirmingView = (props: ConfirmingViewProps) => {
-  const { vault, txHash, formattedAmount, intl } = props
+  const { vault, txHash, intl } = props
 
-  const { data: tokenData } = useVaultTokenData(vault)
+  const { data: share } = useVaultShareData(vault)
 
-  const tokens = `${formattedAmount} ${tokenData?.symbol}`
+  const vaultSymbol = `${share?.symbol ?? '?'}`
   const name = getBlockExplorerName(vault.chainId)
 
   return (
     <>
       <span className='flex items-center gap-2 text-pt-purple-50'>
         <Spinner className='after:border-y-pt-teal' />{' '}
-        {intl?.('depositing', { tokens }) ?? `Depositing ${tokens}...`}
+        {intl?.('depositingInto', { vault: vaultSymbol }) ?? `Depositing into ${vaultSymbol}...`}
       </span>
       <a
         href={getBlockExplorerUrl(vault.chainId, txHash, 'tx')}
@@ -171,16 +177,15 @@ const ConfirmingView = (props: ConfirmingViewProps) => {
 interface SuccessViewProps {
   vault: Vault
   txHash: string
-  formattedAmount: string
-  intl?: Intl<'success' | 'deposited' | 'viewOn'>
+  intl?: Intl<'success' | 'depositedInto' | 'viewOn'>
 }
 
 const SuccessView = (props: SuccessViewProps) => {
-  const { vault, txHash, formattedAmount, intl } = props
+  const { vault, txHash, intl } = props
 
-  const { data: tokenData } = useVaultTokenData(vault)
+  const { data: share } = useVaultShareData(vault)
 
-  const tokens = `${formattedAmount} ${tokenData?.symbol}`
+  const vaultSymbol = `${share?.symbol ?? '?'}`
   const network = getNiceNetworkNameByChainId(vault.chainId)
   const name = getBlockExplorerName(vault.chainId)
 
@@ -192,7 +197,8 @@ const SuccessView = (props: SuccessViewProps) => {
           {intl?.('success') ?? 'Success!'}
         </span>
         <span className='text-pt-purple-50'>
-          {intl?.('deposited', { tokens, network }) ?? `You deposited ${tokens} on ${network}`}
+          {intl?.('depositedInto', { vault: vaultSymbol, network }) ??
+            `You deposited into ${vaultSymbol} on ${network}`}
         </span>
       </div>
       <a

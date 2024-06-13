@@ -32,7 +32,9 @@
       "migrateTo": "Migrate to the new PoolTogether",
       "earnUpTo": "and earn up to <highlight>{apr}% APR</highlight> in OP Bonus Rewards",
       "skipForNow": "Skip for now"
-    }
+    },
+    "before": "Before",
+    "after": "After"
   },
   "Navigation": {
     "home": "Home",
@@ -211,10 +213,12 @@
     "confirmNotice": "Confirm Transaction in Wallet",
     "submissionNotice": "Transaction Submitted",
     "depositing": "Depositing {tokens}...",
+    "depositingInto": "Depositing into {vault}",
     "withdrawing": "Withdrawing {tokens}...",
     "delegating": "Delegating {tokens}...",
     "success": "Success!",
     "deposited": "You deposited {tokens}",
+    "gotTokens": "You got {tokens}",
     "withdrew": "You withdrew {tokens}",
     "delegated": "You delegated {tokens}",
     "nowEligible": "You are now eligible for all future draws in this pool.",
@@ -225,7 +229,11 @@
     "failedTx": "Something went wrong....",
     "tryAgain": "Try Again",
     "risksDisclaimer": "PoolTogether is a permissionless protocol. Prize vaults can be deployed by anyone. Make sure you know what you are depositing into. <vaultLink>Learn more about this prize vault.</vaultLink>",
-    "depositDisclaimer": "By clicking \"Confirm Deposit\", you agree to Cabana's <tosLink>Terms of Service</tosLink>. Click <vaultLink>here</vaultLink> to learn more about the vault you're depositing into."
+    "depositDisclaimer": "By clicking \"Confirm Deposit\", you agree to Cabana's <tosLink>Terms of Service</tosLink>. Click <vaultLink>here</vaultLink> to learn more about the vault you're depositing into.",
+    "findingZapRoute": "Finding zap route...",
+    "noZapRouteFound": "No zap route available",
+    "priceImpact": "Price Impact",
+    "minimumReceived": "Minimum Received"
   },
   "Footer": {
     "titles": {
@@ -315,11 +323,13 @@
       "withdrawal": "Withdrawal",
       "delegate": "Delegate",
       "depositing": "Depositing {tokens}...",
+      "depositingInto": "Depositing into {vault}...",
       "withdrawing": "Withdrawing {tokens}...",
       "delegating": "Delegating {tokens}...",
       "viewOn": "View on {name}",
       "success": "Success!",
       "deposited": "You deposited {tokens} on {network}",
+      "depositedInto": "You deposited into {vault} on {network}",
       "withdrew": "You withdrew {tokens} on {network}",
       "delegated": "You delegated {tokens} on {network}",
       "uhOh": "Uh oh!",

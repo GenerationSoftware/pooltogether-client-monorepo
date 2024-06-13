@@ -1,17 +1,23 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { useVaultTokenData } from '@generationsoftware/hyperstructure-react-hooks'
-import { PrizePoolBadge, SocialShareButton, SuccessPooly } from '@shared/react-components'
-import { ExternalLink } from '@shared/ui'
 import {
-  formatNumberForDisplay,
+  useVaultShareData,
+  useVaultTokenData
+} from '@generationsoftware/hyperstructure-react-hooks'
+import { PrizePoolBadge, SocialShareButton, SuccessPooly } from '@shared/react-components'
+import { Token } from '@shared/types'
+import { ExternalLink, Spinner } from '@shared/ui'
+import {
+  erc20ABI,
+  formatBigIntForDisplay,
   getBlockExplorerName,
   getBlockExplorerUrl,
-  getNiceNetworkNameByChainId
+  getNiceNetworkNameByChainId,
+  lower
 } from '@shared/utilities'
-import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
-import { depositFormTokenAmountAtom } from '../DepositForm'
+import { Address, decodeEventLog, TransactionReceipt } from 'viem'
+import { useAccount, useTransactionReceipt } from 'wagmi'
 
 interface SuccessViewProps {
   vault: Vault
@@ -24,11 +30,26 @@ export const SuccessView = (props: SuccessViewProps) => {
   const t_common = useTranslations('Common')
   const t_modals = useTranslations('TxModals')
 
-  const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
+  const { address: userAddress } = useAccount()
 
-  const { data: tokenData } = useVaultTokenData(vault)
+  const { data: share } = useVaultShareData(vault)
 
-  const tokens = `${formatNumberForDisplay(formTokenAmount)} ${tokenData?.symbol}`
+  const { data: txReceipt } = useTransactionReceipt({
+    chainId: vault.chainId,
+    hash: txHash as `0x${string}`
+  })
+
+  const sharesReceived = useMemo(() => {
+    if (!!userAddress && !!share && !!txReceipt) {
+      return getSharesReceived(userAddress, share, txReceipt)
+    }
+  }, [userAddress, share, txReceipt])
+
+  const formattedSharesReceived =
+    !!share && !!sharesReceived
+      ? formatBigIntForDisplay(sharesReceived, share.decimals, { maximumFractionDigits: 5 })
+      : '?'
+  const tokens = `${formattedSharesReceived} ${share?.symbol}`
   const name = getBlockExplorerName(vault.chainId)
 
   return (
@@ -36,7 +57,7 @@ export const SuccessView = (props: SuccessViewProps) => {
       <div className='flex flex-col gap-3 items-center'>
         <div className='flex flex-col items-center text-lg font-medium text-center'>
           <span className='text-pt-teal'>{t_modals('success')}</span>
-          <span>{t_modals('deposited', { tokens })}</span>
+          <span>{!!sharesReceived ? t_modals('gotTokens', { tokens }) : <Spinner />}</span>
         </div>
         <PrizePoolBadge
           chainId={vault.chainId}
@@ -70,22 +91,22 @@ const ShareButtons = (props: ShareButtonsProps) => {
 
   const t = useTranslations('TxModals')
 
-  const { data: tokenData } = useVaultTokenData(vault)
+  const { data: vaultToken } = useVaultTokenData(vault)
 
   const network = getNiceNetworkNameByChainId(vault.chainId)
   const hashTags = ['PoolTogether', network]
 
   const text = useMemo(() => {
-    if (!!tokenData) {
+    if (!!vaultToken) {
       return {
-        twitter: getShareText(tokenData.symbol, 'twitter'),
-        warpcast: getShareText(tokenData.symbol, 'warpcast'),
-        hey: getShareText(tokenData.symbol, 'hey')
+        twitter: getShareText(vaultToken.symbol, 'twitter'),
+        warpcast: getShareText(vaultToken.symbol, 'warpcast'),
+        hey: getShareText(vaultToken.symbol, 'hey')
       }
     } else {
       return {}
     }
-  }, [tokenData])
+  }, [vaultToken])
 
   return (
     <div className='flex flex-col items-center'>
@@ -124,4 +145,29 @@ const getShareText = (tokenSymbol: string, platform: SharePlatform) => {
   const pseudoRandomIndex = Math.floor(Math.random() * textOptions.length)
 
   return textOptions[pseudoRandomIndex]
+}
+
+const getSharesReceived = (userAddress: Address, share: Token, txReceipt: TransactionReceipt) => {
+  if (txReceipt.status !== 'success') return undefined
+
+  const txLogs = [...txReceipt.logs].reverse()
+
+  for (let i = 0; i < txLogs.length; i++) {
+    try {
+      const { data, topics, address } = txLogs[i]
+
+      if (lower(share.address) === lower(address)) {
+        const { args: eventArgs } = decodeEventLog({
+          abi: erc20ABI,
+          eventName: 'Transfer',
+          data,
+          topics
+        })
+
+        if (!!eventArgs && lower(eventArgs.to) === lower(userAddress)) {
+          return eventArgs.value
+        }
+      }
+    } catch {}
+  }
 }

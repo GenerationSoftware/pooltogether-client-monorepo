@@ -18,10 +18,20 @@ export interface DropdownProps extends Omit<FlowbiteDropdownProps, 'label'> {
   label: ReactNode
   items: DropdownItem[]
   header?: ReactNode
+  floatingContentClassName?: string
+  itemWrapperClassName?: string
 }
 
 export const Dropdown = (props: DropdownProps) => {
-  const { label, items, header, className, ...rest } = props
+  const {
+    label,
+    items,
+    header,
+    className,
+    floatingContentClassName,
+    itemWrapperClassName,
+    ...rest
+  } = props
 
   const { isDesktop } = useScreenSize()
 
@@ -31,18 +41,20 @@ export const Dropdown = (props: DropdownProps) => {
     return (
       <FlowbiteDropdown
         theme={{
-          inlineWrapper: 'flex items-center pr-3',
-          content: 'flex flex-col',
+          inlineWrapper: classNames('flex items-center shrink-0 pr-3', className),
+          content: 'flex flex-col p-1',
           floating: {
-            content: 'px-2 py-2',
+            content: 'p-2',
             style: {
-              auto: 'bg-pt-purple-100'
+              auto: classNames(
+                'bg-pt-purple-100 border border-pt-purple-200 rounded-lg shadow-xl',
+                floatingContentClassName
+              )
             }
           },
           arrowIcon: 'ml-2 h-4 w-4 stroke-[4]'
         }}
         label={label}
-        className={classNames(className)}
         {...rest}
       >
         <li>{header}</li>
@@ -50,7 +62,12 @@ export const Dropdown = (props: DropdownProps) => {
           return (
             <FlowbiteDropdown.Item
               key={`dd-${item.id}`}
-              theme={{ base: 'w-full flex items-center justify-center p-1 cursor-pointer' }}
+              theme={{
+                base: classNames(
+                  'w-full flex items-center justify-center cursor-pointer',
+                  itemWrapperClassName
+                )
+              }}
               onClick={() => item.onClick(item.id)}
             >
               {item.content}
@@ -64,7 +81,11 @@ export const Dropdown = (props: DropdownProps) => {
   return (
     <>
       <span
-        className='flex items-center pr-3 border border-pt-purple-700 rounded-lg cursor-pointer select-none'
+        className={classNames(
+          'flex items-center shrink-0 pr-3 cursor-pointer select-none',
+          'border border-pt-purple-700 rounded-lg',
+          className
+        )}
         onClick={() => setIsModalOpen(true)}
       >
         {label} <ChevronDownIcon className='ml-2 h-4 w-4 stroke-[4]' />

@@ -21,8 +21,8 @@ export const divideBigInts = (a: bigint, b: bigint, precision: number = 4) => {
  */
 export const calculatePercentageOfBigInt = (bigint: bigint, percentage: number) => {
   const precision = getMaxPrecision(percentage)
-  const shiftedPercentage = parseUnits(`${percentage}`, precision)
-  return (bigint * shiftedPercentage) / BigInt(10 ** precision)
+  const shiftedPercentage = parseUnits(percentage.toFixed(precision), precision)
+  return (bigint * shiftedPercentage) / 10n ** BigInt(precision)
 }
 
 /**

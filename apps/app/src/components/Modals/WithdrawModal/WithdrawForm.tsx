@@ -1,12 +1,13 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
+  useCachedVaultLists,
   useTokenBalance,
   useUserVaultShareBalance,
   useVaultExchangeRate,
   useVaultSharePrice,
   useVaultTokenPrice
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { getAssetsFromShares, getSharesFromAssets } from '@shared/utilities'
+import { getAssetsFromShares, getSharesFromAssets, getVaultId } from '@shared/utilities'
 import { atom, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo } from 'react'
@@ -50,6 +51,16 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
     userAddress as Address
   )
   const shareBalance = isFetchedVaultBalance && !!vaultBalance ? vaultBalance.amount : 0n
+
+  const { cachedVaultLists } = useCachedVaultLists()
+
+  const shareLogoURI = useMemo(() => {
+    if (!!vault) {
+      const defaultVaults = cachedVaultLists['default']?.tokens ?? []
+      const cachedLogoURI = defaultVaults.find((v) => getVaultId(v) === vault.id)?.logoURI
+      return vault.logoURI ?? cachedLogoURI
+    }
+  }, [vault, cachedVaultLists])
 
   const formMethods = useForm<TxFormValues>({
     mode: 'onChange',
@@ -120,7 +131,7 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
         ...shareToken,
         amount: shareBalance,
         price: shareToken?.price ?? 0,
-        logoURI: vault.logoURI ?? vault.tokenLogoURI
+        logoURI: shareLogoURI ?? vault.tokenLogoURI
       }
     }
   }, [vault, shareToken, shareBalance])

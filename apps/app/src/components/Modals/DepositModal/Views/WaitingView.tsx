@@ -1,11 +1,8 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { useVaultTokenData } from '@generationsoftware/hyperstructure-react-hooks'
+import { useVaultShareData } from '@generationsoftware/hyperstructure-react-hooks'
 import { PrizePoolBadge } from '@shared/react-components'
 import { Button, Spinner } from '@shared/ui'
-import { formatNumberForDisplay } from '@shared/utilities'
-import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
-import { depositFormTokenAmountAtom } from '../DepositForm'
 
 interface WaitingViewProps {
   vault: Vault
@@ -18,11 +15,7 @@ export const WaitingView = (props: WaitingViewProps) => {
   const t_common = useTranslations('Common')
   const t_modals = useTranslations('TxModals')
 
-  const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
-
-  const { data: tokenData } = useVaultTokenData(vault)
-
-  const tokens = `${formatNumberForDisplay(formTokenAmount)} ${tokenData?.symbol}`
+  const { data: share } = useVaultShareData(vault)
 
   return (
     <div className='flex flex-col gap-4 md:gap-6'>
@@ -33,7 +26,9 @@ export const WaitingView = (props: WaitingViewProps) => {
         intl={t_common}
         className='!py-1 mx-auto'
       />
-      <span className='text-sm text-center md:text-base'>{t_modals('depositing', { tokens })}</span>
+      <span className='text-sm text-center md:text-base'>
+        {t_modals('depositingInto', { vault: share?.symbol ?? '?' })}
+      </span>
       <Spinner size='lg' className='mx-auto after:border-y-pt-teal' />
       <div className='flex items-end h-24 md:h-36'>
         <Button fullSized={true} color='transparent' onClick={closeModal}>

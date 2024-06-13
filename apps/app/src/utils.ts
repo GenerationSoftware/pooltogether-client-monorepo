@@ -1,8 +1,8 @@
 import { connectorsForWallets, WalletList } from '@rainbow-me/rainbowkit'
 import { getInitialCustomRPCs } from '@shared/generic-react-hooks'
-import { NETWORK, parseQueryParam } from '@shared/utilities'
+import { DOLPHIN_ADDRESS, lower, NETWORK, parseQueryParam } from '@shared/utilities'
 import deepmerge from 'deepmerge'
-import { Chain, http, Transport } from 'viem'
+import { Address, Chain, http, Transport } from 'viem'
 import { createConfig, fallback } from 'wagmi'
 import { RPC_URLS, WAGMI_CHAINS, WALLET_STATS_API_URL, WALLETS } from '@constants/config'
 
