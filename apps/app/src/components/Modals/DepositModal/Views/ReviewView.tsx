@@ -122,55 +122,57 @@ const BasicDepositForm = (props: BasicDepositFormProps) => {
     }
   }, [vault, cachedVaultLists])
 
-  if (!!share && !!token) {
-    const tokenInfo = {
-      ...token,
-      amount: formTokenAmount,
-      logoURI:
-        !!vaultTokenAddress && lower(token.address) === lower(vaultTokenAddress)
-          ? vault.tokenLogoURI
-          : inputVault?.logoURI
-    }
-
-    const shareInfo = {
-      ...share,
-      amount: formShareAmount,
-      logoURI: shareLogoURI ?? vault.tokenLogoURI
-    }
-
-    return (
-      <div className='w-full flex flex-col'>
-        <BasicDepositFormInput token={tokenInfo} className='mb-0.5' />
-        <BasicDepositFormInput token={shareInfo} className='my-0.5' />
-        {!!depositZapMinReceived && (
-          <div className='flex flex-col p-2 text-xs text-pt-purple-100'>
-            <div className='flex gap-2 items-center'>
-              <span className='font-semibold'>{t_txModals('priceImpact')}</span>
-              <span className='h-3 grow border-b border-dashed border-pt-purple-50/30' />
-              {depositZapPriceImpact !== undefined ? (
-                <span>{`${depositZapPriceImpact > 0 ? '+' : ''}${formatNumberForDisplay(
-                  depositZapPriceImpact,
-                  { maximumFractionDigits: 2 }
-                )}%`}</span>
-              ) : (
-                <Spinner />
-              )}
-            </div>
-            <div className='flex gap-2 items-center'>
-              <span className='font-semibold'>{t_txModals('minimumReceived')}</span>
-              <span className='h-3 grow border-b border-dashed border-pt-purple-50/30' />
-              <span>
-                {formatBigIntForDisplay(depositZapMinReceived, shareInfo.decimals, {
-                  maximumFractionDigits: 5
-                })}{' '}
-                {shareInfo.symbol}
-              </span>
-            </div>
-          </div>
-        )}
-      </div>
-    )
+  if (!share || !token) {
+    return <></>
   }
+
+  const tokenInfo = {
+    ...token,
+    amount: formTokenAmount,
+    logoURI:
+      !!vaultTokenAddress && lower(token.address) === lower(vaultTokenAddress)
+        ? vault.tokenLogoURI
+        : inputVault?.logoURI
+  }
+
+  const shareInfo = {
+    ...share,
+    amount: formShareAmount,
+    logoURI: shareLogoURI ?? vault.tokenLogoURI
+  }
+
+  return (
+    <div className='w-full flex flex-col'>
+      <BasicDepositFormInput token={tokenInfo} className='mb-0.5' />
+      <BasicDepositFormInput token={shareInfo} className='my-0.5' />
+      {!!depositZapMinReceived && (
+        <div className='flex flex-col p-2 text-xs text-pt-purple-100'>
+          <div className='flex gap-2 items-center'>
+            <span className='font-semibold'>{t_txModals('priceImpact')}</span>
+            <span className='h-3 grow border-b border-dashed border-pt-purple-50/30' />
+            {depositZapPriceImpact !== undefined ? (
+              <span>{`${depositZapPriceImpact > 0 ? '+' : ''}${formatNumberForDisplay(
+                depositZapPriceImpact,
+                { maximumFractionDigits: 2 }
+              )}%`}</span>
+            ) : (
+              <Spinner />
+            )}
+          </div>
+          <div className='flex gap-2 items-center'>
+            <span className='font-semibold'>{t_txModals('minimumReceived')}</span>
+            <span className='h-3 grow border-b border-dashed border-pt-purple-50/30' />
+            <span>
+              {formatBigIntForDisplay(depositZapMinReceived, shareInfo.decimals, {
+                maximumFractionDigits: 5
+              })}{' '}
+              {shareInfo.symbol}
+            </span>
+          </div>
+        </div>
+      )}
+    </div>
+  )
 }
 
 interface BasicDepositFormInputProps {
