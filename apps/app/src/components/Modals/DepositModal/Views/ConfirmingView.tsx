@@ -1,16 +1,9 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { useToken, useVaultTokenAddress } from '@generationsoftware/hyperstructure-react-hooks'
+import { useVaultShareData } from '@generationsoftware/hyperstructure-react-hooks'
 import { PrizePoolBadge } from '@shared/react-components'
 import { Button, ExternalLink, Spinner } from '@shared/ui'
-import {
-  formatNumberForDisplay,
-  getBlockExplorerName,
-  getBlockExplorerUrl
-} from '@shared/utilities'
-import { useAtomValue } from 'jotai'
+import { getBlockExplorerName, getBlockExplorerUrl } from '@shared/utilities'
 import { useTranslations } from 'next-intl'
-import { Address } from 'viem'
-import { depositFormTokenAddressAtom, depositFormTokenAmountAtom } from '../DepositForm'
 
 interface ConfirmingViewProps {
   vault: Vault
@@ -24,15 +17,8 @@ export const ConfirmingView = (props: ConfirmingViewProps) => {
   const t_common = useTranslations('Common')
   const t_modals = useTranslations('TxModals')
 
-  const { data: vaultTokenAddress } = useVaultTokenAddress(vault)
+  const { data: share } = useVaultShareData(vault)
 
-  const formTokenAddress = useAtomValue(depositFormTokenAddressAtom)
-  const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
-
-  const tokenAddress = formTokenAddress ?? vaultTokenAddress
-  const { data: token } = useToken(vault.chainId, tokenAddress as Address)
-
-  const tokens = `${formatNumberForDisplay(formTokenAmount)} ${token?.symbol}`
   const name = getBlockExplorerName(vault.chainId)
 
   return (
@@ -44,7 +30,9 @@ export const ConfirmingView = (props: ConfirmingViewProps) => {
         intl={t_common}
         className='!py-1 mx-auto'
       />
-      <span className='text-sm text-center md:text-base'>{t_modals('depositing', { tokens })}</span>
+      <span className='text-sm text-center md:text-base'>
+        {t_modals('depositingInto', { vault: share?.symbol ?? '?' })}
+      </span>
       <Spinner size='lg' className='mx-auto after:border-y-pt-teal' />
       <div className='flex flex-col w-full justify-end h-24 gap-4 md:h-36 md:gap-6'>
         {!!txHash && (
