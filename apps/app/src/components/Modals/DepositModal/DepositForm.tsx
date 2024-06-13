@@ -42,6 +42,9 @@ export const depositFormTokenAddressAtom = atom<Address | undefined>(undefined)
 export const depositFormTokenAmountAtom = atom<string>('')
 export const depositFormShareAmountAtom = atom<string>('')
 
+export const depositZapPriceImpactAtom = atom<number | undefined>(undefined)
+export const depositZapMinReceivedAtom = atom<bigint | undefined>(undefined)
+
 export interface DepositFormProps {
   vault: Vault
   showInputInfoRows?: boolean
@@ -136,6 +139,9 @@ export const DepositForm = (props: DepositFormProps) => {
   const [formTokenAmount, setFormTokenAmount] = useAtom(depositFormTokenAmountAtom)
   const setFormShareAmount = useSetAtom(depositFormShareAmountAtom)
 
+  const [priceImpact, setPriceImpact] = useAtom(depositZapPriceImpactAtom)
+  const setMinReceived = useSetAtom(depositZapMinReceivedAtom)
+
   const [cachedZapAmountOut, setCachedZapAmountOut] =
     useState<ReturnType<typeof useSendDepositZapTransaction>['amountOut']>()
 
@@ -143,22 +149,20 @@ export const DepositForm = (props: DepositFormProps) => {
     setFormTokenAddress(undefined)
     setFormTokenAmount('')
     setFormShareAmount('')
+    setPriceImpact(undefined)
+    setMinReceived(undefined)
     setCachedZapAmountOut(undefined)
     formMethods.reset()
   }, [])
 
   const depositAmount = useMemo(() => {
-    return !!formTokenAmount && !!token && token.decimals !== undefined
-      ? parseUnits(formTokenAmount, token?.decimals!)
+    return !!formTokenAmount && token?.decimals !== undefined
+      ? parseUnits(formTokenAmount, token.decimals)
       : 0n
   }, [formTokenAmount, token])
 
   const { amountOut: zapAmountOut, isFetchingZapArgs } = useSendDepositZapTransaction(
-    {
-      address: token?.address!,
-      decimals: token?.decimals!,
-      amount: depositAmount
-    },
+    { address: token?.address!, decimals: token?.decimals!, amount: depositAmount },
     vault
   )
 
@@ -319,7 +323,7 @@ export const DepositForm = (props: DepositFormProps) => {
     return options
   }, [zapTokenOptions, vaultToken, vaultTokenWithAmount])
 
-  const priceImpact = useMemo(() => {
+  useEffect(() => {
     if (
       isZappingAndSwapping &&
       !!zapAmountOut &&
@@ -333,8 +337,15 @@ export const DepositForm = (props: DepositFormProps) => {
         shareInputData.price
 
       if (!!inputValue && !!outputValue) {
-        return (1 - inputValue / outputValue) * 100
+        setPriceImpact((1 - inputValue / outputValue) * 100)
+      } else {
+        setPriceImpact(undefined)
       }
+
+      setMinReceived(zapAmountOut.min)
+    } else {
+      setPriceImpact(undefined)
+      setMinReceived(undefined)
     }
   }, [depositAmount, zapAmountOut, tokenInputData, shareInputData])
 

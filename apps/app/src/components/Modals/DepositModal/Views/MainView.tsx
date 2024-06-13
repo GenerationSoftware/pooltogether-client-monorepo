@@ -10,7 +10,6 @@ import { Spinner } from '@shared/ui'
 import { getNiceNetworkNameByChainId } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
-import { Address } from 'viem'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
 import {
@@ -29,7 +28,7 @@ export const MainView = (props: MainViewProps) => {
   const { vault, prizePool } = props
 
   const t_common = useTranslations('Common')
-  const t_modals = useTranslations('TxModals')
+  const t_txModals = useTranslations('TxModals')
 
   const { data: share } = useVaultShareData(vault)
   const { data: vaultTokenAddress } = useVaultTokenAddress(vault)
@@ -39,7 +38,7 @@ export const MainView = (props: MainViewProps) => {
 
   const tokenAddress = formTokenAddress ?? vaultTokenAddress
 
-  const { data: tokenPermitSupport } = useTokenPermitSupport(vault.chainId, tokenAddress as Address)
+  const { data: tokenPermitSupport } = useTokenPermitSupport(vault.chainId, tokenAddress!)
 
   const { data: vaultExchangeRate } = useVaultExchangeRate(vault)
 
@@ -56,12 +55,12 @@ export const MainView = (props: MainViewProps) => {
       <span className='text-lg font-semibold text-center'>
         {!!vaultName && (
           <span className='hidden md:inline-block'>
-            {t_modals('depositTo', { name: vaultName, network: networkName })}
+            {t_txModals('depositTo', { name: vaultName, network: networkName })}
           </span>
         )}
         {!!vaultName && (
           <span className='inline-block md:hidden'>
-            {t_modals('depositToShort', { name: vaultName })}
+            {t_txModals('depositToShort', { name: vaultName })}
           </span>
         )}
         {!vaultName && <Spinner />}
