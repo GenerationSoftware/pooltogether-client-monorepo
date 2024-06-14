@@ -38,7 +38,7 @@ export const Navbar = (props: NavbarProps) => {
         </Link>
         <div className='hidden gap-6 items-center md:flex'>
           <NavbarActions />
-          <NetworkDropdown className='text-pt-purple-600' />
+          <NetworkDropdown />
           <Image
             src='/pooly.svg'
             alt='Pooly'

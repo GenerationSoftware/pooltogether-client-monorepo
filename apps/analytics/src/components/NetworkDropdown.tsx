@@ -27,7 +27,9 @@ export const NetworkDropdown = (props: NetworkDropdownProps) => {
   const dropdownItems: DropdownItem[] = useMemo(() => {
     return validNetworks.map((network) => ({
       id: network.toString(),
-      content: <NetworkBadge chainId={network} hideBg={true} className='select-none' />,
+      content: (
+        <NetworkBadge chainId={network} hideBg={true} className='text-pt-purple-600 select-none' />
+      ),
       onClick: (id) => onChangeNetwork(parseInt(id))
     }))
   }, [validNetworks])
