@@ -244,4 +244,7 @@ export const FATHOM_EVENTS = {
   redeemed: 'Redeemed'
 } as const
 
+/**
+ * Wallet stats API
+ */
 export const WALLET_STATS_API_URL = 'https://wallet-stats.api.cabana.fi'

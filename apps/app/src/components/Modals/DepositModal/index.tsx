@@ -14,7 +14,9 @@ import classNames from 'classnames'
 import { useAtom, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo, useState } from 'react'
-import { Address, TransactionReceipt } from 'viem'
+import { walletSupportsPermit } from 'src/utils'
+import { TransactionReceipt } from 'viem'
+import { useAccount } from 'wagmi'
 import {
   depositFormShareAmountAtom,
   depositFormTokenAddressAtom,
@@ -55,6 +57,8 @@ export const DepositModal = (props: DepositModalProps) => {
 
   const t_toasts = useTranslations('Toasts.transactions')
 
+  const { connector } = useAccount()
+
   const addRecentTransaction = useAddRecentTransaction()
 
   const { vault } = useSelectedVault()
@@ -69,14 +73,14 @@ export const DepositModal = (props: DepositModalProps) => {
   const setFormTokenAmount = useSetAtom(depositFormTokenAmountAtom)
   const [formShareAmount, setFormShareAmount] = useAtom(depositFormShareAmountAtom)
 
-  const { data: vaultToken } = useVaultTokenData(vault as Vault)
+  const { data: vaultToken } = useVaultTokenData(vault!)
 
   const { data: tokenPermitSupport } = useTokenPermitSupport(
-    vault?.chainId as number,
-    formTokenAddress ?? (vaultToken?.address as Address)
+    vault?.chainId!,
+    formTokenAddress ?? vaultToken?.address!
   )
 
-  const { data: vaultExchangeRate } = useVaultExchangeRate(vault as Vault)
+  const { data: vaultExchangeRate } = useVaultExchangeRate(vault!)
 
   const prizePool = useMemo(() => {
     if (!!vault) {
@@ -107,8 +111,8 @@ export const DepositModal = (props: DepositModalProps) => {
 
   if (isModalOpen && !!vault) {
     const modalViews: Record<DepositModalView, ReactNode> = {
-      main: <MainView vault={vault} prizePool={prizePool as PrizePool} />,
-      review: <ReviewView vault={vault} prizePool={prizePool as PrizePool} />,
+      main: <MainView vault={vault} prizePool={prizePool!} />,
+      review: <ReviewView vault={vault} prizePool={prizePool!} />,
       waiting: <WaitingView vault={vault} closeModal={handleClose} />,
       confirming: <ConfirmingView vault={vault} txHash={depositTxHash} closeModal={handleClose} />,
       success: <SuccessView vault={vault} txHash={depositTxHash} />,
@@ -135,7 +139,7 @@ export const DepositModal = (props: DepositModalProps) => {
             onSuccessfulApproval={onSuccessfulApproval}
             onSuccessfulDepositWithZap={onSuccessfulDepositWithZap}
           />
-        ) : tokenPermitSupport === 'eip2612' ? (
+        ) : tokenPermitSupport === 'eip2612' && walletSupportsPermit(connector?.id) ? (
           <DepositWithPermitTxButton
             vault={vault}
             modalView={view}

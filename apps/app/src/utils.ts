@@ -1,8 +1,8 @@
 import { connectorsForWallets, WalletList } from '@rainbow-me/rainbowkit'
 import { getInitialCustomRPCs } from '@shared/generic-react-hooks'
-import { DOLPHIN_ADDRESS, lower, NETWORK, parseQueryParam } from '@shared/utilities'
+import { NETWORK, parseQueryParam } from '@shared/utilities'
 import deepmerge from 'deepmerge'
-import { Address, Chain, http, Transport } from 'viem'
+import { Chain, http, Transport } from 'viem'
 import { createConfig, fallback } from 'wagmi'
 import { RPC_URLS, WAGMI_CHAINS, WALLET_STATS_API_URL, WALLETS } from '@constants/config'
 
@@ -148,4 +148,13 @@ export const trackDeposit = async (chainId: number, txHash: `0x${string}`, walle
   } catch (e) {
     console.error(e)
   }
+}
+
+/**
+ * Returns whether or not the current wallet connector supports ERC-2612 permits
+ * @param connectorId the current wallet connector ID
+ * @returns
+ */
+export const walletSupportsPermit = (connectorId?: string) => {
+  return !connectorId?.toLowerCase().includes('coinbase')
 }

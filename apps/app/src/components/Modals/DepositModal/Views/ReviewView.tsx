@@ -20,7 +20,8 @@ import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
-import { usePublicClient } from 'wagmi'
+import { walletSupportsPermit } from 'src/utils'
+import { useAccount, usePublicClient } from 'wagmi'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
 import {
@@ -42,6 +43,8 @@ export const ReviewView = (props: ReviewViewProps) => {
   const t_common = useTranslations('Common')
   const t_txModals = useTranslations('TxModals')
 
+  const { connector } = useAccount()
+
   const formTokenAddress = useAtomValue(depositFormTokenAddressAtom)
 
   const { data: vaultTokenAddress } = useVaultTokenAddress(vault)
@@ -59,7 +62,7 @@ export const ReviewView = (props: ReviewViewProps) => {
     ? lower(formTokenAddress) === DOLPHIN_ADDRESS
       ? ['depositWithZap', 'withdraw']
       : ['approve', 'depositWithZap', 'withdraw']
-    : tokenPermitSupport === 'eip2612'
+    : tokenPermitSupport === 'eip2612' && walletSupportsPermit(connector?.id)
     ? ['depositWithPermit', 'withdraw']
     : ['approve', 'deposit', 'withdraw']
 

@@ -10,6 +10,8 @@ import { Spinner } from '@shared/ui'
 import { DOLPHIN_ADDRESS, getNiceNetworkNameByChainId, lower } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
+import { walletSupportsPermit } from 'src/utils'
+import { useAccount } from 'wagmi'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
 import {
@@ -29,6 +31,8 @@ export const MainView = (props: MainViewProps) => {
 
   const t_common = useTranslations('Common')
   const t_txModals = useTranslations('TxModals')
+
+  const { connector } = useAccount()
 
   const { data: share } = useVaultShareData(vault)
   const { data: vaultTokenAddress } = useVaultTokenAddress(vault)
@@ -54,7 +58,7 @@ export const MainView = (props: MainViewProps) => {
     ? lower(formTokenAddress) === DOLPHIN_ADDRESS
       ? ['depositWithZap', 'withdraw']
       : ['approve', 'depositWithZap', 'withdraw']
-    : tokenPermitSupport === 'eip2612'
+    : tokenPermitSupport === 'eip2612' && walletSupportsPermit(connector?.id)
     ? ['depositWithPermit', 'withdraw']
     : ['approve', 'deposit', 'withdraw']
 
