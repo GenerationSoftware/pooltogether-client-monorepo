@@ -167,6 +167,8 @@ export const DepositModal = (props: DepositModalProps) => {
         onClose={handleClose}
         label='deposit-flow'
         mobileStyle='tab'
+        className='isolate'
+        bodyClassName='z-10'
       />
     )
   }
