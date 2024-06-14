@@ -15,11 +15,21 @@ import {
 } from '@shared/utilities'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
+import { zeroAddress } from 'viem'
 import { useAccount } from 'wagmi'
+import { ZAP_SETTINGS } from '@constants/config'
+import { zapRouterABI } from '@constants/zapRouterABI'
 
 export interface NetworkFeesProps {
   vault: Vault
-  show?: ('approve' | 'deposit' | 'depositWithPermit' | 'withdraw' | 'delegation')[]
+  show?: (
+    | 'approve'
+    | 'deposit'
+    | 'depositWithPermit'
+    | 'depositWithZap'
+    | 'withdraw'
+    | 'delegation'
+  )[]
 }
 
 export const NetworkFees = (props: NetworkFeesProps) => {
@@ -87,6 +97,55 @@ export const NetworkFees = (props: NetworkFeesProps) => {
                 account: userAddress
               }}
               gasAmount={TX_GAS_ESTIMATES.depositWithPermit}
+            />
+          )}
+          {show?.includes('depositWithZap') && !!ZAP_SETTINGS[vault.chainId] && (
+            <TXFeeEstimate
+              name={t('deposit')}
+              chainId={vault.chainId}
+              tx={{
+                address: ZAP_SETTINGS[vault.chainId].zapRouter,
+                abi: [zapRouterABI['15']],
+                functionName: 'executeOrder',
+                args: [
+                  {
+                    inputs: [
+                      { token: '0x94b008aa00579c1307b0ef2c499ad98a8ce58e58', amount: '1000000' }
+                    ],
+                    outputs: [
+                      {
+                        token: '0x03d3ce84279cb6f54f5e6074ff0f8319d830dafe',
+                        minOutputAmount: '999339'
+                      }
+                    ],
+                    relay: { target: zeroAddress, value: 0n, data: '0x0' },
+                    user: userAddress,
+                    recipient: userAddress
+                  },
+                  [
+                    {
+                      target: '0x216b4b4ba9f3e719726886d34a177484278bfcae',
+                      value: '0',
+                      data: '0x8da5cb5b',
+                      tokens: [{ token: '0x94b008aa00579c1307b0ef2c499ad98a8ce58e58', index: -1 }]
+                    },
+                    {
+                      target: '0xdef171fe48cf0115b1d80b88dc8eab59176fee57',
+                      value: '0',
+                      data: '0xa6886da9000000000000000000000000000000000000000000000000000000000000002000000000000000000000000094b008aa00579c1307b0ef2c499ad98a8ce58e580000000000000000000000000b2c639c533813f4aa9d7837caf62653d097ff85000000000000000000000000e592427a0aece92de3edee1f18e0157c0586156400000000000000000000000000000000000000000000000000000000000f424000000000000000000000000000000000000000000000000000000000000f18a200000000000000000000000000000000000000000000000000000000000f3fab010000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000664fb51a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001c00000000000000000000000000000000000000000000000000000000000000220ffc3cb6eefd749129b6c79a353e0f9c600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002b94b008aa00579c1307b0ef2c499ad98a8ce58e580000640b2c639c533813f4aa9d7837caf62653d097ff850000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+                      tokens: [{ token: '0x94b008aa00579c1307b0ef2c499ad98a8ce58e58', index: -1 }]
+                    },
+                    {
+                      target: '0x03d3ce84279cb6f54f5e6074ff0f8319d830dafe',
+                      value: '0',
+                      data: '0x6e553f650000000000000000000000000000000000000000000000000000000000000000000000000000000000000000e82343a116d2179f197111d92f9b53611b43c01c',
+                      tokens: [{ token: '0x0b2c639c533813f4aa9d7837caf62653d097ff85', index: 4 }]
+                    }
+                  ]
+                ],
+                account: userAddress
+              }}
+              gasAmount={TX_GAS_ESTIMATES.depositWithZap}
             />
           )}
           {(!show || show.includes('withdraw')) && (

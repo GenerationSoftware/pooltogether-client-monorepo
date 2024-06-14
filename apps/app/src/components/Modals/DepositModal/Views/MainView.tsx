@@ -7,7 +7,7 @@ import {
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { PrizePoolBadge } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
-import { getNiceNetworkNameByChainId } from '@shared/utilities'
+import { DOLPHIN_ADDRESS, getNiceNetworkNameByChainId, lower } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
@@ -45,10 +45,18 @@ export const MainView = (props: MainViewProps) => {
   const vaultName = vault.name ?? share?.name
   const networkName = getNiceNetworkNameByChainId(vault.chainId)
 
-  const feesToShow: NetworkFeesProps['show'] =
-    tokenPermitSupport === 'eip2612'
-      ? ['depositWithPermit', 'withdraw']
-      : ['approve', 'deposit', 'withdraw']
+  const isZapping =
+    !!vaultTokenAddress &&
+    !!formTokenAddress &&
+    lower(vaultTokenAddress) !== lower(formTokenAddress)
+
+  const feesToShow: NetworkFeesProps['show'] = isZapping
+    ? lower(formTokenAddress) === DOLPHIN_ADDRESS
+      ? ['depositWithZap', 'withdraw']
+      : ['approve', 'depositWithZap', 'withdraw']
+    : tokenPermitSupport === 'eip2612'
+    ? ['depositWithPermit', 'withdraw']
+    : ['approve', 'deposit', 'withdraw']
 
   return (
     <div className='flex flex-col gap-6'>

@@ -10,6 +10,7 @@ import { PrizePoolBadge, TokenIcon } from '@shared/react-components'
 import { Token, TokenWithLogo } from '@shared/types'
 import { Spinner } from '@shared/ui'
 import {
+  DOLPHIN_ADDRESS,
   formatBigIntForDisplay,
   formatNumberForDisplay,
   getVaultId,
@@ -49,10 +50,18 @@ export const ReviewView = (props: ReviewViewProps) => {
 
   const { data: tokenPermitSupport } = useTokenPermitSupport(vault.chainId, tokenAddress!)
 
-  const feesToShow: NetworkFeesProps['show'] =
-    tokenPermitSupport === 'eip2612'
-      ? ['depositWithPermit', 'withdraw']
-      : ['approve', 'deposit', 'withdraw']
+  const isZapping =
+    !!vaultTokenAddress &&
+    !!formTokenAddress &&
+    lower(vaultTokenAddress) !== lower(formTokenAddress)
+
+  const feesToShow: NetworkFeesProps['show'] = isZapping
+    ? lower(formTokenAddress) === DOLPHIN_ADDRESS
+      ? ['depositWithZap', 'withdraw']
+      : ['approve', 'depositWithZap', 'withdraw']
+    : tokenPermitSupport === 'eip2612'
+    ? ['depositWithPermit', 'withdraw']
+    : ['approve', 'deposit', 'withdraw']
 
   return (
     <div className='flex flex-col gap-6'>
