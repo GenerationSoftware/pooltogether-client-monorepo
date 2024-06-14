@@ -37,7 +37,7 @@ export const usePrizeOdds = (
         )
       : 0
 
-  const oneInX = percent !== 0 ? 1 / percent : Number.MAX_SAFE_INTEGER
+  const oneInX = 1 / percent
 
   const data = isFetched && isSuccess ? { percent, oneInX } : undefined
 
