@@ -158,13 +158,9 @@ export const TWAB_REWARDS_SETTINGS: {
 /**
  * Custom overwrite for wallet addresses
  */
-export const WALLET_NAMES: { [chainId: number]: { [address: Lowercase<Address>]: string } } = {
-  [NETWORK.base]: {
-    '0x327b2ea9668a552fe5dec8e3c6e47e540a0a58c6': 'GP Booster'
-  },
-  [NETWORK.arbitrum]: {
-    '0x1dcfb8b47c2f05ce86c21580c167485de1202e12': 'GP Booster'
-  }
+export const WALLET_NAMES: { [address: Lowercase<Address>]: { name: string; chainId?: number } } = {
+  '0x327b2ea9668a552fe5dec8e3c6e47e540a0a58c6': { name: 'GP Booster', chainId: NETWORK.base },
+  '0x1dcfb8b47c2f05ce86c21580c167485de1202e12': { name: 'GP Booster', chainId: NETWORK.arbitrum }
 }
 
 /**

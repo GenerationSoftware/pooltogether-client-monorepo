@@ -1,10 +1,11 @@
 import { CurrencyValue } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
-import { NETWORK, shorten } from '@shared/utilities'
+import { lower, NETWORK, shorten } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Address } from 'viem'
 import { useAccount, useEnsName } from 'wagmi'
+import { WALLET_NAMES } from '@constants/config'
 import { useUserTotalWinnings } from '@hooks/useUserTotalWinnings'
 
 interface AccountWinningsHeaderProps {
@@ -22,7 +23,7 @@ export const AccountWinningsHeader = (props: AccountWinningsHeaderProps) => {
 
   const isExternalUser = !!address && address.toLowerCase() !== _userAddress?.toLowerCase()
 
-  const { data: totalWinnings } = useUserTotalWinnings(userAddress as Address, {
+  const { data: totalWinnings } = useUserTotalWinnings(userAddress!, {
     skipPrizeChecking: isExternalUser
   })
 
@@ -32,7 +33,9 @@ export const AccountWinningsHeader = (props: AccountWinningsHeaderProps) => {
     <div className={classNames('flex flex-col items-center gap-1 md:gap-2', className)}>
       <span className='text-sm text-pt-purple-100 md:text-base'>
         {isExternalUser
-          ? t('externalAccountWinnings', { account: ensName ?? shorten(address) })
+          ? t('externalAccountWinnings', {
+              account: WALLET_NAMES[lower(address)]?.name ?? ensName ?? shorten(address)
+            })
           : t('yourWinnings')}
       </span>
       <span className='text-[1.75rem] font-grotesk font-medium md:text-4xl'>

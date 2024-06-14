@@ -182,9 +182,6 @@ const DrawWinnersTable = (props: DrawWinnersTableProps) => {
         <div className='flex flex-col w-full max-h-52 gap-3 overflow-y-auto'>
           {wins.map((win) => {
             const winner = win[0] as Address
-            const winnerName = !!prizePool
-              ? WALLET_NAMES[prizePool.chainId]?.[lower(winner)]
-              : undefined
 
             const formattedPrize = formatBigIntForDisplay(win[1], tokenData.decimals, {
               minimumFractionDigits: 4,
@@ -196,7 +193,7 @@ const DrawWinnersTable = (props: DrawWinnersTableProps) => {
                 <span className='w-1/2'>
                   <Link href={`/account/${winner}`}>
                     <button className='hover:text-pt-purple-100'>
-                      {winnerName ?? shorten(winner)}
+                      {WALLET_NAMES[lower(winner)]?.name ?? shorten(winner)}
                     </button>
                   </Link>
                 </span>
