@@ -157,21 +157,24 @@ export const STABLECOINS: Record<NETWORK, { [address: Lowercase<Address>]: strin
   [NETWORK.mainnet]: {
     '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48': 'usd', // USDC
     '0x6b175474e89094c44da98b954eedeac495271d0f': 'usd', // DAI
-    '0x056fd409e1d7a124bd7017459dfea2f387b6d5cd': 'usd' // GUSD
+    '0x056fd409e1d7a124bd7017459dfea2f387b6d5cd': 'usd', // GUSD
+    '0x0000206329b97db379d5e1bf586bbdb969c63274': 'usd' // USDA
   },
   [NETWORK.sepolia]: {},
   [NETWORK.bsc]: {},
   [NETWORK.bsc_testnet]: {},
   [NETWORK.xdai]: {},
   [NETWORK.polygon]: {
-    '0x2791bca1f2de4661ed88a30c99a7a9449aa84174': 'usd' // USDC.e
+    '0x2791bca1f2de4661ed88a30c99a7a9449aa84174': 'usd', // USDC.e
+    '0x0000206329b97db379d5e1bf586bbdb969c63274': 'usd' // USDA
   },
   [NETWORK.mumbai]: {},
   [NETWORK.optimism]: {
     '0x0b2c639c533813f4aa9d7837caf62653d097ff85': 'usd', // USDC
     '0x7f5c764cbc14f9669b88837ca1490cca17c31607': 'usd', // USDC.e
     '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1': 'usd', // DAI
-    '0xc40f949f8a4e094d1b49a23ea9241d289b7b2819': 'usd' // LUSD
+    '0xc40f949f8a4e094d1b49a23ea9241d289b7b2819': 'usd', // LUSD
+    '0x0000206329b97db379d5e1bf586bbdb969c63274': 'usd' // USDA
   },
   [NETWORK.optimism_sepolia]: {
     '0xded96a50515f1a4620a3c5244fae15ed7d216d4a': 'usd', // USDC
@@ -188,7 +191,8 @@ export const STABLECOINS: Record<NETWORK, { [address: Lowercase<Address>]: strin
     '0xaf88d065e77c8cc2239327c5edb3a432268e5831': 'usd', // USDC
     '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8': 'usd', // USDC.e
     '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1': 'usd', // DAI
-    '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9': 'usd' // USDT
+    '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9': 'usd', // USDT
+    '0x0000206329b97db379d5e1bf586bbdb969c63274': 'usd' // USDA
   },
   [NETWORK.arbitrum_sepolia]: {
     '0x7b2e0bd66ef04d26db132391b5600af3887e9f9f': 'usd', // USDC
@@ -197,7 +201,8 @@ export const STABLECOINS: Record<NETWORK, { [address: Lowercase<Address>]: strin
   [NETWORK.base]: {
     '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913': 'usd', // USDC
     '0x50c5725949a6f0c72e6c4a641f24049a917db0cb': 'usd', // DAI
-    '0x368181499736d0c0cc614dbb145e2ec1ac86b8c6': 'usd' // LUSD
+    '0x368181499736d0c0cc614dbb145e2ec1ac86b8c6': 'usd', // LUSD
+    '0x0000206329b97db379d5e1bf586bbdb969c63274': 'usd' // USDA
   },
   [NETWORK.base_sepolia]: {
     '0x034109d90e70b972617e96b33295e724fff5887a': 'usd', // USDC
