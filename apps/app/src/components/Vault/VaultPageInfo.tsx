@@ -223,13 +223,13 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
           data={<VaultContributions vault={vault} />}
         />
       )}
-      {show.includes('depositToken') && (
+      {show.includes('prizeToken') && (
         <VaultInfoRow
-          name={t_vault('headers.depositToken')}
+          name={t_vault('headers.prizeToken')}
           data={
-            isFetchedTokenData ? (
-              !!tokenData ? (
-                <VaultInfoToken token={tokenData} />
+            isFetchedShareData ? (
+              !!shareData ? (
+                <VaultInfoToken token={shareData} />
               ) : (
                 '?'
               )
@@ -239,13 +239,13 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
           }
         />
       )}
-      {show.includes('prizeToken') && (
+      {show.includes('depositToken') && (
         <VaultInfoRow
-          name={t_vault('headers.prizeToken')}
+          name={t_vault('headers.depositToken')}
           data={
-            isFetchedShareData ? (
-              !!shareData ? (
-                <VaultInfoToken token={shareData} />
+            isFetchedTokenData ? (
+              !!tokenData ? (
+                <VaultInfoToken token={tokenData} />
               ) : (
                 '?'
               )

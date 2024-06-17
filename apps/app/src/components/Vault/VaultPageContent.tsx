@@ -81,7 +81,7 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
       <VaultPageHeader vault={vault} className='max-w-[44rem]' />
       {!!vault && !!vaultTokenAddress ? (
         <>
-          <Buttons vault={vault} className='max-w-[44rem]' />
+          <Buttons vault={vault} className='max-w-[44rem] -mt-4' />
           <NotInVaultListsWarning vault={vault} className='max-w-[44rem]' />
           <VaultPageInfo
             vault={vault}
