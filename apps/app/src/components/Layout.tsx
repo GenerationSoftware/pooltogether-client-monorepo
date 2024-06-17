@@ -26,6 +26,7 @@ import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import Head from 'next/head'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/router'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { trackDeposit } from 'src/utils'
@@ -36,6 +37,7 @@ import { useNetworks } from '@hooks/useNetworks'
 import { useSelectedPrizePool } from '@hooks/useSelectedPrizePool'
 import { useSettingsModalView } from '@hooks/useSettingsModalView'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
+import { useWalletId } from '@hooks/useWalletId'
 import { MigrationPopup } from './MigrationPopup'
 import { DepositModal } from './Modals/DepositModal'
 import { DrawModal } from './Modals/DrawModal'
@@ -79,7 +81,7 @@ export const Layout = (props: LayoutProps) => {
   const addRecentTransaction = useAddRecentTransaction()
 
   const { vaults } = useSelectedVaults()
-  const { address: userAddress, connector } = useAccount()
+  const { address: userAddress } = useAccount()
   const { refetch: refetchUserVaultBalances } = useAllUserVaultBalances(
     vaults,
     userAddress as Address,
@@ -116,6 +118,23 @@ export const Layout = (props: LayoutProps) => {
       toast(alert.content, { id: alert.id })
     })
   })
+
+  const searchParams = useSearchParams()
+  const { walletId, setWalletId } = useWalletId()
+
+  useEffect(() => {
+    if (!!searchParams) {
+      const utmSrc = searchParams.get('utm_source')?.toLowerCase()
+
+      if (!!utmSrc) {
+        if (utmSrc === 'imtoken') {
+          setWalletId('imToken')
+        } else if (utmSrc === 'exodus') {
+          setWalletId('exodus')
+        }
+      }
+    }
+  }, [searchParams])
 
   const footerItems: FooterItem[] = [
     {
@@ -246,15 +265,15 @@ export const Layout = (props: LayoutProps) => {
         onSuccessfulApproval={() => fathom.trackEvent(FATHOM_EVENTS.approvedExact)}
         onSuccessfulDeposit={(chainId, txReceipt) => {
           fathom.trackEvent(FATHOM_EVENTS.deposited)
-          !!connector?.id && trackDeposit(chainId, txReceipt.transactionHash, connector.id)
+          !!walletId && trackDeposit(chainId, txReceipt.transactionHash, walletId)
         }}
         onSuccessfulDepositWithPermit={(chainId, txReceipt) => {
           fathom.trackEvent(FATHOM_EVENTS.depositedWithPermit)
-          !!connector?.id && trackDeposit(chainId, txReceipt.transactionHash, connector.id)
+          !!walletId && trackDeposit(chainId, txReceipt.transactionHash, walletId)
         }}
         onSuccessfulDepositWithZap={(chainId, txReceipt) => {
           fathom.trackEvent(FATHOM_EVENTS.depositedWithZap)
-          !!connector?.id && trackDeposit(chainId, txReceipt.transactionHash, connector.id)
+          !!walletId && trackDeposit(chainId, txReceipt.transactionHash, walletId)
         }}
       />
 
