@@ -54,7 +54,7 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
   }, [chainId, address, vaults])
 
   const { data: vaultTokenAddress, isFetched: isFetchedVaultTokenAddress } = useVaultTokenAddress(
-    vault as Vault
+    vault!
   )
 
   if (!!chainId && !isFetchedVaultTokenAddress) {

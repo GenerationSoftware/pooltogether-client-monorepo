@@ -1,17 +1,18 @@
 import { ExclamationTriangleIcon } from '@heroicons/react/24/solid'
-import { Tooltip } from '@shared/ui'
+import { Tooltip, TooltipProps } from '@shared/ui'
 import classNames from 'classnames'
 
 export interface ImportedVaultTooltipProps {
   vaultLists: { name: string; href: string }[]
   iconSize?: 'sm' | 'md' | 'lg'
+  placement?: TooltipProps['placement']
   intl?: string
   className?: string
   iconClassName?: string
 }
 
 export const ImportedVaultTooltip = (props: ImportedVaultTooltipProps) => {
-  const { vaultLists, iconSize, intl, className, iconClassName } = props
+  const { vaultLists, iconSize, placement, intl, className, iconClassName } = props
 
   return (
     <Tooltip
@@ -30,6 +31,7 @@ export const ImportedVaultTooltip = (props: ImportedVaultTooltipProps) => {
           ))}
         </div>
       }
+      placement={placement}
     >
       <ExclamationTriangleIcon
         className={classNames(
