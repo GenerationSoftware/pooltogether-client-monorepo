@@ -322,8 +322,9 @@ const VaultInfoRow = (props: VaultInfoRowProps) => {
   const { name, data } = props
 
   return (
-    <div className='inline-flex w-full items-center justify-between'>
+    <div className='inline-flex w-full items-center justify-between gap-2'>
       <span className='text-pt-purple-100'>{name}</span>
+      <span className='h-3 grow border-b border-dashed border-pt-purple-50/30' />
       <span>{data}</span>
     </div>
   )

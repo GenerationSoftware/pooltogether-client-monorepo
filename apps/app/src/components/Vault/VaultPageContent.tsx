@@ -211,7 +211,6 @@ const Disclaimer = (props: DisclaimerProps) => {
     <div
       className={classNames(
         'w-full flex flex-col gap-4 items-center p-6 text-pt-purple-100 bg-pt-transparent rounded-lg',
-        'lg:gap-5 lg:p-10',
         className
       )}
     >
