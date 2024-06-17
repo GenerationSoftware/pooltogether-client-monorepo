@@ -83,7 +83,6 @@
     },
     "returnToVaults": "Volver a los Cofres",
     "learnAboutVault": "Aprender acerca de {vaultName}",
-    "smartContractRisk": "PoolTogether es un protocolo sin permisos que cualquiera puede usar para desplegar bóvedas de premios. Esta bóveda de premio te expone al riesgo de contrato inteligente de los siguientes contratos:",
     "vaultContract": "Contrato de bóveda",
     "yieldSourceContract": "Contrato de origen del rendimiento",
     "inVaultLists": "Esta bóveda de premios está en las siguientes listas de bóveda que has seleccionado:",

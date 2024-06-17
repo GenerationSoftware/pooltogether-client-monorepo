@@ -77,7 +77,6 @@
     },
     "returnToVaults": "금고로 돌아가기",
     "learnAboutVault": "{vaultName} 에 대해 알아보기",
-    "smartContractRisk": "PoolTogether 는 누구나 사용할 수 있는 허가 없는 프로토콜입니다. 이 상금 금고는 다음 계약들로부터 스마트 계약 위험에 노출됩니다:",
     "vaultContract": "금고 계약",
     "yieldSourceContract": "수익 소스 계약",
     "inVaultLists": "이 상금 금고는 당신이 선택한 다음 금고 목록에 있습니다:",

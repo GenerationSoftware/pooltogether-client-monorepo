@@ -3,22 +3,29 @@ import {
   usePublicClientsByChain,
   useSelectedVaultLists,
   useSelectedVaults,
-  useVaultTokenAddress
+  useVaultShareData,
+  useVaultTokenAddress,
+  useVaultYieldSource
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { DelegateButton, DepositButton, ErrorPooly, WithdrawButton } from '@shared/react-components'
+import {
+  AlertIcon,
+  DelegateButton,
+  DepositButton,
+  ErrorPooly,
+  WithdrawButton
+} from '@shared/react-components'
 import { VaultInfo } from '@shared/types'
 import { Button, Spinner } from '@shared/ui'
-import { getVaultId, NETWORK } from '@shared/utilities'
+import { getBlockExplorerUrl, getVaultId, LINKS, NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
 import * as fathom from 'fathom-client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { ParsedUrlQuery } from 'querystring'
-import { useMemo } from 'react'
+import { AnchorHTMLAttributes, DetailedHTMLProps, useMemo } from 'react'
 import { Address, isAddress } from 'viem'
 import { FATHOM_EVENTS, SUPPORTED_NETWORKS } from '@constants/config'
 import { useNetworks } from '@hooks/useNetworks'
-import { VaultPageExtraInfo } from './VaultPageExtraInfo'
 import { VaultPageHeader } from './VaultPageHeader'
 import { VaultPageInfo } from './VaultPageInfo'
 
@@ -93,7 +100,7 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
             ]}
             className='max-w-[44rem]'
           />
-          <VaultPageExtraInfo vault={vault} className='max-w-[44rem]' />
+          <Disclaimer vault={vault} className='max-w-[44rem]' />
         </>
       ) : (
         <ErrorState chainId={rawChainId} tokenAddress={vaultTokenAddress} />
@@ -180,6 +187,66 @@ const NotInVaultListsWarning = (props: NotInVaultListsWarningProps) => {
     >
       {t('shortWarningNotInVaultLists')}
     </span>
+  )
+}
+
+interface DisclaimerProps {
+  vault: Vault
+  className?: string
+}
+
+const Disclaimer = (props: DisclaimerProps) => {
+  const { vault, className } = props
+
+  const t_vault = useTranslations('Vault')
+
+  const { data: share } = useVaultShareData(vault)
+  const { data: yieldSourceAddress } = useVaultYieldSource(vault)
+
+  const linkProps: Partial<
+    DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>
+  > = { target: '_blank', className: 'text-pt-purple-300 hover:text-pt-purple-400' }
+
+  return (
+    <div
+      className={classNames(
+        'w-full flex flex-col gap-4 items-center p-6 text-pt-purple-100 bg-pt-transparent rounded-lg',
+        'lg:gap-5 lg:p-10',
+        className
+      )}
+    >
+      <div className='flex gap-2 items-center'>
+        <AlertIcon className='w-5 h-5' />
+        <span className='lg:font-semibold'>
+          {t_vault('learnAboutVault', { vaultName: vault.name ?? share?.name ?? '?' })}
+        </span>
+      </div>
+      <span>
+        {t_vault.rich('smartContractRisk', {
+          docsLink: (chunks) => (
+            <a href={LINKS.docs} {...linkProps}>
+              {chunks}
+            </a>
+          ),
+          vaultLink: (chunks) => (
+            <a href={getBlockExplorerUrl(vault.chainId, vault.address)} {...linkProps}>
+              {chunks}
+            </a>
+          ),
+          yieldLink: (chunks) => (
+            <a
+              href={getBlockExplorerUrl(
+                vault.chainId,
+                yieldSourceAddress ?? `${vault.address}/#readContract`
+              )}
+              {...linkProps}
+            >
+              {chunks}
+            </a>
+          )
+        })}
+      </span>
+    </div>
   )
 }
 
