@@ -1,20 +1,23 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   usePublicClientsByChain,
+  useSelectedVaultLists,
   useSelectedVaults,
   useVaultTokenAddress
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { ErrorPooly } from '@shared/react-components'
+import { DelegateButton, DepositButton, ErrorPooly, WithdrawButton } from '@shared/react-components'
+import { VaultInfo } from '@shared/types'
 import { Button, Spinner } from '@shared/ui'
 import { getVaultId, NETWORK } from '@shared/utilities'
+import classNames from 'classnames'
+import * as fathom from 'fathom-client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { ParsedUrlQuery } from 'querystring'
 import { useMemo } from 'react'
 import { Address, isAddress } from 'viem'
-import { SUPPORTED_NETWORKS } from '@constants/config'
+import { FATHOM_EVENTS, SUPPORTED_NETWORKS } from '@constants/config'
 import { useNetworks } from '@hooks/useNetworks'
-import { VaultButtons } from './VaultButtons'
 import { VaultPageExtraInfo } from './VaultPageExtraInfo'
 import { VaultPageHeader } from './VaultPageHeader'
 import { VaultPageInfo } from './VaultPageInfo'
@@ -60,7 +63,7 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
   if (!!chainId && !isFetchedVaultTokenAddress) {
     return (
       <>
-        <VaultPageHeader vault={vault} />
+        <VaultPageHeader vault={vault} className='max-w-[44rem]' />
         <Spinner />
       </>
     )
@@ -71,10 +74,23 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
       <VaultPageHeader vault={vault} className='max-w-[44rem]' />
       {!!vault && !!vaultTokenAddress ? (
         <>
-          <VaultPageInfo vault={vault} className='max-w-[44rem]' />
-          <VaultButtons
+          <Buttons vault={vault} className='max-w-[44rem]' />
+          <NotInVaultListsWarning vault={vault} className='max-w-[44rem]' />
+          <VaultPageInfo
             vault={vault}
-            forceShow={['delegate', 'withdraw']}
+            show={['userBalance', 'userDelegationBalance', 'userWinChance']}
+            className='max-w-[44rem]'
+          />
+          <VaultPageInfo
+            vault={vault}
+            show={[
+              'prizeToken',
+              'depositToken',
+              'vaultOwner',
+              'vaultFee',
+              'vaultFeeRecipient',
+              'lpSourceURI'
+            ]}
             className='max-w-[44rem]'
           />
           <VaultPageExtraInfo vault={vault} className='max-w-[44rem]' />
@@ -86,13 +102,95 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
   )
 }
 
+interface ButtonsProps {
+  vault: Vault
+  className?: string
+}
+
+const Buttons = (props: ButtonsProps) => {
+  const { vault, className } = props
+
+  const t_common = useTranslations('Common')
+  const t_tooltips = useTranslations('Tooltips')
+
+  return (
+    <div className={classNames('flex items-center gap-2 md:gap-4', className)}>
+      <DepositButton
+        vault={vault}
+        extraOnClick={() => fathom.trackEvent(FATHOM_EVENTS.openedDepositModal)}
+        intl={{ base: t_common, tooltips: t_tooltips }}
+      />
+      <WithdrawButton
+        vault={vault}
+        extraOnClick={() => fathom.trackEvent(FATHOM_EVENTS.openedWithdrawModal)}
+        color='transparent'
+      >
+        {t_common('withdraw')}
+      </WithdrawButton>
+      <DelegateButton
+        vault={vault}
+        extraOnClick={() => fathom.trackEvent(FATHOM_EVENTS.openedDelegateModal)}
+        color='transparent'
+      >
+        {t_common('delegate')}
+      </DelegateButton>
+    </div>
+  )
+}
+
+interface NotInVaultListsWarningProps {
+  vault: Vault
+  className?: string
+}
+
+const NotInVaultListsWarning = (props: NotInVaultListsWarningProps) => {
+  const { vault, className } = props
+
+  const t = useTranslations('Vault')
+
+  const { localVaultLists, importedVaultLists } = useSelectedVaultLists()
+  const allVaultLists = Object.values({ ...localVaultLists, ...importedVaultLists })
+
+  const vaultListEntries = useMemo(() => {
+    const entries: VaultInfo[] = []
+
+    if (!!vault) {
+      allVaultLists.forEach((list) => {
+        for (const entry of list.tokens) {
+          if (vault.id === getVaultId(entry)) {
+            entries.push(entry)
+          }
+        }
+      })
+    }
+
+    return entries
+  }, [vault, allVaultLists])
+
+  if (!vault || vaultListEntries.length > 0) {
+    return <></>
+  }
+
+  return (
+    <span
+      className={classNames(
+        'w-full px-6 py-1 text-center text-sm font-medium bg-pt-warning-light text-pt-warning-dark rounded',
+        className
+      )}
+    >
+      {t('shortWarningNotInVaultLists')}
+    </span>
+  )
+}
+
 interface ErrorStateProps {
   chainId?: number
   tokenAddress?: Address
+  className?: string
 }
 
 const ErrorState = (props: ErrorStateProps) => {
-  const { chainId, tokenAddress } = props
+  const { chainId, tokenAddress, className } = props
 
   const t_vault = useTranslations('Vault')
   const t_error = useTranslations('Error')
@@ -103,7 +201,12 @@ const ErrorState = (props: ErrorStateProps) => {
   const isInvalidInterface = !tokenAddress
 
   return (
-    <div className='w-full max-w-md flex flex-col gap-6 items-center text-center'>
+    <div
+      className={classNames(
+        'w-full max-w-md flex flex-col gap-6 items-center text-center',
+        className
+      )}
+    >
       <ErrorPooly className='w-full max-w-[50%]' />
       {isInvalidNetwork ? (
         <div className='flex flex-col gap-2'>
