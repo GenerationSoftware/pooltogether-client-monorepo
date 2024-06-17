@@ -10,6 +10,7 @@ import { getVaultId } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
+import { getCleanURI } from 'src/utils'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 
@@ -62,13 +63,7 @@ export const LpSource = (props: LpSourceProps) => {
 
   const cleanSourceURI = useMemo(() => {
     if (!!sourceURI) {
-      if (sourceURI.startsWith('http')) {
-        return /^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/?\n]+)/i.exec(sourceURI)?.[1] ?? ''
-      } else if (sourceURI.startsWith('ipfs://') || sourceURI.startsWith('ipns://')) {
-        return `${sourceURI.slice(0, 15)}...`
-      } else {
-        return sourceURI
-      }
+      return getCleanURI(sourceURI)
     }
   }, [sourceURI])
 

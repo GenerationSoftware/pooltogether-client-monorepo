@@ -7,6 +7,7 @@ import {
   useVaultTokenAddress,
   useVaultYieldSource
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { useScreenSize } from '@shared/generic-react-hooks'
 import {
   AlertIcon,
   DelegateButton,
@@ -15,7 +16,7 @@ import {
   WithdrawButton
 } from '@shared/react-components'
 import { VaultInfo } from '@shared/types'
-import { Button, Spinner } from '@shared/ui'
+import { Button, Card, ExternalLink, Spinner } from '@shared/ui'
 import { getBlockExplorerUrl, getVaultId, LINKS, NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
 import * as fathom from 'fathom-client'
@@ -23,11 +24,15 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { ParsedUrlQuery } from 'querystring'
 import { AnchorHTMLAttributes, DetailedHTMLProps, useMemo } from 'react'
+import { getCleanURI } from 'src/utils'
 import { Address, isAddress } from 'viem'
 import { FATHOM_EVENTS, SUPPORTED_NETWORKS } from '@constants/config'
 import { useNetworks } from '@hooks/useNetworks'
 import { VaultPageHeader } from './VaultPageHeader'
 import { VaultPageInfo } from './VaultPageInfo'
+import { VaultPrizeYield } from './VaultPrizeYield'
+import { VaultTotalDeposits } from './VaultTotalDeposits'
+import { VaultWinChance } from './VaultWinChance'
 
 interface VaultPageContentProps {
   queryParams: ParsedUrlQuery
@@ -67,10 +72,12 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
     vault!
   )
 
+  const maxWidthClassName = 'max-w-screen-md'
+
   if (!!chainId && !isFetchedVaultTokenAddress) {
     return (
       <>
-        <VaultPageHeader vault={vault} className='max-w-[44rem]' />
+        <VaultPageHeader vault={vault} className={maxWidthClassName} />
         <Spinner />
       </>
     )
@@ -78,16 +85,20 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
 
   return (
     <>
-      <VaultPageHeader vault={vault} className='max-w-[44rem]' />
+      <VaultPageHeader vault={vault} className={maxWidthClassName} />
       {!!vault && !!vaultTokenAddress ? (
         <>
-          <Buttons vault={vault} className='max-w-[44rem] -mt-4' />
-          <NotInVaultListsWarning vault={vault} className='max-w-[44rem]' />
+          <Buttons vault={vault} className={classNames(maxWidthClassName, '-mt-4')} />
+          <NotInVaultListsWarning vault={vault} className={maxWidthClassName} />
           <VaultPageInfo
             vault={vault}
             show={['userBalance', 'userDelegationBalance', 'userWinChance']}
-            className='max-w-[44rem]'
+            className={maxWidthClassName}
           />
+          <Cards vault={vault} className={maxWidthClassName} />
+          {/* TODO: add vault's eligible prizes section */}
+          {/* TODO: add bonus rewards section */}
+          {/* TODO: add recent winners on this vault */}
           <VaultPageInfo
             vault={vault}
             show={[
@@ -98,9 +109,10 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
               'vaultFeeRecipient',
               'lpSourceURI'
             ]}
-            className='max-w-[44rem]'
+            className={maxWidthClassName}
           />
-          <Disclaimer vault={vault} className='max-w-[44rem]' />
+          {/* TODO: add bar chart of prize pool contributions over time (7d or 30d) - maybe include prize yield line? */}
+          <Disclaimer vault={vault} className={maxWidthClassName} />
         </>
       ) : (
         <ErrorState chainId={rawChainId} tokenAddress={vaultTokenAddress} />
@@ -187,6 +199,75 @@ const NotInVaultListsWarning = (props: NotInVaultListsWarningProps) => {
     >
       {t('shortWarningNotInVaultLists')}
     </span>
+  )
+}
+
+interface CardsProps {
+  vault: Vault
+  className?: string
+}
+
+const Cards = (props: CardsProps) => {
+  const { vault, className } = props
+
+  const t_common = useTranslations('Common')
+  const t_vault = useTranslations('Vault')
+
+  const { isDesktop } = useScreenSize()
+
+  const cardClassName = 'px-0 text-center'
+  const titleClassName = 'mb-2 text-xl text-pt-purple-300 font-semibold md:mb-3 md:text-2xl'
+  const contentClassName = 'grow flex flex-col items-center justify-center'
+
+  return (
+    <div
+      className={classNames(
+        'w-full grid grid-cols-1 gap-3 md:grid-cols-2',
+        { 'md:grid-cols-3': !!vault.yieldSourceName },
+        className
+      )}
+    >
+      <Card className={cardClassName}>
+        <span className={titleClassName}>{t_vault('headers.totalDeposited')}</span>
+        <div className={contentClassName}>
+          <VaultTotalDeposits
+            vault={vault}
+            className='gap-2'
+            valueClassName='!text-2xl text-pt-purple-100 font-semibold md:!text-3xl'
+            amountClassName='!text-sm text-pt-purple-300 md:!text-base'
+          />
+        </div>
+      </Card>
+      <Card className={cardClassName}>
+        <span className={titleClassName}>{t_vault('headers.winChance')}</span>
+        <div className={classNames(contentClassName, 'gap-2')}>
+          <VaultWinChance vault={vault} className='h-10 w-auto' />
+          <div className='flex items-center gap-2 text-sm text-pt-purple-300 md:text-base'>
+            <span>{t_vault('headers.prizeYield')}:</span>
+            <VaultPrizeYield vault={vault} label={t_common('apr')} />
+          </div>
+        </div>
+      </Card>
+      {!!vault.yieldSourceName && (
+        <Card className={cardClassName}>
+          <span className={titleClassName}>{t_vault('headers.yieldSource')}</span>
+          <div className={classNames(contentClassName, 'gap-2')}>
+            <span className='text-2xl text-pt-purple-100 font-semibold md:text-3xl'>
+              {vault.yieldSourceName}
+            </span>
+            {!!vault.yieldSourceURI && (
+              <ExternalLink
+                href={vault.yieldSourceURI}
+                size={isDesktop ? 'md' : 'sm'}
+                className='text-pt-purple-300 hover:text-pt-purple-400'
+              >
+                {getCleanURI(vault.yieldSourceURI)}
+              </ExternalLink>
+            )}
+          </div>
+        </Card>
+      )}
+    </div>
   )
 }
 

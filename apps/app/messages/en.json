@@ -104,6 +104,7 @@
       "prizeYield": "Prize Yield",
       "bonusRewards": "Bonus Rewards",
       "tvl": "TVL",
+      "totalDeposited": "Total Deposited",
       "contributions": "{number}D Prize Pool Contribution",
       "depositToken": "Deposit Token",
       "prizeToken": "Prize Token",

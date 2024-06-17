@@ -25,6 +25,7 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { ReactNode, useMemo } from 'react'
+import { getCleanURI } from 'src/utils'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
@@ -383,19 +384,9 @@ interface VaultInfoURIProps {
 const VaultInfoURI = (props: VaultInfoURIProps) => {
   const { URI } = props
 
-  const cleanURI = useMemo(() => {
-    if (URI.startsWith('http')) {
-      return /^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/?\n]+)/i.exec(URI)?.[1] ?? ''
-    } else if (URI.startsWith('ipfs://') || URI.startsWith('ipns://')) {
-      return `${URI.slice(0, 15)}...`
-    } else {
-      return URI
-    }
-  }, [URI])
-
   return (
     <ExternalLink href={URI} size='sm' className='text-pt-purple-200'>
-      {cleanURI}
+      {getCleanURI(URI)}
     </ExternalLink>
   )
 }
