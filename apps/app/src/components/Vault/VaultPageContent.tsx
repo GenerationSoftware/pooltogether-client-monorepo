@@ -1,55 +1,32 @@
-import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
-  useDrawPeriod,
   usePublicClientsByChain,
-  useSelectedVaultLists,
   useSelectedVaults,
-  useVaultPromotions,
   useVaultPromotionsApr,
   useVaultShareData,
   useVaultTokenAddress,
   useVaultYieldSource
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { useScreenSize } from '@shared/generic-react-hooks'
-import {
-  AlertIcon,
-  DelegateButton,
-  DepositButton,
-  ErrorPooly,
-  WithdrawButton
-} from '@shared/react-components'
-import { VaultInfo } from '@shared/types'
-import { Button, Card, ExternalLink, Spinner } from '@shared/ui'
-import {
-  formatDailyCountToFrequency,
-  getBlockExplorerUrl,
-  getCountdownTextFromTimestamp,
-  getPrizeTextFromFrequency,
-  getSecondsSinceEpoch,
-  getVaultId,
-  LINKS,
-  NETWORK,
-  SECONDS_PER_DAY
-} from '@shared/utilities'
+import { AlertIcon, ErrorPooly } from '@shared/react-components'
+import { Button, Spinner } from '@shared/ui'
+import { getBlockExplorerUrl, getVaultId, LINKS, NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
-import * as fathom from 'fathom-client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { ParsedUrlQuery } from 'querystring'
-import { AnchorHTMLAttributes, DetailedHTMLProps, ReactNode, useMemo } from 'react'
-import { getCleanURI } from 'src/utils'
+import { AnchorHTMLAttributes, DetailedHTMLProps, useMemo } from 'react'
 import { Address, isAddress } from 'viem'
 import { useAccount } from 'wagmi'
-import { PrizePoolPrizesCard } from '@components/Prizes/PrizePoolPrizesCard'
-import { FATHOM_EVENTS, SUPPORTED_NETWORKS, TWAB_REWARDS_SETTINGS } from '@constants/config'
+import { SUPPORTED_NETWORKS, TWAB_REWARDS_SETTINGS } from '@constants/config'
 import { useNetworks } from '@hooks/useNetworks'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
-import { VaultBonusRewards } from './VaultBonusRewards'
+import { VaultPageBonusRewardsSection } from './VaultPageBonusRewardsSection'
+import { VaultPageButtons } from './VaultPageButtons'
+import { VaultPageCards } from './VaultPageCards'
 import { VaultPageHeader } from './VaultPageHeader'
 import { VaultPageInfo } from './VaultPageInfo'
-import { VaultPrizeYield } from './VaultPrizeYield'
-import { VaultTotalDeposits } from './VaultTotalDeposits'
-import { VaultWinChance } from './VaultWinChance'
+import { VaultPagePrizesSection } from './VaultPagePrizesSection'
+import { VaultPageVaultListWarning } from './VaultPageVaultListWarning'
 
 interface VaultPageContentProps {
   queryParams: ParsedUrlQuery
@@ -114,8 +91,8 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
       <VaultPageHeader vault={vault} className={maxWidthClassName} />
       {!!vault && !!vaultTokenAddress ? (
         <>
-          <Buttons vault={vault} className={classNames(maxWidthClassName, '-mt-4')} />
-          <NotInVaultListsWarning vault={vault} className={maxWidthClassName} />
+          <VaultPageButtons vault={vault} className={classNames(maxWidthClassName, '-mt-4')} />
+          <VaultPageVaultListWarning vault={vault} className={maxWidthClassName} />
           {!!userAddress && (
             <VaultPageInfo
               vault={vault}
@@ -123,7 +100,7 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
               className={maxWidthClassName}
             />
           )}
-          <Cards vault={vault} className={maxWidthClassName} />
+          <VaultPageCards vault={vault} className={maxWidthClassName} />
           {!!prizePool && (
             <div
               className={classNames(
@@ -132,8 +109,10 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
                 maxWidthClassName
               )}
             >
-              <PrizesSection prizePool={prizePool} />
-              {!!vaultPromotionsApr && <BonusRewardsSection vault={vault} prizePool={prizePool} />}
+              <VaultPagePrizesSection prizePool={prizePool} />
+              {!!vaultPromotionsApr && (
+                <VaultPageBonusRewardsSection vault={vault} prizePool={prizePool} />
+              )}
             </div>
           )}
           {/* TODO: add recent winners on this vault */}
@@ -156,272 +135,6 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
         <ErrorState chainId={rawChainId} tokenAddress={vaultTokenAddress} />
       )}
     </>
-  )
-}
-
-interface ButtonsProps {
-  vault: Vault
-  className?: string
-}
-
-const Buttons = (props: ButtonsProps) => {
-  const { vault, className } = props
-
-  const t_common = useTranslations('Common')
-  const t_tooltips = useTranslations('Tooltips')
-
-  return (
-    <div className={classNames('flex items-center gap-2 md:gap-4', className)}>
-      <DepositButton
-        vault={vault}
-        extraOnClick={() => fathom.trackEvent(FATHOM_EVENTS.openedDepositModal)}
-        intl={{ base: t_common, tooltips: t_tooltips }}
-      />
-      <WithdrawButton
-        vault={vault}
-        extraOnClick={() => fathom.trackEvent(FATHOM_EVENTS.openedWithdrawModal)}
-        color='transparent'
-      >
-        {t_common('withdraw')}
-      </WithdrawButton>
-      <DelegateButton
-        vault={vault}
-        extraOnClick={() => fathom.trackEvent(FATHOM_EVENTS.openedDelegateModal)}
-        color='transparent'
-      >
-        {t_common('delegate')}
-      </DelegateButton>
-    </div>
-  )
-}
-
-interface NotInVaultListsWarningProps {
-  vault: Vault
-  className?: string
-}
-
-const NotInVaultListsWarning = (props: NotInVaultListsWarningProps) => {
-  const { vault, className } = props
-
-  const t = useTranslations('Vault')
-
-  const { localVaultLists, importedVaultLists } = useSelectedVaultLists()
-  const allVaultLists = Object.values({ ...localVaultLists, ...importedVaultLists })
-
-  const vaultListEntries = useMemo(() => {
-    const entries: VaultInfo[] = []
-
-    if (!!vault) {
-      allVaultLists.forEach((list) => {
-        for (const entry of list.tokens) {
-          if (vault.id === getVaultId(entry)) {
-            entries.push(entry)
-          }
-        }
-      })
-    }
-
-    return entries
-  }, [vault, allVaultLists])
-
-  if (!vault || vaultListEntries.length > 0) {
-    return <></>
-  }
-
-  return (
-    <span
-      className={classNames(
-        'w-full px-6 py-1 text-center text-sm font-medium bg-pt-warning-light text-pt-warning-dark rounded',
-        className
-      )}
-    >
-      {t('shortWarningNotInVaultLists')}
-    </span>
-  )
-}
-
-interface CardsProps {
-  vault: Vault
-  className?: string
-}
-
-const Cards = (props: CardsProps) => {
-  const { vault, className } = props
-
-  const t_common = useTranslations('Common')
-  const t_vault = useTranslations('Vault')
-
-  const { isDesktop } = useScreenSize()
-
-  return (
-    <div
-      className={classNames(
-        'w-full grid grid-cols-1 gap-3 md:grid-cols-2',
-        { 'md:grid-cols-3': !!vault.yieldSourceName },
-        className
-      )}
-    >
-      <SimpleCard title={t_vault('headers.totalDeposited')}>
-        <VaultTotalDeposits
-          vault={vault}
-          className='gap-2'
-          valueClassName='!text-2xl text-pt-purple-100 font-semibold md:!text-3xl'
-          amountClassName='!text-sm text-pt-purple-300 md:!text-base'
-        />
-      </SimpleCard>
-      <SimpleCard title={t_vault('headers.winChance')}>
-        <VaultWinChance vault={vault} className='h-10 w-auto' />
-        <div className='flex items-center gap-2 text-sm text-pt-purple-300 md:text-base'>
-          <span>{t_vault('headers.prizeYield')}:</span>
-          <VaultPrizeYield vault={vault} label={t_common('apr')} />
-        </div>
-      </SimpleCard>
-      {!!vault.yieldSourceName && (
-        <SimpleCard title={t_vault('headers.yieldSource')}>
-          <span className='text-2xl text-pt-purple-100 font-semibold md:text-3xl'>
-            {vault.yieldSourceName}
-          </span>
-          {!!vault.yieldSourceURI && (
-            <ExternalLink
-              href={vault.yieldSourceURI}
-              size={isDesktop ? 'md' : 'sm'}
-              className='text-pt-purple-300 hover:text-pt-purple-400'
-            >
-              {getCleanURI(vault.yieldSourceURI)}
-            </ExternalLink>
-          )}
-        </SimpleCard>
-      )}
-    </div>
-  )
-}
-
-interface SimpleCardProps {
-  title: ReactNode
-  children: ReactNode
-  className?: string
-  wrapperClassName?: string
-}
-
-const SimpleCard = (props: SimpleCardProps) => {
-  const { title, children, className, wrapperClassName } = props
-
-  return (
-    <Card className={classNames('text-center', className)} wrapperClassName={wrapperClassName}>
-      <span className='mb-2 text-xl text-pt-purple-300 font-semibold md:mb-3 md:text-2xl'>
-        {title}
-      </span>
-      <div className='grow flex flex-col items-center justify-center gap-2'>{children}</div>
-    </Card>
-  )
-}
-
-interface PrizesSectionProps {
-  prizePool: PrizePool
-  className?: string
-}
-
-const PrizesSection = (props: PrizesSectionProps) => {
-  const { prizePool, className } = props
-
-  const t_prizes = useTranslations('Prizes')
-
-  // TODO: better title?
-  return (
-    <SimpleCard
-      title={t_prizes('currentPrizes')}
-      className='!p-0'
-      wrapperClassName={classNames('bg-transparent shadow-none', className)}
-    >
-      <PrizePoolPrizesCard
-        prizePool={prizePool}
-        className='bg-transparent shadow-none'
-        innerClassName='!p-0'
-        networkClassName='hidden'
-        headersClassName='hidden'
-        prizeClassName='!pl-0 pr-3 !text-2xl !text-pt-purple-100 font-semibold md:!text-3xl'
-        frequencyClassName='!pr-0 pl-3 !text-pt-purple-300'
-      />
-    </SimpleCard>
-  )
-}
-
-interface BonusRewardsSectionProps {
-  vault: Vault
-  prizePool: PrizePool
-  className?: string
-}
-
-const BonusRewardsSection = (props: BonusRewardsSectionProps) => {
-  const { vault, prizePool, className } = props
-
-  const t_common = useTranslations('Common')
-  const t_vault = useTranslations('Vault')
-  const t_freq = useTranslations('Frequency')
-
-  const tokenAddresses = TWAB_REWARDS_SETTINGS[vault.chainId]?.tokenAddresses
-  const fromBlock = TWAB_REWARDS_SETTINGS[vault.chainId]?.fromBlock
-  const { data: vaultPromotions } = useVaultPromotions(vault, { tokenAddresses, fromBlock })
-
-  const { data: drawPeriod } = useDrawPeriod(prizePool)
-
-  const currentTimestamp = useMemo(() => getSecondsSinceEpoch(), [])
-
-  const validPromotions = useMemo(() => {
-    if (!!vaultPromotions && !!drawPeriod) {
-      const maxTimestamp = currentTimestamp + 7 * drawPeriod // TODO: avoid hardcoding N
-
-      return Object.values(vaultPromotions).filter(
-        (p) =>
-          !!p.numberOfEpochs &&
-          Number(p.startTimestamp) < maxTimestamp &&
-          Number(p.startTimestamp) + p.numberOfEpochs * p.epochDuration > currentTimestamp
-      )
-    } else {
-      return []
-    }
-  }, [vaultPromotions, drawPeriod, currentTimestamp])
-
-  const formattedFrequency = useMemo(() => {
-    const minDuration = Math.min(...validPromotions.map((p) => p.epochDuration))
-    const frequency = formatDailyCountToFrequency(SECONDS_PER_DAY / minDuration)
-    return getPrizeTextFromFrequency(frequency, 'everyXdays', t_freq)
-  }, [validPromotions])
-
-  const formattedNextClaim = useMemo(() => {
-    const firstClaimTimestamps = validPromotions
-      .map((promotion) => {
-        const startTimestamp = Number(promotion.startTimestamp)
-        const epochIds = [...Array(promotion.numberOfEpochs! + 1).keys()].slice(1)
-        const claimTimestamps = epochIds.map((i) => startTimestamp + i * promotion.epochDuration)
-        return claimTimestamps.find((t) => t > currentTimestamp) ?? 0
-      })
-      .filter((t) => !!t)
-
-    const nextClaimTimestamp = Math.min(...firstClaimTimestamps)
-    return getCountdownTextFromTimestamp(nextClaimTimestamp, t_freq)
-  }, [validPromotions, currentTimestamp])
-
-  return (
-    <SimpleCard
-      title={t_vault('headers.bonusRewards')}
-      className='!p-0'
-      wrapperClassName={classNames('bg-transparent shadow-none', className)}
-    >
-      <VaultBonusRewards
-        vault={vault}
-        valueClassName='text-2xl text-pt-purple-100 font-semibold md:text-3xl'
-        append={<span className='text-sm text-pt-purple-300 md:text-base'>{t_common('apr')}</span>}
-      />
-      <div className='flex items-center gap-2 text-sm md:text-base'>
-        <span className='text-pt-purple-300'>{t_common('distribution')}:</span>
-        <span className='text-pt-purple-100'>{formattedFrequency}</span>
-      </div>
-      <div className='flex items-center gap-2 text-sm md:text-base'>
-        <span className='text-pt-purple-300'>{t_common('nextClaim')}:</span>
-        <span className='text-pt-purple-100'>{formattedNextClaim}</span>
-      </div>
-    </SimpleCard>
   )
 }
 
