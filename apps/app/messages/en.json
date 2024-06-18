@@ -36,7 +36,8 @@
     "before": "Before",
     "after": "After",
     "distribution": "Distribution",
-    "nextClaim": "Next Claim"
+    "nextClaim": "Next Claim",
+    "date": "Date"
   },
   "Navigation": {
     "home": "Home",

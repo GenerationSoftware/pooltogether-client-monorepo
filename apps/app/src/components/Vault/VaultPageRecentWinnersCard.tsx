@@ -22,9 +22,8 @@ interface VaultPageRecentWinnersCardProps {
 export const VaultPageRecentWinnersCard = (props: VaultPageRecentWinnersCardProps) => {
   const { vault, prizePool, className } = props
 
-  // TODO: move translations to better/neutral locations
+  const t_common = useTranslations('Common')
   const t_prizes = useTranslations('Prizes')
-  const t_account = useTranslations('Account')
 
   const { data: prizeToken, isFetched: isFetchedPrizeToken } = usePrizeTokenData(prizePool)
 
@@ -73,7 +72,7 @@ export const VaultPageRecentWinnersCard = (props: VaultPageRecentWinnersCardProp
     >
       <div className='w-full grid grid-cols-3 font-semibold text-pt-purple-300'>
         <span className='text-left'>{t_prizes('drawModal.winner')}</span>
-        <span>{t_account('winHeaders.date')}</span>
+        <span>{t_common('date')}</span>
         <span className='text-right'>{t_prizes('prize')}</span>
       </div>
       {sortedWins.map(({ winner, timestamp, amount }) => {
