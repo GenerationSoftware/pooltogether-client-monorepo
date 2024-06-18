@@ -1,8 +1,9 @@
-import { Vault } from '@generationsoftware/hyperstructure-client-js'
+import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   usePublicClientsByChain,
   useSelectedVaultLists,
   useSelectedVaults,
+  useVaultPromotionsApr,
   useVaultShareData,
   useVaultTokenAddress,
   useVaultYieldSource
@@ -23,11 +24,14 @@ import * as fathom from 'fathom-client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { ParsedUrlQuery } from 'querystring'
-import { AnchorHTMLAttributes, DetailedHTMLProps, useMemo } from 'react'
+import { AnchorHTMLAttributes, DetailedHTMLProps, ReactNode, useMemo } from 'react'
 import { getCleanURI } from 'src/utils'
 import { Address, isAddress } from 'viem'
-import { FATHOM_EVENTS, SUPPORTED_NETWORKS } from '@constants/config'
+import { PrizePoolPrizesCard } from '@components/Prizes/PrizePoolPrizesCard'
+import { FATHOM_EVENTS, SUPPORTED_NETWORKS, TWAB_REWARDS_SETTINGS } from '@constants/config'
 import { useNetworks } from '@hooks/useNetworks'
+import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
+import { VaultBonusRewards } from './VaultBonusRewards'
 import { VaultPageHeader } from './VaultPageHeader'
 import { VaultPageInfo } from './VaultPageInfo'
 import { VaultPrizeYield } from './VaultPrizeYield'
@@ -72,6 +76,13 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
     vault!
   )
 
+  const prizePoolsArray = Object.values(useSupportedPrizePools())
+  const prizePool = prizePoolsArray.find((prizePool) => prizePool.chainId === vault?.chainId)
+  const tokenAddresses = !!vault ? TWAB_REWARDS_SETTINGS[vault.chainId].tokenAddresses : []
+  const { data: vaultPromotionsApr } = useVaultPromotionsApr(vault!, prizePool!, tokenAddresses, {
+    fromBlock: !!vault ? TWAB_REWARDS_SETTINGS[vault.chainId].fromBlock : undefined
+  })
+
   const maxWidthClassName = 'max-w-screen-md'
 
   if (!!chainId && !isFetchedVaultTokenAddress) {
@@ -96,8 +107,16 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
             className={maxWidthClassName}
           />
           <Cards vault={vault} className={maxWidthClassName} />
-          {/* TODO: add vault's eligible prizes section */}
-          {/* TODO: add bonus rewards section */}
+          <div
+            className={classNames(
+              'w-full grid grid-cols-1 gap-3',
+              { 'md:grid-cols-2': !!vaultPromotionsApr },
+              maxWidthClassName
+            )}
+          >
+            {!!prizePool && <PrizesSection prizePool={prizePool} />}
+            {!!vaultPromotionsApr && <BonusRewardsSection vault={vault} />}
+          </div>
           {/* TODO: add recent winners on this vault */}
           <VaultPageInfo
             vault={vault}
@@ -215,10 +234,6 @@ const Cards = (props: CardsProps) => {
 
   const { isDesktop } = useScreenSize()
 
-  const cardClassName = 'px-0 text-center'
-  const titleClassName = 'mb-2 text-xl text-pt-purple-300 font-semibold md:mb-3 md:text-2xl'
-  const contentClassName = 'grow flex flex-col items-center justify-center'
-
   return (
     <div
       className={classNames(
@@ -227,47 +242,116 @@ const Cards = (props: CardsProps) => {
         className
       )}
     >
-      <Card className={cardClassName}>
-        <span className={titleClassName}>{t_vault('headers.totalDeposited')}</span>
-        <div className={contentClassName}>
-          <VaultTotalDeposits
-            vault={vault}
-            className='gap-2'
-            valueClassName='!text-2xl text-pt-purple-100 font-semibold md:!text-3xl'
-            amountClassName='!text-sm text-pt-purple-300 md:!text-base'
-          />
+      <SimpleCard title={t_vault('headers.totalDeposited')}>
+        <VaultTotalDeposits
+          vault={vault}
+          className='gap-2'
+          valueClassName='!text-2xl text-pt-purple-100 font-semibold md:!text-3xl'
+          amountClassName='!text-sm text-pt-purple-300 md:!text-base'
+        />
+      </SimpleCard>
+      <SimpleCard title={t_vault('headers.winChance')}>
+        <VaultWinChance vault={vault} className='h-10 w-auto' />
+        <div className='flex items-center gap-2 text-sm text-pt-purple-300 md:text-base'>
+          <span>{t_vault('headers.prizeYield')}:</span>
+          <VaultPrizeYield vault={vault} label={t_common('apr')} />
         </div>
-      </Card>
-      <Card className={cardClassName}>
-        <span className={titleClassName}>{t_vault('headers.winChance')}</span>
-        <div className={classNames(contentClassName, 'gap-2')}>
-          <VaultWinChance vault={vault} className='h-10 w-auto' />
-          <div className='flex items-center gap-2 text-sm text-pt-purple-300 md:text-base'>
-            <span>{t_vault('headers.prizeYield')}:</span>
-            <VaultPrizeYield vault={vault} label={t_common('apr')} />
-          </div>
-        </div>
-      </Card>
+      </SimpleCard>
       {!!vault.yieldSourceName && (
-        <Card className={cardClassName}>
-          <span className={titleClassName}>{t_vault('headers.yieldSource')}</span>
-          <div className={classNames(contentClassName, 'gap-2')}>
-            <span className='text-2xl text-pt-purple-100 font-semibold md:text-3xl'>
-              {vault.yieldSourceName}
-            </span>
-            {!!vault.yieldSourceURI && (
-              <ExternalLink
-                href={vault.yieldSourceURI}
-                size={isDesktop ? 'md' : 'sm'}
-                className='text-pt-purple-300 hover:text-pt-purple-400'
-              >
-                {getCleanURI(vault.yieldSourceURI)}
-              </ExternalLink>
-            )}
-          </div>
-        </Card>
+        <SimpleCard title={t_vault('headers.yieldSource')}>
+          <span className='text-2xl text-pt-purple-100 font-semibold md:text-3xl'>
+            {vault.yieldSourceName}
+          </span>
+          {!!vault.yieldSourceURI && (
+            <ExternalLink
+              href={vault.yieldSourceURI}
+              size={isDesktop ? 'md' : 'sm'}
+              className='text-pt-purple-300 hover:text-pt-purple-400'
+            >
+              {getCleanURI(vault.yieldSourceURI)}
+            </ExternalLink>
+          )}
+        </SimpleCard>
       )}
     </div>
+  )
+}
+
+interface SimpleCardProps {
+  title: ReactNode
+  children: ReactNode
+  className?: string
+  wrapperClassName?: string
+}
+
+const SimpleCard = (props: SimpleCardProps) => {
+  const { title, children, className, wrapperClassName } = props
+
+  return (
+    <Card className={classNames('text-center', className)} wrapperClassName={wrapperClassName}>
+      <span className='mb-2 text-xl text-pt-purple-300 font-semibold md:mb-3 md:text-2xl'>
+        {title}
+      </span>
+      <div className='grow flex flex-col items-center justify-center gap-2'>{children}</div>
+    </Card>
+  )
+}
+
+interface PrizesSectionProps {
+  prizePool: PrizePool
+  className?: string
+}
+
+const PrizesSection = (props: PrizesSectionProps) => {
+  const { prizePool, className } = props
+
+  const t_prizes = useTranslations('Prizes')
+
+  // TODO: better title?
+  return (
+    <SimpleCard
+      title={t_prizes('currentPrizes')}
+      className='!p-0'
+      wrapperClassName={classNames('bg-transparent shadow-none', className)}
+    >
+      <PrizePoolPrizesCard
+        prizePool={prizePool}
+        className='bg-transparent shadow-none'
+        innerClassName='!p-0'
+        networkClassName='hidden'
+        headersClassName='hidden'
+        prizeClassName='!pl-0 pr-3 !text-2xl !text-pt-purple-100 font-semibold md:!text-3xl'
+        frequencyClassName='!pr-0 pl-3 !text-pt-purple-300'
+      />
+    </SimpleCard>
+  )
+}
+
+interface BonusRewardsSectionProps {
+  vault: Vault
+  className?: string
+}
+
+const BonusRewardsSection = (props: BonusRewardsSectionProps) => {
+  const { vault, className } = props
+
+  const t_common = useTranslations('Common')
+  const t_vault = useTranslations('Vault')
+
+  return (
+    <SimpleCard
+      title={t_vault('headers.bonusRewards')}
+      className='!p-0'
+      wrapperClassName={classNames('bg-transparent shadow-none', className)}
+    >
+      <VaultBonusRewards
+        vault={vault}
+        valueClassName='text-2xl text-pt-purple-100 font-semibold md:text-3xl'
+        append={<span className='text-sm text-pt-purple-300 md:text-base'>{t_common('apr')}</span>}
+      />
+      {/* TODO: distributed every X hours/days */}
+      {/* TODO: next claim in X hours/days */}
+    </SimpleCard>
   )
 }
 

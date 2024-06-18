@@ -201,7 +201,6 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
             </span>
           }
           data={
-            // TODO: append tokens that rewards are in
             <VaultBonusRewards
               vault={vault}
               append={<span className='text-pt-purple-200'>{t_common('apr')}</span>}
