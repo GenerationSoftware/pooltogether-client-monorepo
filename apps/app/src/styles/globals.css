@@ -67,4 +67,8 @@
     font-family: 'Inter';
     font-feature-settings: 'calt' off;
   }
+
+  button {
+    font-feature-settings: 'calt' off;
+  }
 }
