@@ -1,8 +1,10 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
+  useDrawPeriod,
   usePublicClientsByChain,
   useSelectedVaultLists,
   useSelectedVaults,
+  useVaultPromotions,
   useVaultPromotionsApr,
   useVaultShareData,
   useVaultTokenAddress,
@@ -18,7 +20,17 @@ import {
 } from '@shared/react-components'
 import { VaultInfo } from '@shared/types'
 import { Button, Card, ExternalLink, Spinner } from '@shared/ui'
-import { getBlockExplorerUrl, getVaultId, LINKS, NETWORK } from '@shared/utilities'
+import {
+  formatDailyCountToFrequency,
+  getBlockExplorerUrl,
+  getCountdownTextFromTimestamp,
+  getPrizeTextFromFrequency,
+  getSecondsSinceEpoch,
+  getVaultId,
+  LINKS,
+  NETWORK,
+  SECONDS_PER_DAY
+} from '@shared/utilities'
 import classNames from 'classnames'
 import * as fathom from 'fathom-client'
 import { useTranslations } from 'next-intl'
@@ -107,16 +119,18 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
             className={maxWidthClassName}
           />
           <Cards vault={vault} className={maxWidthClassName} />
-          <div
-            className={classNames(
-              'w-full grid grid-cols-1 gap-3',
-              { 'md:grid-cols-2': !!vaultPromotionsApr },
-              maxWidthClassName
-            )}
-          >
-            {!!prizePool && <PrizesSection prizePool={prizePool} />}
-            {!!vaultPromotionsApr && <BonusRewardsSection vault={vault} />}
-          </div>
+          {!!prizePool && (
+            <div
+              className={classNames(
+                'w-full grid grid-cols-1 gap-3',
+                { 'md:grid-cols-2': !!vaultPromotionsApr },
+                maxWidthClassName
+              )}
+            >
+              <PrizesSection prizePool={prizePool} />
+              {!!vaultPromotionsApr && <BonusRewardsSection vault={vault} prizePool={prizePool} />}
+            </div>
+          )}
           {/* TODO: add recent winners on this vault */}
           <VaultPageInfo
             vault={vault}
@@ -329,14 +343,59 @@ const PrizesSection = (props: PrizesSectionProps) => {
 
 interface BonusRewardsSectionProps {
   vault: Vault
+  prizePool: PrizePool
   className?: string
 }
 
 const BonusRewardsSection = (props: BonusRewardsSectionProps) => {
-  const { vault, className } = props
+  const { vault, prizePool, className } = props
 
   const t_common = useTranslations('Common')
   const t_vault = useTranslations('Vault')
+  const t_freq = useTranslations('Frequency')
+
+  const tokenAddresses = TWAB_REWARDS_SETTINGS[vault.chainId]?.tokenAddresses
+  const fromBlock = TWAB_REWARDS_SETTINGS[vault.chainId]?.fromBlock
+  const { data: vaultPromotions } = useVaultPromotions(vault, { tokenAddresses, fromBlock })
+
+  const { data: drawPeriod } = useDrawPeriod(prizePool)
+
+  const currentTimestamp = useMemo(() => getSecondsSinceEpoch(), [])
+
+  const validPromotions = useMemo(() => {
+    if (!!vaultPromotions && !!drawPeriod) {
+      const maxTimestamp = currentTimestamp + 7 * drawPeriod // TODO: avoid hardcoding N
+
+      return Object.values(vaultPromotions).filter(
+        (p) =>
+          !!p.numberOfEpochs &&
+          Number(p.startTimestamp) < maxTimestamp &&
+          Number(p.startTimestamp) + p.numberOfEpochs * p.epochDuration > currentTimestamp
+      )
+    } else {
+      return []
+    }
+  }, [vaultPromotions, drawPeriod, currentTimestamp])
+
+  const formattedFrequency = useMemo(() => {
+    const minDuration = Math.min(...validPromotions.map((p) => p.epochDuration))
+    const frequency = formatDailyCountToFrequency(SECONDS_PER_DAY / minDuration)
+    return getPrizeTextFromFrequency(frequency, 'everyXdays', t_freq)
+  }, [validPromotions])
+
+  const formattedNextClaim = useMemo(() => {
+    const firstClaimTimestamps = validPromotions
+      .map((promotion) => {
+        const startTimestamp = Number(promotion.startTimestamp)
+        const epochIds = [...Array(promotion.numberOfEpochs! + 1).keys()].slice(1)
+        const claimTimestamps = epochIds.map((i) => startTimestamp + i * promotion.epochDuration)
+        return claimTimestamps.find((t) => t > currentTimestamp) ?? 0
+      })
+      .filter((t) => !!t)
+
+    const nextClaimTimestamp = Math.min(...firstClaimTimestamps)
+    return getCountdownTextFromTimestamp(nextClaimTimestamp, t_freq)
+  }, [validPromotions, currentTimestamp])
 
   return (
     <SimpleCard
@@ -349,8 +408,14 @@ const BonusRewardsSection = (props: BonusRewardsSectionProps) => {
         valueClassName='text-2xl text-pt-purple-100 font-semibold md:text-3xl'
         append={<span className='text-sm text-pt-purple-300 md:text-base'>{t_common('apr')}</span>}
       />
-      {/* TODO: distributed every X hours/days */}
-      {/* TODO: next claim in X hours/days */}
+      <div className='flex items-center gap-2 text-sm md:text-base'>
+        <span className='text-pt-purple-300'>{t_common('distribution')}:</span>
+        <span className='text-pt-purple-100'>{formattedFrequency}</span>
+      </div>
+      <div className='flex items-center gap-2 text-sm md:text-base'>
+        <span className='text-pt-purple-300'>{t_common('nextClaim')}:</span>
+        <span className='text-pt-purple-100'>{formattedNextClaim}</span>
+      </div>
     </SimpleCard>
   )
 }

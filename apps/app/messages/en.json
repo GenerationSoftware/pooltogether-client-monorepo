@@ -34,7 +34,9 @@
       "skipForNow": "Skip for now"
     },
     "before": "Before",
-    "after": "After"
+    "after": "After",
+    "distribution": "Distribution",
+    "nextClaim": "Next Claim"
   },
   "Navigation": {
     "home": "Home",
@@ -293,7 +295,12 @@
     "xPrizesDaily": "{number, plural, one {# prize} other {# prizes}} daily",
     "xPrizesWeekly": "{number, plural, one {# prize} other {# prizes}} weekly",
     "xPrizesMonthly": "{number, plural, one {# prize} other {# prizes}} monthly",
-    "xPrizesYearly": "{number, plural, one {# prize} other {# prizes}} yearly"
+    "xPrizesYearly": "{number, plural, one {# prize} other {# prizes}} yearly",
+    "lessThanAnHour": "In less than an hour",
+    "inXhours": "In {number, plural, one {# hour} other {# hours}}",
+    "inXdays": "In {number, plural, one {# day} other {# days}}",
+    "inXweeks": "In {number, plural, one {# week} other {# weeks}}",
+    "inXmonths": "In {number, plural, one {# month} other {# months}}"
   },
   "Tooltips": {
     "prizes": "Prizes you can win while deposited in a vault",
