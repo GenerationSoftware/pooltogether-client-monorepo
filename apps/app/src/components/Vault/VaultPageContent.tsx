@@ -26,6 +26,7 @@ import { VaultPageCards } from './VaultPageCards'
 import { VaultPageHeader } from './VaultPageHeader'
 import { VaultPageInfo } from './VaultPageInfo'
 import { VaultPagePrizesSection } from './VaultPagePrizesSection'
+import { VaultPageRecentWinnersCard } from './VaultPageRecentWinnersCard'
 import { VaultPageVaultListWarning } from './VaultPageVaultListWarning'
 
 interface VaultPageContentProps {
@@ -102,20 +103,26 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
           )}
           <VaultPageCards vault={vault} className={maxWidthClassName} />
           {!!prizePool && (
-            <div
-              className={classNames(
-                'w-full grid grid-cols-1 gap-3',
-                { 'md:grid-cols-2': !!vaultPromotionsApr },
-                maxWidthClassName
-              )}
-            >
-              <VaultPagePrizesSection prizePool={prizePool} />
-              {!!vaultPromotionsApr && (
-                <VaultPageBonusRewardsSection vault={vault} prizePool={prizePool} />
-              )}
-            </div>
+            <>
+              <div
+                className={classNames(
+                  'w-full grid grid-cols-1 gap-3',
+                  { 'md:grid-cols-2': !!vaultPromotionsApr },
+                  maxWidthClassName
+                )}
+              >
+                <VaultPagePrizesSection prizePool={prizePool} />
+                {!!vaultPromotionsApr && (
+                  <VaultPageBonusRewardsSection vault={vault} prizePool={prizePool} />
+                )}
+              </div>
+              <VaultPageRecentWinnersCard
+                vault={vault}
+                prizePool={prizePool}
+                className={maxWidthClassName}
+              />
+            </>
           )}
-          {/* TODO: add recent winners on this vault */}
           <VaultPageInfo
             vault={vault}
             show={[

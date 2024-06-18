@@ -198,13 +198,7 @@ const DrawWinnersTable = (props: DrawWinnersTableProps) => {
                   </Link>
                 </span>
                 <span className='w-1/2 text-right whitespace-nowrap md:text-center'>
-                  {!!tokenData ? (
-                    `${formattedPrize === '0.0000' ? '< 0.0001' : formattedPrize} ${
-                      tokenData.symbol
-                    }`
-                  ) : (
-                    <Spinner />
-                  )}
+                  {formattedPrize === '0.0000' ? '< 0.0001' : formattedPrize} {tokenData.symbol}
                 </span>
               </div>
             )
