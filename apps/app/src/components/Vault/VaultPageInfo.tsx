@@ -123,11 +123,17 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
   }, [vaultListEntries])
 
   return (
-    <div className={classNames('flex flex-col w-full gap-2 text-sm md:text-base', className)}>
+    <div className={classNames('flex flex-col w-full gap-2 text-base md:text-lg', className)}>
       {!!userAddress && show.includes('userBalance') && (
         <VaultInfoRow
           name={t_vault('headers.yourBalance')}
-          data={<AccountVaultBalance vault={vault} className='!flex-row gap-1' />}
+          data={
+            <AccountVaultBalance
+              vault={vault}
+              className='!flex-row gap-1'
+              valueClassName='!text-base md:!text-lg'
+            />
+          }
         />
       )}
       {!!userAddress &&
@@ -137,7 +143,13 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
         show.includes('userDelegationBalance') && (
           <VaultInfoRow
             name={t_vault('headers.delegatedToYou')}
-            data={<AccountVaultDelegationAmount vault={vault} className='!flex-row gap-1' />}
+            data={
+              <AccountVaultDelegationAmount
+                vault={vault}
+                className='!flex-row gap-1'
+                valueClassName='!text-base md:!text-lg'
+              />
+            }
           />
         )}
       {!!userAddress && show.includes('userWinChance') && (
@@ -146,7 +158,6 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
             <span className='flex gap-2 items-center'>
               {t_vault('headers.yourWinChance')}
               <WinChanceTooltip
-                iconSize='sm'
                 intl={{ text: t_tooltips('winChance') }}
                 className='text-sm md:text-base'
                 iconClassName='text-pt-purple-200'
@@ -162,7 +173,6 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
             <span className='flex gap-2 items-center'>
               {t_vault('headers.prizeYield')}
               <PrizeYieldTooltip
-                iconSize='sm'
                 intl={{ text: t_tooltips('prizeYield'), learnMore: t_common('learnMore') }}
                 className='text-sm md:text-base'
                 iconClassName='text-pt-purple-200'
@@ -184,7 +194,6 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
             <span className='flex gap-2 items-center'>
               {t_vault('headers.bonusRewards')}
               <BonusRewardsTooltip
-                iconSize='sm'
                 intl={t_tooltips('bonusRewards')}
                 className='text-sm md:text-base'
                 iconClassName='text-pt-purple-200'
@@ -195,7 +204,7 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
             // TODO: append tokens that rewards are in
             <VaultBonusRewards
               vault={vault}
-              append={<span className='text-sm text-pt-purple-200'>{t_common('apr')}</span>}
+              append={<span className='text-pt-purple-200'>{t_common('apr')}</span>}
             />
           }
         />
@@ -203,7 +212,13 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
       {show.includes('tvl') && (
         <VaultInfoRow
           name={t_vault('headers.tvl')}
-          data={<VaultTotalDeposits vault={vault} className='!flex-row gap-1' />}
+          data={
+            <VaultTotalDeposits
+              vault={vault}
+              className='!flex-row gap-1'
+              valueClassName='!text-base md:!text-lg'
+            />
+          }
         />
       )}
       {!!prizeToken && show.includes('vaultContributions') && (
@@ -214,7 +229,6 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
               <VaultContributionsTooltip
                 tokenSymbol={prizeToken.symbol}
                 numberOfDays={7}
-                iconSize='sm'
                 intl={t_tooltips}
                 className='text-sm md:text-base'
                 iconClassName='text-pt-purple-200'
@@ -292,7 +306,6 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
                 <span className='flex gap-2 items-center'>
                   {t_vault('headers.vaultFee')}
                   <VaultFeeTooltip
-                    iconSize='sm'
                     intl={{ text: t_tooltips('vaultFee') }}
                     className='text-sm md:text-base'
                     iconClassName='text-pt-purple-200'
