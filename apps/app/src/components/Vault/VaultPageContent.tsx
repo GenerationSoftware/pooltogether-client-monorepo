@@ -39,6 +39,7 @@ import { ParsedUrlQuery } from 'querystring'
 import { AnchorHTMLAttributes, DetailedHTMLProps, ReactNode, useMemo } from 'react'
 import { getCleanURI } from 'src/utils'
 import { Address, isAddress } from 'viem'
+import { useAccount } from 'wagmi'
 import { PrizePoolPrizesCard } from '@components/Prizes/PrizePoolPrizesCard'
 import { FATHOM_EVENTS, SUPPORTED_NETWORKS, TWAB_REWARDS_SETTINGS } from '@constants/config'
 import { useNetworks } from '@hooks/useNetworks'
@@ -56,6 +57,8 @@ interface VaultPageContentProps {
 
 export const VaultPageContent = (props: VaultPageContentProps) => {
   const { queryParams } = props
+
+  const { address: userAddress } = useAccount()
 
   const networks = useNetworks()
   const clientsByChain = usePublicClientsByChain()
@@ -113,11 +116,13 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
         <>
           <Buttons vault={vault} className={classNames(maxWidthClassName, '-mt-4')} />
           <NotInVaultListsWarning vault={vault} className={maxWidthClassName} />
-          <VaultPageInfo
-            vault={vault}
-            show={['userBalance', 'userDelegationBalance', 'userWinChance']}
-            className={maxWidthClassName}
-          />
+          {!!userAddress && (
+            <VaultPageInfo
+              vault={vault}
+              show={['userBalance', 'userDelegationBalance', 'userWinChance']}
+              className={maxWidthClassName}
+            />
+          )}
           <Cards vault={vault} className={maxWidthClassName} />
           {!!prizePool && (
             <div
