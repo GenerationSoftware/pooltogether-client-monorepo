@@ -36,6 +36,7 @@ export * from './events/usePrizeBackstopEvents'
 export * from './events/usePromotionCreatedEvents'
 export * from './events/usePromotionRewardsClaimedEvents'
 export * from './events/useTransferEvents'
+export * from './events/useVaultContributionEvents'
 
 /**
  * Prize Pool Hooks

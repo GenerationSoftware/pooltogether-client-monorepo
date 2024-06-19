@@ -257,6 +257,36 @@ export const getLiquidationEvents = async (
 }
 
 /**
+ * Returns `ContributePrizeTokens` events
+ * @param publicClient a public Viem client to query through
+ * @param prizePoolAddress the address of the prize pool to query events for
+ * @param options optional settings (recommended `vaultAddress` param)
+ * @returns
+ */
+export const getVaultContributionEvents = async (
+  publicClient: PublicClient,
+  prizePoolAddress: Address,
+  options?: { vaultAddress?: Address; fromBlock?: bigint; toBlock?: bigint }
+) => {
+  return await publicClient.getLogs({
+    address: prizePoolAddress,
+    event: {
+      inputs: [
+        { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
+        { indexed: true, internalType: 'uint24', name: 'drawId', type: 'uint24' },
+        { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }
+      ],
+      name: 'ContributePrizeTokens',
+      type: 'event'
+    },
+    args: { vault: options?.vaultAddress },
+    fromBlock: options?.fromBlock,
+    toBlock: options?.toBlock ?? 'latest',
+    strict: true
+  })
+}
+
+/**
  * Returns `ContributedReserve` events
  * @param publicClient a public Viem client to query through
  * @param prizePoolAddress the address of the prize pool to query events for
