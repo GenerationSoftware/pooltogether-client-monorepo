@@ -224,7 +224,7 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
         <VaultInfoRow
           name={
             <span className='flex gap-2 items-center'>
-              {t_vault('headers.contributions', { number: 7 })}
+              {t_vault('headers.contributions')}
               <VaultContributionsTooltip
                 tokenSymbol={prizeToken.symbol}
                 numberOfDays={7}

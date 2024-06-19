@@ -108,7 +108,7 @@
       "bonusRewards": "Bonus Rewards",
       "tvl": "TVL",
       "totalDeposited": "Total Deposited",
-      "contributions": "{number}D Prize Pool Contribution",
+      "contributions": "Prize Pool Contributions",
       "depositToken": "Deposit Token",
       "prizeToken": "Prize Token",
       "delegatedToYou": "Delegated To You",
