@@ -20,6 +20,7 @@ interface VaultPageContributionsCardProps {
   className?: string
 }
 
+// TODO: fix mobile (looks terrible)
 export const VaultPageContributionsCard = (props: VaultPageContributionsCardProps) => {
   const { vault, prizePool, className } = props
 
@@ -53,7 +54,7 @@ export const VaultPageContributionsCard = (props: VaultPageContributionsCardProp
   )
 
   return (
-    <Card wrapperClassName={classNames('w-full', className)}>
+    <Card className='gap-4' wrapperClassName={classNames('w-full', className)}>
       <CardHeader />
       <ContributionsChart vault={vault} prizePool={prizePool} numDays={numDays} />
     </Card>

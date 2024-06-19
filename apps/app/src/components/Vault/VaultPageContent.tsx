@@ -105,7 +105,7 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
           <VaultPageCards vault={vault} className={maxWidthClassName} />
           <div
             className={classNames(
-              'w-full grid grid-cols-1 gap-3',
+              'w-full grid grid-cols-1 gap-x-3 gap-y-8',
               { 'md:grid-cols-2': !!vaultPromotionsApr },
               maxWidthClassName
             )}
