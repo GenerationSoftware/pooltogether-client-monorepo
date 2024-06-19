@@ -135,7 +135,9 @@ export const VaultPageRecentWinnersCard = (props: VaultPageRecentWinnersCardProp
           >
             <span className='text-left'>
               <Link href={`/account/${winner}`}>
-                <button className='hover:text-pt-purple-100'>{formattedWinner}</button>
+                <button className='font-[monospace] hover:text-pt-purple-100'>
+                  {formattedWinner}
+                </button>
               </Link>
             </span>
             <span>{getSimpleDate(timestamp)}</span>
