@@ -23,6 +23,7 @@ import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { VaultPageBonusRewardsSection } from './VaultPageBonusRewardsSection'
 import { VaultPageButtons } from './VaultPageButtons'
 import { VaultPageCards } from './VaultPageCards'
+import { VaultPageContributionsCard } from './VaultPageContributionsCard'
 import { VaultPageHeader } from './VaultPageHeader'
 import { VaultPageInfo } from './VaultPageInfo'
 import { VaultPagePrizesSection } from './VaultPagePrizesSection'
@@ -90,7 +91,7 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
   return (
     <>
       <VaultPageHeader vault={vault} className={maxWidthClassName} />
-      {!!vault && !!vaultTokenAddress ? (
+      {!!vault && !!prizePool && !!vaultTokenAddress ? (
         <>
           <VaultPageButtons vault={vault} className={classNames(maxWidthClassName, '-mt-4')} />
           <VaultPageVaultListWarning vault={vault} className={maxWidthClassName} />
@@ -102,27 +103,23 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
             />
           )}
           <VaultPageCards vault={vault} className={maxWidthClassName} />
-          {!!prizePool && (
-            <>
-              <div
-                className={classNames(
-                  'w-full grid grid-cols-1 gap-3',
-                  { 'md:grid-cols-2': !!vaultPromotionsApr },
-                  maxWidthClassName
-                )}
-              >
-                <VaultPagePrizesSection prizePool={prizePool} />
-                {!!vaultPromotionsApr && (
-                  <VaultPageBonusRewardsSection vault={vault} prizePool={prizePool} />
-                )}
-              </div>
-              <VaultPageRecentWinnersCard
-                vault={vault}
-                prizePool={prizePool}
-                className={maxWidthClassName}
-              />
-            </>
-          )}
+          <div
+            className={classNames(
+              'w-full grid grid-cols-1 gap-3',
+              { 'md:grid-cols-2': !!vaultPromotionsApr },
+              maxWidthClassName
+            )}
+          >
+            <VaultPagePrizesSection prizePool={prizePool} />
+            {!!vaultPromotionsApr && (
+              <VaultPageBonusRewardsSection vault={vault} prizePool={prizePool} />
+            )}
+          </div>
+          <VaultPageRecentWinnersCard
+            vault={vault}
+            prizePool={prizePool}
+            className={maxWidthClassName}
+          />
           <VaultPageInfo
             vault={vault}
             show={[
@@ -135,7 +132,11 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
             ]}
             className={maxWidthClassName}
           />
-          {/* TODO: add bar chart of prize pool contributions over time (7d or 30d) - maybe include prize yield line? */}
+          <VaultPageContributionsCard
+            vault={vault}
+            prizePool={prizePool}
+            className={maxWidthClassName}
+          />
           <Disclaimer vault={vault} className={maxWidthClassName} />
         </>
       ) : (
