@@ -4,6 +4,7 @@ import {
   useVaultContributionAmount
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner, Tooltip } from '@shared/ui'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
@@ -12,11 +13,12 @@ import { useVaultWinChance } from '@hooks/useVaultWinChance'
 interface VaultWinChanceProps {
   vault: Vault
   className?: string
+  fallbackClassName?: string
   tooltipClassName?: string
 }
 
 export const VaultWinChance = (props: VaultWinChanceProps) => {
-  const { vault, className, tooltipClassName } = props
+  const { vault, className, fallbackClassName, tooltipClassName } = props
 
   const { data: winChance, isFetched: isFetchedWinChance } = useVaultWinChance(vault)
 
@@ -40,7 +42,7 @@ export const VaultWinChance = (props: VaultWinChanceProps) => {
   }
 
   if (lastAwardedDrawId === 0 || (lastAwardedDrawId !== undefined && totalContributions === 0n)) {
-    return <NewFallbackGraphic className={className} />
+    return <NewFallbackGraphic className={classNames(className, fallbackClassName)} />
   }
 
   return (
