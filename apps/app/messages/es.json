@@ -228,7 +228,6 @@
     "approval": "Darás tu aprobación para depositar una cantidad específica de {symbol}",
     "vaultFee": "Un porcentaje de rendimiento que no va hacia los premios, y está determinado por el desplegador de la bóveda",
     "importedVault": "Esta bóveda es de las siguientes lista(s) importadas:",
-    "vaultContribution": "La cantidad de {symbol} ha contribuido al bote de premios en los últimos {days} días",
     "deprecatedVault": "Esta bóveda ha sido obsoleta. Todavía puede ser elegible para ganar premios, pero animamos a los usuarios a migrar a otras bóvedas."
   },
   "Toasts": {

@@ -5,6 +5,7 @@ import {
   usePrizeTokenData,
   useVaultContributionEvents
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { VaultContributionsTooltip } from '@shared/react-components'
 import { Card, Spinner } from '@shared/ui'
 import { lower } from '@shared/utilities'
 import classNames from 'classnames'
@@ -20,29 +21,29 @@ interface VaultPageContributionsCardProps {
   className?: string
 }
 
-// TODO: fix mobile (looks terrible)
 export const VaultPageContributionsCard = (props: VaultPageContributionsCardProps) => {
   const { vault, prizePool, className } = props
 
   const t_vault = useTranslations('Vault')
+  const t_tooltips = useTranslations('Tooltips')
+
+  const { data: prizeToken } = usePrizeTokenData(prizePool)
 
   const [numDays, setNumDays] = useState<number | undefined>(7)
 
-  const CardHeader = () => (
-    <div className='flex flex-col items-center gap-2 text-pt-purple-300 font-semibold md:flex-row'>
-      {/* TODO: add tooltip */}
-      <span className='grow text-xl md:text-2xl'>{t_vault('headers.contributions')}</span>
-      <div className='flex items-center gap-2'>
-        <NumDaysOptionButton onClick={setNumDays} numDays={numDays} option={7} />
-        <NumDaysOptionButton onClick={setNumDays} numDays={numDays} option={30} />
-        <NumDaysOptionButton onClick={setNumDays} numDays={numDays} />
-      </div>
-    </div>
-  )
-
   return (
     <Card className='gap-4' wrapperClassName={classNames('w-full', className)}>
-      <CardHeader />
+      <div className='flex flex-col items-center gap-2 text-pt-purple-300 font-semibold md:flex-row'>
+        <span className='grow flex items-center gap-2 text-xl md:text-2xl'>
+          <span>{t_vault('headers.contributions')}</span>
+          <VaultContributionsTooltip tokenSymbol={prizeToken?.symbol ?? '?'} intl={t_tooltips} />
+        </span>
+        <div className='flex items-center gap-2'>
+          <NumDaysOptionButton onClick={setNumDays} numDays={numDays} option={7} />
+          <NumDaysOptionButton onClick={setNumDays} numDays={numDays} option={30} />
+          <NumDaysOptionButton onClick={setNumDays} numDays={numDays} />
+        </div>
+      </div>
       <ContributionsChart vault={vault} prizePool={prizePool} numDays={numDays} />
     </Card>
   )

@@ -214,8 +214,7 @@
     "winChance": "어떤 추첨에서 상을 받을 확률",
     "approval": "{symbol} 의 특정 금액 입금에 대한 승인을 줄 것입니다",
     "vaultFee": "상금으로 가지 않는 수익의 비율로, 금고 배포자가 결정합니다",
-    "importedVault": "이 금고는 다음과 같은 가져온 목록에서 왔습니다:",
-    "vaultContribution": "지난 {days} 일 동안 상금 풀에 기여한 {symbol} 의 금액"
+    "importedVault": "이 금고는 다음과 같은 가져온 목록에서 왔습니다:"
   },
   "Toasts": {
     "transactions": {

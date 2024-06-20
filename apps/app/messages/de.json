@@ -276,7 +276,6 @@
     "approval": "Du gibst Deine Zustimmung, eine bestimmte Anzahl von {symbol} einzuzahlen",
     "vaultFee": "Ein Prozentsatz des Yield, der nicht in Preise fließt und vom Vault Ersteller bestimmt wird",
     "importedVault": "Dieses Vault stammt von der(n) folgenden importierten Liste(n):",
-    "vaultContribution": "Die Gesamtzahl von {symbol} hat in den letzten {days} Tagen zum Preispool beigetragen",
     "deprecatedVault": "Dieser Vault ist nicht mehr aktuell. Evtl. ist er noch berechtigt, Preise zu gewinnen, aber wir ermutigen Nutzer, in andere Vaults zu migrieren.",
     "wrongPrizePoolVault": "Dieser Vault ist mit einem Preispool verbunden, der nicht von diesem Interface unterstützt wird.",
     "badPrecisionPerDollar": "Dieser Vault hat wahrscheinlich Rundungsfehler, die zu verlustreichen Auszahlungen führen können.",

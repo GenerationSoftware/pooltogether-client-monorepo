@@ -5,9 +5,9 @@ import classNames from 'classnames'
 
 export interface VaultContributionsTooltipProps {
   tokenSymbol: string
-  numberOfDays: number
+  numberOfDays?: number
   iconSize?: 'sm' | 'md' | 'lg'
-  intl?: Intl<'vaultContribution'>
+  intl?: Intl<'vaultContribution' | 'vaultContributionWithDays'>
   className?: string
   iconClassName?: string
 }
@@ -19,10 +19,11 @@ export const VaultContributionsTooltip = (props: VaultContributionsTooltipProps)
     <Tooltip
       content={
         <div className={classNames('max-w-[16ch] text-center', className)}>
-          <span>
-            {intl?.('vaultContribution', { symbol: tokenSymbol, days: numberOfDays }) ??
-              `The amount of ${tokenSymbol} contributed to the prize pool over the last ${numberOfDays} days`}
-          </span>
+          {!!numberOfDays
+            ? intl?.('vaultContributionWithDays', { symbol: tokenSymbol, days: numberOfDays }) ??
+              `The amount of ${tokenSymbol} contributed to the prize pool over the last ${numberOfDays} days, enabling wins in this vault`
+            : intl?.('vaultContribution', { symbol: tokenSymbol }) ??
+              `The amount of ${tokenSymbol} contributed to the prize pool, enabling wins in this vault`}
         </div>
       }
     >
