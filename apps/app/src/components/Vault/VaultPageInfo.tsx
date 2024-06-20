@@ -25,6 +25,7 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { ReactNode, useMemo } from 'react'
+import { getCleanURI } from 'src/utils'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { AccountVaultBalance } from '@components/Account/AccountVaultBalance'
@@ -41,11 +42,27 @@ import { VaultTotalDeposits } from './VaultTotalDeposits'
 
 interface VaultPageInfoProps {
   vault: Vault
+  show: (
+    | 'userBalance'
+    | 'userDelegationBalance'
+    | 'userWinChance'
+    | 'prizeYield'
+    | 'bonusRewards'
+    | 'tvl'
+    | 'vaultContributions'
+    | 'depositToken'
+    | 'prizeToken'
+    | 'vaultOwner'
+    | 'yieldSourceURI'
+    | 'lpSourceURI'
+    | 'vaultFee'
+    | 'vaultFeeRecipient'
+  )[]
   className?: string
 }
 
 export const VaultPageInfo = (props: VaultPageInfoProps) => {
-  const { vault, className } = props
+  const { vault, show, className } = props
 
   const t_common = useTranslations('Common')
   const t_vault = useTranslations('Vault')
@@ -106,29 +123,41 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
   }, [vaultListEntries])
 
   return (
-    <div className={classNames('flex flex-col w-full gap-2 text-sm md:text-base', className)}>
-      {!!userAddress && (
+    <div className={classNames('flex flex-col w-full gap-2 text-base md:text-lg', className)}>
+      {!!userAddress && show.includes('userBalance') && (
         <VaultInfoRow
           name={t_vault('headers.yourBalance')}
-          data={<AccountVaultBalance vault={vault} className='!flex-row gap-1' />}
+          data={
+            <AccountVaultBalance
+              vault={vault}
+              className='!flex-row gap-1'
+              valueClassName='!text-base md:!text-lg'
+            />
+          }
         />
       )}
       {!!userAddress &&
         !!shareBalance &&
         !!delegationBalance &&
-        delegationBalance - shareBalance.amount > 0n && (
+        delegationBalance - shareBalance.amount > 0n &&
+        show.includes('userDelegationBalance') && (
           <VaultInfoRow
             name={t_vault('headers.delegatedToYou')}
-            data={<AccountVaultDelegationAmount vault={vault} className='!flex-row gap-1' />}
+            data={
+              <AccountVaultDelegationAmount
+                vault={vault}
+                className='!flex-row gap-1'
+                valueClassName='!text-base md:!text-lg'
+              />
+            }
           />
         )}
-      {!!userAddress && (
+      {!!userAddress && show.includes('userWinChance') && (
         <VaultInfoRow
           name={
             <span className='flex gap-2 items-center'>
               {t_vault('headers.yourWinChance')}
               <WinChanceTooltip
-                iconSize='sm'
                 intl={{ text: t_tooltips('winChance') }}
                 className='text-sm md:text-base'
                 iconClassName='text-pt-purple-200'
@@ -138,33 +167,33 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
           data={<AccountVaultOdds vault={vault} />}
         />
       )}
-      <VaultInfoRow
-        name={
-          <span className='flex gap-2 items-center'>
-            {t_vault('headers.prizeYield')}
-            <PrizeYieldTooltip
-              iconSize='sm'
-              intl={{ text: t_tooltips('prizeYield'), learnMore: t_common('learnMore') }}
-              className='text-sm md:text-base'
-              iconClassName='text-pt-purple-200'
+      {show.includes('prizeYield') && (
+        <VaultInfoRow
+          name={
+            <span className='flex gap-2 items-center'>
+              {t_vault('headers.prizeYield')}
+              <PrizeYieldTooltip
+                intl={{ text: t_tooltips('prizeYield'), learnMore: t_common('learnMore') }}
+                className='text-sm md:text-base'
+                iconClassName='text-pt-purple-200'
+              />
+            </span>
+          }
+          data={
+            <VaultPrizeYield
+              vault={vault}
+              label={t_common('apr')}
+              labelClassName='text-sm text-pt-purple-200'
             />
-          </span>
-        }
-        data={
-          <VaultPrizeYield
-            vault={vault}
-            label={t_common('apr')}
-            labelClassName='text-sm text-pt-purple-200'
-          />
-        }
-      />
-      {!!vaultPromotionsApr && (
+          }
+        />
+      )}
+      {!!vaultPromotionsApr && show.includes('bonusRewards') && (
         <VaultInfoRow
           name={
             <span className='flex gap-2 items-center'>
               {t_vault('headers.bonusRewards')}
               <BonusRewardsTooltip
-                iconSize='sm'
                 intl={t_tooltips('bonusRewards')}
                 className='text-sm md:text-base'
                 iconClassName='text-pt-purple-200'
@@ -172,27 +201,33 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
             </span>
           }
           data={
-            // TODO: append tokens that rewards are in
             <VaultBonusRewards
               vault={vault}
-              append={<span className='text-sm text-pt-purple-200'>{t_common('apr')}</span>}
+              append={<span className='text-pt-purple-200'>{t_common('apr')}</span>}
             />
           }
         />
       )}
-      <VaultInfoRow
-        name={t_vault('headers.tvl')}
-        data={<VaultTotalDeposits vault={vault} className='!flex-row gap-1' />}
-      />
-      {!!prizeToken && (
+      {show.includes('tvl') && (
+        <VaultInfoRow
+          name={t_vault('headers.tvl')}
+          data={
+            <VaultTotalDeposits
+              vault={vault}
+              className='!flex-row gap-1'
+              valueClassName='!text-base md:!text-lg'
+            />
+          }
+        />
+      )}
+      {!!prizeToken && show.includes('vaultContributions') && (
         <VaultInfoRow
           name={
             <span className='flex gap-2 items-center'>
-              {t_vault('headers.contributions', { number: 7 })}
+              {t_vault('headers.contributions')}
               <VaultContributionsTooltip
                 tokenSymbol={prizeToken.symbol}
                 numberOfDays={7}
-                iconSize='sm'
                 intl={t_tooltips}
                 className='text-sm md:text-base'
                 iconClassName='text-pt-purple-200'
@@ -202,55 +237,61 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
           data={<VaultContributions vault={vault} />}
         />
       )}
-      <VaultInfoRow
-        name={t_vault('headers.depositToken')}
-        data={
-          isFetchedTokenData ? (
-            !!tokenData ? (
-              <VaultInfoToken token={tokenData} />
+      {show.includes('prizeToken') && (
+        <VaultInfoRow
+          name={t_vault('headers.prizeToken')}
+          data={
+            isFetchedShareData ? (
+              !!shareData ? (
+                <VaultInfoToken token={shareData} />
+              ) : (
+                '?'
+              )
             ) : (
-              '?'
+              <Spinner />
             )
-          ) : (
-            <Spinner />
-          )
-        }
-      />
-      <VaultInfoRow
-        name={t_vault('headers.prizeToken')}
-        data={
-          isFetchedShareData ? (
-            !!shareData ? (
-              <VaultInfoToken token={shareData} />
+          }
+        />
+      )}
+      {show.includes('depositToken') && (
+        <VaultInfoRow
+          name={t_vault('headers.depositToken')}
+          data={
+            isFetchedTokenData ? (
+              !!tokenData ? (
+                <VaultInfoToken token={tokenData} />
+              ) : (
+                '?'
+              )
             ) : (
-              '?'
+              <Spinner />
             )
-          ) : (
-            <Spinner />
-          )
-        }
-      />
-      <VaultInfoRow
-        name={t_vault('headers.vaultOwner')}
-        data={
-          isFetchedVaultOwner ? (
-            !!vaultOwner ? (
-              <VaultInfoAddress chainId={vault.chainId} address={vaultOwner} />
+          }
+        />
+      )}
+      {show.includes('vaultOwner') && (
+        <VaultInfoRow
+          name={t_vault('headers.vaultOwner')}
+          data={
+            isFetchedVaultOwner ? (
+              !!vaultOwner ? (
+                <VaultInfoAddress chainId={vault.chainId} address={vaultOwner} />
+              ) : (
+                '?'
+              )
             ) : (
-              '?'
+              <Spinner />
             )
-          ) : (
-            <Spinner />
-          )
-        }
-      />
-      {!!vault.yieldSourceURI && (
+          }
+        />
+      )}
+      {!!vault.yieldSourceURI && show.includes('yieldSourceURI') && (
         <VaultInfoRow
           name={t_vault('headers.yieldSource')}
           data={<VaultInfoURI URI={vault.yieldSourceURI} />}
         />
       )}
-      {!!lpInfo.appURI && (
+      {!!lpInfo.appURI && show.includes('lpSourceURI') && (
         <VaultInfoRow
           name={t_vault('headers.lpSource')}
           data={<VaultInfoURI URI={lpInfo.appURI} />}
@@ -258,27 +299,29 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
       )}
       {!!vaultFee && vaultFee.percent > 0 && (
         <>
-          <VaultInfoRow
-            name={
-              <span className='flex gap-2 items-center'>
-                {t_vault('headers.vaultFee')}
-                <VaultFeeTooltip
-                  iconSize='sm'
-                  intl={{ text: t_tooltips('vaultFee') }}
-                  className='text-sm md:text-base'
-                  iconClassName='text-pt-purple-200'
-                />
-              </span>
-            }
-            data={<VaultFeePercentage vault={vault} />}
-          />
-          <VaultInfoRow
-            name={t_vault('headers.feeRecipient')}
-            data={<VaultInfoAddress chainId={vault.chainId} address={vaultFee.recipient} />}
-          />
+          {show.includes('vaultFee') && (
+            <VaultInfoRow
+              name={
+                <span className='flex gap-2 items-center'>
+                  {t_vault('headers.vaultFee')}
+                  <VaultFeeTooltip
+                    intl={{ text: t_tooltips('vaultFee') }}
+                    className='text-sm md:text-base'
+                    iconClassName='text-pt-purple-200'
+                  />
+                </span>
+              }
+              data={<VaultFeePercentage vault={vault} />}
+            />
+          )}
+          {show.includes('vaultFeeRecipient') && (
+            <VaultInfoRow
+              name={t_vault('headers.feeRecipient')}
+              data={<VaultInfoAddress chainId={vault.chainId} address={vaultFee.recipient} />}
+            />
+          )}
         </>
       )}
-      {vaultListEntries.length === 0 && <NotInVaultListsWarning />}
     </div>
   )
 }
@@ -292,8 +335,9 @@ const VaultInfoRow = (props: VaultInfoRowProps) => {
   const { name, data } = props
 
   return (
-    <div className='inline-flex w-full items-center justify-between'>
+    <div className='inline-flex w-full items-center justify-between gap-2'>
       <span className='text-pt-purple-100'>{name}</span>
+      <span className='h-3 grow border-b border-dashed border-pt-purple-50/30' />
       <span>{data}</span>
     </div>
   )
@@ -352,40 +396,9 @@ interface VaultInfoURIProps {
 const VaultInfoURI = (props: VaultInfoURIProps) => {
   const { URI } = props
 
-  const cleanURI = useMemo(() => {
-    if (URI.startsWith('http')) {
-      return /^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/?\n]+)/i.exec(URI)?.[1] ?? ''
-    } else if (URI.startsWith('ipfs://') || URI.startsWith('ipns://')) {
-      return `${URI.slice(0, 15)}...`
-    } else {
-      return URI
-    }
-  }, [URI])
-
   return (
     <ExternalLink href={URI} size='sm' className='text-pt-purple-200'>
-      {cleanURI}
+      {getCleanURI(URI)}
     </ExternalLink>
-  )
-}
-
-interface NotInVaultListsWarningProps {
-  className?: string
-}
-
-const NotInVaultListsWarning = (props: NotInVaultListsWarningProps) => {
-  const { className } = props
-
-  const t = useTranslations('Vault')
-
-  return (
-    <span
-      className={classNames(
-        'w-full px-6 py-1 text-center text-sm font-medium bg-pt-warning-light text-pt-warning-dark rounded',
-        className
-      )}
-    >
-      {t('shortWarningNotInVaultLists')}
-    </span>
   )
 }

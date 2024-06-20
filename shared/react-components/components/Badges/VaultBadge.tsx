@@ -18,13 +18,24 @@ export interface VaultBadgeProps {
   showSymbol?: boolean
   className?: string
   iconClassName?: string
+  networkIconClassName?: string
   nameClassName?: string
   symbolClassName?: string
+  yieldSourceClassName?: string
 }
 
 export const VaultBadge = (props: VaultBadgeProps) => {
-  const { vault, onClick, showSymbol, className, iconClassName, nameClassName, symbolClassName } =
-    props
+  const {
+    vault,
+    onClick,
+    showSymbol,
+    className,
+    iconClassName,
+    networkIconClassName,
+    nameClassName,
+    symbolClassName,
+    yieldSourceClassName
+  } = props
 
   const { data: shareData } = useVaultShareData(vault)
   const { data: tokenAddress } = useVaultTokenAddress(vault)
@@ -50,7 +61,7 @@ export const VaultBadge = (props: VaultBadgeProps) => {
       )}
       onClick={onClick}
     >
-      <div className={classNames('relative pb-1 shrink-0', iconClassName)}>
+      <div className='relative pb-1 shrink-0'>
         <TokenIcon
           token={{
             ...shareData,
@@ -61,8 +72,12 @@ export const VaultBadge = (props: VaultBadgeProps) => {
                 : vault.tokenAddress ?? tokenAddress,
             logoURI: vault.logoURI ?? vaultInfo?.logoURI ?? vault.tokenLogoURI
           }}
+          className={iconClassName}
         />
-        <NetworkIcon chainId={vault.chainId} className='absolute top-3 left-3 h-4 w-4' />
+        <NetworkIcon
+          chainId={vault.chainId}
+          className={classNames('absolute top-3 left-3 h-4 w-4', networkIconClassName)}
+        />
       </div>
       <div className='flex flex-col'>
         <div className='inline-flex items-center gap-2'>
@@ -81,7 +96,7 @@ export const VaultBadge = (props: VaultBadgeProps) => {
           )}
         </div>
         {!!vaultInfo?.extensions?.yieldSource?.name && (
-          <span className='text-xs text-pt-purple-200'>
+          <span className={classNames('text-xs text-pt-purple-200', yieldSourceClassName)}>
             {vaultInfo.extensions.yieldSource.name}
           </span>
         )}

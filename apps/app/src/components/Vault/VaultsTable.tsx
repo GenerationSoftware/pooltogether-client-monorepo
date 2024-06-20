@@ -162,7 +162,6 @@ export const VaultsTable = (props: VaultsTableProps) => {
             content: (
               <>
                 <VaultPrizes vault={vault} />
-                {/* TODO: append tokens that rewards are in */}
                 <VaultBonusRewards
                   vault={vault}
                   prepend='+'

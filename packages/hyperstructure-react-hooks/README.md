@@ -80,6 +80,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `usePromotionCreatedEvents`
 - `usePromotionRewardsClaimedEvents`
 - `useTransferEvents`
+- `useVaultContributionEvents`
 
 ### Prize Pool Hooks
 

@@ -288,8 +288,6 @@ export const getPrizeTextFromFrequency = (
       } else {
         return intl?.('everyXyears', { number: x }) ?? `Every ${x} years`
       }
-    } else {
-      return null
     }
   }
 
@@ -342,8 +340,41 @@ export const getPrizeTextFromFrequency = (
           return intl?.('xPrizesYearly', { number: 1 }) ?? `1 prize yearly`
         }
       }
+    }
+  }
+
+  return null
+}
+
+/**
+ * Returns countdown text for any given timestamp
+ * @param timestamp timestamp to countdown to
+ * @param intl optional localization
+ * @returns
+ */
+export const getCountdownTextFromTimestamp = (
+  timestamp: number,
+  intl?: Intl<'lessThanAnHour' | 'inXhours' | 'inXdays' | 'inXweeks' | 'inXmonths'>
+) => {
+  const currentTimestamp = getSecondsSinceEpoch()
+
+  if (timestamp > currentTimestamp) {
+    const { years, days, hours } = getTimeBreakdown(timestamp - currentTimestamp)
+    const months = Math.floor(years * 12 + days / (365 / 12))
+    const weeks = Math.floor(days / 7)
+
+    if (months > 0) {
+      return (
+        intl?.('inXmonths', { number: months }) ?? `In ${months} month${months === 1 ? '' : 's'}`
+      )
+    } else if (weeks > 0) {
+      return intl?.('inXweeks', { number: weeks }) ?? `In ${weeks} week${weeks === 1 ? '' : 's'}`
+    } else if (days > 0) {
+      return intl?.('inXdays', { number: days }) ?? `In ${days} day${days === 1 ? '' : 's'}`
+    } else if (hours > 0) {
+      return intl?.('inXhours', { number: hours }) ?? `In ${hours} hour${hours === 1 ? '' : 's'}`
     } else {
-      return null
+      return intl?.('lessThanAnHour') ?? `In less than an hour`
     }
   }
 

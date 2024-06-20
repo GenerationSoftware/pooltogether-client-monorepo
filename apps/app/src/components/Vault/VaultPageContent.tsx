@@ -2,22 +2,33 @@ import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   usePublicClientsByChain,
   useSelectedVaults,
-  useVaultTokenAddress
+  useVaultPromotionsApr,
+  useVaultShareData,
+  useVaultTokenAddress,
+  useVaultYieldSource
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { ErrorPooly } from '@shared/react-components'
+import { AlertIcon, ErrorPooly } from '@shared/react-components'
 import { Button, Spinner } from '@shared/ui'
-import { getVaultId, NETWORK } from '@shared/utilities'
+import { getBlockExplorerUrl, getVaultId, LINKS, NETWORK } from '@shared/utilities'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { ParsedUrlQuery } from 'querystring'
-import { useMemo } from 'react'
+import { AnchorHTMLAttributes, DetailedHTMLProps, useMemo } from 'react'
 import { Address, isAddress } from 'viem'
-import { SUPPORTED_NETWORKS } from '@constants/config'
+import { useAccount } from 'wagmi'
+import { SUPPORTED_NETWORKS, TWAB_REWARDS_SETTINGS } from '@constants/config'
 import { useNetworks } from '@hooks/useNetworks'
-import { VaultButtons } from './VaultButtons'
-import { VaultPageExtraInfo } from './VaultPageExtraInfo'
+import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
+import { VaultPageBonusRewardsSection } from './VaultPageBonusRewardsSection'
+import { VaultPageButtons } from './VaultPageButtons'
+import { VaultPageCards } from './VaultPageCards'
+import { VaultPageContributionsCard } from './VaultPageContributionsCard'
 import { VaultPageHeader } from './VaultPageHeader'
 import { VaultPageInfo } from './VaultPageInfo'
+import { VaultPagePrizesSection } from './VaultPagePrizesSection'
+import { VaultPageRecentWinnersCard } from './VaultPageRecentWinnersCard'
+import { VaultPageVaultListWarning } from './VaultPageVaultListWarning'
 
 interface VaultPageContentProps {
   queryParams: ParsedUrlQuery
@@ -25,6 +36,8 @@ interface VaultPageContentProps {
 
 export const VaultPageContent = (props: VaultPageContentProps) => {
   const { queryParams } = props
+
+  const { address: userAddress } = useAccount()
 
   const networks = useNetworks()
   const clientsByChain = usePublicClientsByChain()
@@ -54,13 +67,22 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
   }, [chainId, address, vaults])
 
   const { data: vaultTokenAddress, isFetched: isFetchedVaultTokenAddress } = useVaultTokenAddress(
-    vault as Vault
+    vault!
   )
+
+  const prizePoolsArray = Object.values(useSupportedPrizePools())
+  const prizePool = prizePoolsArray.find((prizePool) => prizePool.chainId === vault?.chainId)
+  const tokenAddresses = !!vault ? TWAB_REWARDS_SETTINGS[vault.chainId].tokenAddresses : []
+  const { data: vaultPromotionsApr } = useVaultPromotionsApr(vault!, prizePool!, tokenAddresses, {
+    fromBlock: !!vault ? TWAB_REWARDS_SETTINGS[vault.chainId].fromBlock : undefined
+  })
+
+  const maxWidthClassName = 'max-w-screen-md'
 
   if (!!chainId && !isFetchedVaultTokenAddress) {
     return (
       <>
-        <VaultPageHeader vault={vault} />
+        <VaultPageHeader vault={vault} className={maxWidthClassName} />
         <Spinner />
       </>
     )
@@ -68,16 +90,54 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
 
   return (
     <>
-      <VaultPageHeader vault={vault} className='max-w-[44rem]' />
-      {!!vault && !!vaultTokenAddress ? (
+      <VaultPageHeader vault={vault} className={maxWidthClassName} />
+      {!!vault && !!prizePool && !!vaultTokenAddress ? (
         <>
-          <VaultPageInfo vault={vault} className='max-w-[44rem]' />
-          <VaultButtons
+          <VaultPageButtons vault={vault} className={classNames(maxWidthClassName, '-mt-4')} />
+          <VaultPageVaultListWarning vault={vault} className={maxWidthClassName} />
+          {!!userAddress && (
+            <VaultPageInfo
+              vault={vault}
+              show={['userBalance', 'userDelegationBalance', 'userWinChance']}
+              className={maxWidthClassName}
+            />
+          )}
+          <VaultPageCards vault={vault} className={maxWidthClassName} />
+          <div
+            className={classNames(
+              'w-full grid grid-cols-1 gap-x-3 gap-y-8',
+              { 'md:grid-cols-2': !!vaultPromotionsApr },
+              maxWidthClassName
+            )}
+          >
+            <VaultPagePrizesSection prizePool={prizePool} />
+            {!!vaultPromotionsApr && (
+              <VaultPageBonusRewardsSection vault={vault} prizePool={prizePool} />
+            )}
+          </div>
+          <VaultPageRecentWinnersCard
             vault={vault}
-            forceShow={['delegate', 'withdraw']}
-            className='max-w-[44rem]'
+            prizePool={prizePool}
+            className={maxWidthClassName}
           />
-          <VaultPageExtraInfo vault={vault} className='max-w-[44rem]' />
+          <VaultPageInfo
+            vault={vault}
+            show={[
+              'prizeToken',
+              'depositToken',
+              'vaultOwner',
+              'vaultFee',
+              'vaultFeeRecipient',
+              'lpSourceURI'
+            ]}
+            className={maxWidthClassName}
+          />
+          <VaultPageContributionsCard
+            vault={vault}
+            prizePool={prizePool}
+            className={maxWidthClassName}
+          />
+          <Disclaimer vault={vault} className={maxWidthClassName} />
         </>
       ) : (
         <ErrorState chainId={rawChainId} tokenAddress={vaultTokenAddress} />
@@ -86,13 +146,73 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
   )
 }
 
+interface DisclaimerProps {
+  vault: Vault
+  className?: string
+}
+
+const Disclaimer = (props: DisclaimerProps) => {
+  const { vault, className } = props
+
+  const t_vault = useTranslations('Vault')
+
+  const { data: share } = useVaultShareData(vault)
+  const { data: yieldSourceAddress } = useVaultYieldSource(vault)
+
+  const linkProps: Partial<
+    DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>
+  > = { target: '_blank', className: 'text-pt-purple-300 hover:text-pt-purple-400' }
+
+  return (
+    <div
+      className={classNames(
+        'w-full flex flex-col gap-4 items-center p-6 text-pt-purple-100 bg-pt-transparent rounded-lg',
+        className
+      )}
+    >
+      <div className='flex gap-2 items-center'>
+        <AlertIcon className='w-5 h-5' />
+        <span className='lg:font-semibold'>
+          {t_vault('learnAboutVault', { vaultName: vault.name ?? share?.name ?? '?' })}
+        </span>
+      </div>
+      <span>
+        {t_vault.rich('smartContractRisk', {
+          docsLink: (chunks) => (
+            <a href={LINKS.docs} {...linkProps}>
+              {chunks}
+            </a>
+          ),
+          vaultLink: (chunks) => (
+            <a href={getBlockExplorerUrl(vault.chainId, vault.address)} {...linkProps}>
+              {chunks}
+            </a>
+          ),
+          yieldLink: (chunks) => (
+            <a
+              href={getBlockExplorerUrl(
+                vault.chainId,
+                yieldSourceAddress ?? `${vault.address}/#readContract`
+              )}
+              {...linkProps}
+            >
+              {chunks}
+            </a>
+          )
+        })}
+      </span>
+    </div>
+  )
+}
+
 interface ErrorStateProps {
   chainId?: number
   tokenAddress?: Address
+  className?: string
 }
 
 const ErrorState = (props: ErrorStateProps) => {
-  const { chainId, tokenAddress } = props
+  const { chainId, tokenAddress, className } = props
 
   const t_vault = useTranslations('Vault')
   const t_error = useTranslations('Error')
@@ -103,7 +223,12 @@ const ErrorState = (props: ErrorStateProps) => {
   const isInvalidInterface = !tokenAddress
 
   return (
-    <div className='w-full max-w-md flex flex-col gap-6 items-center text-center'>
+    <div
+      className={classNames(
+        'w-full max-w-md flex flex-col gap-6 items-center text-center',
+        className
+      )}
+    >
       <ErrorPooly className='w-full max-w-[50%]' />
       {isInvalidNetwork ? (
         <div className='flex flex-col gap-2'>

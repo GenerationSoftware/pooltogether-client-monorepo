@@ -53,6 +53,7 @@ export const QUERY_KEYS = {
   vaultBalances: 'vaultBalances',
   vaultClaimers: 'vaultClaimers',
   vaultContributionAmounts: 'vaultContributionAmounts',
+  vaultContributionEvents: 'vaultContributionEvents',
   vaultExchangeRates: 'vaultExchangeRates',
   vaultFeeInfo: 'vaultFeeInfo',
   vaultFeesAvailable: 'vaultFeeInfo',

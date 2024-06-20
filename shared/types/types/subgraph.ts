@@ -4,6 +4,7 @@ export interface SubgraphDraw {
     id: string
     winner: `0x${string}`
     recipient: `0x${string}`
+    vaultAddress: `0x${string}`
     tier: number
     prizeIndex: number
     payout: bigint

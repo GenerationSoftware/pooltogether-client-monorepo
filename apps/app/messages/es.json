@@ -72,7 +72,6 @@
       "prizeYield": "Rendimiento de premios",
       "bonusRewards": "Recompensas Extras",
       "tvl": "TVL",
-      "contributions": "Contribución del Premio {number}D",
       "depositToken": "Deposita Token",
       "prizeToken": "Token de Premio",
       "delegatedToYou": "Delegado a ti",
@@ -83,7 +82,6 @@
     },
     "returnToVaults": "Volver a los Cofres",
     "learnAboutVault": "Aprender acerca de {vaultName}",
-    "smartContractRisk": "PoolTogether es un protocolo sin permisos que cualquiera puede usar para desplegar bóvedas de premios. Esta bóveda de premio te expone al riesgo de contrato inteligente de los siguientes contratos:",
     "vaultContract": "Contrato de bóveda",
     "yieldSourceContract": "Contrato de origen del rendimiento",
     "inVaultLists": "Esta bóveda de premios está en las siguientes listas de bóveda que has seleccionado:",
@@ -230,7 +228,6 @@
     "approval": "Darás tu aprobación para depositar una cantidad específica de {symbol}",
     "vaultFee": "Un porcentaje de rendimiento que no va hacia los premios, y está determinado por el desplegador de la bóveda",
     "importedVault": "Esta bóveda es de las siguientes lista(s) importadas:",
-    "vaultContribution": "La cantidad de {symbol} ha contribuido al bote de premios en los últimos {days} días",
     "deprecatedVault": "Esta bóveda ha sido obsoleta. Todavía puede ser elegible para ganar premios, pero animamos a los usuarios a migrar a otras bóvedas."
   },
   "Toasts": {

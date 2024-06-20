@@ -33,6 +33,7 @@ export const getSubgraphDraws = async (
             id
             winner
             recipient
+            prizeVault { address }
             tier
             prizeIndex
             payout
@@ -63,6 +64,7 @@ export const getSubgraphDraws = async (
         id: string
         winner: string
         recipient: string
+        prizeVault: { address: string }
         tier: number
         prizeIndex: string
         payout: string
@@ -79,6 +81,7 @@ export const getSubgraphDraws = async (
         id: claim.id,
         winner: claim.winner as Address,
         recipient: claim.recipient as Address,
+        vaultAddress: claim.prizeVault.address as Address,
         tier: claim.tier,
         prizeIndex: parseInt(claim.prizeIndex),
         payout: BigInt(claim.payout),

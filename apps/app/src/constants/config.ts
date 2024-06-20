@@ -94,12 +94,25 @@ export const DEFAULT_VAULT_LISTS = {
 } as const
 
 /**
+ * Event queries' start blocks
+ */
+export const QUERY_START_BLOCK = {
+  [NETWORK.mainnet]: 1n,
+  [NETWORK.optimism]: 118_900_000n,
+  [NETWORK.arbitrum]: 216_345_400n,
+  [NETWORK.base]: 14_506_800n,
+  [NETWORK.optimism_sepolia]: 10_793_300n,
+  [NETWORK.arbitrum_sepolia]: 48_888_900n,
+  [NETWORK.base_sepolia]: 10_578_500n
+} as const satisfies { [chainId: number]: bigint }
+
+/**
  * TWAB rewards settings
  */
 export const TWAB_REWARDS_SETTINGS: {
   [chainId: number]: { tokenAddresses: Address[]; fromBlock: bigint }
 } = {
-  [NETWORK.mainnet]: { tokenAddresses: [], fromBlock: 1n },
+  [NETWORK.mainnet]: { tokenAddresses: [], fromBlock: QUERY_START_BLOCK[NETWORK.mainnet] },
   [NETWORK.optimism]: {
     tokenAddresses: [
       '0x4200000000000000000000000000000000000042', // OP
@@ -109,7 +122,7 @@ export const TWAB_REWARDS_SETTINGS: {
       '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1', // DAI
       '0x395Ae52bB17aef68C2888d941736A71dC6d4e125' // POOL
     ],
-    fromBlock: 118_900_000n
+    fromBlock: QUERY_START_BLOCK[NETWORK.optimism]
   },
   [NETWORK.arbitrum]: {
     tokenAddresses: [
@@ -120,7 +133,7 @@ export const TWAB_REWARDS_SETTINGS: {
       '0xCF934E2402A5e072928a39a956964eb8F2B5B79C', // POOL
       '0x912CE59144191C1204E64559FE8253a0e49E6548' // ARB
     ],
-    fromBlock: 216_345_400n
+    fromBlock: QUERY_START_BLOCK[NETWORK.arbitrum]
   },
   [NETWORK.base]: {
     tokenAddresses: [
@@ -130,28 +143,28 @@ export const TWAB_REWARDS_SETTINGS: {
       '0xd652C5425aea2Afd5fb142e120FeCf79e18fafc3', // POOL
       '0xA88594D404727625A9437C3f886C7643872296AE' // WELL
     ],
-    fromBlock: 14_506_800n
+    fromBlock: QUERY_START_BLOCK[NETWORK.base]
   },
   [NETWORK.optimism_sepolia]: {
     tokenAddresses: [
       USDC_TOKEN_ADDRESSES[NETWORK.optimism_sepolia],
       POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia]
     ],
-    fromBlock: 10_793_300n
+    fromBlock: QUERY_START_BLOCK[NETWORK.optimism_sepolia]
   },
   [NETWORK.arbitrum_sepolia]: {
     tokenAddresses: [
       USDC_TOKEN_ADDRESSES[NETWORK.arbitrum_sepolia],
       POOL_TOKEN_ADDRESSES[NETWORK.arbitrum_sepolia]
     ],
-    fromBlock: 48_888_900n
+    fromBlock: QUERY_START_BLOCK[NETWORK.arbitrum_sepolia]
   },
   [NETWORK.base_sepolia]: {
     tokenAddresses: [
       USDC_TOKEN_ADDRESSES[NETWORK.base_sepolia],
       POOL_TOKEN_ADDRESSES[NETWORK.base_sepolia]
     ],
-    fromBlock: 10_578_500n
+    fromBlock: QUERY_START_BLOCK[NETWORK.base_sepolia]
   }
 }
 

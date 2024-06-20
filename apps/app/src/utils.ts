@@ -158,3 +158,18 @@ export const trackDeposit = async (chainId: number, txHash: `0x${string}`, walle
 export const walletSupportsPermit = (connectorId?: string) => {
   return !connectorId?.toLowerCase().includes('coinbase')
 }
+
+/**
+ * Returns a clean, concise URI for display purposes
+ * @param uri a URI to clean up
+ * @returns
+ */
+export const getCleanURI = (URI: string) => {
+  if (URI.startsWith('http')) {
+    return /^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/?\n]+)/i.exec(URI)?.[1] ?? ''
+  } else if (URI.startsWith('ipfs://') || URI.startsWith('ipns://')) {
+    return `${URI.slice(0, 15)}...`
+  } else {
+    return URI
+  }
+}

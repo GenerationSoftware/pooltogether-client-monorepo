@@ -1,11 +1,7 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import {
-  useCachedVaultLists,
-  useVaultShareData,
-  useVaultTokenData
-} from '@generationsoftware/hyperstructure-react-hooks'
+import { useCachedVaultLists } from '@generationsoftware/hyperstructure-react-hooks'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
-import { ImportedVaultTooltip, PrizePoolBadge, TokenIcon } from '@shared/react-components'
+import { ImportedVaultTooltip, VaultBadge } from '@shared/react-components'
 import { getVaultId } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -21,11 +17,7 @@ interface VaultPageHeaderProps {
 export const VaultPageHeader = (props: VaultPageHeaderProps) => {
   const { vault, className } = props
 
-  const t_common = useTranslations('Common')
   const t_tooltips = useTranslations('Tooltips')
-
-  const { data: share } = useVaultShareData(vault as Vault)
-  const { data: token } = useVaultTokenData(vault as Vault)
 
   const { cachedVaultLists } = useCachedVaultLists()
 
@@ -37,52 +29,36 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
     }
   }, [vault, cachedVaultLists])
 
-  const importedSrcs = useVaultImportedListSrcs(vault as Vault)
+  const importedSrcs = useVaultImportedListSrcs(vault!)
 
   return (
-    <>
-      <div className={classNames('w-full flex flex-col gap-2 items-center', className)}>
-        <div className='w-full flex relative justify-center items-center'>
-          <BackButton />
-          {!!vault && (
-            <div className='w-full max-w-[85%] inline-flex justify-center gap-2 items-center md:max-w-none'>
-              {(!!logoURI || !!token?.address) && (
-                <TokenIcon
-                  token={{
-                    chainId: vault.chainId,
-                    address: !!logoURI ? vault.address : token?.address,
-                    name: !!logoURI ? vault.name : token?.name,
-                    logoURI: logoURI ?? vault.tokenLogoURI,
-                    symbol: !!logoURI ? share?.symbol : token?.symbol
-                  }}
-                  className='h-6 w-6 md:h-8 md:w-8'
-                />
+    <div className={classNames('w-full flex flex-col gap-2 items-center', className)}>
+      <div className='w-full flex relative justify-center items-center'>
+        <BackButton />
+        {!!vault && (
+          <div className='w-full max-w-[85%] inline-flex justify-center gap-3 items-center md:max-w-none'>
+            <VaultBadge
+              vault={vault}
+              className='!p-0 bg-transparent border-none'
+              iconClassName='md:h-8 md:w-8'
+              networkIconClassName='md:top-5 md:left-5'
+              nameClassName={classNames(
+                'mb-1 !text-[1.75rem] font-medium font-grotesk line-clamp-2 md:!text-4xl',
+                { 'text-center': !logoURI }
               )}
-              <span
-                className={classNames(
-                  'text-[1.75rem] font-medium font-grotesk line-clamp-2 overflow-hidden overflow-ellipsis',
-                  'md:max-w-[65%] md:text-4xl',
-                  { 'text-center': !logoURI }
-                )}
-              >
-                {vault.name ?? share?.name}
-              </span>
-              {importedSrcs.length > 0 && (
-                <ImportedVaultTooltip
-                  vaultLists={importedSrcs}
-                  intl={t_tooltips('importedVault')}
-                />
-              )}
-            </div>
-          )}
-        </div>
-        {!!vault && (!!vault.name || !!share?.name) && (
-          <Link href={`/prizes?network=${vault.chainId}`}>
-            <PrizePoolBadge chainId={vault.chainId} onClick={() => {}} intl={t_common} />
-          </Link>
+              yieldSourceClassName='hidden'
+            />
+            {importedSrcs.length > 0 && (
+              <ImportedVaultTooltip
+                vaultLists={importedSrcs}
+                placement='bottom'
+                intl={t_tooltips('importedVault')}
+              />
+            )}
+          </div>
         )}
       </div>
-    </>
+    </div>
   )
 }
 

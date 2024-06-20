@@ -1,4 +1,4 @@
-import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useVaultPromotionsApr } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import { formatNumberForDisplay, TWAB_REWARDS_ADDRESSES } from '@shared/utilities'
@@ -16,18 +16,18 @@ interface VaultBonusRewardsProps {
   valueClassName?: string
 }
 
+// TODO: enable also showing tokens that rewards are in ("in OP + 2 other tokens", etc.)
 export const VaultBonusRewards = (props: VaultBonusRewardsProps) => {
   const { vault, prepend, append, hideUnlessPresent, className, valueClassName } = props
 
-  const prizePools = useSupportedPrizePools()
-
-  const prizePool =
-    !!vault && Object.values(prizePools).find((prizePool) => prizePool.chainId === vault.chainId)
+  const prizePoolsArray = Object.values(useSupportedPrizePools())
+  const prizePool = prizePoolsArray.find((prizePool) => prizePool.chainId === vault?.chainId)
 
   const tokenAddresses = !!vault ? TWAB_REWARDS_SETTINGS[vault.chainId].tokenAddresses : []
   const fromBlock = !!vault ? TWAB_REWARDS_SETTINGS[vault.chainId].fromBlock : undefined
+
   const { data: vaultPromotionsApr, isFetched: isFetchedVaultPromotionsApr } =
-    useVaultPromotionsApr(vault, prizePool as PrizePool, tokenAddresses, { fromBlock })
+    useVaultPromotionsApr(vault, prizePool!, tokenAddresses, { fromBlock })
 
   if (
     (!!vault && TWAB_REWARDS_ADDRESSES[vault.chainId] === undefined) ||

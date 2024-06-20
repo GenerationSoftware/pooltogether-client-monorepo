@@ -60,7 +60,12 @@ export const VaultCard = (props: VaultCardProps) => {
             {t_vaults('headers.winChance')}
             <RelativeWinChanceTooltip intl={t_tooltips('relativeWinChance')} className='text-xs' />
           </span>
-          <VaultWinChance vault={vault} className='w-11' tooltipClassName='text-xs' />
+          <VaultWinChance
+            vault={vault}
+            className='w-11 pb-2'
+            fallbackClassName='!pb-0'
+            tooltipClassName='text-xs'
+          />
         </div>
         <div className='flex items-center justify-between'>
           <span className='flex gap-1 items-center text-sm text-pt-purple-200'>

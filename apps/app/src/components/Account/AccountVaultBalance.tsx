@@ -5,6 +5,7 @@ import {
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { TokenAmount, TokenValueAndAmount } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
+import classNames from 'classnames'
 import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
@@ -12,10 +13,12 @@ interface AccountVaultBalanceProps {
   vault: Vault
   address?: Address
   className?: string
+  valueClassName?: string
+  amountClassName?: string
 }
 
 export const AccountVaultBalance = (props: AccountVaultBalanceProps) => {
-  const { vault, address, className } = props
+  const { vault, address, className, valueClassName, amountClassName } = props
 
   const { address: _userAddress } = useAccount()
   const userAddress = address ?? _userAddress
@@ -38,7 +41,13 @@ export const AccountVaultBalance = (props: AccountVaultBalanceProps) => {
   if (tokenBalance === undefined) {
     if (!!shareBalance && shareBalance.amount > 0n) {
       return (
-        <span className='text-xs text-pt-purple-200 md:text-sm'>
+        <span
+          className={classNames(
+            'text-xs text-pt-purple-200 md:text-sm',
+            className,
+            amountClassName
+          )}
+        >
           <TokenAmount token={shareBalance} hideZeroes={true} />
         </span>
       )
@@ -54,8 +63,8 @@ export const AccountVaultBalance = (props: AccountVaultBalanceProps) => {
       <TokenValueAndAmount
         token={tokenBalance}
         className={className}
-        valueClassName='text-sm md:text-base'
-        amountClassName='text-xs md:text-sm'
+        valueClassName={classNames('text-sm md:text-base', valueClassName)}
+        amountClassName={classNames('text-xs md:text-sm', amountClassName)}
         valueOptions={{ hideZeroes: true }}
         amountOptions={shiftedAmount > 1e3 ? { hideZeroes: true } : { maximumFractionDigits: 2 }}
       />

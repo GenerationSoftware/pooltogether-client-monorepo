@@ -34,7 +34,11 @@
       "skipForNow": "Skip for now"
     },
     "before": "Before",
-    "after": "After"
+    "after": "After",
+    "distribution": "Distribution",
+    "nextClaim": "Next Claim",
+    "date": "Date",
+    "allTime": "All Time"
   },
   "Navigation": {
     "home": "Home",
@@ -104,7 +108,8 @@
       "prizeYield": "Prize Yield",
       "bonusRewards": "Bonus Rewards",
       "tvl": "TVL",
-      "contributions": "{number}D Prize Pool Contribution",
+      "totalDeposited": "Total Deposited",
+      "contributions": "Prize Pool Contributions",
       "depositToken": "Deposit Token",
       "prizeToken": "Prize Token",
       "delegatedToYou": "Delegated To You",
@@ -117,12 +122,14 @@
     },
     "returnToVaults": "Return to Vaults",
     "learnAboutVault": "Learn about {vaultName}",
-    "smartContractRisk": "PoolTogether is a permissionless protocol that anyone can use to deploy prize vaults. This prize vault exposes you to smart contract risk from the following contracts:",
+    "smartContractRisk": "PoolTogether is a permissionless protocol that anyone can use to deploy prize vaults. <docsLink>Read our documentation</docsLink> to learn more. This prize vault exposes you to smart contract risk related to the <vaultLink>vault contract</vaultLink> and its underlying <yieldLink>yield contract</yieldLink>.",
     "vaultContract": "Vault Contract",
     "yieldSourceContract": "Yield Source Contract",
     "inVaultLists": "This prize vault is in the following vault lists you have selected:",
     "notInVaultLists": "This prize vault is not in any of the vault lists you have selected.",
-    "shortWarningNotInVaultLists": "Warning! This vault is not in any of your active lists."
+    "shortWarningNotInVaultLists": "Warning! This vault is not in any of your active lists.",
+    "noWinnersYet": "No winners yet",
+    "noContributionsYet": "No contributions yet"
   },
   "Account": {
     "connectWallet": "Connect your wallet to view account status",
@@ -292,7 +299,12 @@
     "xPrizesDaily": "{number, plural, one {# prize} other {# prizes}} daily",
     "xPrizesWeekly": "{number, plural, one {# prize} other {# prizes}} weekly",
     "xPrizesMonthly": "{number, plural, one {# prize} other {# prizes}} monthly",
-    "xPrizesYearly": "{number, plural, one {# prize} other {# prizes}} yearly"
+    "xPrizesYearly": "{number, plural, one {# prize} other {# prizes}} yearly",
+    "lessThanAnHour": "In less than an hour",
+    "inXhours": "In {number, plural, one {# hour} other {# hours}}",
+    "inXdays": "In {number, plural, one {# day} other {# days}}",
+    "inXweeks": "In {number, plural, one {# week} other {# weeks}}",
+    "inXmonths": "In {number, plural, one {# month} other {# months}}"
   },
   "Tooltips": {
     "prizes": "Prizes you can win while deposited in a vault",
@@ -303,7 +315,8 @@
     "approval": "You'll give your approval to deposit a specific amount of {symbol}",
     "vaultFee": "A percentage of yield that does not go towards prizes, and is determined by the vault owner",
     "importedVault": "This vault is from the following imported list(s):",
-    "vaultContribution": "The amount of {symbol} contributed to the prize pool over the last {days} days",
+    "vaultContribution": "The amount of {symbol} contributed to the prize pool, enabling wins in this vault",
+    "vaultContributionWithDays": "The amount of {symbol} contributed to the prize pool over the last {days} days, enabling wins in this vault",
     "deprecatedVault": "This vault has been deprecated. It may still be eligible to win prizes, but we encourage users to migrate to other vaults.",
     "wrongPrizePoolVault": "This vault is connected to a prize pool not supported by this interface.",
     "badPrecisionPerDollar": "This vault is likely to have rounding errors which may lead to lossy withdrawals.",

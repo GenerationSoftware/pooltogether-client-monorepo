@@ -30,7 +30,7 @@ export default function VaultPage() {
 
   if (router.isReady && !router.isFallback) {
     return (
-      <Layout className='gap-12'>
+      <Layout className='gap-8'>
         <VaultPageContent queryParams={router.query} />
       </Layout>
     )

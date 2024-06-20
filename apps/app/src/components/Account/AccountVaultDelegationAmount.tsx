@@ -8,6 +8,7 @@ import {
 import { TokenAmount, TokenValueAndAmount } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import { getAssetsFromShares } from '@shared/utilities'
+import classNames from 'classnames'
 import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
@@ -15,10 +16,12 @@ interface AccountVaultDelegationAmountProps {
   vault: Vault
   address?: Address
   className?: string
+  valueClassName?: string
+  amountClassName?: string
 }
 
 export const AccountVaultDelegationAmount = (props: AccountVaultDelegationAmountProps) => {
-  const { vault, address, className } = props
+  const { vault, address, className, valueClassName, amountClassName } = props
 
   const { address: _userAddress } = useAccount()
   const userAddress = address ?? _userAddress
@@ -47,7 +50,13 @@ export const AccountVaultDelegationAmount = (props: AccountVaultDelegationAmount
   if (!isFetchedShareBalance || !exchangeRate || !tokenData) {
     if (!!shareBalance && delegationBalance > 0n) {
       return (
-        <span className='text-xs text-pt-purple-200 md:text-sm'>
+        <span
+          className={classNames(
+            'text-xs text-pt-purple-200 md:text-sm',
+            className,
+            amountClassName
+          )}
+        >
           <TokenAmount token={{ ...shareBalance, amount: delegationBalance }} hideZeroes={true} />
         </span>
       )
@@ -64,8 +73,8 @@ export const AccountVaultDelegationAmount = (props: AccountVaultDelegationAmount
       <TokenValueAndAmount
         token={{ ...tokenData, amount }}
         className={className}
-        valueClassName='text-sm md:text-base'
-        amountClassName='text-xs md:text-sm'
+        valueClassName={classNames('text-sm md:text-base', valueClassName)}
+        amountClassName={classNames('text-xs md:text-sm', amountClassName)}
         valueOptions={{ hideZeroes: true }}
         amountOptions={shiftedAmount > 1e3 ? { hideZeroes: true } : { maximumFractionDigits: 2 }}
       />
