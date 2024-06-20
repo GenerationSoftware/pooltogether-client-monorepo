@@ -37,7 +37,8 @@
     "after": "After",
     "distribution": "Distribution",
     "nextClaim": "Next Claim",
-    "date": "Date"
+    "date": "Date",
+    "allTime": "All Time"
   },
   "Navigation": {
     "home": "Home",
@@ -126,7 +127,9 @@
     "yieldSourceContract": "Yield Source Contract",
     "inVaultLists": "This prize vault is in the following vault lists you have selected:",
     "notInVaultLists": "This prize vault is not in any of the vault lists you have selected.",
-    "shortWarningNotInVaultLists": "Warning! This vault is not in any of your active lists."
+    "shortWarningNotInVaultLists": "Warning! This vault is not in any of your active lists.",
+    "noWinnersYet": "No winners yet",
+    "noContributionsYet": "No contributions yet"
   },
   "Account": {
     "connectWallet": "Connect your wallet to view account status",

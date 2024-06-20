@@ -25,31 +25,18 @@ export const VaultPageContributionsCard = (props: VaultPageContributionsCardProp
   const { vault, prizePool, className } = props
 
   const t_vault = useTranslations('Vault')
-  const t_abbr = useTranslations('Abbreviations')
 
-  const numDaysOptions: number[] = [7, 30]
-
-  const [numDays, setNumDays] = useState<number>(numDaysOptions[0])
+  const [numDays, setNumDays] = useState<number | undefined>(7)
 
   const CardHeader = () => (
-    <div className='flex items-center gap-2 text-pt-purple-300 font-semibold'>
+    <div className='flex flex-col items-center gap-2 text-pt-purple-300 font-semibold md:flex-row'>
       {/* TODO: add tooltip */}
       <span className='grow text-xl md:text-2xl'>{t_vault('headers.contributions')}</span>
-      {numDaysOptions.map((option) => (
-        <button
-          key={`numDaysOption-${option}`}
-          onClick={() => setNumDays(option)}
-          className={classNames(
-            'p-2 text-lg rounded-lg border hover:bg-pt-transparent md:text-xl',
-            {
-              'text-pt-purple-50 bg-pt-transparent border-pt-transparent': numDays === option,
-              'border-transparent': numDays !== option
-            }
-          )}
-        >
-          {option} {t_abbr('days')}
-        </button>
-      ))}
+      <div className='flex items-center gap-2'>
+        <NumDaysOptionButton onClick={setNumDays} numDays={numDays} option={7} />
+        <NumDaysOptionButton onClick={setNumDays} numDays={numDays} option={30} />
+        <NumDaysOptionButton onClick={setNumDays} numDays={numDays} />
+      </div>
     </div>
   )
 
@@ -61,15 +48,42 @@ export const VaultPageContributionsCard = (props: VaultPageContributionsCardProp
   )
 }
 
+interface NumDaysOptionButtonProps {
+  onClick: (val?: number) => void
+  numDays: number | undefined
+  option?: number
+}
+
+const NumDaysOptionButton = (props: NumDaysOptionButtonProps) => {
+  const { onClick, numDays, option } = props
+
+  const t_common = useTranslations('Common')
+  const t_abbr = useTranslations('Abbreviations')
+
+  return (
+    <button
+      onClick={() => onClick(option)}
+      className={classNames('p-2 text-lg rounded-lg border hover:bg-pt-transparent md:text-xl', {
+        'text-pt-purple-50 bg-pt-transparent border-pt-transparent': numDays === option,
+        'border-transparent': numDays !== option
+      })}
+    >
+      {!!option ? `${option} ${t_abbr('days')}` : t_common('allTime')}
+    </button>
+  )
+}
+
 interface ContributionsChartProps {
   vault: Vault
   prizePool: PrizePool
-  numDays: number
+  numDays?: number
   className?: string
 }
 
 const ContributionsChart = (props: ContributionsChartProps) => {
   const { vault, prizePool, numDays, className } = props
+
+  const t_vault = useTranslations('Vault')
 
   const { data: contributionEvents } = useVaultContributionEvents(prizePool, {
     vaultAddress: lower(vault.address),
@@ -103,25 +117,29 @@ const ContributionsChart = (props: ContributionsChartProps) => {
         data.push({ name, amount })
       })
 
-      return data.slice(Math.max(0, data.length - numDays))
+      return !!numDays ? data.slice(Math.max(0, data.length - numDays)) : data
     }
   }, [contributionEvents, firstDrawOpenTimestamp, drawPeriod, prizeToken, numDays])
 
-  // TODO: add empty state (all data fetched but no contributions in the last numDays)
   return (
     <div
       className={classNames('w-full aspect-[16/11] flex items-center justify-center', className)}
     >
       {!!chartData && !!prizeToken ? (
-        <ResponsiveContainer width='100%' height='100%'>
-          <BarChart data={chartData} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
-            <XAxis dataKey='name' stroke='#9CA3AF' />
-            {/* TODO: improve y axis domain */}
-            <YAxis stroke='#9CA3AF' tickFormatter={(tick) => `${tick} ${prizeToken.symbol}`} />
-            <Bar dataKey='amount' fill='#6538C1' isAnimationActive={false} />
-            {/* TODO: add tooltip without annoying bg (set in Bar component) */}
-          </BarChart>
-        </ResponsiveContainer>
+        chartData.length ? (
+          <ResponsiveContainer width='100%' height='100%'>
+            <BarChart data={chartData} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
+              <XAxis dataKey='name' stroke='#9CA3AF' />
+              <YAxis stroke='#9CA3AF' tickFormatter={(tick) => `${tick} ${prizeToken.symbol}`} />
+              <Bar dataKey='amount' fill='#6538C1' isAnimationActive={false} />
+              {/* TODO: add tooltip without annoying bg (set in Bar component) */}
+            </BarChart>
+          </ResponsiveContainer>
+        ) : (
+          <span className='text-sm text-pt-purple-100 md:text-base'>
+            {t_vault('noContributionsYet')}
+          </span>
+        )
       ) : (
         <Spinner />
       )}

@@ -4,6 +4,8 @@ import {
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { SortIcon } from '@shared/react-components'
+import { Token } from '@shared/types'
+import { Spinner } from '@shared/ui'
 import {
   formatBigIntForDisplay,
   getSimpleDate,
@@ -31,6 +33,7 @@ export const VaultPageRecentWinnersCard = (props: VaultPageRecentWinnersCardProp
   const { vault, prizePool, className } = props
 
   const t_common = useTranslations('Common')
+  const t_vault = useTranslations('Vault')
   const t_prizes = useTranslations('Prizes')
 
   const { data: prizeToken, isFetched: isFetchedPrizeToken } = usePrizeTokenData(prizePool)
@@ -95,58 +98,47 @@ export const VaultPageRecentWinnersCard = (props: VaultPageRecentWinnersCardProp
     }
   }, [wins, sortBy, sortDirection])
 
-  if (!isFetchedPrizeToken || !prizeToken || !isFetchedDraws || !draws || !sortedWins.length) {
-    return <></>
-  }
+  const isFetched = !!isFetchedPrizeToken && !!prizeToken && !!isFetchedDraws && !!draws
 
   return (
     <VaultPageCard
       title={t_prizes('recentWinners')}
-      wrapperClassName={classNames('w-full md:px-16', className)}
+      wrapperClassName={classNames('w-full aspect-[4/3] md:aspect-[7/3] md:px-16', className)}
     >
-      <div className='w-full grid grid-cols-3 font-semibold text-pt-purple-300'>
-        <span className='text-left'>{t_prizes('drawModal.winner')}</span>
-        <SortableHeader
-          onClick={() => handleHeaderClick('timestamp')}
-          direction={getDirection('timestamp')}
-          className='justify-center'
-        >
-          {t_common('date')}
-        </SortableHeader>
-        <SortableHeader
-          onClick={() => handleHeaderClick('amount')}
-          direction={getDirection('amount')}
-          className='justify-end text-right'
-        >
-          {t_prizes('prize')}
-        </SortableHeader>
-      </div>
-      {sortedWins.slice(0, 6).map(({ winner, timestamp, amount }) => {
-        const formattedWinner = WALLET_NAMES[lower(winner)]?.name ?? shorten(winner)
-        const formattedPrize = formatBigIntForDisplay(amount, prizeToken.decimals, {
-          minimumFractionDigits: 4,
-          maximumFractionDigits: 4
-        })
-
-        return (
-          <div
-            key={`prize-${winner}-${timestamp}`}
-            className='w-full grid grid-cols-3 text-sm md:text-base'
-          >
-            <span className='text-left'>
-              <Link href={`/account/${winner}`}>
-                <button className='font-[monospace] hover:text-pt-purple-100'>
-                  {formattedWinner}
-                </button>
-              </Link>
-            </span>
-            <span>{getSimpleDate(timestamp)}</span>
-            <span className='text-right'>
-              {formattedPrize === '0.0000' ? '< 0.0001' : formattedPrize} {prizeToken.symbol}
-            </span>
+      {isFetched ? (
+        sortedWins.length ? (
+          <div className='w-full grow flex flex-col gap-2'>
+            <div className='w-full grid grid-cols-3 font-semibold text-pt-purple-300'>
+              <span className='text-left'>{t_prizes('drawModal.winner')}</span>
+              <SortableHeader
+                onClick={() => handleHeaderClick('timestamp')}
+                direction={getDirection('timestamp')}
+                className='justify-center'
+              >
+                {t_common('date')}
+              </SortableHeader>
+              <SortableHeader
+                onClick={() => handleHeaderClick('amount')}
+                direction={getDirection('amount')}
+                className='justify-end text-right'
+              >
+                {t_prizes('prize')}
+              </SortableHeader>
+            </div>
+            {sortedWins.slice(0, 6).map((win) => (
+              <WinnerRow
+                key={`prize-${win.winner}-${win.timestamp}`}
+                {...win}
+                prizeToken={prizeToken}
+              />
+            ))}
           </div>
+        ) : (
+          <span className='text-sm text-pt-purple-100 md:text-base'>{t_vault('noWinnersYet')}</span>
         )
-      })}
+      ) : (
+        <Spinner />
+      )}
     </VaultPageCard>
   )
 }
@@ -168,6 +160,37 @@ const SortableHeader = (props: SortableHeaderProps) => {
     >
       <SortIcon direction={direction} className='w-4 h-auto shrink-0' />
       {children}
+    </div>
+  )
+}
+
+interface WinnerRowProps {
+  winner: Address
+  timestamp: number
+  amount: bigint
+  prizeToken: Token
+}
+
+const WinnerRow = (props: WinnerRowProps) => {
+  const { winner, timestamp, amount, prizeToken } = props
+
+  const formattedWinner = WALLET_NAMES[lower(winner)]?.name ?? shorten(winner)
+  const formattedPrize = formatBigIntForDisplay(amount, prizeToken.decimals, {
+    minimumFractionDigits: 4,
+    maximumFractionDigits: 4
+  })
+
+  return (
+    <div className='w-full grid grid-cols-3 text-sm md:text-base'>
+      <span className='text-left'>
+        <Link href={`/account/${winner}`}>
+          <button className='font-[monospace] hover:text-pt-purple-100'>{formattedWinner}</button>
+        </Link>
+      </span>
+      <span>{getSimpleDate(timestamp)}</span>
+      <span className='text-right'>
+        {formattedPrize === '0.0000' ? '< 0.0001' : formattedPrize} {prizeToken.symbol}
+      </span>
     </div>
   )
 }
