@@ -188,7 +188,7 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
           }
         />
       )}
-      {!!vaultPromotionsApr && show.includes('bonusRewards') && (
+      {!!vaultPromotionsApr?.apr && show.includes('bonusRewards') && (
         <VaultInfoRow
           name={
             <span className='flex gap-2 items-center'>

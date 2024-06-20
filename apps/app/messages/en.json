@@ -129,7 +129,12 @@
     "notInVaultLists": "This prize vault is not in any of the vault lists you have selected.",
     "shortWarningNotInVaultLists": "Warning! This vault is not in any of your active lists.",
     "noWinnersYet": "No winners yet",
-    "noContributionsYet": "No contributions yet"
+    "noContributionsYet": "No contributions yet",
+    "rewardsInTokens": {
+      "oneToken": "in <token></token>",
+      "twoTokens": "in <firstToken></firstToken> and <secondToken></secondToken>",
+      "manyTokens": "in <token></token> & {number} others"
+    }
   },
   "Account": {
     "connectWallet": "Connect your wallet to view account status",

@@ -78,8 +78,11 @@ export const VaultPageBonusRewardsSection = (props: VaultPageBonusRewardsSection
     >
       <VaultBonusRewards
         vault={vault}
+        append={<span className='text-pt-purple-300'>{t_common('apr')}</span>}
+        showTokens={true}
+        className='flex-col text-sm md:text-base'
         valueClassName='text-2xl text-pt-purple-100 font-semibold md:text-3xl'
-        append={<span className='text-sm text-pt-purple-300 md:text-base'>{t_common('apr')}</span>}
+        tokensClassName='text-pt-purple-300'
       />
       <div className='flex items-center gap-2 text-sm md:text-base'>
         <span className='text-pt-purple-300'>{t_common('distribution')}:</span>

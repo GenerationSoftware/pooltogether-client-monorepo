@@ -74,7 +74,7 @@ export const VaultCard = (props: VaultCardProps) => {
           </span>
           <VaultPrizes vault={vault} className='text-xs' amountClassName='!text-base' />
         </div>
-        {!!vaultPromotionsApr && (
+        {!!vaultPromotionsApr?.apr && (
           <div className='flex items-center justify-between'>
             <span className='flex gap-1 items-center text-sm text-pt-purple-200'>
               {t_vaults('headers.bonusRewards')}

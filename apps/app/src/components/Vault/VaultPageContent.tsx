@@ -106,12 +106,12 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
           <div
             className={classNames(
               'w-full grid grid-cols-1 gap-x-3 gap-y-8',
-              { 'md:grid-cols-2': !!vaultPromotionsApr },
+              { 'md:grid-cols-2': !!vaultPromotionsApr?.apr },
               maxWidthClassName
             )}
           >
             <VaultPagePrizesSection prizePool={prizePool} />
-            {!!vaultPromotionsApr && (
+            {!!vaultPromotionsApr?.apr && (
               <VaultPageBonusRewardsSection vault={vault} prizePool={prizePool} />
             )}
           </div>

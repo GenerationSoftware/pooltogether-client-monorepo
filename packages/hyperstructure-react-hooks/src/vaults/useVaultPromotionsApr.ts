@@ -1,6 +1,6 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import { TokenWithPrice } from '@shared/types'
-import { getSecondsSinceEpoch, SECONDS_PER_YEAR } from '@shared/utilities'
+import { getSecondsSinceEpoch, lower, SECONDS_PER_YEAR } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
 import {
@@ -60,7 +60,7 @@ export const useVaultPromotionsApr = (
 
   const data = useMemo(() => {
     if (shareToken?.totalSupply === 0n || shareToken?.price === 0) {
-      return 0
+      return { apr: 0, tokens: [] }
     }
 
     if (
@@ -75,17 +75,19 @@ export const useVaultPromotionsApr = (
       const numDraws = options?.numDraws ?? 7
       const currentTimestamp = getSecondsSinceEpoch()
       const maxTimestamp = currentTimestamp + numDraws * drawPeriod
+
+      const allTokenRewardsValue: { [tokenAddress: Address]: number } = {}
       let futureRewards = 0
 
-      tokenAddresses.forEach((address) => {
+      tokenAddresses.forEach((tokenAddress) => {
         const rewardToken: TokenWithPrice = {
-          ...rewardTokenData[address],
-          price: rewardTokenPrices[address.toLowerCase() as Address]
+          ...rewardTokenData[tokenAddress],
+          price: rewardTokenPrices[lower(tokenAddress)]
         }
 
         if (!!rewardToken.price && rewardToken.decimals !== undefined) {
           const promotions = Object.values(vaultPromotions).filter(
-            (promotion) => promotion.token.toLowerCase() === rewardToken.address.toLowerCase()
+            (promotion) => lower(promotion.token) === lower(rewardToken.address)
           )
 
           promotions.forEach((promotion) => {
@@ -112,7 +114,10 @@ export const useVaultPromotionsApr = (
 
               const tokenRewards =
                 parseFloat(formatUnits(tokensPerEpoch, rewardToken.decimals)) * numValidEpochs
-              futureRewards += tokenRewards * (rewardToken.price ?? 0)
+              const tokenRewardsValue = tokenRewards * (rewardToken.price ?? 0)
+
+              allTokenRewardsValue[tokenAddress] = tokenRewardsValue
+              futureRewards += tokenRewardsValue
             }
           })
         }
@@ -121,8 +126,18 @@ export const useVaultPromotionsApr = (
       const yearlyRewards = futureRewards * (yearlyDraws / numDraws)
       const tvl =
         parseFloat(formatUnits(shareToken.totalSupply, shareToken.decimals)) * shareToken.price
+      const apr = (yearlyRewards / tvl) * 100
 
-      return (yearlyRewards / tvl) * 100
+      const promotionTokenAddresses = Object.entries(allTokenRewardsValue)
+        .filter((entry) => !!entry[1])
+        .sort((a, b) => b[1] - a[1])
+        .map((entry) => entry[0] as Address)
+      const promotionTokens = promotionTokenAddresses.map((tokenAddress) => ({
+        ...rewardTokenData[tokenAddress],
+        price: rewardTokenPrices[lower(tokenAddress)]
+      }))
+
+      return { apr, tokens: promotionTokens }
     }
   }, [vaultPromotions, drawPeriod, shareToken, rewardTokenPrices, rewardTokenData])
 
