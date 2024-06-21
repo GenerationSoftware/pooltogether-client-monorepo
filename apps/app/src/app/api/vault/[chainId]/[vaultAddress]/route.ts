@@ -33,27 +33,7 @@ export async function GET(
     const vaultData = await getVaultData(vault, prizePool)
 
     return NextResponse.json(vaultData, { status: 200 })
-  } catch (e: any) {
-    if (!(e instanceof Error)) {
-      e = new Error(e as string)
-    }
-
-    const vault = getVault(chainId, vaultAddress)
-
-    return NextResponse.json(
-      {
-        message: 'Could not fetch vault data',
-        error: e.message,
-        clientDetails: {
-          chainId: vault.publicClient.chain?.id,
-          transport: {
-            key: vault.publicClient.transport.key,
-            name: vault.publicClient.transport.name,
-            type: vault.publicClient.transport.type
-          }
-        }
-      },
-      { status: 500 }
-    )
+  } catch {
+    return NextResponse.json({ message: 'Could not fetch vault data' }, { status: 500 })
   }
 }
