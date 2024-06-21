@@ -3,6 +3,7 @@ import { DelegateButton, DepositButton, WithdrawButton } from '@shared/react-com
 import classNames from 'classnames'
 import * as fathom from 'fathom-client'
 import { useTranslations } from 'next-intl'
+import { useAccount } from 'wagmi'
 import { FATHOM_EVENTS } from '@constants/config'
 
 interface VaultPageButtonsProps {
@@ -15,6 +16,8 @@ export const VaultPageButtons = (props: VaultPageButtonsProps) => {
 
   const t_common = useTranslations('Common')
   const t_tooltips = useTranslations('Tooltips')
+
+  const { address: userAddress } = useAccount()
 
   return (
     <div className={classNames('flex items-center gap-2 md:gap-4', className)}>
@@ -30,13 +33,15 @@ export const VaultPageButtons = (props: VaultPageButtonsProps) => {
       >
         {t_common('withdraw')}
       </WithdrawButton>
-      <DelegateButton
-        vault={vault}
-        extraOnClick={() => fathom.trackEvent(FATHOM_EVENTS.openedDelegateModal)}
-        color='transparent'
-      >
-        {t_common('delegate')}
-      </DelegateButton>
+      {!!userAddress && (
+        <DelegateButton
+          vault={vault}
+          extraOnClick={() => fathom.trackEvent(FATHOM_EVENTS.openedDelegateModal)}
+          color='transparent'
+        >
+          {t_common('delegate')}
+        </DelegateButton>
+      )}
     </div>
   )
 }
