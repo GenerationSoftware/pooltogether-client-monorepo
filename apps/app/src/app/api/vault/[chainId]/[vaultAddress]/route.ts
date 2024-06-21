@@ -38,8 +38,21 @@ export async function GET(
       e = new Error(e as string)
     }
 
+    const vault = getVault(chainId, vaultAddress)
+
     return NextResponse.json(
-      { message: 'Could not fetch vault data', error: e.message },
+      {
+        message: 'Could not fetch vault data',
+        error: e.message,
+        clientDetails: {
+          chainId: vault.publicClient.chain?.id,
+          transport: {
+            key: vault.publicClient.transport.key,
+            name: vault.publicClient.transport.name,
+            type: vault.publicClient.transport.type
+          }
+        }
+      },
       { status: 500 }
     )
   }
