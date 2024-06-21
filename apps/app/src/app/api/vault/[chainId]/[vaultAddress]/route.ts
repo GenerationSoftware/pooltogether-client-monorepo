@@ -33,8 +33,7 @@ export async function GET(
     const vaultData = await getVaultData(vault, prizePool)
 
     return NextResponse.json(vaultData, { status: 200 })
-  } catch (err) {
-    console.error(err)
-    return NextResponse.json({ message: 'Could not fetch vault data' }, { status: 500 })
+  } catch (error) {
+    return NextResponse.json({ message: 'Could not fetch vault data', error }, { status: 500 })
   }
 }
