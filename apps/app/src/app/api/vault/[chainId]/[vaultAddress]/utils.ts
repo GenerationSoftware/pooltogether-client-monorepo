@@ -1,6 +1,7 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import { PartialPromotionInfo, Token, TokenWithLogo, TokenWithPrice } from '@shared/types'
 import {
+  erc20ABI,
   getAssetsFromShares,
   getPromotionCreatedEvents,
   getPromotions,
@@ -10,7 +11,9 @@ import {
   getVaultId,
   lower,
   PRIZE_POOLS,
-  SECONDS_PER_YEAR
+  prizePoolABI,
+  SECONDS_PER_YEAR,
+  vaultABI
 } from '@shared/utilities'
 import defaultVaultList from '@vaultLists/default'
 import {
@@ -21,7 +24,9 @@ import {
   http,
   isAddress,
   parseEther,
-  PublicClient
+  parseUnits,
+  PublicClient,
+  zeroAddress
 } from 'viem'
 import { RPC_URLS, TWAB_REWARDS_SETTINGS, WAGMI_CHAINS } from '@constants/config'
 import { VaultApiParams } from './route'
@@ -81,91 +86,186 @@ export const getPrizePool = (vault: Vault) => {
   return prizePool
 }
 
-// TODO: use multicall batches for efficiency
 export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
-  const shareData = await vault.getShareData()
-  const assetData = await vault.getTotalTokenBalance()
-  const exchangeRate = await vault.getExchangeRate()
-  const yieldSourceAddress = await vault.getYieldSource()
-  const owner = await vault.getOwner()
-  const liquidationPair = await vault.getLiquidationPair()
-  const claimer = await vault.getClaimer()
-  const yieldFees = await vault.getFeeInfo()
+  const firstMulticallResults = await vault.publicClient.multicall({
+    contracts: [
+      { address: vault.address, abi: vaultABI, functionName: 'asset' },
+      { address: vault.address, abi: erc20ABI, functionName: 'symbol' },
+      { address: vault.address, abi: erc20ABI, functionName: 'name' },
+      { address: vault.address, abi: erc20ABI, functionName: 'decimals' },
+      { address: vault.address, abi: erc20ABI, functionName: 'totalSupply' },
+      { address: vault.address, abi: vaultABI, functionName: 'totalPreciseAssets' },
+      { address: vault.address, abi: vaultABI, functionName: 'totalAssets' },
+      { address: vault.address, abi: vaultABI, functionName: 'yieldVault' },
+      { address: vault.address, abi: vaultABI, functionName: 'owner' },
+      { address: vault.address, abi: vaultABI, functionName: 'liquidationPair' },
+      { address: vault.address, abi: vaultABI, functionName: 'claimer' },
+      { address: vault.address, abi: vaultABI, functionName: 'yieldFeePercentage' },
+      { address: vault.address, abi: vaultABI, functionName: 'yieldFeeRecipient' },
+      { address: prizePool.address, abi: prizePoolABI, functionName: 'prizeToken' },
+      { address: prizePool.address, abi: prizePoolABI, functionName: 'getLastAwardedDrawId' },
+      { address: prizePool.address, abi: prizePoolABI, functionName: 'drawPeriodSeconds' }
+    ],
+    batchSize: 1_024 * 1_024
+  })
 
-  const lastDrawId = (await prizePool.getLastAwardedDrawId()) || 1
-  const drawPeriod = await prizePool.getDrawPeriodInSeconds()
-  const prizeAssetData = await prizePool.getPrizeTokenData()
+  const assetAddress = firstMulticallResults[0].result!
+  const shareSymbol = firstMulticallResults[1].result!
+  const shareName = firstMulticallResults[2].result!
+  const shareDecimals = firstMulticallResults[3].result!
+  const shareTotalSupply = firstMulticallResults[4].result!
+  const totalAssets = (firstMulticallResults[5].result ?? firstMulticallResults[6].result)!
+  const yieldSourceAddress = firstMulticallResults[7].result!
+  const owner = firstMulticallResults[8].result!
+  const liquidationPair = firstMulticallResults[9].result!
+  const claimer = firstMulticallResults[10].result!
+  const yieldFeePercentage = firstMulticallResults[11].result ?? 0
+  const yieldFeeRecipient = firstMulticallResults[12].result ?? zeroAddress
+  const prizeAssetAddress = firstMulticallResults[13].result!
+  const lastDrawId = firstMulticallResults[14].result || 1
+  const drawPeriod = firstMulticallResults[15].result!
 
-  const getContributions = async (startDrawId: number) =>
-    (await prizePool.getVaultContributedAmounts([vault.address], startDrawId, lastDrawId))[vault.id]
-  const dailyContributions = await getContributions(lastDrawId)
-  const weeklyContributions = await getContributions(Math.max(0, lastDrawId - 6))
-  const monthlyContributions = await getContributions(Math.max(0, lastDrawId - 29))
-  const allTimeContributions = await getContributions(0)
+  const secondMulticallResults = await vault.publicClient.multicall({
+    contracts: [
+      { address: assetAddress, abi: erc20ABI, functionName: 'symbol' },
+      { address: assetAddress, abi: erc20ABI, functionName: 'name' },
+      { address: assetAddress, abi: erc20ABI, functionName: 'decimals' },
+      { address: prizeAssetAddress, abi: erc20ABI, functionName: 'symbol' },
+      { address: prizeAssetAddress, abi: erc20ABI, functionName: 'name' },
+      { address: prizeAssetAddress, abi: erc20ABI, functionName: 'decimals' },
+      {
+        address: vault.address,
+        abi: vaultABI,
+        functionName: 'convertToAssets',
+        args: [parseUnits('1', shareDecimals)]
+      },
+      {
+        address: prizePool.address,
+        abi: prizePoolABI,
+        functionName: 'getContributedBetween',
+        args: [vault.address, lastDrawId, lastDrawId]
+      },
+      {
+        address: prizePool.address,
+        abi: prizePoolABI,
+        functionName: 'getContributedBetween',
+        args: [vault.address, Math.max(1, lastDrawId - 6), lastDrawId]
+      },
+      {
+        address: prizePool.address,
+        abi: prizePoolABI,
+        functionName: 'getContributedBetween',
+        args: [vault.address, Math.max(1, lastDrawId - 29), lastDrawId]
+      },
+      {
+        address: prizePool.address,
+        abi: prizePoolABI,
+        functionName: 'getContributedBetween',
+        args: [vault.address, 1, lastDrawId]
+      },
+      {
+        address: prizePool.address,
+        abi: prizePoolABI,
+        functionName: 'getVaultUserBalanceAndTotalSupplyTwab',
+        args: [vault.address, zeroAddress, lastDrawId, lastDrawId]
+      },
+      {
+        address: prizePool.address,
+        abi: prizePoolABI,
+        functionName: 'getVaultUserBalanceAndTotalSupplyTwab',
+        args: [vault.address, zeroAddress, Math.max(1, lastDrawId - 6), lastDrawId]
+      },
+      {
+        address: prizePool.address,
+        abi: prizePoolABI,
+        functionName: 'getVaultUserBalanceAndTotalSupplyTwab',
+        args: [vault.address, zeroAddress, Math.max(1, lastDrawId - 29), lastDrawId]
+      },
+      {
+        address: prizePool.address,
+        abi: prizePoolABI,
+        functionName: 'getVaultUserBalanceAndTotalSupplyTwab',
+        args: [vault.address, zeroAddress, 1, lastDrawId]
+      }
+    ],
+    batchSize: 1_024 * 1_024
+  })
 
-  const getSupplyTwab = async (numDraws: number) =>
-    (await prizePool.getVaultTotalSupplyTwabs([vault.address], numDraws))[vault.id]
-  const dailySupplyTwab = await getSupplyTwab(1)
-  const weeklySupplyTwab = await getSupplyTwab(7)
-  const monthlySupplyTwab = await getSupplyTwab(30)
-  const allTimeSupplyTwab = await getSupplyTwab(lastDrawId)
+  const assetSymbol = secondMulticallResults[0].result!
+  const assetName = secondMulticallResults[1].result!
+  const assetDecimals = secondMulticallResults[2].result!
+  const prizeAssetSymbol = secondMulticallResults[3].result!
+  const prizeAssetName = secondMulticallResults[4].result!
+  const prizeAssetDecimals = secondMulticallResults[5].result!
+  const exchangeRate = secondMulticallResults[6].result!
+  const dailyContributions = secondMulticallResults[7].result ?? 0n
+  const weeklyContributions = secondMulticallResults[8].result ?? 0n
+  const monthlyContributions = secondMulticallResults[9].result ?? 0n
+  const allTimeContributions = secondMulticallResults[10].result ?? 0n
+  const dailySupplyTwab = secondMulticallResults[11].result?.[1] ?? 0n
+  const weeklySupplyTwab = secondMulticallResults[12].result?.[1] ?? 0n
+  const monthlySupplyTwab = secondMulticallResults[13].result?.[1] ?? 0n
+  const allTimeSupplyTwab = secondMulticallResults[14].result?.[1] ?? 0n
 
   const prices = await getTokenPrices(vault.chainId, [
-    assetData.address,
-    prizeAssetData.address,
+    assetAddress,
+    prizeAssetAddress,
     ...TWAB_REWARDS_SETTINGS[vault.chainId]?.tokenAddresses
   ])
 
-  const assetPrice = prices[lower(assetData.address)]
+  const assetPrice = prices[lower(assetAddress)]
   const sharePrice =
     !!assetPrice && !!exchangeRate
       ? parseFloat(
-          formatEther(
-            getAssetsFromShares(parseEther(`${assetPrice}`), exchangeRate, shareData.decimals)
-          )
+          formatEther(getAssetsFromShares(parseEther(`${assetPrice}`), exchangeRate, shareDecimals))
         )
       : undefined
-  const prizeAssetPrice = prices[lower(prizeAssetData.address)]
+  const prizeAssetPrice = prices[lower(prizeAssetAddress)]
 
-  const tvl = parseFloat(formatUnits(assetData.amount, assetData.decimals)) * (assetPrice ?? 0)
-
-  const bonusRewards = await getBonusRewardsInfo(vault, drawPeriod, prices, tvl)
-
-  const share: Token & TokenWithPrice & Partial<TokenWithLogo> & { amount: string } = {
-    chainId: shareData.chainId,
-    address: shareData.address,
-    symbol: shareData.symbol,
-    name: vault.name ?? shareData.name,
-    decimals: shareData.decimals,
-    amount: shareData.totalSupply.toString(),
+  const share: Token & TokenWithPrice & Partial<TokenWithLogo> & { amount: number } = {
+    chainId: vault.chainId,
+    address: vault.address,
+    symbol: shareSymbol,
+    name: vault.name ?? shareName,
+    decimals: shareDecimals,
+    amount: parseFloat(formatUnits(shareTotalSupply, shareDecimals)),
     logoURI: vault.logoURI,
     price: sharePrice
   }
 
-  const asset: Token & TokenWithPrice & Partial<TokenWithLogo> & { amount: string } = {
-    chainId: assetData.chainId,
-    address: assetData.address,
-    symbol: assetData.symbol,
-    name: assetData.name,
-    decimals: assetData.decimals,
-    amount: assetData.amount.toString(),
+  const asset: Token & TokenWithPrice & Partial<TokenWithLogo> & { amount: number } = {
+    chainId: vault.chainId,
+    address: assetAddress,
+    symbol: assetSymbol,
+    name: assetName,
+    decimals: assetDecimals,
+    amount: parseFloat(formatUnits(totalAssets, assetDecimals)),
     logoURI: vault.tokenLogoURI,
     price: assetPrice
   }
 
   const prizeAsset: Token & TokenWithPrice = {
-    chainId: prizeAssetData.chainId,
-    address: prizeAssetData.address,
-    symbol: prizeAssetData.symbol,
-    name: prizeAssetData.name,
-    decimals: prizeAssetData.decimals,
+    chainId: vault.chainId,
+    address: prizeAssetAddress,
+    symbol: prizeAssetSymbol,
+    name: prizeAssetName,
+    decimals: prizeAssetDecimals,
     price: prizeAssetPrice
   }
+
+  const tvl = asset.amount * (assetPrice ?? 0)
+
+  const bonusRewards = await getBonusRewardsInfo(vault, drawPeriod, prices, tvl)
 
   const yieldSource: { address: Address; name?: string; appURI?: string } = {
     address: yieldSourceAddress,
     name: vault.yieldSourceName,
     appURI: vault.yieldSourceURI
+  }
+
+  const yieldFees: { percent: number; recipient: Address } = {
+    percent: yieldFeePercentage,
+    recipient: yieldFeeRecipient
   }
 
   const contributions: { day: number; week: number; month: number; all: number } = {
@@ -176,7 +276,7 @@ export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
   }
 
   const getPrizeYield = (numDraws: number, contributions: bigint, twab: bigint) => {
-    if (!!prizeAsset.price && !!share.price) {
+    if (!!prizeAsset.price && !!share.price && !!twab) {
       const yearlyNumDraws = SECONDS_PER_YEAR / drawPeriod
       const extrapolatedYearlyContributions =
         parseFloat(formatUnits(contributions, prizeAsset.decimals)) * (yearlyNumDraws / numDraws)

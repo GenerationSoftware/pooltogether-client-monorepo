@@ -12,7 +12,6 @@ export interface VaultApiParams {
   vaultAddress: string
 }
 
-// TODO: setup basic caching
 export async function GET(
   _req: NextRequest,
   ctx: { params: VaultApiParams }
