@@ -105,8 +105,7 @@ export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
       { address: prizePool.address, abi: prizePoolABI, functionName: 'prizeToken' },
       { address: prizePool.address, abi: prizePoolABI, functionName: 'getLastAwardedDrawId' },
       { address: prizePool.address, abi: prizePoolABI, functionName: 'drawPeriodSeconds' }
-    ],
-    batchSize: 1_024 * 1_024
+    ]
   })
 
   const assetAddress = firstMulticallResults[0].result!
@@ -187,8 +186,7 @@ export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
         functionName: 'getVaultUserBalanceAndTotalSupplyTwab',
         args: [vault.address, zeroAddress, 1, lastDrawId]
       }
-    ],
-    batchSize: 1_024 * 1_024
+    ]
   })
 
   const assetSymbol = secondMulticallResults[0].result!
