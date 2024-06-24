@@ -16,12 +16,14 @@ import {
   vaultABI
 } from '@shared/utilities'
 import defaultVaultList from '@vaultLists/default'
+import { NextRequest } from 'next/server'
 import {
   Address,
   createPublicClient,
   formatEther,
   formatUnits,
   http,
+  HttpTransportConfig,
   isAddress,
   parseEther,
   parseUnits,
@@ -51,15 +53,26 @@ export const getVaultAddressFromParams = (params: VaultApiParams) => {
   return !!rawAddress && isAddress(params.vaultAddress) ? params.vaultAddress : undefined
 }
 
+export const getPublicClient = (
+  chainId: NonNullable<ReturnType<typeof getChainIdFromParams>>,
+  req: NextRequest
+) => {
+  const host = req.headers.get('host')
+  const httpTransportConfig: HttpTransportConfig | undefined = !!host
+    ? { fetchOptions: { headers: { Origin: `https://${host}` } } }
+    : undefined
+
+  return createPublicClient({
+    chain: WAGMI_CHAINS[chainId],
+    transport: http(RPC_URLS[chainId], httpTransportConfig)
+  }) as PublicClient
+}
+
 export const getVault = (
   chainId: NonNullable<ReturnType<typeof getChainIdFromParams>>,
-  address: Address
+  address: Address,
+  publicClient: PublicClient
 ) => {
-  const publicClient = createPublicClient({
-    chain: WAGMI_CHAINS[chainId],
-    transport: http(RPC_URLS[chainId])
-  }) as PublicClient
-
   const existingVaultInfo = defaultVaultList.tokens.find(
     (t) => getVaultId(t) === getVaultId({ chainId, address })
   )
@@ -105,7 +118,8 @@ export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
       { address: prizePool.address, abi: prizePoolABI, functionName: 'prizeToken' },
       { address: prizePool.address, abi: prizePoolABI, functionName: 'getLastAwardedDrawId' },
       { address: prizePool.address, abi: prizePoolABI, functionName: 'drawPeriodSeconds' }
-    ]
+    ],
+    batchSize: 1_024 * 1_024
   })
 
   const assetAddress = firstMulticallResults[0].result!
@@ -186,7 +200,8 @@ export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
         functionName: 'getVaultUserBalanceAndTotalSupplyTwab',
         args: [vault.address, zeroAddress, 1, lastDrawId]
       }
-    ]
+    ],
+    batchSize: 1_024 * 1_024
   })
 
   const assetSymbol = secondMulticallResults[0].result!

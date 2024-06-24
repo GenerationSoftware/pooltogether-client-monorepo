@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import {
   getChainIdFromParams,
   getPrizePool,
+  getPublicClient,
   getVault,
   getVaultAddressFromParams,
   getVaultData
@@ -13,7 +14,7 @@ export interface VaultApiParams {
 }
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   ctx: { params: VaultApiParams }
 ): Promise<NextResponse> {
   const chainId = getChainIdFromParams(ctx.params)
@@ -28,7 +29,8 @@ export async function GET(
   }
 
   try {
-    const vault = getVault(chainId, vaultAddress)
+    const publicClient = getPublicClient(chainId, req)
+    const vault = getVault(chainId, vaultAddress, publicClient)
     const prizePool = getPrizePool(vault)
     const vaultData = await getVaultData(vault, prizePool)
 
