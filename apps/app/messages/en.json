@@ -261,7 +261,9 @@
     "governance": "Governance",
     "security": "Security",
     "enableTestnets": "Enable Testnets",
-    "disableTestnets": "Disable Testnets"
+    "disableTestnets": "Disable Testnets",
+    "termsAndConditions": "Terms and Conditions",
+    "privacyPolicy": "Privacy Policy"
   },
   "Settings": {
     "customizeExperience": "Customize Your Experience",

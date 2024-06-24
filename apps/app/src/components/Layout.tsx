@@ -1,36 +1,27 @@
-import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
   useAllUserVaultBalances,
   useAllUserVaultDelegationBalances,
   usePrizeDrawWinners,
   useSelectedVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
-import {
-  ConnectButton,
-  useAddRecentTransaction,
-  useChainModal,
-  useConnectModal
-} from '@rainbow-me/rainbowkit'
-import { MODAL_KEYS, useIsModalOpen, useIsTestnets } from '@shared/generic-react-hooks'
+import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import {
   CaptchaModal,
   CheckPrizesModal,
   DelegateModal,
   SettingsModal
 } from '@shared/react-components'
-import { Footer, FooterItem, Navbar, SocialIcon, toast } from '@shared/ui'
-import { getDiscordInvite, LINKS, NETWORK } from '@shared/utilities'
+import { toast } from '@shared/ui'
+import { getDiscordInvite, NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
 import * as fathom from 'fathom-client'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import Head from 'next/head'
-import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/router'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { trackDeposit } from 'src/utils'
-import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { DEFAULT_VAULT_LISTS, FATHOM_EVENTS } from '@constants/config'
 import { useNetworks } from '@hooks/useNetworks'
@@ -38,10 +29,12 @@ import { useSelectedPrizePool } from '@hooks/useSelectedPrizePool'
 import { useSettingsModalView } from '@hooks/useSettingsModalView'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { useWalletId } from '@hooks/useWalletId'
+import { Footer } from './Footer'
 import { MigrationPopup } from './MigrationPopup'
 import { DepositModal } from './Modals/DepositModal'
 import { DrawModal } from './Modals/DrawModal'
 import { WithdrawModal } from './Modals/WithdrawModal'
+import { Navbar } from './Navbar'
 import { drawIdAtom } from './Prizes/PrizePoolWinners'
 import { VaultListHandler } from './VaultListHandler'
 
@@ -58,19 +51,14 @@ export const Layout = (props: LayoutProps) => {
   const t_common = useTranslations('Common')
   const t_nav = useTranslations('Navigation')
   const t_settings = useTranslations('Settings')
-  const t_footer = useTranslations('Footer')
   const t_txModals = useTranslations('TxModals')
   const t_txToasts = useTranslations('Toasts.transactions')
   const t_errors = useTranslations('Error')
   const t_prizeChecking = useTranslations('Account.prizeChecking')
 
-  const { setIsModalOpen: setIsSettingsModalOpen } = useIsModalOpen(MODAL_KEYS.settings)
   const { view: settingsModalView, setView: setSettingsModalView } = useSettingsModalView()
 
-  const { setIsModalOpen: setIsCaptchaModalOpen } = useIsModalOpen(MODAL_KEYS.captcha)
-
   const supportedNetworks = useNetworks()
-  const { isTestnets, setIsTestnets } = useIsTestnets()
 
   const customRpcNetworks = useMemo(() => {
     return [...new Set([NETWORK.mainnet, ...supportedNetworks])]
@@ -82,14 +70,12 @@ export const Layout = (props: LayoutProps) => {
 
   const { vaults } = useSelectedVaults()
   const { address: userAddress } = useAccount()
-  const { refetch: refetchUserVaultBalances } = useAllUserVaultBalances(
-    vaults,
-    userAddress as Address,
-    { refetchOnWindowFocus: true }
-  )
+  const { refetch: refetchUserVaultBalances } = useAllUserVaultBalances(vaults, userAddress!, {
+    refetchOnWindowFocus: true
+  })
   const { refetch: refetchUserVaultDelegationBalances } = useAllUserVaultDelegationBalances(
     vaults,
-    userAddress as Address,
+    userAddress!,
     { refetchOnWindowFocus: true }
   )
 
@@ -99,7 +85,7 @@ export const Layout = (props: LayoutProps) => {
   }
 
   const { selectedPrizePool } = useSelectedPrizePool()
-  const { data: draws } = usePrizeDrawWinners(selectedPrizePool as PrizePool)
+  const { data: draws } = usePrizeDrawWinners(selectedPrizePool!)
 
   const selectedDrawId = useAtomValue(drawIdAtom)
   const selectedDraw = draws?.find((draw) => draw.id === selectedDrawId)
@@ -136,78 +122,6 @@ export const Layout = (props: LayoutProps) => {
     }
   }, [searchParams])
 
-  const footerItems: FooterItem[] = [
-    {
-      title: t_footer('titles.getHelp'),
-      content: [
-        { content: t_footer('userDocs'), href: LINKS.docs },
-        { content: t_footer('devDocs'), href: LINKS.protocolDevDocs }
-      ]
-    },
-    {
-      title: t_footer('titles.ecosystem'),
-      content: [
-        { content: t_footer('extensions'), href: LINKS.ecosystem },
-        { content: t_footer('governance'), href: LINKS.governance },
-        { content: t_footer('security'), href: LINKS.audits }
-      ]
-    },
-    {
-      title: t_footer('titles.community'),
-      content: [
-        {
-          content: 'Twitter',
-          href: LINKS.twitter,
-          icon: <SocialIcon platform='twitter' className='w-6 h-auto shrink-0' />
-        },
-        {
-          content: 'Discord',
-          onClick: () => setIsCaptchaModalOpen(true),
-          icon: <SocialIcon platform='discord' className='w-6 h-auto shrink-0' />
-        },
-        {
-          content: 'GitHub',
-          href: LINKS.github,
-          icon: <SocialIcon platform='github' className='w-6 h-auto shrink-0' />
-        },
-        {
-          content: 'Medium',
-          href: LINKS.medium,
-          icon: <SocialIcon platform='medium' className='w-6 h-auto shrink-0' />
-        }
-      ]
-    },
-    {
-      title: t_footer('titles.settings'),
-      content: [
-        {
-          content: t_settings('changeCurrency'),
-          onClick: () => {
-            setSettingsModalView('currency')
-            setIsSettingsModalOpen(true)
-          }
-        },
-        {
-          content: t_settings('changeLanguage'),
-          onClick: () => {
-            setSettingsModalView('language')
-            setIsSettingsModalOpen(true)
-          }
-        }
-      ]
-    }
-  ]
-
-  if (isBrowser) {
-    footerItems[footerItems.length - 1].content.push({
-      content: isTestnets ? t_footer('disableTestnets') : t_footer('enableTestnets'),
-      onClick: () => {
-        setIsTestnets(!isTestnets)
-        router.reload()
-      }
-    })
-  }
-
   const pageTitles: { [href: string]: string } = {
     account: t_nav('account'),
     prizes: t_nav('prizes'),
@@ -223,27 +137,7 @@ export const Layout = (props: LayoutProps) => {
         <title>{`Cabana App${!!pageTitle ? ` | ${pageTitle}` : ''}`}</title>
       </Head>
 
-      <Navbar
-        links={[
-          { href: '/prizes', name: t_nav('prizes') },
-          { href: '/vaults', name: t_nav('vaults') },
-          { href: '/account', name: t_nav('account') }
-        ]}
-        activePage={router.pathname}
-        // @ts-ignore
-        linksAs={Link}
-        append={
-          <ConnectButton
-            showBalance={false}
-            chainStatus={{ smallScreen: 'icon', largeScreen: 'full' }}
-            accountStatus='full'
-          />
-        }
-        onClickSettings={() => setIsSettingsModalOpen(true)}
-        intl={{ home: t_nav('home') }}
-        className='font-grotesk'
-        linkClassName='hover:text-pt-purple-200'
-      />
+      <Navbar />
 
       <SettingsModal
         view={settingsModalView}
@@ -320,12 +214,7 @@ export const Layout = (props: LayoutProps) => {
         {isBrowser && router.isReady && <>{children}</>}
       </main>
 
-      <Footer
-        items={footerItems}
-        className='bg-pt-purple-600'
-        containerClassName='max-w-6xl'
-        titleClassName='text-pt-teal-dark'
-      />
+      <Footer />
     </div>
   )
 }
