@@ -79,11 +79,13 @@ export const useVaultPromotionsApr = (
       const allTokenRewardsValue: { [tokenAddress: Address]: number } = {}
       let futureRewards = 0
 
+      const getToken = (address: Address): TokenWithPrice => ({
+        ...rewardTokenData[address],
+        price: rewardTokenPrices[lower(address)]
+      })
+
       tokenAddresses.forEach((tokenAddress) => {
-        const rewardToken: TokenWithPrice = {
-          ...rewardTokenData[tokenAddress],
-          price: rewardTokenPrices[lower(tokenAddress)]
-        }
+        const rewardToken = getToken(tokenAddress)
 
         if (!!rewardToken.price && rewardToken.decimals !== undefined) {
           const promotions = Object.values(vaultPromotions).filter(
@@ -132,10 +134,7 @@ export const useVaultPromotionsApr = (
         .filter((entry) => !!entry[1])
         .sort((a, b) => b[1] - a[1])
         .map((entry) => entry[0] as Address)
-      const promotionTokens = promotionTokenAddresses.map((tokenAddress) => ({
-        ...rewardTokenData[tokenAddress],
-        price: rewardTokenPrices[lower(tokenAddress)]
-      }))
+      const promotionTokens = promotionTokenAddresses.map((tokenAddress) => getToken(tokenAddress))
 
       return { apr, tokens: promotionTokens }
     }
