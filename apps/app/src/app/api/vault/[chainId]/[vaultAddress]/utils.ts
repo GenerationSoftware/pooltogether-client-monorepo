@@ -235,7 +235,7 @@ export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
       : undefined
   const prizeAssetPrice = prices[lower(prizeAssetAddress)]
 
-  const share: Token & TokenWithPrice & Partial<TokenWithLogo> & { amount: number } = {
+  const share: TokenWithPrice & Partial<TokenWithLogo> & { amount: number } = {
     chainId: vault.chainId,
     address: vault.address,
     symbol: shareSymbol,
@@ -246,7 +246,7 @@ export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
     price: sharePrice
   }
 
-  const asset: Token & TokenWithPrice & Partial<TokenWithLogo> & { amount: number } = {
+  const asset: TokenWithPrice & Partial<TokenWithLogo> & { amount: number } = {
     chainId: vault.chainId,
     address: assetAddress,
     symbol: assetSymbol,
@@ -257,7 +257,7 @@ export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
     price: assetPrice
   }
 
-  const prizeAsset: Token & TokenWithPrice = {
+  const prizeAsset: TokenWithPrice = {
     chainId: vault.chainId,
     address: prizeAssetAddress,
     symbol: prizeAssetSymbol,

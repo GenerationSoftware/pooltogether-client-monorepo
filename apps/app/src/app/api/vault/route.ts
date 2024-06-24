@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 
-export async function GET(): Promise<NextResponse> {
+export function GET(): NextResponse {
   return NextResponse.json(
-    { message: 'Missing <chainId> and <vaultAddress> in /api/<chainId>/<vaultAddress>' },
+    { message: 'Missing <chainId> and <vaultAddress> in /api/vault/<chainId>/<vaultAddress>' },
     { status: 400 }
   )
 }
