@@ -16,7 +16,7 @@ import { Button } from '@shared/ui'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
-import { Address, parseUnits, TransactionReceipt } from 'viem'
+import { parseUnits, TransactionReceipt } from 'viem'
 import { useAccount } from 'wagmi'
 import { DepositModalView } from '.'
 import { isValidFormInput } from '../TxFormInput'
@@ -59,27 +59,19 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
     data: allowance,
     isFetched: isFetchedAllowance,
     refetch: refetchTokenAllowance
-  } = useTokenAllowance(
-    vault.chainId,
-    userAddress as Address,
-    vault.address,
-    tokenData?.address as Address
-  )
+  } = useTokenAllowance(vault.chainId, userAddress!, vault.address, tokenData?.address!)
 
   const {
     data: userTokenBalance,
     isFetched: isFetchedUserTokenBalance,
     refetch: refetchUserTokenBalance
-  } = useTokenBalance(vault.chainId, userAddress as Address, tokenData?.address as Address)
+  } = useTokenBalance(vault.chainId, userAddress!, tokenData?.address!)
 
-  const { refetch: refetchUserVaultTokenBalance } = useUserVaultTokenBalance(
-    vault,
-    userAddress as Address
-  )
+  const { refetch: refetchUserVaultTokenBalance } = useUserVaultTokenBalance(vault, userAddress!)
 
   const { refetch: refetchUserVaultDelegationBalance } = useUserVaultDelegationBalance(
     vault,
-    userAddress as Address
+    userAddress!
   )
 
   const { refetch: refetchVaultBalance } = useVaultBalance(vault)
@@ -89,9 +81,7 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
   const isValidFormTokenAmount =
     decimals !== undefined ? isValidFormInput(formTokenAmount, decimals) : false
 
-  const depositAmount = isValidFormTokenAmount
-    ? parseUnits(formTokenAmount, decimals as number)
-    : 0n
+  const depositAmount = isValidFormTokenAmount ? parseUnits(formTokenAmount, decimals!) : 0n
 
   const [isApproved, setIsApproved] = useState<boolean>(false)
   const [isReadyToSendTxAfterSigning, setIsReadyToSendTxAfterSigning] = useState<boolean>(false)
@@ -100,7 +90,8 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
     signature,
     deadline,
     isWaiting: isWaitingApproval,
-    signApprove
+    signApprove,
+    refetch: refetchNonces
   } = useApproveSignature(depositAmount, vault, {
     onSuccess: () => {
       setIsApproved(true)
@@ -115,31 +106,26 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
     isSuccess: isSuccessfulDepositWithPermit,
     txHash: depositWithPermitTxHash,
     sendDepositWithPermitTransaction
-  } = useSendDepositWithPermitTransaction(
-    depositAmount,
-    vault,
-    signature as `0x${string}`,
-    deadline as bigint,
-    {
-      onSend: () => {
-        setModalView('waiting')
-      },
-      onSuccess: (txReceipt) => {
-        setIsApproved(false)
-        refetchUserTokenBalance()
-        refetchUserVaultTokenBalance()
-        refetchUserVaultDelegationBalance()
-        refetchVaultBalance()
-        refetchTokenAllowance()
-        refetchUserBalances?.()
-        onSuccessfulDepositWithPermit?.(vault.chainId, txReceipt)
-        setModalView('success')
-      },
-      onError: () => {
-        setModalView('error')
-      }
+  } = useSendDepositWithPermitTransaction(depositAmount, vault, signature!, deadline!, {
+    onSend: () => {
+      setModalView('waiting')
+    },
+    onSuccess: (txReceipt) => {
+      setIsApproved(false)
+      refetchNonces()
+      refetchUserTokenBalance()
+      refetchUserVaultTokenBalance()
+      refetchUserVaultDelegationBalance()
+      refetchVaultBalance()
+      refetchTokenAllowance()
+      refetchUserBalances?.()
+      onSuccessfulDepositWithPermit?.(vault.chainId, txReceipt)
+      setModalView('success')
+    },
+    onError: () => {
+      setModalView('error')
     }
-  )
+  })
 
   const {
     isWaiting: isWaitingDeposit,

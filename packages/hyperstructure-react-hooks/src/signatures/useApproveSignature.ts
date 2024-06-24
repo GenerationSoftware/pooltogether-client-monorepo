@@ -27,6 +27,7 @@ export const useApproveSignature = (
   isSuccess: boolean
   isError: boolean
   signApprove?: () => void
+  refetch: () => void
 } => {
   const { address: userAddress } = useAccount()
 
@@ -39,7 +40,7 @@ export const useApproveSignature = (
 
   const { data: tokenDomain } = useTokenDomain(token?.chainId as number, token?.address as Address)
 
-  const { data: nonces } = useTokenNonces(
+  const { data: nonces, refetch } = useTokenNonces(
     token?.chainId as number,
     userAddress as Address,
     token?.address as Address,
@@ -144,5 +145,5 @@ export const useApproveSignature = (
   const isError = isSigningError || isInvalidSignature
   const isSuccess = isSigningSuccess && !isError
 
-  return { signature, deadline, isWaiting, isSuccess, isError, signApprove }
+  return { signature, deadline, isWaiting, isSuccess, isError, signApprove, refetch }
 }

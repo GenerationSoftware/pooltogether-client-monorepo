@@ -1,14 +1,14 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { calculatePercentageOfBigInt, vaultABI } from '@shared/utilities'
 import { useEffect } from 'react'
-import { Address, hexToSignature, isAddress, Signature, TransactionReceipt } from 'viem'
+import { Address, isAddress, parseSignature, Signature, TransactionReceipt } from 'viem'
 import {
   useAccount,
   useSimulateContract,
   useWaitForTransactionReceipt,
   useWriteContract
 } from 'wagmi'
-import { useGasAmountEstimate, useVaultTokenAddress } from '..'
+import { useGasAmountEstimate } from '..'
 
 /**
  * Prepares and submits a `depositWithPermit` transaction to a vault
@@ -49,7 +49,7 @@ export const useSendDepositWithPermitTransaction = (
     isAddress(userAddress) &&
     chain?.id === vault.chainId
 
-  const sig: Signature = !!signature ? hexToSignature(signature) : { v: 0n, r: '0x0', s: '0x0' }
+  const sig: Signature = !!signature ? parseSignature(signature) : { v: 0n, r: '0x0', s: '0x0' }
 
   const { data: gasEstimate } = useGasAmountEstimate(
     vault?.chainId,
