@@ -1,5 +1,6 @@
 import { PrizeInfo, TokenWithSupply, TxOverrides } from '@shared/types'
 import {
+  calculatePercentageOfBigInt,
   drawManagerABI,
   getPrizePoolAllPrizeInfo,
   getPrizePoolContributionAmounts,
@@ -11,7 +12,7 @@ import {
   validateAddress,
   validateClientNetwork
 } from '@shared/utilities'
-import { Address, PublicClient, WalletClient } from 'viem'
+import { Address, formatEther, PublicClient, WalletClient } from 'viem'
 
 /**
  * This class provides read and write functions to interact with a prize pool
@@ -26,6 +27,7 @@ export class PrizePool {
   drawAuctionDurationInSeconds: number | undefined
   tierShares: number | undefined
   reserveShares: number | undefined
+  tierLiquidityUtilizationRate: bigint | undefined
 
   /**
    * Creates an instance of a Prize Pool with a given public and optional wallet client
@@ -49,6 +51,7 @@ export class PrizePool {
       drawAuctionDurationInSeconds?: number
       tierShares?: number
       reserveShares?: number
+      tierLiquidityUtilizationRate?: bigint
     }
   ) {
     this.id = getPrizePoolId(chainId, address)
@@ -61,6 +64,7 @@ export class PrizePool {
     this.drawAuctionDurationInSeconds = options?.drawAuctionDurationInSeconds
     this.tierShares = options?.tierShares
     this.reserveShares = options?.reserveShares
+    this.tierLiquidityUtilizationRate = options?.tierLiquidityUtilizationRate
   }
 
   /* ============================== Read Functions ============================== */
@@ -517,6 +521,52 @@ export class PrizePool {
     )
 
     return allPrizeInfo
+  }
+
+  /**
+   * Returns the utilization rate for all tiers' liquidity
+   * @returns
+   */
+  async getTierLiquidityUtilizationRate(): Promise<bigint> {
+    if (this.tierLiquidityUtilizationRate !== undefined) return this.tierLiquidityUtilizationRate
+
+    const source = 'Prize Pool [getTierLiquidityUtilizationRate]'
+    await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    const tierLiquidityUtilizationRate = await this.publicClient.readContract({
+      address: this.address,
+      abi: prizePoolABI,
+      functionName: 'tierLiquidityUtilizationRate'
+    })
+
+    this.tierLiquidityUtilizationRate = tierLiquidityUtilizationRate
+    return tierLiquidityUtilizationRate
+  }
+
+  /**
+   * Returns the total amount of prizes available on the prize pool
+   * @returns
+   */
+  async getTotalPrizesAvailable(): Promise<bigint> {
+    const source = 'Prize Pool [getTotalPrizesAvailable]'
+    await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    const tierLiquidityUtilizationRate = await this.getTierLiquidityUtilizationRate()
+    const utilizationRateMultiplier = 1 / parseFloat(formatEther(tierLiquidityUtilizationRate))
+
+    const allPrizeInfo = await this.getAllPrizeInfo()
+
+    let total = 0n
+    allPrizeInfo.forEach((prizeInfo, i) => {
+      const prizeSize = calculatePercentageOfBigInt(
+        prizeInfo.amount.current,
+        utilizationRateMultiplier
+      )
+      const numPrizes = BigInt(this.getTierPrizeCount(i))
+      total += prizeSize * numPrizes
+    })
+
+    return total
   }
 
   /* ============================== Write Functions ============================== */

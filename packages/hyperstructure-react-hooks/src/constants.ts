@@ -34,6 +34,7 @@ export const QUERY_KEYS = {
   promotionRewardsClaimedEvents: 'promotionRewardsClaimedEvents',
   promotionInfo: 'promotionInfo',
   selectedVaults: 'selectedVaults',
+  totalPrizesAvailable: 'totalPrizesAvailable',
   tokenAllowances: 'tokenAllowances',
   tokenBalances: 'tokenBalances',
   tokenDomain: 'tokenDomain',

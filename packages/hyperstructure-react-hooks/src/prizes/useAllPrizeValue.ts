@@ -1,7 +1,9 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import { NO_REFETCH } from '@shared/generic-react-hooks'
+import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { formatUnits } from 'viem'
-import { useAllPrizeInfo } from './useAllPrizeInfo'
+import { QUERY_KEYS } from '../constants'
 import { useAllPrizeTokenPrices } from './useAllPrizeTokenPrices'
 
 /**
@@ -11,52 +13,41 @@ import { useAllPrizeTokenPrices } from './useAllPrizeTokenPrices'
  */
 export const useAllPrizeValue = (prizePools: PrizePool[]) => {
   const {
-    data: allPrizeInfo,
-    isFetched: isFetchedAllPrizeInfo,
-    refetch: refetchAllPrizeInfo
-  } = useAllPrizeInfo(prizePools)
-
-  const {
     data: prizeTokens,
     isFetched: isFetchedPrizeTokens,
     refetch: refetchAllPrizeTokenPrices
   } = useAllPrizeTokenPrices(prizePools)
 
-  const isFetched = isFetchedAllPrizeInfo && isFetchedPrizeTokens
+  const results = useQueries({
+    queries: prizePools.map((prizePool) => {
+      const queryKey = [QUERY_KEYS.totalPrizesAvailable, prizePool?.id]
 
-  const refetch = () => {
-    refetchAllPrizeInfo()
-    refetchAllPrizeTokenPrices()
-  }
+      return {
+        queryKey: queryKey,
+        queryFn: async () => await prizePool.getTotalPrizesAvailable(),
+        enabled: !!prizePool,
+        ...NO_REFETCH
+      }
+    })
+  })
 
-  const data = useMemo(() => {
-    const totalPrizeValue: { [prizePoolId: string]: number } = {}
-
-    if (isFetched) {
-      const prizePoolIds = prizePools.map((pool) => pool.id)
-      prizePoolIds.forEach((prizePoolId) => {
-        let totalValue = 0
-
-        const prizes = allPrizeInfo[prizePoolId]
-        const prizeToken = prizeTokens[prizePoolId]
-
-        if (!!prizes?.length && !!prizeToken?.price) {
-          prizes.slice(0, prizes.length - 2).forEach((prize, i) => {
-            const prizeValue =
-              parseFloat(formatUnits(prize.amount.current, prizeToken.decimals)) *
-              (prizeToken.price as number)
-            totalValue += prizeValue * Math.pow(4, i)
-          })
-        }
-
-        if (!!totalValue) {
-          totalPrizeValue[prizePoolId] = totalValue
-        }
-      })
+  return useMemo(() => {
+    const isFetched = isFetchedPrizeTokens && results?.every((result) => result.isFetched)
+    const refetch = () => {
+      refetchAllPrizeTokenPrices()
+      results?.forEach((result) => result.refetch())
     }
 
-    return totalPrizeValue
-  }, [allPrizeInfo, prizeTokens, isFetched])
+    const formattedData: { [prizePoolId: string]: number } = {}
+    results.forEach((result, i) => {
+      const prizePoolId = prizePools[i].id
+      const prizeToken = prizeTokens[prizePoolId]
 
-  return { data, isFetched, refetch }
+      if (!!prizeToken?.price && !!result.data) {
+        formattedData[prizePoolId] =
+          parseFloat(formatUnits(result.data, prizeToken.decimals)) * prizeToken.price
+      }
+    })
+    return { isFetched, refetch, data: formattedData }
+  }, [prizeTokens, isFetchedPrizeTokens, results])
 }
