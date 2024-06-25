@@ -383,7 +383,7 @@ export const DepositForm = (props: DepositFormProps) => {
           inputClassName={classNames({ '!text-pt-purple-200': isZapping })}
           disabledCoverClassName={classNames({ '!backdrop-brightness-100': isZapping })}
         />
-        {isZappingAndSwapping && (
+        {isZappingAndSwapping && !!depositAmount && (
           <div className='flex flex-col p-2 text-xs text-pt-purple-100'>
             <div className='flex gap-2 items-center'>
               <span className='font-semibold'>{t_txModals('priceImpact')}</span>
