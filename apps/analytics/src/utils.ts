@@ -17,6 +17,7 @@ export const createCustomWagmiConfig = () => {
   return createConfig({
     chains: supportedNetworks,
     transports: getNetworkTransports(supportedNetworks.map((network) => network.id)),
+    batch: { multicall: { batchSize: 1_024 * 1_024 } },
     ssr: true
   })
 }
