@@ -27,7 +27,7 @@ export const AccountDepositsCards = (props: AccountDepositsCardsProps) => {
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
 
-  const { sortedVaults } = useSortedVaults(Object.values(vaults.vaults), {
+  const { sortedVaults } = useSortedVaults(vaults, {
     prizePools: prizePoolsArray,
     defaultSortId: 'userBalance'
   })

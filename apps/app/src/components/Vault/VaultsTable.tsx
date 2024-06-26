@@ -2,8 +2,7 @@ import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   SortDirection,
   SortId,
-  useSelectedVaultLists,
-  useSortedVaults
+  useSelectedVaultLists
 } from '@generationsoftware/hyperstructure-react-hooks'
 import {
   ImportedVaultTooltip,
@@ -12,13 +11,12 @@ import {
   SortIcon,
   VaultBadge
 } from '@shared/react-components'
-import { Spinner, Table, TableProps } from '@shared/ui'
+import { Table, TableProps } from '@shared/ui'
 import { getVaultId } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { ReactNode } from 'react'
-import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { VaultBonusRewards } from './VaultBonusRewards'
 import { VaultButtons } from './VaultButtons'
 import { VaultPrizes } from './VaultPrizes'
@@ -27,49 +25,19 @@ import { VaultWinChance } from './VaultWinChance'
 
 interface VaultsTableProps {
   vaults: Vault[]
+  onSort: (id: SortId) => void
+  getSortDirection: (id: SortId) => SortDirection | undefined
   className?: string
 }
 
 export const VaultsTable = (props: VaultsTableProps) => {
-  const { vaults, className } = props
+  const { vaults, onSort, getSortDirection, className } = props
 
   const t_common = useTranslations('Common')
   const t_vaults = useTranslations('Vaults')
   const t_tooltips = useTranslations('Tooltips')
 
-  const prizePools = useSupportedPrizePools()
-  const prizePoolsArray = Object.values(prizePools)
-
-  const {
-    sortedVaults,
-    sortVaultsBy,
-    setSortVaultsBy,
-    sortDirection,
-    setSortDirection,
-    toggleSortDirection,
-    isFetched
-  } = useSortedVaults(vaults, { prizePools: prizePoolsArray })
-
   const { localVaultLists, importedVaultLists } = useSelectedVaultLists()
-
-  const handleHeaderClick = (id: SortId) => {
-    if (sortVaultsBy === id) {
-      toggleSortDirection()
-    } else {
-      setSortDirection('desc')
-      setSortVaultsBy(id)
-    }
-  }
-
-  const getDirection = (id: SortId) => {
-    if (sortVaultsBy === id) {
-      return sortDirection
-    }
-  }
-
-  if (!isFetched) {
-    return <Spinner className={className} />
-  }
 
   const getImportedVaultSrcs = (vault: Vault) => {
     const listsWithVault: { name: string; href: string }[] = []
@@ -104,8 +72,8 @@ export const VaultsTable = (props: VaultsTableProps) => {
         content: (
           <SortableHeader
             id='prizes'
-            onClick={handleHeaderClick}
-            direction={getDirection('prizes')}
+            onClick={onSort}
+            direction={getSortDirection('prizes')}
             append={<PrizesTooltip iconSize='lg' intl={t_tooltips('prizes')} />}
           />
         ),
@@ -115,8 +83,8 @@ export const VaultsTable = (props: VaultsTableProps) => {
         content: (
           <SortableHeader
             id='winChance'
-            onClick={handleHeaderClick}
-            direction={getDirection('winChance')}
+            onClick={onSort}
+            direction={getSortDirection('winChance')}
             append={
               <RelativeWinChanceTooltip iconSize='lg' intl={t_tooltips('relativeWinChance')} />
             }
@@ -128,15 +96,15 @@ export const VaultsTable = (props: VaultsTableProps) => {
         content: (
           <SortableHeader
             id='totalBalance'
-            onClick={handleHeaderClick}
-            direction={getDirection('totalBalance')}
+            onClick={onSort}
+            direction={getSortDirection('totalBalance')}
           />
         ),
         position: 'center'
       },
       manage: { content: <ManageHeader />, position: 'right' }
     },
-    rows: sortedVaults.map((vault) => {
+    rows: vaults.map((vault) => {
       const importedSrcs = getImportedVaultSrcs(vault)
 
       return {

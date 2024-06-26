@@ -1,29 +1,44 @@
 import {
+  SortId,
   useSelectedVaultListIds,
-  useSelectedVaults
+  useSelectedVaults,
+  useSortedVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Button, Spinner } from '@shared/ui'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
+import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { VaultCards } from './VaultCards'
 import { filteredVaultsAtom, filterIdAtom, vaultListFilterIdAtom } from './VaultFilters'
 import { VaultsTable } from './VaultsTable'
 
 export const VaultsDisplay = () => {
-  const { isFetched: isFetchedVaultData } = useSelectedVaults()
+  const { vaults, isFetched: isFetchedVaultData } = useSelectedVaults()
 
-  const { localIds, importedIds } = useSelectedVaultListIds()
+  const prizePools = useSupportedPrizePools()
+  const prizePoolsArray = Object.values(prizePools)
+
+  const {
+    isFetched: isFetchedSortedVaults,
+    sortVaultsBy,
+    setSortVaultsBy,
+    sortDirection,
+    setSortDirection,
+    toggleSortDirection
+  } = useSortedVaults(vaults, {
+    prizePools: prizePoolsArray
+  })
 
   const filteredVaults = useAtomValue(filteredVaultsAtom)
 
-  if (!isFetchedVaultData) {
+  const { localIds, importedIds } = useSelectedVaultListIds()
+
+  if (!isFetchedVaultData || !isFetchedSortedVaults || !filteredVaults) {
     return <Spinner />
   }
 
-  const noSelectedVaultLists = localIds.length + importedIds.length === 0
-
-  if (noSelectedVaultLists) {
+  if (localIds.length + importedIds.length === 0) {
     return <NoSelectedVaultListsCard />
   }
 
@@ -31,9 +46,29 @@ export const VaultsDisplay = () => {
     return <NoValidVaultsCard />
   }
 
+  const onSort = (id: SortId) => {
+    if (sortVaultsBy === id) {
+      toggleSortDirection()
+    } else {
+      setSortDirection('desc')
+      setSortVaultsBy(id)
+    }
+  }
+
+  const getSortDirection = (id: SortId) => {
+    if (sortVaultsBy === id) {
+      return sortDirection
+    }
+  }
+
   return (
     <>
-      <VaultsTable vaults={filteredVaults} className='hidden lg:block' />
+      <VaultsTable
+        vaults={filteredVaults}
+        onSort={onSort}
+        getSortDirection={getSortDirection}
+        className='hidden lg:block'
+      />
       <VaultCards vaults={filteredVaults} className='lg:hidden' />
     </>
   )

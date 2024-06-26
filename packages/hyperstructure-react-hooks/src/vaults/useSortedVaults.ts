@@ -1,4 +1,5 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
+import { Vaults } from '@generationsoftware/hyperstructure-client-js'
 import { TokenWithAmount, TokenWithPrice, TokenWithSupply } from '@shared/types'
 import { useMemo, useState } from 'react'
 import { Address, formatUnits } from 'viem'
@@ -7,8 +8,7 @@ import {
   useAllPrizeValue,
   useAllUserVaultBalances,
   useAllVaultPrizeYields,
-  useAllVaultSharePrices,
-  useVaults
+  useAllVaultSharePrices
 } from '..'
 
 export type SortId = 'prizes' | 'winChance' | 'totalBalance' | 'userBalance'
@@ -23,7 +23,7 @@ export type SortDirection = 'asc' | 'desc'
  * @returns
  */
 export const useSortedVaults = (
-  vaultsArray: Vault[],
+  vaults: Vaults,
   options?: {
     prizePools?: PrizePool[]
     defaultSortId?: SortId
@@ -34,8 +34,6 @@ export const useSortedVaults = (
   const [sortDirection, setSortDirection] = useState<SortDirection>(
     options?.defaultSortDirection ?? 'desc'
   )
-
-  const vaults = useVaults(vaultsArray)
 
   const { address: userAddress } = useAccount()
 
@@ -61,7 +59,10 @@ export const useSortedVaults = (
 
   const sortedVaults = useMemo(() => {
     if (isFetched && !!allVaultShareTokens) {
-      let sortedVaults = sortVaultsByTotalDeposits(vaultsArray, allVaultShareTokens)
+      let sortedVaults = sortVaultsByTotalDeposits(
+        Object.values(vaults.vaults),
+        allVaultShareTokens
+      )
 
       if (sortVaultsBy === 'prizes' && !!options?.prizePools?.length) {
         sortedVaults = sortVaultsByPrizes(sortedVaults, options.prizePools, allPrizeValue)
@@ -83,7 +84,7 @@ export const useSortedVaults = (
     } else {
       return []
     }
-  }, [vaultsArray, sortVaultsBy, sortDirection, userAddress, isFetched])
+  }, [vaults, sortVaultsBy, sortDirection, userAddress, isFetched])
 
   const toggleSortDirection = () => {
     setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')

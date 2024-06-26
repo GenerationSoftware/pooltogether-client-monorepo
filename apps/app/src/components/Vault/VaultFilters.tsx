@@ -2,7 +2,8 @@ import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useAllUserVaultBalances,
   useSelectedVaultLists,
-  useSelectedVaults
+  useSelectedVaults,
+  useSortedVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { NetworkIcon } from '@shared/react-components'
 import { VaultList } from '@shared/types'
@@ -14,14 +15,14 @@ import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/router'
 import { useEffect, useMemo } from 'react'
-import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useNetworks } from '@hooks/useNetworks'
+import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 
 export const filterIdAtom = atom<string>('all')
 export const vaultListFilterIdAtom = atom<string>('all')
 
-export const filteredVaultsAtom = atom<Vault[]>([])
+export const filteredVaultsAtom = atom<Vault[] | undefined>(undefined)
 
 interface VaultFiltersProps {
   className?: string
@@ -34,31 +35,37 @@ export const VaultFilters = (props: VaultFiltersProps) => {
 
   const t = useTranslations('Vaults')
 
+  const { address: userAddress } = useAccount()
+
   const networks = useNetworks()
 
   const { vaults } = useSelectedVaults()
 
+  const prizePools = useSupportedPrizePools()
+  const prizePoolsArray = Object.values(prizePools)
+
+  const { sortedVaults, isFetched: isFetchedSortedVaults } = useSortedVaults(vaults, {
+    prizePools: prizePoolsArray
+  })
+
   const { localVaultLists, importedVaultLists } = useSelectedVaultLists()
 
+  const { data: userVaultBalances, isFetched: isFetchedUserVaultBalances } =
+    useAllUserVaultBalances(vaults, userAddress!)
+
+  const [filterId, setFilterId] = useAtom(filterIdAtom)
   const vaultListFilterId = useAtomValue(vaultListFilterIdAtom)
 
-  const { address: userAddress } = useAccount()
+  const setFilteredVaults = useSetAtom(filteredVaultsAtom)
 
-  const { data: userVaultBalances, isFetched: isFetchedUserVaultBalances } =
-    useAllUserVaultBalances(vaults, userAddress as Address)
-
-  const vaultsArray = useMemo(() => {
+  const listFilteredVaultsArray = useMemo(() => {
     return getVaultListIdFilteredVaults(
       vaultListFilterId,
-      Object.values(vaults.vaults),
+      sortedVaults,
       { ...localVaultLists, ...importedVaultLists },
       userVaultBalances
     )
-  }, [vaults, vaultListFilterId, userVaultBalances])
-
-  const [filterId, setFilterId] = useAtom(filterIdAtom)
-
-  const setFilteredVaults = useSetAtom(filteredVaultsAtom)
+  }, [sortedVaults, vaultListFilterId, userVaultBalances])
 
   // Getting filter ID from URL query:
   useEffect(() => {
@@ -69,17 +76,16 @@ export const VaultFilters = (props: VaultFiltersProps) => {
     !!chainId && chainId in NETWORK && setFilterId(chainId.toString())
   }, [])
 
-  const filterOnClick = (vaults: Vault[], filter: (vaults: Vault[]) => Vault[] | undefined) => {
-    const filteredVaultsArray = filter(vaults.filter((vault) => !!vault.tokenAddress)) ?? []
-    setFilteredVaults(filteredVaultsArray)
+  const filterOnClick = (vaults: Vault[], filter: (vaults: Vault[]) => Vault[]) => {
+    setFilteredVaults(filter(vaults))
   }
 
   const filterAll = () => {
-    filterOnClick(vaultsArray, (vaults) => vaults)
+    filterOnClick(listFilteredVaultsArray, (vaults) => vaults)
   }
 
   const filterStablecoins = () => {
-    filterOnClick(vaultsArray, (vaults) =>
+    filterOnClick(listFilteredVaultsArray, (vaults) =>
       vaults.filter((vault) =>
         Object.keys(STABLECOINS[vault.chainId as NETWORK]).includes(
           vault.tokenAddress?.toLowerCase() ?? '?'
@@ -89,7 +95,9 @@ export const VaultFilters = (props: VaultFiltersProps) => {
   }
 
   const filterNetwork = (chainId: NETWORK) => {
-    filterOnClick(vaultsArray, (vaults) => vaults.filter((vault) => vault.chainId === chainId))
+    filterOnClick(listFilteredVaultsArray, (vaults) =>
+      vaults.filter((vault) => vault.chainId === chainId)
+    )
   }
 
   const filterItems: (SelectionItem & { filter: () => void })[] = useMemo(
@@ -117,13 +125,12 @@ export const VaultFilters = (props: VaultFiltersProps) => {
         }
       })
     ],
-    [networks, isFetchedUserVaultBalances, vaultsArray]
+    [networks, isFetchedUserVaultBalances, listFilteredVaultsArray]
   )
 
   useEffect(() => {
-    const filterItem = filterItems.find((item) => item.id === filterId)
-    !!filterItem && filterItem.filter()
-  }, [filterItems, filterId, vaultsArray])
+    isFetchedSortedVaults && filterItems.find((item) => item.id === filterId)?.filter()
+  }, [filterItems, filterId, listFilteredVaultsArray, isFetchedSortedVaults])
 
   if (router.isReady) {
     return (
