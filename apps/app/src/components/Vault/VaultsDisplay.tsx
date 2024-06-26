@@ -27,7 +27,8 @@ export const VaultsDisplay = () => {
     setSortDirection,
     toggleSortDirection
   } = useSortedVaults(vaults, {
-    prizePools: prizePoolsArray
+    prizePools: prizePoolsArray,
+    defaultSortId: 'totalBalance'
   })
 
   const filteredVaults = useAtomValue(filteredVaultsAtom)

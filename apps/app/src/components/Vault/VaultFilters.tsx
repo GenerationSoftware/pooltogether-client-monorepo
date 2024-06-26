@@ -45,7 +45,8 @@ export const VaultFilters = (props: VaultFiltersProps) => {
   const prizePoolsArray = Object.values(prizePools)
 
   const { sortedVaults, isFetched: isFetchedSortedVaults } = useSortedVaults(vaults, {
-    prizePools: prizePoolsArray
+    prizePools: prizePoolsArray,
+    defaultSortId: 'totalBalance'
   })
 
   const { localVaultLists, importedVaultLists } = useSelectedVaultLists()

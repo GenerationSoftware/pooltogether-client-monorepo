@@ -1,8 +1,9 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import { Vaults } from '@generationsoftware/hyperstructure-client-js'
 import { TokenWithAmount, TokenWithPrice, TokenWithSupply } from '@shared/types'
-import { useMemo, useState } from 'react'
-import { Address, formatUnits } from 'viem'
+import { atom, useAtom } from 'jotai'
+import { useEffect, useMemo } from 'react'
+import { formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import {
   useAllPrizeValue,
@@ -13,6 +14,9 @@ import {
 
 export type SortId = 'prizes' | 'winChance' | 'totalBalance' | 'userBalance'
 export type SortDirection = 'asc' | 'desc'
+
+const sortVaultsByAtom = atom<SortId>('totalBalance')
+const sortDirectionAtom = atom<SortDirection>('desc')
 
 /**
  * Returns a sorted array of vaults
@@ -30,10 +34,13 @@ export const useSortedVaults = (
     defaultSortDirection?: SortDirection
   }
 ) => {
-  const [sortVaultsBy, setSortVaultsBy] = useState<SortId>(options?.defaultSortId ?? 'totalBalance')
-  const [sortDirection, setSortDirection] = useState<SortDirection>(
-    options?.defaultSortDirection ?? 'desc'
-  )
+  const [sortVaultsBy, setSortVaultsBy] = useAtom(sortVaultsByAtom)
+  const [sortDirection, setSortDirection] = useAtom(sortDirectionAtom)
+
+  useEffect(() => {
+    if (options?.defaultSortId) setSortVaultsBy(options.defaultSortId)
+    if (options?.defaultSortDirection) setSortDirection(options.defaultSortDirection)
+  }, [])
 
   const { address: userAddress } = useAccount()
 
@@ -41,7 +48,7 @@ export const useSortedVaults = (
     useAllVaultSharePrices(vaults)
 
   const { data: allUserVaultBalances, isFetched: isFetchedAllUserVaultBalances } =
-    useAllUserVaultBalances(vaults, userAddress as Address)
+    useAllUserVaultBalances(vaults, userAddress!)
 
   const { data: allPrizeValue, isFetched: isFetchedAllPrizeValue } = useAllPrizeValue(
     options?.prizePools ?? []
