@@ -1,19 +1,19 @@
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { StatsView } from 'src/views/StatsView'
+import { DrawsView } from 'src/views/DrawsView'
 import { Layout } from '@components/Layout'
 import { useSelectedChainId } from '@hooks/useSelectedChainId'
 
-export default function StatsPage() {
+export default function DrawsPage() {
   const router = useRouter()
 
   const { chainId, isReady } = useSelectedChainId()
 
   useEffect(() => {
     if (isReady && !chainId) {
-      router.replace('/')
+      router.replace('/draws')
     }
   }, [chainId, isReady])
 
-  return <Layout>{!!chainId && <StatsView chainId={chainId} />}</Layout>
+  return <Layout>{!!chainId && <DrawsView chainId={chainId} />}</Layout>
 }

@@ -1,14 +1,12 @@
-import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { PRIZE_POOLS, sToMs } from '@shared/utilities'
+import { sToMs } from '@shared/utilities'
 import classNames from 'classnames'
-import { useEffect, useMemo } from 'react'
-import { PublicClient } from 'viem'
-import { usePublicClient } from 'wagmi'
+import { useEffect } from 'react'
 import { DrawsAvgClaimFeesChart } from '@components/Charts/DrawsAvgClaimFeesChart'
 import { DrawsAvgLiqEfficiencyChart } from '@components/Charts/DrawsAvgLiqEfficiencyChart'
 import { DrawCards } from '@components/Draws/DrawCards'
 import { useCurrentDrawAwardReward } from '@hooks/useCurrentDrawAwardReward'
 import { useCurrentRngAuctionReward } from '@hooks/useCurrentRngAuctionReward'
+import { usePrizePool } from '@hooks/usePrizePool'
 import { useRngTxs } from '@hooks/useRngTxs'
 
 interface DrawsViewProps {
@@ -19,20 +17,7 @@ interface DrawsViewProps {
 export const DrawsView = (props: DrawsViewProps) => {
   const { chainId, className } = props
 
-  const publicClient = usePublicClient({ chainId })
-
-  const prizePool = useMemo(() => {
-    const prizePoolInfo = PRIZE_POOLS.find(
-      (pool) => pool.chainId === chainId
-    ) as (typeof PRIZE_POOLS)[number]
-
-    return new PrizePool(
-      prizePoolInfo.chainId,
-      prizePoolInfo.address,
-      publicClient as PublicClient,
-      prizePoolInfo.options
-    )
-  }, [chainId, publicClient])
+  const prizePool = usePrizePool(chainId)
 
   const { refetch: refetchCurrentRngAuctionReward } = useCurrentRngAuctionReward(prizePool)
   const { refetch: refetchCurrentDrawAwardReward } = useCurrentDrawAwardReward(prizePool)
