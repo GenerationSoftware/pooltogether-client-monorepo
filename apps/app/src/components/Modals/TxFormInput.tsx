@@ -134,7 +134,7 @@ export const TxFormInput = (props: TxFormInputProps) => {
         className
       )}
     >
-      <div className='flex justify-between'>
+      <div className='flex justify-between md:gap-6'>
         <Input
           formKey={formKey}
           decimals={token.decimals}
