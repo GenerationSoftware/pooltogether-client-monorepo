@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+import { PrizesCard } from '@components/Stats/PrizesCard'
 import { usePrizePool } from '@hooks/usePrizePool'
 
 interface StatsViewProps {
@@ -13,6 +14,7 @@ export const StatsView = (props: StatsViewProps) => {
 
   return (
     <div className={classNames('w-full flex flex-col gap-6 items-center', className)}>
+      <PrizesCard prizePool={prizePool} />
       {/* TODO: display TVL over time (vault chart, maybe underlying token pie chart?) */}
       {/* TODO: display PPC over time (similar chart to vault page on the app) */}
       {/* TODO: display TUW currently and over time */}
