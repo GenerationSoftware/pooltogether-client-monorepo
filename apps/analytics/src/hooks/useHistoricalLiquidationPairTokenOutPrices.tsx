@@ -5,7 +5,7 @@ import {
   useTokens
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { TokenWithSupply, VaultInfo } from '@shared/types'
-import { getVaultId } from '@shared/utilities'
+import { getVaultId, lower } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
@@ -46,7 +46,7 @@ export const useHistoricalLiquidationPairTokenOutPrices = (
   }, [chainId, publicClient, tokenOutAddresses, isFetchedIsValidVaults, isValidVaults])
 
   const { data: shareTokensWithPriceHistory, isFetched: isFetchedShareTokensWithPriceHistory } =
-    useAllVaultHistoricalSharePrices(chainId, vaults as Vaults)
+    useAllVaultHistoricalSharePrices(chainId, vaults!)
 
   const nonVaultTokenAddresses = useMemo(() => {
     const vaultAddresses =
@@ -77,7 +77,7 @@ export const useHistoricalLiquidationPairTokenOutPrices = (
         const shareTokenPrices = shareTokensWithPriceHistory?.[vaultId]
 
         const token = tokens?.[tokenOutAddress]
-        const tokenPrices = historicalTokenPrices?.[tokenOutAddress.toLowerCase() as Address]
+        const tokenPrices = historicalTokenPrices?.[lower(tokenOutAddress)]
 
         if (!!shareTokenPrices?.priceHistory.length) {
           results[lpAddress as Address] = shareTokenPrices

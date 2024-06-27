@@ -5,6 +5,7 @@ import {
   useVaultSharePrice
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { TokenWithPrice } from '@shared/types'
+import { lower } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
@@ -20,7 +21,7 @@ export const useLiquidationPairTokenOutPrice = (
   const { data: tokenOutAddress, isFetched: isFetchedTokenOutAddress } =
     useLiquidationPairTokenOutAddress(chainId, lpAddress)
 
-  const { data: token, isFetched: isFetchedToken } = useToken(chainId, tokenOutAddress as Address)
+  const { data: token, isFetched: isFetchedToken } = useToken(chainId, tokenOutAddress!)
 
   const { data: isValidVault, isFetched: isFetchedIsValidVault } =
     useIsLiquidationPairTokenOutAVault(chainId, lpAddress)
@@ -30,7 +31,7 @@ export const useLiquidationPairTokenOutPrice = (
       return new Vault(chainId, tokenOutAddress, publicClient)
     }
   }, [chainId, publicClient, tokenOutAddress, isFetchedIsValidVault, isValidVault])
-  const { data: shareTokenWithPrice } = useVaultSharePrice(vault as Vault)
+  const { data: shareTokenWithPrice } = useVaultSharePrice(vault!)
 
   const { data: tokenPrices, isFetched: isFetchedTokenPrices } = useTokenPrices(
     chainId,
@@ -44,7 +45,7 @@ export const useLiquidationPairTokenOutPrice = (
       return { data: shareTokenWithPrice, isFetched }
     } else if (!!tokenPrices && !!tokenOutAddress) {
       return {
-        data: { ...token, price: tokenPrices[tokenOutAddress.toLowerCase() as Address] },
+        data: { ...token, price: tokenPrices[lower(tokenOutAddress)] },
         isFetched
       }
     }
