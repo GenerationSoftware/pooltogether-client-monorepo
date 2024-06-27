@@ -40,7 +40,7 @@ export const PrizesCard = (props: PrizesCardProps) => {
             })
 
             return (
-              <div className='flex justify-between items-center gap-4'>
+              <div key={`prize-tier-${tier}`} className='flex justify-between items-center gap-4'>
                 <span>{tierName}</span>
                 <span>
                   {formattedAmount === '0' ? '< 0.0001' : formattedAmount} {prizeToken.symbol}
