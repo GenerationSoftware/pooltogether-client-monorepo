@@ -34,20 +34,18 @@ export const TVLOverTimeChart = (props: TVLOverTimeChartProps) => {
     return data
   }, [vaultTVLs])
 
-  const chartAreas = useMemo((): AreaChartProps['areas'] => {
-    return Object.keys(vaultTVLs ?? {}).map((vaultId) => ({ id: vaultId, stackId: 1 }))
-  }, [vaultTVLs])
-
   if (!chartData?.length) {
     return <></>
   }
+
+  const areas = Object.keys(vaultTVLs ?? {}).map((vaultId) => ({ id: vaultId, stackId: 1 }))
 
   return (
     <div
       className={classNames('w-full flex flex-col gap-2 font-medium text-pt-purple-200', className)}
     >
       <span className='ml-2'>TVL Over Time</span>
-      <AreaChart data={chartData} areas={chartAreas} tooltip={{ show: true }} />
+      <AreaChart data={chartData} areas={areas} tooltip={{ show: true }} />
     </div>
   )
 }
