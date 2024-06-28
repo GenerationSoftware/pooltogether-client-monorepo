@@ -112,6 +112,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `usePrizePools`
 - `usePrizeTokenData`
 - `usePrizeTokenPrice`
+- `useWalletAddresses`
 
 ### Signature Hooks
 

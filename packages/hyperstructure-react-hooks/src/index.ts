@@ -69,6 +69,7 @@ export * from './prizes/usePrizeOdds'
 export * from './prizes/usePrizePools'
 export * from './prizes/usePrizeTokenData'
 export * from './prizes/usePrizeTokenPrice'
+export * from './prizes/useWalletAddresses'
 
 /**
  * Signature Hooks

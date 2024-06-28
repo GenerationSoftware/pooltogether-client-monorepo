@@ -67,7 +67,8 @@ export const QUERY_KEYS = {
   vaultTokenData: 'vaultTokenData',
   vaultTotalSupplyTwabs: 'vaultTotalSupplyTwabs',
   vaultTwabController: 'vaultTwabController',
-  vaultYieldSources: 'vaultYieldSources'
+  vaultYieldSources: 'vaultYieldSources',
+  walletAddresses: 'walletAddresses'
 } as const
 
 /**

@@ -1,5 +1,6 @@
 import { SubgraphDraw, SubgraphObservation, SubgraphPrize } from '@shared/types'
 import { Address } from 'viem'
+import { lower } from '..'
 import { SUBGRAPH_API_URLS } from '../constants'
 
 /**
@@ -425,4 +426,86 @@ export const getPaginatedUserSubgraphObservations = async (
   }
 
   return userObservations
+}
+
+/**
+ * Returns a prize pool's unique wallet addresses
+ *
+ * NOTE: By default queries 5k addresses
+ * @param chainId the network's chain ID
+ * @param options optional parameters
+ * @returns
+ */
+export const getSubgraphWalletAddresses = async (
+  chainId: number,
+  options?: {
+    activeWalletsOnly?: boolean
+    numWallets?: number
+    offsetWallets?: number
+  }
+): Promise<Lowercase<Address>[]> => {
+  if (chainId in SUBGRAPH_API_URLS) {
+    const subgraphUrl = SUBGRAPH_API_URLS[chainId as keyof typeof SUBGRAPH_API_URLS]
+
+    const headers = { 'Content-Type': 'application/json' }
+
+    const optionalQuery = options?.activeWalletsOnly
+      ? 'where: { accounts_: { delegateBalance_gt: 0 } }, '
+      : ''
+
+    const body = JSON.stringify({
+      query: `query($numWallets: Int, $offsetWallets: Int) {
+        users(${optionalQuery}first: $numWallets, skip: $offsetWallets) {
+          address
+        }
+      }`,
+      variables: {
+        numWallets: options?.numWallets ?? 5_000,
+        offsetWallets: options?.offsetWallets ?? 0
+      }
+    })
+
+    const result = await fetch(subgraphUrl, { method: 'POST', headers, body })
+    const jsonData = await result.json()
+    const wallets: { address: string }[] = jsonData?.data?.users ?? []
+
+    return wallets.map((wallet) => lower(wallet.address))
+  } else {
+    console.warn(`Could not find subgraph URL for chain ID: ${chainId}`)
+    return []
+  }
+}
+
+/**
+ * Returns all of a prize pool's unique wallet addresses
+ *
+ * NOTE: Wraps {@link getSubgraphWalletAddresses} to fetch all results regardless of number of entries
+ * @param chainId the network's chain ID
+ * @param options optional parameters
+ */
+export const getPaginatedSubgraphWalletAddresses = async (
+  chainId: number,
+  options?: { activeWalletsOnly?: boolean; pageSize?: number }
+) => {
+  const walletAddresses = new Set<Lowercase<Address>>()
+  const pageSize = options?.pageSize ?? 5_000
+  let page = 0
+
+  while (true) {
+    const newPage = await getSubgraphWalletAddresses(chainId, {
+      activeWalletsOnly: options?.activeWalletsOnly,
+      numWallets: pageSize,
+      offsetWallets: page * pageSize
+    })
+
+    newPage.forEach((address) => walletAddresses.add(address))
+
+    if (newPage.length < pageSize) {
+      break
+    } else {
+      page++
+    }
+  }
+
+  return [...walletAddresses]
 }
