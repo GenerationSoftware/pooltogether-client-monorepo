@@ -127,4 +127,4 @@ The biggest culprit of the above is `@tanstack/react-query`, which sometimes is 
 
 If editing component themes in `ui`, having the `Tailwind CSS IntelliSense` plugin for VSCode is recommended. In order to enable it for custom Flowbite themes and string class names, add `theme` and `.*ClassName*` to the `Class Attributes` setting.
 
-Currently,  `lottie-react` has some issues SSR in Node v22. See this [Github issue](https://github.com/Gamote/lottie-react/issues/101#issuecomment-2196496874). If you run into an errors similar to that (i.e `ReferenceError: document is not defined`), downgrad your node version to 18 (Ref: https://github.com/Gamote/lottie-react/issues/101#issuecomment-2196496874)
+Currently, `lottie-react` has some SSR issues in Node v22 as seen [here](https://github.com/Gamote/lottie-react/issues/101). Downgrading your node version to v18 resolves this issue.
