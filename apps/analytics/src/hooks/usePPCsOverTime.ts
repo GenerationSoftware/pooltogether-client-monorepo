@@ -28,7 +28,7 @@ export const usePPCsOverTime = (prizePool: PrizePool) => {
           args: [drawId, drawId]
         }))
 
-        // @ts-expect-error
+        // @ts-ignore
         const multicallResults = await prizePool.publicClient.multicall({ contracts })
 
         drawIds.forEach((drawId, i) => {

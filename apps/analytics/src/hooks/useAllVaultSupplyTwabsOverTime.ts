@@ -20,7 +20,7 @@ export const useAllVaultSupplyTwabsOverTime = (prizePool: PrizePool, vaultAddres
           .map((vaultAddress) => getCalls(prizePool.address, vaultAddress, drawIds))
           .flat()
 
-        // @ts-expect-error
+        // @ts-ignore
         const multicallResults = await prizePool.publicClient.multicall({ contracts })
 
         vaultAddresses.forEach((vaultAddress, i) => {
