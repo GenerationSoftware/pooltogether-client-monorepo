@@ -230,7 +230,9 @@ export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
   const sharePrice =
     !!assetPrice && !!exchangeRate
       ? parseFloat(
-          formatEther(getAssetsFromShares(parseEther(`${assetPrice}`), exchangeRate, shareDecimals))
+          formatEther(
+            getAssetsFromShares(parseEther(assetPrice.toFixed(18)), exchangeRate, shareDecimals)
+          )
         )
       : undefined
   const prizeAssetPrice = prices[lower(prizeAssetAddress)]

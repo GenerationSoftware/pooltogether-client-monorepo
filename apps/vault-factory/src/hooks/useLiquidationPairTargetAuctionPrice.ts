@@ -28,7 +28,7 @@ export const useLiquidationPairTargetAuctionPrice = (prizeToken: Token) => {
         const prizeTokenPriceUsd = prizeTokenPrice / usdcPrice
         const numTokens = NETWORK_CONFIG[chainId].lp.targetAuctionPriceUsd / prizeTokenPriceUsd
 
-        return parseUnits(`${numTokens}`, prizeToken.decimals)
+        return parseUnits(numTokens.toFixed(18), prizeToken.decimals)
       }
     }
   }, [prizeToken, tokenPrices])
