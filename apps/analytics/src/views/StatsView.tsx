@@ -27,8 +27,7 @@ export const StatsView = (props: StatsViewProps) => {
         <TVLByTokenChart prizePool={prizePool} />
       </div>
       <PPCOverTimeChart prizePool={prizePool} />
-      {/* TODO: display prize yield over time */}
-      {/* TODO: display deposit metrics (avg, median) */}
+      {/* TODO: display total prizes given out */}
     </div>
   )
 }

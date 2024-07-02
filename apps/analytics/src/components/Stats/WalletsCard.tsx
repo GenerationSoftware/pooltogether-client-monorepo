@@ -29,6 +29,9 @@ export const WalletsCard = (props: WalletsCardProps) => {
           {!!allWalletAddresses ? allWalletAddresses.length.toLocaleString() : <Spinner />}
         </span>
       </div>
+      {/* TODO: add wallets that have won prizes */}
+      {/* TODO: display avg deposit */}
+      {/* TODO: display median deposit */}
     </div>
   )
 }
