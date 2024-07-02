@@ -30,7 +30,7 @@ export const TVLOverTimeChart = (props: TVLOverTimeChartProps) => {
       const numDrawIds = Object.values(vaultTVLs)[0].length
 
       for (let i = 0; i < numDrawIds; i++) {
-        const drawData: AreaChartProps['data'][number] = { name: i + 1 }
+        const drawData: AreaChartProps['data'][number] = { name: `#${i + 1}` }
 
         Object.entries(vaultTVLs).forEach(([vaultId, tvls]) => {
           drawData[vaultId] = tvls[i]?.tvl ?? 0
@@ -71,11 +71,12 @@ export const TVLOverTimeChart = (props: TVLOverTimeChartProps) => {
 
               return [formattedValue, formattedName]
             },
-            labelFormatter: (label) => `Draw #${label}`,
+            labelFormatter: (label) => `Draw ${label}`,
             sort: 'desc',
             labelClassName: 'pb-1',
             itemStyle: { padding: 0 }
           }}
+          xAxis={{ minTickGap: 25 }}
           aspect={2}
         />
       ) : (

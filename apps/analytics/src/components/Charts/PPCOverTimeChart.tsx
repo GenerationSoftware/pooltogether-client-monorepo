@@ -33,7 +33,7 @@ export const PPCOverTimeChart = (props: PPCOverTimeChartProps) => {
           Object.keys(ppcs).length <= hideFirstDraws ||
           i >= hideFirstDraws
         ) {
-          data.push({ name: parseInt(entry[0]), ppc: entry[1] })
+          data.push({ name: `#${parseInt(entry[0])}`, ppc: entry[1] })
         }
       })
     }
@@ -58,8 +58,9 @@ export const PPCOverTimeChart = (props: PPCOverTimeChartProps) => {
               `${formatNumberForDisplay(value, { maximumFractionDigits: 4 })} ${prizeToken.symbol}`,
               'PPC'
             ],
-            labelFormatter: (label) => `Draw #${label}`
+            labelFormatter: (label) => `Draw ${label}`
           }}
+          xAxis={{ minTickGap: 50 }}
         />
       ) : (
         <div className='w-full aspect-[2.8] flex items-center justify-center'>
