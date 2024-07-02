@@ -73,6 +73,7 @@ export interface AreaChartProps {
     content?: ContentType<number, string | number>
     formatter?: (value: number, name: string | number) => ReactNode | ReactNode[]
     labelFormatter?: (label: string) => ReactNode
+    sort?: 'asc' | 'desc'
   }
   margin?: { left: number; mobileLeft: number }
   legend?: { show?: boolean; formatter: (value: string | number) => ReactNode }
@@ -131,6 +132,11 @@ export const AreaChart = (props: AreaChartProps) => {
             content={tooltip.content}
             formatter={tooltip.formatter}
             labelFormatter={tooltip.labelFormatter}
+            itemSorter={
+              !!tooltip.sort
+                ? (item) => (item.value as number) * (tooltip.sort === 'desc' ? -1 : 1)
+                : undefined
+            }
           />
         )}
         <XAxis

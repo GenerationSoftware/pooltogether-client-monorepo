@@ -1,6 +1,9 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import { useTokens } from '@generationsoftware/hyperstructure-react-hooks'
+import { formatNumberForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
+import { Address } from 'viem'
 import { useAllVaultTVLsOverTime } from '@hooks/useAllVaultTVLsOverTime'
 import { AreaChart, AreaChartProps } from './AreaChart'
 
@@ -13,6 +16,9 @@ export const TVLOverTimeChart = (props: TVLOverTimeChartProps) => {
   const { prizePool, className } = props
 
   const { data: vaultTVLs } = useAllVaultTVLsOverTime(prizePool)
+
+  const vaultAddresses = Object.keys(vaultTVLs ?? {}).map(getAddressFromVaultId)
+  const { data: tokens } = useTokens(prizePool.chainId, vaultAddresses)
 
   const chartData = useMemo(() => {
     const data: AreaChartProps['data'] = []
@@ -34,18 +40,41 @@ export const TVLOverTimeChart = (props: TVLOverTimeChartProps) => {
     return data
   }, [vaultTVLs])
 
-  if (!chartData?.length) {
+  if (!chartData?.length || !tokens) {
     return <></>
   }
 
+  const lastDrawData = chartData[chartData.length - 1]
   const areas = Object.keys(vaultTVLs ?? {}).map((vaultId) => ({ id: vaultId, stackId: 1 }))
+  const sortedAreas = areas.sort((a, b) => lastDrawData[b.id] - lastDrawData[a.id])
 
   return (
     <div
       className={classNames('w-full flex flex-col gap-2 font-medium text-pt-purple-800', className)}
     >
       <span className='ml-2 text-pt-purple-200'>TVL Over Time</span>
-      <AreaChart data={chartData} areas={areas} tooltip={{ show: true }} aspect={2} />
+      <AreaChart
+        data={chartData}
+        areas={sortedAreas}
+        tooltip={{
+          show: true,
+          formatter: (value, name) => {
+            const formattedValue = formatNumberForDisplay(value, { maximumFractionDigits: 4 })
+
+            const address = getAddressFromVaultId(String(name))
+            const formattedName = tokens[address]?.name ?? '?'
+
+            return [formattedValue, formattedName]
+          },
+          labelFormatter: (label) => `Draw ${label}`,
+          sort: 'desc'
+        }}
+        aspect={2}
+      />
     </div>
   )
+}
+
+const getAddressFromVaultId = (vaultId: string) => {
+  return vaultId.split('-')[0] as Lowercase<Address>
 }
