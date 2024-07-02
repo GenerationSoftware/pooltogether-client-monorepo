@@ -29,7 +29,7 @@ export const TVLByTokenChart = (props: TVLByTokenChartProps) => {
       data.push({ name: tokenAddress, tvl })
     })
 
-    return data
+    return data.sort((a, b) => b.tvl - a.tvl)
   }, [tvls])
 
   if (!chartData?.length || !tokens) {

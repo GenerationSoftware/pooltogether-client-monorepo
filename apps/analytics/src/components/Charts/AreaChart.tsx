@@ -1,5 +1,5 @@
 import { useScreenSize } from '@shared/generic-react-hooks'
-import { ReactNode } from 'react'
+import { CSSProperties, ReactNode } from 'react'
 import {
   Area,
   Legend,
@@ -74,6 +74,8 @@ export interface AreaChartProps {
     formatter?: (value: number, name: string | number) => ReactNode | ReactNode[]
     labelFormatter?: (label: string) => ReactNode
     sort?: 'asc' | 'desc'
+    labelClassName?: string
+    itemStyle?: CSSProperties
   }
   margin?: { left: number; mobileLeft: number }
   legend?: { show?: boolean; formatter: (value: string | number) => ReactNode }
@@ -137,6 +139,8 @@ export const AreaChart = (props: AreaChartProps) => {
                 ? (item) => (item.value as number) * (tooltip.sort === 'desc' ? -1 : 1)
                 : undefined
             }
+            labelClassName={tooltip.labelClassName}
+            itemStyle={tooltip.itemStyle}
           />
         )}
         <XAxis

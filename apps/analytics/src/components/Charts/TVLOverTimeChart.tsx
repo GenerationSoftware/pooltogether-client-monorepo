@@ -1,5 +1,5 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { useTokens } from '@generationsoftware/hyperstructure-react-hooks'
+import { usePrizeTokenData, useTokens } from '@generationsoftware/hyperstructure-react-hooks'
 import { formatNumberForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
@@ -19,6 +19,8 @@ export const TVLOverTimeChart = (props: TVLOverTimeChartProps) => {
 
   const vaultAddresses = Object.keys(vaultTVLs ?? {}).map(getAddressFromVaultId)
   const { data: tokens } = useTokens(prizePool.chainId, vaultAddresses)
+
+  const { data: prizeToken } = usePrizeTokenData(prizePool)
 
   const chartData = useMemo(() => {
     const data: AreaChartProps['data'] = []
@@ -40,7 +42,7 @@ export const TVLOverTimeChart = (props: TVLOverTimeChartProps) => {
     return data
   }, [vaultTVLs])
 
-  if (!chartData?.length || !tokens) {
+  if (!chartData?.length || !tokens || !prizeToken) {
     return <></>
   }
 
@@ -59,15 +61,19 @@ export const TVLOverTimeChart = (props: TVLOverTimeChartProps) => {
         tooltip={{
           show: true,
           formatter: (value, name) => {
-            const formattedValue = formatNumberForDisplay(value, { maximumFractionDigits: 4 })
+            if (value < 0.001) return []
 
-            const address = getAddressFromVaultId(String(name))
-            const formattedName = tokens[address]?.name ?? '?'
+            const formattedValue = `${formatNumberForDisplay(value, {
+              maximumFractionDigits: 3
+            })} ${prizeToken.symbol}`
+            const formattedName = tokens[getAddressFromVaultId(String(name))]?.name ?? '?'
 
             return [formattedValue, formattedName]
           },
-          labelFormatter: (label) => `Draw ${label}`,
-          sort: 'desc'
+          labelFormatter: (label) => `Draw #${label}`,
+          sort: 'desc',
+          labelClassName: 'pb-1',
+          itemStyle: { padding: 0 }
         }}
         aspect={2}
       />

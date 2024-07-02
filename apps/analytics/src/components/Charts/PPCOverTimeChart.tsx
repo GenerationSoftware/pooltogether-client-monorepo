@@ -1,4 +1,6 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
+import { formatNumberForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import { usePPCsOverTime } from '@hooks/usePPCsOverTime'
@@ -14,6 +16,8 @@ export const PPCOverTimeChart = (props: PPCOverTimeChartProps) => {
 
   const { data: ppcs } = usePPCsOverTime(prizePool)
 
+  const { data: prizeToken } = usePrizeTokenData(prizePool)
+
   const chartData = useMemo(() => {
     const data: BarChartProps['data'] = []
 
@@ -26,16 +30,27 @@ export const PPCOverTimeChart = (props: PPCOverTimeChartProps) => {
     return data
   }, [ppcs])
 
-  if (!chartData?.length) {
+  if (!chartData?.length || !prizeToken) {
     return <></>
   }
 
   return (
     <div
-      className={classNames('w-full flex flex-col gap-2 font-medium text-pt-purple-200', className)}
+      className={classNames('w-full flex flex-col gap-2 font-medium text-pt-purple-800', className)}
     >
-      <span className='ml-2'>PPCs Over Time</span>
-      <BarChart data={chartData} bars={[{ id: 'ppc' }]} tooltip={{ show: true }} />
+      <span className='ml-2 text-pt-purple-200'>PPCs Over Time</span>
+      <BarChart
+        data={chartData}
+        bars={[{ id: 'ppc' }]}
+        tooltip={{
+          show: true,
+          formatter: (value) => [
+            `${formatNumberForDisplay(value, { maximumFractionDigits: 4 })} ${prizeToken.symbol}`,
+            'PPC'
+          ],
+          labelFormatter: (label) => `Draw #${label}`
+        }}
+      />
     </div>
   )
 }

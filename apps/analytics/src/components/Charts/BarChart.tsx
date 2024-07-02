@@ -87,6 +87,7 @@ export const BarChart = (props: BarChartProps) => {
             content={tooltip.content}
             formatter={tooltip.formatter}
             labelFormatter={tooltip.labelFormatter}
+            cursor={{ fillOpacity: 0.1 }}
           />
         )}
         <XAxis
