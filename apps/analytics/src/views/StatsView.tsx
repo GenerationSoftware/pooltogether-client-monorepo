@@ -26,7 +26,7 @@ export const StatsView = (props: StatsViewProps) => {
         <TVLOverTimeChart prizePool={prizePool} />
         <TVLByTokenChart prizePool={prizePool} />
       </div>
-      <PPCOverTimeChart prizePool={prizePool} />
+      <PPCOverTimeChart prizePool={prizePool} hideFirstDraws={3} />
       {/* TODO: display total prizes given out */}
     </div>
   )

@@ -1,34 +1,45 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
+import { Toggle } from '@shared/ui'
 import { formatNumberForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { usePPCsOverTime } from '@hooks/usePPCsOverTime'
 import { BarChart, BarChartProps } from './BarChart'
 
 interface PPCOverTimeChartProps {
   prizePool: PrizePool
+  hideFirstDraws?: number
   className?: string
 }
 
 export const PPCOverTimeChart = (props: PPCOverTimeChartProps) => {
-  const { prizePool, className } = props
+  const { prizePool, hideFirstDraws, className } = props
 
   const { data: ppcs } = usePPCsOverTime(prizePool)
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
+  const [isHidingFirstDraws, setIsHidingFirstDraws] = useState<boolean>(true)
+
   const chartData = useMemo(() => {
     const data: BarChartProps['data'] = []
 
     if (!!ppcs) {
-      Object.entries(ppcs).forEach((entry) => {
-        data.push({ name: parseInt(entry[0]), ppc: entry[1] })
+      Object.entries(ppcs).forEach((entry, i) => {
+        if (
+          !hideFirstDraws ||
+          !isHidingFirstDraws ||
+          Object.keys(ppcs).length <= hideFirstDraws ||
+          i >= hideFirstDraws
+        ) {
+          data.push({ name: parseInt(entry[0]), ppc: entry[1] })
+        }
       })
     }
 
     return data
-  }, [ppcs])
+  }, [ppcs, hideFirstDraws, isHidingFirstDraws])
 
   if (!chartData?.length || !prizeToken) {
     return <></>
@@ -41,7 +52,7 @@ export const PPCOverTimeChart = (props: PPCOverTimeChartProps) => {
       <span className='ml-2 text-pt-purple-200'>PPCs Over Time</span>
       <BarChart
         data={chartData}
-        bars={[{ id: 'ppc' }]}
+        bars={[{ id: 'ppc', animate: true }]}
         tooltip={{
           show: true,
           formatter: (value) => [
@@ -51,6 +62,16 @@ export const PPCOverTimeChart = (props: PPCOverTimeChartProps) => {
           labelFormatter: (label) => `Draw #${label}`
         }}
       />
+      {!!hideFirstDraws && (
+        <Toggle
+          checked={!isHidingFirstDraws}
+          onChange={() => setIsHidingFirstDraws(!isHidingFirstDraws)}
+          size='sm'
+          label={`${isHidingFirstDraws ? 'Show' : 'Hide'} first ${hideFirstDraws} draws`}
+          className='ml-8'
+          labelClassName='text-pt-purple-200/60'
+        />
+      )}
     </div>
   )
 }

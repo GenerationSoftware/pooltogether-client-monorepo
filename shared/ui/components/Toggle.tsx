@@ -3,6 +3,7 @@ import classNames from 'classnames'
 export interface ToggleProps {
   checked: boolean
   onChange: (checked: boolean) => void
+  size?: 'sm' | 'md'
   label?: string
   disabled?: boolean
   className?: string
@@ -10,7 +11,7 @@ export interface ToggleProps {
 }
 
 export const Toggle = (props: ToggleProps) => {
-  const { checked, onChange, label, disabled, className, labelClassName } = props
+  const { checked, onChange, size, label, disabled, className, labelClassName } = props
 
   const toggle = () => {
     !disabled && onChange(!checked)
@@ -37,15 +38,23 @@ export const Toggle = (props: ToggleProps) => {
       />
       <div
         className={classNames(
-          'w-[74px] h-10 rounded-full border border-gray-50',
+          'rounded-full border border-gray-50',
+          { 'w-[46px] h-6': size === 'sm', 'w-[74px] h-10': size === 'md' || !size },
           { 'bg-gray-200': !checked, 'bg-green-300': checked },
           { 'brightness-50': disabled }
         )}
       >
         <span
-          className={classNames('absolute top-1 left-1 w-8 h-8 rounded-full transition-all', {
-            'translate-x-full': checked
-          })}
+          className={classNames(
+            'absolute rounded-full transition-all',
+            {
+              'top-[2px] left-[2px] w-5 h-5': size === 'sm',
+              'top-1 left-1 w-8 h-8': size === 'md' || !size
+            },
+            {
+              'translate-x-full': checked
+            }
+          )}
         >
           <CheckIcon
             className={classNames(iconClassName, 'bg-green-100 text-green-500', {
@@ -60,7 +69,15 @@ export const Toggle = (props: ToggleProps) => {
         </span>
       </div>
       {!!label && (
-        <span className={classNames('ml-3 text-sm font-medium', labelClassName)}>{label}</span>
+        <span
+          className={classNames(
+            'text-sm font-medium',
+            { 'ml-2': size === 'sm', 'ml-3': size === 'md' || !size },
+            labelClassName
+          )}
+        >
+          {label}
+        </span>
       )}
     </label>
   )
