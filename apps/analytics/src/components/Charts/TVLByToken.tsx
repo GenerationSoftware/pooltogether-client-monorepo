@@ -1,5 +1,6 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { useTokens } from '@generationsoftware/hyperstructure-react-hooks'
+import { Spinner } from '@shared/ui'
 import { lower } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
@@ -32,23 +33,27 @@ export const TVLByTokenChart = (props: TVLByTokenChartProps) => {
     return data.sort((a, b) => b.tvl - a.tvl)
   }, [tvls])
 
-  if (!chartData?.length || !tokens) {
-    return <></>
-  }
+  const isReady = !!chartData?.length && !!tokens
 
   return (
     <div className={classNames('w-full flex flex-col font-medium text-pt-purple-800', className)}>
       <span className='ml-2 text-pt-purple-200'>TVL By Token</span>
-      <PieChart
-        data={chartData}
-        radius={{ inner: '60%' }}
-        label={{
-          show: true,
-          nameFormatter: (name) => tokens[lower(name)]?.symbol ?? '?',
-          center: true
-        }}
-        animate={true}
-      />
+      {isReady ? (
+        <PieChart
+          data={chartData}
+          radius={{ inner: '60%' }}
+          label={{
+            show: true,
+            nameFormatter: (name) => tokens[lower(name)]?.symbol ?? '?',
+            center: true
+          }}
+          animate={true}
+        />
+      ) : (
+        <div className='w-full aspect-square flex items-center justify-center'>
+          <Spinner />
+        </div>
+      )}
     </div>
   )
 }

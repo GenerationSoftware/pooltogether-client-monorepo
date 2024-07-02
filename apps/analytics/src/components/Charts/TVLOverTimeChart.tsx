@@ -1,5 +1,6 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { usePrizeTokenData, useTokens } from '@generationsoftware/hyperstructure-react-hooks'
+import { Spinner } from '@shared/ui'
 import { formatNumberForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
@@ -42,9 +43,7 @@ export const TVLOverTimeChart = (props: TVLOverTimeChartProps) => {
     return data
   }, [vaultTVLs])
 
-  if (!chartData?.length || !tokens || !prizeToken) {
-    return <></>
-  }
+  const isReady = !!chartData?.length && !!tokens && !!prizeToken
 
   const lastDrawData = chartData[chartData.length - 1]
   const vaultIds = Object.keys(vaultTVLs ?? {})
@@ -56,28 +55,34 @@ export const TVLOverTimeChart = (props: TVLOverTimeChartProps) => {
       className={classNames('w-full flex flex-col gap-2 font-medium text-pt-purple-800', className)}
     >
       <span className='ml-2 text-pt-purple-200'>TVL Over Time</span>
-      <AreaChart
-        data={chartData}
-        areas={sortedAreas}
-        tooltip={{
-          show: true,
-          formatter: (value, name) => {
-            if (value < 0.001) return []
+      {isReady ? (
+        <AreaChart
+          data={chartData}
+          areas={sortedAreas}
+          tooltip={{
+            show: true,
+            formatter: (value, name) => {
+              if (value < 0.001) return []
 
-            const formattedValue = `${formatNumberForDisplay(value, {
-              maximumFractionDigits: 3
-            })} ${prizeToken.symbol}`
-            const formattedName = tokens[getAddressFromVaultId(String(name))]?.name ?? '?'
+              const formattedValue = `${formatNumberForDisplay(value, {
+                maximumFractionDigits: 3
+              })} ${prizeToken.symbol}`
+              const formattedName = tokens[getAddressFromVaultId(String(name))]?.name ?? '?'
 
-            return [formattedValue, formattedName]
-          },
-          labelFormatter: (label) => `Draw #${label}`,
-          sort: 'desc',
-          labelClassName: 'pb-1',
-          itemStyle: { padding: 0 }
-        }}
-        aspect={2}
-      />
+              return [formattedValue, formattedName]
+            },
+            labelFormatter: (label) => `Draw #${label}`,
+            sort: 'desc',
+            labelClassName: 'pb-1',
+            itemStyle: { padding: 0 }
+          }}
+          aspect={2}
+        />
+      ) : (
+        <div className='w-full aspect-[2] flex items-center justify-center'>
+          <Spinner />
+        </div>
+      )}
     </div>
   )
 }

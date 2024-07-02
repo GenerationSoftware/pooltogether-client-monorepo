@@ -58,16 +58,7 @@ export const PieChart = (props: PieChartProps) => {
                     const percentage = `${(percent * 100).toFixed(1)}%`
 
                     return (
-                      <text
-                        x={x}
-                        y={y}
-                        fill='white'
-                        textAnchor='middle'
-                        dominantBaseline='middle'
-                        transform={
-                          label.center ? (x > cx ? 'translate(-50%)' : 'translate(50%)') : undefined
-                        }
-                      >
+                      <text x={x} y={y} fill='white' textAnchor='middle' dominantBaseline='middle'>
                         {name} ({percentage})
                       </text>
                     )

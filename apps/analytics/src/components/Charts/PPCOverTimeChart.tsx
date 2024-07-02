@@ -1,6 +1,6 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
-import { Toggle } from '@shared/ui'
+import { Spinner, Toggle } from '@shared/ui'
 import { formatNumberForDisplay } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo, useState } from 'react'
@@ -41,28 +41,32 @@ export const PPCOverTimeChart = (props: PPCOverTimeChartProps) => {
     return data
   }, [ppcs, hideFirstDraws, isHidingFirstDraws])
 
-  if (!chartData?.length || !prizeToken) {
-    return <></>
-  }
+  const isReady = !!chartData?.length && !!prizeToken
 
   return (
     <div
       className={classNames('w-full flex flex-col gap-2 font-medium text-pt-purple-800', className)}
     >
       <span className='ml-2 text-pt-purple-200'>PPCs Over Time</span>
-      <BarChart
-        data={chartData}
-        bars={[{ id: 'ppc', animate: true }]}
-        tooltip={{
-          show: true,
-          formatter: (value) => [
-            `${formatNumberForDisplay(value, { maximumFractionDigits: 4 })} ${prizeToken.symbol}`,
-            'PPC'
-          ],
-          labelFormatter: (label) => `Draw #${label}`
-        }}
-      />
-      {!!hideFirstDraws && (
+      {isReady ? (
+        <BarChart
+          data={chartData}
+          bars={[{ id: 'ppc', animate: true }]}
+          tooltip={{
+            show: true,
+            formatter: (value) => [
+              `${formatNumberForDisplay(value, { maximumFractionDigits: 4 })} ${prizeToken.symbol}`,
+              'PPC'
+            ],
+            labelFormatter: (label) => `Draw #${label}`
+          }}
+        />
+      ) : (
+        <div className='w-full aspect-[2.8] flex items-center justify-center'>
+          <Spinner />
+        </div>
+      )}
+      {isReady && !!hideFirstDraws && (
         <Toggle
           checked={!isHidingFirstDraws}
           onChange={() => setIsHidingFirstDraws(!isHidingFirstDraws)}
