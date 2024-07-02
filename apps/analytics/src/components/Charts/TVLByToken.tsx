@@ -47,6 +47,7 @@ export const TVLByTokenChart = (props: TVLByTokenChartProps) => {
           nameFormatter: (name) => tokens[lower(name)]?.symbol ?? '?',
           center: true
         }}
+        animate={true}
       />
     </div>
   )

@@ -47,7 +47,8 @@ export const TVLOverTimeChart = (props: TVLOverTimeChartProps) => {
   }
 
   const lastDrawData = chartData[chartData.length - 1]
-  const areas = Object.keys(vaultTVLs ?? {}).map((vaultId) => ({ id: vaultId, stackId: 1 }))
+  const vaultIds = Object.keys(vaultTVLs ?? {})
+  const areas = vaultIds.map((vaultId) => ({ id: vaultId, stackId: 1, animate: true }))
   const sortedAreas = areas.sort((a, b) => lastDrawData[b.id] - lastDrawData[a.id])
 
   return (
