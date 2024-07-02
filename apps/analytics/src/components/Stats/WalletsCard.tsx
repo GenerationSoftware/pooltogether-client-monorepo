@@ -16,15 +16,15 @@ export const WalletsCard = (props: WalletsCardProps) => {
 
   return (
     <div className={classNames('flex flex-col p-4 bg-pt-transparent rounded-2xl', className)}>
-      <span className='text-pt-purple-400'>Unique Wallet Addresses</span>
+      <span className='text-pt-purple-400'>Users</span>
       <div className='flex justify-between items-center gap-4'>
-        <span>Currently Deposited</span>
+        <span>Unique Wallets (Currently Deposited)</span>
         <span>
           {!!activeWalletAddresses ? activeWalletAddresses.length.toLocaleString() : <Spinner />}
         </span>
       </div>
       <div className='flex justify-between items-center gap-4'>
-        <span>All Time</span>
+        <span>Unique Wallets (All Time)</span>
         <span>
           {!!allWalletAddresses ? allWalletAddresses.length.toLocaleString() : <Spinner />}
         </span>

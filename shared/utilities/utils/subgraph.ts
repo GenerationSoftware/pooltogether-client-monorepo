@@ -431,7 +431,7 @@ export const getPaginatedUserSubgraphObservations = async (
 /**
  * Returns a prize pool's unique wallet addresses
  *
- * NOTE: By default queries 5k addresses
+ * NOTE: By default queries 1k addresses
  * @param chainId the network's chain ID
  * @param options optional parameters
  * @returns
@@ -460,7 +460,7 @@ export const getSubgraphWalletAddresses = async (
         }
       }`,
       variables: {
-        numWallets: options?.numWallets ?? 5_000,
+        numWallets: options?.numWallets ?? 1_000,
         offsetWallets: options?.offsetWallets ?? 0
       }
     })
@@ -488,7 +488,7 @@ export const getPaginatedSubgraphWalletAddresses = async (
   options?: { activeWalletsOnly?: boolean; pageSize?: number }
 ) => {
   const walletAddresses = new Set<Lowercase<Address>>()
-  const pageSize = options?.pageSize ?? 5_000
+  const pageSize = options?.pageSize ?? 1_000
   let page = 0
 
   while (true) {

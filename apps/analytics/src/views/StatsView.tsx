@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 import { PPCOverTimeChart } from '@components/Charts/PPCOverTimeChart'
+import { TVLByTokenChart } from '@components/Charts/TVLByToken'
 import { TVLOverTimeChart } from '@components/Charts/TVLOverTimeChart'
 import { PrizesCard } from '@components/Stats/PrizesCard'
 import { WalletsCard } from '@components/Stats/WalletsCard'
@@ -17,11 +18,15 @@ export const StatsView = (props: StatsViewProps) => {
 
   return (
     <div className={classNames('w-full flex flex-col gap-6 items-center', className)}>
-      <PrizesCard prizePool={prizePool} />
-      <TVLOverTimeChart prizePool={prizePool} />
-      {/* TODO: display underlying token tvl composition in a pie chart */}
+      <div className='w-full grid grid-cols-1 gap-6 items-center md:grid-cols-2'>
+        <PrizesCard prizePool={prizePool} className='h-full' />
+        <WalletsCard prizePool={prizePool} className='h-full' />
+      </div>
+      <div className='w-full grid grid-cols-1 gap-6 items-center md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]'>
+        <TVLOverTimeChart prizePool={prizePool} />
+        <TVLByTokenChart prizePool={prizePool} />
+      </div>
       <PPCOverTimeChart prizePool={prizePool} />
-      <WalletsCard prizePool={prizePool} />
       {/* TODO: display prize yield over time */}
       {/* TODO: display deposit metrics (avg, median) */}
     </div>

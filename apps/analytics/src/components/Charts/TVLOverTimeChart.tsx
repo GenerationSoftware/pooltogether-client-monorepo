@@ -45,7 +45,7 @@ export const TVLOverTimeChart = (props: TVLOverTimeChartProps) => {
       className={classNames('w-full flex flex-col gap-2 font-medium text-pt-purple-200', className)}
     >
       <span className='ml-2'>TVL Over Time</span>
-      <AreaChart data={chartData} areas={areas} tooltip={{ show: true }} />
+      <AreaChart data={chartData} areas={areas} tooltip={{ show: true }} aspect={2} />
     </div>
   )
 }
