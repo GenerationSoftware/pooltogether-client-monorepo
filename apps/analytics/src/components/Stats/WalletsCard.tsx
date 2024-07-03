@@ -1,9 +1,13 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { useWalletAddresses } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  usePrizeDrawWinners,
+  useWalletAddresses
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
-import { formatNumberForDisplay } from '@shared/utilities'
+import { formatNumberForDisplay, lower } from '@shared/utilities'
 import classNames from 'classnames'
-import { ReactNode } from 'react'
+import { ReactNode, useMemo } from 'react'
+import { Address } from 'viem'
 import { useDeposits } from '@hooks/useDeposits'
 
 interface WalletsCardProps {
@@ -17,20 +21,39 @@ export const WalletsCard = (props: WalletsCardProps) => {
   const { data: allWalletAddresses } = useWalletAddresses(prizePool)
   const { data: activeWalletAddresses } = useWalletAddresses(prizePool, { activeWalletsOnly: true })
 
+  const { data: draws } = usePrizeDrawWinners(prizePool)
+
+  const winnerWalletAddresses = useMemo(() => {
+    if (!!draws) {
+      const walletAddresses = new Set<Lowercase<Address>>()
+
+      draws.forEach((draw) => {
+        draw.prizeClaims.forEach((claim) => {
+          walletAddresses.add(lower(claim.winner))
+        })
+      })
+
+      return [...walletAddresses]
+    }
+  }, [draws])
+
   const { data: deposits } = useDeposits(prizePool)
 
   return (
     <div className={classNames('flex flex-col p-4 bg-pt-transparent rounded-2xl', className)}>
       <span className='text-pt-purple-400'>Users</span>
       <DataRow
+        name='Unique Wallets (All Time)'
+        value={allWalletAddresses?.length.toLocaleString()}
+      />
+      <DataRow
         name='Unique Wallets (Currently Deposited)'
         value={activeWalletAddresses?.length.toLocaleString()}
       />
       <DataRow
-        name='Unique Wallets (All Time)'
-        value={allWalletAddresses?.length.toLocaleString()}
+        name='Unique Wallets (Prizes Won)'
+        value={winnerWalletAddresses?.length.toLocaleString()}
       />
-      {/* TODO: add wallets that have won prizes */}
       <DataRow
         name='Median Deposit Transaction'
         value={
