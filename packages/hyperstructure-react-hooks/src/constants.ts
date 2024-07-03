@@ -7,6 +7,7 @@ export const QUERY_KEYS = {
   block: 'block',
   blockAtTimestamp: 'blockAtTimestamp',
   clientChainId: 'clientChainId',
+  depositEvents: 'depositEvents',
   drawAuctionDuration: 'drawAuctionDuration',
   drawAwardedEvents: 'drawAwardedEvents',
   drawFinishedEvents: 'drawFinishedEvents',
@@ -68,7 +69,8 @@ export const QUERY_KEYS = {
   vaultTotalSupplyTwabs: 'vaultTotalSupplyTwabs',
   vaultTwabController: 'vaultTwabController',
   vaultYieldSources: 'vaultYieldSources',
-  walletAddresses: 'walletAddresses'
+  walletAddresses: 'walletAddresses',
+  withdrawEvents: 'withdrawEvents'
 } as const
 
 /**

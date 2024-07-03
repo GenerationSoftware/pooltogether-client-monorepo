@@ -71,6 +71,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 
 ### Event Hooks
 
+- `useDepositEvents`
 - `useDrawAwardedEvents`
 - `useDrawFinishedEvents`
 - `useDrawStartedEvents`
@@ -81,6 +82,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `usePromotionRewardsClaimedEvents`
 - `useTransferEvents`
 - `useVaultContributionEvents`
+- `useWithdrawEvents`
 
 ### Prize Pool Hooks
 
