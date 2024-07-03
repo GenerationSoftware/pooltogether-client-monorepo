@@ -1,67 +1,30 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
   useAllVaultExchangeRates,
-  useAllVaultHistoricalTokenPrices,
-  useAllVaultTokenAddresses,
   useAllVaultTokenData,
   useDrawPeriod,
-  useFirstDrawOpenedAt,
-  useVaults
+  useFirstDrawOpenedAt
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { getAssetsFromShares, lower } from '@shared/utilities'
 import { useMemo } from 'react'
-import { Address, formatUnits } from 'viem'
+import { formatUnits } from 'viem'
 import { useAllVaultSupplyTwabsOverTime } from '@hooks/useAllVaultSupplyTwabsOverTime'
-import { useDeployedVaultAddresses } from '@hooks/useDeployedVaultAddresses'
+import { useAllVaultsWithHistoricalPrices } from '@hooks/useAllVaultsWithHistoricalPrices'
 
 export const useAllVaultTVLsOverTime = (prizePool: PrizePool) => {
-  const { data: vaultAddresses, isFetched: isFetchedVaultAddresses } =
-    useDeployedVaultAddresses(prizePool)
-
-  const vaults = useVaults(
-    vaultAddresses?.map((address) => ({ chainId: prizePool.chainId, address })) ?? []
-  )
-
-  const { data: vaultTokenAddresses, isFetched: isFetchedVaultTokenAddresses } =
-    useAllVaultTokenAddresses(vaults)
-
-  const { data: vaultHistoricalTokenPrices, isFetched: isFetchedVaultHistoricalTokenPrices } =
-    useAllVaultHistoricalTokenPrices(prizePool.chainId, vaults)
-
-  const validVaultAddresses = useMemo(() => {
-    let validAddresses: Lowercase<Address>[] = []
-
-    if (isFetchedVaultHistoricalTokenPrices) {
-      const tokenAddressesWithPrices = Object.keys(vaultHistoricalTokenPrices).map((entry) =>
-        lower(entry)
-      )
-
-      Object.entries(vaultTokenAddresses?.byVault ?? {}).forEach(([vaultId, tokenAddress]) => {
-        if (tokenAddressesWithPrices.includes(lower(tokenAddress))) {
-          validAddresses.push(vaultId.split('-')[0] as Lowercase<Address>)
-        }
-      })
-    }
-
-    return validAddresses
-  }, [
-    prizePool,
-    vaultTokenAddresses,
+  const {
+    vaults,
     vaultHistoricalTokenPrices,
-    isFetchedVaultHistoricalTokenPrices
-  ])
-
-  const validVaults = useVaults(
-    validVaultAddresses?.map((address) => ({ chainId: prizePool.chainId, address })) ?? []
-  )
+    isFetched: isFetchedVaults
+  } = useAllVaultsWithHistoricalPrices(prizePool)
 
   const { data: vaultSupplyTwabs, isFetched: isFetchedVaultSupplyTwabs } =
-    useAllVaultSupplyTwabsOverTime(prizePool, validVaultAddresses)
+    useAllVaultSupplyTwabsOverTime(prizePool, vaults.vaultAddresses[prizePool.chainId])
 
-  const { data: vaultTokens, isFetched: isFetchedVaultTokens } = useAllVaultTokenData(validVaults)
+  const { data: vaultTokens, isFetched: isFetchedVaultTokens } = useAllVaultTokenData(vaults)
 
   const { data: vaultExchangeRates, isFetched: isFetchedVaultExchangeRates } =
-    useAllVaultExchangeRates(validVaults)
+    useAllVaultExchangeRates(vaults)
 
   const { data: firstDrawOpenedAt, isFetched: isFetchedFirstDrawOpenedAt } =
     useFirstDrawOpenedAt(prizePool)
@@ -69,9 +32,7 @@ export const useAllVaultTVLsOverTime = (prizePool: PrizePool) => {
   const { data: drawPeriod, isFetched: isFetchedDrawPeriod } = useDrawPeriod(prizePool)
 
   const isFetched =
-    isFetchedVaultAddresses &&
-    isFetchedVaultTokenAddresses &&
-    isFetchedVaultHistoricalTokenPrices &&
+    isFetchedVaults &&
     isFetchedVaultSupplyTwabs &&
     isFetchedVaultTokens &&
     isFetchedVaultExchangeRates &&

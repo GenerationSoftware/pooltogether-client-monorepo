@@ -46,7 +46,7 @@ export const useAllVaultSupplyTwabsOverTime = (prizePool: PrizePool, vaultAddres
 
       return supplyTwabs
     },
-    enabled: !!prizePool && !!vaultAddresses.length && !!lastAwardedDrawId,
+    enabled: !!prizePool && !!vaultAddresses?.length && !!lastAwardedDrawId,
     ...NO_REFETCH
   })
 }
