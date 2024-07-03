@@ -14,14 +14,13 @@ import { useAllVaultsWithHistoricalPrices } from '@hooks/useAllVaultsWithHistori
 export const useAllVaultTVLsOverTime = (prizePool: PrizePool) => {
   const {
     vaults,
+    vaultTokens,
     vaultHistoricalTokenPrices,
     isFetched: isFetchedVaults
   } = useAllVaultsWithHistoricalPrices(prizePool)
 
   const { data: vaultSupplyTwabs, isFetched: isFetchedVaultSupplyTwabs } =
     useAllVaultSupplyTwabsOverTime(prizePool, vaults.vaultAddresses[prizePool.chainId])
-
-  const { data: vaultTokens, isFetched: isFetchedVaultTokens } = useAllVaultTokenData(vaults)
 
   const { data: vaultExchangeRates, isFetched: isFetchedVaultExchangeRates } =
     useAllVaultExchangeRates(vaults)
@@ -34,7 +33,6 @@ export const useAllVaultTVLsOverTime = (prizePool: PrizePool) => {
   const isFetched =
     isFetchedVaults &&
     isFetchedVaultSupplyTwabs &&
-    isFetchedVaultTokens &&
     isFetchedVaultExchangeRates &&
     isFetchedFirstDrawOpenedAt &&
     isFetchedDrawPeriod
