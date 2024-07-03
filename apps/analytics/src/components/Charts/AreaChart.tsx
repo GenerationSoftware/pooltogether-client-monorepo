@@ -117,11 +117,11 @@ export const AreaChart = (props: AreaChartProps) => {
             key={`area-${area.id}`}
             type={area.type ?? DEFAULT.area.type}
             dataKey={area.id}
-            stroke={area.stroke ?? DEFAULT.area.strokes[i]}
+            stroke={area.stroke ?? DEFAULT.area.strokes[i % DEFAULT.area.strokes.length]}
             fill={
               gradients ?? DEFAULT.gradients
                 ? `url(#${getGradientFillId(area.id)})`
-                : area.stroke ?? DEFAULT.area.strokes[i]
+                : area.stroke ?? DEFAULT.area.strokes[i % DEFAULT.area.strokes.length]
             }
             strokeWidth={area.strokeWidth ?? DEFAULT.area.strokeWidth}
             dot={area.dot ?? DEFAULT.area.dot}
@@ -172,12 +172,20 @@ export const AreaChart = (props: AreaChartProps) => {
               >
                 <stop
                   offset='5%'
-                  stopColor={area.stroke ?? area.stroke ?? DEFAULT.area.strokes[i]}
+                  stopColor={
+                    area.stroke ??
+                    area.stroke ??
+                    DEFAULT.area.strokes[i % DEFAULT.area.strokes.length]
+                  }
                   stopOpacity={0.8}
                 />
                 <stop
                   offset='95%'
-                  stopColor={area.stroke ?? area.stroke ?? DEFAULT.area.strokes[i]}
+                  stopColor={
+                    area.stroke ??
+                    area.stroke ??
+                    DEFAULT.area.strokes[i % DEFAULT.area.strokes.length]
+                  }
                   stopOpacity={0.2}
                 />
               </linearGradient>

@@ -106,7 +106,7 @@ export const LineChart = (props: LineChartProps) => {
             key={`line-${line.id}`}
             type={line.type ?? DEFAULT.line.type}
             dataKey={line.id}
-            stroke={line.stroke ?? DEFAULT.line.strokes[i]}
+            stroke={line.stroke ?? DEFAULT.line.strokes[i % DEFAULT.line.strokes.length]}
             strokeWidth={line.strokeWidth ?? DEFAULT.line.strokeWidth}
             strokeDasharray={line.strokeDashArray}
             dot={line.dot ?? DEFAULT.line.dot}
