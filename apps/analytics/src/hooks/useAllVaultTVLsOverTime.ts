@@ -1,7 +1,6 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
   useAllVaultExchangeRates,
-  useAllVaultTokenData,
   useDrawPeriod,
   useFirstDrawOpenedAt
 } from '@generationsoftware/hyperstructure-react-hooks'

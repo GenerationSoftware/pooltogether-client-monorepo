@@ -28,11 +28,10 @@ export const getTokenPrices = async (
       const response = await fetch(url.toString())
       const rawTokenPrices: { [address: Address]: { date: string; price: number }[] } =
         await response.json()
-      Object.keys(rawTokenPrices).forEach((key) => {
-        const address = key as Address
-        const tokenPrice = rawTokenPrices[address][0]?.price
+      Object.keys(rawTokenPrices).forEach((address) => {
+        const tokenPrice = rawTokenPrices[address as Address][0]?.price
         if (tokenPrice !== undefined) {
-          tokenPrices[address] = tokenPrice
+          tokenPrices[address as Address] = tokenPrice
         }
       })
 
@@ -61,7 +60,6 @@ export const getTokenPrices = async (
   }
 }
 
-// TODO: also redirect prices here to get historical prices of token it is redirected to (useful for testnets)
 /**
  * Returns a token's historical prices in ETH from the CloudFlare API
  * @param chainId chain ID where the token addresses provided is from
@@ -82,13 +80,19 @@ export const getHistoricalTokenPrices = async (
       const tokenPrices: { [address: Address]: { date: string; price: number }[] } =
         await response.json()
 
-      return tokenPrices
+      const priceEntries = Object.values(tokenPrices)[0]
+      if (!!priceEntries?.length) {
+        return tokenPrices
+      } else {
+        return await getRedirectedHistoricalTokenPrices(chainId, tokenAddress)
+      }
     } else {
       const lowercaseTokenAddress = lower(tokenAddress)
       const mostRecentTokenPrice = (await getTokenPrices(chainId, [tokenAddress]))[
         lowercaseTokenAddress
       ]
       const dateNow = new Date().toISOString().split('T')[0]
+
       return { [lowercaseTokenAddress]: [{ date: dateNow, price: mostRecentTokenPrice }] }
     }
   } catch (e) {
@@ -138,4 +142,34 @@ const getRedirectedTokenPrices = async (chainId: number, tokenAddresses: string[
   })
 
   return redirectedTokenPrices
+}
+
+/**
+ * Returns redirected historical token prices for a token without accurate pricing data on their original network
+ * @param chainId chain ID where the token addresses provided is from
+ * @param tokenAddress token address to query redirected historical prices for (if necessary)
+ * @returns
+ */
+const getRedirectedHistoricalTokenPrices = async (chainId: number, tokenAddress: string) => {
+  const redirect = TOKEN_PRICE_REDIRECTS[chainId]?.[lower(tokenAddress)]
+
+  if (!!redirect) {
+    const redirectedHistoricalTokenPrices: {
+      [address: Address]: { date: string; price: number }[]
+    } = {}
+
+    const newHistoricalTokenPrices = await getHistoricalTokenPrices(
+      redirect.chainId,
+      redirect.address
+    )
+
+    const priceEntries = Object.values(newHistoricalTokenPrices)[0]
+    if (!!priceEntries?.length) {
+      redirectedHistoricalTokenPrices[tokenAddress as Address] = priceEntries
+    }
+
+    return redirectedHistoricalTokenPrices
+  } else {
+    return {}
+  }
 }
