@@ -52,6 +52,7 @@ export interface AreaChartProps {
     dot?: AreaDot
     animate?: boolean
     stackId?: string | number
+    opacity?: number
   }[]
   aspect?: number
   xAxis?: {
@@ -127,6 +128,7 @@ export const AreaChart = (props: AreaChartProps) => {
             dot={area.dot ?? DEFAULT.area.dot}
             isAnimationActive={area.animate ?? DEFAULT.area.animate}
             stackId={area.stackId}
+            opacity={area.opacity}
           />
         ))}
         {tooltip?.show && (

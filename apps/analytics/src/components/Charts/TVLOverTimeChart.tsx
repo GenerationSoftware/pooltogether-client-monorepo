@@ -31,10 +31,16 @@ export const TVLOverTimeChart = (props: TVLOverTimeChartProps) => {
 
       for (let i = 0; i < numDrawIds; i++) {
         const drawData: AreaChartProps['data'][number] = { name: `#${i + 1}` }
+        let totalTvl = 0
 
         Object.entries(vaultTVLs).forEach(([vaultId, tvls]) => {
-          drawData[vaultId] = tvls[i]?.tvl ?? 0
+          const tvl = tvls[i]?.tvl ?? 0
+
+          drawData[vaultId] = tvl
+          totalTvl += tvl
         })
+
+        drawData['total'] = totalTvl
 
         data.push(drawData)
       }
@@ -47,8 +53,15 @@ export const TVLOverTimeChart = (props: TVLOverTimeChartProps) => {
 
   const lastDrawData = chartData[chartData.length - 1]
   const vaultIds = Object.keys(vaultTVLs ?? {})
-  const areas = vaultIds.map((vaultId) => ({ id: vaultId, stackId: 1, animate: true }))
-  const sortedAreas = areas.sort((a, b) => lastDrawData[b.id] - lastDrawData[a.id])
+  const areas: AreaChartProps['areas'] = vaultIds.map((vaultId) => ({
+    id: vaultId,
+    stackId: 1,
+    animate: true
+  }))
+  const sortedAreas: AreaChartProps['areas'] = [
+    ...areas.sort((a, b) => lastDrawData[b.id] - lastDrawData[a.id]),
+    { id: 'total', stroke: '#36147d', opacity: 0 }
+  ]
 
   return (
     <div
@@ -67,7 +80,10 @@ export const TVLOverTimeChart = (props: TVLOverTimeChartProps) => {
               const formattedValue = `${formatNumberForDisplay(value, {
                 maximumFractionDigits: 3
               })} ${prizeToken.symbol}`
-              const formattedName = tokens[getAddressFromVaultId(String(name))]?.name ?? '?'
+              const formattedName =
+                name === 'total'
+                  ? 'Total TVL'
+                  : tokens[getAddressFromVaultId(String(name))]?.name ?? '?'
 
               return [formattedValue, formattedName]
             },
