@@ -54,6 +54,7 @@ export const WalletsCard = (props: WalletsCardProps) => {
         name='Unique Wallets (Prizes Won)'
         value={winnerWalletAddresses?.length.toLocaleString()}
       />
+      <hr className='my-2 border-pt-purple-200/50' />
       <DataRow
         name='Median Deposit Transaction'
         value={
