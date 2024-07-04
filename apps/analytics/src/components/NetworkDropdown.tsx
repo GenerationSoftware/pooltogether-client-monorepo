@@ -28,7 +28,11 @@ export const NetworkDropdown = (props: NetworkDropdownProps) => {
     return validNetworks.map((network) => ({
       id: network.toString(),
       content: (
-        <NetworkBadge chainId={network} hideBg={true} className='text-pt-purple-600 select-none' />
+        <NetworkBadge
+          chainId={network}
+          hideBg={true}
+          className='md:text-pt-purple-600 select-none'
+        />
       ),
       onClick: (id) => onChangeNetwork(parseInt(id))
     }))
