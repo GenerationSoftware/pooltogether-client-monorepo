@@ -111,3 +111,8 @@ export const liquidationPairSmoothingFactorAtom = atom<number>(0.5)
  * Liquidation Pair Address
  */
 export const liquidationPairAddressAtom = atom<Address | undefined>(undefined)
+
+/**
+ * Contribution Amount
+ */
+export const contributionAmountAtom = atom<bigint | undefined>(undefined)

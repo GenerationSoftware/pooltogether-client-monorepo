@@ -6,6 +6,7 @@ import {
   useVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { ArrowPathRoundedSquareIcon, TrashIcon, WrenchIcon } from '@heroicons/react/24/outline'
+import { ArrowTrendingUpIcon } from '@heroicons/react/24/outline'
 import { useScreenSize } from '@shared/generic-react-hooks'
 import { VaultBadge } from '@shared/react-components'
 import { Spinner, Table, TableData, Tooltip } from '@shared/ui'
@@ -13,9 +14,10 @@ import { getBlockExplorerUrl, LINKS, shorten } from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { SupportedNetwork } from 'src/types'
 import { zeroAddress } from 'viem'
 import { useAccount } from 'wagmi'
-import { SUPPORTED_NETWORKS } from '@constants/config'
+import { NETWORK_CONFIG, SUPPORTED_NETWORKS } from '@constants/config'
 import { useDeployedVaultState } from '@hooks/useDeployedVaultState'
 import { useLiquidationPairSteps } from '@hooks/useLiquidationPairSteps'
 import { useUserDeployedVaults } from '@hooks/useUserDeployedVaults'
@@ -213,6 +215,10 @@ const VaultActionsItem = (props: ItemProps) => {
 
   const { removeVault } = useUserDeployedVaults()
 
+  const onClickContribute = () => {
+    router.push(`/contribute/${vault.chainId}/${vault.address}`)
+  }
+
   const onClickSetLp = () => {
     setLpStep(0)
     router.push(`/lp/${vault.chainId}/${vault.address}`)
@@ -229,6 +235,9 @@ const VaultActionsItem = (props: ItemProps) => {
   const isVaultOwner =
     !!vaultOwner && !!address && vaultOwner.toLowerCase() === address.toLowerCase()
 
+  const isContributorContractAvailable =
+    !!NETWORK_CONFIG[vault.chainId as SupportedNetwork].contributor
+
   const iconClassName = 'h-6 w-6 text-pt-purple-300 cursor-pointer'
   const ownerOnlyIconClassName = classNames(iconClassName, {
     'cursor-default opacity-50': !isVaultOwner
@@ -236,6 +245,11 @@ const VaultActionsItem = (props: ItemProps) => {
 
   return (
     <div className='flex gap-1 items-center'>
+      {isContributorContractAvailable && (
+        <Tooltip content='Contribute'>
+          <ArrowTrendingUpIcon onClick={onClickContribute} className={iconClassName} />
+        </Tooltip>
+      )}
       <Tooltip content='Set LP'>
         <ArrowPathRoundedSquareIcon
           onClick={isVaultOwner ? onClickSetLp : undefined}
