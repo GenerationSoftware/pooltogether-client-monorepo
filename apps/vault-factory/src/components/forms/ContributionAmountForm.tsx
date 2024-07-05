@@ -75,6 +75,7 @@ export const ContributionAmountForm = (props: ContributionAmountFormProps) => {
               )} available)`
           }}
           label='Contribution Amount'
+          placeholder={`0${!!token ? ` ${token.symbol}` : ''}`}
           className='w-full max-w-md'
         />
         <div className='flex gap-2 items-center'>
