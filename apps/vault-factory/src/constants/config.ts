@@ -107,6 +107,7 @@ export const NETWORK_CONFIG: Record<
       description: string
       vaults: { address: Address; tags?: YieldSourceVaultTag[] }[]
     }[]
+    contributor?: Address
   }
 > = {
   [NETWORK.optimism]: {
@@ -133,21 +134,24 @@ export const NETWORK_CONFIG: Record<
           { address: '0x60c20e80355e92Ef2f1CD96E07088F1b0AF46124' }
         ]
       }
-    ]
+    ],
+    contributor: '0x68A100A3729Fc04ab26Fb4C0862Df22CEec2f18B'
   },
   [NETWORK.arbitrum]: {
     description: `Arbitrum's flagship optimistic rollup on Ethereum.`,
     prizePool: '0x52E7910C4C287848C8828e8b17b8371f4Ebc5D42',
     claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.arbitrum],
     lp: { targetAuctionPeriod: SECONDS_PER_HOUR * 6, targetAuctionPriceUsd: 10 },
-    yieldSources: []
+    yieldSources: [],
+    contributor: '0x5f9292672e33b76b70dea44163c780376b4da397'
   },
   [NETWORK.base]: {
     description: `Coinbase's optimistic rollup on Ethereum.`,
     prizePool: '0x45b2010d8A4f08b53c9fa7544C51dFd9733732cb',
     claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.base],
     lp: { targetAuctionPeriod: SECONDS_PER_HOUR * 6, targetAuctionPriceUsd: 10 },
-    yieldSources: []
+    yieldSources: [],
+    contributor: '0x4e30c0a8cce76940d87ae62eb12f3ac536a996f4'
   },
   [NETWORK.optimism_sepolia]: {
     description: 'Sepolia testnet for the Optimism network.',
@@ -225,3 +229,39 @@ export const VAULT_TAGS: Record<YieldSourceVaultTag, string> = {
 export const LOCAL_STORAGE_KEYS = {
   vaultIds: 'vaultIds'
 } as const
+
+/**
+ * Contributor ABI
+ */
+export const contributorABI = [
+  {
+    inputs: [{ internalType: 'address', name: 'target', type: 'address' }],
+    name: 'AddressEmptyCode',
+    type: 'error'
+  },
+  { inputs: [], name: 'FailedCall', type: 'error' },
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'balance', type: 'uint256' },
+      { internalType: 'uint256', name: 'needed', type: 'uint256' }
+    ],
+    name: 'InsufficientBalance',
+    type: 'error'
+  },
+  {
+    inputs: [{ internalType: 'address', name: 'token', type: 'address' }],
+    name: 'SafeERC20FailedOperation',
+    type: 'error'
+  },
+  {
+    inputs: [
+      { internalType: 'contract IPrizePool', name: 'prizePool', type: 'address' },
+      { internalType: 'address', name: 'vault', type: 'address' },
+      { internalType: 'uint256', name: 'amount', type: 'uint256' }
+    ],
+    name: 'contribute',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  }
+] as const
