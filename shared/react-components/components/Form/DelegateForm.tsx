@@ -47,8 +47,6 @@ export const DelegateForm = (props: DelegateFormProps) => {
 
   const setFormNewDelegateAddressAtom = useSetAtom(delegateFormNewDelegateAddressAtom)
 
-  const disabled = modalView === 'confirming' || modalView === 'waiting'
-
   const [isActiveOverride, setIsActiveOverride] = useState<boolean>(false)
 
   useEffect(() => {
@@ -70,7 +68,7 @@ export const DelegateForm = (props: DelegateFormProps) => {
         <DelegateInput
           formKey='newDelegateAddress'
           autoComplete='off'
-          disabled={disabled}
+          disabled={modalView === 'waiting' || modalView === 'confirming'}
           validate={{
             isValidAddress: (v: string) =>
               isAddress(v?.trim()) ||

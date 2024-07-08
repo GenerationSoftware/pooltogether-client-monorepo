@@ -1,4 +1,3 @@
-import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useSelectedVault,
   useVaultTwabController
@@ -7,12 +6,11 @@ import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { Intl, RichIntl } from '@shared/types'
 import { Modal } from '@shared/ui'
 import { useState } from 'react'
-import { Address } from 'viem'
-import { DelegateTxToastProps } from '../../Toasts/DelegateTxToast'
+import { createDelegateTxToast, DelegateTxToastProps } from '../../Toasts/DelegateTxToast'
 import { DelegateModalBody } from './DelegateModalBody'
 import { DelegateTxButton } from './DelegateTxButton'
 
-export type DelegateModalView = 'main' | 'waiting' | 'success' | 'error' | 'confirming'
+export type DelegateModalView = 'main' | 'waiting' | 'confirming' | 'success' | 'error'
 
 export interface DelegateModalProps {
   onClose?: () => void
@@ -63,9 +61,23 @@ export const DelegateModal = (props: DelegateModalProps) => {
 
   const [view, setView] = useState<DelegateModalView>('main')
 
-  const { data: twabController } = useVaultTwabController(vault as Vault)
+  const [delegateTxHash, setDelegateTxHash] = useState<string>()
+
+  const { data: twabController } = useVaultTwabController(vault!)
+
+  const createToast = () => {
+    if (!!vault && !!delegateTxHash && view === 'confirming') {
+      createDelegateTxToast({
+        vault: vault,
+        txHash: delegateTxHash,
+        addRecentTransaction,
+        intl: intl?.txToast
+      })
+    }
+  }
 
   const handleClose = () => {
+    createToast()
     setIsModalOpen(false)
     setView('main')
   }
@@ -76,10 +88,10 @@ export const DelegateModal = (props: DelegateModalProps) => {
     const modalFooterContent = (
       <div className={'flex flex-col items-center gap-6'}>
         <DelegateTxButton
-          twabController={twabController as Address}
+          twabController={twabController!}
           vault={vault}
-          modalView={view}
           setModalView={setView}
+          setDelegateTxHash={setDelegateTxHash}
           openConnectModal={openConnectModal}
           openChainModal={openChainModal}
           addRecentTransaction={addRecentTransaction}
