@@ -1,15 +1,11 @@
 import { CurrencyValue, TokenIcon } from '@shared/react-components'
 import { TokenWithAmount, TokenWithLogo, TokenWithPrice } from '@shared/types'
 import { Dropdown, DropdownItem, Spinner } from '@shared/ui'
-import {
-  DOLPHIN_ADDRESS,
-  formatBigIntForDisplay,
-  formatNumberForDisplay,
-  lower
-} from '@shared/utilities'
+import { DOLPHIN_ADDRESS, formatNumberForDisplay, lower } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useFormContext } from 'react-hook-form'
+import { getRoundedDownFormattedTokenAmount } from 'src/utils'
 import { formatUnits } from 'viem'
 import { NATIVE_ASSET_IGNORE_AMOUNT } from '@constants/config'
 
@@ -89,8 +85,6 @@ export const TxFormInput = (props: TxFormInputProps) => {
     isValidFormInput(formAmount, token.decimals) && !!token.price
       ? Number(formAmount) * token.price
       : 0
-
-  const formattedBalance = formatBigIntForDisplay(token.amount, token.decimals)
 
   const error =
     !!errors[formKey]?.message && typeof errors[formKey]?.message === 'string'
@@ -180,7 +174,7 @@ export const TxFormInput = (props: TxFormInputProps) => {
           </div>
           <div className='flex gap-1 ml-auto'>
             <span>
-              {t('balance')} {formattedBalance}
+              {t('balance')} {getRoundedDownFormattedTokenAmount(token.amount, token.decimals)}
             </span>
             {showMaxButton && (
               <span

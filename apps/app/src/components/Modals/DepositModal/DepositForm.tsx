@@ -31,6 +31,7 @@ import { atom, useAtom, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import { getRoundedDownFormattedTokenAmount } from 'src/utils'
 import { Address, formatUnits, parseUnits } from 'viem'
 import { useAccount, usePublicClient } from 'wagmi'
 import { ZAP_SETTINGS } from '@constants/config'
@@ -452,7 +453,7 @@ const TokenPickerOption = (props: TokenPickerOptionProps) => {
         </span>
       </span>
       <span className='text-sm text-gray-300 md:text-lg md:text-gray-700'>
-        {formatBigIntForDisplay(token.amount, token.decimals)}
+        {getRoundedDownFormattedTokenAmount(token.amount, token.decimals)}
       </span>
     </div>
   )
