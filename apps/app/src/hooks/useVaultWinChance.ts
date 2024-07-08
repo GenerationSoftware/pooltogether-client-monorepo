@@ -1,8 +1,9 @@
-import { Vault } from '@generationsoftware/hyperstructure-client-js'
+import { Vault, Vaults } from '@generationsoftware/hyperstructure-client-js'
 import {
   useAllVaultPrizeYields,
   useSelectedVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { getVaultId } from '@shared/utilities'
 import { useMemo } from 'react'
 import { useSupportedPrizePools } from './useSupportedPrizePools'
 
@@ -12,7 +13,19 @@ import { useSupportedPrizePools } from './useSupportedPrizePools'
  * @returns
  */
 export const useVaultWinChance = (vault: Vault) => {
-  const { vaults } = useSelectedVaults()
+  const { vaults: selectedVaults } = useSelectedVaults()
+
+  const vaults = useMemo(() => {
+    const isVaultSelected = !!Object.values(selectedVaults.vaults).find(
+      (v) => v.id === getVaultId(vault)
+    )
+
+    if (isVaultSelected) {
+      return selectedVaults
+    } else {
+      return new Vaults([...selectedVaults.allVaultInfo, vault], selectedVaults.publicClients)
+    }
+  }, [vault, selectedVaults])
 
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
