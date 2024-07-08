@@ -9,9 +9,9 @@ import { optimismSepoliaVaults } from './optimismSepolia'
 
 const defaultVaultList: VaultList = {
   name: 'Cabana Vault List',
-  keywords: ['pooltogether', 'cabana', 'g9', 'optimism'],
-  version: { major: 2, minor: 8, patch: 2 },
-  timestamp: '2024-06-04T19:40:08Z',
+  keywords: ['pooltogether', 'cabana', 'g9', 'optimism', 'base', 'arbitrum'],
+  version: { major: 2, minor: 8, patch: 3 },
+  timestamp: '2024-07-08T19:38:00Z',
   logoURI: `${DOMAINS.app}/pooltogether-token-logo.svg`,
   tokens: [
     ...optimismVaults,
