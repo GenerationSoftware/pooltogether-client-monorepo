@@ -6,6 +6,7 @@ import { ReactNode, useEffect, useState } from 'react'
 import { CustomAppProps } from '@pages/_app'
 import { AccountFrame } from './Frames/AccountFrame'
 import { DefaultFrame } from './Frames/DefaultFrame'
+import { VaultFrame } from './Frames/VaultFrame'
 import { Highlight } from './Highlight'
 
 export const AppContainer = (props: AppProps & CustomAppProps) => {
@@ -32,7 +33,13 @@ export const AppContainer = (props: AppProps & CustomAppProps) => {
   }, [])
 
   const pageFrames: { [href: string]: ReactNode } = {
-    account: <AccountFrame user={serverProps.params['user']} />
+    account: <AccountFrame user={serverProps.params['user']} />,
+    vault: (
+      <VaultFrame
+        chainId={serverProps.params['chainId']}
+        vaultAddress={serverProps.params['vaultAddress']}
+      />
+    )
   }
 
   const pageFrame = pageFrames[pathname.split('/')[1]]
