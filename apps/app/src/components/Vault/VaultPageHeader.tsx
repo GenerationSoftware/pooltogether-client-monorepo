@@ -43,7 +43,7 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
               iconClassName='md:h-8 md:w-8'
               networkIconClassName='md:top-5 md:left-5'
               nameClassName={classNames(
-                'mb-1 !text-[1.75rem] font-medium font-grotesk line-clamp-2 md:!text-4xl',
+                'mb-1 !text-[1.75rem] leading-8 font-medium font-grotesk line-clamp-2 md:!text-4xl',
                 { 'text-center': !logoURI }
               )}
               yieldSourceClassName='hidden'
