@@ -30,6 +30,7 @@ export interface TxFormInputProps {
   showTokenPicker?: boolean
   tokenPickerOptions?: DropdownItem[]
   priceImpact?: number
+  fallbackLogoToken?: Partial<TokenWithLogo>
   className?: string
   inputClassName?: string
   disabledCoverClassName?: string
@@ -48,6 +49,7 @@ export const TxFormInput = (props: TxFormInputProps) => {
     showTokenPicker,
     tokenPickerOptions,
     priceImpact,
+    fallbackLogoToken,
     className,
     inputClassName,
     disabledCoverClassName
@@ -114,7 +116,7 @@ export const TxFormInput = (props: TxFormInputProps) => {
 
   const TokenBadge = (props: { className?: string }) => (
     <div className={classNames('flex shrink-0 items-center gap-1', props.className)}>
-      <TokenIcon token={token} />
+      <TokenIcon token={token} fallbackToken={fallbackLogoToken} />
       <span className='text-lg font-semibold md:text-2xl'>{token.symbol}</span>
     </div>
   )

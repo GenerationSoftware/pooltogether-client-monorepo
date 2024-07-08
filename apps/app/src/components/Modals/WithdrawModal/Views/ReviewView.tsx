@@ -7,6 +7,7 @@ import { PrizePoolBadge, TokenIcon } from '@shared/react-components'
 import { Token, TokenWithLogo } from '@shared/types'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
+import { Address } from 'viem'
 import { NetworkFees } from '../../NetworkFees'
 import { withdrawFormShareAmountAtom, withdrawFormTokenAmountAtom } from '../WithdrawForm'
 
@@ -43,6 +44,7 @@ export const ReviewView = (props: ReviewViewProps) => {
               amount: formShareAmount,
               logoURI: vault.logoURI ?? vault.tokenLogoURI
             }}
+            fallbackLogoTokenAddress={tokenData?.address}
           />
           <BasicWithdrawFormInput
             token={{ ...tokenData, amount: formTokenAmount, logoURI: vault.tokenLogoURI }}
@@ -56,10 +58,12 @@ export const ReviewView = (props: ReviewViewProps) => {
 
 interface BasicWithdrawFormInputProps {
   token: Token & Partial<TokenWithLogo> & { amount: string }
+  fallbackLogoTokenAddress?: Address
 }
 
+// TODO: this should probably include token value like in the main view
 const BasicWithdrawFormInput = (props: BasicWithdrawFormInputProps) => {
-  const { token } = props
+  const { token, fallbackLogoTokenAddress } = props
 
   return (
     <div className='bg-pt-transparent p-3 rounded-lg border border-transparent md:p-4'>
@@ -71,7 +75,10 @@ const BasicWithdrawFormInput = (props: BasicWithdrawFormInputProps) => {
           {token.amount}
         </span>
         <div className='flex shrink-0 items-center gap-1'>
-          <TokenIcon token={token} />
+          <TokenIcon
+            token={token}
+            fallbackToken={{ chainId: token.chainId, address: fallbackLogoTokenAddress }}
+          />
           <span className='text-lg font-semibold md:text-2xl'>{token.symbol}</span>
         </div>
       </div>

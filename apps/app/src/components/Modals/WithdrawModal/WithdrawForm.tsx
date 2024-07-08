@@ -165,6 +165,7 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
               onChange={handleShareAmountChange}
               showInfoRow={showInputInfoRows}
               showMaxButton={true}
+              fallbackLogoToken={vaultToken}
               className='mb-0.5'
             />
             <TxFormInput

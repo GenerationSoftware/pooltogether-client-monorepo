@@ -379,6 +379,7 @@ export const DepositForm = (props: DepositFormProps) => {
           priceImpact={priceImpact}
           disabled={isZapping}
           isLoading={isFetchingZapArgs}
+          fallbackLogoToken={vaultToken}
           className='my-0.5 z-10'
           inputClassName={classNames({ '!text-pt-purple-200': isZapping })}
           disabledCoverClassName={classNames({ '!backdrop-brightness-100': isZapping })}

@@ -21,6 +21,7 @@ import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { walletSupportsPermit } from 'src/utils'
+import { Address } from 'viem'
 import { useAccount, usePublicClient } from 'wagmi'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
@@ -156,7 +157,11 @@ const BasicDepositForm = (props: BasicDepositFormProps) => {
   return (
     <div className='w-full flex flex-col'>
       <BasicDepositFormInput token={tokenInfo} className='mb-0.5' />
-      <BasicDepositFormInput token={shareInfo} className='my-0.5' />
+      <BasicDepositFormInput
+        token={shareInfo}
+        fallbackLogoTokenAddress={vaultTokenAddress}
+        className='my-0.5'
+      />
       {!!depositZapMinReceived && (
         <div className='flex flex-col p-2 text-xs text-pt-purple-100'>
           <div className='flex gap-2 items-center'>
@@ -189,12 +194,13 @@ const BasicDepositForm = (props: BasicDepositFormProps) => {
 
 interface BasicDepositFormInputProps {
   token: Token & Partial<TokenWithLogo> & { amount: string }
+  fallbackLogoTokenAddress?: Address
   className?: string
 }
 
 // TODO: this should probably include token value like in the main view
 const BasicDepositFormInput = (props: BasicDepositFormInputProps) => {
-  const { token, className } = props
+  const { token, fallbackLogoTokenAddress, className } = props
 
   return (
     <div
@@ -211,7 +217,10 @@ const BasicDepositFormInput = (props: BasicDepositFormInputProps) => {
           {token.amount}
         </span>
         <div className='flex shrink-0 items-center gap-1'>
-          <TokenIcon token={token} />
+          <TokenIcon
+            token={token}
+            fallbackToken={{ chainId: token.chainId, address: fallbackLogoTokenAddress }}
+          />
           <span className='text-lg font-semibold md:text-2xl'>{token.symbol}</span>
         </div>
       </div>
