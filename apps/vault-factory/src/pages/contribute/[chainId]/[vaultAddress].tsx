@@ -1,7 +1,8 @@
 import {
   usePrizePool,
   usePrizeTokenData,
-  useVault
+  useVault,
+  useVaultShareData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import { useRouter } from 'next/router'
@@ -35,7 +36,7 @@ export default function ContributePage() {
         <Layout isSidebarActive={true}>
           <div className='w-full flex flex-col grow gap-8 lg:flex-row lg:gap-4'>
             <div className='flex flex-col shrink-0 gap-8 items-center p-6 bg-pt-transparent lg:w-[27rem] lg:py-0 lg:pl-2 lg:pr-6 lg:bg-transparent'>
-              <ContributeStepInfo />
+              <ContributeStepInfo chainId={chainId} vaultAddress={vaultAddress} />
             </div>
             <ContributeStepContent chainId={chainId} vaultAddress={vaultAddress} />
           </div>
@@ -47,14 +48,34 @@ export default function ContributePage() {
   }
 }
 
-const ContributeStepInfo = () => {
+interface ContributeStepInfoProps {
+  chainId: SupportedNetwork
+  vaultAddress: Address
+}
+
+const ContributeStepInfo = (props: ContributeStepInfoProps) => {
+  const { chainId, vaultAddress } = props
+
+  const vault = useVault({ chainId, address: vaultAddress })
+
+  const { data: share } = useVaultShareData(vault)
+
+  const prizePoolAddress = NETWORK_CONFIG[chainId]?.prizePool
+  const prizePool = usePrizePool(chainId, prizePoolAddress)
+
+  const { data: prizeToken } = usePrizeTokenData(prizePool)
+
+  if (!share || !prizeToken) {
+    return <Spinner className='my-auto' />
+  }
+
   return (
     <StepInfo
       step={0}
       stepInfo={[
         {
-          title: 'Contribute to a vault',
-          info: 'By contributing WETH to the prize pool on behalf of a prize vault, you increase the chances of it winning prizes.'
+          title: `Make a contribution to the ${share.symbol} vault`,
+          info: `By contributing ${prizeToken.symbol} to the prize pool on behalf of the ${share.symbol} vault, you increase the chances of its depositors winning prizes.`
         }
       ]}
       setStep={() => {}}
