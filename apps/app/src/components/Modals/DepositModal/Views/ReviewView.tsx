@@ -1,6 +1,6 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
-  useCachedVaultLists,
+  useSelectedVaults,
   useToken,
   useTokenPermitSupport,
   useVaultSharePrice,
@@ -22,7 +22,7 @@ import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { walletSupportsPermit } from 'src/utils'
 import { Address } from 'viem'
-import { useAccount, usePublicClient } from 'wagmi'
+import { useAccount } from 'wagmi'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
 import {
@@ -94,8 +94,6 @@ const BasicDepositForm = (props: BasicDepositFormProps) => {
 
   const t_txModals = useTranslations('TxModals')
 
-  const publicClient = usePublicClient({ chainId: vault.chainId })
-
   const formTokenAddress = useAtomValue(depositFormTokenAddressAtom)
   const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
   const formShareAmount = useAtomValue(depositFormShareAmountAtom)
@@ -109,31 +107,20 @@ const BasicDepositForm = (props: BasicDepositFormProps) => {
 
   const { data: share } = useVaultSharePrice(vault)
 
-  const { cachedVaultLists } = useCachedVaultLists()
+  const { vaults } = useSelectedVaults()
 
   const inputVault = useMemo(() => {
-    if (!!vault && !!publicClient && !!tokenAddress) {
+    if (!!vault && !!tokenAddress) {
       const vaultId = getVaultId({ chainId: vault.chainId, address: tokenAddress })
-      const vaults = cachedVaultLists['default']?.tokens ?? []
-      const vaultInfo = vaults.find((v) => getVaultId(v) === vaultId)
-
-      if (!!vaultInfo) {
-        return new Vault(vaultInfo.chainId, vaultInfo.address, publicClient, {
-          decimals: vaultInfo.decimals,
-          name: vaultInfo.name,
-          logoURI: vaultInfo.logoURI
-        })
-      }
+      return Object.values(vaults.vaults).find((v) => getVaultId(v) === vaultId)
     }
-  }, [vault, publicClient, tokenAddress, cachedVaultLists])
+  }, [vault, tokenAddress, vaults])
 
   const shareLogoURI = useMemo(() => {
     if (!!vault) {
-      const defaultVaults = cachedVaultLists['default']?.tokens ?? []
-      const cachedLogoURI = defaultVaults.find((v) => getVaultId(v) === vault.id)?.logoURI
-      return vault.logoURI ?? cachedLogoURI
+      return vault.logoURI ?? vaults.allVaultInfo.find((v) => getVaultId(v) === vault.id)?.logoURI
     }
-  }, [vault, cachedVaultLists])
+  }, [vault, vaults])
 
   if (!share || !token) {
     return <></>

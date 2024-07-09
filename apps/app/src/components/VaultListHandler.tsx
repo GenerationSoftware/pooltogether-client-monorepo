@@ -35,9 +35,13 @@ export const VaultListHandler = () => {
     for (const key in DEFAULT_VAULT_LISTS) {
       const defaultVaultList = DEFAULT_VAULT_LISTS[key as keyof typeof DEFAULT_VAULT_LISTS]
       const cachedVaultList = cachedVaultLists[key]
+
       if (!cachedVaultList || isNewerVersion(defaultVaultList.version, cachedVaultList.version)) {
         cache(key, defaultVaultList)
-        select(key, 'local')
+
+        if (key === 'default') {
+          select(key, 'local')
+        }
       }
     }
   }, [])

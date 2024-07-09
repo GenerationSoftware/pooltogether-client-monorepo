@@ -1,5 +1,5 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { useCachedVaultLists } from '@generationsoftware/hyperstructure-react-hooks'
+import { useSelectedVaults } from '@generationsoftware/hyperstructure-react-hooks'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { ImportedVaultTooltip, VaultBadge } from '@shared/react-components'
 import { getVaultId } from '@shared/utilities'
@@ -19,15 +19,13 @@ export const VaultPageHeader = (props: VaultPageHeaderProps) => {
 
   const t_tooltips = useTranslations('Tooltips')
 
-  const { cachedVaultLists } = useCachedVaultLists()
+  const { vaults } = useSelectedVaults()
 
   const logoURI = useMemo(() => {
     if (!!vault) {
-      const defaultVaults = cachedVaultLists['default']?.tokens ?? []
-      const cachedLogoURI = defaultVaults.find((v) => getVaultId(v) === vault.id)?.logoURI
-      return vault.logoURI ?? cachedLogoURI
+      return vault.logoURI ?? vaults.allVaultInfo.find((v) => getVaultId(v) === vault.id)?.logoURI
     }
-  }, [vault, cachedVaultLists])
+  }, [vault, vaults])
 
   const importedSrcs = useVaultImportedListSrcs(vault!)
 

@@ -1,6 +1,6 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
-  useCachedVaultLists,
+  useSelectedVaults,
   useToken,
   useTokenBalance,
   useTokenPrices,
@@ -33,7 +33,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { getRoundedDownFormattedTokenAmount } from 'src/utils'
 import { Address, formatUnits, parseUnits } from 'viem'
-import { useAccount, usePublicClient } from 'wagmi'
+import { useAccount } from 'wagmi'
 import { ZAP_SETTINGS } from '@constants/config'
 import { useSendDepositZapTransaction } from '@hooks/zaps/useSendDepositZapTransaction'
 import { useZapTokenOptions } from '@hooks/zaps/useZapTokenOptions'
@@ -59,8 +59,6 @@ export const DepositForm = (props: DepositFormProps) => {
 
   const { address: userAddress } = useAccount()
 
-  const publicClient = usePublicClient({ chainId: vault.chainId })
-
   const { data: vaultExchangeRate } = useVaultExchangeRate(vault)
   const { data: vaultToken } = useVaultTokenPrice(vault)
   const { data: vaultTokenWithAmount } = useTokenBalance(
@@ -76,31 +74,20 @@ export const DepositForm = (props: DepositFormProps) => {
 
   const tokenAddress = formTokenAddress ?? vaultToken?.address
 
-  const { cachedVaultLists } = useCachedVaultLists()
+  const { vaults } = useSelectedVaults()
 
   const inputVault = useMemo(() => {
-    if (!!vault && !!publicClient && !!tokenAddress) {
+    if (!!vault && !!tokenAddress) {
       const vaultId = getVaultId({ chainId: vault.chainId, address: tokenAddress })
-      const vaults = cachedVaultLists['default']?.tokens ?? []
-      const vaultInfo = vaults.find((v) => getVaultId(v) === vaultId)
-
-      if (!!vaultInfo) {
-        return new Vault(vaultInfo.chainId, vaultInfo.address, publicClient, {
-          decimals: vaultInfo.decimals,
-          name: vaultInfo.name,
-          logoURI: vaultInfo.logoURI
-        })
-      }
+      return Object.values(vaults.vaults).find((v) => getVaultId(v) === vaultId)
     }
-  }, [vault, publicClient, tokenAddress, cachedVaultLists])
+  }, [vault, tokenAddress, vaults])
 
   const shareLogoURI = useMemo(() => {
     if (!!vault) {
-      const defaultVaults = cachedVaultLists['default']?.tokens ?? []
-      const cachedLogoURI = defaultVaults.find((v) => getVaultId(v) === vault.id)?.logoURI
-      return vault.logoURI ?? cachedLogoURI
+      return vault.logoURI ?? vaults.allVaultInfo.find((v) => getVaultId(v) === vault.id)?.logoURI
     }
-  }, [vault, cachedVaultLists])
+  }, [vault, vaults])
 
   const { data: tokenData } = useToken(vault.chainId, tokenAddress!)
   const { data: tokenPrices } = useTokenPrices(vault.chainId, !!tokenAddress ? [tokenAddress] : [])
@@ -370,6 +357,9 @@ export const DepositForm = (props: DepositFormProps) => {
           showMaxButton={true}
           showTokenPicker={!!ZAP_SETTINGS[vault.chainId]}
           tokenPickerOptions={tokenPickerOptions}
+          fallbackLogoToken={
+            !!inputVault ? { ...inputVault.tokenData, logoURI: inputVault.tokenLogoURI } : undefined
+          }
           className='mb-0.5 z-20'
         />
         <TxFormInput
@@ -427,14 +417,12 @@ interface TokenPickerOptionProps {
 const TokenPickerOption = (props: TokenPickerOptionProps) => {
   const { token, className } = props
 
-  const { cachedVaultLists } = useCachedVaultLists()
+  const { vaults } = useSelectedVaults()
 
-  const tokenInVaultList = useMemo(() => {
+  const vault = useMemo(() => {
     const vaultId = getVaultId(token)
-    const vaults = cachedVaultLists['default']?.tokens ?? []
-
-    return vaults.find((v) => getVaultId(v) === vaultId)
-  }, [token, cachedVaultLists])
+    return Object.values(vaults.vaults).find((v) => getVaultId(v) === vaultId)
+  }, [token, vaults])
 
   return (
     <div
@@ -447,7 +435,10 @@ const TokenPickerOption = (props: TokenPickerOptionProps) => {
       )}
     >
       <span className='flex items-center gap-1'>
-        <TokenIcon token={{ logoURI: tokenInVaultList?.logoURI, ...token }} />
+        <TokenIcon
+          token={{ ...token, logoURI: vault?.logoURI }}
+          fallbackToken={!!vault ? { ...vault.tokenData, logoURI: vault.tokenLogoURI } : undefined}
+        />
         <span className='text-lg text-pt-purple-50 md:text-2xl md:text-pt-purple-600'>
           {token.symbol}
         </span>

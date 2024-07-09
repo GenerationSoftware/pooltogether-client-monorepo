@@ -1,6 +1,6 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
-  useCachedVaultLists,
+  useSelectedVaults,
   useTokenBalance,
   useUserVaultShareBalance,
   useVaultExchangeRate,
@@ -52,15 +52,13 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
   )
   const shareBalance = isFetchedVaultBalance && !!vaultBalance ? vaultBalance.amount : 0n
 
-  const { cachedVaultLists } = useCachedVaultLists()
+  const { vaults } = useSelectedVaults()
 
   const shareLogoURI = useMemo(() => {
     if (!!vault) {
-      const defaultVaults = cachedVaultLists['default']?.tokens ?? []
-      const cachedLogoURI = defaultVaults.find((v) => getVaultId(v) === vault.id)?.logoURI
-      return vault.logoURI ?? cachedLogoURI
+      return vault.logoURI ?? vaults.allVaultInfo.find((v) => getVaultId(v) === vault.id)?.logoURI
     }
-  }, [vault, cachedVaultLists])
+  }, [vault, vaults])
 
   const formMethods = useForm<TxFormValues>({
     mode: 'onChange',

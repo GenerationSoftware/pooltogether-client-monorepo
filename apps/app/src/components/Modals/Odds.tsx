@@ -1,8 +1,8 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
-  useCachedVaultLists,
   useDrawPeriod,
   usePrizeOdds,
+  useSelectedVaults,
   useVaultShareData,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
@@ -17,7 +17,6 @@ import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { parseUnits } from 'viem'
-import { usePublicClient } from 'wagmi'
 import {
   depositFormShareAmountAtom,
   depositFormTokenAddressAtom,
@@ -35,8 +34,6 @@ export const Odds = (props: OddsProps) => {
   const t_common = useTranslations('Common')
   const t_txModals = useTranslations('TxModals')
 
-  const publicClient = usePublicClient({ chainId: vault.chainId })
-
   const formTokenAddress = useAtomValue(depositFormTokenAddressAtom)
   const formTokenAmount = useAtomValue(depositFormTokenAmountAtom)
   const formShareAmount = useAtomValue(depositFormShareAmountAtom)
@@ -46,23 +43,14 @@ export const Odds = (props: OddsProps) => {
 
   const inputTokenAddress = formTokenAddress ?? vaultToken?.address
 
-  const { cachedVaultLists } = useCachedVaultLists()
+  const { vaults } = useSelectedVaults()
 
   const inputVault = useMemo(() => {
-    if (!!vault && !!publicClient && !!inputTokenAddress) {
+    if (!!vault && !!inputTokenAddress) {
       const vaultId = getVaultId({ chainId: vault.chainId, address: inputTokenAddress })
-      const vaults = cachedVaultLists['default']?.tokens ?? []
-      const vaultInfo = vaults.find((v) => getVaultId(v) === vaultId)
-
-      if (!!vaultInfo) {
-        return new Vault(vaultInfo.chainId, vaultInfo.address, publicClient, {
-          decimals: vaultInfo.decimals,
-          name: vaultInfo.name,
-          logoURI: vaultInfo.logoURI
-        })
-      }
+      return Object.values(vaults.vaults).find((v) => getVaultId(v) === vaultId)
     }
-  }, [vault, publicClient, inputTokenAddress, cachedVaultLists])
+  }, [vault, inputTokenAddress, vaults])
 
   const { data: inputShare } = useVaultShareData(inputVault!)
 
