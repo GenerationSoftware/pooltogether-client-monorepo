@@ -1,9 +1,8 @@
 import classNames from 'classnames'
-import { PPCOverTimeChart } from '@components/Charts/PPCOverTimeChart'
-import { TVLByTokenChart } from '@components/Charts/TVLByToken'
-import { TVLOverTimeChart } from '@components/Charts/TVLOverTimeChart'
-import { PrizesCard } from '@components/Stats/PrizesCard'
-import { WalletsCard } from '@components/Stats/WalletsCard'
+import { PrizeStats } from '@components/Stats/PrizeStats'
+import { TVLStats } from '@components/Stats/TVLStats'
+import { UserStats } from '@components/Stats/UserStats'
+import { YieldStats } from '@components/Stats/YieldStats'
 import { usePrizePool } from '@hooks/usePrizePool'
 
 interface StatsViewProps {
@@ -17,16 +16,11 @@ export const StatsView = (props: StatsViewProps) => {
   const prizePool = usePrizePool(chainId)
 
   return (
-    <div className={classNames('w-full flex flex-col gap-6 items-center', className)}>
-      <div className='w-full grid grid-cols-1 gap-6 items-center md:grid-cols-2'>
-        <PrizesCard prizePool={prizePool} className='h-full' />
-        <WalletsCard prizePool={prizePool} className='h-full' />
-      </div>
-      <div className='w-full grid grid-cols-1 gap-6 items-center md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]'>
-        <TVLOverTimeChart prizePool={prizePool} />
-        <TVLByTokenChart prizePool={prizePool} />
-      </div>
-      <PPCOverTimeChart prizePool={prizePool} hideFirstDraws={3} />
+    <div className={classNames('w-full flex flex-col gap-12 items-center', className)}>
+      <UserStats prizePool={prizePool} />
+      <PrizeStats prizePool={prizePool} />
+      <TVLStats prizePool={prizePool} />
+      <YieldStats prizePool={prizePool} />
     </div>
   )
 }

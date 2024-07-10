@@ -67,7 +67,7 @@ export const TVLOverTimeChart = (props: TVLOverTimeChartProps) => {
     <div
       className={classNames('w-full flex flex-col gap-2 font-medium text-pt-purple-800', className)}
     >
-      <span className='ml-2 text-pt-purple-200'>TVL Over Time</span>
+      <span className='ml-2 text-pt-purple-100 font-bold'>TVL Over Time</span>
       {isReady ? (
         <AreaChart
           data={chartData}

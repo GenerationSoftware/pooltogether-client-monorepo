@@ -37,7 +37,7 @@ export const TVLByTokenChart = (props: TVLByTokenChartProps) => {
 
   return (
     <div className={classNames('w-full flex flex-col font-medium text-pt-purple-800', className)}>
-      <span className='ml-2 text-pt-purple-200'>TVL By Token</span>
+      <span className='ml-2 text-pt-purple-100 font-bold'>TVL By Token</span>
       {isReady ? (
         <PieChart
           data={chartData}
