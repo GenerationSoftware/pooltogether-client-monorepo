@@ -72,7 +72,7 @@ export const useSendDeployLiquidationPairTransaction = (
       tokenOut,
       BigInt(targetAuctionPeriod ?? 0),
       targetAuctionPrice,
-      parseEther(`${smoothingFactor}`)
+      parseEther(smoothingFactor.toFixed(6))
     ],
     query: { enabled }
   })

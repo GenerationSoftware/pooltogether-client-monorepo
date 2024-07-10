@@ -19,6 +19,7 @@ export type FormKey =
   | 'deployedVaultChainId'
   | 'deployedVaultAddress'
   | 'lpAddress'
+  | 'contributionAmount'
 
 export type VaultState = 'active' | 'invalid' | 'missingLiquidationPair' | 'missingClaimer'
 

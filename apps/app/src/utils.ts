@@ -1,8 +1,8 @@
 import { connectorsForWallets, WalletList } from '@rainbow-me/rainbowkit'
 import { getInitialCustomRPCs } from '@shared/generic-react-hooks'
-import { NETWORK, parseQueryParam } from '@shared/utilities'
+import { formatNumberForDisplay, NETWORK, parseQueryParam } from '@shared/utilities'
 import deepmerge from 'deepmerge'
-import { Chain, http, Transport } from 'viem'
+import { Chain, formatUnits, http, Transport } from 'viem'
 import { createConfig, fallback } from 'wagmi'
 import { RPC_URLS, WAGMI_CHAINS, WALLET_STATS_API_URL, WALLETS } from '@constants/config'
 
@@ -173,4 +173,24 @@ export const getCleanURI = (URI: string) => {
   } else {
     return URI
   }
+}
+
+/**
+ * Returns a formatted token amount rounded down to an appropriate number of fractional digits
+ * @param amount a token amount to format
+ * @param decimals the token's decimals
+ * @returns
+ */
+export const getRoundedDownFormattedTokenAmount = (amount: bigint, decimals: number) => {
+  const shiftedAmount = formatUnits(amount, decimals)
+
+  const fractionDigits = shiftedAmount.split('.')[1] ?? ''
+  const numFractionLeadingZeroes = (fractionDigits.match(/^0+/) || [''])[0].length
+  const maximumFractionDigits = Math.max(Math.min(numFractionLeadingZeroes + 1, 4), 3)
+
+  const roundingMultiplier = 10 ** maximumFractionDigits
+  const roundedAmount =
+    Math.floor(parseFloat(shiftedAmount) * roundingMultiplier) / roundingMultiplier
+
+  return formatNumberForDisplay(roundedAmount, { maximumFractionDigits })
 }

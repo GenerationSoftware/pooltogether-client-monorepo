@@ -60,7 +60,7 @@ export const useAllVaultHistoricalSharePrices = (chainId: number, vaults: Vaults
                   price: parseFloat(
                     formatEther(
                       getAssetsFromShares(
-                        parseEther(`${entry.price}`),
+                        parseEther(entry.price.toFixed(18)),
                         exchangeRate,
                         shareToken.decimals
                       )

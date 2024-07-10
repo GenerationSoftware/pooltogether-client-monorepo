@@ -1,10 +1,8 @@
-import {
-  useAllPrizeValue,
-  useCachedVaultLists
-} from '@generationsoftware/hyperstructure-react-hooks'
+import { useAllPrizeValue } from '@generationsoftware/hyperstructure-react-hooks'
 import { CurrencyValue, TokenIcon } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import { isTestnet, lower, NETWORK, sToMs } from '@shared/utilities'
+import defaultVaultList from '@vaultLists/default'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
@@ -57,9 +55,6 @@ export const HomeHeader = () => {
 const TokenFlipper = (props: { className?: string }) => {
   const { className } = props
 
-  const { cachedVaultLists } = useCachedVaultLists()
-  const defaultVaultList = cachedVaultLists['default']
-
   const tokens = useMemo(() => {
     const vaultTokens: { chainId: number; address: Address }[] = []
     const ignoreList: { [chainId: number]: Lowercase<Address>[] } = {
@@ -69,22 +64,20 @@ const TokenFlipper = (props: { className?: string }) => {
       ]
     }
 
-    if (!!defaultVaultList) {
-      defaultVaultList.tokens.forEach((vaultInfo) => {
-        const tokenAddress = vaultInfo.extensions?.underlyingAsset?.address
+    defaultVaultList.tokens.forEach((vaultInfo) => {
+      const tokenAddress = vaultInfo.extensions?.underlyingAsset?.address
 
-        if (
-          !isTestnet(vaultInfo.chainId) &&
-          !!tokenAddress &&
-          !ignoreList[vaultInfo.chainId]?.includes(lower(tokenAddress))
-        ) {
-          vaultTokens.push({
-            chainId: vaultInfo.chainId,
-            address: tokenAddress
-          })
-        }
-      })
-    }
+      if (
+        !isTestnet(vaultInfo.chainId) &&
+        !!tokenAddress &&
+        !ignoreList[vaultInfo.chainId]?.includes(lower(tokenAddress))
+      ) {
+        vaultTokens.push({
+          chainId: vaultInfo.chainId,
+          address: tokenAddress
+        })
+      }
+    })
 
     return vaultTokens
   }, [defaultVaultList])

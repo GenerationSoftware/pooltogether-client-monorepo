@@ -54,7 +54,7 @@ export const useAllVaultSharePrices = (vaults: Vaults) => {
               ? parseFloat(
                   formatEther(
                     getAssetsFromShares(
-                      parseEther(`${tokenPrice}`),
+                      parseEther(tokenPrice.toFixed(18)),
                       exchangeRate,
                       shareToken.decimals
                     )

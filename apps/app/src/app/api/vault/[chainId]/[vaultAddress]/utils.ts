@@ -15,7 +15,6 @@ import {
   SECONDS_PER_YEAR,
   vaultABI
 } from '@shared/utilities'
-import defaultVaultList from '@vaultLists/default'
 import { NextRequest } from 'next/server'
 import {
   Address,
@@ -30,7 +29,12 @@ import {
   PublicClient,
   zeroAddress
 } from 'viem'
-import { RPC_URLS, TWAB_REWARDS_SETTINGS, WAGMI_CHAINS } from '@constants/config'
+import {
+  DEFAULT_VAULT_LISTS,
+  RPC_URLS,
+  TWAB_REWARDS_SETTINGS,
+  WAGMI_CHAINS
+} from '@constants/config'
 import { VaultApiParams } from './route'
 
 export const getChainIdFromParams = (params: VaultApiParams) => {
@@ -73,9 +77,10 @@ export const getVault = (
   address: Address,
   publicClient: PublicClient
 ) => {
-  const existingVaultInfo = defaultVaultList.tokens.find(
-    (t) => getVaultId(t) === getVaultId({ chainId, address })
-  )
+  const existingVaultInfo = Object.values(DEFAULT_VAULT_LISTS)
+    .map((list) => list.tokens)
+    .flat()
+    .find((t) => getVaultId(t) === getVaultId({ chainId, address }))
 
   const vault = new Vault(chainId, address, publicClient, {
     decimals: existingVaultInfo?.decimals,
@@ -230,7 +235,9 @@ export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
   const sharePrice =
     !!assetPrice && !!exchangeRate
       ? parseFloat(
-          formatEther(getAssetsFromShares(parseEther(`${assetPrice}`), exchangeRate, shareDecimals))
+          formatEther(
+            getAssetsFromShares(parseEther(assetPrice.toFixed(18)), exchangeRate, shareDecimals)
+          )
         )
       : undefined
   const prizeAssetPrice = prices[lower(prizeAssetAddress)]

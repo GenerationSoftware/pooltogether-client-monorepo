@@ -17,8 +17,10 @@ import {
   xdefiWallet,
   zerionWallet
 } from '@rainbow-me/rainbowkit/wallets'
+import { VaultList } from '@shared/types'
 import { NETWORK, POOL_TOKEN_ADDRESSES, USDC_TOKEN_ADDRESSES } from '@shared/utilities'
 import defaultVaultList from '@vaultLists/default'
+import memeVaultList from '@vaultLists/meme'
 import { Address, parseUnits } from 'viem'
 import {
   arbitrum,
@@ -90,8 +92,9 @@ export const RPC_URLS = {
  * Default vault lists
  */
 export const DEFAULT_VAULT_LISTS = {
-  default: defaultVaultList
-} as const
+  default: defaultVaultList,
+  meme: memeVaultList
+} as const satisfies { [vaultListId: string]: VaultList }
 
 /**
  * Event queries' start blocks

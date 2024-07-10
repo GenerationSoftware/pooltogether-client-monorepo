@@ -7,25 +7,23 @@ import {
 import { Intl } from '@shared/types'
 import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
-import { Address, isAddress } from 'viem'
+import { Address, isAddress, TransactionReceipt } from 'viem'
 import { useAccount } from 'wagmi'
 import { DelegateModalView } from '.'
 import { TransactionButton } from '../../Buttons/TransactionButton'
 import { delegateFormNewDelegateAddressAtom } from '../../Form/DelegateForm'
-import { createDelegateTxToast, DelegateTxToastProps } from '../../Toasts/DelegateTxToast'
 
 interface DelegateTxButtonProps {
   twabController: Address
   vault: Vault
-  modalView: string
   setModalView: (view: DelegateModalView) => void
+  setDelegateTxHash: (txHash: string) => void
   openConnectModal?: () => void
   openChainModal?: () => void
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
-  onSuccessfulDelegation?: () => void
+  onSuccessfulDelegation?: (chainId: number, txReceipt: TransactionReceipt) => void
   intl?: {
     base?: Intl<'updateDelegatedAddress' | 'delegateTx' | 'switchNetwork' | 'switchingNetwork'>
-    txToast?: DelegateTxToastProps['intl']
     common?: Intl<'connectWallet'>
   }
 }
@@ -34,8 +32,8 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
   const {
     twabController,
     vault,
-    modalView,
     setModalView,
+    setDelegateTxHash,
     openConnectModal,
     openChainModal,
     addRecentTransaction,
@@ -55,17 +53,6 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
     { refetchOnWindowFocus: true }
   )
 
-  const createToast = (delegateTxHash: Address) => {
-    if (!!vault && !!delegateTxHash) {
-      createDelegateTxToast({
-        vault: vault,
-        txHash: delegateTxHash,
-        addRecentTransaction: addRecentTransaction,
-        intl: intl?.txToast
-      })
-    }
-  }
-
   const {
     isWaiting: isWaitingDelegation,
     isConfirming: isConfirmingDelegation,
@@ -74,23 +61,17 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
     sendDelegateTransaction
   } = useSendDelegateTransaction(twabController, newDelegateAddress, vault, {
     onSend: () => {
-      setModalView('confirming')
+      setModalView('waiting')
     },
-    onSuccess: () => {
+    onSuccess: (txReceipt) => {
       refetchUserVaultDelegate()
-      onSuccessfulDelegation?.()
+      onSuccessfulDelegation?.(vault.chainId, txReceipt)
       setModalView('main')
     },
     onError: () => {
-      setModalView('main')
+      setModalView('error')
     }
   })
-
-  useEffect(() => {
-    if (isWaitingDelegation && modalView !== 'waiting') {
-      setModalView('waiting')
-    }
-  }, [isWaitingDelegation])
 
   useEffect(() => {
     if (
@@ -99,14 +80,12 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
       !isWaitingDelegation &&
       !isSuccessfulDelegation
     ) {
-      if (delegateTxHash) {
-        createToast(delegateTxHash)
-      }
+      setDelegateTxHash(delegateTxHash)
       setModalView('confirming')
     }
   }, [delegateTxHash, isConfirmingDelegation])
 
-  const delegateAddressHasChanged = newDelegateAddress !== delegate
+  const hasDelegateAddressChanged = newDelegateAddress !== delegate
 
   const delegateEnabled =
     !isDisconnected &&
@@ -115,12 +94,8 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
     isAddress(newDelegateAddress) &&
     !isWaitingDelegation &&
     !isConfirmingDelegation &&
-    delegateAddressHasChanged &&
+    hasDelegateAddressChanged &&
     !!sendDelegateTransaction
-
-  if (isDisconnected) {
-    return <></>
-  }
 
   return (
     <TransactionButton

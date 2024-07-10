@@ -70,9 +70,13 @@ export const useZapTokenOptions = (chainId: number) => {
   const { data: tokenPrices } = useTokenPrices(chainId, tokenAddresses)
 
   const { vault } = useSelectedVault()
+
   const { cachedVaultLists } = useCachedVaultLists()
   const vaults = useVaults(
-    cachedVaultLists['default']?.tokens.filter((t) => t.chainId === chainId) ?? []
+    Object.values(cachedVaultLists)
+      .map((list) => list?.tokens ?? [])
+      .flat()
+      .filter((t) => t.chainId === chainId)
   )
   const { data: vaultBalances } = useAllUserVaultBalances(vaults, userAddress as Address, {
     refetchOnWindowFocus: true

@@ -13,6 +13,7 @@ import { getVaultId, NETWORK, STABLECOINS } from '@shared/utilities'
 import classNames from 'classnames'
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
+import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/router'
 import { useEffect, useMemo } from 'react'
 import { useAccount } from 'wagmi'
@@ -32,6 +33,7 @@ export const VaultFilters = (props: VaultFiltersProps) => {
   const { className } = props
 
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   const t = useTranslations('Vaults')
 
@@ -70,11 +72,13 @@ export const VaultFilters = (props: VaultFiltersProps) => {
 
   // Getting filter ID from URL query:
   useEffect(() => {
-    const rawUrlNetwork =
-      router.query['network'] || router.asPath.match(/(?<=[?&]network=)(\d*?)(?=(&|$))/)?.[0]
+    const rawUrlNetwork = searchParams?.get('network')
     const chainId =
       !!rawUrlNetwork && typeof rawUrlNetwork === 'string' ? parseInt(rawUrlNetwork) : undefined
-    !!chainId && chainId in NETWORK && setFilterId(chainId.toString())
+
+    if (!!chainId && chainId in NETWORK) {
+      setFilterId(chainId.toString())
+    }
   }, [])
 
   const filterOnClick = (vaults: Vault[], filter: (vaults: Vault[]) => Vault[]) => {
@@ -101,19 +105,35 @@ export const VaultFilters = (props: VaultFiltersProps) => {
     )
   }
 
+  const handleQueryParamChanges = ({ network }: { network?: number }) => {
+    if (!!network) {
+      router.push({ query: { ...router.query, network } }, undefined, { shallow: true })
+    } else {
+      const newQuery = { ...router.query }
+      delete newQuery['network']
+      router.push({ query: newQuery }, undefined, { shallow: true })
+    }
+  }
+
   const filterItems: (SelectionItem & { filter: () => void })[] = useMemo(
     () => [
       {
         id: 'all',
         content: t('filters.showAll'),
-        onClick: () => setFilterId('all'),
+        onClick: () => {
+          setFilterId('all')
+          handleQueryParamChanges({})
+        },
         filter: filterAll,
         className: 'whitespace-nowrap'
       },
       {
         id: 'stablecoin',
         content: t('filters.stablecoins'),
-        onClick: () => setFilterId('stablecoin'),
+        onClick: () => {
+          setFilterId('stablecoin')
+          handleQueryParamChanges({})
+        },
         filter: filterStablecoins,
         className: 'whitespace-nowrap'
       },
@@ -121,7 +141,10 @@ export const VaultFilters = (props: VaultFiltersProps) => {
         return {
           id: network.toString(),
           content: <NetworkIcon chainId={network} className='h-5 w-5' />,
-          onClick: () => setFilterId(network.toString()),
+          onClick: () => {
+            setFilterId(network.toString())
+            handleQueryParamChanges({ network })
+          },
           filter: () => filterNetwork(network)
         }
       })
@@ -133,23 +156,19 @@ export const VaultFilters = (props: VaultFiltersProps) => {
     isFetchedSortedVaults && filterItems.find((item) => item.id === filterId)?.filter()
   }, [filterItems, filterId, listFilteredVaultsArray, isFetchedSortedVaults])
 
-  if (router.isReady) {
-    return (
-      <div className='w-full flex justify-center'>
-        <div
-          className={classNames(
-            'flex justify-between items-center overflow-x-auto no-scrollbar',
-            'lg:bg-pt-bg-purple-dark lg:py-4 lg:px-8 lg:rounded-3xl',
-            className
-          )}
-        >
-          <Selection items={filterItems} activeItem={filterId} buttonColor='purple' />
-        </div>
+  return (
+    <div className='w-full flex justify-center'>
+      <div
+        className={classNames(
+          'flex justify-between items-center overflow-x-auto no-scrollbar',
+          'lg:bg-pt-bg-purple-dark lg:py-4 lg:px-8 lg:rounded-3xl',
+          className
+        )}
+      >
+        <Selection items={filterItems} activeItem={filterId} buttonColor='purple' />
       </div>
-    )
-  }
-
-  return <></>
+    </div>
+  )
 }
 
 const getVaultListIdFilteredVaults = (

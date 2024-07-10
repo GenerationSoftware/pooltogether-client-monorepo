@@ -118,7 +118,11 @@ export const useVaultPromotionsApr = (
                 parseFloat(formatUnits(tokensPerEpoch, rewardToken.decimals)) * numValidEpochs
               const tokenRewardsValue = tokenRewards * (rewardToken.price ?? 0)
 
-              allTokenRewardsValue[tokenAddress] = tokenRewardsValue
+              if (allTokenRewardsValue[tokenAddress] === undefined) {
+                allTokenRewardsValue[tokenAddress] = 0
+              }
+
+              allTokenRewardsValue[tokenAddress] += tokenRewardsValue
               futureRewards += tokenRewardsValue
             }
           })
