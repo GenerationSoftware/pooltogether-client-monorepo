@@ -1,17 +1,15 @@
-import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
   useBlockAtTimestamp,
   useLiquidationEvents
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { PRIZE_POOLS, SECONDS_PER_DAY, sToMs } from '@shared/utilities'
+import { SECONDS_PER_DAY, sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtom } from 'jotai'
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 import { currentTimestampAtom } from 'src/atoms'
-import { PublicClient } from 'viem'
-import { usePublicClient } from 'wagmi'
 import { LiquidationsTable } from '@components/Liquidations/LiquidationsTable'
 import { QUERY_START_BLOCK } from '@constants/config'
+import { usePrizePool } from '@hooks/usePrizePool'
 
 interface LiquidationsViewProps {
   chainId: number
@@ -21,32 +19,17 @@ interface LiquidationsViewProps {
 export const LiquidationsView = (props: LiquidationsViewProps) => {
   const { chainId, className } = props
 
-  const publicClient = usePublicClient({ chainId })
-
   const [currentTimestamp, setCurrentTimestamp] = useAtom(currentTimestampAtom)
 
-  const prizePool = useMemo(() => {
-    const prizePoolInfo = PRIZE_POOLS.find(
-      (pool) => pool.chainId === chainId
-    ) as (typeof PRIZE_POOLS)[number]
-
-    return new PrizePool(
-      prizePoolInfo.chainId,
-      prizePoolInfo.address,
-      publicClient as PublicClient,
-      prizePoolInfo.options
-    )
-  }, [chainId, publicClient])
+  const prizePool = usePrizePool(chainId)
 
   const { data: minBlock } = useBlockAtTimestamp(
     prizePool.chainId,
     currentTimestamp - SECONDS_PER_DAY
   )
 
-  const fromBlock = !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
-
   const { refetch: refetchLiquidationEvents } = useLiquidationEvents(prizePool?.chainId, {
-    fromBlock
+    fromBlock: !!prizePool ? QUERY_START_BLOCK[prizePool.chainId] : undefined
   })
 
   // Automatic data refetching

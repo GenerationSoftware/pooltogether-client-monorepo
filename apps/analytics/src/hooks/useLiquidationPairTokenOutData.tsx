@@ -10,7 +10,7 @@ export const useLiquidationPairTokenOutData = (
   const { data: tokenOutAddress, isFetched: isFetchedTokenOutAddress } =
     useLiquidationPairTokenOutAddress(chainId, lpAddress)
 
-  const { data: token, isFetched: isFetchedToken } = useToken(chainId, tokenOutAddress as Address)
+  const { data: token, isFetched: isFetchedToken } = useToken(chainId, tokenOutAddress!)
 
   const isFetched = isFetchedTokenOutAddress && isFetchedToken
 

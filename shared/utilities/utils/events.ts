@@ -3,19 +3,19 @@ import { LIQUIDATION_ROUTER_ADDRESSES, TWAB_REWARDS_ADDRESSES } from '../constan
 import { getLiquidationPairAddresses } from './liquidations'
 
 /**
- * Returns `Deposit` events on a given vault
+ * Returns `Deposit` events
  * @param publicClient a public Viem client to query through
- * @param vaultAddress a vault address to get events for
+ * @param vaultAddresses vault addresses to get events for
  * @param options optional settings
  * @returns
  */
 export const getDepositEvents = async (
   publicClient: PublicClient,
-  vaultAddress: Address,
-  options?: { fromBlock?: bigint; toBlock?: bigint }
+  vaultAddresses: Address[],
+  options?: { sender?: Address[]; owner?: Address[]; fromBlock?: bigint; toBlock?: bigint }
 ) => {
   return await publicClient.getLogs({
-    address: vaultAddress,
+    address: vaultAddresses,
     event: {
       inputs: [
         { indexed: true, internalType: 'address', name: 'sender', type: 'address' },
@@ -26,6 +26,7 @@ export const getDepositEvents = async (
       name: 'Deposit',
       type: 'event'
     },
+    args: { sender: options?.sender, owner: options?.owner },
     fromBlock: options?.fromBlock,
     toBlock: options?.toBlock ?? 'latest',
     strict: true
@@ -33,19 +34,25 @@ export const getDepositEvents = async (
 }
 
 /**
- * Returns `Withdraw` events on a given vault
+ * Returns `Withdraw` events
  * @param publicClient a public Viem client to query through
- * @param vaultAddress a vault address to get events for
+ * @param vaultAddresses vault addresses to get events for
  * @param options optional settings
  * @returns
  */
 export const getWithdrawEvents = async (
   publicClient: PublicClient,
-  vaultAddress: Address,
-  options?: { fromBlock?: bigint; toBlock?: bigint }
+  vaultAddresses: Address[],
+  options?: {
+    sender?: Address[]
+    receiver?: Address[]
+    owner?: Address[]
+    fromBlock?: bigint
+    toBlock?: bigint
+  }
 ) => {
   return await publicClient.getLogs({
-    address: vaultAddress,
+    address: vaultAddresses,
     event: {
       inputs: [
         { indexed: true, internalType: 'address', name: 'sender', type: 'address' },
@@ -57,6 +64,7 @@ export const getWithdrawEvents = async (
       name: 'Withdraw',
       type: 'event'
     },
+    args: { sender: options?.sender, receiver: options?.receiver, owner: options?.owner },
     fromBlock: options?.fromBlock,
     toBlock: options?.toBlock ?? 'latest',
     strict: true

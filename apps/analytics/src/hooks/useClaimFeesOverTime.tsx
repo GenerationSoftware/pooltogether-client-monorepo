@@ -3,12 +3,10 @@ import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { claimerABI, DEFAULT_CLAIMER_ADDRESSES, prizePoolABI } from '@shared/utilities'
 import { useQueries } from '@tanstack/react-query'
 import { useMemo } from 'react'
-import { usePublicClient, useReadContract } from 'wagmi'
+import { useReadContract } from 'wagmi'
 
 // TODO: BUG - infura seems to be returning bogus/cached data, with viem batching or not
 export const useClaimFeesOverTime = (prizePool: PrizePool, blockNumbers: bigint[]) => {
-  const publicClient = usePublicClient({ chainId: prizePool.chainId })
-
   const claimerAddress = DEFAULT_CLAIMER_ADDRESSES[prizePool.chainId]
 
   const { data: numTiers } = useReadContract({
@@ -23,10 +21,10 @@ export const useClaimFeesOverTime = (prizePool: PrizePool, blockNumbers: bigint[
   const results = useQueries({
     queries: blockNumbers.map((blockNumber) => {
       return {
-        queryKey: ['computedClaimFee', prizePool.chainId, numTiers, blockNumber.toString()],
+        queryKey: ['computedClaimFee', prizePool.id, numTiers, blockNumber.toString()],
         queryFn: async () => {
-          if (!!publicClient && !!numTiers) {
-            return await publicClient.readContract({
+          if (!!numTiers) {
+            return await prizePool.publicClient.readContract({
               address: claimerAddress,
               abi: claimerABI,
               functionName: 'computeFeePerClaim',
@@ -35,7 +33,7 @@ export const useClaimFeesOverTime = (prizePool: PrizePool, blockNumbers: bigint[
             })
           }
         },
-        enabled: !!publicClient && !!numTiers && !!claimerAddress,
+        enabled: !!numTiers && !!claimerAddress,
         ...NO_REFETCH
       }
     })

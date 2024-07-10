@@ -150,11 +150,11 @@ export const DrawsAvgLiqEfficiencyChart = (props: DrawsAvgLiqEfficiencyChartProp
     return (
       <div
         className={classNames(
-          'w-full flex flex-col gap-2 font-medium text-pt-purple-200',
+          'w-full flex flex-col gap-2 font-medium text-pt-purple-800',
           className
         )}
       >
-        <span className='ml-2'>Average Liquidation Efficiency</span>
+        <span className='ml-2 text-pt-purple-200 md:ml-6'>Average Liquidation Efficiency</span>
         <LineChart
           data={chartData}
           lines={[{ id: 'percentage' }, { id: 'cumAvg', strokeDashArray: 5 }]}

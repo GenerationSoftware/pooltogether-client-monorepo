@@ -1,5 +1,6 @@
 import { useHistoricalTokenPrices, useTokens } from '@generationsoftware/hyperstructure-react-hooks'
 import { TokenWithSupply } from '@shared/types'
+import { lower } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useLiquidationPairTokenInAddresses } from './useLiquidationPairTokenInAddresses'
@@ -29,7 +30,7 @@ export const useHistoricalLiquidationPairTokenInPrices = (
     if (!!tokenInAddresses) {
       Object.entries(tokenInAddresses).forEach(([lpAddress, tokenInAddress]) => {
         const token = tokens?.[tokenInAddress]
-        const tokenPrices = historicalTokenPrices?.[tokenInAddress.toLowerCase() as Address]
+        const tokenPrices = historicalTokenPrices?.[lower(tokenInAddress)]
 
         if (!!token && !!tokenPrices?.length) {
           results[lpAddress as Address] = { ...token, priceHistory: tokenPrices }

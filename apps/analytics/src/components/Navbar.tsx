@@ -91,7 +91,8 @@ const NavbarActions = (props: NavbarActionsProps) => {
 
   return (
     <>
-      <NavbarLink href={`/${networkName}/`} name='Draws' className={linkClassName} />
+      <NavbarLink href={`/${networkName}/`} name='Stats' className={linkClassName} />
+      <NavbarLink href={`/${networkName}/draws`} name='Draws' className={linkClassName} />
       <NavbarLink
         href={`/${networkName}/liquidations`}
         name='Liquidations'

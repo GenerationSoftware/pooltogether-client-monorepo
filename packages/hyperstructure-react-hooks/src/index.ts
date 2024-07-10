@@ -27,6 +27,7 @@ export * from './blockchain/useTxReceipts'
 /**
  * Event Hooks
  */
+export * from './events/useDepositEvents'
 export * from './events/useDrawAwardedEvents'
 export * from './events/useDrawFinishedEvents'
 export * from './events/useDrawStartedEvents'
@@ -37,6 +38,7 @@ export * from './events/usePromotionCreatedEvents'
 export * from './events/usePromotionRewardsClaimedEvents'
 export * from './events/useTransferEvents'
 export * from './events/useVaultContributionEvents'
+export * from './events/useWithdrawEvents'
 
 /**
  * Prize Pool Hooks
@@ -69,6 +71,7 @@ export * from './prizes/usePrizeOdds'
 export * from './prizes/usePrizePools'
 export * from './prizes/usePrizeTokenData'
 export * from './prizes/usePrizeTokenPrice'
+export * from './prizes/useWalletAddresses'
 
 /**
  * Signature Hooks

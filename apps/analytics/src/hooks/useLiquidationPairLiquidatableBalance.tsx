@@ -26,7 +26,7 @@ export const useLiquidationPairLiquidatableBalance = (chainId: number, lpAddress
           address: source,
           abi: vaultABI,
           functionName: 'liquidatableBalanceOf',
-          args: [lpTokenOutAddress as Address]
+          args: [lpTokenOutAddress!]
         })
 
         return liquidatableBalance

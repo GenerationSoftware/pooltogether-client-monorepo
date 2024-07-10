@@ -1,5 +1,5 @@
 import { useScreenSize } from '@shared/generic-react-hooks'
-import { ReactNode } from 'react'
+import { CSSProperties, ReactNode } from 'react'
 import {
   Area,
   Legend,
@@ -52,6 +52,7 @@ export interface AreaChartProps {
     dot?: AreaDot
     animate?: boolean
     stackId?: string | number
+    opacity?: number
   }[]
   aspect?: number
   xAxis?: {
@@ -73,6 +74,9 @@ export interface AreaChartProps {
     content?: ContentType<number, string | number>
     formatter?: (value: number, name: string | number) => ReactNode | ReactNode[]
     labelFormatter?: (label: string) => ReactNode
+    sort?: 'asc' | 'desc'
+    labelClassName?: string
+    itemStyle?: CSSProperties
   }
   margin?: { left: number; mobileLeft: number }
   legend?: { show?: boolean; formatter: (value: string | number) => ReactNode }
@@ -114,16 +118,17 @@ export const AreaChart = (props: AreaChartProps) => {
             key={`area-${area.id}`}
             type={area.type ?? DEFAULT.area.type}
             dataKey={area.id}
-            stroke={area.stroke ?? DEFAULT.area.strokes[i]}
+            stroke={area.stroke ?? DEFAULT.area.strokes[i % DEFAULT.area.strokes.length]}
             fill={
               gradients ?? DEFAULT.gradients
                 ? `url(#${getGradientFillId(area.id)})`
-                : area.stroke ?? DEFAULT.area.strokes[i]
+                : area.stroke ?? DEFAULT.area.strokes[i % DEFAULT.area.strokes.length]
             }
             strokeWidth={area.strokeWidth ?? DEFAULT.area.strokeWidth}
             dot={area.dot ?? DEFAULT.area.dot}
             isAnimationActive={area.animate ?? DEFAULT.area.animate}
             stackId={area.stackId}
+            opacity={area.opacity}
           />
         ))}
         {tooltip?.show && (
@@ -131,6 +136,13 @@ export const AreaChart = (props: AreaChartProps) => {
             content={tooltip.content}
             formatter={tooltip.formatter}
             labelFormatter={tooltip.labelFormatter}
+            itemSorter={
+              !!tooltip.sort
+                ? (item) => (item.value as number) * (tooltip.sort === 'desc' ? -1 : 1)
+                : undefined
+            }
+            labelClassName={tooltip.labelClassName}
+            itemStyle={tooltip.itemStyle}
           />
         )}
         <XAxis
@@ -162,12 +174,20 @@ export const AreaChart = (props: AreaChartProps) => {
               >
                 <stop
                   offset='5%'
-                  stopColor={area.stroke ?? area.stroke ?? DEFAULT.area.strokes[i]}
+                  stopColor={
+                    area.stroke ??
+                    area.stroke ??
+                    DEFAULT.area.strokes[i % DEFAULT.area.strokes.length]
+                  }
                   stopOpacity={0.8}
                 />
                 <stop
                   offset='95%'
-                  stopColor={area.stroke ?? area.stroke ?? DEFAULT.area.strokes[i]}
+                  stopColor={
+                    area.stroke ??
+                    area.stroke ??
+                    DEFAULT.area.strokes[i % DEFAULT.area.strokes.length]
+                  }
                   stopOpacity={0.2}
                 />
               </linearGradient>

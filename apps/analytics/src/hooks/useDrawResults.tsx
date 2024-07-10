@@ -1,6 +1,7 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { Prize } from '@shared/types'
+import { lower } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { Address } from 'viem'
 import { DRAW_RESULTS_URL } from '@constants/config'
@@ -11,7 +12,7 @@ export const useDrawResults = (
   drawId: number,
   options?: { refetchInterval?: number }
 ) => {
-  const queryKey = ['drawResults', prizePool?.chainId, drawId]
+  const queryKey = ['drawResults', prizePool?.id, drawId]
 
   const { status, isSkipped, isFetched: isFetchedStatus } = useDrawStatus(prizePool, drawId)
 
@@ -23,7 +24,7 @@ export const useDrawResults = (
     queryFn: async () => {
       const prizes: Prize[] = []
       const chainId = prizePool.chainId
-      const prizePoolAddress = prizePool.address.toLowerCase() as Address
+      const prizePoolAddress = lower(prizePool.address)
 
       try {
         const url = `${DRAW_RESULTS_URL[chainId]}/${prizePoolAddress}/draw/${drawId}/winners.json`

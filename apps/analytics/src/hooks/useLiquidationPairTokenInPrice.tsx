@@ -1,5 +1,6 @@
 import { useToken, useTokenPrices } from '@generationsoftware/hyperstructure-react-hooks'
 import { TokenWithPrice } from '@shared/types'
+import { lower } from '@shared/utilities'
 import { Address } from 'viem'
 import { useLiquidationPairTokenInAddress } from './useLiquidationPairTokenInAddresses'
 
@@ -10,7 +11,7 @@ export const useLiquidationPairTokenInPrice = (
   const { data: tokenInAddress, isFetched: isFetchedTokenInAddress } =
     useLiquidationPairTokenInAddress(chainId, lpAddress)
 
-  const { data: token, isFetched: isFetchedToken } = useToken(chainId, tokenInAddress as Address)
+  const { data: token, isFetched: isFetchedToken } = useToken(chainId, tokenInAddress!)
 
   const { data: tokenPrices, isFetched: isFetchedTokenPrices } = useTokenPrices(
     chainId,
@@ -19,7 +20,7 @@ export const useLiquidationPairTokenInPrice = (
 
   const data =
     !!token && !!tokenPrices && !!tokenInAddress
-      ? { ...token, price: tokenPrices[tokenInAddress.toLowerCase() as Address] }
+      ? { ...token, price: tokenPrices[lower(tokenInAddress)] }
       : undefined
 
   const isFetched = isFetchedTokenInAddress && isFetchedToken && isFetchedTokenPrices

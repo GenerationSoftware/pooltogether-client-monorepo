@@ -19,7 +19,7 @@ export const useIsLiquidationPairTokenOutAVault = (chainId: number, lpAddress: A
       if (!!publicClient) {
         try {
           const asset = await publicClient.readContract({
-            address: tokenOutAddress as Address,
+            address: tokenOutAddress!,
             abi: vaultABI,
             functionName: 'asset'
           })

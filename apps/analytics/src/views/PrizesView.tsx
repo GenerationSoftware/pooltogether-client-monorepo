@@ -1,14 +1,12 @@
-import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { PRIZE_POOLS, sToMs } from '@shared/utilities'
+import { sToMs } from '@shared/utilities'
 import classNames from 'classnames'
 import { useRouter } from 'next/router'
 import { useEffect, useMemo } from 'react'
-import { PublicClient } from 'viem'
-import { usePublicClient } from 'wagmi'
 import { DrawAvgClaimFeesChart } from '@components/Charts/DrawAvgClaimFeesChart'
 import { DrawSelector } from '@components/Draws/DrawSelector'
 import { DrawStatusBadge } from '@components/Draws/DrawStatusBadge'
 import { PrizesTable } from '@components/Prizes/PrizesTable'
+import { usePrizePool } from '@hooks/usePrizePool'
 import { useRngTxs } from '@hooks/useRngTxs'
 
 interface PrizesViewProps {
@@ -21,20 +19,7 @@ export const PrizesView = (props: PrizesViewProps) => {
 
   const router = useRouter()
 
-  const publicClient = usePublicClient({ chainId })
-
-  const prizePool = useMemo(() => {
-    const prizePoolInfo = PRIZE_POOLS.find(
-      (pool) => pool.chainId === chainId
-    ) as (typeof PRIZE_POOLS)[number]
-
-    return new PrizePool(
-      prizePoolInfo.chainId,
-      prizePoolInfo.address,
-      publicClient as PublicClient,
-      prizePoolInfo.options
-    )
-  }, [chainId, publicClient])
+  const prizePool = usePrizePool(chainId)
 
   const drawIdSelected = useMemo(() => {
     const queryDraw = router.query['draw'] as string | undefined
