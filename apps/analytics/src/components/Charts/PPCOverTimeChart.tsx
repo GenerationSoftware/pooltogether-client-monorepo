@@ -61,6 +61,7 @@ export const PPCOverTimeChart = (props: PPCOverTimeChartProps) => {
             labelFormatter: (label) => `Draw ${label}`
           }}
           xAxis={{ minTickGap: 50 }}
+          yAxis={{ tickFormatter: (value) => value.toLocaleString() }}
         />
       ) : (
         <div className='w-full aspect-[2.8] flex items-center justify-center'>

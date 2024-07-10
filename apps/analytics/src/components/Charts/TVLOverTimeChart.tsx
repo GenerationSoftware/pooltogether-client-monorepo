@@ -93,6 +93,7 @@ export const TVLOverTimeChart = (props: TVLOverTimeChartProps) => {
             itemStyle: { padding: 0 }
           }}
           xAxis={{ minTickGap: 25 }}
+          yAxis={{ tickFormatter: (value) => value.toLocaleString() }}
           aspect={2}
         />
       ) : (
