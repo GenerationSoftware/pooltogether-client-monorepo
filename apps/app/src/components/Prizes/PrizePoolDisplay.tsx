@@ -4,7 +4,7 @@ import { ExternalLink } from '@shared/ui'
 import { LINKS, NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useRouter } from 'next/router'
+import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { PrizePoolPrizesCard } from './PrizePoolPrizesCard'
@@ -51,7 +51,7 @@ interface PrizePoolCarouselProps {
 const PrizePoolCarousel = (props: PrizePoolCarouselProps) => {
   const { className } = props
 
-  const router = useRouter()
+  const searchParams = useSearchParams()
 
   const [prizePoolIndex, setPrizePoolIndex] = useState<number>(0)
 
@@ -70,15 +70,16 @@ const PrizePoolCarousel = (props: PrizePoolCarouselProps) => {
   }
 
   useEffect(() => {
-    const rawUrlNetwork = router.query['network']
+    const rawUrlNetwork = searchParams?.get('network')
     const chainId =
       !!rawUrlNetwork && typeof rawUrlNetwork === 'string' ? parseInt(rawUrlNetwork) : undefined
+
     if (!!chainId) {
       handleNetworkChange(chainId)
       const prizePoolIndex = prizePoolsArray.findIndex((pool) => pool.chainId === chainId)
       prizePoolIndex !== -1 && setPrizePoolIndex(prizePoolIndex)
     }
-  }, [router])
+  }, [searchParams])
 
   useEffect(() => {
     const chainId = prizePoolsArray[prizePoolIndex]?.chainId

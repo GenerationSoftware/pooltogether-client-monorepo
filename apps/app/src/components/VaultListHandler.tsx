@@ -7,12 +7,12 @@ import { createVaultListToast } from '@shared/react-components'
 import { isNewerVersion } from '@shared/utilities'
 import * as fathom from 'fathom-client'
 import { useTranslations } from 'next-intl'
-import { useRouter } from 'next/router'
+import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { DEFAULT_VAULT_LISTS, FATHOM_EVENTS } from '@constants/config'
 
 export const VaultListHandler = () => {
-  const router = useRouter()
+  const searchParams = useSearchParams()
 
   const t = useTranslations('Toasts.vaultListImports')
 
@@ -48,11 +48,11 @@ export const VaultListHandler = () => {
 
   // Validating Vault List Source
   useEffect(() => {
-    const vaultListSrc = router.query['list']
+    const vaultListSrc = searchParams?.get('list')
     if (!!vaultListSrc && typeof vaultListSrc === 'string') {
       setUrlQueryVaultListSrc(vaultListSrc.trim())
     }
-  }, [router.query])
+  }, [searchParams])
 
   // Displaying Vault List Toast
   useEffect(() => {
