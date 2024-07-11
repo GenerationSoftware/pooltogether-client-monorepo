@@ -5,6 +5,7 @@ import {
   useVaultShareData,
   useVaultTokenAddress
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { useMiscSettings } from '@shared/generic-react-hooks'
 import { PrizePoolBadge } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import { DOLPHIN_ADDRESS, getNiceNetworkNameByChainId, lower } from '@shared/utilities'
@@ -12,7 +13,6 @@ import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { walletSupportsPermit } from 'src/utils'
 import { useAccount } from 'wagmi'
-import { isPermitDepositsDisabledAtom } from '..'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
 import {
@@ -41,13 +41,13 @@ export const MainView = (props: MainViewProps) => {
   const formTokenAddress = useAtomValue(depositFormTokenAddressAtom)
   const formShareAmount = useAtomValue(depositFormShareAmountAtom)
 
-  const isPermitDepositsDisabled = useAtomValue(isPermitDepositsDisabledAtom)
-
   const tokenAddress = formTokenAddress ?? vaultTokenAddress
 
   const { data: tokenPermitSupport } = useTokenPermitSupport(vault.chainId, tokenAddress!)
 
   const { data: vaultExchangeRate } = useVaultExchangeRate(vault)
+
+  const { isActive: isPermitDepositsDisabled } = useMiscSettings('permitDepositsDisabled')
 
   const vaultName = vault.name ?? share?.name
   const networkName = getNiceNetworkNameByChainId(vault.chainId)

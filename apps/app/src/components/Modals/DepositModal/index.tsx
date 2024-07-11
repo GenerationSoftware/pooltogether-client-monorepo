@@ -6,12 +6,12 @@ import {
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
-import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
+import { MODAL_KEYS, useIsModalOpen, useMiscSettings } from '@shared/generic-react-hooks'
 import { AlertIcon, createDepositTxToast } from '@shared/react-components'
 import { Modal } from '@shared/ui'
 import { LINKS, lower } from '@shared/utilities'
 import classNames from 'classnames'
-import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
+import { useAtom, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo, useState } from 'react'
 import { walletSupportsPermit } from 'src/utils'
@@ -31,8 +31,6 @@ import { MainView } from './Views/MainView'
 import { ReviewView } from './Views/ReviewView'
 import { SuccessView } from './Views/SuccessView'
 import { WaitingView } from './Views/WaitingView'
-
-export const isPermitDepositsDisabledAtom = atom<boolean>(false)
 
 export type DepositModalView = 'main' | 'review' | 'waiting' | 'confirming' | 'success' | 'error'
 
@@ -75,8 +73,6 @@ export const DepositModal = (props: DepositModalProps) => {
   const setFormTokenAmount = useSetAtom(depositFormTokenAmountAtom)
   const [formShareAmount, setFormShareAmount] = useAtom(depositFormShareAmountAtom)
 
-  const isPermitDepositsDisabled = useAtomValue(isPermitDepositsDisabledAtom)
-
   const { data: vaultToken } = useVaultTokenData(vault!)
 
   const { data: tokenPermitSupport } = useTokenPermitSupport(
@@ -85,6 +81,8 @@ export const DepositModal = (props: DepositModalProps) => {
   )
 
   const { data: vaultExchangeRate } = useVaultExchangeRate(vault!)
+
+  const { isActive: isPermitDepositsDisabled } = useMiscSettings('permitDepositsDisabled')
 
   const prizePool = useMemo(() => {
     if (!!vault) {

@@ -6,6 +6,7 @@ import {
   useVaultSharePrice,
   useVaultTokenAddress
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { useMiscSettings } from '@shared/generic-react-hooks'
 import { PrizePoolBadge, TokenIcon } from '@shared/react-components'
 import { Token, TokenWithLogo } from '@shared/types'
 import { Spinner } from '@shared/ui'
@@ -23,7 +24,6 @@ import { useMemo } from 'react'
 import { walletSupportsPermit } from 'src/utils'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
-import { isPermitDepositsDisabledAtom } from '..'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
 import {
@@ -49,13 +49,13 @@ export const ReviewView = (props: ReviewViewProps) => {
 
   const formTokenAddress = useAtomValue(depositFormTokenAddressAtom)
 
-  const isPermitDepositsDisabled = useAtomValue(isPermitDepositsDisabledAtom)
-
   const { data: vaultTokenAddress } = useVaultTokenAddress(vault)
 
   const tokenAddress = formTokenAddress ?? vaultTokenAddress
 
   const { data: tokenPermitSupport } = useTokenPermitSupport(vault.chainId, tokenAddress!)
+
+  const { isActive: isPermitDepositsDisabled } = useMiscSettings('permitDepositsDisabled')
 
   const isZapping =
     !!vaultTokenAddress &&

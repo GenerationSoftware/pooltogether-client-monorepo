@@ -25,6 +25,7 @@ A library of shared React hooks with minimal dependencies.
 - `useIsDismissed`
 - `useIsModalOpen`
 - `useIsTestnets`
+- `useMiscSettings`
 - `useScreenSize`
 - `useSelectedCurrency`
 - `useSelectedLanguage`

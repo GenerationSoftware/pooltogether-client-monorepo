@@ -1,15 +1,13 @@
+import { useMiscSettings } from '@shared/generic-react-hooks'
 import { Toggle } from '@shared/ui'
-import { useAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { ReactNode } from 'react'
-import { isPermitDepositsDisabledAtom } from '@components/Modals/DepositModal'
 
 export const MiscSettingsView = () => {
   const t = useTranslations('Settings')
 
-  const [isPermitDepositsDisabled, setIsPermitDepositsDisabled] = useAtom(
-    isPermitDepositsDisabledAtom
-  )
+  const { isActive: isPermitDepositsDisabled, set: setIsPermitDepositsDisabled } =
+    useMiscSettings('permitDepositsDisabled')
 
   return (
     <div className='flex flex-col items-center gap-6'>
