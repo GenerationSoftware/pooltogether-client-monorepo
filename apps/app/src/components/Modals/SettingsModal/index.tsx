@@ -10,10 +10,11 @@ import { useSettingsModalView } from '@hooks/useSettingsModalView'
 import { CurrencyView } from './Views/CurrencyView'
 import { LanguageView } from './Views/LanguageView'
 import { MenuView } from './Views/MenuView'
+import { MiscSettingsView } from './Views/MiscSettingsView'
 import { RPCsView } from './Views/RPCsView'
 import { VaultListView } from './Views/VaultListView'
 
-export type SettingsModalOption = 'currency' | 'language' | 'vaultLists' | 'customRPCs'
+export type SettingsModalOption = 'currency' | 'language' | 'vaultLists' | 'customRPCs' | 'misc'
 
 export type SettingsModalView = 'menu' | SettingsModalOption
 
@@ -65,7 +66,8 @@ export const SettingsModal = (props: SettingsModalProps) => {
           router.reload()
         }}
       />
-    )
+    ),
+    misc: <MiscSettingsView />
   }
 
   if (isModalOpen) {

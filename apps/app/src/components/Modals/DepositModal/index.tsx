@@ -11,7 +11,7 @@ import { AlertIcon, createDepositTxToast } from '@shared/react-components'
 import { Modal } from '@shared/ui'
 import { LINKS, lower } from '@shared/utilities'
 import classNames from 'classnames'
-import { useAtom, useSetAtom } from 'jotai'
+import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo, useState } from 'react'
 import { walletSupportsPermit } from 'src/utils'
@@ -31,6 +31,8 @@ import { MainView } from './Views/MainView'
 import { ReviewView } from './Views/ReviewView'
 import { SuccessView } from './Views/SuccessView'
 import { WaitingView } from './Views/WaitingView'
+
+export const isPermitDepositsDisabledAtom = atom<boolean>(false)
 
 export type DepositModalView = 'main' | 'review' | 'waiting' | 'confirming' | 'success' | 'error'
 
@@ -72,6 +74,8 @@ export const DepositModal = (props: DepositModalProps) => {
   const [formTokenAddress, setFormTokenAddress] = useAtom(depositFormTokenAddressAtom)
   const setFormTokenAmount = useSetAtom(depositFormTokenAmountAtom)
   const [formShareAmount, setFormShareAmount] = useAtom(depositFormShareAmountAtom)
+
+  const isPermitDepositsDisabled = useAtomValue(isPermitDepositsDisabledAtom)
 
   const { data: vaultToken } = useVaultTokenData(vault!)
 
@@ -139,7 +143,9 @@ export const DepositModal = (props: DepositModalProps) => {
             onSuccessfulApproval={onSuccessfulApproval}
             onSuccessfulDepositWithZap={onSuccessfulDepositWithZap}
           />
-        ) : tokenPermitSupport === 'eip2612' && walletSupportsPermit(connector?.id) ? (
+        ) : tokenPermitSupport === 'eip2612' &&
+          walletSupportsPermit(connector?.id) &&
+          !isPermitDepositsDisabled ? (
           <DepositWithPermitTxButton
             vault={vault}
             modalView={view}

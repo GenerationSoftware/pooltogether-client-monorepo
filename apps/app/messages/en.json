@@ -289,7 +289,12 @@
     "override": "override",
     "default": "Default",
     "set": "Set",
-    "refreshToUpdateRPCs": "Refresh the page to see changes"
+    "refreshToUpdateRPCs": "Refresh the page to see changes",
+    "otherSettings": "Other Settings",
+    "permitApprovals": {
+      "enabled": "Permit approvals are enabled",
+      "disabled": "Permit approvals are disabled"
+    }
   },
   "Abbreviations": {
     "days": "days",

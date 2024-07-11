@@ -23,6 +23,7 @@ import { useMemo } from 'react'
 import { walletSupportsPermit } from 'src/utils'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
+import { isPermitDepositsDisabledAtom } from '..'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
 import {
@@ -48,6 +49,8 @@ export const ReviewView = (props: ReviewViewProps) => {
 
   const formTokenAddress = useAtomValue(depositFormTokenAddressAtom)
 
+  const isPermitDepositsDisabled = useAtomValue(isPermitDepositsDisabledAtom)
+
   const { data: vaultTokenAddress } = useVaultTokenAddress(vault)
 
   const tokenAddress = formTokenAddress ?? vaultTokenAddress
@@ -63,7 +66,9 @@ export const ReviewView = (props: ReviewViewProps) => {
     ? lower(formTokenAddress) === DOLPHIN_ADDRESS
       ? ['depositWithZap', 'withdraw']
       : ['approve', 'depositWithZap', 'withdraw']
-    : tokenPermitSupport === 'eip2612' && walletSupportsPermit(connector?.id)
+    : tokenPermitSupport === 'eip2612' &&
+      walletSupportsPermit(connector?.id) &&
+      !isPermitDepositsDisabled
     ? ['depositWithPermit', 'withdraw']
     : ['approve', 'deposit', 'withdraw']
 

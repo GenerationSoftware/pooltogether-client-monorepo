@@ -12,6 +12,7 @@ import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { walletSupportsPermit } from 'src/utils'
 import { useAccount } from 'wagmi'
+import { isPermitDepositsDisabledAtom } from '..'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
 import {
@@ -40,6 +41,8 @@ export const MainView = (props: MainViewProps) => {
   const formTokenAddress = useAtomValue(depositFormTokenAddressAtom)
   const formShareAmount = useAtomValue(depositFormShareAmountAtom)
 
+  const isPermitDepositsDisabled = useAtomValue(isPermitDepositsDisabledAtom)
+
   const tokenAddress = formTokenAddress ?? vaultTokenAddress
 
   const { data: tokenPermitSupport } = useTokenPermitSupport(vault.chainId, tokenAddress!)
@@ -58,7 +61,9 @@ export const MainView = (props: MainViewProps) => {
     ? lower(formTokenAddress) === DOLPHIN_ADDRESS
       ? ['depositWithZap', 'withdraw']
       : ['approve', 'depositWithZap', 'withdraw']
-    : tokenPermitSupport === 'eip2612' && walletSupportsPermit(connector?.id)
+    : tokenPermitSupport === 'eip2612' &&
+      walletSupportsPermit(connector?.id) &&
+      !isPermitDepositsDisabled
     ? ['depositWithPermit', 'withdraw']
     : ['approve', 'deposit', 'withdraw']
 
