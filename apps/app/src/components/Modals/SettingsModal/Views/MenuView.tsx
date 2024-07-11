@@ -1,4 +1,8 @@
-import { CubeTransparentIcon, SparklesIcon } from '@heroicons/react/24/outline'
+import {
+  ArrowTopRightOnSquareIcon,
+  CubeTransparentIcon,
+  SparklesIcon
+} from '@heroicons/react/24/outline'
 import {
   SUPPORTED_CURRENCIES,
   useSelectedCurrency,
@@ -34,13 +38,6 @@ export const MenuView = (props: MenuViewProps) => {
         title={t('customizeExperience')}
         items={[
           {
-            iconContent: SUPPORTED_CURRENCIES[selectedCurrency].symbol,
-            title: t('changeCurrency'),
-            onClick: () => setSettingsModalView('currency'),
-            disabled: disable?.includes('currency'),
-            hidden: hide?.includes('currency')
-          },
-          {
             iconContent: selectedLanguage.toUpperCase(),
             iconClassName: '!text-base font-semibold',
             title: t('changeLanguage'),
@@ -49,9 +46,11 @@ export const MenuView = (props: MenuViewProps) => {
             hidden: hide?.includes('language')
           },
           {
-            iconContent: <SparklesIcon className='h-6 w-6 text-pt-purple-100' />,
-            title: t('viewEcosystem'),
-            onClick: () => window.open(LINKS.ecosystem)
+            iconContent: SUPPORTED_CURRENCIES[selectedCurrency].symbol,
+            title: t('changeCurrency'),
+            onClick: () => setSettingsModalView('currency'),
+            disabled: disable?.includes('currency'),
+            hidden: hide?.includes('currency')
           },
           {
             iconContent: <ClipboardListIcon className='h-6 w-6 text-pt-purple-100' />,
@@ -66,6 +65,12 @@ export const MenuView = (props: MenuViewProps) => {
             onClick: () => setSettingsModalView('customRPCs'),
             disabled: disable?.includes('customRPCs'),
             hidden: hide?.includes('customRPCs')
+          },
+          {
+            iconContent: <SparklesIcon className='h-6 w-6 text-pt-purple-100' />,
+            title: t('viewEcosystem'),
+            onClick: () => window.open(LINKS.ecosystem),
+            isExternalLink: true
           }
         ]}
       />
@@ -76,7 +81,8 @@ export const MenuView = (props: MenuViewProps) => {
             iconContent: '?',
             iconClassName: 'font-semibold',
             title: t('getHelpWithCabana'),
-            onClick: () => window.open(LINKS.docs)
+            onClick: () => window.open(LINKS.docs),
+            isExternalLink: true
           }
         ]}
       />
@@ -111,18 +117,19 @@ interface SettingsMenuItemProps {
   iconContent: ReactNode
   title: string
   onClick: () => void
+  isExternalLink?: boolean
   iconClassName?: string
   disabled?: boolean
   hidden?: boolean
 }
 
 const SettingsMenuItem = (props: SettingsMenuItemProps) => {
-  const { iconContent, title, onClick, iconClassName, disabled, hidden } = props
+  const { iconContent, title, onClick, isExternalLink, iconClassName, disabled, hidden } = props
 
   return (
     <div
       className={classNames(
-        'flex gap-3 w-full items-center rounded-lg px-8 py-4 select-none relative bg-pt-transparent hover:bg-pt-transparent/5',
+        'flex gap-2 w-full items-center rounded-lg px-8 py-4 select-none relative bg-pt-transparent hover:bg-pt-transparent/5',
         { 'cursor-pointer': !disabled, 'brightness-50': disabled },
         { hidden: hidden }
       )}
@@ -132,8 +139,16 @@ const SettingsMenuItem = (props: SettingsMenuItemProps) => {
         }
       }}
     >
-      <BasicIcon content={iconContent} size='lg' theme='dark' className={iconClassName} />
+      <BasicIcon
+        content={iconContent}
+        size='lg'
+        theme='dark'
+        className={classNames('mr-1', iconClassName)}
+      />
       <span className='flex items-center text-pt-purple-50'>{title}</span>
+      {isExternalLink && (
+        <ArrowTopRightOnSquareIcon className='h-5 w-5 shrink-0 text-pt-purple-200 stroke-2' />
+      )}
     </div>
   )
 }
