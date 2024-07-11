@@ -24,11 +24,6 @@ export * from './components/Currency/TokenValue'
 export * from './components/Currency/TokenValueAndAmount'
 
 /**
- * Forms
- */
-export * from './components/Form/DelegateForm'
-
-/**
  * Graphics
  */
 export * from './components/Graphics/ErrorPooly'
@@ -48,9 +43,6 @@ export * from './components/Icons/TokenIcon'
  * Modals
  */
 export * from './components/Modals/CaptchaModal'
-export * from './components/Modals/CheckPrizesModal'
-export * from './components/Modals/DelegateModal'
-export * from './components/Modals/SettingsModal'
 
 /**
  * Prize Pool

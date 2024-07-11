@@ -2,11 +2,12 @@ import {
   useSelectedVault,
   useVaultTwabController
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
-import { Intl, RichIntl } from '@shared/types'
+import { createDelegateTxToast } from '@shared/react-components'
 import { Modal } from '@shared/ui'
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
-import { createDelegateTxToast, DelegateTxToastProps } from '../../Toasts/DelegateTxToast'
 import { DelegateModalBody } from './DelegateModalBody'
 import { DelegateTxButton } from './DelegateTxButton'
 
@@ -14,46 +15,15 @@ export type DelegateModalView = 'main' | 'waiting' | 'confirming' | 'success' | 
 
 export interface DelegateModalProps {
   onClose?: () => void
-  openConnectModal?: () => void
-  openChainModal?: () => void
-  addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   onSuccessfulDelegation?: () => void
-  intl?: {
-    base?: RichIntl<
-      | 'delegateFrom'
-      | 'delegateFromShort'
-      | 'delegateDescription'
-      | 'delegateSelfDescription'
-      | 'delegatedAddress'
-      | 'changeDelegateAddress'
-      | 'changeDelegateAddressShort'
-      | 'updateDelegatedAddress'
-      | 'delegateTx'
-      | 'switchNetwork'
-      | 'switchingNetwork'
-      | 'submissionNotice'
-      | 'success'
-      | 'delegated'
-      | 'uhOh'
-      | 'failedTx'
-      | 'tryAgain'
-    >
-    tooltip?: Intl<'delegateDescription'>
-    common?: Intl<'prizePool' | 'connectWallet' | 'close' | 'viewOn' | 'warning' | 'learnMore'>
-    txToast?: DelegateTxToastProps['intl']
-    errors?: RichIntl<'formErrors.invalidAddress' | 'formErrors.sameAsDelegate'>
-  }
 }
 
 export const DelegateModal = (props: DelegateModalProps) => {
-  const {
-    onClose,
-    openConnectModal,
-    openChainModal,
-    addRecentTransaction,
-    onSuccessfulDelegation,
-    intl
-  } = props
+  const { onClose, onSuccessfulDelegation } = props
+
+  const t_toasts = useTranslations('Toasts.transactions')
+
+  const addRecentTransaction = useAddRecentTransaction()
 
   const { vault } = useSelectedVault()
 
@@ -71,7 +41,7 @@ export const DelegateModal = (props: DelegateModalProps) => {
         vault: vault,
         txHash: delegateTxHash,
         addRecentTransaction,
-        intl: intl?.txToast
+        intl: t_toasts
       })
     }
   }
@@ -83,7 +53,7 @@ export const DelegateModal = (props: DelegateModalProps) => {
   }
 
   if (isModalOpen && !!vault) {
-    const modalBodyContent = <DelegateModalBody modalView={view} vault={vault} intl={intl} />
+    const modalBodyContent = <DelegateModalBody modalView={view} vault={vault} />
 
     const modalFooterContent = (
       <div className={'flex flex-col items-center gap-6'}>
@@ -92,11 +62,7 @@ export const DelegateModal = (props: DelegateModalProps) => {
           vault={vault}
           setModalView={setView}
           setDelegateTxHash={setDelegateTxHash}
-          openConnectModal={openConnectModal}
-          openChainModal={openChainModal}
-          addRecentTransaction={addRecentTransaction}
           onSuccessfulDelegation={onSuccessfulDelegation}
-          intl={intl}
         />
       </div>
     )

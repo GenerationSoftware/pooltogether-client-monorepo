@@ -1,21 +1,22 @@
-import { Intl } from '@shared/types'
 import { Button } from '@shared/ui'
 import classNames from 'classnames'
 import Lottie from 'lottie-react'
+import { useTranslations } from 'next-intl'
 import { noWinAnimation } from '../animations'
 
 interface NoWinViewProps {
   onGoToAccount: () => void
-  intl?: Intl<'noPrizes' | 'viewAccount'>
 }
 
 export const NoWinView = (props: NoWinViewProps) => {
-  const { onGoToAccount, intl } = props
+  const { onGoToAccount } = props
+
+  const t = useTranslations('Account.prizeChecking')
 
   return (
     <div className='flex flex-col items-center'>
       <span className='text-center text-3xl font-grotesk font-medium text-gray-100'>
-        {intl?.('noPrizes') ?? `Sorry, no prizes this time.`}
+        {t('noPrizes')}
       </span>
       <Lottie
         animationData={noWinAnimation}
@@ -23,7 +24,7 @@ export const NoWinView = (props: NoWinViewProps) => {
         className='w-full max-w-xs h-auto pointer-events-none'
       />
       <Button onClick={onGoToAccount} className={classNames('mx-auto')}>
-        {intl?.('viewAccount') ?? `View Your Account`}
+        {t('viewAccount')}
       </Button>
     </div>
   )

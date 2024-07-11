@@ -1,9 +1,12 @@
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { CURRENCY_ID, LANGUAGE_ID, MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
-import { Intl, VaultList } from '@shared/types'
 import { Modal } from '@shared/ui'
 import { NETWORK } from '@shared/utilities'
-import { ReactNode } from 'react'
+import { useRouter } from 'next/router'
+import { ReactNode, useMemo } from 'react'
+import { DEFAULT_VAULT_LISTS } from '@constants/config'
+import { useNetworks } from '@hooks/useNetworks'
+import { useSettingsModalView } from '@hooks/useSettingsModalView'
 import { CurrencyView } from './Views/CurrencyView'
 import { LanguageView } from './Views/LanguageView'
 import { MenuView } from './Views/MenuView'
@@ -15,97 +18,52 @@ export type SettingsModalOption = 'currency' | 'language' | 'vaultLists' | 'cust
 export type SettingsModalView = 'menu' | SettingsModalOption
 
 export interface SettingsModalProps {
-  view: SettingsModalView
-  setView: (view: SettingsModalView) => void
-  reloadPage: () => void
   locales?: LANGUAGE_ID[]
-  localVaultLists: { [id: string]: VaultList }
-  supportedNetworks?: NETWORK[]
   disable?: SettingsModalOption[]
   hide?: SettingsModalOption[]
   onCurrencyChange?: (id: CURRENCY_ID) => void
   onLanguageChange?: (id: LANGUAGE_ID) => void
   onVaultListImport?: (id: string) => void
   onRpcChange?: () => void
-  intl?: {
-    base?: Intl<
-      | 'customizeExperience'
-      | 'customizeCurrency'
-      | 'customizeLanguage'
-      | 'changeCurrency'
-      | 'changeLanguage'
-      | 'viewEcosystem'
-      | 'manageVaultLists'
-      | 'setCustomRPCs'
-      | 'getHelp'
-      | 'getHelpWithCabana'
-      | 'vaultListsDescription'
-      | 'learnMoreVaultLists'
-      | 'urlInput'
-      | 'addVaultList'
-      | 'clearImportedVaultLists'
-      | 'numVaults'
-      | 'numTestnetVaults'
-      | 'imported'
-      | 'customRpcDescription'
-      | 'customNetworkRpc'
-      | 'override'
-      | 'default'
-      | 'set'
-      | 'refreshToUpdateRPCs'
-    >
-    errors?: Intl<
-      | 'formErrors.invalidSrc'
-      | 'formErrors.invalidVaultList'
-      | 'formErrors.invalidRpcNetwork'
-      | 'formErrors.invalidRpcUrl'
-    >
-  }
 }
 
 export const SettingsModal = (props: SettingsModalProps) => {
   const {
-    view,
-    setView,
-    reloadPage,
     locales,
-    localVaultLists,
-    supportedNetworks,
     disable,
     hide,
     onCurrencyChange,
     onLanguageChange,
     onVaultListImport,
-    onRpcChange,
-    intl
+    onRpcChange
   } = props
+
+  const router = useRouter()
+
+  const { view, setView } = useSettingsModalView()
 
   const { isModalOpen, setIsModalOpen } = useIsModalOpen(MODAL_KEYS.settings)
 
+  const supportedNetworks = useNetworks()
+
+  const customNetworks = useMemo(() => {
+    return [...new Set([NETWORK.mainnet, ...supportedNetworks])]
+  }, [supportedNetworks])
+
   const modalViews: Record<SettingsModalView, ReactNode> = {
-    menu: <MenuView setView={setView} disable={disable} hide={hide} intl={intl?.base} />,
-    currency: (
-      <CurrencyView setView={setView} onCurrencyChange={onCurrencyChange} intl={intl?.base} />
-    ),
-    language: (
-      <LanguageView
-        setView={setView}
-        locales={locales}
-        onLanguageChange={onLanguageChange}
-        intl={intl?.base}
-      />
-    ),
+    menu: <MenuView disable={disable} hide={hide} />,
+    currency: <CurrencyView onCurrencyChange={onCurrencyChange} />,
+    language: <LanguageView locales={locales} onLanguageChange={onLanguageChange} />,
     vaultLists: (
-      <VaultListView localVaultLists={localVaultLists} onSuccess={onVaultListImport} intl={intl} />
+      <VaultListView localVaultLists={DEFAULT_VAULT_LISTS} onSuccess={onVaultListImport} />
     ),
     customRPCs: (
       <RPCsView
-        chainIds={supportedNetworks ?? []}
+        chainIds={customNetworks}
         onClickPageReload={() => {
           onRpcChange?.()
-          reloadPage()
+          router.reload()
         }}
-        intl={intl}
       />
     )
   }

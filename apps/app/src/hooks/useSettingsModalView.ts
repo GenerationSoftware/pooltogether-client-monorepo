@@ -1,5 +1,5 @@
-import { SettingsModalView } from '@shared/react-components'
 import { atom, useAtom } from 'jotai'
+import { SettingsModalView } from '@components/Modals/SettingsModal'
 
 const settingsModalView = atom<SettingsModalView>('menu')
 

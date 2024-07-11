@@ -3,37 +3,25 @@ import {
   useSelectedVaultListIds
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { TrashIcon } from '@heroicons/react/24/outline'
+import { ImportedBadge } from '@shared/react-components'
 import { VaultList } from '@shared/types'
-import { Intl } from '@shared/types'
 import { BasicIcon, Button, ExternalLink, Spinner, Toggle } from '@shared/ui'
 import { getVaultList, isTestnet, LINKS, NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { usePublicClient } from 'wagmi'
-import { ImportedBadge } from '../../../Badges/ImportedBadge'
 
 interface VaultListViewProps {
   localVaultLists: { [id: string]: VaultList }
   onSuccess?: (id: string) => void
-  intl?: {
-    base?: Intl<
-      | 'manageVaultLists'
-      | 'vaultListsDescription'
-      | 'learnMoreVaultLists'
-      | 'urlInput'
-      | 'addVaultList'
-      | 'clearImportedVaultLists'
-      | 'numVaults'
-      | 'numTestnetVaults'
-      | 'imported'
-    >
-    errors?: Intl<'formErrors.invalidSrc' | 'formErrors.invalidVaultList'>
-  }
 }
 
 export const VaultListView = (props: VaultListViewProps) => {
-  const { localVaultLists, onSuccess, intl } = props
+  const { localVaultLists, onSuccess } = props
+
+  const t = useTranslations('Settings')
 
   const { cachedVaultLists, remove } = useCachedVaultLists()
 
@@ -42,11 +30,13 @@ export const VaultListView = (props: VaultListViewProps) => {
   const importedVaultLists = useMemo(() => {
     const localVaultListIds = Object.keys(localVaultLists ?? {})
     const newVaultLists: { [id: string]: VaultList } = {}
+
     Object.keys(cachedVaultLists).forEach((key) => {
       if (!localVaultListIds.includes(key) && !!cachedVaultLists[key]) {
-        newVaultLists[key] = cachedVaultLists[key] as VaultList
+        newVaultLists[key] = cachedVaultLists[key]!
       }
     })
+
     return newVaultLists
   }, [localVaultLists, cachedVaultLists])
 
@@ -60,9 +50,15 @@ export const VaultListView = (props: VaultListViewProps) => {
 
   return (
     <div className='flex flex-col gap-4 md:gap-8'>
-      <Header intl={intl?.base} />
+      <div className='flex flex-col items-center gap-2 text-center'>
+        <span className='text-lg font-semibold md:text-xl'>{t('manageVaultLists')}</span>
+        <span className='text-sm text-pt-purple-50 md:text-base'>{t('vaultListsDescription')}</span>
+        <ExternalLink href={LINKS.listDocs} className='text-pt-purple-200'>
+          {t('learnMoreVaultLists')}
+        </ExternalLink>
+      </div>
 
-      <ImportVaultListForm onSuccess={onSuccess} intl={intl} />
+      <ImportVaultListForm onSuccess={onSuccess} />
 
       {Object.keys(localVaultLists).map((id) => (
         <VaultListItem
@@ -70,7 +66,6 @@ export const VaultListView = (props: VaultListViewProps) => {
           id={id}
           vaultList={localVaultLists[id]}
           isChecked={localIds.includes(id)}
-          intl={intl?.base}
         />
       ))}
 
@@ -81,50 +76,25 @@ export const VaultListView = (props: VaultListViewProps) => {
           vaultList={importedVaultLists[id]}
           isChecked={importedIds.includes(id)}
           isImported={true}
-          intl={intl?.base}
         />
       ))}
 
       {Object.keys(importedVaultLists).length > 0 && (
-        <ClearImportedVaultListsButton onClick={handleClearAll} intl={intl?.base} />
+        <ClearImportedVaultListsButton onClick={handleClearAll} />
       )}
-    </div>
-  )
-}
-
-interface HeaderProps {
-  intl?: Intl<'manageVaultLists' | 'vaultListsDescription' | 'learnMoreVaultLists'>
-}
-
-const Header = (props: HeaderProps) => {
-  const { intl } = props
-
-  return (
-    <div className='flex flex-col items-center gap-2 text-center'>
-      <span className='text-lg font-semibold md:text-xl'>
-        {intl?.('manageVaultLists') ?? 'Manage Vault Lists'}
-      </span>
-      <span className='text-sm text-pt-purple-50 md:text-base'>
-        {intl?.('vaultListsDescription') ??
-          'Vault lists determine what prize vaults are displayed throughout the app. Use caution when interacting with imported lists.'}
-      </span>
-      <ExternalLink href={LINKS.listDocs} className='text-pt-purple-200'>
-        {intl?.('learnMoreVaultLists') ?? 'Learn more about vault lists'}
-      </ExternalLink>
     </div>
   )
 }
 
 interface ImportVaultListFormProps {
   onSuccess?: (id: string) => void
-  intl?: {
-    base?: Intl<'urlInput' | 'addVaultList'>
-    errors?: Intl<'formErrors.invalidSrc' | 'formErrors.invalidVaultList'>
-  }
 }
 
 const ImportVaultListForm = (props: ImportVaultListFormProps) => {
-  const { onSuccess, intl } = props
+  const { onSuccess } = props
+
+  const t_settings = useTranslations('Settings')
+  const t_errors = useTranslations('Error.formErrors')
 
   const mainnetPublicClient = usePublicClient({ chainId: NETWORK.mainnet })
 
@@ -162,14 +132,10 @@ const ImportVaultListForm = (props: ImportVaultListFormProps) => {
         onSuccess?.(cleanSrc)
         reset()
       } else {
-        setError('src', {
-          message: intl?.errors?.('formErrors.invalidVaultList') ?? 'No valid vault list found'
-        })
+        setError('src', { message: t_errors('invalidVaultList') })
       }
     } catch (err) {
-      setError('src', {
-        message: intl?.errors?.('formErrors.invalidVaultList') ?? 'No valid vault list found'
-      })
+      setError('src', { message: t_errors('invalidVaultList') })
     } finally {
       setIsImporting(false)
     }
@@ -187,7 +153,7 @@ const ImportVaultListForm = (props: ImportVaultListFormProps) => {
                 v.startsWith('ipfs://') ||
                 v.startsWith('ipns://') ||
                 v.endsWith('.eth') ||
-                (intl?.errors?.('formErrors.invalidSrc') ?? 'Not a valid URL or ENS domain')
+                t_errors('invalidSrc')
             }
           })}
           id='vaultListInput'
@@ -196,7 +162,7 @@ const ImportVaultListForm = (props: ImportVaultListFormProps) => {
             'w-full text-sm bg-gray-50 text-pt-purple-900 px-4 py-3 rounded-lg focus:outline-none',
             { 'brightness-75': isImporting }
           )}
-          placeholder={intl?.base?.('urlInput') ?? 'https:// or ipfs:// or ENS name'}
+          placeholder={t_settings('urlInput')}
           disabled={isImporting}
         />
         <Button
@@ -210,7 +176,7 @@ const ImportVaultListForm = (props: ImportVaultListFormProps) => {
               'opacity-0': isImporting
             })}
           >
-            {intl?.base?.('addVaultList') ?? 'Add Vault List'}
+            {t_settings('addVaultList')}
           </span>
           {isImporting && <Spinner className='absolute left-0 right-0 mx-auto' />}
         </Button>
@@ -225,11 +191,12 @@ interface VaultListItemProps {
   vaultList: VaultList
   isChecked?: boolean
   isImported?: boolean
-  intl?: Intl<'numVaults' | 'numTestnetVaults' | 'imported'>
 }
 
 const VaultListItem = (props: VaultListItemProps) => {
-  const { vaultList, id, isChecked, isImported, intl } = props
+  const { vaultList, id, isChecked, isImported } = props
+
+  const t = useTranslations('Settings')
 
   const { remove } = useCachedVaultLists()
 
@@ -273,19 +240,13 @@ const VaultListItem = (props: VaultListItemProps) => {
             <span className='text-xs'>{version}</span>
           </a>
           <div className='flex items-center gap-2 text-pt-purple-100'>
-            <span className='text-xs'>
-              {intl?.('numVaults', { number: numVaults.mainnet }) ??
-                `${numVaults.mainnet} vault${numVaults.mainnet === 1 ? '' : 's'}`}
-            </span>
+            <span className='text-xs'>{t('numVaults', { number: numVaults.mainnet })}</span>
             {numVaults.testnet > 0 && (
               <span className='text-xs'>
-                (+
-                {intl?.('numTestnetVaults', { number: numVaults.testnet }) ??
-                  `${numVaults.testnet} vault${numVaults.testnet === 1 ? '' : 's'}`}
-                )
+                (+{t('numTestnetVaults', { number: numVaults.testnet })})
               </span>
             )}
-            {isImported && <ImportedBadge intl={{ text: intl?.('imported') }} />}
+            {isImported && <ImportedBadge intl={{ text: t('imported') }} />}
           </div>
         </div>
       </div>
@@ -301,18 +262,19 @@ const VaultListItem = (props: VaultListItemProps) => {
 
 interface ClearImportedVaultListsButtonProps {
   onClick: () => void
-  intl?: Intl<'clearImportedVaultLists'>
 }
 
 const ClearImportedVaultListsButton = (props: ClearImportedVaultListsButtonProps) => {
-  const { onClick, intl } = props
+  const { onClick } = props
+
+  const t = useTranslations('Settings')
 
   return (
     <span
       onClick={onClick}
       className='w-full text-center text-sm text-pt-purple-200 cursor-pointer'
     >
-      {intl?.('clearImportedVaultLists') ?? 'Clear all imported vault lists'}
+      {t('clearImportedVaultLists')}
     </span>
   )
 }

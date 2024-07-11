@@ -4,32 +4,26 @@ import {
   useSelectedCurrency,
   useSelectedLanguage
 } from '@shared/generic-react-hooks'
-import { Intl } from '@shared/types'
+import { ClipboardListIcon } from '@shared/react-components'
 import { BasicIcon } from '@shared/ui'
 import { LINKS } from '@shared/utilities'
 import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
 import { ReactNode } from 'react'
-import { SettingsModalOption, SettingsModalView } from '..'
-import { ClipboardListIcon } from '../../../Icons/ClipboardListIcon'
+import { useSettingsModalView } from '@hooks/useSettingsModalView'
+import { SettingsModalOption } from '..'
 
 interface MenuViewProps {
-  setView: (view: SettingsModalView) => void
   disable?: SettingsModalOption[]
   hide?: SettingsModalOption[]
-  intl?: Intl<
-    | 'customizeExperience'
-    | 'changeCurrency'
-    | 'changeLanguage'
-    | 'viewEcosystem'
-    | 'manageVaultLists'
-    | 'setCustomRPCs'
-    | 'getHelp'
-    | 'getHelpWithCabana'
-  >
 }
 
 export const MenuView = (props: MenuViewProps) => {
-  const { setView, disable, hide, intl } = props
+  const { disable, hide } = props
+
+  const t = useTranslations('Settings')
+
+  const { setView: setSettingsModalView } = useSettingsModalView()
 
   const { selectedCurrency } = useSelectedCurrency()
   const { selectedLanguage } = useSelectedLanguage()
@@ -37,51 +31,51 @@ export const MenuView = (props: MenuViewProps) => {
   return (
     <div className='flex flex-col gap-4'>
       <SettingsMenuSection
-        title={intl?.('customizeExperience') ?? 'Customize Your Experience'}
+        title={t('customizeExperience')}
         items={[
           {
             iconContent: SUPPORTED_CURRENCIES[selectedCurrency].symbol,
-            title: intl?.('changeCurrency') ?? 'Change Currency',
-            onClick: () => setView('currency'),
+            title: t('changeCurrency'),
+            onClick: () => setSettingsModalView('currency'),
             disabled: disable?.includes('currency'),
             hidden: hide?.includes('currency')
           },
           {
             iconContent: selectedLanguage.toUpperCase(),
             iconClassName: '!text-base font-semibold',
-            title: intl?.('changeLanguage') ?? 'Change Language',
-            onClick: () => setView('language'),
+            title: t('changeLanguage'),
+            onClick: () => setSettingsModalView('language'),
             disabled: disable?.includes('language'),
             hidden: hide?.includes('language')
           },
           {
             iconContent: <SparklesIcon className='h-6 w-6 text-pt-purple-100' />,
-            title: intl?.('viewEcosystem') ?? 'View Ecosystem',
+            title: t('viewEcosystem'),
             onClick: () => window.open(LINKS.ecosystem)
           },
           {
             iconContent: <ClipboardListIcon className='h-6 w-6 text-pt-purple-100' />,
-            title: intl?.('manageVaultLists') ?? 'Manage Vault Lists',
-            onClick: () => setView('vaultLists'),
+            title: t('manageVaultLists'),
+            onClick: () => setSettingsModalView('vaultLists'),
             disabled: disable?.includes('vaultLists'),
             hidden: hide?.includes('vaultLists')
           },
           {
             iconContent: <CubeTransparentIcon className='h-6 w-6 text-pt-purple-100' />,
-            title: intl?.('setCustomRPCs') ?? 'Set Custom RPCs',
-            onClick: () => setView('customRPCs'),
+            title: t('setCustomRPCs'),
+            onClick: () => setSettingsModalView('customRPCs'),
             disabled: disable?.includes('customRPCs'),
             hidden: hide?.includes('customRPCs')
           }
         ]}
       />
       <SettingsMenuSection
-        title={intl?.('getHelp') ?? 'Get Help'}
+        title={t('getHelp')}
         items={[
           {
             iconContent: '?',
             iconClassName: 'font-semibold',
-            title: intl?.('getHelpWithCabana') ?? 'Get Help w/ Using Cabana',
+            title: t('getHelpWithCabana'),
             onClick: () => window.open(LINKS.docs)
           }
         ]}

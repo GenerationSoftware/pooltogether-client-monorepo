@@ -4,15 +4,9 @@ import {
   usePrizeDrawWinners,
   useSelectedVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
-import {
-  CaptchaModal,
-  CheckPrizesModal,
-  DelegateModal,
-  SettingsModal
-} from '@shared/react-components'
+import { CaptchaModal } from '@shared/react-components'
 import { toast } from '@shared/ui'
-import { getDiscordInvite, NETWORK } from '@shared/utilities'
+import { getDiscordInvite } from '@shared/utilities'
 import classNames from 'classnames'
 import * as fathom from 'fathom-client'
 import { useAtomValue } from 'jotai'
@@ -20,19 +14,20 @@ import { useTranslations } from 'next-intl'
 import Head from 'next/head'
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/router'
-import { ReactNode, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { trackDeposit } from 'src/utils'
 import { useAccount } from 'wagmi'
-import { DEFAULT_VAULT_LISTS, FATHOM_EVENTS } from '@constants/config'
-import { useNetworks } from '@hooks/useNetworks'
+import { FATHOM_EVENTS } from '@constants/config'
 import { useSelectedPrizePool } from '@hooks/useSelectedPrizePool'
-import { useSettingsModalView } from '@hooks/useSettingsModalView'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { useWalletId } from '@hooks/useWalletId'
 import { Footer } from './Footer'
 import { MigrationPopup } from './MigrationPopup'
+import { CheckPrizesModal } from './Modals/CheckPrizesModal'
+import { DelegateModal } from './Modals/DelegateModal'
 import { DepositModal } from './Modals/DepositModal'
 import { DrawModal } from './Modals/DrawModal'
+import { SettingsModal } from './Modals/SettingsModal'
 import { WithdrawModal } from './Modals/WithdrawModal'
 import { Navbar } from './Navbar'
 import { drawIdAtom } from './Prizes/PrizePoolWinners'
@@ -50,23 +45,6 @@ export const Layout = (props: LayoutProps) => {
 
   const t_common = useTranslations('Common')
   const t_nav = useTranslations('Navigation')
-  const t_settings = useTranslations('Settings')
-  const t_txModals = useTranslations('TxModals')
-  const t_txToasts = useTranslations('Toasts.transactions')
-  const t_errors = useTranslations('Error')
-  const t_prizeChecking = useTranslations('Account.prizeChecking')
-
-  const { view: settingsModalView, setView: setSettingsModalView } = useSettingsModalView()
-
-  const supportedNetworks = useNetworks()
-
-  const customRpcNetworks = useMemo(() => {
-    return [...new Set([NETWORK.mainnet, ...supportedNetworks])]
-  }, [supportedNetworks])
-
-  const { openConnectModal } = useConnectModal()
-  const { openChainModal } = useChainModal()
-  const addRecentTransaction = useAddRecentTransaction()
 
   const { vaults } = useSelectedVaults()
   const { address: userAddress } = useAccount()
@@ -140,17 +118,11 @@ export const Layout = (props: LayoutProps) => {
       <Navbar />
 
       <SettingsModal
-        view={settingsModalView}
-        setView={setSettingsModalView}
-        reloadPage={() => router.reload()}
         locales={['en', 'de', 'ru', 'ko', 'uk', 'hi', 'es']}
-        localVaultLists={DEFAULT_VAULT_LISTS}
-        supportedNetworks={customRpcNetworks}
         onCurrencyChange={() => fathom.trackEvent(FATHOM_EVENTS.changedCurrency)}
         onLanguageChange={() => fathom.trackEvent(FATHOM_EVENTS.changedLanguage)}
         onVaultListImport={() => fathom.trackEvent(FATHOM_EVENTS.importedVaultList)}
         onRpcChange={() => fathom.trackEvent(FATHOM_EVENTS.changedRPC)}
-        intl={{ base: t_settings, errors: t_errors }}
       />
 
       <DepositModal
@@ -176,22 +148,14 @@ export const Layout = (props: LayoutProps) => {
         onSuccessfulWithdrawal={() => fathom.trackEvent(FATHOM_EVENTS.redeemed)}
       />
 
-      <DelegateModal
-        openConnectModal={openConnectModal}
-        openChainModal={openChainModal}
-        addRecentTransaction={addRecentTransaction}
-        onSuccessfulDelegation={() => fathom.trackEvent(FATHOM_EVENTS.delegated)}
-        intl={{ base: t_txModals, common: t_common, txToast: t_txToasts, errors: t_errors }}
-      />
+      <DelegateModal onSuccessfulDelegation={() => fathom.trackEvent(FATHOM_EVENTS.delegated)} />
 
       <DrawModal draw={selectedDraw} prizePool={selectedPrizePool} />
 
       <CheckPrizesModal
         prizePools={prizePoolsArray}
-        onGoToAccount={() => router.push('/account')}
         onWin={() => fathom.trackEvent(FATHOM_EVENTS.checkedPrizes, { _value: 1 })}
         onNoWin={() => fathom.trackEvent(FATHOM_EVENTS.checkedPrizes, { _value: 0 })}
-        intl={t_prizeChecking}
       />
 
       <CaptchaModal

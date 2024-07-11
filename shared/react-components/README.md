@@ -40,10 +40,6 @@ A React componponent library utilizing some simpler components from the internal
 - `TokenValue`
 - `TokenValueAndAmount`
 
-### Forms
-
-- `DelegateForm`
-
 ### Graphics
 
 - `ErrorPooly`
@@ -61,9 +57,6 @@ A React componponent library utilizing some simpler components from the internal
 ### Modals
 
 - `CaptchaModal`
-- `CheckPrizesModal`
-- `DelegateModal`
-- `SettingsModal`
 
 ### Prize Pool
 

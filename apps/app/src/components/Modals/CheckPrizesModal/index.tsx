@@ -5,9 +5,9 @@ import {
   useLastCheckedPrizesTimestamps
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen, useScreenSize } from '@shared/generic-react-hooks'
-import { Intl } from '@shared/types'
 import { Modal } from '@shared/ui'
 import { getSecondsSinceEpoch, sToMs } from '@shared/utilities'
+import { useRouter } from 'next/router'
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
@@ -19,14 +19,14 @@ export type CheckPrizesModalView = 'checking' | 'win' | 'noWin'
 
 export interface CheckPrizesModalProps {
   prizePools: PrizePool[]
-  onGoToAccount: () => void
   onWin?: () => void
   onNoWin?: () => void
-  intl?: Intl<'checking' | 'noPrizes' | 'viewAccount' | 'youWonX' | 'xWon'>
 }
 
 export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
-  const { prizePools, onGoToAccount, onWin, onNoWin, intl } = props
+  const { prizePools, onWin, onNoWin } = props
+
+  const router = useRouter()
 
   const { isModalOpen, setIsModalOpen } = useIsModalOpen(MODAL_KEYS.checkPrizes)
 
@@ -102,26 +102,24 @@ export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
 
   if (isModalOpen) {
     const modalViews: Record<CheckPrizesModalView, ReactNode> = {
-      checking: <CheckingView intl={intl} />,
+      checking: <CheckingView />,
       win: !!drawsToCheck && (
         <WinView
           prizePools={prizePools}
           draws={drawsToCheck.draws}
           wins={wins}
           onGoToAccount={() => {
-            onGoToAccount()
+            router.push('/account')
             handleClose()
           }}
-          intl={intl}
         />
       ),
       noWin: (
         <NoWinView
           onGoToAccount={() => {
-            onGoToAccount()
+            router.push('/account')
             handleClose()
           }}
-          intl={intl}
         />
       )
     }

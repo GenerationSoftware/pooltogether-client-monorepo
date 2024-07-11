@@ -1,34 +1,27 @@
 import { CheckIcon } from '@heroicons/react/24/outline'
 import { CURRENCY_ID, SUPPORTED_CURRENCIES, useSelectedCurrency } from '@shared/generic-react-hooks'
-import { Intl } from '@shared/types'
 import classNames from 'classnames'
-import { SettingsModalView } from '..'
+import { useTranslations } from 'next-intl'
+import { useSettingsModalView } from '@hooks/useSettingsModalView'
 
 interface CurrencyViewProps {
-  setView: (view: SettingsModalView) => void
   onCurrencyChange?: (id: CURRENCY_ID) => void
-  intl?: Intl<'customizeCurrency'>
 }
 
 export const CurrencyView = (props: CurrencyViewProps) => {
-  const { setView, onCurrencyChange, intl } = props
+  const { onCurrencyChange } = props
+
+  const t = useTranslations('Settings')
 
   const currencies = Object.keys(SUPPORTED_CURRENCIES) as CURRENCY_ID[]
 
   return (
     <div className='flex flex-col items-center gap-4 px-4'>
       <span className='textl-lg font-semibold text-pt-purple-50 order-first md:text-xl'>
-        {intl?.('customizeCurrency') ?? 'Customize Currency'}
+        {t('customizeCurrency')}
       </span>
       {currencies.map((id) => {
-        return (
-          <CurrencyItem
-            key={`curr-item-${id}`}
-            id={id}
-            setView={setView}
-            onSelect={onCurrencyChange}
-          />
-        )
+        return <CurrencyItem key={`curr-item-${id}`} id={id} onSelect={onCurrencyChange} />
       })}
     </div>
   )
@@ -36,12 +29,13 @@ export const CurrencyView = (props: CurrencyViewProps) => {
 
 interface CurrencyItemProps {
   id: CURRENCY_ID
-  setView: (view: SettingsModalView) => void
   onSelect?: (id: CURRENCY_ID) => void
 }
 
 const CurrencyItem = (props: CurrencyItemProps) => {
-  const { id, setView, onSelect } = props
+  const { id, onSelect } = props
+
+  const { setView: setSettingsModalView } = useSettingsModalView()
 
   const { selectedCurrency, setSelectedCurrency } = useSelectedCurrency()
 
@@ -54,7 +48,7 @@ const CurrencyItem = (props: CurrencyItemProps) => {
       onClick={() => {
         setSelectedCurrency(id)
         onSelect?.(id)
-        setView('menu')
+        setSettingsModalView('menu')
       }}
     >
       <span className='flex items-center justify-center gap-2 text-pt-purple-50'>

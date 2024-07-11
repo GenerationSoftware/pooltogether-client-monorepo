@@ -4,18 +4,16 @@ import {
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { useSelectedCurrency } from '@shared/generic-react-hooks'
-import { DrawWithTimestamps, SubgraphPrize, TokenWithAmount, Win } from '@shared/types'
-import { Intl } from '@shared/types'
+import { NetworkIcon, TokenAmount, TokenValue } from '@shared/react-components'
+import { DrawWithTimestamps, SubgraphPrize, TokenWithAmount } from '@shared/types'
 import { Button } from '@shared/ui'
 import { getSimpleDate, NETWORK, WRAPPED_NATIVE_ASSETS } from '@shared/utilities'
 import classNames from 'classnames'
 import Lottie from 'lottie-react'
+import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
-import { TokenAmount } from '../../../Currency/TokenAmount'
-import { TokenValue } from '../../../Currency/TokenValue'
-import { NetworkIcon } from '../../../Icons/NetworkIcon'
 import { winAnimation } from '../animations'
 
 interface WinViewProps {
@@ -23,11 +21,12 @@ interface WinViewProps {
   draws: { [chainId: number]: DrawWithTimestamps[] }
   wins: { [chainId: number]: SubgraphPrize[] }
   onGoToAccount: () => void
-  intl?: Intl<'viewAccount' | 'youWonX' | 'xWon'>
 }
 
 export const WinView = (props: WinViewProps) => {
-  const { prizePools, draws, wins, onGoToAccount, intl } = props
+  const { prizePools, draws, wins, onGoToAccount } = props
+
+  const t = useTranslations('Account.prizeChecking')
 
   const { address: userAddress } = useAccount()
 
@@ -108,7 +107,7 @@ export const WinView = (props: WinViewProps) => {
           onComplete={() => setIsAnimationComplete(true)}
         />
         <Button onClick={onGoToAccount} className={classNames('mx-auto', transitionIn)}>
-          {intl?.('viewAccount') ?? `View Your Account`}
+          {t('viewAccount')}
         </Button>
       </div>
     )
@@ -120,11 +119,12 @@ export const WinView = (props: WinViewProps) => {
 interface HeaderProps {
   token: TokenWithAmount
   className?: string
-  intl?: Intl<'youWonX'>
 }
 
 const Header = (props: HeaderProps) => {
-  const { token, className, intl } = props
+  const { token, className } = props
+
+  const t = useTranslations('Account.prizeChecking')
 
   const { selectedCurrency } = useSelectedCurrency()
 
@@ -143,7 +143,7 @@ const Header = (props: HeaderProps) => {
   return (
     <div className={classNames('flex flex-col items-center text-center', className)}>
       <span className='text-3xl font-grotesk font-medium text-gray-100'>
-        {intl?.('youWonX') ?? `You won`} <TokenValue token={token} hideZeroes={true} />!
+        {t('youWonX')} <TokenValue token={token} hideZeroes={true} />!
       </span>
       {!isTokenEquivalentHidden && (
         <span className='text-pt-purple-100'>
@@ -159,11 +159,12 @@ interface PrizeRowProps {
   timestamp: number
   prizeToken: { chainId: number; address: Address; amount: bigint }
   className?: string
-  intl?: Intl<'xWon'>
 }
 
 const PrizeRow = (props: PrizeRowProps) => {
-  const { chainId, timestamp, prizeToken, className, intl } = props
+  const { chainId, timestamp, prizeToken, className } = props
+
+  const t = useTranslations('Account.prizeChecking')
 
   return (
     <div
@@ -177,7 +178,7 @@ const PrizeRow = (props: PrizeRowProps) => {
         <span className='text-sm text-pt-purple-300'>{getSimpleDate(timestamp)}</span>
       </div>
       <span className='font-medium'>
-        <TokenValue token={prizeToken} /> {intl?.('xWon') ?? `Won!`}
+        <TokenValue token={prizeToken} /> {t('xWon')}
       </span>
     </div>
   )

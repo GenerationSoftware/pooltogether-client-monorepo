@@ -4,37 +4,24 @@ import {
   useVaultShareData,
   useVaultTokenAddress
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { NetworkIcon, TokenIcon } from '@shared/react-components'
 import { TokenWithLogo } from '@shared/types'
-import { Intl, RichIntl } from '@shared/types'
 import { Spinner } from '@shared/ui'
 import { getNiceNetworkNameByChainId } from '@shared/utilities'
+import { useTranslations } from 'next-intl'
 import { useAccount } from 'wagmi'
-import { DelegateForm } from '../../Form/DelegateForm'
-import { NetworkIcon } from '../../Icons/NetworkIcon'
-import { TokenIcon } from '../../Icons/TokenIcon'
+import { DelegateForm } from './DelegateForm'
 import { DelegateModalView } from './index'
 
 interface DelegateModalBodyProps {
   vault: Vault
   modalView: DelegateModalView
-  intl?: {
-    base?: Intl<
-      | 'delegateFrom'
-      | 'delegateFromShort'
-      | 'delegateDescription'
-      | 'delegateSelfDescription'
-      | 'changeDelegateAddress'
-      | 'changeDelegateAddressShort'
-      | 'delegatedAddress'
-    >
-    tooltip?: Intl<'delegateDescription'>
-    common?: Intl<'prizePool' | 'warning' | 'learnMore'>
-    errors?: RichIntl<'formErrors.invalidAddress' | 'formErrors.sameAsDelegate'>
-  }
 }
 
 export const DelegateModalBody = (props: DelegateModalBodyProps) => {
-  const { vault, modalView, intl } = props
+  const { vault, modalView } = props
+
+  const t = useTranslations('TxModals')
 
   const { address: userAddress } = useAccount()
 
@@ -70,28 +57,24 @@ export const DelegateModalBody = (props: DelegateModalBodyProps) => {
               <NetworkIcon chainId={vault.chainId} className='absolute top-4 left-4 h-3 w-3' />
             </div>
             <span className='hidden md:inline-block'>
-              {intl?.base?.('delegateFrom', { name: vaultName, network: networkName }) ??
-                `Delegate your ${vaultName} on ${networkName}`}
+              {t('delegateFrom', { name: vaultName, network: networkName })}
             </span>
             <span className='inline-block md:hidden text-sm'>
-              {intl?.base?.('delegateFromShort', { name: vaultName }) ??
-                `Delegate your ${vaultName}`}
+              {t('delegateFromShort', { name: vaultName })}
             </span>
           </div>
         )}
 
         <span className='text-xs sm:text-sm my-2 font-normal text-pt-purple-200 block'>
           {!!vaultName && isDelegatedToSelf
-            ? intl?.base?.('delegateSelfDescription', { tokens: vaultToken }) ??
-              `You are delegating to yourself. Any prize your ${vaultToken} deposit wins will go to your wallet..`
-            : intl?.base?.('delegateDescription', { tokens: vaultToken }) ??
-              `The delegated address receives any prizes your ${vaultToken} deposit wins.`}
+            ? t('delegateSelfDescription', { tokens: vaultToken })
+            : t('delegateDescription', { tokens: vaultToken })}
         </span>
 
         {!vaultName && <Spinner />}
       </span>
 
-      <DelegateForm modalView={modalView} vault={vault} intl={intl} />
+      <DelegateForm modalView={modalView} vault={vault} />
     </div>
   )
 }
