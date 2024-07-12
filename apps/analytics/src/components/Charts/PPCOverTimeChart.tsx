@@ -47,7 +47,7 @@ export const PPCOverTimeChart = (props: PPCOverTimeChartProps) => {
     <div
       className={classNames('w-full flex flex-col gap-2 font-medium text-pt-purple-800', className)}
     >
-      <span className='ml-2 text-pt-purple-100 font-bold'>PPCs Over Time</span>
+      <span className='ml-2 text-pt-purple-100 font-bold'>Prize Pool Contributions Over Time</span>
       {isReady ? (
         <BarChart
           data={chartData}
