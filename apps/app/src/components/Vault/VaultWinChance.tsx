@@ -20,7 +20,9 @@ interface VaultWinChanceProps {
 export const VaultWinChance = (props: VaultWinChanceProps) => {
   const { vault, className, fallbackClassName, tooltipClassName } = props
 
-  const { data: winChance, isFetched: isFetchedWinChance } = useVaultWinChance(vault)
+  const { data: winChance, isFetched: isFetchedWinChance } = useVaultWinChance(vault, {
+    capMaxPrizeYieldConsidered: 100
+  })
 
   const prizePools = useSupportedPrizePools()
   const prizePool = Object.values(prizePools).find((pool) => pool.chainId === vault.chainId)

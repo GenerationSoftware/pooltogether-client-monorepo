@@ -10,9 +10,13 @@ import { useSupportedPrizePools } from './useSupportedPrizePools'
 /**
  * Returns a relative value from 0 to 1 that represents the chances of winning in a given vault
  * @param vault the vault to calculate win chance for
+ * @param options optional settings
  * @returns
  */
-export const useVaultWinChance = (vault: Vault) => {
+export const useVaultWinChance = (
+  vault: Vault,
+  options?: { capMaxPrizeYieldConsidered?: number }
+) => {
   const { vaults: selectedVaults } = useSelectedVaults()
 
   const vaults = useMemo(() => {
@@ -36,7 +40,12 @@ export const useVaultWinChance = (vault: Vault) => {
     const prizeYield = allVaultPrizeYields[vault.id] as number | undefined
 
     if (prizeYield !== undefined) {
-      return Math.sqrt(prizeYield / Math.max(...Object.values(allVaultPrizeYields)))
+      const capValue = (val: number) => Math.min(val, options?.capMaxPrizeYieldConsidered || val)
+
+      const maxPrizeYield = Math.max(...Object.values(allVaultPrizeYields).map(capValue))
+      const relativeValue = Math.sqrt(Math.sqrt(capValue(prizeYield) / maxPrizeYield))
+
+      return relativeValue
     }
   }, [vault, allVaultPrizeYields])
 
