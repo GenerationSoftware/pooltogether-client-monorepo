@@ -11,19 +11,23 @@ import {
  */
 const tokenLogoUrls = {
   eth: `${LINKS.app}/icons/ether.svg`,
-  pool: 'https://assets.coingecko.com/coins/images/14003/standard/PoolTogether.png?1696513732',
-  usdc: 'https://assets.coingecko.com/coins/images/6319/standard/usdc.png?1696506694',
-  dai: 'https://assets.coingecko.com/coins/images/9956/standard/Badge_Dai.png?1696509996',
-  gusd: 'https://assets.coingecko.com/coins/images/5992/standard/gemini-dollar-gusd.png?1696506408',
-  weth: 'https://assets.coingecko.com/coins/images/2518/standard/weth.png?1696503332',
-  wbtc: 'https://assets.coingecko.com/coins/images/7598/standard/wrapped_bitcoin_wbtc.png?1696507857',
-  lusd: 'https://assets.coingecko.com/coins/images/14666/standard/Group_3.png?1696514341',
+  pool: 'https://assets.coingecko.com/coins/images/14003/standard/PoolTogether.png',
+  usdc: 'https://assets.coingecko.com/coins/images/6319/standard/usdc.png',
+  dai: 'https://assets.coingecko.com/coins/images/9956/standard/Badge_Dai.png',
+  gusd: 'https://assets.coingecko.com/coins/images/5992/standard/gemini-dollar-gusd.png',
+  weth: 'https://assets.coingecko.com/coins/images/2518/standard/weth.png',
+  wbtc: 'https://assets.coingecko.com/coins/images/7598/standard/wrapped_bitcoin_wbtc.png',
+  lusd: 'https://assets.coingecko.com/coins/images/14666/standard/Group_3.png',
   op: 'https://optimistic.etherscan.io/token/images/optimism_32.png',
   przVELO: `${LINKS.app}/icons/przVELO.svg`,
-  steth: 'https://assets.coingecko.com/coins/images/13442/standard/steth_logo.png?1696513206',
-  usdt: 'https://assets.coingecko.com/coins/images/325/standard/Tether.png?1696501661',
+  steth: 'https://assets.coingecko.com/coins/images/13442/standard/steth_logo.png',
+  usdt: 'https://assets.coingecko.com/coins/images/325/standard/Tether.png',
   usda: 'https://raw.githubusercontent.com/AngleProtocol/angle-token-list/main/src/assets/tokens/stUSD.svg',
-  eura: 'https://raw.githubusercontent.com/AngleProtocol/angle-token-list/main/src/assets/tokens/stEUR.svg'
+  eura: 'https://raw.githubusercontent.com/AngleProtocol/angle-token-list/main/src/assets/tokens/stEUR.svg',
+  crash: 'https://assets.coingecko.com/coins/images/37152/standard/apCdaaX9_400x400.jpg',
+  degen: 'https://assets.coingecko.com/coins/images/34515/standard/android-chrome-512x512.png',
+  dude: 'https://assets.coingecko.com/coins/images/36860/standard/dudelogo.png',
+  higher: 'https://assets.coingecko.com/coins/images/36084/standard/200x200logo.png'
 } as const
 
 /**
@@ -116,7 +120,11 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x368181499736d0c0cc614dbb145e2ec1ac86b8c6': tokenLogoUrls.lusd,
     '0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452': tokenLogoUrls.steth,
     '0x0000206329b97db379d5e1bf586bbdb969c63274': tokenLogoUrls.usda,
-    '0xa61beb4a3d02decb01039e378237032b351125b4': tokenLogoUrls.eura
+    '0xa61beb4a3d02decb01039e378237032b351125b4': tokenLogoUrls.eura,
+    '0x621e87af48115122cd96209f820fe0445c2ea90e': tokenLogoUrls.crash,
+    '0x4ed4e862860bed51a9570b96d89af5e1b0efefed': tokenLogoUrls.degen,
+    '0xcb2861a1ec1d0392afb9e342d5aa539e4f75b633': tokenLogoUrls.dude,
+    '0x0578d8a44db98b23bf096a382e016e29a5ce0ffe': tokenLogoUrls.higher
   },
   [NETWORK.base_sepolia]: {
     [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,
