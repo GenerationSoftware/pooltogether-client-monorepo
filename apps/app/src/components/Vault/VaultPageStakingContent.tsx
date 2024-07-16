@@ -28,8 +28,6 @@ export const VaultPagePoolStakingContent = (props: VaultPagePoolStakingContentPr
 
   const numDraws = 7
 
-  const t_vault = useTranslations('Vault')
-
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
   const { data: lastAwardedDrawId } = useLastAwardedDrawId(prizePool)
@@ -95,24 +93,12 @@ export const VaultPagePoolStakingContent = (props: VaultPagePoolStakingContentPr
 
   return (
     <div className={classNames('w-full flex flex-col gap-8', className)}>
-      <VaultPageCard title={t_vault('poolReserveRateTitle')}>
-        {!!vaultContributions ? (
-          <span className='text-3xl font-semibold text-pt-purple-100'>
-            {t_vault('percentageOfYield', {
-              number: vaultContributions.current.percentage.toLocaleString(undefined, {
-                maximumFractionDigits: 2
-              })
-            })}
-          </span>
-        ) : (
-          <Spinner />
-        )}
-        <span className='text-lg text-pt-purple-300'>
-          {t_vault('poolReserveRateDescription', {
-            network: getNiceNetworkNameByChainId(prizePool.chainId)
-          })}
-        </span>
-      </VaultPageCard>
+      <ReserveRateCard
+        chainId={prizePool.chainId}
+        numDraws={numDraws}
+        currentReserveRate={vaultContributions?.current.percentage}
+        pastReserveRate={vaultContributions?.past.percentage}
+      />
       <Card className='aspect-[7/8] md:aspect-[3/2] items-center'>
         {!!prizeToken && !!vaultContributions ? (
           <VaultContributionsChart
@@ -125,6 +111,64 @@ export const VaultPagePoolStakingContent = (props: VaultPagePoolStakingContentPr
         )}
       </Card>
     </div>
+  )
+}
+
+interface ReserveRateCardProps {
+  chainId: number
+  numDraws: number
+  currentReserveRate?: number
+  pastReserveRate?: number
+  className?: string
+}
+
+const ReserveRateCard = (props: ReserveRateCardProps) => {
+  const { chainId, numDraws, currentReserveRate, pastReserveRate } = props
+
+  const t_vault = useTranslations('Vault')
+
+  const formattedReserveRate =
+    currentReserveRate !== undefined
+      ? currentReserveRate.toLocaleString(undefined, { maximumFractionDigits: 2 })
+      : undefined
+
+  const change =
+    currentReserveRate !== undefined && pastReserveRate !== undefined
+      ? currentReserveRate - pastReserveRate
+      : undefined
+  const formattedChange = !!change
+    ? Math.abs(change).toLocaleString(undefined, { maximumFractionDigits: 2 })
+    : undefined
+
+  return (
+    <VaultPageCard title={t_vault('poolReserveRateTitle')}>
+      {currentReserveRate !== undefined ? (
+        <>
+          <span className='text-3xl font-semibold text-pt-purple-100'>
+            {t_vault('percentageOfYield', { number: formattedReserveRate })}
+          </span>
+          {!!change && (
+            <span
+              className={classNames({
+                'text-pt-teal-dark': change > 0,
+                'text-pt-warning-dark': change < 0
+              })}
+            >
+              {change > 0 ? '↑' : '↓'}
+              {formattedChange}%{' '}
+              <span className='text-pt-purple-300'>
+                {t_vault('lastNDraws', { number: numDraws })}
+              </span>
+            </span>
+          )}
+        </>
+      ) : (
+        <Spinner />
+      )}
+      <span className='text-lg text-pt-purple-300'>
+        {t_vault('poolReserveRateDescription', { network: getNiceNetworkNameByChainId(chainId) })}
+      </span>
+    </VaultPageCard>
   )
 }
 
@@ -229,7 +273,7 @@ const Keys = (props: KeysProps) => {
           {!!changes[index] && (
             <span
               className={classNames({
-                'text-pt-teal': changes[index] > 0,
+                'text-pt-teal-dark': changes[index] > 0,
                 'text-pt-warning-dark': changes[index] < 0
               })}
             >
