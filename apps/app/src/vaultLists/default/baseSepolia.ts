@@ -14,6 +14,9 @@ export const baseSepoliaVaults: VaultList['tokens'] = [
         address: '0x50Ac98a0CA373a3935069A8755D895663d2F4A16',
         symbol: 'POOL',
         name: 'PoolTogether'
+      },
+      yieldSource: {
+        name: 'PoolTogether'
       }
     }
   },

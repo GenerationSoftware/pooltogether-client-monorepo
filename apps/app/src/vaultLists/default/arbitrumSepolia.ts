@@ -14,6 +14,9 @@ export const arbitrumSepoliaVaults: VaultList['tokens'] = [
         address: '0x02A32F041C16158bcC1CaA90e22B230958eD5c4b',
         symbol: 'POOL',
         name: 'PoolTogether'
+      },
+      yieldSource: {
+        name: 'PoolTogether'
       }
     }
   },
