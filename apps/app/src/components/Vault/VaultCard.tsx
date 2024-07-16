@@ -7,9 +7,11 @@ import {
   RelativeWinChanceTooltip,
   VaultBadge
 } from '@shared/react-components'
+import { lower } from '@shared/utilities'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { TWAB_REWARDS_SETTINGS } from '@constants/config'
+import { POOL_STAKING_VAULTS, TWAB_REWARDS_SETTINGS } from '@constants/config'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { useVaultImportedListSrcs } from '@hooks/useVaultImportedListSrcs'
 import { VaultBonusRewards } from './VaultBonusRewards'
@@ -44,8 +46,15 @@ export const VaultCard = (props: VaultCardProps) => {
     { fromBlock }
   )
 
+  const isPoolStakingVault = POOL_STAKING_VAULTS[vault.chainId] === lower(vault.address)
+
   return (
-    <div className='flex flex-col gap-4 bg-pt-transparent rounded-lg px-3 pt-3 pb-6'>
+    <div
+      className={classNames('flex flex-col gap-4 rounded-lg px-3 pt-3 pb-6', {
+        'bg-pt-purple-600': isPoolStakingVault,
+        'bg-pt-transparent': !isPoolStakingVault
+      })}
+    >
       <div className='inline-flex gap-2 items-center'>
         <Link href={`/vault/${vault.chainId}/${vault.address}`}>
           <VaultBadge vault={vault} onClick={() => {}} />

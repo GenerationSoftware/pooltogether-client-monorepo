@@ -12,11 +12,12 @@ import {
   VaultBadge
 } from '@shared/react-components'
 import { Table, TableProps } from '@shared/ui'
-import { getVaultId } from '@shared/utilities'
+import { getVaultId, lower } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { ReactNode } from 'react'
+import { POOL_STAKING_VAULTS } from '@constants/config'
 import { VaultBonusRewards } from './VaultBonusRewards'
 import { VaultButtons } from './VaultButtons'
 import { VaultPrizes } from './VaultPrizes'
@@ -107,6 +108,8 @@ export const VaultsTable = (props: VaultsTableProps) => {
     rows: vaults.map((vault) => {
       const importedSrcs = getImportedVaultSrcs(vault)
 
+      const isPoolStakingVault = POOL_STAKING_VAULTS[vault.chainId] === lower(vault.address)
+
       return {
         id: vault.id,
         cells: {
@@ -156,7 +159,8 @@ export const VaultsTable = (props: VaultsTableProps) => {
             content: <VaultButtons vault={vault} forceHide={['delegate']} />,
             position: 'right'
           }
-        }
+        },
+        className: classNames({ '!bg-pt-purple-600': isPoolStakingVault })
       }
     })
   }
