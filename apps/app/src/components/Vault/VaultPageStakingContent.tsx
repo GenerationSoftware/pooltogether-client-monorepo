@@ -8,6 +8,7 @@ import { useScreenSize } from '@shared/generic-react-hooks'
 import { Token } from '@shared/types'
 import { Intl } from '@shared/types'
 import { Card, Spinner } from '@shared/ui'
+import { getNiceNetworkNameByChainId } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -15,6 +16,7 @@ import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
 import { formatUnits } from 'viem'
 import { POOL_STAKING_VAULTS, QUERY_START_BLOCK } from '@constants/config'
 import { usePrizePoolPPCs } from '@hooks/usePrizePoolPPCs'
+import { VaultPageCard } from './VaultPageCard'
 
 interface VaultPagePoolStakingContentProps {
   prizePool: PrizePool
@@ -25,6 +27,8 @@ export const VaultPagePoolStakingContent = (props: VaultPagePoolStakingContentPr
   const { prizePool, className } = props
 
   const numDraws = 7
+
+  const t_vault = useTranslations('Vault')
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
@@ -90,9 +94,25 @@ export const VaultPagePoolStakingContent = (props: VaultPagePoolStakingContentPr
   }, [prizeToken, drawIds, currentTotalPPCs, pastTotalPPCs, contributionEvents])
 
   return (
-    <div className={classNames('w-full flex flex-col', className)}>
-      {/* TODO: show explainer sentence */}
-      {/* TODO: add pool reserve rate card */}
+    <div className={classNames('w-full flex flex-col gap-8', className)}>
+      <VaultPageCard title={t_vault('poolReserveRateTitle')}>
+        {!!vaultContributions ? (
+          <span className='text-3xl font-semibold text-pt-purple-100'>
+            {t_vault('percentageOfYield', {
+              number: vaultContributions.current.percentage.toLocaleString(undefined, {
+                maximumFractionDigits: 2
+              })
+            })}
+          </span>
+        ) : (
+          <Spinner />
+        )}
+        <span className='text-lg text-pt-purple-300'>
+          {t_vault('poolReserveRateDescription', {
+            network: getNiceNetworkNameByChainId(prizePool.chainId)
+          })}
+        </span>
+      </VaultPageCard>
       <Card className='aspect-[7/8] md:aspect-[3/2] items-center'>
         {!!prizeToken && !!vaultContributions ? (
           <VaultContributionsChart

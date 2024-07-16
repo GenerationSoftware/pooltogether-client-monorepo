@@ -135,6 +135,9 @@
       "twoTokens": "in <firstToken></firstToken> and <secondToken></secondToken>",
       "manyTokens": "in <token></token> & {number} others"
     },
+    "poolReserveRateTitle": "Current POOL Reserve Rate",
+    "poolReserveRateDescription": "This percentage of all yield on the {network} prize pool goes towards this POOL vault, and is distributed in the most PoolTogether way; as prizes!",
+    "percentageOfYield": "{number}% of yield",
     "nDayNetworkYield": "{number}D Network Yield",
     "nDayPoolReserve": "{number}D POOL Reserve",
     "lastNDays": "last {number} days",
