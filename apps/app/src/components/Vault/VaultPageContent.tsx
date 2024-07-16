@@ -106,7 +106,9 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
             />
           )}
           <VaultPageCards vault={vault} className={maxWidthClassName} />
-          {isPoolStakingVault && <VaultPagePoolStakingContent prizePool={prizePool} />}
+          {isPoolStakingVault && (
+            <VaultPagePoolStakingContent prizePool={prizePool} className={maxWidthClassName} />
+          )}
           <div
             className={classNames(
               'w-full grid grid-cols-1 gap-x-3 gap-y-8',

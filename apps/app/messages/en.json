@@ -134,7 +134,11 @@
       "oneToken": "in <token></token>",
       "twoTokens": "in <firstToken></firstToken> and <secondToken></secondToken>",
       "manyTokens": "in <token></token> & {number} others"
-    }
+    },
+    "nDayNetworkYield": "{number}D Network Yield",
+    "nDayPoolReserve": "{number}D POOL Reserve",
+    "lastNDays": "last {number} days",
+    "lastNDraws": "last {number} draws"
   },
   "Account": {
     "connectWallet": "Connect your wallet to view account status",
