@@ -5,8 +5,8 @@ import { baseVaults } from './base'
 const memeVaultList: VaultList = {
   name: 'Meme Vault List',
   keywords: ['pooltogether', 'memes', 'base'],
-  version: { major: 1, minor: 0, patch: 0 },
-  timestamp: '2024-07-09T21:05:21Z',
+  version: { major: 1, minor: 1, patch: 0 },
+  timestamp: '2024-07-17T15:23:43Z',
   logoURI: `${DOMAINS.app}/doge.png`,
   tokens: [...baseVaults]
 }
