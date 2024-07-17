@@ -413,9 +413,9 @@ export const LIQUIDATION_PAIR_FACTORY_ADDRESSES: { [chainId: number]: Address } 
  * Default claimer addresses
  */
 export const DEFAULT_CLAIMER_ADDRESSES: { [chainId: number]: Address } = {
-  [NETWORK.optimism]: '0x0b5a1dc536D5A67C66D00B337E6b189385BD8438',
-  [NETWORK.base]: '0x5ffeee76d1e2d2d1d18ba0bc77d8d047b85e1e87',
-  [NETWORK.arbitrum]: '0x1e68e5e92d22aefdc791a61c874c06831023e571',
+  [NETWORK.optimism]: '0x220C9398b0Ee07472bF8906e44574Cb9FE3B8D90',
+  [NETWORK.base]: '0xcdCE635b774DE77cdF791647601dba64a75547ba',
+  [NETWORK.arbitrum]: '0xBEA38368f2A657f00f173764f18F00e841317c73',
   [NETWORK.optimism_sepolia]: '0xac2be4D9C0d8841c1f0Af43A564BDF2EF3Df3954',
   [NETWORK.arbitrum_sepolia]: '0x24ad9015e48951f74f33dc071af34a6db14e95d9',
   [NETWORK.base_sepolia]: '0xdc5e799a3e57f7642210feb9ebb0d1a38cf4fe84'
