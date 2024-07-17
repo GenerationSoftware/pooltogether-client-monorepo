@@ -701,13 +701,6 @@ export const vaultABI = [
     type: 'function'
   },
   {
-    inputs: [{ internalType: 'uint256', name: '_assets', type: 'uint256' }],
-    name: 'sponsor',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-    stateMutability: 'nonpayable',
-    type: 'function'
-  },
-  {
     inputs: [],
     name: 'symbol',
     outputs: [{ internalType: 'string', name: '', type: 'string' }],
