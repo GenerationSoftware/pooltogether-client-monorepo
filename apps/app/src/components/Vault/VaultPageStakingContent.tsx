@@ -199,6 +199,7 @@ const VaultContributionsChart = (props: VaultContributionsChartProps) => {
     ]
   }, [vaultContributions])
 
+  // TODO: improve vertical padding of chart container on desktop and mobile
   return (
     <div
       className={classNames('w-full h-full flex flex-col items-center justify-center', className)}
@@ -214,6 +215,8 @@ const VaultContributionsChart = (props: VaultContributionsChartProps) => {
                 ? (params) => getSvgLabel(params, vaultContributions, prizeToken, numDraws, t_vault)
                 : false
             }
+            labelLine={false}
+            cx={isDesktop ? '30%' : undefined}
           >
             <Cell
               key='totalContributionsCell'
@@ -337,6 +340,7 @@ const getSvgLabel = (
     midAngle: number
     innerRadius: number
     outerRadius: number
+    maxRadius: number
     index: number
   },
   vaultContributions: {
@@ -347,13 +351,13 @@ const getSvgLabel = (
   numDraws: number,
   intl: Intl<'nDayNetworkYield' | 'nDayPoolReserve' | 'lastNDays' | 'lastNDraws'>
 ) => {
-  const { cx, cy, midAngle, innerRadius, outerRadius, index } = data
+  const { cx, cy, midAngle: _midAngle, innerRadius, outerRadius, maxRadius, index } = data
 
-  // TODO: display both on the right with straight lines
-  // TODO: fix labels clipping on card boundaries
-  const radius = 25 + innerRadius + (outerRadius - innerRadius)
-  const x = cx + radius * Math.cos((-midAngle * Math.PI) / 180)
+  const midAngle = index === 0 ? 35 : _midAngle
+  const radius = innerRadius + (outerRadius - innerRadius)
+  const x = maxRadius + (maxRadius - cx) / 3
   const y = cy + radius * Math.sin((-midAngle * Math.PI) / 180)
+  const lineLength = x - (cx + radius * Math.cos((-midAngle * Math.PI) / 180))
 
   const defaultProps = { x, y, dominantBaseline: 'middle' }
 
@@ -361,7 +365,13 @@ const getSvgLabel = (
     getKeysData(vaultContributions, numDraws, intl)
 
   return (
-    <g textAnchor={midAngle >= 90 && midAngle <= 270 ? 'end' : 'start'}>
+    <>
+      <LabelLine
+        x={x - lineLength + 16}
+        y={y}
+        length={lineLength - 32}
+        stroke={fillColors[index]}
+      />
       <text {...defaultProps} fill={fillColors[index]} fontSize={20} fontWeight={700}>
         {titles[index]}
       </text>
@@ -379,6 +389,31 @@ const getSvgLabel = (
           {formattedChanges[index]}% <tspan fill='#b18cff'>{changeTimeText}</tspan>
         </text>
       )}
-    </g>
+    </>
+  )
+}
+
+interface LabelLineProps {
+  x: number
+  y: number
+  length: number
+  stroke: string
+}
+
+const LabelLine = (props: LabelLineProps) => {
+  const { x, y, length, stroke } = props
+
+  return (
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      x={x}
+      y={y - 3}
+      width={length + 3}
+      height={6}
+      viewBox={`0 0 ${length + 3} 6`}
+      fill='none'
+    >
+      <path d={`M${length} 3 L3 3`} stroke={stroke} strokeWidth={5} strokeLinecap='round' />
+    </svg>
   )
 }
