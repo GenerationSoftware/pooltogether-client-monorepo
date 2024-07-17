@@ -47,12 +47,6 @@ export const PrizesView = (props: PrizesViewProps) => {
             drawId={drawIdSelected}
             className='max-w-4xl'
           />
-          {/* TODO: re-add this chart once infura caching issue is fixed */}
-          {/* <DrawClaimFeesOverTimeChart
-            prizePool={prizePool}
-            drawId={drawIdSelected}
-            className='max-w-4xl'
-          /> */}
           <PrizesTable prizePool={prizePool} drawId={drawIdSelected} className='md:mt-6' />
         </>
       )}
