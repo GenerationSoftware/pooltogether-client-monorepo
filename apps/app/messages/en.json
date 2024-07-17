@@ -145,6 +145,7 @@
     "yourDelegations": "Delegated to You",
     "yourWinnings": "Your Winnings",
     "delegatedTo": "Delegated to <link>{account}</link>",
+    "sponsoring": "Sponsoring",
     "externalAccountDeposits": "{account}'s Deposits",
     "externalAccountDelegations": "Delegations to {account}",
     "externalAccountWinnings": "{account}'s Winnings",

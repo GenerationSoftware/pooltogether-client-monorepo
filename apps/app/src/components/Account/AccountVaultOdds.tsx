@@ -65,17 +65,19 @@ export const AccountVaultOdds = (props: AccountVaultOddsProps) => {
   if (!!delegate && delegate?.toLowerCase() !== userAddress.toLowerCase()) {
     return (
       <span className={classNames(className, delegatedClassName)}>
-        {t.rich('delegatedTo', {
-          account: ensName ?? shorten(delegate),
-          link: (chunks) => (
-            <Link
-              href={`/account/${ensName ?? delegate}`}
-              className='text-pt-teal hover:text-pt-teal-dark'
-            >
-              {chunks}
-            </Link>
-          )
-        })}
+        {delegate === '0x0000000000000000000000000000000000000001'
+          ? t('sponsoring')
+          : t.rich('delegatedTo', {
+              account: ensName ?? shorten(delegate),
+              link: (chunks) => (
+                <Link
+                  href={`/account/${ensName ?? delegate}`}
+                  className='text-pt-teal hover:text-pt-teal-dark'
+                >
+                  {chunks}
+                </Link>
+              )
+            })}
       </span>
     )
   }
