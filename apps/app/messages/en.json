@@ -134,6 +134,16 @@
       "oneToken": "in <token></token>",
       "twoTokens": "in <firstToken></firstToken> and <secondToken></secondToken>",
       "manyTokens": "in <token></token> & {number} others"
+    },
+    "poolStaking": {
+      "reserveRate": "POOL Reserve Rate",
+      "wherePrizesComeFrom": "Where <highlight>Prize POOL</highlight> prizes come from",
+      "reserveDescription": "The <highlight>POOL reserve</highlight> goes to this vault and is distributed as prizes!",
+      "percentageOfYield": "{number}% of yield",
+      "nDayNetworkYield": "{number}D Network Yield",
+      "nDayPoolReserve": "{number}D POOL Reserve",
+      "lastNDays": "last {number} days",
+      "lastNDraws": "last {number} draws"
     }
   },
   "Account": {

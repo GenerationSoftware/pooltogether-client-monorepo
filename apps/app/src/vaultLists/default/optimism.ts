@@ -14,6 +14,9 @@ export const optimismVaults: VaultList['tokens'] = [
         address: '0x395Ae52bB17aef68C2888d941736A71dC6d4e125',
         symbol: 'POOL',
         name: 'PoolTogether'
+      },
+      yieldSource: {
+        name: 'PoolTogether'
       }
     }
   },

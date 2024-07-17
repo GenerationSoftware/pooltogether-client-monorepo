@@ -14,6 +14,9 @@ export const baseVaults: VaultList['tokens'] = [
         address: '0xd652C5425aea2Afd5fb142e120FeCf79e18fafc3',
         symbol: 'POOL',
         name: 'PoolTogether'
+      },
+      yieldSource: {
+        name: 'PoolTogether'
       }
     }
   },

@@ -14,6 +14,9 @@ export const optimismSepoliaVaults: VaultList['tokens'] = [
         address: '0x24Ffb8Ca3DeA588B267A15F1d94766dCbA034aE6',
         symbol: 'POOL',
         name: 'PoolTogether'
+      },
+      yieldSource: {
+        name: 'PoolTogether'
       }
     }
   },

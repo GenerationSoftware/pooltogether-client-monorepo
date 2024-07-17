@@ -14,6 +14,9 @@ export const arbitrumVaults: VaultList['tokens'] = [
         address: '0xCF934E2402A5e072928a39a956964eb8F2B5B79C',
         symbol: 'POOL',
         name: 'PoolTogether'
+      },
+      yieldSource: {
+        name: 'PoolTogether'
       }
     }
   },

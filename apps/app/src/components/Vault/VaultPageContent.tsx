@@ -9,7 +9,7 @@ import {
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { AlertIcon, ErrorPooly } from '@shared/react-components'
 import { Button, Spinner } from '@shared/ui'
-import { getBlockExplorerUrl, getVaultId, LINKS, NETWORK } from '@shared/utilities'
+import { getBlockExplorerUrl, getVaultId, LINKS, lower, NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -17,7 +17,7 @@ import { ParsedUrlQuery } from 'querystring'
 import { AnchorHTMLAttributes, DetailedHTMLProps, useMemo } from 'react'
 import { Address, isAddress } from 'viem'
 import { useAccount } from 'wagmi'
-import { SUPPORTED_NETWORKS, TWAB_REWARDS_SETTINGS } from '@constants/config'
+import { POOL_STAKING_VAULTS, SUPPORTED_NETWORKS, TWAB_REWARDS_SETTINGS } from '@constants/config'
 import { useNetworks } from '@hooks/useNetworks'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { VaultPageBonusRewardsSection } from './VaultPageBonusRewardsSection'
@@ -28,6 +28,7 @@ import { VaultPageHeader } from './VaultPageHeader'
 import { VaultPageInfo } from './VaultPageInfo'
 import { VaultPagePrizesSection } from './VaultPagePrizesSection'
 import { VaultPageRecentWinnersCard } from './VaultPageRecentWinnersCard'
+import { VaultPagePoolStakingContent } from './VaultPageStakingContent'
 import { VaultPageVaultListWarning } from './VaultPageVaultListWarning'
 
 interface VaultPageContentProps {
@@ -88,6 +89,8 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
     )
   }
 
+  const isPoolStakingVault = !!vault && POOL_STAKING_VAULTS[vault.chainId] === lower(vault.address)
+
   return (
     <>
       <VaultPageHeader vault={vault} className={maxWidthClassName} />
@@ -103,6 +106,13 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
             />
           )}
           <VaultPageCards vault={vault} className={maxWidthClassName} />
+          {isPoolStakingVault && (
+            <VaultPagePoolStakingContent
+              vault={vault}
+              prizePool={prizePool}
+              className={maxWidthClassName}
+            />
+          )}
           <div
             className={classNames(
               'w-full grid grid-cols-1 gap-x-3 gap-y-8',

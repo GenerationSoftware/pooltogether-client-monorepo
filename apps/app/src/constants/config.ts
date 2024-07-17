@@ -97,6 +97,18 @@ export const DEFAULT_VAULT_LISTS = {
 } as const satisfies { [vaultListId: string]: VaultList }
 
 /**
+ * POOL staking prize vaults
+ */
+export const POOL_STAKING_VAULTS: { [chainId: number]: Lowercase<Address> } = {
+  [NETWORK.optimism]: '0xa52e38a9147f5ea9e0c5547376c21c9e3f3e5e1f',
+  [NETWORK.arbitrum]: '0x97a9c02cfbbf0332d8172331461ab476df1e8c95',
+  [NETWORK.base]: '0x6b5a5c55e9dd4bb502ce25bbfbaa49b69cf7e4dd',
+  [NETWORK.optimism_sepolia]: '0x95849a4c2e58f4f8bf868adef10b05747a24ee71',
+  [NETWORK.arbitrum_sepolia]: '0xb608c0f9d37b14bdfefc654b1fc8f38b34541a01',
+  [NETWORK.base_sepolia]: '0x8ec8328d3281f8275d6b44ffada9df002b928aea'
+}
+
+/**
  * Event queries' start blocks
  */
 export const QUERY_START_BLOCK = {
