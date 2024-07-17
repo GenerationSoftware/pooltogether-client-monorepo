@@ -444,6 +444,12 @@ export const V3_POOLS: Record<
       ticketAddress: '0x0e930b8610229d74da0a174626138deb732ce6e9',
       tokenAddress: '0x04f2694c8fcee23e8fd0dfea1d4f5bb8c352111f',
       migrateTo: MIGRATION_DESTINATIONS.wethVault
+    },
+    {
+      address: '0xc32a0f9dfe2d93e8a60ba0200e033a59aec91559',
+      ticketAddress: '0xfdc192c153044dedb67c5a17b8651951cf70ee4a',
+      tokenAddress: '0x6b3595068778dd592e39a122f4f5a5cf09c90fe2',
+      migrateTo: MIGRATION_DESTINATIONS.wethVault
     }
   ],
   [NETWORK.optimism]: [],
