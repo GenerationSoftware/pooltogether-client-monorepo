@@ -1,5 +1,12 @@
 import { VaultInfo } from '@shared/types'
-import { Address, formatUnits, isAddress, parseUnits, PublicClient } from 'viem'
+import {
+  Address,
+  formatUnits,
+  isAddress,
+  parseUnits,
+  PublicClient,
+  ReadContractParameters
+} from 'viem'
 import { twabControllerABI } from '../abis/twabController'
 import { vaultABI } from '../abis/vault'
 import { vaultFactoryABI } from '../abis/vaultFactory'
@@ -232,45 +239,64 @@ export const getVaultAddresses = (vaults: VaultInfo[]): { [chainId: number]: Add
 }
 
 /**
- * Returns all vault addresses from a vault factory
+ * Returns all vault addresses from vault factories
  * @param publicClient a public Viem client to query through
- * @param options optional custom vault factory address
+ * @param options optional custom vault factory addresses
  * @returns
  */
-export const getVaultAddressesFromFactory = async (
+export const getVaultAddressesFromFactories = async (
   publicClient: PublicClient,
-  options?: { factoryAddress?: Address }
+  options?: { factoryAddresses?: Address[] }
 ) => {
   const vaultAddresses = new Set<Lowercase<Address>>()
 
   const chainId = await publicClient.getChainId()
 
-  const vaultFactoryAddress = options?.factoryAddress ?? VAULT_FACTORY_ADDRESSES[chainId]
+  const vaultFactoryAddresses = options?.factoryAddresses ?? []
 
-  if (!vaultFactoryAddress) throw new Error(`No vault factory address set for chain ID ${chainId}`)
+  if (!vaultFactoryAddresses.length && !VAULT_FACTORY_ADDRESSES[chainId]) {
+    throw new Error(`No vault factory address set for chain ID ${chainId}`)
+  } else if (!vaultFactoryAddresses.length) {
+    vaultFactoryAddresses.push(VAULT_FACTORY_ADDRESSES[chainId])
+  }
 
-  const totalVaults = await publicClient.readContract({
-    address: vaultFactoryAddress,
-    abi: vaultFactoryABI,
-    functionName: 'totalVaults'
+  const totalVaultsMulticallResults = await publicClient.multicall({
+    contracts: vaultFactoryAddresses.map((address) => ({
+      address,
+      abi: vaultFactoryABI,
+      functionName: 'totalVaults'
+    }))
   })
 
-  const vaultIndexes = [...Array(Number(totalVaults)).keys()]
-  const calls = vaultIndexes.map((vaultIndex) => ({
-    functionName: 'allVaults',
-    args: [vaultIndex]
-  }))
+  const vaultIndexes: { [vaultFactoryAddress: Address]: number[] } = {}
+  totalVaultsMulticallResults.forEach((entry, i) => {
+    if (entry.status === 'success' && entry.result > 0n) {
+      vaultIndexes[vaultFactoryAddresses[i]] = [...Array(Number(entry.result)).keys()]
+    }
+  })
 
-  const multicallResults: (string | undefined)[] = await getSimpleMulticallResults(
-    publicClient,
-    vaultFactoryAddress,
-    vaultFactoryABI,
-    calls
-  )
+  const contracts: ReadContractParameters<typeof vaultFactoryABI>[] = []
+  Object.entries(vaultIndexes).forEach(([address, indexes]) => {
+    indexes.forEach((index) => {
+      contracts.push({
+        address: address as Address,
+        abi: vaultFactoryABI,
+        functionName: 'allVaults',
+        args: [BigInt(index)]
+      })
+    })
+  })
 
-  multicallResults.forEach((address) => {
-    if (!!address && isAddress(address)) {
-      vaultAddresses.add(lower(address))
+  if (!contracts.length) {
+    return []
+  }
+
+  const vaultAddressesMulticallResults = await publicClient.multicall({ contracts })
+
+  vaultAddressesMulticallResults.forEach((entry) => {
+    if (entry.status === 'success') {
+      const address = entry.result as any as string
+      isAddress(address) && vaultAddresses.add(lower(address))
     }
   })
 
