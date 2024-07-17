@@ -15,7 +15,8 @@ interface TVLStatsProps {
 export const TVLStats = (props: TVLStatsProps) => {
   const { prizePool, className } = props
 
-  const { data: deposits } = useDeposits(prizePool)
+  // TODO: disabled until this is more efficient (currently spamming waaaaay too many eth_getBlock calls)
+  // const { data: deposits } = useDeposits(prizePool)
 
   return (
     <div className={classNames('w-full flex flex-col items-center gap-4', className)}>
@@ -24,7 +25,7 @@ export const TVLStats = (props: TVLStatsProps) => {
         <TVLOverTimeChart prizePool={prizePool} />
         <TVLByTokenChart prizePool={prizePool} />
       </div>
-      <StatCards
+      {/* <StatCards
         cards={[
           {
             id: 'medianDeposit',
@@ -46,7 +47,7 @@ export const TVLStats = (props: TVLStatsProps) => {
           }
         ]}
         className='sm:grid-cols-2'
-      />
+      /> */}
     </div>
   )
 }
