@@ -107,7 +107,11 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
           )}
           <VaultPageCards vault={vault} className={maxWidthClassName} />
           {isPoolStakingVault && (
-            <VaultPagePoolStakingContent prizePool={prizePool} className={maxWidthClassName} />
+            <VaultPagePoolStakingContent
+              vault={vault}
+              prizePool={prizePool}
+              className={maxWidthClassName}
+            />
           )}
           <div
             className={classNames(

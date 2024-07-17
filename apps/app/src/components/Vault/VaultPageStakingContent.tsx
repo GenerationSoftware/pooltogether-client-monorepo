@@ -1,4 +1,4 @@
-import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useLastAwardedDrawId,
   usePrizeTokenData,
@@ -8,25 +8,29 @@ import { useScreenSize } from '@shared/generic-react-hooks'
 import { Token } from '@shared/types'
 import { Intl } from '@shared/types'
 import { Card, Spinner } from '@shared/ui'
-import { getNiceNetworkNameByChainId } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
 import { formatUnits } from 'viem'
-import { POOL_STAKING_VAULTS, QUERY_START_BLOCK } from '@constants/config'
+import { QUERY_START_BLOCK } from '@constants/config'
 import { usePrizePoolPPCs } from '@hooks/usePrizePoolPPCs'
 import { VaultPageCard } from './VaultPageCard'
+import { VaultPrizeYield } from './VaultPrizeYield'
 
 interface VaultPagePoolStakingContentProps {
+  vault: Vault
   prizePool: PrizePool
   className?: string
 }
 
 export const VaultPagePoolStakingContent = (props: VaultPagePoolStakingContentProps) => {
-  const { prizePool, className } = props
+  const { vault, prizePool, className } = props
 
   const numDraws = 7
+
+  const t_vault = useTranslations('Vault')
+  const t_common = useTranslations('Common')
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
@@ -52,7 +56,7 @@ export const VaultPagePoolStakingContent = (props: VaultPagePoolStakingContentPr
   const { data: pastTotalPPCs } = usePrizePoolPPCs(prizePool, drawIds?.past!)
 
   const { data: contributionEvents } = useVaultContributionEvents(prizePool, {
-    vaultAddress: POOL_STAKING_VAULTS[prizePool.chainId],
+    vaultAddress: vault.address,
     fromBlock: QUERY_START_BLOCK[prizePool.chainId as keyof typeof QUERY_START_BLOCK]
   })
 
@@ -93,29 +97,50 @@ export const VaultPagePoolStakingContent = (props: VaultPagePoolStakingContentPr
 
   return (
     <div className={classNames('w-full flex flex-col gap-8', className)}>
-      <ReserveRateCard
-        chainId={prizePool.chainId}
-        numDraws={numDraws}
-        currentReserveRate={vaultContributions?.current.percentage}
-        pastReserveRate={vaultContributions?.past.percentage}
-      />
-      <Card className='aspect-[7/8] md:aspect-[3/2] items-center'>
-        {!!prizeToken && !!vaultContributions ? (
-          <VaultContributionsChart
-            vaultContributions={vaultContributions}
-            prizeToken={prizeToken}
-            numDraws={numDraws}
+      <div className='grid grid-cols-1 gap-3 md:grid-cols-2'>
+        <ReserveRateCard
+          numDraws={numDraws}
+          currentReserveRate={vaultContributions?.current.percentage}
+          pastReserveRate={vaultContributions?.past.percentage}
+        />
+        <VaultPageCard title={t_vault('headers.prizeYield')}>
+          <VaultPrizeYield
+            vault={vault}
+            label={t_common('apr')}
+            className='text-3xl font-semibold text-pt-purple-100'
           />
-        ) : (
-          <Spinner />
-        )}
+        </VaultPageCard>
+      </div>
+      <Card className='aspect-[2/3] md:aspect-[3/2] items-center'>
+        <div className='flex flex-col gap-4 text-center text-pt-purple-100 font-semibold md:gap-1'>
+          <span className='text-3xl'>
+            {t_vault.rich('poolStaking.wherePrizesComeFrom', {
+              highlight: (chunks) => <span className='text-pt-purple-300'>{chunks}</span>
+            })}
+          </span>
+          <span>
+            {t_vault.rich('poolStaking.reserveDescription', {
+              highlight: (chunks) => <span className='text-pt-teal-light'>{chunks}</span>
+            })}
+          </span>
+        </div>
+        <div className='w-full flex grow items-center justify-center'>
+          {!!prizeToken && !!vaultContributions ? (
+            <VaultContributionsChart
+              vaultContributions={vaultContributions}
+              prizeToken={prizeToken}
+              numDraws={numDraws}
+            />
+          ) : (
+            <Spinner />
+          )}
+        </div>
       </Card>
     </div>
   )
 }
 
 interface ReserveRateCardProps {
-  chainId: number
   numDraws: number
   currentReserveRate?: number
   pastReserveRate?: number
@@ -123,7 +148,7 @@ interface ReserveRateCardProps {
 }
 
 const ReserveRateCard = (props: ReserveRateCardProps) => {
-  const { chainId, numDraws, currentReserveRate, pastReserveRate } = props
+  const { numDraws, currentReserveRate, pastReserveRate } = props
 
   const t_vault = useTranslations('Vault')
 
@@ -141,23 +166,23 @@ const ReserveRateCard = (props: ReserveRateCardProps) => {
     : undefined
 
   return (
-    <VaultPageCard title={t_vault('poolReserveRateTitle')}>
+    <VaultPageCard title={t_vault('poolStaking.reserveRate')}>
       {currentReserveRate !== undefined ? (
         <>
           <span className='text-3xl font-semibold text-pt-purple-100'>
-            {t_vault('percentageOfYield', { number: formattedReserveRate })}
+            {t_vault('poolStaking.percentageOfYield', { number: formattedReserveRate })}
           </span>
           {!!change && (
             <span
               className={classNames({
                 'text-pt-teal-dark': change > 0,
-                'text-pt-warning-dark': change < 0
+                'text-pt-warning-light': change < 0
               })}
             >
               {change > 0 ? '↑' : '↓'}
               {formattedChange}%{' '}
               <span className='text-pt-purple-300'>
-                {t_vault('lastNDraws', { number: numDraws })}
+                {t_vault('poolStaking.lastNDraws', { number: numDraws })}
               </span>
             </span>
           )}
@@ -165,9 +190,6 @@ const ReserveRateCard = (props: ReserveRateCardProps) => {
       ) : (
         <Spinner />
       )}
-      <span className='text-lg text-pt-purple-300'>
-        {t_vault('poolReserveRateDescription', { network: getNiceNetworkNameByChainId(chainId) })}
-      </span>
     </VaultPageCard>
   )
 }
@@ -185,7 +207,7 @@ interface VaultContributionsChartProps {
 const VaultContributionsChart = (props: VaultContributionsChartProps) => {
   const { vaultContributions, prizeToken, numDraws, className } = props
 
-  const t_vault = useTranslations('Vault')
+  const t_poolStaking = useTranslations('Vault.poolStaking')
 
   const { isDesktop } = useScreenSize()
 
@@ -199,7 +221,6 @@ const VaultContributionsChart = (props: VaultContributionsChartProps) => {
     ]
   }, [vaultContributions])
 
-  // TODO: improve vertical padding of chart container on desktop and mobile
   return (
     <div
       className={classNames('w-full h-full flex flex-col items-center justify-center', className)}
@@ -212,7 +233,8 @@ const VaultContributionsChart = (props: VaultContributionsChartProps) => {
             innerRadius='60%'
             label={
               isDesktop
-                ? (params) => getSvgLabel(params, vaultContributions, prizeToken, numDraws, t_vault)
+                ? (params) =>
+                    getSvgLabel(params, vaultContributions, prizeToken, numDraws, t_poolStaking)
                 : false
             }
             labelLine={false}
@@ -253,10 +275,10 @@ interface KeysProps {
 const Keys = (props: KeysProps) => {
   const { vaultContributions, prizeToken, numDraws, className } = props
 
-  const t_vault = useTranslations('Vault')
+  const t_poolStaking = useTranslations('Vault.poolStaking')
 
   const { titles, formattedAmounts, changes, formattedChanges, fillColors, changeTimeText } =
-    getKeysData(vaultContributions, numDraws, t_vault)
+    getKeysData(vaultContributions, numDraws, t_poolStaking)
 
   const Key = (props: { index: number }) => {
     const { index } = props
@@ -277,7 +299,7 @@ const Keys = (props: KeysProps) => {
             <span
               className={classNames({
                 'text-pt-teal-dark': changes[index] > 0,
-                'text-pt-warning-dark': changes[index] < 0
+                'text-pt-warning-light': changes[index] < 0
               })}
             >
               {changes[index] > 0 ? '↑' : '↓'}
@@ -382,7 +404,7 @@ const getSvgLabel = (
         <text
           {...defaultProps}
           dy={68}
-          fill={changes[index] > 0 ? '#0dc5a5' : '#8b0000'}
+          fill={changes[index] > 0 ? '#0dc5a5' : '#ffb6b6'}
           fontSize={16}
         >
           {changes[index] > 0 ? '↑' : '↓'}

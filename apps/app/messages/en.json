@@ -135,13 +135,16 @@
       "twoTokens": "in <firstToken></firstToken> and <secondToken></secondToken>",
       "manyTokens": "in <token></token> & {number} others"
     },
-    "poolReserveRateTitle": "Current POOL Reserve Rate",
-    "poolReserveRateDescription": "This percentage of all yield on the {network} prize pool goes towards this POOL vault, and is distributed in the most PoolTogether way: as prizes!",
-    "percentageOfYield": "{number}% of yield",
-    "nDayNetworkYield": "{number}D Network Yield",
-    "nDayPoolReserve": "{number}D POOL Reserve",
-    "lastNDays": "last {number} days",
-    "lastNDraws": "last {number} draws"
+    "poolStaking": {
+      "reserveRate": "POOL Reserve Rate",
+      "wherePrizesComeFrom": "Where <highlight>Prize POOL</highlight> prizes come from",
+      "reserveDescription": "The <highlight>POOL reserve</highlight> goes to this vault and is distributed as prizes!",
+      "percentageOfYield": "{number}% of yield",
+      "nDayNetworkYield": "{number}D Network Yield",
+      "nDayPoolReserve": "{number}D POOL Reserve",
+      "lastNDays": "last {number} days",
+      "lastNDraws": "last {number} draws"
+    }
   },
   "Account": {
     "connectWallet": "Connect your wallet to view account status",
