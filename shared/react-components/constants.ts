@@ -19,7 +19,6 @@ const tokenLogoUrls = {
   wbtc: 'https://assets.coingecko.com/coins/images/7598/standard/wrapped_bitcoin_wbtc.png',
   lusd: 'https://assets.coingecko.com/coins/images/14666/standard/Group_3.png',
   op: 'https://optimistic.etherscan.io/token/images/optimism_32.png',
-  przVELO: `${LINKS.app}/icons/przVELO.svg`,
   steth: 'https://assets.coingecko.com/coins/images/13442/standard/steth_logo.png',
   usdt: 'https://assets.coingecko.com/coins/images/325/standard/Tether.png',
   usda: 'https://raw.githubusercontent.com/AngleProtocol/angle-token-list/main/src/assets/tokens/stUSD.svg',
@@ -74,8 +73,6 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x68f180fcce6836688e9084f035309e29bf0a2095': tokenLogoUrls.wbtc,
     '0xc40f949f8a4e094d1b49a23ea9241d289b7b2819': tokenLogoUrls.lusd,
     '0x4200000000000000000000000000000000000042': tokenLogoUrls.op,
-    '0x9b53ef6f13077727d22cb4acad1119c79a97be17': tokenLogoUrls.przVELO,
-    '0x9b4c0de59628c64b02d7ce86f21db9a579539d5a': tokenLogoUrls.przVELO,
     '0x0000206329b97db379d5e1bf586bbdb969c63274': tokenLogoUrls.usda,
     '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': tokenLogoUrls.eura
   },
