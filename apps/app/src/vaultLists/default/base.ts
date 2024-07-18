@@ -119,5 +119,50 @@ export const baseVaults: VaultList['tokens'] = [
         appURI: 'https://angle.money/stusd'
       }
     }
+  },
+  {
+    chainId: NETWORK.base,
+    address: '0x4e42f783db2d0c5bdff40fdc66fcae8b1cda4a43',
+    name: 'Prize WETH',
+    decimals: 18,
+    symbol: 'przWETH',
+    logoURI: `${DOMAINS.app}/icons/przWETH.svg`,
+    tags: ['aave'],
+    extensions: {
+      underlyingAsset: {
+        address: '0x4200000000000000000000000000000000000006',
+        symbol: 'WETH',
+        name: 'Wrapped Ether'
+      },
+      yieldSource: {
+        name: 'Aave',
+        appURI:
+          'https://app.aave.com/reserve-overview/?underlyingAsset=0x4200000000000000000000000000000000000006&marketName=proto_base_v3'
+      }
+    }
+  },
+  {
+    chainId: NETWORK.base,
+    address: '0x6428DDB6EF1818FA99552E10882D34c1db57BBcA',
+    name: 'Prize WETH/WELL',
+    decimals: 18,
+    symbol: 'przWELL/WETH',
+    logoURI: `${DOMAINS.app}/icons/przAERO.svg`,
+    tags: ['beefy', 'lp', 'aerodrome'],
+    extensions: {
+      underlyingAsset: {
+        address: '0x89D0F320ac73dd7d9513FFC5bc58D1161452a657',
+        symbol: 'vAMM-WETH/WELL',
+        name: 'Volatile AMM - WETH/WELL'
+      },
+      yieldSource: {
+        name: 'Beefy',
+        appURI: 'https://app.beefy.com/vault/aerodrome-weth-bwell'
+      },
+      lp: {
+        appURI:
+          'https://aerodrome.finance/deposit?token0=0x4200000000000000000000000000000000000006&token1=0xA88594D404727625A9437C3f886C7643872296AE&type=-1'
+      }
+    }
   }
 ]

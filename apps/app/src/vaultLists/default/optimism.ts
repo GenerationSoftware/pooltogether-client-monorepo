@@ -171,5 +171,29 @@ export const optimismVaults: VaultList['tokens'] = [
         appURI: 'https://app.beefy.com/vault/sonne-op-op'
       }
     }
+  },
+  {
+    chainId: NETWORK.optimism,
+    address: '0x5eb32e6dEc24d58C14D21fd1b329d9f65DE58364',
+    name: 'Prize WETH/mooBIFI',
+    decimals: 18,
+    symbol: 'przWETH/mooBIFI',
+    logoURI: `${DOMAINS.app}/icons/przVELO.svg`,
+    tags: ['beefy', 'lp', 'velodrome'],
+    extensions: {
+      underlyingAsset: {
+        address: '0x6Ed6Df1C23C51cb7Cc67a348cC8d9E6108EA3BFE',
+        symbol: 'vAMMV2-WETH/mooBIFI',
+        name: 'VolatileV2 AMM - WETH/mooBIFI'
+      },
+      yieldSource: {
+        name: 'Beefy',
+        appURI: 'https://app.beefy.com/vault/velodrome-v2-weth-moobifi'
+      },
+      lp: {
+        appURI:
+          'https://velodrome.finance/deposit?token0=0x4200000000000000000000000000000000000006&token1=0xc55E93C62874D8100dBd2DfE307EDc1036ad5434&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a'
+      }
+    }
   }
 ]
