@@ -49,8 +49,15 @@ export const VaultListHandler = () => {
   // Validating Vault List Source
   useEffect(() => {
     const vaultListSrc = searchParams?.get('list')
+
     if (!!vaultListSrc && typeof vaultListSrc === 'string') {
-      setUrlQueryVaultListSrc(vaultListSrc.trim())
+      const isLocalVaultList = Object.keys(DEFAULT_VAULT_LISTS).includes(vaultListSrc.toLowerCase())
+
+      if (isLocalVaultList) {
+        select(vaultListSrc.toLowerCase(), 'local')
+      } else {
+        setUrlQueryVaultListSrc(vaultListSrc.trim())
+      }
     }
   }, [searchParams])
 
@@ -63,6 +70,7 @@ export const VaultListHandler = () => {
       : isImportingVaultList
       ? 'importing'
       : undefined
+
     if (!!state) {
       createVaultListToast({ vaultListSrc: urlQueryVaultListSrc, state, intl: t })
     }
