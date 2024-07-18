@@ -26,7 +26,11 @@ const tokenLogoUrls = {
   crash: 'https://assets.coingecko.com/coins/images/37152/standard/apCdaaX9_400x400.jpg',
   degen: 'https://assets.coingecko.com/coins/images/34515/standard/android-chrome-512x512.png',
   dude: 'https://assets.coingecko.com/coins/images/36860/standard/dudelogo.png',
-  higher: 'https://assets.coingecko.com/coins/images/36084/standard/200x200logo.png'
+  higher: 'https://assets.coingecko.com/coins/images/36084/standard/200x200logo.png',
+  well: 'https://assets.coingecko.com/coins/images/26133/standard/WELL.png',
+  bifi: 'https://assets.coingecko.com/coins/images/12704/standard/bifi.png',
+  mooBIFI:
+    'https://assets.coingecko.com/coins/images/32597/standard/319381e63428d3c2ab6e035d5f3abd76.png'
 } as const
 
 /**
@@ -43,7 +47,8 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599': tokenLogoUrls.wbtc,
     '0x5f98805a4e8be255a32880fdec7f6728c6568ba0': tokenLogoUrls.lusd,
     '0x0000206329b97db379d5e1bf586bbdb969c63274': tokenLogoUrls.usda,
-    '0x1a7e4e63778b4f12a199c062f3efdd288afcbce8': tokenLogoUrls.eura
+    '0x1a7e4e63778b4f12a199c062f3efdd288afcbce8': tokenLogoUrls.eura,
+    '0xb1f1ee126e9c96231cc3d3fad7c08b4cf873b1f1': tokenLogoUrls.bifi
   },
   [NETWORK.sepolia]: {
     [DOLPHIN_ADDRESS]: tokenLogoUrls.eth
@@ -74,7 +79,9 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0xc40f949f8a4e094d1b49a23ea9241d289b7b2819': tokenLogoUrls.lusd,
     '0x4200000000000000000000000000000000000042': tokenLogoUrls.op,
     '0x0000206329b97db379d5e1bf586bbdb969c63274': tokenLogoUrls.usda,
-    '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': tokenLogoUrls.eura
+    '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': tokenLogoUrls.eura,
+    '0x1f32b1c2345538c0c6f582fcb022739c4a194ebb': tokenLogoUrls.steth,
+    '0xc55e93c62874d8100dbd2dfe307edc1036ad5434': tokenLogoUrls.mooBIFI
   },
   [NETWORK.optimism_sepolia]: {
     [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,
@@ -121,7 +128,8 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x621e87af48115122cd96209f820fe0445c2ea90e': tokenLogoUrls.crash,
     '0x4ed4e862860bed51a9570b96d89af5e1b0efefed': tokenLogoUrls.degen,
     '0xcb2861a1ec1d0392afb9e342d5aa539e4f75b633': tokenLogoUrls.dude,
-    '0x0578d8a44db98b23bf096a382e016e29a5ce0ffe': tokenLogoUrls.higher
+    '0x0578d8a44db98b23bf096a382e016e29a5ce0ffe': tokenLogoUrls.higher,
+    '0xa88594d404727625a9437c3f886c7643872296ae': tokenLogoUrls.well
   },
   [NETWORK.base_sepolia]: {
     [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,
