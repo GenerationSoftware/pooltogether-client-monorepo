@@ -120,11 +120,11 @@ export const optimismVaults: VaultList['tokens'] = [
       },
       yieldSource: {
         name: 'Beefy',
-        appURI: 'https://app.beefy.finance/vault/velodrome-v2-pool-weth'
+        appURI: 'https://app.beefy.com/vault/velodrome-v2-pool-weth'
       },
       lp: {
         appURI:
-          'https://velodrome.finance/deposit?token0=0x395Ae52bB17aef68C2888d941736A71dC6d4e125&token1=0x4200000000000000000000000000000000000006&type=-1'
+          'https://velodrome.finance/deposit?token0=0x395Ae52bB17aef68C2888d941736A71dC6d4e125&token1=0x4200000000000000000000000000000000000006&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a'
       }
     }
   },
@@ -144,11 +144,11 @@ export const optimismVaults: VaultList['tokens'] = [
       },
       yieldSource: {
         name: 'Beefy',
-        appURI: 'https://app.beefy.finance/vault/velodrome-v2-wsteth-weth'
+        appURI: 'https://app.beefy.com/vault/velodrome-v2-wsteth-weth'
       },
       lp: {
         appURI:
-          'https://velodrome.finance/deposit?token0=0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb&token1=0x4200000000000000000000000000000000000006&type=-1'
+          'https://velodrome.finance/deposit?token0=0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb&token1=0x4200000000000000000000000000000000000006&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a'
       }
     }
   },
@@ -168,7 +168,7 @@ export const optimismVaults: VaultList['tokens'] = [
       },
       yieldSource: {
         name: 'Beefy',
-        appURI: 'https://app.beefy.finance/vault/sonne-op-op'
+        appURI: 'https://app.beefy.com/vault/sonne-op-op'
       }
     }
   }

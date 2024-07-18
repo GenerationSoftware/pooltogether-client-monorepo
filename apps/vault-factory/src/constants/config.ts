@@ -119,7 +119,7 @@ export const NETWORK_CONFIG: Record<
       {
         id: 'beefy',
         name: 'Beefy',
-        href: 'https://beefy.finance/',
+        href: 'https://beefy.com/',
         description: 'Multichain yield optimizer',
         vaults: [
           { address: '0x1dBD083e1422c8c7AcD7091F5437e8C2854F25f4', tags: ['lp'] },
