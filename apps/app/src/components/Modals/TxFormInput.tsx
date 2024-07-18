@@ -157,7 +157,7 @@ export const TxFormInput = (props: TxFormInputProps) => {
               items={tokenPickerOptions}
               inline={true}
               className='pl-1 pr-1 border-0 rounded-lg hover:bg-pt-transparent'
-              floatingContentClassName='md:!fixed md:!inset-auto md:!transform-none md:-mx-[calc(0.5rem+1px)] md:-my-[calc(2.5rem+1px)]'
+              floatingContentClassName='md:!fixed md:!inset-auto md:max-h-[50vh] md:!transform-none md:-mx-[calc(0.5rem+1px)] md:-my-[calc(2.5rem+1px)] md:overflow-auto'
             />
           </div>
         ) : (
