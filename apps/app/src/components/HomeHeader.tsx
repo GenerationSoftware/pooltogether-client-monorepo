@@ -60,8 +60,10 @@ const TokenFlipper = (props: { className?: string }) => {
     const ignoreList: { [chainId: number]: Lowercase<Address>[] } = {
       [NETWORK.optimism]: [
         '0xdb1fe6da83698885104da02a6e0b3b65c0b0de80',
-        '0x6da98bde0068d10ddd11b468b197ea97d96f96bc'
-      ]
+        '0x6da98bde0068d10ddd11b468b197ea97d96f96bc',
+        '0x6ed6df1c23c51cb7cc67a348cc8d9e6108ea3bfe'
+      ],
+      [NETWORK.base]: ['0x89d0f320ac73dd7d9513ffc5bc58d1161452a657']
     }
 
     defaultVaultList.tokens.forEach((vaultInfo) => {
