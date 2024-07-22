@@ -131,7 +131,8 @@ export const NETWORK_CONFIG: Record<
           { address: '0xA240fEd2198E2549C090b7b6b3b7748f9330E88a', tags: ['lp'] },
           { address: '0xEcbe6Eef225f143EE4Eb26368a2f6BE1E60835bC', tags: ['lp'] },
           { address: '0xAc314aa0FB72aa53A100AaF55A4CF9d9949FF9c0', tags: ['lp'] },
-          { address: '0x60c20e80355e92Ef2f1CD96E07088F1b0AF46124' }
+          { address: '0x3A23118b62d693b6F92D4dd48a8b34AedCcba7f3', tags: ['lp'] },
+          { address: '0x068FA527EAa896440a78BC6a174D85dd31C4B345', tags: ['lp'] }
         ]
       }
     ],
@@ -150,7 +151,15 @@ export const NETWORK_CONFIG: Record<
     prizePool: '0x45b2010d8A4f08b53c9fa7544C51dFd9733732cb',
     claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.base],
     lp: { targetAuctionPeriod: SECONDS_PER_HOUR * 6, targetAuctionPriceUsd: 10 },
-    yieldSources: [],
+    yieldSources: [
+      {
+        id: 'beefy',
+        name: 'Beefy',
+        href: 'https://beefy.com/',
+        description: 'Multichain yield optimizer',
+        vaults: [{ address: '0xC5b394778A1F28735C380A15E9cC8a014F40e2B1', tags: ['lp'] }]
+      }
+    ],
     contributor: '0x4e30c0a8cce76940d87ae62eb12f3ac536a996f4'
   },
   [NETWORK.optimism_sepolia]: {
