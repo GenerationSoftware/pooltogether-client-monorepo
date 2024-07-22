@@ -48,9 +48,8 @@ export const AccountPromotionCards = (props: AccountPromotionCardsProps) => {
     })
 
     return Object.entries(promotions)
-      .sort((a, b) =>
-        a[1].claimable > b[1].claimable ? -1 : b[1].startTimestamp - a[1].startTimestamp
-      )
+      .sort((a, b) => b[1].startTimestamp - a[1].startTimestamp)
+      .sort((a, b) => +b[1].claimable - +a[1].claimable)
       ?.map(([id]) => id)
   }, [claimed, claimable])
 

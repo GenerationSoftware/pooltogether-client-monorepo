@@ -87,14 +87,14 @@ export const AccountPromotionsTable = (props: AccountPromotionsTableProps) => {
     })
 
     const sortedPromotions = Object.entries(promotions)
-      .sort((a, b) =>
-        a[1].claimable > b[1].claimable ? -1 : b[1].startTimestamp - a[1].startTimestamp
-      )
+      .sort((a, b) => b[1].startTimestamp - a[1].startTimestamp)
+      .sort((a, b) => +b[1].claimable - +a[1].claimable)
       ?.map(([id]) => id)
 
     sortedPromotions.forEach((uniquePromotionId) => {
       const chainId = parseInt(uniquePromotionId.split('-')[0])
       const promotionId = BigInt(uniquePromotionId.split('-')[1])
+
       const promotionInfo =
         claimed.find(
           (promotion) => promotion.chainId === chainId && promotion.promotionId === promotionId
