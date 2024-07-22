@@ -87,8 +87,8 @@ const ContributionsChart = (props: ContributionsChartProps) => {
   const t_vault = useTranslations('Vault')
 
   const { data: contributionEvents } = useVaultContributionEvents(prizePool, {
-    vaultAddress: lower(vault.address),
-    fromBlock: QUERY_START_BLOCK[vault.chainId as keyof typeof QUERY_START_BLOCK]
+    vaultAddress: vault.address,
+    fromBlock: QUERY_START_BLOCK[prizePool.chainId as keyof typeof QUERY_START_BLOCK]
   })
 
   const { data: firstDrawOpenTimestamp } = useFirstDrawOpenedAt(prizePool)

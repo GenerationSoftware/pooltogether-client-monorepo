@@ -68,23 +68,18 @@ export const VaultPagePoolStakingContent = (props: VaultPagePoolStakingContentPr
       !!pastTotalPPCs &&
       !!contributionEvents
     ) {
-      const vaultPPCs = contributionEvents.map((event) => ({
-        drawId: event.args.drawId,
-        amount: event.args.amount
-      }))
-
       const formatPrizeToken = (val: bigint) => parseFloat(formatUnits(val, prizeToken.decimals))
 
       const current = { amount: 0, totalAmount: formatPrizeToken(currentTotalPPCs), percentage: 0 }
       const past = { amount: 0, totalAmount: formatPrizeToken(pastTotalPPCs), percentage: 0 }
 
-      vaultPPCs.forEach((vaultPPC) => {
-        if (vaultPPC.drawId >= drawIds.current.start && vaultPPC.drawId <= drawIds.current.end) {
-          current.amount += formatPrizeToken(vaultPPC.amount)
+      contributionEvents.forEach(({ args: { drawId, amount } }) => {
+        if (drawId > drawIds.current.start && drawId <= drawIds.current.end + 1) {
+          current.amount += formatPrizeToken(amount)
         }
 
-        if (vaultPPC.drawId >= drawIds.past.start && vaultPPC.drawId <= drawIds.past.end) {
-          past.amount += formatPrizeToken(vaultPPC.amount)
+        if (drawId > drawIds.past.start && drawId <= drawIds.past.end + 1) {
+          past.amount += formatPrizeToken(amount)
         }
       })
 
