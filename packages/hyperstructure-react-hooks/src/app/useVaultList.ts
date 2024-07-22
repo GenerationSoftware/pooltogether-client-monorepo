@@ -15,18 +15,26 @@ import { QUERY_KEYS } from '../constants'
  */
 export const useVaultList = (
   src: string,
-  options?: { onSuccess?: (id: string) => void }
+  options?: { localVaultLists?: { [id: string]: VaultList }; onSuccess?: (id: string) => void }
 ): UseQueryResult<VaultList | undefined> => {
   const publicClient = usePublicClient({ chainId: NETWORK.mainnet })
 
   const { select } = useSelectedVaultListIds()
   const { cache } = useCachedVaultLists()
 
-  const queryKey = [QUERY_KEYS.vaultList, src]
+  const queryKey = [QUERY_KEYS.vaultList, src, Object.keys(options?.localVaultLists ?? {})]
 
   return useQuery({
     queryKey,
     queryFn: async () => {
+      const localVaultList = options?.localVaultLists?.[src.toLowerCase()]
+
+      if (!!localVaultList) {
+        select(src.toLowerCase(), 'local')
+        options?.onSuccess?.(src.toLowerCase())
+        return localVaultList
+      }
+
       const vaultList = await getVaultList(src, publicClient)
 
       if (!!vaultList) {

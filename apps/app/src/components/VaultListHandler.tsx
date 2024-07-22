@@ -27,6 +27,7 @@ export const VaultListHandler = () => {
     isSuccess: isSuccessVaultList,
     isError: isErrorVaultList
   } = useVaultList(urlQueryVaultListSrc, {
+    localVaultLists: DEFAULT_VAULT_LISTS,
     onSuccess: () => fathom.trackEvent(FATHOM_EVENTS.importedVaultList)
   })
 
@@ -51,13 +52,7 @@ export const VaultListHandler = () => {
     const vaultListSrc = searchParams?.get('list')
 
     if (!!vaultListSrc && typeof vaultListSrc === 'string') {
-      const isLocalVaultList = Object.keys(DEFAULT_VAULT_LISTS).includes(vaultListSrc.toLowerCase())
-
-      if (isLocalVaultList) {
-        select(vaultListSrc.toLowerCase(), 'local')
-      } else {
-        setUrlQueryVaultListSrc(vaultListSrc.trim())
-      }
+      setUrlQueryVaultListSrc(vaultListSrc.trim())
     }
   }, [searchParams])
 
