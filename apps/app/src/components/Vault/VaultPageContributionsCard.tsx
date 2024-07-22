@@ -2,12 +2,12 @@ import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useDrawPeriod,
   useFirstDrawOpenedAt,
+  useLastAwardedDrawId,
   usePrizeTokenData,
   useVaultContributionEvents
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { VaultContributionsTooltip } from '@shared/react-components'
 import { Card, Spinner } from '@shared/ui'
-import { lower } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
@@ -94,10 +94,18 @@ const ContributionsChart = (props: ContributionsChartProps) => {
   const { data: firstDrawOpenTimestamp } = useFirstDrawOpenedAt(prizePool)
   const { data: drawPeriod } = useDrawPeriod(prizePool)
 
+  const { data: lastAwardedDrawId } = useLastAwardedDrawId(prizePool)
+
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
   const chartData = useMemo(() => {
-    if (!!contributionEvents && !!firstDrawOpenTimestamp && !!drawPeriod && !!prizeToken) {
+    if (
+      !!contributionEvents &&
+      !!firstDrawOpenTimestamp &&
+      !!drawPeriod &&
+      !!lastAwardedDrawId &&
+      !!prizeToken
+    ) {
       const data: { name: string; amount: number }[] = []
 
       const drawContributions: { [drawId: number]: bigint } = {}
@@ -109,11 +117,16 @@ const ContributionsChart = (props: ContributionsChartProps) => {
         }
       })
 
-      Object.entries(drawContributions).forEach(([strDrawId, rawAmount]) => {
-        const drawOpenTimestamp = firstDrawOpenTimestamp + (Number(strDrawId) - 1) * drawPeriod
+      const drawsWithData = Object.keys(drawContributions).map(Number)
+      const minDrawId = Math.min(...drawsWithData)
+      const maxDrawId = Math.max(...drawsWithData, lastAwardedDrawId)
+      const drawIds = Array.from({ length: maxDrawId - minDrawId + 1 }, (_v, i) => minDrawId + i)
+
+      drawIds.forEach((drawId) => {
+        const drawOpenTimestamp = firstDrawOpenTimestamp + (drawId - 1) * drawPeriod
         const date = new Date(drawOpenTimestamp * 1e3)
         const name = `${date.getDate()}/${date.getMonth() + 1}`
-        const amount = parseFloat(formatUnits(rawAmount, prizeToken.decimals))
+        const amount = parseFloat(formatUnits(drawContributions[drawId] ?? 0n, prizeToken.decimals))
 
         data.push({ name, amount })
       })
