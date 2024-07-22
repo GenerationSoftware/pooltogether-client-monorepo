@@ -1,11 +1,12 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { useBlocks, useDepositEvents } from '@generationsoftware/hyperstructure-react-hooks'
+import { useDepositEvents } from '@generationsoftware/hyperstructure-react-hooks'
 import { TokenWithAmount, TokenWithPrice, TokenWithSupply } from '@shared/types'
 import { getVaultId, lower } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
 import { QUERY_START_BLOCK } from '@constants/config'
 import { useAllVaultsWithHistoricalPrices } from '@hooks/useAllVaultsWithHistoricalPrices'
+import { useRngTxs } from './useRngTxs'
 
 export const useDeposits = (prizePool: PrizePool) => {
   const {
@@ -21,22 +22,9 @@ export const useDeposits = (prizePool: PrizePool) => {
     { fromBlock: QUERY_START_BLOCK[prizePool.chainId] }
   )
 
-  const uniqueBlockNumbers = useMemo(() => {
-    const blockNumbers = new Set<bigint>()
+  const { data: rngTxs, isFetched: isFetchedRngTxs } = useRngTxs(prizePool)
 
-    depositEvents?.forEach((event) => {
-      blockNumbers.add(event.blockNumber)
-    })
-
-    return [...blockNumbers]
-  }, [depositEvents])
-
-  const { data: blocks, isFetched: isFetchedBlocks } = useBlocks(
-    prizePool.chainId,
-    uniqueBlockNumbers
-  )
-
-  const isFetched = isFetchedVaults && isFetchedDepositEvents && !!depositEvents && isFetchedBlocks
+  const isFetched = isFetchedVaults && isFetchedDepositEvents && !!depositEvents && isFetchedRngTxs
 
   const data = useMemo(() => {
     if (isFetched) {
@@ -51,11 +39,10 @@ export const useDeposits = (prizePool: PrizePool) => {
 
       depositEvents.forEach((event) => {
         const vaultId = getVaultId({ chainId: prizePool.chainId, address: event.address })
-        const block = blocks.find((block) => block.number === event.blockNumber)
         const tokenData = vaultTokens[vaultId]
         const tokenAmount = event.args.assets
         const tokenPrices = vaultHistoricalTokenPrices[lower(tokenData.address)]
-        const tokenPrice = !!block ? getTokenHistoricalPrice(tokenPrices, block.timestamp) : 0
+        const tokenPrice = getTokenHistoricalPrice(tokenPrices, rngTxs, event.blockNumber)
         const tokenValue = parseFloat(formatUnits(tokenAmount, tokenData.decimals)) * tokenPrice
 
         list.push({
@@ -87,25 +74,49 @@ export const useDeposits = (prizePool: PrizePool) => {
 
       return { list, avgValue, medianValue }
     }
-  }, [depositEvents, vaultTokens, vaultHistoricalTokenPrices, blocks, isFetched])
+  }, [depositEvents, vaultTokens, vaultHistoricalTokenPrices, rngTxs, isFetched])
 
   return { data, isFetched }
 }
 
 const getTokenHistoricalPrice = (
   historicalPrices: { date: string; price: number }[],
-  timestamp: bigint
+  rngTxs?: NonNullable<ReturnType<typeof useRngTxs>['data']>,
+  blockNumber?: bigint
 ) => {
-  let bestEntry = { timeDiff: Number.MAX_SAFE_INTEGER, price: 0 }
-  historicalPrices.forEach((entry) => {
-    const entryTimestamp = new Date(entry.date).getTime() / 1e3
-    const timeDiff = Math.abs(Number(timestamp) - entryTimestamp)
+  if (!rngTxs || !blockNumber) {
+    return historicalPrices[0].price
+  }
 
-    if (timeDiff < bestEntry.timeDiff) {
-      bestEntry.timeDiff = timeDiff
-      bestEntry.price = entry.price
+  let bestRngTx = { blockDiff: -1n, timestamp: 0 }
+
+  rngTxs.forEach(({ drawStart: [tx] }) => {
+    if (!!tx.blockNumber && !!tx.timestamp) {
+      const blockDiff =
+        tx.blockNumber - blockNumber < 0n
+          ? blockNumber - tx.blockNumber
+          : tx.blockNumber - blockNumber
+
+      if (bestRngTx.blockDiff === -1n || blockDiff < bestRngTx.blockDiff) {
+        bestRngTx.blockDiff = blockDiff
+        bestRngTx.timestamp = tx.timestamp
+      }
     }
   })
+
+  let bestEntry = { timeDiff: Number.MAX_SAFE_INTEGER, price: 0 }
+
+  if (!!bestRngTx.timestamp) {
+    historicalPrices.forEach((entry) => {
+      const entryTimestamp = new Date(entry.date).getTime() / 1e3
+      const timeDiff = Math.abs(bestRngTx.timestamp - entryTimestamp)
+
+      if (timeDiff < bestEntry.timeDiff) {
+        bestEntry.timeDiff = timeDiff
+        bestEntry.price = entry.price
+      }
+    })
+  }
 
   return bestEntry.price
 }
