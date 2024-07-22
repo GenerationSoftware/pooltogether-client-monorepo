@@ -34,7 +34,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { getRoundedDownFormattedTokenAmount } from 'src/utils'
 import { Address, formatUnits, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
-import { ZAP_SETTINGS } from '@constants/config'
+import { ZAP_PRIORITIES, ZAP_SETTINGS } from '@constants/config'
 import { useSendDepositZapTransaction } from '@hooks/zaps/useSendDepositZapTransaction'
 import { useZapTokenOptions } from '@hooks/zaps/useZapTokenOptions'
 import { isValidFormInput, TxFormInput, TxFormValues } from '../TxFormInput'
@@ -134,7 +134,7 @@ export const DepositForm = (props: DepositFormProps) => {
     useState<ReturnType<typeof useSendDepositZapTransaction>['amountOut']>()
 
   useEffect(() => {
-    setFormTokenAddress(undefined)
+    setFormTokenAddress(ZAP_PRIORITIES[vault.chainId]?.[lower(vault.address)])
     setFormTokenAmount('')
     setFormShareAmount('')
     setPriceImpact(undefined)

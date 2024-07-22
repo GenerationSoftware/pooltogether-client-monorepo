@@ -214,6 +214,13 @@ export const ZAP_SETTINGS: {
 }
 
 /**
+ * Zap token priorities
+ */
+export const ZAP_PRIORITIES: {
+  [chainId: number]: { [vaultAddress: Lowercase<Address>]: Address }
+} = {}
+
+/**
  * Amount of native assets to suggest not spending (for gas purposes)
  */
 export const NATIVE_ASSET_IGNORE_AMOUNT: { [chainId: number]: bigint } = {
