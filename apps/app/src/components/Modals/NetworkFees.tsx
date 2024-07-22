@@ -28,6 +28,7 @@ export interface NetworkFeesProps {
     | 'depositWithPermit'
     | 'depositWithZap'
     | 'withdraw'
+    | 'withdrawWithZap'
     | 'delegation'
   )[]
 }
@@ -160,6 +161,20 @@ export const NetworkFees = (props: NetworkFeesProps) => {
                 account: userAddress
               }}
               gasAmount={TX_GAS_ESTIMATES.withdraw}
+            />
+          )}
+          {show?.includes('withdrawWithZap') && !!ZAP_SETTINGS[vault.chainId] && (
+            <TXFeeEstimate
+              name={t('withdrawal')}
+              chainId={vault.chainId}
+              tx={{
+                address: ZAP_SETTINGS[vault.chainId].zapRouter,
+                abi: [zapRouterABI['15']],
+                functionName: 'executeOrder',
+                args: [], // TODO: add tx args
+                account: userAddress
+              }}
+              gasAmount={TX_GAS_ESTIMATES.withdrawWithZap}
             />
           )}
           {(!show || show.includes('delegation')) && !!twabControllerAddress && (

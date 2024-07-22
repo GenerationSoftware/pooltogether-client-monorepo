@@ -17,7 +17,6 @@ import { useAccount } from 'wagmi'
 // TODO: should not hardcode token options (fetch from some existing tokenlist - paraswap would be ideal)
 const zapTokenOptions: { [chainId: number]: Address[] } = {
   [NETWORK.optimism]: [
-    DOLPHIN_ADDRESS, // ETH
     '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85', // USDC
     '0x4200000000000000000000000000000000000006', // WETH
     '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1', // DAI
@@ -30,7 +29,6 @@ const zapTokenOptions: { [chainId: number]: Address[] } = {
     '0xc55e93c62874d8100dbd2dfe307edc1036ad5434' // mooBIFI
   ],
   [NETWORK.base]: [
-    DOLPHIN_ADDRESS, // ETH
     '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', // USDC
     '0x940181a94A35A4569E4529A3CDfB74e38FD98631', // AERO
     '0xd652C5425aea2Afd5fb142e120FeCf79e18fafc3', // POOL
@@ -43,7 +41,6 @@ const zapTokenOptions: { [chainId: number]: Address[] } = {
     '0xA88594D404727625A9437C3f886C7643872296AE' // WELL
   ],
   [NETWORK.arbitrum]: [
-    DOLPHIN_ADDRESS, // ETH
     '0xaf88d065e77c8cC2239327C5EDb3A432268e5831', // USDC
     '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1', // WETH
     '0xCF934E2402A5e072928a39a956964eb8F2B5B79C', // POOL
@@ -57,12 +54,15 @@ const zapTokenOptions: { [chainId: number]: Address[] } = {
 /**
  * Returns token options to use for zap transactions
  * @param chainId the chain ID the zap is to be made in
+ * @param options optional settings
  * @returns
  */
-export const useZapTokenOptions = (chainId: number) => {
+export const useZapTokenOptions = (chainId: number, options?: { includeNativeAsset?: boolean }) => {
   const { address: userAddress } = useAccount()
 
   const tokenAddresses = zapTokenOptions[chainId] ?? []
+  options?.includeNativeAsset && tokenAddresses.unshift(DOLPHIN_ADDRESS)
+
   const { data: tokens } = useTokens(chainId, tokenAddresses)
   const { data: tokenBalances } = useTokenBalances(
     chainId,

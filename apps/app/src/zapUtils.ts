@@ -126,6 +126,28 @@ export const getWrapTx = (chainId: number, amount: bigint) => {
   }
 }
 
+export const getUnwrapTx = (chainId: number, amount: bigint) => {
+  return {
+    target: WRAPPED_NATIVE_ASSETS[chainId as NETWORK]!,
+    value: 0n,
+    data: encodeFunctionData({
+      abi: [
+        {
+          constant: false,
+          inputs: [{ internalType: 'uint256', name: 'wad', type: 'uint256' }],
+          name: 'withdraw',
+          outputs: [],
+          payable: false,
+          stateMutability: 'nonpayable',
+          type: 'function'
+        }
+      ],
+      functionName: 'withdraw',
+      args: [amount]
+    })
+  }
+}
+
 export const getArbitraryProxyTx = (proxyAddress: Address) => {
   return {
     target: proxyAddress,
@@ -227,7 +249,7 @@ export const getRedeemTx = (
   }
 }
 
-export const getSwapZapRoute = (
+export const getSwapZapInRoute = (
   inputToken: Parameters<typeof useSendDepositZapTransaction>['0'],
   vault: Vault,
   swapTx: NonNullable<ReturnType<typeof useSwapTx>['data']>,
@@ -282,7 +304,38 @@ export const getSwapZapRoute = (
   return route
 }
 
-export const getLpSwapZapRoute = (
+export const getSwapZapOutRoute = (
+  vault: Vault,
+  amount: bigint,
+  swapTx: NonNullable<ReturnType<typeof useSwapTx>['data']>,
+  vaultTokenAddress: Address,
+  exchangeRate: bigint
+) => {
+  const route: Mutable<ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>[1]> = []
+
+  const zapRouterAddress = ZAP_SETTINGS[vault.chainId]?.zapRouter as Address | undefined
+
+  if (!!zapRouterAddress) {
+    route.push(
+      {
+        ...getArbitraryProxyTx(swapTx.allowanceProxy),
+        tokens: [{ token: vault.address, index: -1 }]
+      },
+      {
+        ...getRedeemTx(vault.address, zapRouterAddress, amount, exchangeRate, vault.decimals!),
+        tokens: [{ token: vault.address, index: -1 }]
+      },
+      {
+        ...swapTx.tx,
+        tokens: [{ token: vaultTokenAddress, index: -1 }]
+      }
+    )
+  }
+
+  return route
+}
+
+export const getLpSwapZapInRoute = (
   inputToken: Parameters<typeof useSendDepositZapTransaction>['0'],
   vault: Vault,
   lpVaultToken: NonNullable<ReturnType<typeof useLpToken>['data']>,
@@ -376,7 +429,7 @@ export const getLpSwapZapRoute = (
   return route
 }
 
-export const getSimpleZapRoute = (
+export const getSimpleZapInRoute = (
   inputToken: Parameters<typeof useSendDepositZapTransaction>['0'],
   vault: Vault,
   vaultTokenAddress: Address,
@@ -408,6 +461,21 @@ export const getSimpleZapRoute = (
     route.push({
       ...getDepositTx(vault.address, zapRouterAddress),
       tokens: [{ token: vaultTokenAddress, index: 4 }]
+    })
+  }
+
+  return route
+}
+
+export const getSimpleZapOutRoute = (vault: Vault, amount: bigint, exchangeRate: bigint) => {
+  const route: Mutable<ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>[1]> = []
+
+  const zapRouterAddress = ZAP_SETTINGS[vault.chainId]?.zapRouter as Address | undefined
+
+  if (!!zapRouterAddress) {
+    route.push({
+      ...getRedeemTx(vault.address, zapRouterAddress, amount, exchangeRate, vault.decimals!),
+      tokens: [{ token: vault.address, index: -1 }]
     })
   }
 

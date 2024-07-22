@@ -41,6 +41,7 @@ import { isValidFormInput, TxFormInput, TxFormValues } from '../TxFormInput'
 
 export const depositFormTokenAddressAtom = atom<Address | undefined>(undefined)
 export const depositFormTokenAmountAtom = atom<string>('')
+
 export const depositFormShareAmountAtom = atom<string>('')
 
 export const depositZapPriceImpactAtom = atom<number | undefined>(undefined)
@@ -274,7 +275,7 @@ export const DepositForm = (props: DepositFormProps) => {
     }
   }, [vault, share, shareBalance, shareLogoURI])
 
-  const zapTokenOptions = useZapTokenOptions(vault.chainId)
+  const zapTokenOptions = useZapTokenOptions(vault.chainId, { includeNativeAsset: true })
 
   const tokenPickerOptions = useMemo(() => {
     const getOptionId = (option: Token) => `zapToken-${option.chainId}-${option.address}`

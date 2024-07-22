@@ -18,6 +18,7 @@ interface SuccessViewProps {
   txHash?: string
 }
 
+// TODO: add zap info (announce tokens that were received)
 export const SuccessView = (props: SuccessViewProps) => {
   const { vault, txHash, closeModal } = props
 

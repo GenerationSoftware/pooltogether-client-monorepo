@@ -15,6 +15,7 @@ interface ReviewViewProps {
   vault: Vault
 }
 
+// TODO: add zap info
 export const ReviewView = (props: ReviewViewProps) => {
   const { vault } = props
 
