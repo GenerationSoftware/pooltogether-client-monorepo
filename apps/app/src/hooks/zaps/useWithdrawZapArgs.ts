@@ -79,7 +79,7 @@ export const useWithdrawZapArgs = ({
         min: getAssetsFromShares(amount, exchangeRate, vaultToken.decimals)
       }
     }
-  }, [])
+  }, [amount, isSwapTxNecessary, swapTx, exchangeRate, vaultToken])
 
   const isFetched =
     !!outputToken &&
