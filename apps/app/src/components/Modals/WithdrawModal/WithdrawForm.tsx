@@ -204,11 +204,11 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
   }
 
   useEffect(() => {
-    if (!!share && isValidFormInput(formShareAmount, share.decimals)) {
+    if (!!share && !!tokenData && isValidFormInput(formShareAmount, share.decimals)) {
       handleShareAmountChange(formShareAmount)
       formMethods.trigger('shareAmount')
     }
-  }, [share])
+  }, [tokenData])
 
   const handleTokenAmountChange = (tokenAmount: string) => {
     if (
