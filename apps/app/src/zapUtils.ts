@@ -217,6 +217,26 @@ export const getVelodromeAddLiquidityTx = (
   }
 }
 
+export const getBeefyWithdrawTx = (mooTokenAddress: Address, amount: bigint) => {
+  return {
+    target: mooTokenAddress,
+    value: 0n,
+    data: encodeFunctionData({
+      abi: [
+        {
+          inputs: [{ internalType: 'uint256', name: '_shares', type: 'uint256' }],
+          name: 'withdraw',
+          outputs: [],
+          stateMutability: 'nonpayable',
+          type: 'function'
+        }
+      ],
+      functionName: 'withdraw',
+      args: [amount]
+    })
+  }
+}
+
 export const getDepositTx = (vaultAddress: Address, zapRouterAddress: Address) => {
   return {
     target: vaultAddress,
@@ -433,7 +453,7 @@ export const getSimpleZapInRoute = (
   inputToken: Parameters<typeof useSendDepositZapTransaction>['0'],
   vault: Vault,
   vaultTokenAddress: Address,
-  options?: { redeem?: { exchangeRate: bigint } }
+  options?: { redeem?: { exchangeRate: bigint }; beefyWithdraw?: { pricePerFullShare: bigint } }
 ) => {
   const route: Mutable<ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>[1]> = []
 
@@ -454,6 +474,11 @@ export const getSimpleZapInRoute = (
           options.redeem.exchangeRate,
           inputToken.decimals
         ),
+        tokens: [{ token: inputToken.address, index: -1 }]
+      })
+    } else if (!!options?.beefyWithdraw) {
+      route.push({
+        ...getBeefyWithdrawTx(inputToken.address, inputToken.amount),
         tokens: [{ token: inputToken.address, index: -1 }]
       })
     }

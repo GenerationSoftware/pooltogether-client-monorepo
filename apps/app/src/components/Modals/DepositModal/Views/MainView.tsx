@@ -91,7 +91,6 @@ export const MainView = (props: MainViewProps) => {
       {/* TODO: add flow for when exchange rate cannot be found */}
       {!!vaultExchangeRate && (
         <>
-          <LpSource vault={vault} />
           <DepositForm vault={vault} showInputInfoRows={true} />
           {!!formShareAmount && (
             <div className='flex flex-col gap-4 mx-auto md:flex-row md:gap-9'>

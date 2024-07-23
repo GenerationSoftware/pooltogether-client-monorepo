@@ -3,17 +3,19 @@ import {
   useAllVaultSharePrices,
   useCachedVaultLists,
   useSelectedVault,
+  useTokenBalance,
   useTokenBalances,
   useTokenPrices,
   useTokens,
   useVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { TokenWithAmount, TokenWithPrice } from '@shared/types'
+import { TokenWithAmount, TokenWithLogo, TokenWithPrice } from '@shared/types'
 import { DOLPHIN_ADDRESS, getVaultId, lower, NETWORK } from '@shared/utilities'
 import { useMemo } from 'react'
 import { isDolphinAddress } from 'src/zapUtils'
 import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
+import { useBeefyVault } from './useBeefyVault'
 
 // TODO: should not hardcode token options (fetch from some existing tokenlist - paraswap would be ideal)
 const zapTokenOptions: { [chainId: number]: Address[] } = {
@@ -63,7 +65,11 @@ const zapTokenOptions: { [chainId: number]: Address[] } = {
  */
 export const useZapTokenOptions = (
   chainId: number,
-  options?: { includeNativeAsset?: boolean; includeVaultsWithBalance?: boolean }
+  options?: {
+    includeNativeAsset?: boolean
+    includeVaultsWithBalance?: boolean
+    includeBeefyVault?: boolean
+  }
 ) => {
   const { address: userAddress } = useAccount()
 
@@ -89,8 +95,24 @@ export const useZapTokenOptions = (
   })
   const { data: sharePrices } = useAllVaultSharePrices(vaults)
 
+  const { data: beefyVault } = useBeefyVault(vault!, {
+    enabled: options?.includeBeefyVault ?? false
+  })
+  const { data: beefyVaultBalance } = useTokenBalance(
+    chainId,
+    userAddress!,
+    (!!beefyVault ? beefyVault.address : undefined)!,
+    { refetchOnWindowFocus: true }
+  )
+  const { data: underlyingBeefyTokenPrices } = useTokenPrices(
+    chainId,
+    !!beefyVault ? [beefyVault.want] : []
+  )
+
   const tokenOptions = useMemo(() => {
-    const tOptions: (TokenWithAmount & Required<TokenWithPrice> & { value: number })[] = []
+    const tOptions: (TokenWithAmount &
+      Required<TokenWithPrice> &
+      Partial<TokenWithLogo> & { value: number })[] = []
 
     if (!!tokens) {
       Object.values(tokens).forEach((token) => {
@@ -114,12 +136,32 @@ export const useZapTokenOptions = (
           const price = sharePrices?.[vaultId]?.price ?? 0
           const value = parseFloat(formatUnits(share.amount, share.decimals)) * price
 
-          tOptions.push({ ...share, amount: share.amount, price, value })
+          tOptions.push({ ...share, price, value })
         })
     }
 
+    if (options?.includeBeefyVault && !!beefyVault && !!beefyVaultBalance) {
+      const underlyingPrice = underlyingBeefyTokenPrices?.[lower(beefyVault.want)] ?? 0
+      const price = underlyingPrice * parseFloat(formatUnits(beefyVault.pricePerFullShare, 18))
+      const value =
+        parseFloat(formatUnits(beefyVaultBalance.amount, beefyVaultBalance.decimals)) * price
+
+      tOptions.push({ ...beefyVaultBalance, logoURI: beefyVault.logoURI, price, value })
+    }
+
     return tOptions.sort((a, b) => b.value - a.value)
-  }, [tokens, tokenBalances, tokenPrices, vault, vaultBalances, sharePrices, options])
+  }, [
+    tokens,
+    tokenBalances,
+    tokenPrices,
+    vault,
+    vaultBalances,
+    sharePrices,
+    beefyVault,
+    beefyVaultBalance,
+    underlyingBeefyTokenPrices,
+    options
+  ])
 
   return tokenOptions
 }

@@ -20,6 +20,7 @@ import { Address, ContractFunctionArgs, zeroAddress } from 'viem'
 import { useAccount } from 'wagmi'
 import { ZAP_SETTINGS } from '@constants/config'
 import { zapRouterABI } from '@constants/zapRouterABI'
+import { useBeefyVault } from './useBeefyVault'
 import { useIsVelodromeLp } from './useIsVelodromeLp'
 import { useLpToken } from './useLpToken'
 import { useSendDepositZapTransaction } from './useSendDepositZapTransaction'
@@ -67,10 +68,16 @@ export const useDepositZapArgs = ({
   const { data: inputVaultExchangeRate, isFetched: isFetchedInputVaultExchangeRate } =
     useVaultExchangeRate(inputVault as Vault)
 
+  const { data: beefyVault, isFetched: isFetchedBeefyVault } = useBeefyVault(vault)
+  const isInputTokenBeefyVault =
+    !!beefyVault && !!inputToken?.address && lower(inputToken.address) === lower(beefyVault.address)
+
   const swapInputTokenAddress = isDolphinAddress(inputToken?.address)
     ? wrappedNativeTokenAddress!
     : !!inputVault
     ? inputVaultToken?.address
+    : isInputTokenBeefyVault
+    ? beefyVault.want
     : inputToken?.address
 
   const swapInputTokenDecimals = inputVaultToken?.decimals ?? inputToken?.decimals
@@ -83,6 +90,12 @@ export const useDepositZapArgs = ({
           inputVaultToken.decimals
         )
       : 0n
+    : isInputTokenBeefyVault
+    ? getAssetsFromShares(
+        inputToken?.amount ?? 0n,
+        beefyVault.pricePerFullShare,
+        inputToken.decimals
+      )
     : inputToken?.amount ?? 0n
 
   const isSwapTxNecessary =
@@ -93,20 +106,30 @@ export const useDepositZapArgs = ({
     !isLpSwapTxsNecessary
 
   const isFirstLpSwapTxNecessary =
+    !!vaultToken &&
+    !!swapInputTokenAddress &&
+    lower(vaultToken.address) !== lower(swapInputTokenAddress) &&
     isFetchedVaultTokenVelodromeLp &&
     !!isLpSwapTxsNecessary &&
     !!swapInputTokenAddress &&
     isFetchedLpVaultToken &&
     !!lpVaultToken?.token0?.address &&
-    lower(swapInputTokenAddress) !== lower(lpVaultToken.token0.address)
+    lower(swapInputTokenAddress) !== lower(lpVaultToken.token0.address) &&
+    isFetchedBeefyVault &&
+    !isInputTokenBeefyVault
 
   const isSecondLpSwapTxNecessary =
+    !!vaultToken &&
+    !!swapInputTokenAddress &&
+    lower(vaultToken.address) !== lower(swapInputTokenAddress) &&
     isFetchedVaultTokenVelodromeLp &&
     !!isLpSwapTxsNecessary &&
     !!swapInputTokenAddress &&
     isFetchedLpVaultToken &&
     !!lpVaultToken?.token1?.address &&
-    lower(swapInputTokenAddress) !== lower(lpVaultToken.token1.address)
+    lower(swapInputTokenAddress) !== lower(lpVaultToken.token1.address) &&
+    isFetchedBeefyVault &&
+    !isInputTokenBeefyVault
 
   const {
     data: swapTx,
@@ -168,7 +191,7 @@ export const useDepositZapArgs = ({
         if (!!swapTx) {
           return getSwapAmountOut(swapTx, exchangeRate, vaultToken.decimals)
         }
-      } else if (isLpSwapTxsNecessary) {
+      } else if (isFirstLpSwapTxNecessary || isSecondLpSwapTxNecessary) {
         if (
           !!lpVaultToken &&
           (!isFirstLpSwapTxNecessary || !!firstLpSwapTx) &&
@@ -204,7 +227,6 @@ export const useDepositZapArgs = ({
     vaultToken,
     exchangeRate,
     isSwapTxNecessary,
-    isLpSwapTxsNecessary,
     isFirstLpSwapTxNecessary,
     isSecondLpSwapTxNecessary,
     swapTx,
@@ -235,7 +257,8 @@ export const useDepositZapArgs = ({
       (isFetchedInputVaultToken &&
         !!inputVaultToken &&
         isFetchedInputVaultExchangeRate &&
-        !!inputVaultExchangeRate))
+        !!inputVaultExchangeRate)) &&
+    isFetchedBeefyVault
 
   const isFetching =
     !isFetched && (isFetchingSwapTx || isFetchingFirstLpSwapTx || isFetchingSecondLpSwapTx)
@@ -285,7 +308,7 @@ export const useDepositZapArgs = ({
               ? { asset: inputVaultToken, exchangeRate: inputVaultExchangeRate }
               : undefined
         })
-      } else if (!!lpVaultToken) {
+      } else if ((!!firstLpSwapTx || !!secondLpSwapTx) && !!lpVaultToken) {
         if (!!firstLpSwapTx) {
           addZapOutput({ token: lpVaultToken.token0.address, minOutputAmount: 0n })
         }
@@ -310,7 +333,10 @@ export const useDepositZapArgs = ({
         )
       } else {
         zapRoute = getSimpleZapInRoute(inputToken, vault, vaultToken.address, {
-          redeem: !!inputVaultExchangeRate ? { exchangeRate: inputVaultExchangeRate } : undefined
+          redeem: !!inputVaultExchangeRate ? { exchangeRate: inputVaultExchangeRate } : undefined,
+          beefyWithdraw: isInputTokenBeefyVault
+            ? { pricePerFullShare: beefyVault.pricePerFullShare }
+            : undefined
         })
       }
 
@@ -333,6 +359,8 @@ export const useDepositZapArgs = ({
     lpVaultToken,
     inputVaultToken,
     inputVaultExchangeRate,
+    beefyVault,
+    isInputTokenBeefyVault,
     swapTx,
     firstLpSwapTx,
     secondLpSwapTx,

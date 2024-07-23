@@ -24,6 +24,7 @@ import { useMemo } from 'react'
 import { walletSupportsPermit } from 'src/utils'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
+import { useBeefyVault } from '@hooks/zaps/useBeefyVault'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
 import {
@@ -127,6 +128,8 @@ const BasicDepositForm = (props: BasicDepositFormProps) => {
     }
   }, [vault, vaults])
 
+  const { data: beefyVault } = useBeefyVault(vault)
+
   if (!share || !token) {
     return <></>
   }
@@ -137,6 +140,8 @@ const BasicDepositForm = (props: BasicDepositFormProps) => {
     logoURI:
       !!vaultTokenAddress && lower(token.address) === lower(vaultTokenAddress)
         ? vault.tokenLogoURI
+        : !!beefyVault && lower(token.address) === lower(beefyVault.address)
+        ? beefyVault.logoURI
         : inputVault?.logoURI
   }
 

@@ -35,6 +35,7 @@ import { getRoundedDownFormattedTokenAmount } from 'src/utils'
 import { Address, formatUnits, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { ZAP_PRIORITIES, ZAP_SETTINGS } from '@constants/config'
+import { useBeefyVault } from '@hooks/zaps/useBeefyVault'
 import { useSendDepositZapTransaction } from '@hooks/zaps/useSendDepositZapTransaction'
 import { useZapTokenOptions } from '@hooks/zaps/useZapTokenOptions'
 import { isValidFormInput, TxFormInput, TxFormValues } from '../TxFormInput'
@@ -93,6 +94,11 @@ export const DepositForm = (props: DepositFormProps) => {
   const { data: tokenData } = useToken(vault.chainId, tokenAddress!)
   const { data: tokenPrices } = useTokenPrices(vault.chainId, !!tokenAddress ? [tokenAddress] : [])
   const { data: inputVaultWithPrice } = useVaultSharePrice(inputVault!)
+  const { data: beefyVault } = useBeefyVault(vault)
+  const { data: underlyingBeefyTokenPrices } = useTokenPrices(
+    vault.chainId,
+    !!beefyVault ? [beefyVault.want] : []
+  )
   const token: (TokenWithSupply & TokenWithPrice & Partial<TokenWithLogo>) | undefined =
     !!tokenAddress && (!!tokenData || !!inputVaultWithPrice)
       ? {
@@ -102,7 +108,16 @@ export const DepositForm = (props: DepositFormProps) => {
               : inputVault?.logoURI,
           ...tokenData!,
           ...inputVaultWithPrice!,
-          price: tokenPrices?.[lower(tokenAddress)] ?? inputVaultWithPrice?.price
+          ...(!!beefyVault && lower(tokenAddress) === lower(beefyVault.address) ? beefyVault : {}),
+          price:
+            tokenPrices?.[lower(tokenAddress)] ??
+            inputVaultWithPrice?.price ??
+            (!!beefyVault &&
+            !!underlyingBeefyTokenPrices &&
+            lower(tokenAddress) === lower(beefyVault.address)
+              ? (underlyingBeefyTokenPrices?.[lower(beefyVault.want)] ?? 0) *
+                parseFloat(formatUnits(beefyVault.pricePerFullShare, 18))
+              : undefined)
         }
       : undefined
 
@@ -271,7 +286,8 @@ export const DepositForm = (props: DepositFormProps) => {
 
   const zapTokenOptions = useZapTokenOptions(vault.chainId, {
     includeNativeAsset: true,
-    includeVaultsWithBalance: true
+    includeVaultsWithBalance: true,
+    includeBeefyVault: true
   })
 
   const tokenPickerOptions = useMemo(() => {
@@ -408,7 +424,7 @@ export const DepositForm = (props: DepositFormProps) => {
 }
 
 interface TokenPickerOptionProps {
-  token: TokenWithAmount & Required<TokenWithPrice> & { value: number }
+  token: TokenWithAmount & Required<TokenWithPrice> & Partial<TokenWithLogo> & { value: number }
   className?: string
 }
 
@@ -434,7 +450,7 @@ const TokenPickerOption = (props: TokenPickerOptionProps) => {
     >
       <span className='flex items-center gap-1'>
         <TokenIcon
-          token={{ ...token, logoURI: vault?.logoURI }}
+          token={{ ...token, logoURI: token.logoURI ?? vault?.logoURI }}
           fallbackToken={!!vault ? { ...vault.tokenData, logoURI: vault.tokenLogoURI } : undefined}
         />
         <span className='text-lg text-pt-purple-50 md:text-2xl md:text-pt-purple-600'>
