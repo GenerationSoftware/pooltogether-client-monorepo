@@ -274,7 +274,8 @@ export const FATHOM_EVENTS = {
   openedDepositModal: 'OpenedDepositModal',
   openedDrawModal: 'OpenedDrawModal',
   openedWithdrawModal: 'OpenedWithdrawModal',
-  redeemed: 'Redeemed'
+  redeemed: 'Redeemed',
+  redeemedWithZap: 'RedeemedWithZap'
 } as const
 
 /**

@@ -5,6 +5,7 @@ import {
   useUserVaultShareBalance,
   useUserVaultTokenBalance,
   useVaultBalance,
+  useVaultShareData,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { XMarkIcon } from '@heroicons/react/24/outline'
@@ -25,15 +26,14 @@ import { SuccessPooly } from '../Graphics/SuccessPooly'
 export interface WithdrawTxToastProps {
   vault: Vault
   txHash: string
-  formattedAmount: string
   addRecentTransaction?: (tx: { hash: string; description: string; confirmations?: number }) => void
   refetchUserBalances?: () => void
   intl?: Intl<
     | 'withdrawal'
-    | 'withdrawing'
+    | 'withdrawingFrom'
     | 'viewOn'
     | 'success'
-    | 'withdrew'
+    | 'withdrewFrom'
     | 'uhOh'
     | 'failedTx'
     | 'tryAgain'
@@ -50,7 +50,7 @@ export const createWithdrawTxToast = (data: WithdrawTxToastProps) => {
 }
 
 export const WithdrawTxToast = (props: WithdrawTxToastProps) => {
-  const { vault, txHash, formattedAmount, addRecentTransaction, refetchUserBalances, intl } = props
+  const { vault, txHash, addRecentTransaction, refetchUserBalances, intl } = props
 
   const { data: tokenData } = useVaultTokenData(vault)
 
@@ -63,21 +63,15 @@ export const WithdrawTxToast = (props: WithdrawTxToastProps) => {
 
   const { refetch: refetchTokenBalance } = useTokenBalance(
     vault.chainId,
-    userAddress as Address,
-    tokenData?.address as Address
+    userAddress!,
+    tokenData?.address!
   )
 
   const { refetch: refetchVaultBalance } = useVaultBalance(vault)
 
-  const { refetch: refetchUserVaultShareBalance } = useUserVaultShareBalance(
-    vault,
-    userAddress as Address
-  )
+  const { refetch: refetchUserVaultShareBalance } = useUserVaultShareBalance(vault, userAddress!)
 
-  const { refetch: refetchUserVaultTokenBalance } = useUserVaultTokenBalance(
-    vault,
-    userAddress as Address
-  )
+  const { refetch: refetchUserVaultTokenBalance } = useUserVaultTokenBalance(vault, userAddress!)
 
   useEffect(() => {
     if (isSuccess && !!txHash) {
@@ -102,7 +96,7 @@ export const WithdrawTxToast = (props: WithdrawTxToastProps) => {
   if (!isFetching && isSuccess) {
     toast(
       <ToastLayout id={txHash}>
-        <SuccessView vault={vault} txHash={txHash} formattedAmount={formattedAmount} intl={intl} />
+        <SuccessView vault={vault} txHash={txHash} intl={intl} />
       </ToastLayout>,
       { id: txHash }
     )
@@ -119,7 +113,7 @@ export const WithdrawTxToast = (props: WithdrawTxToastProps) => {
 
   return (
     <ToastLayout id={txHash}>
-      <ConfirmingView vault={vault} txHash={txHash} formattedAmount={formattedAmount} intl={intl} />
+      <ConfirmingView vault={vault} txHash={txHash} intl={intl} />
     </ToastLayout>
   )
 }
@@ -146,23 +140,22 @@ const ToastLayout = (props: ToastLayoutProps) => {
 interface ConfirmingViewProps {
   vault: Vault
   txHash: string
-  formattedAmount: string
-  intl?: Intl<'withdrawing' | 'viewOn'>
+  intl?: Intl<'withdrawingFrom' | 'viewOn'>
 }
 
 const ConfirmingView = (props: ConfirmingViewProps) => {
-  const { vault, txHash, formattedAmount, intl } = props
+  const { vault, txHash, intl } = props
 
-  const { data: tokenData } = useVaultTokenData(vault)
+  const { data: share } = useVaultShareData(vault)
 
-  const tokens = `${formattedAmount} ${tokenData?.symbol}`
+  const vaultSymbol = `${share?.symbol ?? '?'}`
   const name = getBlockExplorerName(vault.chainId)
 
   return (
     <>
       <span className='flex items-center gap-2 text-pt-purple-50'>
         <Spinner className='after:border-y-pt-teal' />{' '}
-        {intl?.('withdrawing', { tokens }) ?? `Withdrawing ${tokens}...`}
+        {intl?.('withdrawingFrom', { vault: vaultSymbol }) ?? `Withdrawing from ${vaultSymbol}...`}
       </span>
       <a
         href={getBlockExplorerUrl(vault.chainId, txHash, 'tx')}
@@ -178,16 +171,15 @@ const ConfirmingView = (props: ConfirmingViewProps) => {
 interface SuccessViewProps {
   vault: Vault
   txHash: string
-  formattedAmount: string
-  intl?: Intl<'success' | 'withdrew' | 'viewOn'>
+  intl?: Intl<'success' | 'withdrewFrom' | 'viewOn'>
 }
 
 const SuccessView = (props: SuccessViewProps) => {
-  const { vault, txHash, formattedAmount, intl } = props
+  const { vault, txHash, intl } = props
 
-  const { data: tokenData } = useVaultTokenData(vault)
+  const { data: share } = useVaultShareData(vault)
 
-  const tokens = `${formattedAmount} ${tokenData?.symbol}`
+  const vaultSymbol = `${share?.symbol ?? '?'}`
   const network = getNiceNetworkNameByChainId(vault.chainId)
   const name = getBlockExplorerName(vault.chainId)
 
@@ -199,7 +191,8 @@ const SuccessView = (props: SuccessViewProps) => {
           {intl?.('success') ?? 'Success!'}
         </span>
         <span className='text-pt-purple-50'>
-          {intl?.('withdrew', { tokens, network }) ?? `You withdrew ${tokens} on ${network}`}
+          {intl?.('withdrewFrom', { vault: vaultSymbol, network }) ??
+            `You withdrew from ${vaultSymbol} on ${network}`}
         </span>
       </div>
       <a

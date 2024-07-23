@@ -145,7 +145,9 @@ export const Layout = (props: LayoutProps) => {
 
       <WithdrawModal
         refetchUserBalances={refetchUserBalances}
+        onSuccessfulApproval={() => fathom.trackEvent(FATHOM_EVENTS.approvedExact)}
         onSuccessfulWithdrawal={() => fathom.trackEvent(FATHOM_EVENTS.redeemed)}
+        onSuccessfulWithdrawalWithZap={() => fathom.trackEvent(FATHOM_EVENTS.redeemedWithZap)}
       />
 
       <DelegateModal onSuccessfulDelegation={() => fathom.trackEvent(FATHOM_EVENTS.delegated)} />

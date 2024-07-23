@@ -348,20 +348,20 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
           onChange={handleShareAmountChange}
           showInfoRow={showInputInfoRows}
           showMaxButton={true}
-          showTokenPicker={!!ZAP_SETTINGS[vault.chainId]}
-          tokenPickerOptions={tokenPickerOptions}
           fallbackLogoToken={vaultToken}
-          className='mb-0.5 z-20'
+          className='mb-0.5 z-10'
         />
         <TxFormInput
           token={tokenInputData}
           formKey='tokenAmount'
           onChange={handleTokenAmountChange}
           showInfoRow={showInputInfoRows}
+          showTokenPicker={!!ZAP_SETTINGS[vault.chainId]}
+          tokenPickerOptions={tokenPickerOptions}
           priceImpact={priceImpact}
           disabled={isZapping}
           isLoading={isFetchingZapArgs}
-          className='my-0.5 z-10'
+          className='my-0.5 z-20'
           inputClassName={classNames({ '!text-pt-purple-200': isZapping })}
           disabledCoverClassName={classNames({ '!backdrop-brightness-100': isZapping })}
         />

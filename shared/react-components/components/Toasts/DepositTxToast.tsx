@@ -63,21 +63,15 @@ export const DepositTxToast = (props: DepositTxToastProps) => {
 
   const { refetch: refetchTokenBalance } = useTokenBalance(
     vault.chainId,
-    userAddress as Address,
-    tokenData?.address as Address
+    userAddress!,
+    tokenData?.address!
   )
 
   const { refetch: refetchVaultBalance } = useVaultBalance(vault)
 
-  const { refetch: refetchUserVaultShareBalance } = useUserVaultShareBalance(
-    vault,
-    userAddress as Address
-  )
+  const { refetch: refetchUserVaultShareBalance } = useUserVaultShareBalance(vault, userAddress!)
 
-  const { refetch: refetchUserVaultTokenBalance } = useUserVaultTokenBalance(
-    vault,
-    userAddress as Address
-  )
+  const { refetch: refetchUserVaultTokenBalance } = useUserVaultTokenBalance(vault, userAddress!)
 
   useEffect(() => {
     if (isSuccess && !!txHash) {

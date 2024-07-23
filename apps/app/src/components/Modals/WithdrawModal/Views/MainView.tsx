@@ -27,8 +27,6 @@ export const MainView = (props: MainViewProps) => {
 
   const formTokenAddress = useAtomValue(withdrawFormTokenAddressAtom)
 
-  const tokenAddress = formTokenAddress ?? vaultTokenAddress
-
   const { data: vaultExchangeRate } = useVaultExchangeRate(vault)
 
   const vaultName = vault.name ?? `"${shareData?.name}"`

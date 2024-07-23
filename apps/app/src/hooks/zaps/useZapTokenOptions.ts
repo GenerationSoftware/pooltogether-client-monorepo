@@ -11,12 +11,14 @@ import {
 import { TokenWithAmount, TokenWithPrice } from '@shared/types'
 import { DOLPHIN_ADDRESS, getVaultId, lower, NETWORK } from '@shared/utilities'
 import { useMemo } from 'react'
+import { isDolphinAddress } from 'src/zapUtils'
 import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
 // TODO: should not hardcode token options (fetch from some existing tokenlist - paraswap would be ideal)
 const zapTokenOptions: { [chainId: number]: Address[] } = {
   [NETWORK.optimism]: [
+    DOLPHIN_ADDRESS, // ETH
     '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85', // USDC
     '0x4200000000000000000000000000000000000006', // WETH
     '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1', // DAI
@@ -29,6 +31,7 @@ const zapTokenOptions: { [chainId: number]: Address[] } = {
     '0xc55e93c62874d8100dbd2dfe307edc1036ad5434' // mooBIFI
   ],
   [NETWORK.base]: [
+    DOLPHIN_ADDRESS, // ETH
     '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', // USDC
     '0x940181a94A35A4569E4529A3CDfB74e38FD98631', // AERO
     '0xd652C5425aea2Afd5fb142e120FeCf79e18fafc3', // POOL
@@ -41,6 +44,7 @@ const zapTokenOptions: { [chainId: number]: Address[] } = {
     '0xA88594D404727625A9437C3f886C7643872296AE' // WELL
   ],
   [NETWORK.arbitrum]: [
+    DOLPHIN_ADDRESS, // ETH
     '0xaf88d065e77c8cC2239327C5EDb3A432268e5831', // USDC
     '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1', // WETH
     '0xCF934E2402A5e072928a39a956964eb8F2B5B79C', // POOL
@@ -57,19 +61,18 @@ const zapTokenOptions: { [chainId: number]: Address[] } = {
  * @param options optional settings
  * @returns
  */
-export const useZapTokenOptions = (chainId: number, options?: { includeNativeAsset?: boolean }) => {
+export const useZapTokenOptions = (
+  chainId: number,
+  options?: { includeNativeAsset?: boolean; includeVaultsWithBalance?: boolean }
+) => {
   const { address: userAddress } = useAccount()
 
   const tokenAddresses = zapTokenOptions[chainId] ?? []
-  options?.includeNativeAsset && tokenAddresses.unshift(DOLPHIN_ADDRESS)
 
   const { data: tokens } = useTokens(chainId, tokenAddresses)
-  const { data: tokenBalances } = useTokenBalances(
-    chainId,
-    userAddress as Address,
-    tokenAddresses,
-    { refetchOnWindowFocus: true }
-  )
+  const { data: tokenBalances } = useTokenBalances(chainId, userAddress!, tokenAddresses, {
+    refetchOnWindowFocus: true
+  })
   const { data: tokenPrices } = useTokenPrices(chainId, tokenAddresses)
 
   const { vault } = useSelectedVault()
@@ -81,25 +84,27 @@ export const useZapTokenOptions = (chainId: number, options?: { includeNativeAss
       .flat()
       .filter((t) => t.chainId === chainId)
   )
-  const { data: vaultBalances } = useAllUserVaultBalances(vaults, userAddress as Address, {
+  const { data: vaultBalances } = useAllUserVaultBalances(vaults, userAddress!, {
     refetchOnWindowFocus: true
   })
   const { data: sharePrices } = useAllVaultSharePrices(vaults)
 
   const tokenOptions = useMemo(() => {
-    const options: (TokenWithAmount & Required<TokenWithPrice> & { value: number })[] = []
+    const tOptions: (TokenWithAmount & Required<TokenWithPrice> & { value: number })[] = []
 
     if (!!tokens) {
       Object.values(tokens).forEach((token) => {
-        const amount = tokenBalances?.[token.address]?.amount ?? 0n
-        const price = tokenPrices?.[lower(token.address)] ?? 0
-        const value = parseFloat(formatUnits(amount, token.decimals)) * price
+        if (options?.includeNativeAsset || !isDolphinAddress(token.address)) {
+          const amount = tokenBalances?.[token.address]?.amount ?? 0n
+          const price = tokenPrices?.[lower(token.address)] ?? 0
+          const value = parseFloat(formatUnits(amount, token.decimals)) * price
 
-        options.push({ ...token, amount, price, value })
+          tOptions.push({ ...token, amount, price, value })
+        }
       })
     }
 
-    if (!!vault && !!vaultBalances) {
+    if (options?.includeVaultsWithBalance && !!vault && !!vaultBalances) {
       Object.values(vaultBalances)
         .filter(
           (v) => v.chainId === chainId && !!v.amount && lower(v.address) !== lower(vault.address)
@@ -109,12 +114,12 @@ export const useZapTokenOptions = (chainId: number, options?: { includeNativeAss
           const price = sharePrices?.[vaultId]?.price ?? 0
           const value = parseFloat(formatUnits(share.amount, share.decimals)) * price
 
-          options.push({ ...share, amount: share.amount, price, value })
+          tOptions.push({ ...share, amount: share.amount, price, value })
         })
     }
 
-    return options.sort((a, b) => b.value - a.value)
-  }, [tokens, tokenBalances, tokenPrices, vault, vaultBalances, sharePrices])
+    return tOptions.sort((a, b) => b.value - a.value)
+  }, [tokens, tokenBalances, tokenPrices, vault, vaultBalances, sharePrices, options])
 
   return tokenOptions
 }

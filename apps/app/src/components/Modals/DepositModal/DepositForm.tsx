@@ -275,7 +275,10 @@ export const DepositForm = (props: DepositFormProps) => {
     }
   }, [vault, share, shareBalance, shareLogoURI])
 
-  const zapTokenOptions = useZapTokenOptions(vault.chainId, { includeNativeAsset: true })
+  const zapTokenOptions = useZapTokenOptions(vault.chainId, {
+    includeNativeAsset: true,
+    includeVaultsWithBalance: true
+  })
 
   const tokenPickerOptions = useMemo(() => {
     const getOptionId = (option: Token) => `zapToken-${option.chainId}-${option.address}`
