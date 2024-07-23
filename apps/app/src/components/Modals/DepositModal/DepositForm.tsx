@@ -188,9 +188,7 @@ export const DepositForm = (props: DepositFormProps) => {
 
       setFormShareAmount(slicedShares)
 
-      formMethods.setValue('shareAmount', slicedShares, {
-        shouldValidate: true
-      })
+      formMethods.setValue('shareAmount', slicedShares, { shouldValidate: true })
     }
   }, [cachedZapAmountOut])
 
@@ -209,9 +207,7 @@ export const DepositForm = (props: DepositFormProps) => {
 
           setFormShareAmount(slicedShares)
 
-          formMethods.setValue('shareAmount', slicedShares, {
-            shouldValidate: true
-          })
+          formMethods.setValue('shareAmount', slicedShares, { shouldValidate: true })
         }
       } else {
         setFormTokenAmount('0')
@@ -245,9 +241,7 @@ export const DepositForm = (props: DepositFormProps) => {
 
         setFormTokenAmount(slicedTokens)
 
-        formMethods.setValue('tokenAmount', slicedTokens, {
-          shouldValidate: true
-        })
+        formMethods.setValue('tokenAmount', slicedTokens, { shouldValidate: true })
       } else {
         setFormTokenAmount('0')
       }

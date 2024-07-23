@@ -62,7 +62,7 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
 
   const { data: vaultExchangeRate } = useVaultExchangeRate(vault)
 
-  const { data: shareToken } = useVaultSharePrice(vault)
+  const { data: share } = useVaultSharePrice(vault)
   const { data: vaultToken } = useVaultTokenPrice(vault)
 
   const { data: vaultTokenWithAmount } = useTokenBalance(
@@ -117,7 +117,7 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
   })
 
   const [formShareAmount, setFormShareAmount] = useAtom(withdrawFormShareAmountAtom)
-  const [formTokenAmount, setFormTokenAmount] = useAtom(withdrawFormTokenAmountAtom)
+  const setFormTokenAmount = useSetAtom(withdrawFormTokenAmountAtom)
 
   const [priceImpact, setPriceImpact] = useAtom(withdrawZapPriceImpactAtom)
   const setMinReceived = useSetAtom(withdrawZapMinReceivedAtom)
@@ -136,7 +136,7 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
   }, [])
 
   const vaultDecimals =
-    vault.decimals ?? vaultToken?.decimals ?? shareToken?.decimals ?? vaultBalance?.decimals
+    vault.decimals ?? vaultToken?.decimals ?? share?.decimals ?? vaultBalance?.decimals
 
   const withdrawAmount = useMemo(() => {
     return !!formShareAmount && vaultDecimals !== undefined
@@ -176,34 +176,26 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
 
       setFormTokenAmount(slicedTokens)
 
-      formMethods.setValue('tokenAmount', slicedTokens, {
-        shouldValidate: true
-      })
+      formMethods.setValue('tokenAmount', slicedTokens, { shouldValidate: true })
     }
   }, [cachedZapAmountOut])
 
-  const handleTokenAmountChange = (tokenAmount: string) => {
-    if (
-      !!vaultExchangeRate &&
-      token?.decimals !== undefined &&
-      shareToken?.decimals !== undefined
-    ) {
-      if (isValidFormInput(tokenAmount, token.decimals)) {
-        setFormTokenAmount(tokenAmount)
+  const handleShareAmountChange = (shareAmount: string) => {
+    if (!!vaultExchangeRate && token?.decimals !== undefined && share?.decimals !== undefined) {
+      if (isValidFormInput(shareAmount, share.decimals)) {
+        setFormShareAmount(shareAmount)
 
         if (!isZapping) {
-          const tokens = parseUnits(tokenAmount, token.decimals)
-          const shares = getSharesFromAssets(tokens, vaultExchangeRate, shareToken.decimals)
-          const formattedShares = formatUnits(shares, shareToken.decimals)
-          const slicedShares = formattedShares.endsWith('.0')
-            ? formattedShares.slice(0, -2)
-            : formattedShares
+          const shares = parseUnits(shareAmount, share.decimals)
+          const tokens = getAssetsFromShares(shares, vaultExchangeRate, share.decimals)
+          const formattedTokens = formatUnits(tokens, token.decimals)
+          const slicedTokens = formattedTokens.endsWith('.0')
+            ? formattedTokens.slice(0, -2)
+            : formattedTokens
 
-          setFormShareAmount(slicedShares)
+          setFormTokenAmount(slicedTokens)
 
-          formMethods.setValue('shareAmount', slicedShares, {
-            shouldValidate: true
-          })
+          formMethods.setValue('tokenAmount', slicedTokens, { shouldValidate: true })
         }
       } else {
         setFormTokenAmount('0')
@@ -212,34 +204,32 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
   }
 
   useEffect(() => {
-    if (!!tokenData && isValidFormInput(formTokenAmount, tokenData.decimals)) {
-      handleTokenAmountChange(formTokenAmount)
-      formMethods.trigger('tokenAmount')
+    if (!!share && isValidFormInput(formShareAmount, share.decimals)) {
+      handleShareAmountChange(formShareAmount)
+      formMethods.trigger('shareAmount')
     }
-  }, [tokenData])
+  }, [share])
 
-  const handleShareAmountChange = (shareAmount: string) => {
+  const handleTokenAmountChange = (tokenAmount: string) => {
     if (
       !isZapping &&
       !!vaultExchangeRate &&
       token?.decimals !== undefined &&
-      shareToken?.decimals !== undefined
+      share?.decimals !== undefined
     ) {
-      if (isValidFormInput(shareAmount, shareToken.decimals)) {
-        setFormShareAmount(shareAmount)
+      if (isValidFormInput(tokenAmount, token.decimals)) {
+        setFormTokenAmount(tokenAmount)
 
-        const shares = parseUnits(shareAmount, shareToken.decimals)
-        const tokens = getAssetsFromShares(shares, vaultExchangeRate, shareToken.decimals)
-        const formattedTokens = formatUnits(tokens, token.decimals)
-        const slicedTokens = formattedTokens.endsWith('.0')
-          ? formattedTokens.slice(0, -2)
-          : formattedTokens
+        const tokens = parseUnits(tokenAmount, token.decimals)
+        const shares = getSharesFromAssets(tokens, vaultExchangeRate, share.decimals)
+        const formattedShares = formatUnits(shares, share.decimals)
+        const slicedShares = formattedShares.endsWith('.0')
+          ? formattedShares.slice(0, -2)
+          : formattedShares
 
-        setFormTokenAmount(slicedTokens)
+        setFormShareAmount(slicedShares)
 
-        formMethods.setValue('tokenAmount', slicedTokens, {
-          shouldValidate: true
-        })
+        formMethods.setValue('shareAmount', slicedShares, { shouldValidate: true })
       } else {
         setFormTokenAmount('0')
       }
@@ -247,15 +237,15 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
   }
 
   const shareInputData = useMemo(() => {
-    if (!!shareToken) {
+    if (!!share) {
       return {
-        ...shareToken,
+        ...share,
         amount: shareBalance,
-        price: shareToken?.price ?? 0,
+        price: share?.price ?? 0,
         logoURI: shareLogoURI ?? vault.tokenLogoURI
       }
     }
-  }, [vault, shareToken, shareBalance, shareLogoURI])
+  }, [vault, share, shareBalance, shareLogoURI])
 
   const tokenInputData = useMemo(() => {
     if (!!token) {
