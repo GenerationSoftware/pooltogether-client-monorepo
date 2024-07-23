@@ -1,16 +1,22 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { useVaultTokenData } from '@generationsoftware/hyperstructure-react-hooks'
+import { useToken, useVaultTokenAddress } from '@generationsoftware/hyperstructure-react-hooks'
 import { PrizePoolBadge, SuccessPooly } from '@shared/react-components'
-import { Button, ExternalLink } from '@shared/ui'
+import { Token } from '@shared/types'
+import { Button, ExternalLink, Spinner } from '@shared/ui'
 import {
-  formatNumberForDisplay,
+  erc20ABI,
+  formatBigIntForDisplay,
   getBlockExplorerName,
-  getBlockExplorerUrl
+  getBlockExplorerUrl,
+  lower
 } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/router'
-import { withdrawFormTokenAmountAtom } from '../WithdrawForm'
+import { useMemo } from 'react'
+import { Address, decodeEventLog, TransactionReceipt } from 'viem'
+import { useAccount, useTransactionReceipt } from 'wagmi'
+import { withdrawFormTokenAddressAtom } from '../WithdrawForm'
 
 interface SuccessViewProps {
   vault: Vault
@@ -26,11 +32,32 @@ export const SuccessView = (props: SuccessViewProps) => {
   const t_common = useTranslations('Common')
   const t_modals = useTranslations('TxModals')
 
-  const formTokenAmount = useAtomValue(withdrawFormTokenAmountAtom)
+  const { address: userAddress } = useAccount()
 
-  const { data: tokenData } = useVaultTokenData(vault)
+  const { data: vaultTokenAddress } = useVaultTokenAddress(vault)
 
-  const tokens = `${formatNumberForDisplay(formTokenAmount)} ${tokenData?.symbol}`
+  const formTokenAddress = useAtomValue(withdrawFormTokenAddressAtom)
+
+  const tokenAddress = formTokenAddress ?? vaultTokenAddress
+
+  const { data: token } = useToken(vault.chainId, tokenAddress!)
+
+  const { data: txReceipt } = useTransactionReceipt({
+    chainId: vault.chainId,
+    hash: txHash as `0x${string}`
+  })
+
+  const tokensReceived = useMemo(() => {
+    if (!!userAddress && !!token && !!txReceipt) {
+      return getTokensReceived(userAddress, token, txReceipt)
+    }
+  }, [userAddress, token, txReceipt])
+
+  const formattedTokensReceived =
+    !!token && !!tokensReceived
+      ? formatBigIntForDisplay(tokensReceived, token.decimals, { maximumFractionDigits: 5 })
+      : '?'
+  const tokens = `${formattedTokensReceived} ${token?.symbol}`
   const name = getBlockExplorerName(vault.chainId)
 
   return (
@@ -38,7 +65,7 @@ export const SuccessView = (props: SuccessViewProps) => {
       <div className='flex flex-col gap-3 items-center'>
         <div className='flex flex-col items-center text-lg font-medium text-center'>
           <span className='text-pt-teal'>{t_modals('success')}</span>
-          <span>{t_modals('withdrew', { tokens })}</span>
+          <span>{!!tokensReceived ? t_modals('gotTokens', { tokens }) : <Spinner />}</span>
         </div>
         <PrizePoolBadge
           chainId={vault.chainId}
@@ -69,4 +96,29 @@ export const SuccessView = (props: SuccessViewProps) => {
       </Button>
     </div>
   )
+}
+
+const getTokensReceived = (userAddress: Address, token: Token, txReceipt: TransactionReceipt) => {
+  if (txReceipt.status !== 'success') return undefined
+
+  const txLogs = [...txReceipt.logs].reverse()
+
+  for (let i = 0; i < txLogs.length; i++) {
+    try {
+      const { data, topics, address } = txLogs[i]
+
+      if (lower(token.address) === lower(address)) {
+        const { args: eventArgs } = decodeEventLog({
+          abi: erc20ABI,
+          eventName: 'Transfer',
+          data,
+          topics
+        })
+
+        if (!!eventArgs && lower(eventArgs.to) === lower(userAddress)) {
+          return eventArgs.value
+        }
+      }
+    } catch {}
+  }
 }

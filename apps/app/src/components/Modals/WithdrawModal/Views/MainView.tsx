@@ -1,14 +1,16 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useVaultExchangeRate,
-  useVaultShareData
+  useVaultShareData,
+  useVaultTokenAddress
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { PrizePoolBadge } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
-import { getNiceNetworkNameByChainId } from '@shared/utilities'
+import { getNiceNetworkNameByChainId, lower } from '@shared/utilities'
+import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
-import { NetworkFees } from '../../NetworkFees'
-import { WithdrawForm } from '../WithdrawForm'
+import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
+import { WithdrawForm, withdrawFormTokenAddressAtom } from '../WithdrawForm'
 
 interface MainViewProps {
   vault: Vault
@@ -18,26 +20,38 @@ export const MainView = (props: MainViewProps) => {
   const { vault } = props
 
   const t_common = useTranslations('Common')
-  const t_modals = useTranslations('TxModals')
+  const t_txModals = useTranslations('TxModals')
 
   const { data: shareData } = useVaultShareData(vault)
+  const { data: vaultTokenAddress } = useVaultTokenAddress(vault)
+
+  const formTokenAddress = useAtomValue(withdrawFormTokenAddressAtom)
 
   const { data: vaultExchangeRate } = useVaultExchangeRate(vault)
 
   const vaultName = vault.name ?? `"${shareData?.name}"`
   const networkName = getNiceNetworkNameByChainId(vault.chainId)
 
+  const isZapping =
+    !!vaultTokenAddress &&
+    !!formTokenAddress &&
+    lower(vaultTokenAddress) !== lower(formTokenAddress)
+
+  const feesToShow: NetworkFeesProps['show'] = isZapping
+    ? ['approve', 'withdrawWithZap']
+    : ['withdraw']
+
   return (
     <div className='flex flex-col gap-6'>
       <span className='text-lg font-semibold text-center'>
         {!!vaultName && (
           <span className='hidden md:inline-block'>
-            {t_modals('withdrawFrom', { name: vaultName, network: networkName })}
+            {t_txModals('withdrawFrom', { name: vaultName, network: networkName })}
           </span>
         )}
         {!!vaultName && (
           <span className='inline-block md:hidden'>
-            {t_modals('withdrawFromShort', { name: vaultName })}
+            {t_txModals('withdrawFromShort', { name: vaultName })}
           </span>
         )}
         {!vaultName && <Spinner />}
@@ -52,7 +66,7 @@ export const MainView = (props: MainViewProps) => {
       {!!vaultExchangeRate && (
         <>
           <WithdrawForm vault={vault} showInputInfoRows={true} />
-          <NetworkFees vault={vault} show={['withdraw']} />
+          <NetworkFees vault={vault} show={feesToShow} />
         </>
       )}
     </div>

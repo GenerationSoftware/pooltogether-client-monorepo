@@ -41,6 +41,7 @@ import { isValidFormInput, TxFormInput, TxFormValues } from '../TxFormInput'
 
 export const depositFormTokenAddressAtom = atom<Address | undefined>(undefined)
 export const depositFormTokenAmountAtom = atom<string>('')
+
 export const depositFormShareAmountAtom = atom<string>('')
 
 export const depositZapPriceImpactAtom = atom<number | undefined>(undefined)
@@ -187,9 +188,7 @@ export const DepositForm = (props: DepositFormProps) => {
 
       setFormShareAmount(slicedShares)
 
-      formMethods.setValue('shareAmount', slicedShares, {
-        shouldValidate: true
-      })
+      formMethods.setValue('shareAmount', slicedShares, { shouldValidate: true })
     }
   }, [cachedZapAmountOut])
 
@@ -208,9 +207,7 @@ export const DepositForm = (props: DepositFormProps) => {
 
           setFormShareAmount(slicedShares)
 
-          formMethods.setValue('shareAmount', slicedShares, {
-            shouldValidate: true
-          })
+          formMethods.setValue('shareAmount', slicedShares, { shouldValidate: true })
         }
       } else {
         setFormTokenAmount('0')
@@ -244,9 +241,7 @@ export const DepositForm = (props: DepositFormProps) => {
 
         setFormTokenAmount(slicedTokens)
 
-        formMethods.setValue('tokenAmount', slicedTokens, {
-          shouldValidate: true
-        })
+        formMethods.setValue('tokenAmount', slicedTokens, { shouldValidate: true })
       } else {
         setFormTokenAmount('0')
       }
@@ -274,7 +269,10 @@ export const DepositForm = (props: DepositFormProps) => {
     }
   }, [vault, share, shareBalance, shareLogoURI])
 
-  const zapTokenOptions = useZapTokenOptions(vault.chainId)
+  const zapTokenOptions = useZapTokenOptions(vault.chainId, {
+    includeNativeAsset: true,
+    includeVaultsWithBalance: true
+  })
 
   const tokenPickerOptions = useMemo(() => {
     const getOptionId = (option: Token) => `zapToken-${option.chainId}-${option.address}`

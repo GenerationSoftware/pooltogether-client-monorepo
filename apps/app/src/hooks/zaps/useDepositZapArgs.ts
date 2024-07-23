@@ -9,11 +9,11 @@ import { getAssetsFromShares, lower, NETWORK, WRAPPED_NATIVE_ASSETS } from '@sha
 import { useMemo } from 'react'
 import {
   getLpSwapAmountOut,
-  getLpSwapZapRoute,
+  getLpSwapZapInRoute,
   getSimpleAmountOut,
-  getSimpleZapRoute,
+  getSimpleZapInRoute,
   getSwapAmountOut,
-  getSwapZapRoute,
+  getSwapZapInRoute,
   isDolphinAddress
 } from 'src/zapUtils'
 import { Address, ContractFunctionArgs, zeroAddress } from 'viem'
@@ -279,7 +279,7 @@ export const useDepositZapArgs = ({
       let zapRoute: ZapRoute = []
 
       if (!!swapTx) {
-        zapRoute = getSwapZapRoute(inputToken, vault, swapTx, vaultToken.address, {
+        zapRoute = getSwapZapInRoute(inputToken, vault, swapTx, vaultToken.address, {
           redeem:
             !!inputVaultToken && !!inputVaultExchangeRate
               ? { asset: inputVaultToken, exchangeRate: inputVaultExchangeRate }
@@ -294,7 +294,7 @@ export const useDepositZapArgs = ({
           addZapOutput({ token: lpVaultToken.token1.address, minOutputAmount: 0n })
         }
 
-        zapRoute = getLpSwapZapRoute(
+        zapRoute = getLpSwapZapInRoute(
           inputToken,
           vault,
           lpVaultToken,
@@ -309,7 +309,7 @@ export const useDepositZapArgs = ({
           }
         )
       } else {
-        zapRoute = getSimpleZapRoute(inputToken, vault, vaultToken.address, {
+        zapRoute = getSimpleZapInRoute(inputToken, vault, vaultToken.address, {
           redeem: !!inputVaultExchangeRate ? { exchangeRate: inputVaultExchangeRate } : undefined
         })
       }
@@ -329,6 +329,7 @@ export const useDepositZapArgs = ({
     vault,
     userAddress,
     vaultToken,
+    exchangeRate,
     lpVaultToken,
     inputVaultToken,
     inputVaultExchangeRate,
