@@ -111,7 +111,9 @@ export const TxFormInput = (props: TxFormInputProps) => {
   const TokenBadge = (props: { className?: string }) => (
     <div className={classNames('flex shrink-0 items-center gap-1', props.className)}>
       <TokenIcon token={token} fallbackToken={fallbackLogoToken} />
-      <span className='text-lg font-semibold md:text-2xl'>{token.symbol}</span>
+      <span className='text-lg font-semibold md:text-2xl'>
+        {token.symbol.length > 17 ? `${token.symbol.slice(0, 15)}...` : token.symbol}
+      </span>
     </div>
   )
 
@@ -130,7 +132,7 @@ export const TxFormInput = (props: TxFormInputProps) => {
         className
       )}
     >
-      <div className='flex justify-between md:gap-6'>
+      <div className='flex justify-between md:gap-2'>
         <Input
           formKey={formKey}
           decimals={token.decimals}
