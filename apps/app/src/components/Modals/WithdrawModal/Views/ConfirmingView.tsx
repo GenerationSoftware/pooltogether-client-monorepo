@@ -1,15 +1,9 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import { useVaultTokenData } from '@generationsoftware/hyperstructure-react-hooks'
+import { useVaultShareData } from '@generationsoftware/hyperstructure-react-hooks'
 import { PrizePoolBadge } from '@shared/react-components'
 import { Button, ExternalLink, Spinner } from '@shared/ui'
-import {
-  formatNumberForDisplay,
-  getBlockExplorerName,
-  getBlockExplorerUrl
-} from '@shared/utilities'
-import { useAtomValue } from 'jotai'
+import { getBlockExplorerName, getBlockExplorerUrl } from '@shared/utilities'
 import { useTranslations } from 'next-intl'
-import { withdrawFormTokenAmountAtom } from '../WithdrawForm'
 
 interface ConfirmingViewProps {
   vault: Vault
@@ -23,11 +17,8 @@ export const ConfirmingView = (props: ConfirmingViewProps) => {
   const t_common = useTranslations('Common')
   const t_modals = useTranslations('TxModals')
 
-  const formTokenAmount = useAtomValue(withdrawFormTokenAmountAtom)
+  const { data: share } = useVaultShareData(vault)
 
-  const { data: tokenData } = useVaultTokenData(vault)
-
-  const tokens = `${formatNumberForDisplay(formTokenAmount)} ${tokenData?.symbol}`
   const name = getBlockExplorerName(vault.chainId)
 
   return (
@@ -40,7 +31,7 @@ export const ConfirmingView = (props: ConfirmingViewProps) => {
         className='!py-1 mx-auto'
       />
       <span className='text-sm text-center md:text-base'>
-        {t_modals('withdrawing', { tokens })}
+        {t_modals('withdrawingFrom', { vault: share?.symbol ?? '?' })}
       </span>
       <Spinner size='lg' className='mx-auto after:border-y-pt-teal' />
       <div className='flex flex-col w-full justify-end h-24 gap-4 md:h-36 md:gap-6'>

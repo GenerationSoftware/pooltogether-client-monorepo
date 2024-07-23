@@ -127,10 +127,10 @@ const BasicWithdrawForm = (props: BasicWithdrawFormProps) => {
             <span className='font-semibold'>{t_txModals('minimumReceived')}</span>
             <span className='h-3 grow border-b border-dashed border-pt-purple-50/30' />
             <span>
-              {formatBigIntForDisplay(withdrawZapMinReceived, shareInfo.decimals, {
+              {formatBigIntForDisplay(withdrawZapMinReceived, tokenInfo.decimals, {
                 maximumFractionDigits: 5
               })}{' '}
-              {shareInfo.symbol}
+              {tokenInfo.symbol}
             </span>
           </div>
         </div>

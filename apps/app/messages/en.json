@@ -238,6 +238,7 @@
     "depositing": "Depositing {tokens}...",
     "depositingInto": "Depositing into {vault}",
     "withdrawing": "Withdrawing {tokens}...",
+    "withdrawingFrom": "Withdrawing from {vault}",
     "delegating": "Delegating {tokens}...",
     "success": "Success!",
     "deposited": "You deposited {tokens}",
