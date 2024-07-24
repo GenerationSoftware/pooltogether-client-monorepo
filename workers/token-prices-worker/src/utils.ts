@@ -75,8 +75,8 @@ export const getCurrentDate = () => {
 export const getLpTokenInfo = async (chainId: SUPPORTED_NETWORK, tokenAddresses: Address[]) => {
   const lpTokenInfo: {
     [lpTokenAddress: Address]: {
-      token0: { address: Address; decimals: number; reserve: bigint }
-      token1: { address: Address; decimals: number; reserve: bigint }
+      token0: { address: Lowercase<Address>; decimals: number; reserve: bigint }
+      token1: { address: Lowercase<Address>; decimals: number; reserve: bigint }
       decimals: number
       totalSupply: bigint
     }
@@ -130,7 +130,12 @@ export const getLpTokenInfo = async (chainId: SUPPORTED_NETWORK, tokenAddresses:
     }
 
     const lpTokenAddresses = [...new Set<Address>(Object.keys(tokenAddressMap) as Address[])]
-    const underlyingTokenAddresses = [...new Set<Address>(...Object.values(tokenAddressMap))]
+    const underlyingTokenAddresses = Object.values(tokenAddressMap)
+      .flat()
+      .map((address) => address.toLowerCase() as Lowercase<Address>)
+    const uniqueUnderlyingTokenAddresses = [
+      ...new Set<Lowercase<Address>>(underlyingTokenAddresses)
+    ]
 
     const lpTokenCalls: ContractFunctionParameters<typeof lpABI>[] = []
     lpTokenAddresses.forEach((address) => {
@@ -141,7 +146,7 @@ export const getLpTokenInfo = async (chainId: SUPPORTED_NETWORK, tokenAddresses:
     })
 
     const underlyingTokenCalls: ContractFunctionParameters<typeof erc20Abi>[] = []
-    underlyingTokenAddresses.forEach((address) => {
+    uniqueUnderlyingTokenAddresses.forEach((address) => {
       underlyingTokenCalls.push({ address, abi: erc20Abi, functionName: 'decimals' })
     })
 
@@ -149,7 +154,7 @@ export const getLpTokenInfo = async (chainId: SUPPORTED_NETWORK, tokenAddresses:
       contracts: [...lpTokenCalls, ...underlyingTokenCalls]
     })
 
-    const underlyingTokenDecimals: { [tokenAddress: Address]: number } = {}
+    const underlyingTokenDecimals: { [tokenAddress: Lowercase<Address>]: number } = {}
     lpTokenResults.slice(lpTokenCalls.length).forEach((data, i) => {
       if (data.status === 'success' && typeof data.result === 'number') {
         underlyingTokenDecimals[underlyingTokenAddresses[i]] = data.result
@@ -157,8 +162,8 @@ export const getLpTokenInfo = async (chainId: SUPPORTED_NETWORK, tokenAddresses:
     })
 
     lpTokenAddresses.forEach((lpTokenAddress, i) => {
-      const token0Address = tokenAddressMap[lpTokenAddress][0]
-      const token1Address = tokenAddressMap[lpTokenAddress][1]
+      const token0Address = tokenAddressMap[lpTokenAddress][0].toLowerCase() as Lowercase<Address>
+      const token1Address = tokenAddressMap[lpTokenAddress][1].toLowerCase() as Lowercase<Address>
 
       if (!!token0Address && !!token1Address) {
         const token0 = {
@@ -173,7 +178,7 @@ export const getLpTokenInfo = async (chainId: SUPPORTED_NETWORK, tokenAddresses:
         }
 
         const isValidToken = (data: {
-          address: Address
+          address: Lowercase<Address>
           decimals: any
           reserve: any
         }): data is (typeof lpTokenInfo)[Address]['token0'] => {
