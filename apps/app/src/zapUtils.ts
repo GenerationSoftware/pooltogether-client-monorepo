@@ -382,12 +382,21 @@ export const getSwapZapOutRoute = (
       {
         ...getRedeemTx(vault.address, zapRouterAddress, amount, exchangeRate, vault.decimals!),
         tokens: [{ token: vault.address, index: -1 }]
-      },
-      {
-        ...swapTx.tx,
-        tokens: [{ token: vaultTokenAddress, index: -1 }]
       }
     )
+
+    const rocketPoolAddresses = ROCKETPOOL_ADDRESSES[vault.chainId]
+    if (!!rocketPoolAddresses && lower(vaultTokenAddress) === rocketPoolAddresses.WRETH) {
+      route.push({
+        ...getBurnWRETHTx(rocketPoolAddresses.WRETH, 0n),
+        tokens: [{ token: rocketPoolAddresses.WRETH, index: 4 }]
+      })
+    }
+
+    route.push({
+      ...swapTx.tx,
+      tokens: [{ token: vaultTokenAddress, index: -1 }]
+    })
   }
 
   return route
@@ -538,7 +547,12 @@ export const getSimpleZapInRoute = (
   return route
 }
 
-export const getSimpleZapOutRoute = (vault: Vault, amount: bigint, exchangeRate: bigint) => {
+export const getSimpleZapOutRoute = (
+  vault: Vault,
+  amount: bigint,
+  vaultTokenAddress: Address,
+  exchangeRate: bigint
+) => {
   const route: Mutable<ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>[1]> = []
 
   const zapRouterAddress = ZAP_SETTINGS[vault.chainId]?.zapRouter as Address | undefined
@@ -548,6 +562,14 @@ export const getSimpleZapOutRoute = (vault: Vault, amount: bigint, exchangeRate:
       ...getRedeemTx(vault.address, zapRouterAddress, amount, exchangeRate, vault.decimals!),
       tokens: [{ token: vault.address, index: -1 }]
     })
+
+    const rocketPoolAddresses = ROCKETPOOL_ADDRESSES[vault.chainId]
+    if (!!rocketPoolAddresses && lower(vaultTokenAddress) === rocketPoolAddresses.WRETH) {
+      route.push({
+        ...getBurnWRETHTx(rocketPoolAddresses.WRETH, 0n),
+        tokens: [{ token: rocketPoolAddresses.WRETH, index: 4 }]
+      })
+    }
   }
 
   return route

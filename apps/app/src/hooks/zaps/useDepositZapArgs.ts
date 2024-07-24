@@ -120,7 +120,8 @@ export const useDepositZapArgs = ({
     !!swapInputTokenAddress &&
     lower(vaultToken.address) !== lower(swapInputTokenAddress) &&
     isFetchedVaultTokenVelodromeLp &&
-    !isLpSwapTxsNecessary
+    !isLpSwapTxsNecessary &&
+    (!isMintingWRETHNecessary || lower(swapInputTokenAddress) !== rocketPoolTokenAddresses.RETH)
 
   const isFirstLpSwapTxNecessary =
     !!vaultToken &&
