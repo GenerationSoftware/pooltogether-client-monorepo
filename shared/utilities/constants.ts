@@ -487,6 +487,11 @@ export const TOKEN_PRICE_REDIRECTS: {
     '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': {
       chainId: NETWORK.mainnet,
       address: '0x1a7e4e63778b4f12a199c062f3efdd288afcbce8'
+    },
+    /* wrETH */
+    '0x67cde7af920682a29fcfea1a179ef0f30f48df3e': {
+      chainId: NETWORK.mainnet,
+      address: DOLPHIN_ADDRESS // TODO: this is not 100% accurate
     }
   },
   [NETWORK.arbitrum]: {

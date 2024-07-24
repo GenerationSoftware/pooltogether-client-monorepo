@@ -13,7 +13,7 @@ import {
   WRAPPED_NATIVE_ASSETS
 } from '@shared/utilities'
 import { Address, ContractFunctionArgs, encodeFunctionData, zeroAddress } from 'viem'
-import { VELODROME_ADDRESSES, ZAP_SETTINGS } from '@constants/config'
+import { ROCKETPOOL_ADDRESSES, VELODROME_ADDRESSES, ZAP_SETTINGS } from '@constants/config'
 import { zapRouterABI } from '@constants/zapRouterABI'
 import { useLpToken } from '@hooks/zaps/useLpToken'
 import { useSendDepositZapTransaction } from '@hooks/zaps/useSendDepositZapTransaction'
@@ -21,17 +21,6 @@ import { useSwapTx } from '@hooks/zaps/useSwapTx'
 
 export const isDolphinAddress = (address?: Address) =>
   !!address && lower(address) === DOLPHIN_ADDRESS
-
-export const getSwapAmountOut = (
-  swapTx: NonNullable<ReturnType<typeof useSwapTx>['data']>,
-  exchangeRate: bigint,
-  decimals: number
-) => {
-  return {
-    expected: getSharesFromAssets(swapTx.amountOut.expected, exchangeRate, decimals),
-    min: getSharesFromAssets(swapTx.amountOut.min, exchangeRate, decimals)
-  }
-}
 
 export const getLpSwapAmountOut = (
   inputToken: Parameters<typeof useSendDepositZapTransaction>['0'],
@@ -93,11 +82,11 @@ export const getLpSwapAmountOut = (
 }
 
 export const getSimpleAmountOut = (
-  inputToken: Parameters<typeof useSendDepositZapTransaction>['0'],
+  inputTokenAmount: bigint,
   exchangeRate: bigint,
   decimals: number
 ) => {
-  const simpleAmountOut = getSharesFromAssets(inputToken.amount, exchangeRate, decimals)
+  const simpleAmountOut = getSharesFromAssets(inputTokenAmount, exchangeRate, decimals)
 
   return {
     expected: simpleAmountOut,
@@ -269,6 +258,46 @@ export const getRedeemTx = (
   }
 }
 
+export const getMintWRETHTx = (wrETHAddress: Address, amount: bigint) => {
+  return {
+    target: wrETHAddress,
+    value: 0n,
+    data: encodeFunctionData({
+      abi: [
+        {
+          inputs: [{ internalType: 'uint256', name: '_amountTokens', type: 'uint256' }],
+          name: 'mint',
+          outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+          stateMutability: 'nonpayable',
+          type: 'function'
+        }
+      ],
+      functionName: 'mint',
+      args: [amount]
+    })
+  }
+}
+
+export const getBurnWRETHTx = (wrETHAddress: Address, amount: bigint) => {
+  return {
+    target: wrETHAddress,
+    value: 0n,
+    data: encodeFunctionData({
+      abi: [
+        {
+          inputs: [{ internalType: 'uint256', name: '_amountWreth', type: 'uint256' }],
+          name: 'burn',
+          outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+          stateMutability: 'nonpayable',
+          type: 'function'
+        }
+      ],
+      functionName: 'burn',
+      args: [amount]
+    })
+  }
+}
+
 export const getSwapZapInRoute = (
   inputToken: Parameters<typeof useSendDepositZapTransaction>['0'],
   vault: Vault,
@@ -313,12 +342,21 @@ export const getSwapZapInRoute = (
       {
         ...swapTx.tx,
         tokens: [{ token: swapInputTokenAddress, index: -1 }]
-      },
-      {
-        ...getDepositTx(vault.address, zapRouterAddress),
-        tokens: [{ token: vaultTokenAddress, index: 4 }]
       }
     )
+
+    const rocketPoolAddresses = ROCKETPOOL_ADDRESSES[vault.chainId]
+    if (!!rocketPoolAddresses && lower(vaultTokenAddress) === rocketPoolAddresses.WRETH) {
+      route.push({
+        ...getMintWRETHTx(rocketPoolAddresses.WRETH, 0n),
+        tokens: [{ token: rocketPoolAddresses.RETH, index: 4 }]
+      })
+    }
+
+    route.push({
+      ...getDepositTx(vault.address, zapRouterAddress),
+      tokens: [{ token: vaultTokenAddress, index: 4 }]
+    })
   }
 
   return route
@@ -344,12 +382,21 @@ export const getSwapZapOutRoute = (
       {
         ...getRedeemTx(vault.address, zapRouterAddress, amount, exchangeRate, vault.decimals!),
         tokens: [{ token: vault.address, index: -1 }]
-      },
-      {
-        ...swapTx.tx,
-        tokens: [{ token: vaultTokenAddress, index: -1 }]
       }
     )
+
+    const rocketPoolAddresses = ROCKETPOOL_ADDRESSES[vault.chainId]
+    if (!!rocketPoolAddresses && lower(vaultTokenAddress) === rocketPoolAddresses.WRETH) {
+      route.push({
+        ...getBurnWRETHTx(rocketPoolAddresses.WRETH, 0n),
+        tokens: [{ token: rocketPoolAddresses.WRETH, index: 4 }]
+      })
+    }
+
+    route.push({
+      ...swapTx.tx,
+      tokens: [{ token: vaultTokenAddress, index: -1 }]
+    })
   }
 
   return route
@@ -483,6 +530,14 @@ export const getSimpleZapInRoute = (
       })
     }
 
+    const rocketPoolAddresses = ROCKETPOOL_ADDRESSES[vault.chainId]
+    if (!!rocketPoolAddresses && lower(vaultTokenAddress) === rocketPoolAddresses.WRETH) {
+      route.push({
+        ...getMintWRETHTx(rocketPoolAddresses.WRETH, 0n),
+        tokens: [{ token: rocketPoolAddresses.RETH, index: 4 }]
+      })
+    }
+
     route.push({
       ...getDepositTx(vault.address, zapRouterAddress),
       tokens: [{ token: vaultTokenAddress, index: 4 }]
@@ -492,7 +547,12 @@ export const getSimpleZapInRoute = (
   return route
 }
 
-export const getSimpleZapOutRoute = (vault: Vault, amount: bigint, exchangeRate: bigint) => {
+export const getSimpleZapOutRoute = (
+  vault: Vault,
+  amount: bigint,
+  vaultTokenAddress: Address,
+  exchangeRate: bigint
+) => {
   const route: Mutable<ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>[1]> = []
 
   const zapRouterAddress = ZAP_SETTINGS[vault.chainId]?.zapRouter as Address | undefined
@@ -502,6 +562,14 @@ export const getSimpleZapOutRoute = (vault: Vault, amount: bigint, exchangeRate:
       ...getRedeemTx(vault.address, zapRouterAddress, amount, exchangeRate, vault.decimals!),
       tokens: [{ token: vault.address, index: -1 }]
     })
+
+    const rocketPoolAddresses = ROCKETPOOL_ADDRESSES[vault.chainId]
+    if (!!rocketPoolAddresses && lower(vaultTokenAddress) === rocketPoolAddresses.WRETH) {
+      route.push({
+        ...getBurnWRETHTx(rocketPoolAddresses.WRETH, 0n),
+        tokens: [{ token: rocketPoolAddresses.WRETH, index: 4 }]
+      })
+    }
   }
 
   return route
