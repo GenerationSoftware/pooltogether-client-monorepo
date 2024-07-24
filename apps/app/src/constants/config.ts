@@ -18,7 +18,12 @@ import {
   zerionWallet
 } from '@rainbow-me/rainbowkit/wallets'
 import { VaultList } from '@shared/types'
-import { NETWORK, POOL_TOKEN_ADDRESSES, USDC_TOKEN_ADDRESSES } from '@shared/utilities'
+import {
+  NETWORK,
+  POOL_TOKEN_ADDRESSES,
+  USDC_TOKEN_ADDRESSES,
+  WRAPPED_NATIVE_ASSETS
+} from '@shared/utilities'
 import defaultVaultList from '@vaultLists/default'
 import memeVaultList from '@vaultLists/meme'
 import { Address, parseUnits } from 'viem'
@@ -218,7 +223,11 @@ export const ZAP_SETTINGS: {
  */
 export const ZAP_PRIORITIES: {
   [chainId: number]: { [vaultAddress: Lowercase<Address>]: Address }
-} = {}
+} = {
+  [NETWORK.optimism]: {
+    '0x8c2f27b7819eb1bb7e3b5c407c5e1839186d5aba': WRAPPED_NATIVE_ASSETS[NETWORK.optimism]!
+  }
+}
 
 /**
  * Amount of native assets to suggest not spending (for gas purposes)
