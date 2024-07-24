@@ -195,5 +195,25 @@ export const optimismVaults: VaultList['tokens'] = [
           'https://velodrome.finance/deposit?token0=0x4200000000000000000000000000000000000006&token1=0xc55E93C62874D8100dBd2DfE307EDc1036ad5434&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a'
       }
     }
+  },
+  {
+    chainId: NETWORK.optimism,
+    address: '0x8c2f27b7819eb1bb7e3b5c407c5e1839186d5aba',
+    name: 'Prize wrETH',
+    decimals: 18,
+    symbol: 'przWRETH',
+    logoURI: `${DOMAINS.app}/icons/przWRETH.svg`,
+    tags: ['rocketpool'],
+    extensions: {
+      underlyingAsset: {
+        address: '0x67CdE7AF920682A29fcfea1A179ef0f30F48Df3e',
+        symbol: 'wrETH',
+        name: 'Wrapped Rocket Pool ETH'
+      },
+      yieldSource: {
+        name: 'Rocket Pool',
+        appURI: 'https://rocketpool.net'
+      }
+    }
   }
 ]
