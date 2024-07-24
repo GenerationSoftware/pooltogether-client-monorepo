@@ -30,7 +30,9 @@ const zapTokenOptions: { [chainId: number]: Address[] } = {
     '0x7F5c764cBc14f9669B88837ca1490cCa17c31607', // USDC.e
     '0x4200000000000000000000000000000000000042', // OP
     '0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb', // wstETH
-    '0xc55e93c62874d8100dbd2dfe307edc1036ad5434' // mooBIFI
+    '0xc55e93c62874d8100dbd2dfe307edc1036ad5434', // mooBIFI
+    '0x9Bcef72be871e61ED4fBbc7630889beE758eb81D', // rETH
+    '0x67CdE7AF920682A29fcfea1A179ef0f30F48Df3e' // wrETH
   ],
   [NETWORK.base]: [
     DOLPHIN_ADDRESS, // ETH
