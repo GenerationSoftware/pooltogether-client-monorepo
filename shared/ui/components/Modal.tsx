@@ -4,8 +4,10 @@ import classNames from 'classnames'
 import {
   AnimatePresence,
   AnimationProps,
+  DragControls,
   DraggableProps,
   motion,
+  useDragControls,
   useReducedMotion
 } from 'framer-motion'
 import { ReactNode, useEffect, useLayoutEffect, useState } from 'react'
@@ -46,6 +48,8 @@ export const Modal = (props: ModalProps) => {
 
   const shouldReduceMotion = useReducedMotion()
 
+  const dragControls = useDragControls()
+
   const minVelocityToDismiss = 500
   const minScreenHeightToDismiss = 0.35
   const minScreenWidthToDismiss = 0.25
@@ -74,7 +78,9 @@ export const Modal = (props: ModalProps) => {
         ) {
           setIsModalShown(false)
         }
-      }
+      },
+      dragControls,
+      dragListener: false
     },
     cover: {
       initial: { x: '100%' },
@@ -129,12 +135,12 @@ export const Modal = (props: ModalProps) => {
               key={`modal-${label}`}
               {...animationProps}
               className={classNames(
-                'flex flex-col relative items-center p-8 shadow-xl overflow-x-hidden overflow-y-auto md:rounded-lg',
+                'flex flex-col relative items-center py-8 shadow-xl overflow-hidden md:rounded-lg',
                 'bg-pt-purple-700 text-pt-purple-50',
                 'h-screen md:h-auto md:max-h-[90vh]',
                 'w-screen md:w-full md:max-w-lg',
                 {
-                  '!h-auto max-h-[90vh] rounded-t-lg': mobileStyle === 'tab' || !mobileStyle
+                  '!h-auto max-h-[80vh] rounded-t-lg': mobileStyle === 'tab' || !mobileStyle
                 },
                 className
               )}
@@ -143,6 +149,7 @@ export const Modal = (props: ModalProps) => {
               <ModalContent
                 onClose={() => setIsModalShown(false)}
                 mobileStyle={mobileStyle}
+                dragControls={dragControls}
                 {...rest}
               />
             </motion.div>
@@ -186,6 +193,7 @@ interface ModalContentProps {
   onClose: () => void
   hideHeader?: boolean
   mobileStyle?: MobileStyle
+  dragControls?: DragControls
 }
 
 const ModalContent = (props: ModalContentProps) => {
@@ -198,16 +206,31 @@ const ModalContent = (props: ModalContentProps) => {
     footerClassName,
     onClose,
     hideHeader,
-    mobileStyle
+    mobileStyle,
+    dragControls
   } = props
 
   const { height, isMobile } = useScreenSize()
 
   return (
     <>
-      {mobileStyle === 'tab' && <ModalTabHandle />}
+      {mobileStyle === 'tab' && (
+        <>
+          <ModalTabHandle />
+          {!!dragControls && (
+            <div
+              onPointerDown={(e) => dragControls.start(e)}
+              style={{ touchAction: 'none' }}
+              className={classNames('absolute top-0 w-full', {
+                'h-8': hideHeader,
+                'h-12': !hideHeader
+              })}
+            />
+          )}
+        </>
+      )}
       <XMarkIcon
-        className='hidden md:inline-block absolute top-5 end-4 h-6 w-6 ml-auto cursor-pointer hover:bg-pt-purple-600 hover:text-pt-purple-200 rounded-lg transition duration-100'
+        className='hidden absolute top-5 end-4 h-6 w-6 ml-auto cursor-pointer hover:bg-pt-purple-600 hover:text-pt-purple-200 rounded-lg transition duration-100 md:inline-block'
         style={
           !!height && isMobile && mobileStyle === 'cover'
             ? { display: 'inline-block', top: 'auto', bottom: height - 44 }
@@ -220,7 +243,11 @@ const ModalContent = (props: ModalContentProps) => {
           {headerContent}
         </ModalHeader>
       )}
-      <ModalBody className={bodyClassName}>{bodyContent}</ModalBody>
+      <ModalBody
+        className={classNames(bodyClassName, { 'overflow-y-auto': mobileStyle !== 'cover' })}
+      >
+        {bodyContent}
+      </ModalBody>
       {!!footerContent && <ModalFooter className={footerClassName}>{footerContent}</ModalFooter>}
     </>
   )
@@ -238,7 +265,7 @@ const ModalHeader = (props: ModalHeaderProps) => {
   return (
     <div
       className={classNames(
-        'w-full flex pb-4 text-pt-purple-50',
+        'w-full flex px-8 pb-4 text-pt-purple-50',
         { 'pt-24 md:pt-0': mobileStyle === 'cover' },
         className
       )}
@@ -256,7 +283,9 @@ interface ModalBodyProps {
 const ModalBody = (props: ModalBodyProps) => {
   const { children, className } = props
 
-  return <div className={classNames('w-full max-w-xl md:max-w-none', className)}>{children}</div>
+  return (
+    <div className={classNames('w-full max-w-xl px-8 md:max-w-none', className)}>{children}</div>
+  )
 }
 
 interface ModalFooterProps {
@@ -268,7 +297,9 @@ const ModalFooter = (props: ModalFooterProps) => {
   const { children, className } = props
 
   return (
-    <div className={classNames('w-full max-w-xl pt-4 md:max-w-none', className)}>{children}</div>
+    <div className={classNames('w-full max-w-xl px-8 pt-4 md:max-w-none', className)}>
+      {children}
+    </div>
   )
 }
 

@@ -131,7 +131,8 @@ export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
         label='prize-checking'
         mobileStyle='tab'
         hideHeader={isMobile}
-        className='overflow-y-hidden md:!max-w-2xl'
+        className='md:!max-w-2xl'
+        bodyClassName='overflow-y-hidden'
       />
     )
   }
