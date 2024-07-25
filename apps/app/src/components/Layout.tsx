@@ -22,7 +22,6 @@ import { useSelectedPrizePool } from '@hooks/useSelectedPrizePool'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { useWalletId } from '@hooks/useWalletId'
 import { Footer } from './Footer'
-import { MigrationPopup } from './MigrationPopup'
 import { CheckPrizesModal } from './Modals/CheckPrizesModal'
 import { DelegateModal } from './Modals/DelegateModal'
 import { DepositModal } from './Modals/DepositModal'
@@ -167,9 +166,6 @@ export const Layout = (props: LayoutProps) => {
       />
 
       <VaultListHandler />
-
-      {/* TODO: remove a while after launch */}
-      <MigrationPopup />
 
       <main
         className={classNames(
