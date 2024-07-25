@@ -157,7 +157,7 @@ export const getLpTokenInfo = async (chainId: SUPPORTED_NETWORK, tokenAddresses:
     const underlyingTokenDecimals: { [tokenAddress: Lowercase<Address>]: number } = {}
     lpTokenResults.slice(lpTokenCalls.length).forEach((data, i) => {
       if (data.status === 'success' && typeof data.result === 'number') {
-        underlyingTokenDecimals[underlyingTokenAddresses[i]] = data.result
+        underlyingTokenDecimals[uniqueUnderlyingTokenAddresses[i]] = data.result
       }
     })
 
