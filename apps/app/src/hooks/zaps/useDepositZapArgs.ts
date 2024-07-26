@@ -49,7 +49,7 @@ export const useDepositZapArgs = ({
 }) => {
   const zapRouterAddress = ZAP_SETTINGS[vault?.chainId]?.zapRouter as Address | undefined
   const wrappedNativeTokenAddress = WRAPPED_NATIVE_ASSETS[vault?.chainId as NETWORK]
-  const rocketPoolTokenAddresses = ROCKETPOOL_ADDRESSES[vault?.chainId]
+  const rocketPoolAddresses = ROCKETPOOL_ADDRESSES[vault?.chainId]
 
   const { address: userAddress } = useAccount()
 
@@ -108,11 +108,9 @@ export const useDepositZapArgs = ({
     : inputToken?.amount ?? 0n
 
   const isMintingWRETHNecessary =
-    !!vaultToken &&
-    !!rocketPoolTokenAddresses &&
-    lower(vaultToken.address) === rocketPoolTokenAddresses.WRETH
+    !!vaultToken && !!rocketPoolAddresses && lower(vaultToken.address) === rocketPoolAddresses.WRETH
   const swapOutputToken: Parameters<typeof useSwapTx>[0]['to'] = isMintingWRETHNecessary
-    ? { address: rocketPoolTokenAddresses.RETH, decimals: 18 }
+    ? { address: rocketPoolAddresses.RETH, decimals: 18 }
     : { address: vaultToken?.address!, decimals: vaultToken?.decimals! }
 
   const isSwapTxNecessary =
@@ -121,7 +119,7 @@ export const useDepositZapArgs = ({
     lower(vaultToken.address) !== lower(swapInputTokenAddress) &&
     isFetchedVaultTokenVelodromeLp &&
     !isLpSwapTxsNecessary &&
-    (!isMintingWRETHNecessary || lower(swapInputTokenAddress) !== rocketPoolTokenAddresses.RETH)
+    (!isMintingWRETHNecessary || lower(swapInputTokenAddress) !== rocketPoolAddresses.RETH)
 
   const isFirstLpSwapTxNecessary =
     !!vaultToken &&
@@ -344,7 +342,7 @@ export const useDepositZapArgs = ({
       }
 
       if (isMintingWRETHNecessary) {
-        addZapOutput({ token: rocketPoolTokenAddresses.RETH, minOutputAmount: 0n })
+        addZapOutput({ token: rocketPoolAddresses.RETH, minOutputAmount: 0n })
       }
 
       let zapRoute: ZapRoute = []

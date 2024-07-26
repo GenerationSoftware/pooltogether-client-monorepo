@@ -269,11 +269,16 @@ export const VELODROME_ADDRESSES: {
  * Rocketpool Addresses
  */
 export const ROCKETPOOL_ADDRESSES: {
-  [chainId: number]: { RETH: Lowercase<Address>; WRETH: Lowercase<Address> }
+  [chainId: number]: {
+    RETH: Lowercase<Address>
+    WRETH: Lowercase<Address>
+    oracle: Lowercase<Address>
+  }
 } = {
   [NETWORK.optimism]: {
     RETH: '0x9bcef72be871e61ed4fbbc7630889bee758eb81d',
-    WRETH: '0x67cde7af920682a29fcfea1a179ef0f30f48df3e'
+    WRETH: '0x67cde7af920682a29fcfea1a179ef0f30f48df3e',
+    oracle: '0x1a8f81c256aee9c640e14bb0453ce247ea0dfe6f'
   }
 }
 

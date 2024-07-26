@@ -42,7 +42,7 @@ export const useWithdrawZapArgs = ({
 }) => {
   const zapRouterAddress = ZAP_SETTINGS[vault?.chainId]?.zapRouter as Address | undefined
   const wrappedNativeTokenAddress = WRAPPED_NATIVE_ASSETS[vault?.chainId as NETWORK]
-  const rocketPoolTokenAddresses = ROCKETPOOL_ADDRESSES[vault?.chainId]
+  const rocketPoolAddresses = ROCKETPOOL_ADDRESSES[vault?.chainId]
 
   const { address: userAddress } = useAccount()
 
@@ -53,9 +53,7 @@ export const useWithdrawZapArgs = ({
   const { data: wrETHExchangeRate } = useWRETHExchangeRate(vault?.chainId)
 
   const isBurningWRETHNecessary =
-    !!vaultToken &&
-    !!rocketPoolTokenAddresses &&
-    lower(vaultToken.address) === rocketPoolTokenAddresses.WRETH
+    !!vaultToken && !!rocketPoolAddresses && lower(vaultToken.address) === rocketPoolAddresses.WRETH
 
   const isSwapTxNecessary =
     !!vaultToken &&
@@ -63,11 +61,11 @@ export const useWithdrawZapArgs = ({
     lower(vaultToken.address) !== lower(outputToken.address) &&
     (!isDolphinAddress(outputToken.address) ||
       lower(vaultToken.address) !== wrappedNativeTokenAddress!) &&
-    (!isBurningWRETHNecessary || lower(outputToken.address) !== rocketPoolTokenAddresses.RETH)
+    (!isBurningWRETHNecessary || lower(outputToken.address) !== rocketPoolAddresses.RETH)
 
   const swapInputToken: Parameters<typeof useSwapTx>[0]['from'] = isBurningWRETHNecessary
     ? {
-        address: rocketPoolTokenAddresses.RETH,
+        address: rocketPoolAddresses.RETH,
         decimals: 18,
         amount: !!wrETHExchangeRate
           ? getSharesFromAssets(
@@ -154,7 +152,7 @@ export const useWithdrawZapArgs = ({
       }
 
       if (isBurningWRETHNecessary) {
-        addZapOutput({ token: rocketPoolTokenAddresses.RETH, minOutputAmount: 0n })
+        addZapOutput({ token: rocketPoolAddresses.RETH, minOutputAmount: 0n })
       }
 
       let zapRoute: ZapRoute = []

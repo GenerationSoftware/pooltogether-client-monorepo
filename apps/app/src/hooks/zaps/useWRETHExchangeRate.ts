@@ -1,42 +1,45 @@
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { useQuery } from '@tanstack/react-query'
-import { parseUnits } from 'viem'
 import { usePublicClient } from 'wagmi'
 import { ROCKETPOOL_ADDRESSES } from '@constants/config'
 
 /**
- * Returns `wrethForTokens`, the amount of wrETH that is equal to 1 rETH
+ * Returns `rate`, the amount of wrETH that is equal to 1 rETH
  * @param chainId network to check
+ * @param options optional settings
  * @returns
  */
-export const useWRETHExchangeRate = (chainId: number) => {
+export const useWRETHExchangeRate = (
+  chainId: number,
+  options?: { useOracle?: boolean; refetchInterval?: number }
+) => {
   const publicClient = usePublicClient({ chainId })
 
-  const wrETHTokenAddress = ROCKETPOOL_ADDRESSES[chainId]?.WRETH
+  const rocketPoolAddresses = ROCKETPOOL_ADDRESSES[chainId]
 
   return useQuery({
-    queryKey: ['wrETHExchangeRate', chainId],
+    queryKey: ['wrETHExchangeRate', chainId, options?.useOracle ?? false],
     queryFn: async () => {
       if (!!publicClient) {
         const exchangeRate = await publicClient.readContract({
-          address: wrETHTokenAddress,
+          address: options?.useOracle ? rocketPoolAddresses.oracle : rocketPoolAddresses.WRETH,
           abi: [
             {
-              inputs: [{ internalType: 'uint256', name: '_tokens', type: 'uint256' }],
-              name: 'wrethForTokens',
+              inputs: [],
+              name: 'rate',
               outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
               stateMutability: 'view',
               type: 'function'
             }
           ],
-          functionName: 'wrethForTokens',
-          args: [parseUnits('1', 18)]
+          functionName: 'rate'
         })
 
         return exchangeRate
       }
     },
-    enabled: !!chainId && !!publicClient && !!wrETHTokenAddress,
-    ...NO_REFETCH
+    enabled: !!chainId && !!publicClient && !!rocketPoolAddresses,
+    ...NO_REFETCH,
+    refetchInterval: options?.refetchInterval ?? false
   })
 }
