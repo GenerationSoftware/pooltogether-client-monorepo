@@ -215,5 +215,101 @@ export const optimismVaults: VaultList['tokens'] = [
         appURI: 'https://rocketpool.net'
       }
     }
+  },
+  {
+    chainId: NETWORK.optimism,
+    address: '0x7889366a039d92dd6aa12ce8f6fb027c3b7e397c',
+    name: 'Prize USDC/OP',
+    decimals: 18,
+    symbol: 'przUSDC/OP',
+    logoURI: `${DOMAINS.app}/icons/przVELO.svg`,
+    tags: ['beefy', 'lp', 'velodrome'],
+    extensions: {
+      underlyingAsset: {
+        address: '0x67F56Ac099F11aD5F65E2ec804f75F2cEa6ab8C5',
+        symbol: 'vAMMV2-USDC/OP',
+        name: 'VolatileV2 AMM - USDC/OP'
+      },
+      yieldSource: {
+        name: 'Beefy',
+        appURI: 'https://app.beefy.com/vault/velodrome-v2-usdc-op'
+      },
+      lp: {
+        appURI:
+          'https://velodrome.finance/deposit?token0=0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85&token1=0x4200000000000000000000000000000000000042&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a'
+      }
+    }
+  },
+  {
+    chainId: NETWORK.optimism,
+    address: '0xE2778B7c04a44dC8480FeE88edc3cEF8ee11Fce0',
+    name: 'Prize WETH/tBTC',
+    decimals: 18,
+    symbol: 'przWETH/tBTC',
+    logoURI: `${DOMAINS.app}/icons/przVELO.svg`,
+    tags: ['beefy', 'lp', 'velodrome'],
+    extensions: {
+      underlyingAsset: {
+        address: '0xadBB23Bcc3C1B9810491897cb0690Cf645B858b1',
+        symbol: 'vAMMV2-WETH/tBTC',
+        name: 'VolatileV2 AMM - WETH/tBTC'
+      },
+      yieldSource: {
+        name: 'Beefy',
+        appURI: 'https://app.beefy.com/vault/velodrome-v2-weth-tbtc'
+      },
+      lp: {
+        appURI:
+          'https://velodrome.finance/deposit?token0=0x4200000000000000000000000000000000000006&token1=0x6c84a8f1c29108F47a79964b5Fe888D4f4D0dE40&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a'
+      }
+    }
+  },
+  {
+    chainId: NETWORK.optimism,
+    address: '0x626f8282f712732be0c12d4a89a86be6e9ce8ac8',
+    name: 'Prize USDC/VELO',
+    decimals: 18,
+    symbol: 'przUSDC/VELO',
+    logoURI: `${DOMAINS.app}/icons/przVELO.svg`,
+    tags: ['beefy', 'lp', 'velodrome'],
+    extensions: {
+      underlyingAsset: {
+        address: '0xa0A215dE234276CAc1b844fD58901351a50fec8A',
+        symbol: 'vAMMV2-USDC/VELO',
+        name: 'VolatileV2 AMM - USDC/VELO'
+      },
+      yieldSource: {
+        name: 'Beefy',
+        appURI: 'https://app.beefy.com/vault/velodrome-v2-velo-usdc'
+      },
+      lp: {
+        appURI:
+          'https://velodrome.finance/deposit?token0=0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85&token1=0x9560e827aF36c94D2Ac33a39bCE1Fe78631088Db&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a'
+      }
+    }
+  },
+  {
+    chainId: NETWORK.optimism,
+    address: '0xb4063d1f0b0b7caee88708895ec4e365bf44b984',
+    name: 'Prize USDC/SNX',
+    decimals: 18,
+    symbol: 'przUSDC/SNX',
+    logoURI: `${DOMAINS.app}/icons/przVELO.svg`,
+    tags: ['beefy', 'lp', 'velodrome'],
+    extensions: {
+      underlyingAsset: {
+        address: '0x894d6Ea97767EbeCEfE01c9410f6Bd67935AA952',
+        symbol: 'vAMMV2-USDC/SNX',
+        name: 'VolatileV2 AMM - USDC/SNX'
+      },
+      yieldSource: {
+        name: 'Beefy',
+        appURI: 'https://app.beefy.com/vault/velodrome-v2-usdc-snx-2'
+      },
+      lp: {
+        appURI:
+          'https://velodrome.finance/deposit?token0=0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85&token1=0x8700dAec35aF8Ff88c16BdF0418774CB3D7599B4&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a'
+      }
+    }
   }
 ]
