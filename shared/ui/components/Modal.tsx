@@ -244,7 +244,11 @@ const ModalContent = (props: ModalContentProps) => {
         </ModalHeader>
       )}
       <ModalBody
-        className={classNames(bodyClassName, { 'overflow-y-auto': mobileStyle !== 'cover' })}
+        className={classNames(
+          'md:overflow-y-auto',
+          { 'overflow-y-auto': mobileStyle !== 'cover' },
+          bodyClassName
+        )}
       >
         {bodyContent}
       </ModalBody>

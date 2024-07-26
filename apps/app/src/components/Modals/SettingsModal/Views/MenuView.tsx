@@ -107,7 +107,7 @@ const SettingsMenuSection = (props: SettingsMenuSectionProps) => {
   const { title, items } = props
 
   return (
-    <div className='flex flex-col gap-4'>
+    <div className='flex flex-col gap-3'>
       <span className='text-xl font-semibold text-pt-purple-50 md:text-2xl'>{title}</span>
       {items.map((item) => {
         return (
@@ -137,7 +137,7 @@ const SettingsMenuItem = (props: SettingsMenuItemProps) => {
   return (
     <div
       className={classNames(
-        'flex gap-2 w-full items-center rounded-lg px-8 py-4 select-none relative bg-pt-transparent hover:bg-pt-transparent/5',
+        'flex gap-2 w-full items-center rounded-lg px-6 py-3 select-none relative bg-pt-transparent hover:bg-pt-transparent/5',
         { 'cursor-pointer': !disabled, 'brightness-50': disabled },
         { hidden: hidden }
       )}
