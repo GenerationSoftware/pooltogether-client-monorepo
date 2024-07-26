@@ -106,6 +106,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useEstimatedPrizeCount`
 - `useFirstDrawOpenedAt`
 - `useGrandPrize`
+- `useGrandPrizePeriodDraws`
 - `useLargestGrandPrize`
 - `useLastAwardedDrawId`
 - `useLastAwardedDrawTimestamps`

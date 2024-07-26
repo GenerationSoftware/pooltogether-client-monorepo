@@ -28,6 +28,7 @@ export class PrizePool {
   tierShares: number | undefined
   reserveShares: number | undefined
   tierLiquidityUtilizationRate: bigint | undefined
+  grandPrizePeriodDraws: number | undefined
 
   /**
    * Creates an instance of a Prize Pool with a given public and optional wallet client
@@ -52,6 +53,7 @@ export class PrizePool {
       tierShares?: number
       reserveShares?: number
       tierLiquidityUtilizationRate?: bigint
+      grandPrizePeriodDraws?: number
     }
   ) {
     this.id = getPrizePoolId(chainId, address)
@@ -65,6 +67,7 @@ export class PrizePool {
     this.tierShares = options?.tierShares
     this.reserveShares = options?.reserveShares
     this.tierLiquidityUtilizationRate = options?.tierLiquidityUtilizationRate
+    this.grandPrizePeriodDraws = options?.grandPrizePeriodDraws
   }
 
   /* ============================== Read Functions ============================== */
@@ -567,6 +570,26 @@ export class PrizePool {
     })
 
     return total
+  }
+
+  /**
+   * Returns the number of draws targeted to distribute the grand prize
+   * @returns
+   */
+  async getGrandPrizePeriodDraws(): Promise<number> {
+    if (this.grandPrizePeriodDraws !== undefined) return this.grandPrizePeriodDraws
+
+    const source = 'Prize Pool [getGrandPrizePeriodDraws]'
+    await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    const grandPrizePeriodDraws = await this.publicClient.readContract({
+      address: this.address,
+      abi: prizePoolABI,
+      functionName: 'grandPrizePeriodDraws'
+    })
+
+    this.grandPrizePeriodDraws = grandPrizePeriodDraws
+    return grandPrizePeriodDraws
   }
 
   /* ============================== Write Functions ============================== */

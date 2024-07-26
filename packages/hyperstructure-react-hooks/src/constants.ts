@@ -21,6 +21,7 @@ export const QUERY_KEYS = {
   gasAmountEstimates: 'gasAmountEstimates',
   gasFeeEstimate: 'gasFeeEstimate',
   gasPrices: 'gasPrices',
+  grandPrizePeriodDraws: 'grandPrizePeriodDraws',
   historicalTokenPrices: 'historicalTokenPrices',
   lastAwardedDrawId: 'lastAwardedDrawId',
   lastAwardedDrawTimestamps: 'lastAwardedDrawTimestamps',
