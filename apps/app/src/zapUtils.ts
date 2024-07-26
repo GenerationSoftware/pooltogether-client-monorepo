@@ -367,7 +367,8 @@ export const getSwapZapOutRoute = (
   amount: bigint,
   swapTx: NonNullable<ReturnType<typeof useSwapTx>['data']>,
   vaultTokenAddress: Address,
-  exchangeRate: bigint
+  exchangeRate: bigint,
+  options?: { unwrapWETH?: boolean }
 ) => {
   const route: Mutable<ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>[1]> = []
 
@@ -397,6 +398,14 @@ export const getSwapZapOutRoute = (
       ...swapTx.tx,
       tokens: [{ token: vaultTokenAddress, index: -1 }]
     })
+
+    const wrappedNativeAssetAddress = WRAPPED_NATIVE_ASSETS[vault.chainId as NETWORK]
+    if (!!options?.unwrapWETH && !!wrappedNativeAssetAddress) {
+      route.push({
+        ...getUnwrapTx(vault.chainId, 0n),
+        tokens: [{ token: wrappedNativeAssetAddress, index: 4 }]
+      })
+    }
   }
 
   return route
@@ -551,7 +560,8 @@ export const getSimpleZapOutRoute = (
   vault: Vault,
   amount: bigint,
   vaultTokenAddress: Address,
-  exchangeRate: bigint
+  exchangeRate: bigint,
+  options?: { unwrapWETH?: boolean }
 ) => {
   const route: Mutable<ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>[1]> = []
 
@@ -568,6 +578,14 @@ export const getSimpleZapOutRoute = (
       route.push({
         ...getBurnWRETHTx(rocketPoolAddresses.WRETH, 0n),
         tokens: [{ token: rocketPoolAddresses.WRETH, index: 4 }]
+      })
+    }
+
+    const wrappedNativeAssetAddress = WRAPPED_NATIVE_ASSETS[vault.chainId as NETWORK]
+    if (!!options?.unwrapWETH && !!wrappedNativeAssetAddress) {
+      route.push({
+        ...getUnwrapTx(vault.chainId, 0n),
+        tokens: [{ token: wrappedNativeAssetAddress, index: 4 }]
       })
     }
   }

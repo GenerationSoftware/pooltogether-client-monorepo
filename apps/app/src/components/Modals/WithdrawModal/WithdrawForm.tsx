@@ -257,7 +257,7 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
     }
   }, [token, tokenBalance])
 
-  const zapTokenOptions = useZapTokenOptions(vault.chainId)
+  const zapTokenOptions = useZapTokenOptions(vault.chainId, { includeNativeAsset: true })
 
   const tokenPickerOptions = useMemo(() => {
     const getOptionId = (option: Token) => `zapToken-${option.chainId}-${option.address}`

@@ -25,7 +25,6 @@ type ZapConfig = ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOr
 type ZapRoute = ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>[1]
 
 // TODO: enable redeeming lp tokens and swapping each output to the output token
-// TODO: fully enable unwrapping weth to eth (index 4 for dynamic amount post-swap)
 
 /**
  * Returns withdraw zap args
@@ -161,9 +160,13 @@ export const useWithdrawZapArgs = ({
       let zapRoute: ZapRoute = []
 
       if (!!swapTx) {
-        zapRoute = getSwapZapOutRoute(vault, amount, swapTx, vaultToken.address, exchangeRate)
+        zapRoute = getSwapZapOutRoute(vault, amount, swapTx, vaultToken.address, exchangeRate, {
+          unwrapWETH: isDolphinAddress(outputToken.address)
+        })
       } else {
-        zapRoute = getSimpleZapOutRoute(vault, amount, vaultToken.address, exchangeRate)
+        zapRoute = getSimpleZapOutRoute(vault, amount, vaultToken.address, exchangeRate, {
+          unwrapWETH: isDolphinAddress(outputToken.address)
+        })
       }
 
       const zapConfig: ZapConfig = {
