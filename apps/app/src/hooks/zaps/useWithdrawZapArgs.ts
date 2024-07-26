@@ -57,7 +57,7 @@ export const useWithdrawZapArgs = ({
 
   const isSwapTxNecessary =
     !!vaultToken &&
-    !!outputToken &&
+    !!outputToken?.address &&
     lower(vaultToken.address) !== lower(outputToken.address) &&
     (!isDolphinAddress(outputToken.address) ||
       lower(vaultToken.address) !== wrappedNativeTokenAddress!) &&
