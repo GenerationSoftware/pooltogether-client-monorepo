@@ -18,5 +18,13 @@ export interface CovalentPricingApiResponse {
 }
 
 export interface LpTokens {
-  [address: Lowercase<Address>]: { isLp: false } | { isLp: true; underlying: [Address, Address] }
+  [address: Lowercase<Address>]:
+    | { isLp: false }
+    | { isLp: true; underlying: [Address, Address, ...Address[]] }
+}
+
+export interface UnderlyingToken {
+  address: Lowercase<Address>
+  decimals: number
+  reserve: bigint
 }

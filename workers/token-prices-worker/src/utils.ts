@@ -7,9 +7,16 @@ import {
   http,
   isAddress
 } from 'viem'
+import { curveLpABI } from './abis/curveLpABI'
 import { lpABI } from './abis/lpABI'
 import { COVALENT_API_URL, NETWORK_KEYS, RPC_URLS, START_DATE, VIEM_CHAINS } from './constants'
-import { ChainTokenPrices, CovalentPricingApiResponse, LpTokens, SUPPORTED_NETWORK } from './types'
+import {
+  ChainTokenPrices,
+  CovalentPricingApiResponse,
+  LpTokens,
+  SUPPORTED_NETWORK,
+  UnderlyingToken
+} from './types'
 
 export const getCovalentTokenPrices = async (
   chainId: SUPPORTED_NETWORK,
@@ -71,12 +78,10 @@ export const getCurrentDate = () => {
   return yyyy + '-' + mm + '-' + dd
 }
 
-// TODO: should not assume every LP has 2 underlying tokens (could have more)
 export const getLpTokenInfo = async (chainId: SUPPORTED_NETWORK, tokenAddresses: Address[]) => {
   const lpTokenInfo: {
     [lpTokenAddress: Address]: {
-      token0: { address: Lowercase<Address>; decimals: number; reserve: bigint }
-      token1: { address: Lowercase<Address>; decimals: number; reserve: bigint }
+      underlyingTokens: [UnderlyingToken, UnderlyingToken, ...UnderlyingToken[]]
       decimals: number
       totalSupply: bigint
     }
@@ -91,26 +96,40 @@ export const getLpTokenInfo = async (chainId: SUPPORTED_NETWORK, tokenAddresses:
   })
 
   if (!!publicClient && tokenAddresses.length > 0) {
-    const tokenAddressMap: { [lpTokenAddress: Address]: [Address, Address] } = {}
+    const tokenAddressMap: { [lpTokenAddress: Address]: [Address, Address, ...Address[]] } = {}
 
     const tokensToCheck: Address[] = []
-    const tokenCalls: ContractFunctionParameters<typeof lpABI>[] = []
+    const tokenCalls: ContractFunctionParameters<typeof lpABI | typeof curveLpABI>[] = []
+
     tokenAddresses.forEach((address) => {
       const cachedData = cachedLpTokens[address.toLowerCase() as Lowercase<Address>]
+
       if (cachedData?.isLp) {
-        tokenAddressMap[address] = [cachedData.underlying[0], cachedData.underlying[1]]
+        tokenAddressMap[address] = [...cachedData.underlying]
       } else if (!cachedData) {
         tokensToCheck.push(address)
-        tokenCalls.push({ address, abi: lpABI, functionName: 'token0' })
-        tokenCalls.push({ address, abi: lpABI, functionName: 'token1' })
+        tokenCalls.push(
+          { address, abi: lpABI, functionName: 'token0' },
+          { address, abi: lpABI, functionName: 'token1' },
+          { address, abi: curveLpABI, functionName: 'coins', args: [0n] },
+          { address, abi: curveLpABI, functionName: 'coins', args: [1n] },
+          { address, abi: curveLpABI, functionName: 'coins', args: [2n] },
+          { address, abi: curveLpABI, functionName: 'coins', args: [3n] }
+        )
       }
     })
 
     const tokenResults = await publicClient.multicall({ contracts: tokenCalls })
 
-    for (let i = 0; i < tokenResults.length; i += 2) {
+    for (let i = 0; i < tokenResults.length; i += 6) {
+      const lpTokenAddress = tokensToCheck[Math.floor(i / 6)]
+
       const token0 = tokenResults[i]
       const token1 = tokenResults[i + 1]
+      const coin0 = tokenResults[i + 2]
+      const coin1 = tokenResults[i + 3]
+      const coin2 = tokenResults[i + 4]
+      const coin3 = tokenResults[i + 5]
 
       const isValidTokenResult = (
         data: (typeof tokenResults)[number]
@@ -124,12 +143,18 @@ export const getLpTokenInfo = async (chainId: SUPPORTED_NETWORK, tokenAddresses:
       }
 
       if (isValidTokenResult(token0) && isValidTokenResult(token1)) {
-        const lpTokenAddress = tokensToCheck[Math.floor(i / 2)]
         tokenAddressMap[lpTokenAddress] = [token0.result, token1.result]
+      } else if (isValidTokenResult(coin0) && isValidTokenResult(coin1)) {
+        tokenAddressMap[lpTokenAddress] = [coin0.result, coin1.result]
+        isValidTokenResult(coin2) && tokenAddressMap[lpTokenAddress].push(coin2.result)
+        isValidTokenResult(coin3) && tokenAddressMap[lpTokenAddress].push(coin3.result)
       }
     }
 
     const lpTokenAddresses = [...new Set<Address>(Object.keys(tokenAddressMap) as Address[])]
+
+    if (!lpTokenAddresses.length) return {}
+
     const underlyingTokenAddresses = Object.values(tokenAddressMap)
       .flat()
       .map((address) => address.toLowerCase() as Lowercase<Address>)
@@ -137,12 +162,18 @@ export const getLpTokenInfo = async (chainId: SUPPORTED_NETWORK, tokenAddresses:
       ...new Set<Lowercase<Address>>(underlyingTokenAddresses)
     ]
 
-    const lpTokenCalls: ContractFunctionParameters<typeof lpABI>[] = []
+    const lpTokenCalls: ContractFunctionParameters<typeof lpABI | typeof curveLpABI>[] = []
     lpTokenAddresses.forEach((address) => {
-      lpTokenCalls.push({ address, abi: lpABI, functionName: 'decimals' })
-      lpTokenCalls.push({ address, abi: lpABI, functionName: 'totalSupply' })
-      lpTokenCalls.push({ address, abi: lpABI, functionName: 'reserve0' })
-      lpTokenCalls.push({ address, abi: lpABI, functionName: 'reserve1' })
+      lpTokenCalls.push(
+        { address, abi: lpABI, functionName: 'decimals' },
+        { address, abi: lpABI, functionName: 'totalSupply' },
+        { address, abi: lpABI, functionName: 'reserve0' },
+        { address, abi: lpABI, functionName: 'reserve1' },
+        { address, abi: curveLpABI, functionName: 'balances', args: [0n] },
+        { address, abi: curveLpABI, functionName: 'balances', args: [1n] },
+        { address, abi: curveLpABI, functionName: 'balances', args: [2n] },
+        { address, abi: curveLpABI, functionName: 'balances', args: [3n] }
+      )
     })
 
     const underlyingTokenCalls: ContractFunctionParameters<typeof erc20Abi>[] = []
@@ -162,37 +193,67 @@ export const getLpTokenInfo = async (chainId: SUPPORTED_NETWORK, tokenAddresses:
     })
 
     lpTokenAddresses.forEach((lpTokenAddress, i) => {
-      const token0Address = tokenAddressMap[lpTokenAddress][0].toLowerCase() as Lowercase<Address>
-      const token1Address = tokenAddressMap[lpTokenAddress][1].toLowerCase() as Lowercase<Address>
+      const lpTokenResultIndex = i * 8
 
-      if (!!token0Address && !!token1Address) {
-        const token0 = {
-          address: token0Address,
-          decimals: underlyingTokenDecimals[token0Address],
-          reserve: lpTokenResults[i * 4 + 2]?.result
-        }
-        const token1 = {
-          address: token1Address,
-          decimals: underlyingTokenDecimals[token1Address],
-          reserve: lpTokenResults[i * 4 + 3]?.result
-        }
+      const tokenAddresses = tokenAddressMap[lpTokenAddress].map(
+        (address) => address.toLowerCase() as Lowercase<Address>
+      )
 
-        const isValidToken = (data: {
+      const reserves: bigint[] = []
+      const reserve0 =
+        lpTokenResults[lpTokenResultIndex + 2]?.result ??
+        lpTokenResults[lpTokenResultIndex + 4]?.result
+      const reserve1 =
+        lpTokenResults[lpTokenResultIndex + 3]?.result ??
+        lpTokenResults[lpTokenResultIndex + 5]?.result
+      const reserve2 = lpTokenResults[lpTokenResultIndex + 6]?.result
+      const reserve3 = lpTokenResults[lpTokenResultIndex + 7]?.result
+
+      if (
+        !!reserve0 &&
+        typeof reserve0 === 'bigint' &&
+        !!reserve1 &&
+        typeof reserve1 === 'bigint'
+      ) {
+        reserves.push(reserve0, reserve1)
+        !!reserve2 && typeof reserve2 === 'bigint' && reserves.push(reserve2)
+        !!reserve3 && typeof reserve3 === 'bigint' && reserves.push(reserve3)
+      }
+
+      if (tokenAddresses.length === reserves.length) {
+        const tokens = tokenAddresses.map((address, i) => ({
+          address,
+          decimals: underlyingTokenDecimals[address],
+          reserve: reserves[i]
+        }))
+
+        const isValidUnderlyingToken = (data?: {
           address: Lowercase<Address>
           decimals: any
           reserve: any
-        }): data is (typeof lpTokenInfo)[Address]['token0'] => {
+        }): data is UnderlyingToken => {
           return (
-            typeof data.decimals === 'number' && !!data.reserve && typeof data.reserve === 'bigint'
+            !!data?.address &&
+            isAddress(data.address) &&
+            typeof data.decimals === 'number' &&
+            !!data.reserve &&
+            typeof data.reserve === 'bigint'
           )
         }
 
-        if (isValidToken(token0) && isValidToken(token1)) {
-          const decimals = lpTokenResults[i * 4]?.result
-          const totalSupply = lpTokenResults[i * 4 + 1]?.result
+        if (isValidUnderlyingToken(tokens[0]) && isValidUnderlyingToken(tokens[1])) {
+          const decimals = lpTokenResults[lpTokenResultIndex]?.result
+          const totalSupply = lpTokenResults[lpTokenResultIndex + 1]?.result
 
           if (typeof decimals === 'number' && !!totalSupply && typeof totalSupply === 'bigint') {
-            lpTokenInfo[lpTokenAddress] = { token0, token1, decimals, totalSupply }
+            const underlyingTokens: [UnderlyingToken, UnderlyingToken, ...UnderlyingToken[]] = [
+              tokens[0],
+              tokens[1]
+            ]
+            isValidUnderlyingToken(tokens[2]) && underlyingTokens.push(tokens[2])
+            isValidUnderlyingToken(tokens[3]) && underlyingTokens.push(tokens[3])
+
+            lpTokenInfo[lpTokenAddress] = { underlyingTokens, decimals, totalSupply }
           }
         }
       }
@@ -210,26 +271,26 @@ export const calcLpTokenPrices = (
 
   const date = getCurrentDate()
 
-  Object.entries(lpTokenInfo).forEach(([strAddress, info]) => {
-    const lpTokenAddress = strAddress as Address
+  Object.entries(lpTokenInfo).forEach(([_lpTokenAddress, info]) => {
+    const lpTokenAddress = _lpTokenAddress as Address
 
-    const token0Address = info.token0.address.toLowerCase() as Lowercase<Address>
-    const token1Address = info.token1.address.toLowerCase() as Lowercase<Address>
+    const tokenAddresses = info.underlyingTokens.map(
+      (token) => token.address.toLowerCase() as Lowercase<Address>
+    )
+    const tokenPrices = tokenAddresses.map(
+      (address) => underlyingTokenPrices[address]?.[0]?.price ?? 0
+    )
 
-    const token0Price = underlyingTokenPrices[token0Address]?.[0]?.price
-    const token1Price = underlyingTokenPrices[token1Address]?.[0]?.price
+    if (tokenPrices.every((price) => !!price)) {
+      const tokenAmounts = info.underlyingTokens.map((token) =>
+        parseFloat(formatUnits(token.reserve, token.decimals))
+      )
+      const tokenValues = tokenAmounts.map((amount, i) => amount * tokenPrices[i])
 
-    if (!!token0Price && !!token1Price) {
-      const token0Amount = parseFloat(formatUnits(info.token0.reserve, info.token0.decimals))
-      const token1Amount = parseFloat(formatUnits(info.token1.reserve, info.token1.decimals))
-      const token0Value = token0Price * token0Amount
-      const token1Value = token1Price * token1Amount
-
+      const lpValue = tokenValues.reduce((a, b) => a + b, 0)
       const lpSupply = parseFloat(formatUnits(info.totalSupply, info.decimals))
 
-      const lpPrice = (token0Value + token1Value) / lpSupply
-
-      lpTokenPrices[lpTokenAddress] = [{ date, price: lpPrice }]
+      lpTokenPrices[lpTokenAddress] = [{ date, price: lpValue / lpSupply }]
     }
   })
 

@@ -66,20 +66,23 @@ export const fetchTokenPrices = async (
         invalidTokenAddresses.forEach((address) => {
           newLpTokens[address.toLowerCase() as Lowercase<Address>] = { isLp: false }
         })
-        Object.entries(lpTokenInfo).forEach(([strAddress, info]) => {
-          const lpTokenAddress = strAddress.toLowerCase() as Lowercase<Address>
+        Object.entries(lpTokenInfo).forEach(([_lpTokenAddress, info]) => {
+          const lpTokenAddress = _lpTokenAddress.toLowerCase() as Lowercase<Address>
           newLpTokens[lpTokenAddress] = {
             isLp: true,
-            underlying: [info.token0.address, info.token1.address]
+            underlying: info.underlyingTokens.map((token) => token.address) as [
+              Address,
+              Address,
+              ...Address[]
+            ]
           }
         })
         await updateCachedLpTokens(event, chainId, newLpTokens)
 
         if (lpTokenAddresses.length > 0) {
-          const underlyingTokenAddresses = new Set<Address>()
+          const underlyingTokenAddresses = new Set<Lowercase<Address>>()
           Object.values(lpTokenInfo).forEach((entry) => {
-            underlyingTokenAddresses.add(entry.token0.address)
-            underlyingTokenAddresses.add(entry.token1.address)
+            entry.underlyingTokens.forEach((token) => underlyingTokenAddresses.add(token.address))
           })
 
           const strUnderlyingTokenPrices = await fetchTokenPrices(event, chainId, [
