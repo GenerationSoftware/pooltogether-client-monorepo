@@ -203,7 +203,7 @@ export const optimismVaults: VaultList['tokens'] = [
     decimals: 18,
     symbol: 'przWRETH',
     logoURI: `${DOMAINS.app}/icons/przWRETH.svg`,
-    tags: ['rocketpool'],
+    tags: ['rocketpool', 'deprecated'],
     extensions: {
       underlyingAsset: {
         address: '0x67CdE7AF920682A29fcfea1A179ef0f30F48Df3e',
