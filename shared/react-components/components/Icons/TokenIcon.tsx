@@ -53,6 +53,16 @@ export const TokenIcon = (props: TokenIconProps) => {
       )
     }
 
+    if (token.chainId === NETWORK.optimism && token.symbol === '2BTC-f') {
+      return (
+        <Icon
+          logoURI='https://assets.coingecko.com/coins/images/12124/standard/Curve.png'
+          altText={altText}
+          className={className}
+        />
+      )
+    }
+
     if (token.chainId in COINGECKO_PLATFORMS) {
       return (
         <CoingeckoTokenIcon

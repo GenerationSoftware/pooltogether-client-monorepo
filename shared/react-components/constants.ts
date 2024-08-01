@@ -31,7 +31,9 @@ const tokenLogoUrls = {
   bifi: 'https://assets.coingecko.com/coins/images/12704/standard/bifi.png',
   mooBIFI:
     'https://assets.coingecko.com/coins/images/32597/standard/319381e63428d3c2ab6e035d5f3abd76.png',
-  reth: 'https://assets.coingecko.com/coins/images/20764/standard/reth.png'
+  reth: 'https://assets.coingecko.com/coins/images/20764/standard/reth.png',
+  snx: 'https://assets.coingecko.com/coins/images/3406/standard/SNX.png',
+  crv: 'https://assets.coingecko.com/coins/images/12124/standard/Curve.png'
 } as const
 
 /**
@@ -50,7 +52,9 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x0000206329b97db379d5e1bf586bbdb969c63274': tokenLogoUrls.usda,
     '0x1a7e4e63778b4f12a199c062f3efdd288afcbce8': tokenLogoUrls.eura,
     '0xb1f1ee126e9c96231cc3d3fad7c08b4cf873b1f1': tokenLogoUrls.bifi,
-    '0xae78736cd615f374d3085123a210448e74fc6393': tokenLogoUrls.reth
+    '0xae78736cd615f374d3085123a210448e74fc6393': tokenLogoUrls.reth,
+    '0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f': tokenLogoUrls.snx,
+    '0xd533a949740bb3306d119cc777fa900ba034cd52': tokenLogoUrls.crv
   },
   [NETWORK.sepolia]: {
     [DOLPHIN_ADDRESS]: tokenLogoUrls.eth
@@ -85,7 +89,9 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x1f32b1c2345538c0c6f582fcb022739c4a194ebb': tokenLogoUrls.steth,
     '0xc55e93c62874d8100dbd2dfe307edc1036ad5434': tokenLogoUrls.mooBIFI,
     '0x9bcef72be871e61ed4fbbc7630889bee758eb81d': tokenLogoUrls.reth,
-    '0x67cde7af920682a29fcfea1a179ef0f30f48df3e': tokenLogoUrls.reth
+    '0x67cde7af920682a29fcfea1a179ef0f30f48df3e': tokenLogoUrls.reth,
+    '0x8700daec35af8ff88c16bdf0418774cb3d7599b4': tokenLogoUrls.snx,
+    '0x0994206dfe8de6ec6920ff4d779b0d950605fb53': tokenLogoUrls.crv
   },
   [NETWORK.optimism_sepolia]: {
     [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,
@@ -110,7 +116,8 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x82af49447d8a07e3bd95bd0d56f35241523fbab1': tokenLogoUrls.weth,
     '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9': tokenLogoUrls.usdt,
     '0x0000206329b97db379d5e1bf586bbdb969c63274': tokenLogoUrls.usda,
-    '0xfa5ed56a203466cbbc2430a43c66b9d8723528e7': tokenLogoUrls.eura
+    '0xfa5ed56a203466cbbc2430a43c66b9d8723528e7': tokenLogoUrls.eura,
+    '0x11cdb42b0eb46d95f990bedd4695a6e3fa034978': tokenLogoUrls.crv
   },
   [NETWORK.arbitrum_sepolia]: {
     [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,

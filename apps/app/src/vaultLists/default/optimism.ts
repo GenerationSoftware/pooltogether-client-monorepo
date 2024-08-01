@@ -311,5 +311,28 @@ export const optimismVaults: VaultList['tokens'] = [
           'https://velodrome.finance/deposit?token0=0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85&token1=0x8700dAec35aF8Ff88c16BdF0418774CB3D7599B4&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a'
       }
     }
+  },
+  {
+    chainId: NETWORK.optimism,
+    address: '0xB4911EFd3d53352f658536aFD37e7897cB7dD7f6',
+    name: 'Prize tBTC/WBTC',
+    decimals: 18,
+    symbol: 'przTBTC/WBTC',
+    logoURI: `${DOMAINS.app}/icons/przCRV.svg`,
+    tags: ['beefy', 'lp', 'curve'],
+    extensions: {
+      underlyingAsset: {
+        address: '0x1Dc5c0f8668a9F54ED922171d578011850ca0341',
+        symbol: '2BTC-f',
+        name: 'Curve.fi Factory Plain Pool: 2BTC'
+      },
+      yieldSource: {
+        name: 'Beefy',
+        appURI: 'https://app.beefy.com/vault/curve-op-tbtc'
+      },
+      lp: {
+        appURI: 'https://curve.fi/#/optimism/pools/factory-v2-63'
+      }
+    }
   }
 ]
