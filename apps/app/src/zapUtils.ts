@@ -14,6 +14,7 @@ import {
 } from '@shared/utilities'
 import { Address, ContractFunctionArgs, encodeFunctionData, zeroAddress } from 'viem'
 import { ROCKETPOOL_ADDRESSES, VELODROME_ADDRESSES, ZAP_SETTINGS } from '@constants/config'
+import { curveLpTokenABI } from '@constants/curveLpTokenABI'
 import { zapRouterABI } from '@constants/zapRouterABI'
 import { useLpToken } from '@hooks/zaps/useLpToken'
 import { useSendDepositZapTransaction } from '@hooks/zaps/useSendDepositZapTransaction'
@@ -202,6 +203,22 @@ export const getVelodromeAddLiquidityTx = (
         to,
         options?.deadline ?? BigInt(getSecondsSinceEpoch() + 300)
       ]
+    })
+  }
+}
+
+export const getCurveAddLiquidityTx = (
+  lpTokenAddress: Address,
+  underlyingTokenAmounts: [bigint, bigint],
+  minOutput: bigint
+) => {
+  return {
+    target: lpTokenAddress,
+    value: 0n,
+    data: encodeFunctionData({
+      abi: curveLpTokenABI,
+      functionName: 'add_liquidity',
+      args: [[underlyingTokenAmounts[0], underlyingTokenAmounts[1]], minOutput]
     })
   }
 }
@@ -417,7 +434,6 @@ export const getLpSwapZapInRoute = (
   lpVaultToken: NonNullable<ReturnType<typeof useLpToken>['data']>,
   firstLpSwapTx: ReturnType<typeof useSwapTx>['data'],
   secondLpSwapTx: ReturnType<typeof useSwapTx>['data'],
-  vaultTokenAddress: Address,
   options?: { redeem?: { asset: Token; exchangeRate: bigint } }
 ) => {
   const route: Mutable<ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>[1]> = []
@@ -497,7 +513,75 @@ export const getLpSwapZapInRoute = (
       },
       {
         ...getDepositTx(vault.address, zapRouterAddress),
-        tokens: [{ token: vaultTokenAddress, index: 4 }]
+        tokens: [{ token: lpVaultToken.address, index: 4 }]
+      }
+    )
+  }
+
+  return route
+}
+
+export const getCurveLpZapInRoute = (
+  inputToken: Parameters<typeof useSendDepositZapTransaction>['0'],
+  vault: Vault,
+  lpVaultToken: NonNullable<ReturnType<typeof useLpToken>['data']>,
+  swapTx?: ReturnType<typeof useSwapTx>['data'],
+  options?: { redeem?: { asset: Token; exchangeRate: bigint } }
+) => {
+  const route: Mutable<ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>[1]> = []
+
+  const swapInputTokenAddress = isDolphinAddress(inputToken.address)
+    ? WRAPPED_NATIVE_ASSETS[vault.chainId as NETWORK]
+    : !!options?.redeem
+    ? options.redeem.asset.address
+    : inputToken.address
+
+  const zapRouterAddress = ZAP_SETTINGS[vault.chainId]?.zapRouter as Address | undefined
+
+  if (!!swapInputTokenAddress && !!zapRouterAddress) {
+    if (isDolphinAddress(inputToken.address)) {
+      route.push({
+        ...getWrapTx(vault.chainId, inputToken.amount),
+        tokens: [{ token: zeroAddress, index: -1 }]
+      })
+    } else if (options?.redeem) {
+      route.push({
+        ...getRedeemTx(
+          inputToken.address,
+          zapRouterAddress,
+          inputToken.amount,
+          options.redeem.exchangeRate,
+          inputToken.decimals
+        ),
+        tokens: [{ token: inputToken.address, index: -1 }]
+      })
+    }
+
+    if (!!swapTx) {
+      route.push(
+        {
+          ...getArbitraryProxyTx(swapTx.allowanceProxy),
+          tokens: [{ token: swapInputTokenAddress, index: -1 }]
+        },
+        {
+          ...swapTx.tx,
+          tokens: [{ token: swapInputTokenAddress, index: -1 }]
+        }
+      )
+    }
+
+    route.push(
+      {
+        ...getCurveAddLiquidityTx(lpVaultToken.address, [0n, 0n], 0n),
+        tokens: [
+          lpVaultToken.bestCurveInputTokenAddress === lpVaultToken.token0.address
+            ? { token: lpVaultToken.token0.address, index: 4 }
+            : { token: lpVaultToken.token1.address, index: 36 }
+        ]
+      },
+      {
+        ...getDepositTx(vault.address, zapRouterAddress),
+        tokens: [{ token: lpVaultToken.address, index: 4 }]
       }
     )
   }

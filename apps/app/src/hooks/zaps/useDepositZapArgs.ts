@@ -6,6 +6,7 @@ import {
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Mutable } from '@shared/types'
 import {
+  calculatePercentageOfBigInt,
   getAssetsFromShares,
   getSharesFromAssets,
   lower,
@@ -14,6 +15,7 @@ import {
 } from '@shared/utilities'
 import { useMemo } from 'react'
 import {
+  getCurveLpZapInRoute,
   getLpSwapAmountOut,
   getLpSwapZapInRoute,
   getSimpleAmountOut,
@@ -21,11 +23,13 @@ import {
   getSwapZapInRoute,
   isDolphinAddress
 } from 'src/zapUtils'
-import { Address, ContractFunctionArgs, zeroAddress } from 'viem'
+import { Address, ContractFunctionArgs, formatUnits, parseUnits, zeroAddress } from 'viem'
 import { useAccount } from 'wagmi'
 import { ROCKETPOOL_ADDRESSES, ZAP_SETTINGS } from '@constants/config'
 import { zapRouterABI } from '@constants/zapRouterABI'
 import { useBeefyVault } from './useBeefyVault'
+import { useCurveAddLiquidityOutput } from './useCurveAddLiquidityOutput'
+import { useIsCurveLp } from './useIsCurveLp'
 import { useIsVelodromeLp } from './useIsVelodromeLp'
 import { useLpToken } from './useLpToken'
 import { useSendDepositZapTransaction } from './useSendDepositZapTransaction'
@@ -57,11 +61,11 @@ export const useDepositZapArgs = ({
 
   const { data: exchangeRate, isFetched: isFetchedExchangeRate } = useVaultExchangeRate(vault)
 
-  const { data: isLpSwapTxsNecessary, isFetched: isFetchedVaultTokenVelodromeLp } =
-    useIsVelodromeLp(vaultToken!)
+  const { data: isVelodromeLp, isFetched: isFetchedIsVelodromeLp } = useIsVelodromeLp(vaultToken!)
+  const { data: isCurveLp, isFetched: isFetchedIsCurveLp } = useIsCurveLp(vaultToken!)
 
   const { data: lpVaultToken, isFetched: isFetchedLpVaultToken } = useLpToken(vaultToken!, {
-    enabled: isLpSwapTxsNecessary ?? false
+    enabled: (isVelodromeLp || isCurveLp) ?? false
   })
 
   const { vaults: _vaults } = useSelectedVaults()
@@ -111,22 +115,33 @@ export const useDepositZapArgs = ({
     !!vaultToken && !!rocketPoolAddresses && lower(vaultToken.address) === rocketPoolAddresses.WRETH
   const swapOutputToken: Parameters<typeof useSwapTx>[0]['to'] = isMintingWRETHNecessary
     ? { address: rocketPoolAddresses.RETH, decimals: 18 }
+    : isCurveLp && !!lpVaultToken?.token0.address
+    ? lpVaultToken.bestCurveInputTokenAddress === lpVaultToken.token0.address
+      ? { address: lpVaultToken.token0.address, decimals: lpVaultToken.token0.decimals }
+      : { address: lpVaultToken.token1.address, decimals: lpVaultToken.token1.decimals }
     : { address: vaultToken?.address!, decimals: vaultToken?.decimals! }
 
   const isSwapTxNecessary =
     !!vaultToken &&
     !!swapInputTokenAddress &&
     lower(vaultToken.address) !== lower(swapInputTokenAddress) &&
-    isFetchedVaultTokenVelodromeLp &&
-    !isLpSwapTxsNecessary &&
+    isFetchedIsVelodromeLp &&
+    !isVelodromeLp &&
+    isFetchedIsCurveLp &&
+    (!isCurveLp ||
+      (isFetchedLpVaultToken &&
+        !!lpVaultToken?.token0?.address &&
+        !!lpVaultToken.token1?.address &&
+        lower(swapInputTokenAddress) !== lower(lpVaultToken.token0.address) &&
+        lower(swapInputTokenAddress) !== lower(lpVaultToken.token1.address))) &&
     (!isMintingWRETHNecessary || lower(swapInputTokenAddress) !== rocketPoolAddresses.RETH)
 
   const isFirstLpSwapTxNecessary =
     !!vaultToken &&
     !!swapInputTokenAddress &&
     lower(vaultToken.address) !== lower(swapInputTokenAddress) &&
-    isFetchedVaultTokenVelodromeLp &&
-    !!isLpSwapTxsNecessary &&
+    isFetchedIsVelodromeLp &&
+    !!isVelodromeLp &&
     !!swapInputTokenAddress &&
     isFetchedLpVaultToken &&
     !!lpVaultToken?.token0?.address &&
@@ -138,8 +153,8 @@ export const useDepositZapArgs = ({
     !!vaultToken &&
     !!swapInputTokenAddress &&
     lower(vaultToken.address) !== lower(swapInputTokenAddress) &&
-    isFetchedVaultTokenVelodromeLp &&
-    !!isLpSwapTxsNecessary &&
+    isFetchedIsVelodromeLp &&
+    !!isVelodromeLp &&
     !!swapInputTokenAddress &&
     isFetchedLpVaultToken &&
     !!lpVaultToken?.token1?.address &&
@@ -195,6 +210,26 @@ export const useDepositZapArgs = ({
     options: { enabled: isSecondLpSwapTxNecessary }
   })
 
+  const curveAddLiquidityInput =
+    isCurveLp && !!inputToken?.amount && inputToken.decimals !== undefined && !!lpVaultToken
+      ? swapTx?.amountOut.expected ??
+        parseUnits(
+          formatUnits(inputToken.amount ?? 0n, inputToken.decimals),
+          lpVaultToken.token0.decimals
+        )
+      : 0n
+  const { data: curveAddLiquidityOutput, isFetched: isFetchedCurveAddLiquidityOutput } =
+    useCurveAddLiquidityOutput(
+      lpVaultToken?.chainId!,
+      lpVaultToken?.address!,
+      (!!curveAddLiquidityInput
+        ? lpVaultToken!.bestCurveInputTokenAddress === lpVaultToken!.token0.address
+          ? [curveAddLiquidityInput, 0n]
+          : [0n, curveAddLiquidityInput]
+        : undefined)!,
+      { enabled: isCurveLp && (!isSwapTxNecessary || !!swapTx) && !!curveAddLiquidityInput }
+    )
+
   const amountOut = useMemo(() => {
     if (
       !!swapInputTokenAddress &&
@@ -219,6 +254,15 @@ export const useDepositZapArgs = ({
                   vaultToken.decimals
                 )
               }
+            }
+          } else if (isCurveLp) {
+            if (!!curveAddLiquidityOutput) {
+              const expected = getSharesFromAssets(
+                curveAddLiquidityOutput,
+                exchangeRate,
+                vaultToken.decimals
+              )
+              return { expected, min: calculatePercentageOfBigInt(expected, 0.99) }
             }
           } else {
             return {
@@ -256,6 +300,15 @@ export const useDepositZapArgs = ({
             vaultToken.decimals
           )
         }
+      } else if (isCurveLp && !isInputTokenBeefyVault) {
+        if (!!curveAddLiquidityOutput) {
+          const expected = getSharesFromAssets(
+            curveAddLiquidityOutput,
+            exchangeRate,
+            vaultToken.decimals
+          )
+          return { expected, min: calculatePercentageOfBigInt(expected, 0.99) }
+        }
       } else {
         return getSimpleAmountOut(swapInputTokenAmount, exchangeRate, vaultToken.decimals)
       }
@@ -266,6 +319,7 @@ export const useDepositZapArgs = ({
     swapInputTokenAmount,
     vaultToken,
     exchangeRate,
+    isCurveLp,
     isSwapTxNecessary,
     isFirstLpSwapTxNecessary,
     isSecondLpSwapTxNecessary,
@@ -273,7 +327,9 @@ export const useDepositZapArgs = ({
     firstLpSwapTx,
     secondLpSwapTx,
     lpVaultToken,
-    wrETHExchangeRate
+    isInputTokenBeefyVault,
+    wrETHExchangeRate,
+    curveAddLiquidityOutput
   ])
 
   const isFetched =
@@ -288,9 +344,15 @@ export const useDepositZapArgs = ({
     !!swapInputTokenAddress &&
     swapInputTokenDecimals !== undefined &&
     !!swapInputTokenAmount &&
-    isFetchedVaultTokenVelodromeLp &&
+    isFetchedIsVelodromeLp &&
+    isFetchedIsCurveLp &&
     (!isSwapTxNecessary || (isFetchedSwapTx && !!swapTx)) &&
-    (!isLpSwapTxsNecessary || (isFetchedLpVaultToken && !!lpVaultToken)) &&
+    (!isVelodromeLp || (isFetchedLpVaultToken && !!lpVaultToken)) &&
+    (!isCurveLp ||
+      (isFetchedLpVaultToken &&
+        !!lpVaultToken &&
+        isFetchedCurveAddLiquidityOutput &&
+        !!curveAddLiquidityOutput)) &&
     (!isFirstLpSwapTxNecessary || (isFetchedFirstLpSwapTx && !!firstLpSwapTx)) &&
     (!isSecondLpSwapTxNecessary || (isFetchedSecondLpSwapTx && !!secondLpSwapTx)) &&
     !!amountOut &&
@@ -348,12 +410,23 @@ export const useDepositZapArgs = ({
       let zapRoute: ZapRoute = []
 
       if (!!swapTx) {
-        zapRoute = getSwapZapInRoute(inputToken, vault, swapTx, vaultToken.address, {
-          redeem:
-            !!inputVaultToken && !!inputVaultExchangeRate
-              ? { asset: inputVaultToken, exchangeRate: inputVaultExchangeRate }
-              : undefined
-        })
+        addZapOutput({ token: swapOutputToken.address, minOutputAmount: 0n })
+
+        if (isCurveLp && !!lpVaultToken) {
+          zapRoute = getCurveLpZapInRoute(inputToken, vault, lpVaultToken, swapTx, {
+            redeem:
+              !!inputVaultToken && !!inputVaultExchangeRate
+                ? { asset: inputVaultToken, exchangeRate: inputVaultExchangeRate }
+                : undefined
+          })
+        } else {
+          zapRoute = getSwapZapInRoute(inputToken, vault, swapTx, vaultToken.address, {
+            redeem:
+              !!inputVaultToken && !!inputVaultExchangeRate
+                ? { asset: inputVaultToken, exchangeRate: inputVaultExchangeRate }
+                : undefined
+          })
+        }
       } else if ((!!firstLpSwapTx || !!secondLpSwapTx) && !!lpVaultToken) {
         if (!!firstLpSwapTx) {
           addZapOutput({ token: lpVaultToken.token0.address, minOutputAmount: 0n })
@@ -369,7 +442,6 @@ export const useDepositZapArgs = ({
           lpVaultToken,
           firstLpSwapTx,
           secondLpSwapTx,
-          vaultToken.address,
           {
             redeem:
               !!inputVaultToken && !!inputVaultExchangeRate
@@ -377,6 +449,13 @@ export const useDepositZapArgs = ({
                 : undefined
           }
         )
+      } else if (isCurveLp && !!lpVaultToken && !isInputTokenBeefyVault) {
+        zapRoute = getCurveLpZapInRoute(inputToken, vault, lpVaultToken, undefined, {
+          redeem:
+            !!inputVaultToken && !!inputVaultExchangeRate
+              ? { asset: inputVaultToken, exchangeRate: inputVaultExchangeRate }
+              : undefined
+        })
       } else {
         zapRoute = getSimpleZapInRoute(inputToken, vault, vaultToken.address, {
           redeem: !!inputVaultExchangeRate ? { exchangeRate: inputVaultExchangeRate } : undefined,
@@ -402,6 +481,7 @@ export const useDepositZapArgs = ({
     userAddress,
     vaultToken,
     exchangeRate,
+    isCurveLp,
     lpVaultToken,
     inputVaultToken,
     inputVaultExchangeRate,
