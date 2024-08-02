@@ -147,7 +147,7 @@ const Header = (props: HeaderProps) => {
       </span>
       {!isTokenEquivalentHidden && (
         <span className='text-pt-purple-100'>
-          (<TokenAmount token={token} hideZeroes={true} />)
+          (<TokenAmount token={token} maximumFractionDigits={5} />)
         </span>
       )}
     </div>

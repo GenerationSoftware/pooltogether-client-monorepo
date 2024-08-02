@@ -132,7 +132,7 @@ export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
         mobileStyle='tab'
         hideHeader={isMobile}
         className='md:!max-w-2xl'
-        bodyClassName='overflow-y-hidden'
+        bodyClassName='overflow-y-hidden md:overflow-y-hidden'
       />
     )
   }
