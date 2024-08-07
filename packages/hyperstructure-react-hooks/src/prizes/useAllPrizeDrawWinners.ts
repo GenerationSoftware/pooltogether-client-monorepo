@@ -16,11 +16,7 @@ export const useAllPrizeDrawWinners = (prizePools: PrizePool[]) => {
     queries: prizePools.map((prizePool) => {
       return {
         queryKey: [QUERY_KEYS.drawWinners, prizePool?.chainId],
-        queryFn: async () => {
-          const chainId = prizePool.chainId
-          const drawWinners = await getPaginatedSubgraphDraws(chainId)
-          return drawWinners
-        },
+        queryFn: async () => await getPaginatedSubgraphDraws(prizePool.chainId),
         staleTime: Infinity,
         enabled: !!prizePool,
         ...NO_REFETCH

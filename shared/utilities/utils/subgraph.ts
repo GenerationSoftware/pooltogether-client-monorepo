@@ -3,6 +3,7 @@ import { Address } from 'viem'
 import { lower } from '..'
 import { SUBGRAPH_API_URLS } from '../constants'
 
+// TODO: this will break the "skip" limit with over 6000 draws or over 6000 prizes per draw (9 tiers)
 /**
  * Returns past draws from the given network's subgraph
  *
@@ -439,7 +440,7 @@ export const getSubgraphWalletAddresses = async (
   options?: {
     activeWalletsOnly?: boolean
     numWallets?: number
-    offsetWallets?: number
+    lastWalletAddress?: Address
   }
 ): Promise<Lowercase<Address>[]> => {
   if (chainId in SUBGRAPH_API_URLS) {
@@ -447,19 +448,19 @@ export const getSubgraphWalletAddresses = async (
 
     const headers = { 'Content-Type': 'application/json' }
 
-    const optionalQuery = options?.activeWalletsOnly
-      ? 'where: { accounts_: { delegateBalance_gt: 0 } }, '
+    const optionalFilter = options?.activeWalletsOnly
+      ? ', accounts_: { delegateBalance_gt: 0 }'
       : ''
 
     const body = JSON.stringify({
-      query: `query($numWallets: Int, $offsetWallets: Int) {
-        users(${optionalQuery}first: $numWallets, skip: $offsetWallets) {
+      query: `query($numWallets: Int, $lastWalletAddress: Bytes) {
+        users(where: { address_gt: $lastWalletAddress${optionalFilter} }, first: $numWallets) {
           address
         }
       }`,
       variables: {
         numWallets: options?.numWallets ?? 1_000,
-        offsetWallets: options?.offsetWallets ?? 0
+        lastWalletAddress: options?.lastWalletAddress ?? ''
       }
     })
 
@@ -487,13 +488,13 @@ export const getPaginatedSubgraphWalletAddresses = async (
 ) => {
   const walletAddresses = new Set<Lowercase<Address>>()
   const pageSize = options?.pageSize ?? 1_000
-  let page = 0
+  let lastWalletAddress: Address | undefined = undefined
 
   while (true) {
     const newPage = await getSubgraphWalletAddresses(chainId, {
       activeWalletsOnly: options?.activeWalletsOnly,
       numWallets: pageSize,
-      offsetWallets: page * pageSize
+      lastWalletAddress
     })
 
     newPage.forEach((address) => walletAddresses.add(address))
@@ -501,7 +502,7 @@ export const getPaginatedSubgraphWalletAddresses = async (
     if (newPage.length < pageSize) {
       break
     } else {
-      page++
+      lastWalletAddress = newPage[newPage.length - 1]
     }
   }
 
