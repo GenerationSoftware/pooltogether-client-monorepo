@@ -1,7 +1,6 @@
 import {
   useAllUserVaultBalances,
   useAllUserVaultDelegationBalances,
-  usePrizeDrawWinners,
   useSelectedVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { CaptchaModal } from '@shared/react-components'
@@ -9,7 +8,6 @@ import { toast } from '@shared/ui'
 import { getDiscordInvite } from '@shared/utilities'
 import classNames from 'classnames'
 import * as fathom from 'fathom-client'
-import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import Head from 'next/head'
 import { useSearchParams } from 'next/navigation'
@@ -18,8 +16,6 @@ import { ReactNode, useEffect, useState } from 'react'
 import { trackDeposit } from 'src/utils'
 import { useAccount } from 'wagmi'
 import { FATHOM_EVENTS } from '@constants/config'
-import { useSelectedPrizePool } from '@hooks/useSelectedPrizePool'
-import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { useWalletId } from '@hooks/useWalletId'
 import { Footer } from './Footer'
 import { CheckPrizesModal } from './Modals/CheckPrizesModal'
@@ -29,7 +25,6 @@ import { DrawModal } from './Modals/DrawModal'
 import { SettingsModal } from './Modals/SettingsModal'
 import { WithdrawModal } from './Modals/WithdrawModal'
 import { Navbar } from './Navbar'
-import { drawIdAtom } from './Prizes/PrizePoolWinners'
 import { VaultListHandler } from './VaultListHandler'
 
 interface LayoutProps {
@@ -62,18 +57,9 @@ export const Layout = (props: LayoutProps) => {
     refetchUserVaultDelegationBalances()
   }
 
-  const { selectedPrizePool } = useSelectedPrizePool()
-  const { data: draws } = usePrizeDrawWinners(selectedPrizePool!)
-
-  const selectedDrawId = useAtomValue(drawIdAtom)
-  const selectedDraw = draws?.find((draw) => draw.id === selectedDrawId)
-
   // NOTE: This is necessary due to hydration errors otherwise.
   const [isBrowser, setIsBrowser] = useState(false)
   useEffect(() => setIsBrowser(true), [])
-
-  const prizePools = useSupportedPrizePools()
-  const prizePoolsArray = Object.values(prizePools)
 
   const temporaryAlerts: { id: string; content: ReactNode }[] = []
 
@@ -126,7 +112,6 @@ export const Layout = (props: LayoutProps) => {
       />
 
       <DepositModal
-        prizePools={prizePoolsArray}
         refetchUserBalances={refetchUserBalances}
         onSuccessfulApproval={() => fathom.trackEvent(FATHOM_EVENTS.approvedExact)}
         onSuccessfulDeposit={(chainId, txReceipt) => {
@@ -152,10 +137,9 @@ export const Layout = (props: LayoutProps) => {
 
       <DelegateModal onSuccessfulDelegation={() => fathom.trackEvent(FATHOM_EVENTS.delegated)} />
 
-      <DrawModal draw={selectedDraw} prizePool={selectedPrizePool} />
+      <DrawModal />
 
       <CheckPrizesModal
-        prizePools={prizePoolsArray}
         onWin={() => fathom.trackEvent(FATHOM_EVENTS.checkedPrizes, { _value: 1 })}
         onNoWin={() => fathom.trackEvent(FATHOM_EVENTS.checkedPrizes, { _value: 0 })}
       />

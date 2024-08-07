@@ -1,20 +1,26 @@
-import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import { usePrizeDrawWinners } from '@generationsoftware/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen, useScreenSize } from '@shared/generic-react-hooks'
-import { SubgraphDraw } from '@shared/types'
 import { Button, Modal } from '@shared/ui'
+import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
+import { drawIdAtom } from '@components/Prizes/PrizePoolWinners'
+import { useSelectedPrizePool } from '@hooks/useSelectedPrizePool'
 import { MainView } from './Views/MainView'
 
 export interface DrawModalProps {
-  draw?: SubgraphDraw
-  prizePool?: PrizePool
   onClose?: () => void
 }
 
 export const DrawModal = (props: DrawModalProps) => {
-  const { draw, prizePool, onClose } = props
+  const { onClose } = props
 
   const t_common = useTranslations('Common')
+
+  const { selectedPrizePool } = useSelectedPrizePool()
+  const { data: draws } = usePrizeDrawWinners(selectedPrizePool!)
+
+  const selectedDrawId = useAtomValue(drawIdAtom)
+  const selectedDraw = draws?.find((draw) => draw.id === selectedDrawId)
 
   const { isModalOpen, setIsModalOpen } = useIsModalOpen(MODAL_KEYS.drawWinners, { onClose })
 
@@ -24,10 +30,10 @@ export const DrawModal = (props: DrawModalProps) => {
     setIsModalOpen(false)
   }
 
-  if (isModalOpen && !!draw && !!prizePool) {
+  if (isModalOpen && !!selectedDraw && !!selectedPrizePool) {
     return (
       <Modal
-        bodyContent={<MainView draw={draw} prizePool={prizePool} />}
+        bodyContent={<MainView draw={selectedDraw} prizePool={selectedPrizePool} />}
         footerContent={
           <Button onClick={handleClose} fullSized={true}>
             {t_common('close')}

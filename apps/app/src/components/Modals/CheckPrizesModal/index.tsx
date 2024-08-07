@@ -1,4 +1,3 @@
-import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import {
   useAllUserPrizePoolWins,
   useDrawsToCheckForPrizes,
@@ -9,8 +8,8 @@ import { Modal } from '@shared/ui'
 import { getSecondsSinceEpoch, sToMs } from '@shared/utilities'
 import { useRouter } from 'next/router'
 import { ReactNode, useEffect, useRef, useState } from 'react'
-import { Address } from 'viem'
 import { useAccount } from 'wagmi'
+import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { CheckingView } from './Views/CheckingView'
 import { NoWinView } from './Views/NoWinView'
 import { WinView } from './Views/WinView'
@@ -18,13 +17,12 @@ import { WinView } from './Views/WinView'
 export type CheckPrizesModalView = 'checking' | 'win' | 'noWin'
 
 export interface CheckPrizesModalProps {
-  prizePools: PrizePool[]
   onWin?: () => void
   onNoWin?: () => void
 }
 
 export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
-  const { prizePools, onWin, onNoWin } = props
+  const { onWin, onNoWin } = props
 
   const router = useRouter()
 
@@ -36,13 +34,14 @@ export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
 
   const { address: userAddress } = useAccount()
 
-  const { data: drawsToCheck } = useDrawsToCheckForPrizes(prizePools, userAddress as Address)
+  const prizePools = useSupportedPrizePools()
+  const prizePoolsArray = Object.values(prizePools)
 
-  const { data: wins } = useAllUserPrizePoolWins(prizePools, userAddress as Address)
+  const { data: drawsToCheck } = useDrawsToCheckForPrizes(prizePoolsArray, userAddress!)
 
-  const { lastCheckedPrizesTimestamps, set } = useLastCheckedPrizesTimestamps(
-    userAddress as Address
-  )
+  const { data: wins } = useAllUserPrizePoolWins(prizePoolsArray, userAddress!)
+
+  const { lastCheckedPrizesTimestamps, set } = useLastCheckedPrizesTimestamps(userAddress!)
 
   const timeoutRef = useRef<number | null>(null)
 
@@ -105,7 +104,7 @@ export const CheckPrizesModal = (props: CheckPrizesModalProps) => {
       checking: <CheckingView />,
       win: !!drawsToCheck && (
         <WinView
-          prizePools={prizePools}
+          prizePools={prizePoolsArray}
           draws={drawsToCheck.draws}
           wins={wins}
           onGoToAccount={() => {

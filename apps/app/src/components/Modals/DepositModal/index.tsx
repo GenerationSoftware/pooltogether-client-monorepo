@@ -1,4 +1,4 @@
-import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useSelectedVault,
   useTokenPermitSupport,
@@ -17,6 +17,7 @@ import { ReactNode, useMemo, useState } from 'react'
 import { walletSupportsPermit } from 'src/utils'
 import { TransactionReceipt } from 'viem'
 import { useAccount } from 'wagmi'
+import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import {
   depositFormShareAmountAtom,
   depositFormTokenAddressAtom,
@@ -35,7 +36,6 @@ import { WaitingView } from './Views/WaitingView'
 export type DepositModalView = 'main' | 'review' | 'waiting' | 'confirming' | 'success' | 'error'
 
 export interface DepositModalProps {
-  prizePools: PrizePool[]
   onClose?: () => void
   refetchUserBalances?: () => void
   onSuccessfulApproval?: () => void
@@ -46,7 +46,6 @@ export interface DepositModalProps {
 
 export const DepositModal = (props: DepositModalProps) => {
   const {
-    prizePools,
     onClose,
     refetchUserBalances,
     onSuccessfulApproval,
@@ -84,9 +83,11 @@ export const DepositModal = (props: DepositModalProps) => {
 
   const { isActive: isPermitDepositsDisabled } = useMiscSettings('permitDepositsDisabled')
 
+  const prizePools = useSupportedPrizePools()
+
   const prizePool = useMemo(() => {
     if (!!vault) {
-      return prizePools.find((prizePool) => prizePool.chainId === vault.chainId)
+      return Object.values(prizePools).find((prizePool) => prizePool.chainId === vault.chainId)
     }
   }, [prizePools, vault])
 
