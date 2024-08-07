@@ -144,7 +144,8 @@
       "nDayPoolReserve": "{number}D POOL Reserve",
       "lastNDays": "last {number} days",
       "lastNDraws": "last {number} draws"
-    }
+    },
+    "addToPersonalVaultList": "Add to Personal Vault List"
   },
   "Account": {
     "connectWallet": "Connect your wallet to view account status",

@@ -1,4 +1,5 @@
 import { Version } from './contracts'
+import { Mutable } from './mutable'
 
 /**
  * Vault list interface, compatible with Uniswap's token lists (https://tokenlists.org/)
@@ -56,6 +57,16 @@ export interface VaultListTags {
     readonly name: string
     readonly description: string
   }
+}
+
+export type MutableVaultList = Omit<Mutable<VaultList>, 'tokens'> & {
+  tokens: MutableVaultInfo[]
+}
+export type MutableVaultInfo = Omit<Mutable<VaultInfo>, 'extensions'> & {
+  extensions?: MutableVaultExtensions
+}
+export type MutableVaultExtensions = Omit<Mutable<VaultExtensions>, 'underlyingAsset'> & {
+  underlyingAsset?: Mutable<VaultExtensions['underlyingAsset']>
 }
 
 export interface VaultDeployInfo {

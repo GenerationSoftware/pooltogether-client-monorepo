@@ -1,4 +1,4 @@
-import { getFormattedVaultList } from 'src/utils'
+import { getFormattedVaultList } from '@shared/utilities'
 import { useAllVaultListData } from './useAllVaultListData'
 
 /**

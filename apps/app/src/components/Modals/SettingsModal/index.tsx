@@ -4,7 +4,6 @@ import { Modal } from '@shared/ui'
 import { NETWORK } from '@shared/utilities'
 import { useRouter } from 'next/router'
 import { ReactNode, useMemo } from 'react'
-import { DEFAULT_VAULT_LISTS } from '@constants/config'
 import { useNetworks } from '@hooks/useNetworks'
 import { useSettingsModalView } from '@hooks/useSettingsModalView'
 import { CurrencyView } from './Views/CurrencyView'
@@ -55,9 +54,7 @@ export const SettingsModal = (props: SettingsModalProps) => {
     menu: <MenuView disable={disable} hide={hide} />,
     currency: <CurrencyView onCurrencyChange={onCurrencyChange} />,
     language: <LanguageView locales={locales} onLanguageChange={onLanguageChange} />,
-    vaultLists: (
-      <VaultListView localVaultLists={DEFAULT_VAULT_LISTS} onSuccess={onVaultListImport} />
-    ),
+    vaultLists: <VaultListView onSuccess={onVaultListImport} />,
     customRPCs: (
       <RPCsView
         chainIds={customNetworks}

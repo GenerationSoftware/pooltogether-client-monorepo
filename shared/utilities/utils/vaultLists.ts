@@ -1,7 +1,15 @@
-import { VaultList, Version } from '@shared/types'
+import {
+  MutableVaultList,
+  Token,
+  VaultInfo,
+  VaultList,
+  VaultListTags,
+  Version
+} from '@shared/types'
 import { createPublicClient, http, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
 import { normalize } from 'viem/ens'
+import { getVaultId } from './vaults'
 
 /**
  * Returns a vault list object from an HTTP URL, IPFS/IPNS hash or ENS domain
@@ -111,4 +119,66 @@ export const isNewerVersion = (a: Version, b: Version) => {
     (a.major === b.major && a.minor > b.minor) ||
     (a.major === b.major && a.minor === b.minor && a.patch > b.patch)
   )
+}
+
+/**
+ * Returns a formatted vault list with given share and token data
+ * @param data as much data as possible to format a vault list
+ * @returns
+ */
+export const getFormattedVaultList = (data: {
+  name: string
+  version?: Version
+  timestamp?: string
+  tokens: VaultInfo[]
+  keywords?: string[]
+  tags?: VaultListTags
+  logoURI?: string
+  shareData?: { [vaultId: string]: Token }
+  tokenData?: { [vaultId: string]: Token }
+}): VaultList => {
+  const defaultVersion: Version = { major: 1, minor: 0, patch: 0 }
+  const defaultTimestamp = new Date().toISOString()
+
+  const vaultList: MutableVaultList = {
+    name: data.name,
+    version: data.version ?? defaultVersion,
+    timestamp: data.timestamp ?? defaultTimestamp,
+    keywords: data.keywords,
+    tags: data.tags,
+    logoURI: data.logoURI,
+    tokens: data.tokens
+  }
+
+  vaultList.tokens.forEach((vaultInfo, i) => {
+    const vaultId = getVaultId(vaultInfo)
+
+    const shareData = data.shareData?.[vaultId]
+    const tokenData = data.tokenData?.[vaultId]
+
+    if (!!shareData) {
+      if (!vaultInfo.name) {
+        vaultList.tokens[i].name = shareData.name
+      }
+
+      vaultList.tokens[i].decimals = shareData.decimals
+      vaultList.tokens[i].symbol = shareData.symbol
+    }
+
+    if (!!tokenData) {
+      if (vaultList.tokens[i].extensions === undefined) {
+        vaultList.tokens[i].extensions = {}
+      }
+
+      if (vaultList.tokens[i].extensions!.underlyingAsset === undefined) {
+        vaultList.tokens[i].extensions!.underlyingAsset = {}
+      }
+
+      vaultList.tokens[i].extensions!.underlyingAsset!.address = tokenData.address
+      vaultList.tokens[i].extensions!.underlyingAsset!.symbol = tokenData.symbol
+      vaultList.tokens[i].extensions!.underlyingAsset!.name = tokenData.name
+    }
+  })
+
+  return vaultList
 }

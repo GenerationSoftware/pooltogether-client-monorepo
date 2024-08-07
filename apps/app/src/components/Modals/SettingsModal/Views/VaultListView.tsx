@@ -12,14 +12,16 @@ import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { usePublicClient } from 'wagmi'
+import { DEFAULT_VAULT_LISTS } from '@constants/config'
 
 interface VaultListViewProps {
-  localVaultLists: { [id: string]: VaultList }
   onSuccess?: (id: string) => void
 }
 
 export const VaultListView = (props: VaultListViewProps) => {
-  const { localVaultLists, onSuccess } = props
+  const { onSuccess } = props
+
+  const localVaultListIds = Object.keys(DEFAULT_VAULT_LISTS)
 
   const t = useTranslations('Settings')
 
@@ -27,22 +29,20 @@ export const VaultListView = (props: VaultListViewProps) => {
 
   const { localIds, importedIds, unselect } = useSelectedVaultListIds()
 
-  const importedVaultLists = useMemo(() => {
-    const localVaultListIds = Object.keys(localVaultLists ?? {})
-    const newVaultLists: { [id: string]: VaultList } = {}
+  const importedVaultListsIds = useMemo(() => {
+    const ids: string[] = []
 
-    Object.keys(cachedVaultLists).forEach((key) => {
-      if (!localVaultListIds.includes(key) && !!cachedVaultLists[key]) {
-        newVaultLists[key] = cachedVaultLists[key]!
+    Object.keys(cachedVaultLists).forEach((id) => {
+      if (!localVaultListIds.includes(id) && !!cachedVaultLists[id]) {
+        ids.push(id)
       }
     })
 
-    return newVaultLists
-  }, [localVaultLists, cachedVaultLists])
+    return ids
+  }, [cachedVaultLists])
 
   const handleClearAll = () => {
-    const ids = Object.keys(importedVaultLists)
-    ids.forEach((id) => {
+    importedVaultListsIds.forEach((id) => {
       unselect(id, 'imported')
       remove(id)
     })
@@ -60,26 +60,32 @@ export const VaultListView = (props: VaultListViewProps) => {
 
       <ImportVaultListForm onSuccess={onSuccess} />
 
-      {Object.keys(localVaultLists).map((id) => (
-        <VaultListItem
-          key={`vl-local-item-${id}`}
-          id={id}
-          vaultList={localVaultLists[id]}
-          isChecked={localIds.includes(id)}
-        />
-      ))}
+      {Object.entries(cachedVaultLists)
+        .filter((entry) => !!entry[1])
+        .map(([id, vaultList]) => {
+          if (localVaultListIds.includes(id)) {
+            return (
+              <VaultListItem
+                key={`vl-local-item-${id}`}
+                id={id}
+                vaultList={vaultList!}
+                isChecked={localIds.includes(id)}
+              />
+            )
+          } else {
+            return (
+              <VaultListItem
+                key={`vl-imported-item-${id}`}
+                id={id}
+                vaultList={vaultList!}
+                isChecked={importedIds.includes(id)}
+                isImported={true}
+              />
+            )
+          }
+        })}
 
-      {Object.keys(importedVaultLists).map((id) => (
-        <VaultListItem
-          key={`vl-imported-item-${id}`}
-          id={id}
-          vaultList={importedVaultLists[id]}
-          isChecked={importedIds.includes(id)}
-          isImported={true}
-        />
-      ))}
-
-      {Object.keys(importedVaultLists).length > 0 && (
+      {importedVaultListsIds.length > 0 && (
         <ClearImportedVaultListsButton onClick={handleClearAll} />
       )}
     </div>
@@ -235,7 +241,10 @@ const VaultListItem = (props: VaultListItemProps) => {
           <BasicIcon content='?' size='lg' />
         )}
         <div className='flex flex-col gap-1 text-pt-purple-50'>
-          <a href={isImported ? id : `/api/vaultList/${id}`} target='_blank'>
+          <a
+            href={isImported ? (id !== 'personal' ? id : undefined) : `/api/vaultList/${id}`}
+            target='_blank'
+          >
             <span className='text-sm md:text-base md:font-medium'>{vaultList.name}</span>{' '}
             <span className='text-xs'>{version}</span>
           </a>
