@@ -41,6 +41,7 @@ interface ParaSwapTxRequestBody {
   slippage: number
   userAddress: Address
   partner: 'cabana'
+  priceRoute: ParaSwapPricesResponse['priceRoute']
 }
 
 interface ParaSwapTxResponse {
@@ -103,9 +104,10 @@ export const useSwapTx = (swapData: {
     queryKey,
     queryFn: async () => {
       if (!!publicClient) {
+        const baseApiUrl = 'https://api.paraswap.io'
         const partner = 'cabana'
 
-        const pricesApiUrl = new URL('https://apiv5.paraswap.io/prices')
+        const pricesApiUrl = new URL(`${baseApiUrl}/prices`)
         pricesApiUrl.searchParams.set('srcToken', from.address)
         pricesApiUrl.searchParams.set('srcDecimals', from.decimals.toString())
         pricesApiUrl.searchParams.set('destToken', to.address)
@@ -115,6 +117,7 @@ export const useSwapTx = (swapData: {
         pricesApiUrl.searchParams.set('network', chainId.toString())
         pricesApiUrl.searchParams.set('userAddress', userAddress)
         pricesApiUrl.searchParams.set('partner', partner)
+        pricesApiUrl.searchParams.set('version', '6.2')
 
         const pricesApiResponse: ParaSwapPricesResponse = await fetch(pricesApiUrl.toString(), {
           method: 'get'
@@ -123,7 +126,7 @@ export const useSwapTx = (swapData: {
           .then((t) => JSON.parse(t))
 
         if (!!pricesApiResponse?.priceRoute) {
-          const txApiUrl = new URL(`https://apiv5.paraswap.io/transactions/${chainId}`)
+          const txApiUrl = new URL(`${baseApiUrl}/transactions/${chainId}`)
           txApiUrl.searchParams.set('ignoreChecks', 'true')
           txApiUrl.searchParams.set('ignoreGasEstimate', 'true')
 
@@ -136,7 +139,7 @@ export const useSwapTx = (swapData: {
             slippage,
             userAddress,
             partner,
-            ...pricesApiResponse
+            priceRoute: pricesApiResponse.priceRoute
           }
 
           const txApiResponse: ParaSwapTxResponse = await fetch(txApiUrl, {
