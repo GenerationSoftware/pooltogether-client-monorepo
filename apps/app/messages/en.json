@@ -168,6 +168,7 @@
     "claimRewardsTx": "{symbol} Rewards Claim",
     "claimAllRewardsTx": "{network} Multi-Rewards Claim",
     "claimAllOnNetwork": "Claim all on {network}",
+    "claimSoon": "Claim soon!",
     "winHeaders": {
       "date": "Date",
       "prizeVault": "Prize Vault",

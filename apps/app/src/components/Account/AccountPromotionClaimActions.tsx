@@ -4,6 +4,7 @@ import {
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { TokenAmount, TransactionButton } from '@shared/react-components'
+import { getSecondsSinceEpoch } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -67,17 +68,17 @@ const ClaimRewardsButton = (props: ClaimRewardsButtonProps) => {
     refetch: refetchClaimable
   } = useUserClaimablePromotions(userAddress)
 
-  const claimable = useMemo(() => {
+  const promotion = useMemo(() => {
     return allClaimable.find(
       (promotion) => promotion.chainId === chainId && promotion.promotionId === promotionId
     )
   }, [allClaimable])
 
-  const { data: tokenData } = useToken(chainId, claimable?.token as Address)
+  const { data: token } = useToken(chainId, promotion?.token!)
 
   const epochsToClaim =
-    !!claimable && isFetchedAllClaimable
-      ? Object.keys(claimable.epochRewards).map((k) => parseInt(k))
+    !!promotion && isFetchedAllClaimable
+      ? Object.keys(promotion.epochRewards).map((k) => parseInt(k))
       : []
   const { isWaiting, isConfirming, isSuccess, txHash, sendClaimRewardsTransaction } =
     useSendClaimRewardsTransaction(
@@ -92,35 +93,46 @@ const ClaimRewardsButton = (props: ClaimRewardsButtonProps) => {
       }
     )
 
-  if (!!claimable && !!tokenData) {
-    const claimableAmount = Object.values(claimable.epochRewards).reduce((a, b) => a + b, 0n)
+  if (!!promotion && !!token) {
+    const claimableAmount = Object.values(promotion.epochRewards).reduce((a, b) => a + b, 0n)
 
     if (claimableAmount > 0n) {
-      const shiftedClaimableAmount = parseFloat(formatUnits(claimableAmount, tokenData.decimals))
+      const shiftedClaimableAmount = parseFloat(formatUnits(claimableAmount, token.decimals))
 
-      // TODO: display warning to claim soon if promotion has ended
+      const endTimestamp = !!promotion.numberOfEpochs
+        ? Number(promotion.startTimestamp) + promotion.numberOfEpochs * promotion.epochDuration
+        : undefined
+      const isClaimWarningDisplayed = !!endTimestamp && endTimestamp < getSecondsSinceEpoch()
+
       return (
-        <TransactionButton
-          chainId={chainId}
-          isTxLoading={isWaiting || isConfirming}
-          isTxSuccess={isSuccess}
-          write={sendClaimRewardsTransaction}
-          txHash={txHash}
-          txDescription={t_account('claimRewardsTx', { symbol: tokenData.symbol })}
-          openConnectModal={openConnectModal}
-          openChainModal={openChainModal}
-          addRecentTransaction={addRecentTransaction}
-          intl={{ base: t_txs, common: t_common }}
-          fullSized={fullSized}
-          className={classNames('min-w-[6rem]', className)}
-        >
-          {t_common('claim')}{' '}
-          <TokenAmount
-            token={{ chainId, address: claimable.token, amount: claimableAmount }}
-            hideZeroes={shiftedClaimableAmount > 1e3 ? true : undefined}
-            maximumFractionDigits={shiftedClaimableAmount <= 1e3 ? 2 : undefined}
-          />
-        </TransactionButton>
+        <div className='flex flex-col'>
+          <TransactionButton
+            chainId={chainId}
+            isTxLoading={isWaiting || isConfirming}
+            isTxSuccess={isSuccess}
+            write={sendClaimRewardsTransaction}
+            txHash={txHash}
+            txDescription={t_account('claimRewardsTx', { symbol: token.symbol })}
+            openConnectModal={openConnectModal}
+            openChainModal={openChainModal}
+            addRecentTransaction={addRecentTransaction}
+            intl={{ base: t_txs, common: t_common }}
+            fullSized={fullSized}
+            className={classNames('min-w-[6rem]', className)}
+          >
+            {t_common('claim')}{' '}
+            <TokenAmount
+              token={{ chainId, address: promotion.token, amount: claimableAmount }}
+              hideZeroes={shiftedClaimableAmount > 1e3 ? true : undefined}
+              maximumFractionDigits={shiftedClaimableAmount <= 1e3 ? 2 : undefined}
+            />
+          </TransactionButton>
+          {isClaimWarningDisplayed && (
+            <span className='mt-1 mr-1 text-right text-pt-warning-light'>
+              {t_account('claimSoon')}
+            </span>
+          )}
+        </div>
       )
     }
   }
