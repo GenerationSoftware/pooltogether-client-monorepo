@@ -90,7 +90,7 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
 
   const maxWidthClassName = 'max-w-screen-md'
 
-  if (!!chainId && !isFetchedVaultTokenAddress) {
+  if (!!chainId && !!address && !isFetchedVaultTokenAddress) {
     return (
       <>
         <VaultPageHeader vault={vault} className={maxWidthClassName} />
