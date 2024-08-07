@@ -34,11 +34,12 @@ import { VaultListHandler } from './VaultListHandler'
 
 interface LayoutProps {
   children: ReactNode
+  overrides?: { pageTitle?: string }
   className?: string
 }
 
 export const Layout = (props: LayoutProps) => {
-  const { children, className } = props
+  const { children, overrides, className } = props
 
   const router = useRouter()
 
@@ -106,7 +107,7 @@ export const Layout = (props: LayoutProps) => {
     vault: t_nav('vault')
   }
 
-  const pageTitle = pageTitles[router.pathname.split('/')[1]]
+  const pageTitle = overrides?.pageTitle ?? pageTitles[router.pathname.split('/')[1]]
 
   return (
     <div className='flex flex-col min-h-screen'>

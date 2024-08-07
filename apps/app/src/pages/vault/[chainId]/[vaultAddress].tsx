@@ -1,6 +1,7 @@
 import { SECONDS_PER_DAY } from '@shared/utilities'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
 import { getMessages } from 'src/utils'
 import { Layout } from '@components/Layout'
 import { VaultPageContent } from '@components/Vault/VaultPageContent'
@@ -28,10 +29,12 @@ export const getStaticProps: GetStaticProps<VaultPageProps> = async ({ locale })
 export default function VaultPage() {
   const router = useRouter()
 
+  const [vaultName, setVaultName] = useState<string>('')
+
   if (router.isReady && !router.isFallback) {
     return (
-      <Layout className='gap-8'>
-        <VaultPageContent queryParams={router.query} />
+      <Layout overrides={{ pageTitle: vaultName }} className='gap-8'>
+        <VaultPageContent queryParams={router.query} onFetchedVaultName={setVaultName} />
       </Layout>
     )
   }

@@ -14,7 +14,7 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { ParsedUrlQuery } from 'querystring'
-import { AnchorHTMLAttributes, DetailedHTMLProps, useMemo } from 'react'
+import { AnchorHTMLAttributes, DetailedHTMLProps, useEffect, useMemo } from 'react'
 import { Address, isAddress } from 'viem'
 import { useAccount } from 'wagmi'
 import { POOL_STAKING_VAULTS, SUPPORTED_NETWORKS, TWAB_REWARDS_SETTINGS } from '@constants/config'
@@ -33,10 +33,11 @@ import { VaultPageVaultListWarning } from './VaultPageVaultListWarning'
 
 interface VaultPageContentProps {
   queryParams: ParsedUrlQuery
+  onFetchedVaultName?: (name: string) => void
 }
 
 export const VaultPageContent = (props: VaultPageContentProps) => {
-  const { queryParams } = props
+  const { queryParams, onFetchedVaultName } = props
 
   const { address: userAddress } = useAccount()
 
@@ -70,6 +71,15 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
   const { data: vaultTokenAddress, isFetched: isFetchedVaultTokenAddress } = useVaultTokenAddress(
     vault!
   )
+
+  const { data: share } = useVaultShareData(vault!)
+
+  useEffect(() => {
+    if (!!vault) {
+      const name = vault.name ?? vault.shareData?.name ?? share?.name
+      !!name && onFetchedVaultName?.(name)
+    }
+  }, [vault, share])
 
   const prizePoolsArray = Object.values(useSupportedPrizePools())
   const prizePool = prizePoolsArray.find((prizePool) => prizePool.chainId === vault?.chainId)
