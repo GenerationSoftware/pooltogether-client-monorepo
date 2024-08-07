@@ -179,7 +179,7 @@ export const getUserSubgraphPrizes = async (
   userAddress: string,
   options?: {
     numPrizes?: number
-    offsetPrizes?: number
+    lastPrizeId?: string
   }
 ): Promise<SubgraphPrize[]> => {
   if (chainId in SUBGRAPH_API_URLS) {
@@ -188,8 +188,8 @@ export const getUserSubgraphPrizes = async (
     const headers = { 'Content-Type': 'application/json' }
 
     const body = JSON.stringify({
-      query: `query($id: Bytes, $numPrizes: Int, $offsetPrizes: Int, $orderDirection: OrderDirection, $orderBy: PrizeClaim_orderBy) {
-        prizeClaims(where: { winner: $id }, first: $numPrizes, skip: $offsetPrizes, orderDirection: $orderDirection, orderBy: $orderBy) {
+      query: `query($id: Bytes, $numPrizes: Int, $lastPrizeId: Bytes) {
+        prizeClaims(where: { winner: $id, id_gt: $lastPrizeId }, first: $numPrizes) {
           id
           draw { drawId }
           prizeVault { address }
@@ -205,9 +205,7 @@ export const getUserSubgraphPrizes = async (
       variables: {
         id: userAddress,
         numPrizes: options?.numPrizes ?? 1_000,
-        offsetPrizes: options?.offsetPrizes ?? 0,
-        orderDirection: 'asc',
-        orderBy: 'timestamp'
+        lastPrizeId: options?.lastPrizeId ?? ''
       }
     })
 
@@ -261,12 +259,12 @@ export const getPaginatedUserSubgraphPrizes = async (
 ) => {
   const userPrizes: SubgraphPrize[] = []
   const pageSize = options?.pageSize ?? 1_000
-  let page = 0
+  let lastPrizeId = ''
 
   while (true) {
     const newPage = await getUserSubgraphPrizes(chainId, userAddress, {
       numPrizes: pageSize,
-      offsetPrizes: page * pageSize
+      lastPrizeId
     })
 
     userPrizes.push(...newPage)
@@ -274,7 +272,7 @@ export const getPaginatedUserSubgraphPrizes = async (
     if (newPage.length < pageSize) {
       break
     } else {
-      page++
+      lastPrizeId = newPage[newPage.length - 1].id
     }
   }
 
