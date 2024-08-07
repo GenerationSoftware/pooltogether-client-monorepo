@@ -9,10 +9,10 @@ import { getNiceNetworkNameByChainId, getVaultId, shorten } from '@shared/utilit
 import classNames from 'classnames'
 import { useAtom } from 'jotai'
 import { vaultsAtom } from 'src/atoms'
-import { MutableVaultInfo } from 'src/types'
 import { isValidChars } from 'src/utils'
 import { EditableText } from './EditableText'
 import { VaultCard } from './VaultCard'
+import { MutableVaultInfo } from '@shared/types'
 
 interface VaultsTableProps {
   className?: string
