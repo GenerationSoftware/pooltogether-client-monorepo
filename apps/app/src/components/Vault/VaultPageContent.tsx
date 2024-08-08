@@ -135,32 +135,40 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
               <VaultPageBonusRewardsSection vault={vault} prizePool={prizePool} />
             )}
           </div>
-          <VaultPageRecentWinnersCard
-            vault={vault}
-            prizePool={prizePool}
-            className={maxWidthClassName}
-          />
-          <VaultPageInfo
-            vault={vault}
-            show={[
-              'prizeToken',
-              'depositToken',
-              'vaultOwner',
-              'vaultFee',
-              'vaultFeeRecipient',
-              'lpSourceURI'
-            ]}
-            className={maxWidthClassName}
-          />
-          <VaultPageContributionsCard
-            vault={vault}
-            prizePool={prizePool}
-            className={maxWidthClassName}
-          />
-          <Disclaimer vault={vault} className={maxWidthClassName} />
         </>
       ) : (
         <ErrorState chainId={rawChainId} tokenAddress={vaultTokenAddress} />
+      )}
+      {!!vault && !!prizePool && (
+        <VaultPageRecentWinnersCard
+          vault={vault}
+          prizePool={prizePool}
+          className={maxWidthClassName}
+        />
+      )}
+      {!!vault && !!prizePool && !!vaultTokenAddress && (
+        <VaultPageInfo
+          vault={vault}
+          show={[
+            'prizeToken',
+            'depositToken',
+            'vaultOwner',
+            'vaultFee',
+            'vaultFeeRecipient',
+            'lpSourceURI'
+          ]}
+          className={maxWidthClassName}
+        />
+      )}
+      {!!vault && !!prizePool && (
+        <VaultPageContributionsCard
+          vault={vault}
+          prizePool={prizePool}
+          className={maxWidthClassName}
+        />
+      )}
+      {!!vault && !!prizePool && !!vaultTokenAddress && (
+        <Disclaimer vault={vault} className={maxWidthClassName} />
       )}
     </>
   )
