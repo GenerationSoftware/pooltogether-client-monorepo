@@ -3,8 +3,7 @@ import {
   useDrawPeriod,
   useFirstDrawOpenedAt,
   useLastAwardedDrawId,
-  usePrizeTokenData,
-  useVaultContributionEvents
+  usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { VaultContributionsTooltip } from '@shared/react-components'
 import { Card, Spinner } from '@shared/ui'
@@ -13,7 +12,7 @@ import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 import { formatUnits } from 'viem'
-import { QUERY_START_BLOCK } from '@constants/config'
+import { useVaultContributions } from '@hooks/useVaultContributions'
 
 interface VaultPageContributionsCardProps {
   vault: Vault
@@ -86,10 +85,7 @@ const ContributionsChart = (props: ContributionsChartProps) => {
 
   const t_vault = useTranslations('Vault')
 
-  const { data: contributionEvents } = useVaultContributionEvents(prizePool, {
-    vaultAddress: vault.address,
-    fromBlock: QUERY_START_BLOCK[prizePool.chainId as keyof typeof QUERY_START_BLOCK]
-  })
+  const { data: contributions } = useVaultContributions(prizePool, vault.address)
 
   const { data: firstDrawOpenTimestamp } = useFirstDrawOpenedAt(prizePool)
   const { data: drawPeriod } = useDrawPeriod(prizePool)
@@ -100,7 +96,7 @@ const ContributionsChart = (props: ContributionsChartProps) => {
 
   const chartData = useMemo(() => {
     if (
-      !!contributionEvents &&
+      !!contributions &&
       !!firstDrawOpenTimestamp &&
       !!drawPeriod &&
       !!lastAwardedDrawId &&
@@ -108,16 +104,7 @@ const ContributionsChart = (props: ContributionsChartProps) => {
     ) {
       const data: { name: string; amount: number }[] = []
 
-      const drawContributions: { [drawId: number]: bigint } = {}
-      contributionEvents.forEach(({ args: { drawId, amount } }) => {
-        if (drawContributions[drawId] === undefined) {
-          drawContributions[drawId] = amount
-        } else {
-          drawContributions[drawId] += amount
-        }
-      })
-
-      const drawsWithData = Object.keys(drawContributions).map(Number)
+      const drawsWithData = Object.keys(contributions).map(Number)
       const minDrawId = Math.min(...drawsWithData)
       const maxDrawId = Math.max(...drawsWithData, lastAwardedDrawId)
       const drawIds = Array.from({ length: maxDrawId - minDrawId + 1 }, (_v, i) => minDrawId + i)
@@ -126,14 +113,14 @@ const ContributionsChart = (props: ContributionsChartProps) => {
         const drawOpenTimestamp = firstDrawOpenTimestamp + (drawId - 1) * drawPeriod
         const date = new Date(drawOpenTimestamp * 1e3)
         const name = `${date.getDate()}/${date.getMonth() + 1}`
-        const amount = parseFloat(formatUnits(drawContributions[drawId] ?? 0n, prizeToken.decimals))
+        const amount = parseFloat(formatUnits(contributions[drawId] ?? 0n, prizeToken.decimals))
 
         data.push({ name, amount })
       })
 
       return !!numDays ? data.slice(Math.max(0, data.length - numDays)) : data
     }
-  }, [contributionEvents, firstDrawOpenTimestamp, drawPeriod, prizeToken, numDays])
+  }, [contributions, firstDrawOpenTimestamp, drawPeriod, prizeToken, numDays])
 
   return (
     <div

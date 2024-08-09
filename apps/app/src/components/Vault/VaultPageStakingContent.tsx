@@ -1,8 +1,7 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useLastAwardedDrawId,
-  usePrizeTokenData,
-  useVaultContributionEvents
+  usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { useScreenSize } from '@shared/generic-react-hooks'
 import { Token } from '@shared/types'
@@ -13,8 +12,8 @@ import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
 import { formatUnits } from 'viem'
-import { QUERY_START_BLOCK } from '@constants/config'
 import { usePrizePoolPPCs } from '@hooks/usePrizePoolPPCs'
+import { useVaultContributions } from '@hooks/useVaultContributions'
 import { VaultPageCard } from './VaultPageCard'
 import { VaultPrizeYield } from './VaultPrizeYield'
 
@@ -55,40 +54,33 @@ export const VaultPagePoolStakingContent = (props: VaultPagePoolStakingContentPr
 
   const { data: pastTotalPPCs } = usePrizePoolPPCs(prizePool, drawIds?.past!)
 
-  const { data: contributionEvents } = useVaultContributionEvents(prizePool, {
-    vaultAddress: vault.address,
-    fromBlock: QUERY_START_BLOCK[prizePool.chainId as keyof typeof QUERY_START_BLOCK]
-  })
+  const { data: contributions } = useVaultContributions(prizePool, vault.address)
 
   const vaultContributions = useMemo(() => {
-    if (
-      !!prizeToken &&
-      !!drawIds &&
-      !!currentTotalPPCs &&
-      !!pastTotalPPCs &&
-      !!contributionEvents
-    ) {
+    if (!!prizeToken && !!drawIds && !!currentTotalPPCs && !!pastTotalPPCs && !!contributions) {
       const formatPrizeToken = (val: bigint) => parseFloat(formatUnits(val, prizeToken.decimals))
 
       const current = { amount: 0, totalAmount: formatPrizeToken(currentTotalPPCs), percentage: 0 }
       const past = { amount: 0, totalAmount: formatPrizeToken(pastTotalPPCs), percentage: 0 }
 
-      contributionEvents.forEach(({ args: { drawId, amount } }) => {
-        if (drawId > drawIds.current.start && drawId <= drawIds.current.end + 1) {
-          current.amount += formatPrizeToken(amount)
-        }
+      Object.entries(contributions)
+        .map((entry) => [Number(entry[0]), entry[1]] as [number, bigint])
+        .forEach(([drawId, amount]) => {
+          if (drawId > drawIds.current.start && drawId <= drawIds.current.end + 1) {
+            current.amount += formatPrizeToken(amount)
+          }
 
-        if (drawId > drawIds.past.start && drawId <= drawIds.past.end + 1) {
-          past.amount += formatPrizeToken(amount)
-        }
-      })
+          if (drawId > drawIds.past.start && drawId <= drawIds.past.end + 1) {
+            past.amount += formatPrizeToken(amount)
+          }
+        })
 
       current.percentage = (current.amount / current.totalAmount) * 100
       past.percentage = (past.amount / past.totalAmount) * 100
 
       return { current, past }
     }
-  }, [prizeToken, drawIds, currentTotalPPCs, pastTotalPPCs, contributionEvents])
+  }, [prizeToken, drawIds, currentTotalPPCs, pastTotalPPCs, contributions])
 
   return (
     <div className={classNames('w-full flex flex-col gap-8', className)}>
