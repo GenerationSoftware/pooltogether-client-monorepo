@@ -1,5 +1,5 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
-import { PartialPromotionInfo, Token, TokenWithLogo, TokenWithPrice } from '@shared/types'
+import { PartialPromotionInfo, TokenWithLogo, TokenWithPrice } from '@shared/types'
 import {
   erc20ABI,
   getAssetsFromShares,
@@ -105,6 +105,8 @@ export const getPrizePool = (vault: Vault) => {
 }
 
 export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
+  const batchSize = 1_024 * 1_024
+
   const firstMulticallResults = await vault.publicClient.multicall({
     contracts: [
       { address: vault.address, abi: vaultABI, functionName: 'asset' },
@@ -124,39 +126,76 @@ export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
       { address: prizePool.address, abi: prizePoolABI, functionName: 'getLastAwardedDrawId' },
       { address: prizePool.address, abi: prizePoolABI, functionName: 'drawPeriodSeconds' }
     ],
-    batchSize: 1_024 * 1_024
+    batchSize
   })
 
-  const assetAddress = firstMulticallResults[0].result!
-  const shareSymbol = firstMulticallResults[1].result!
-  const shareName = firstMulticallResults[2].result!
-  const shareDecimals = firstMulticallResults[3].result!
-  const shareTotalSupply = firstMulticallResults[4].result!
-  const totalAssets = (firstMulticallResults[5].result ?? firstMulticallResults[6].result)!
-  const yieldSourceAddress = firstMulticallResults[7].result!
-  const owner = firstMulticallResults[8].result!
-  const liquidationPair = firstMulticallResults[9].result!
-  const claimer = firstMulticallResults[10].result!
+  const assetAddress = firstMulticallResults[0].result
+  const shareSymbol = firstMulticallResults[1].result
+  const shareName = firstMulticallResults[2].result
+  const shareDecimals = firstMulticallResults[3].result
+  const shareTotalSupply = firstMulticallResults[4].result
+  const totalAssets = firstMulticallResults[5].result ?? firstMulticallResults[6].result
+  const yieldSourceAddress = firstMulticallResults[7].result
+  const owner = firstMulticallResults[8].result
+  const liquidationPair = firstMulticallResults[9].result
+  const claimer = firstMulticallResults[10].result
   const yieldFeePercentage = firstMulticallResults[11].result ?? 0
   const yieldFeeRecipient = firstMulticallResults[12].result ?? zeroAddress
-  const prizeAssetAddress = firstMulticallResults[13].result!
+  const prizeAssetAddress = firstMulticallResults[13].result
   const lastDrawId = firstMulticallResults[14].result || 1
-  const drawPeriod = firstMulticallResults[15].result!
+  const drawPeriod = firstMulticallResults[15].result
+
+  let assetSymbol: string | undefined = undefined
+  let assetName: string | undefined = undefined
+  let assetDecimals: number | undefined = undefined
+
+  if (!!assetAddress) {
+    const assetMulticallResults = await vault.publicClient.multicall({
+      contracts: [
+        { address: assetAddress, abi: erc20ABI, functionName: 'symbol' },
+        { address: assetAddress, abi: erc20ABI, functionName: 'name' },
+        { address: assetAddress, abi: erc20ABI, functionName: 'decimals' }
+      ],
+      batchSize
+    })
+
+    assetSymbol = assetMulticallResults[0].result
+    assetName = assetMulticallResults[1].result
+    assetDecimals = assetMulticallResults[2].result
+  }
+
+  let exchangeRate: bigint | undefined = undefined
+
+  if (shareDecimals !== undefined) {
+    exchangeRate = await vault.publicClient.readContract({
+      address: vault.address,
+      abi: vaultABI,
+      functionName: 'convertToAssets',
+      args: [parseUnits('1', shareDecimals)]
+    })
+  }
+
+  let prizeAssetSymbol: string | undefined = undefined
+  let prizeAssetName: string | undefined = undefined
+  let prizeAssetDecimals: number | undefined = undefined
+
+  if (!!prizeAssetAddress) {
+    const prizeAssetMulticallResults = await vault.publicClient.multicall({
+      contracts: [
+        { address: prizeAssetAddress, abi: erc20ABI, functionName: 'symbol' },
+        { address: prizeAssetAddress, abi: erc20ABI, functionName: 'name' },
+        { address: prizeAssetAddress, abi: erc20ABI, functionName: 'decimals' }
+      ],
+      batchSize
+    })
+
+    prizeAssetSymbol = prizeAssetMulticallResults[0].result
+    prizeAssetName = prizeAssetMulticallResults[1].result
+    prizeAssetDecimals = prizeAssetMulticallResults[2].result
+  }
 
   const secondMulticallResults = await vault.publicClient.multicall({
     contracts: [
-      { address: assetAddress, abi: erc20ABI, functionName: 'symbol' },
-      { address: assetAddress, abi: erc20ABI, functionName: 'name' },
-      { address: assetAddress, abi: erc20ABI, functionName: 'decimals' },
-      { address: prizeAssetAddress, abi: erc20ABI, functionName: 'symbol' },
-      { address: prizeAssetAddress, abi: erc20ABI, functionName: 'name' },
-      { address: prizeAssetAddress, abi: erc20ABI, functionName: 'decimals' },
-      {
-        address: vault.address,
-        abi: vaultABI,
-        functionName: 'convertToAssets',
-        args: [parseUnits('1', shareDecimals)]
-      },
       {
         address: prizePool.address,
         abi: prizePoolABI,
@@ -206,124 +245,129 @@ export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
         args: [vault.address, zeroAddress, 1, lastDrawId]
       }
     ],
-    batchSize: 1_024 * 1_024
+    batchSize
   })
 
-  const assetSymbol = secondMulticallResults[0].result!
-  const assetName = secondMulticallResults[1].result!
-  const assetDecimals = secondMulticallResults[2].result!
-  const prizeAssetSymbol = secondMulticallResults[3].result!
-  const prizeAssetName = secondMulticallResults[4].result!
-  const prizeAssetDecimals = secondMulticallResults[5].result!
-  const exchangeRate = secondMulticallResults[6].result!
-  const dailyContributions = secondMulticallResults[7].result ?? 0n
-  const weeklyContributions = secondMulticallResults[8].result ?? 0n
-  const monthlyContributions = secondMulticallResults[9].result ?? 0n
-  const allTimeContributions = secondMulticallResults[10].result ?? 0n
-  const dailySupplyTwab = secondMulticallResults[11].result?.[1] ?? 0n
-  const weeklySupplyTwab = secondMulticallResults[12].result?.[1] ?? 0n
-  const monthlySupplyTwab = secondMulticallResults[13].result?.[1] ?? 0n
-  const allTimeSupplyTwab = secondMulticallResults[14].result?.[1] ?? 0n
+  const dailyContributions = secondMulticallResults[0].result ?? 0n
+  const weeklyContributions = secondMulticallResults[1].result ?? 0n
+  const monthlyContributions = secondMulticallResults[2].result ?? 0n
+  const allTimeContributions = secondMulticallResults[3].result ?? 0n
+  const dailySupplyTwab = secondMulticallResults[4].result?.[1] ?? 0n
+  const weeklySupplyTwab = secondMulticallResults[5].result?.[1] ?? 0n
+  const monthlySupplyTwab = secondMulticallResults[6].result?.[1] ?? 0n
+  const allTimeSupplyTwab = secondMulticallResults[7].result?.[1] ?? 0n
 
-  const prices = await getTokenPrices(vault.chainId, [
-    assetAddress,
-    prizeAssetAddress,
-    ...TWAB_REWARDS_SETTINGS[vault.chainId]?.tokenAddresses
-  ])
+  const tokenAddresses: Address[] = [...TWAB_REWARDS_SETTINGS[vault.chainId]?.tokenAddresses]
+  !!assetAddress && tokenAddresses.push(assetAddress)
+  !!prizeAssetAddress && tokenAddresses.push(prizeAssetAddress)
 
-  const assetPrice = prices[lower(assetAddress)]
-  const sharePrice =
-    !!assetPrice && !!exchangeRate
-      ? parseFloat(
-          formatEther(
-            getAssetsFromShares(parseEther(assetPrice.toFixed(18)), exchangeRate, shareDecimals)
-          )
-        )
+  const prices = await getTokenPrices(vault.chainId, tokenAddresses)
+
+  const asset: Partial<TokenWithPrice & TokenWithLogo & { amount: number }> | undefined =
+    !!assetAddress
+      ? {
+          chainId: vault.chainId,
+          address: assetAddress,
+          symbol: assetSymbol,
+          name: assetName,
+          decimals: assetDecimals,
+          amount:
+            totalAssets !== undefined && assetDecimals !== undefined
+              ? parseFloat(formatUnits(totalAssets, assetDecimals))
+              : undefined,
+          logoURI: vault.tokenLogoURI,
+          price: !!assetAddress ? prices[lower(assetAddress)] : undefined
+        }
       : undefined
-  const prizeAssetPrice = prices[lower(prizeAssetAddress)]
 
-  const share: TokenWithPrice & Partial<TokenWithLogo> & { amount: number } = {
+  const share: Partial<TokenWithPrice & TokenWithLogo & { amount: number }> = {
     chainId: vault.chainId,
     address: vault.address,
     symbol: shareSymbol,
     name: vault.name ?? shareName,
     decimals: shareDecimals,
-    amount: parseFloat(formatUnits(shareTotalSupply, shareDecimals)),
+    amount:
+      shareTotalSupply !== undefined && shareDecimals !== undefined
+        ? parseFloat(formatUnits(shareTotalSupply, shareDecimals))
+        : undefined,
     logoURI: vault.logoURI,
-    price: sharePrice
+    price:
+      asset?.price !== undefined && !!exchangeRate && shareDecimals !== undefined
+        ? parseFloat(
+            formatEther(
+              getAssetsFromShares(parseEther(asset.price.toFixed(18)), exchangeRate, shareDecimals)
+            )
+          )
+        : undefined
   }
 
-  const asset: TokenWithPrice & Partial<TokenWithLogo> & { amount: number } = {
-    chainId: vault.chainId,
-    address: assetAddress,
-    symbol: assetSymbol,
-    name: assetName,
-    decimals: assetDecimals,
-    amount: parseFloat(formatUnits(totalAssets, assetDecimals)),
-    logoURI: vault.tokenLogoURI,
-    price: assetPrice
-  }
-
-  const prizeAsset: TokenWithPrice = {
+  const prizeAsset: Partial<TokenWithPrice> = {
     chainId: vault.chainId,
     address: prizeAssetAddress,
     symbol: prizeAssetSymbol,
     name: prizeAssetName,
     decimals: prizeAssetDecimals,
-    price: prizeAssetPrice
+    price: !!prizeAssetAddress ? prices[lower(prizeAssetAddress)] : undefined
   }
 
-  const tvl = asset.amount * (assetPrice ?? 0)
+  const tvl = asset?.amount !== undefined ? asset.amount * (asset.price ?? 0) : undefined
 
-  const bonusRewards = await getBonusRewardsInfo(vault, drawPeriod, prices, tvl)
+  const bonusRewards =
+    !!drawPeriod && tvl !== undefined
+      ? await getBonusRewardsInfo(vault, drawPeriod, prices, tvl)
+      : undefined
 
-  const yieldSource: { address: Address; name?: string; appURI?: string } = {
-    address: yieldSourceAddress,
-    name: vault.yieldSourceName,
-    appURI: vault.yieldSourceURI
-  }
+  const yieldSource: { address: Address; name?: string; appURI?: string } | undefined =
+    !!yieldSourceAddress
+      ? {
+          address: yieldSourceAddress,
+          name: vault.yieldSourceName,
+          appURI: vault.yieldSourceURI
+        }
+      : undefined
 
   const yieldFees: { percent: number; recipient: Address } = {
     percent: yieldFeePercentage,
     recipient: yieldFeeRecipient
   }
 
-  const contributions: { day: number; week: number; month: number; all: number } = {
-    day: parseFloat(formatUnits(dailyContributions, prizeAsset.decimals)),
-    week: parseFloat(formatUnits(weeklyContributions, prizeAsset.decimals)),
-    month: parseFloat(formatUnits(monthlyContributions, prizeAsset.decimals)),
-    all: parseFloat(formatUnits(allTimeContributions, prizeAsset.decimals))
-  }
+  const contributions: { day: number; week: number; month: number; all: number } | undefined =
+    prizeAsset.decimals !== undefined
+      ? {
+          day: parseFloat(formatUnits(dailyContributions, prizeAsset.decimals)),
+          week: parseFloat(formatUnits(weeklyContributions, prizeAsset.decimals)),
+          month: parseFloat(formatUnits(monthlyContributions, prizeAsset.decimals)),
+          all: parseFloat(formatUnits(allTimeContributions, prizeAsset.decimals))
+        }
+      : undefined
 
   const getPrizeYield = (numDraws: number, contributions: bigint, twab: bigint) => {
-    if (!!prizeAsset.price && !!share.price && !!twab) {
+    if (
+      !!drawPeriod &&
+      prizeAsset.decimals !== undefined &&
+      share.decimals !== undefined &&
+      !!prizeAsset.price &&
+      !!share.price &&
+      !!twab
+    ) {
       const yearlyNumDraws = SECONDS_PER_YEAR / drawPeriod
       const extrapolatedYearlyContributions =
         parseFloat(formatUnits(contributions, prizeAsset.decimals)) * (yearlyNumDraws / numDraws)
       const extrapolatedYearlyContributionsValue =
         extrapolatedYearlyContributions * prizeAsset.price
       const twabTvl = parseFloat(formatUnits(twab, share.decimals)) * share.price
+
       return (extrapolatedYearlyContributionsValue / twabTvl) * 100
+    } else {
+      return 0
     }
   }
-  const dailyPrizeYield = getPrizeYield(1, dailyContributions, dailySupplyTwab)
-  const weeklyPrizeYield = getPrizeYield(
-    Math.min(7, lastDrawId),
-    weeklyContributions,
-    weeklySupplyTwab
-  )
-  const monthlyPrizeYield = getPrizeYield(
-    Math.min(30, lastDrawId),
-    monthlyContributions,
-    monthlySupplyTwab
-  )
-  const allTimePrizeYield = getPrizeYield(lastDrawId, allTimeContributions, allTimeSupplyTwab)
 
-  const prizeYield: { day?: number; week?: number; month?: number; all?: number } = {
-    day: dailyPrizeYield,
-    week: weeklyPrizeYield,
-    month: monthlyPrizeYield,
-    all: allTimePrizeYield
+  const prizeYield: { day: number; week: number; month: number; all: number } = {
+    day: getPrizeYield(1, dailyContributions, dailySupplyTwab),
+    week: getPrizeYield(Math.min(7, lastDrawId), weeklyContributions, weeklySupplyTwab),
+    month: getPrizeYield(Math.min(30, lastDrawId), monthlyContributions, monthlySupplyTwab),
+    all: getPrizeYield(lastDrawId, allTimeContributions, allTimeSupplyTwab)
   }
 
   return {
