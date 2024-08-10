@@ -32,7 +32,7 @@ export const useSendV3PodWithdrawTransaction = (
   const podAddress =
     !!chainId && !!tokenAddress
       ? V3_POOLS[chainId as SupportedNetwork]?.find(
-          (entry) => entry.ticketAddress === tokenAddress.toLowerCase()
+          (entry) => entry.podAddress === tokenAddress.toLowerCase()
         )?.podAddress
       : undefined
 
