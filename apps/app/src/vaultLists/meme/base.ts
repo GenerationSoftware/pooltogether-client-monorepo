@@ -57,5 +57,19 @@ export const baseVaults: VaultList['tokens'] = [
         name: 'Higher'
       }
     }
+  },
+  {
+    chainId: NETWORK.base,
+    address: '0x52ee27824a64430cbd1be03794d4eb92e4b8bbd0',
+    name: 'Prize Based',
+    decimals: 18,
+    symbol: 'przBASED',
+    extensions: {
+      underlyingAsset: {
+        address: '0x32E0f9d26D1e33625742A52620cC76C1130efde6',
+        symbol: 'BASED',
+        name: 'Based'
+      }
+    }
   }
 ]
