@@ -17,7 +17,12 @@ import {
   xdefiWallet,
   zerionWallet
 } from '@rainbow-me/rainbowkit/wallets'
-import { DEFAULT_CLAIMER_ADDRESSES, NETWORK, SECONDS_PER_HOUR } from '@shared/utilities'
+import {
+  DEFAULT_CLAIMER_ADDRESSES,
+  NETWORK,
+  SECONDS_PER_DAY,
+  SECONDS_PER_HOUR
+} from '@shared/utilities'
 import { SupportedNetwork, YieldSourceVaultTag } from 'src/types'
 import { Address } from 'viem'
 import {
@@ -34,6 +39,7 @@ import {
  * Supported networks
  */
 export const SUPPORTED_NETWORKS = [
+  NETWORK.mainnet,
   NETWORK.optimism,
   NETWORK.arbitrum,
   NETWORK.base,
@@ -110,6 +116,13 @@ export const NETWORK_CONFIG: Record<
     contributor?: Address
   }
 > = {
+  [NETWORK.mainnet]: {
+    description: 'The settlement layer for the internet.',
+    prizePool: '0x7865D01da4C9BA2F69B7879e6d2483aB6B354d95',
+    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.mainnet],
+    lp: { targetAuctionPeriod: SECONDS_PER_DAY, targetAuctionPriceUsd: 100 },
+    yieldSources: []
+  },
   [NETWORK.optimism]: {
     description: 'The OG optimistic rollup on Ethereum.',
     prizePool: '0xF35fE10ffd0a9672d0095c435fd8767A7fe29B55',

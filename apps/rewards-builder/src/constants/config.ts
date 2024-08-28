@@ -33,6 +33,7 @@ import {
  * Supported networks
  */
 export const SUPPORTED_NETWORKS = [
+  NETWORK.mainnet,
   NETWORK.optimism,
   NETWORK.arbitrum,
   NETWORK.base,
@@ -95,7 +96,7 @@ export const RPC_URLS = {
 export const PROMOTION_FILTERS: {
   [chainId: number]: { tokenAddresses?: Address[]; fromBlock?: bigint }
 } = {
-  [NETWORK.mainnet]: {},
+  [NETWORK.mainnet]: { fromBlock: 20_565_000n },
   [NETWORK.optimism]: { fromBlock: 118_900_000n },
   [NETWORK.arbitrum]: { fromBlock: 216_345_400n },
   [NETWORK.base]: { fromBlock: 14_506_800n },

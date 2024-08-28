@@ -28,9 +28,7 @@ export const TargetAuctionPeriodInput = (props: TargetAuctionPeriodInputProps) =
     setValue(
       'targetAuctionPeriod',
       (targetAuctionPeriod ?? defaultPeriod ?? SECONDS_PER_HOUR).toString(),
-      {
-        shouldValidate: true
-      }
+      { shouldValidate: true }
     )
     if (!targetAuctionPeriod) {
       setTargetAuctionPeriod(defaultPeriod)
