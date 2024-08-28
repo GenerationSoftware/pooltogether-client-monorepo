@@ -89,6 +89,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useAllDrawIds`
 - `useAllDrawPeriods`
 - `useAllFirstDrawOpenedAt`
+- `useAllGrandPrizePeriodDraws`
 - `useAllLastAwardedDrawIds`
 - `useAllPrizeDrawWinners`
 - `useAllPrizeInfo`
