@@ -78,13 +78,16 @@ export const useZapArgs = (
               inputToken.decimals
             )
           }
-        } else if (!!inputTokenInfo.beefyVault) {
+        } else if (
+          !!outputTokenInfo.beefyVault &&
+          lower(outputTokenInfo.beefyVault.address) === lower(inputToken.address)
+        ) {
           return {
-            address: inputTokenInfo.beefyVault.want,
-            decimals: inputTokenInfo.beefyVault.decimals,
+            address: outputTokenInfo.beefyVault.want,
+            decimals: outputTokenInfo.beefyVault.decimals,
             amount: getAssetsFromShares(
               inputToken.amount,
-              inputTokenInfo.beefyVault.pricePerFullShare,
+              outputTokenInfo.beefyVault.pricePerFullShare,
               inputToken.decimals
             )
           }
@@ -93,7 +96,7 @@ export const useZapArgs = (
         }
       }
     }
-  }, [inputToken, isValidInputToken, inputTokenInfo, isFetchedInputTokenInfo])
+  }, [inputToken, isValidInputToken, inputTokenInfo, isFetchedInputTokenInfo, outputTokenInfo])
 
   const swapOutputTokens = useMemo(() => {
     if (isValidOutputToken) {
@@ -160,7 +163,9 @@ export const useZapArgs = (
     !!swapInputToken &&
     ((swapOutputTokens.length === 1 &&
       lower(swapInputToken.address) !== lower(swapOutputTokens[0].address)) ||
-      swapOutputTokens.length === 2)
+      swapOutputTokens.length === 2) &&
+    (!outputTokenInfo.beefyVault ||
+      lower(outputTokenInfo.beefyVault.want) !== lower(swapInputToken.address))
 
   const isFirstSwapNecessary =
     isSwapNecessary && lower(swapInputToken.address) !== lower(swapOutputTokens[0].address)
@@ -215,18 +220,17 @@ export const useZapArgs = (
         ? firstSwapTx?.amountOut.expected
         : swapInputToken.amount
       : undefined
-  const { data: curveAddLiquidityOutput, isFetched: isFetchedCurveAddLiquidityOutput } =
-    useCurveAddLiquidityOutput(
-      chainId,
-      outputTokenInfo?.lpToken?.address!,
-      !!curveAddLiquidityInput
-        ? outputTokenInfo.lpToken!.bestCurveInputTokenAddress ===
-          outputTokenInfo.lpToken!.token0.address
-          ? [curveAddLiquidityInput, 0n]
-          : [0n, curveAddLiquidityInput]
-        : [0n, 0n],
-      { enabled: !!curveAddLiquidityInput }
-    )
+  const { data: curveAddLiquidityOutput } = useCurveAddLiquidityOutput(
+    chainId,
+    outputTokenInfo?.lpToken?.address!,
+    !!curveAddLiquidityInput
+      ? outputTokenInfo.lpToken!.bestCurveInputTokenAddress ===
+        outputTokenInfo.lpToken!.token0.address
+        ? [curveAddLiquidityInput, 0n]
+        : [0n, curveAddLiquidityInput]
+      : [0n, 0n],
+    { enabled: !!curveAddLiquidityInput }
+  )
 
   const amountOut = useMemo(() => {
     if (
@@ -433,7 +437,10 @@ export const useZapArgs = (
           ),
           tokens: [{ token: inputToken.address, index: -1 }]
         })
-      } else if (!!inputTokenInfo.beefyVault) {
+      } else if (
+        !!outputTokenInfo.beefyVault &&
+        lower(outputTokenInfo.beefyVault.address) === lower(inputToken.address)
+      ) {
         zapRoute.push({
           ...getBeefyWithdrawTx(inputToken.address, inputToken.amount),
           tokens: [{ token: inputToken.address, index: -1 }]
@@ -458,7 +465,9 @@ export const useZapArgs = (
         })
       } else if (
         outputTokenInfo.isCurveLp &&
-        !!outputTokenInfo.lpToken?.bestCurveInputTokenAddress
+        !!outputTokenInfo.lpToken?.bestCurveInputTokenAddress &&
+        (!outputTokenInfo.beefyVault ||
+          lower(outputTokenInfo.beefyVault.want) !== lower(swapInputToken.address))
       ) {
         zapRoute.push({
           ...getCurveAddLiquidityTx(outputTokenInfo.lpToken.address, [0n, 0n], 0n),
@@ -472,7 +481,9 @@ export const useZapArgs = (
       } else if (
         outputTokenInfo.isVelodromeLp &&
         !!outputTokenInfo.lpToken &&
-        !!velodromeRouterAddress
+        !!velodromeRouterAddress &&
+        (!outputTokenInfo.beefyVault ||
+          lower(outputTokenInfo.beefyVault.want) !== lower(swapInputToken.address))
       ) {
         const halfAmount = {
           expected: swapInputToken.amount / 2n,
