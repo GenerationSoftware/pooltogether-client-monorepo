@@ -222,10 +222,12 @@ export const useZapArgs = (
     useCurveAddLiquidityOutput(
       chainId,
       outputTokenInfo?.lpToken?.address!,
-      outputTokenInfo.lpToken!.bestCurveInputTokenAddress ===
-        outputTokenInfo.lpToken!.token0.address
-        ? [curveAddLiquidityInput ?? 0n, 0n]
-        : [0n, curveAddLiquidityInput ?? 0n],
+      !!curveAddLiquidityInput
+        ? outputTokenInfo.lpToken!.bestCurveInputTokenAddress ===
+          outputTokenInfo.lpToken!.token0.address
+          ? [curveAddLiquidityInput, 0n]
+          : [0n, curveAddLiquidityInput]
+        : [0n, 0n],
       { enabled: !!curveAddLiquidityInput }
     )
 
