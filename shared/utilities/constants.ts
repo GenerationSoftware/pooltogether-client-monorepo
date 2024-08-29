@@ -700,6 +700,10 @@ export const TOKEN_DATA_REDIRECTS: {
 export const ZAP_SETTINGS: {
   [chainId: number]: { zapRouter: Address; zapTokenManager: Address }
 } = {
+  [NETWORK.mainnet]: {
+    zapRouter: '0x5Cc9400FfB4Da168Cf271e912F589462C3A00d1F',
+    zapTokenManager: '0xEdFEc19ee32f5130084C0aCab91FeA604C137912'
+  },
   [NETWORK.optimism]: {
     zapRouter: '0xE82343A116d2179F197111D92f9B53611B43C01c',
     zapTokenManager: '0x5a32F67C5eD74dc1b2e031b1bc2c3E965073424F'
