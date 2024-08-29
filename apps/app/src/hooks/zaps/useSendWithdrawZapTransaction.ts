@@ -14,7 +14,7 @@ import {
 } from 'wagmi'
 import { ZAP_SETTINGS } from '@constants/config'
 import { zapRouterABI } from '@constants/zapRouterABI'
-import { useWithdrawZapArgs } from './useWithdrawZapArgs'
+import { useZapArgs } from './useZapArgs'
 
 /**
  * Prepares and submits a zap transaction that includes withdrawing from a vault and swapping
@@ -61,7 +61,11 @@ export const useSendWithdrawZapTransaction = (
     amountOut,
     isFetched: isFetchedZapArgs,
     isFetching: isFetchingZapArgs
-  } = useWithdrawZapArgs({ outputToken, vault, amount })
+  } = useZapArgs(
+    vault.chainId,
+    { address: vault.address, decimals: vault.decimals!, amount },
+    outputToken
+  )
 
   const enabled =
     !!outputToken?.address &&
