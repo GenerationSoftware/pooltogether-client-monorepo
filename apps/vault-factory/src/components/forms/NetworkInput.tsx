@@ -24,7 +24,7 @@ export const NetworkInput = (props: NetworkInputProps) => {
   const id = `chain-${chainId}`
 
   return (
-    <div className={classNames('max-w-sm lg:max-w-[25%]', className)}>
+    <div className={classNames('w-full max-w-sm lg:max-w-[25%]', className)}>
       <input
         id={id}
         {...register('vaultChainId', {

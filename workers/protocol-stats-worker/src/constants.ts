@@ -33,18 +33,21 @@ export const VIEM_CHAINS: Record<NETWORK, Chain> = {
 }
 
 export const V5_NETWORKS = [
+  NETWORK.mainnet,
   NETWORK.optimism,
   NETWORK.base,
   NETWORK.arbitrum
 ] as const satisfies NETWORK[]
 
 export const RPC_URLS: Record<(typeof V5_NETWORKS)[number], string> = {
+  [NETWORK.mainnet]: MAINNET_RPC_URL,
   [NETWORK.optimism]: OPTIMISM_RPC_URL,
   [NETWORK.base]: BASE_RPC_URL,
   [NETWORK.arbitrum]: ARBITRUM_RPC_URL
 }
 
 export const V5_SUBGRAPH_API_URLS: Record<(typeof V5_NETWORKS)[number], `https://${string}`> = {
+  [NETWORK.mainnet]: 'https://api.studio.thegraph.com/query/63100/pt-v5-ethereum/version/latest',
   [NETWORK.optimism]: 'https://api.studio.thegraph.com/query/63100/pt-v5-optimism/version/latest',
   [NETWORK.base]: 'https://api.studio.thegraph.com/query/41211/pt-v5-base/version/latest',
   [NETWORK.arbitrum]: 'https://api.studio.thegraph.com/query/63100/pt-v5-arbitrum/version/latest'

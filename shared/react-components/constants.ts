@@ -33,7 +33,8 @@ const tokenLogoUrls = {
     'https://assets.coingecko.com/coins/images/32597/standard/319381e63428d3c2ab6e035d5f3abd76.png',
   reth: 'https://assets.coingecko.com/coins/images/20764/standard/reth.png',
   snx: 'https://assets.coingecko.com/coins/images/3406/standard/SNX.png',
-  crv: 'https://assets.coingecko.com/coins/images/12124/standard/Curve.png'
+  crv: 'https://assets.coingecko.com/coins/images/12124/standard/Curve.png',
+  based: 'https://basescan.org/token/images/basedtoken_32.png'
 } as const
 
 /**

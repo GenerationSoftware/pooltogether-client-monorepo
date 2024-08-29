@@ -14,7 +14,6 @@ export const VaultPagePrizesSection = (props: VaultPagePrizesSectionProps) => {
 
   const t_prizes = useTranslations('Prizes')
 
-  // TODO: better title?
   return (
     <VaultPageCard
       title={t_prizes('currentPrizes')}

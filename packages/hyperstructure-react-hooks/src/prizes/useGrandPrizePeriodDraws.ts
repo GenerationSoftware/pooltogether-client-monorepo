@@ -1,6 +1,6 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
-import { useQuery, UseQueryResult } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { QUERY_KEYS } from '../constants'
 
 /**
@@ -8,7 +8,7 @@ import { QUERY_KEYS } from '../constants'
  * @param prizePool instance of the `PrizePool` class
  * @returns
  */
-export const useGrandPrizePeriodDraws = (prizePool: PrizePool): UseQueryResult<number> => {
+export const useGrandPrizePeriodDraws = (prizePool: PrizePool) => {
   const queryKey = [QUERY_KEYS.grandPrizePeriodDraws, prizePool?.id]
 
   return useQuery({

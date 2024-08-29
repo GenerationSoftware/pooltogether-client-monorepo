@@ -47,6 +47,7 @@ export const RPC_URLS = {
  * Queries' start blocks
  */
 export const QUERY_START_BLOCK: { [chainId: number]: bigint } = {
+  [NETWORK.mainnet]: 20_565_000n,
   [NETWORK.optimism]: 118_900_000n,
   [NETWORK.arbitrum]: 216_345_400n,
   [NETWORK.base]: 14_506_800n,
@@ -59,6 +60,7 @@ export const QUERY_START_BLOCK: { [chainId: number]: bigint } = {
  * Draw results URL
  */
 export const DRAW_RESULTS_URL: { [chainId: number]: string } = {
+  [NETWORK.mainnet]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-winners/main/winners/vaultAccounts/${NETWORK.mainnet}`,
   [NETWORK.optimism]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-winners/main/winners/vaultAccounts/${NETWORK.optimism}`,
   [NETWORK.arbitrum]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-winners/main/winners/vaultAccounts/${NETWORK.arbitrum}`,
   [NETWORK.base]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-winners/main/winners/vaultAccounts/${NETWORK.base}`,

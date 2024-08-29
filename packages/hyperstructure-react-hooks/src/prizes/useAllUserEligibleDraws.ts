@@ -6,6 +6,7 @@ import {
   useAllDrawIds,
   useAllDrawPeriods,
   useAllFirstDrawOpenedAt,
+  useAllGrandPrizePeriodDraws,
   useAllUserBalanceUpdates
 } from '..'
 
@@ -26,14 +27,15 @@ export const useAllUserEligibleDraws = (prizePools: PrizePool[], userAddress: st
   const { data: allBalanceUpdates, isFetched: isFetchedAllBalanceUpdates } =
     useAllUserBalanceUpdates(prizePools, userAddress)
 
-  // TODO: this assumes `grandPrizePeriodDraws` is always 91 - not ideal
-  const grandPrizePeriodDraws = 91
+  const { data: allGrandPrizePeriodDraws, isFetched: isFetchedGrandPrizePeriodDraws } =
+    useAllGrandPrizePeriodDraws(prizePools)
 
   const isFetched =
     isFetchedAllDrawIds &&
     isFetchedAllFirstDrawOpenedAt &&
     isFetchedAllDrawPeriods &&
-    isFetchedAllBalanceUpdates
+    isFetchedAllBalanceUpdates &&
+    isFetchedGrandPrizePeriodDraws
 
   const data = useMemo(() => {
     if (isFetched) {
@@ -50,51 +52,64 @@ export const useAllUserEligibleDraws = (prizePools: PrizePool[], userAddress: st
           (id) => parseInt(id.split('-')[1]) === chainId
         )
 
-        if (
-          !!prizePoolId &&
-          !!allFirstDrawOpenedAt[prizePoolId] &&
-          !!allDrawPeriods[prizePoolId] &&
-          !!allBalanceUpdates[chainId]
-        ) {
+        if (!!prizePoolId) {
           const drawIds = allDrawIds[prizePoolId]
           const firstDrawOpenedAt = allFirstDrawOpenedAt[prizePoolId]
           const drawPeriod = allDrawPeriods[prizePoolId]
-          const drawCloseTimestamps = drawIds.map((id) => firstDrawOpenedAt + drawPeriod * id)
+          const balanceUpdates = allBalanceUpdates[chainId]
+          const grandPrizePeriodDraws = allGrandPrizePeriodDraws[prizePoolId]
 
-          const chainDraws: DrawWithTimestamps[] = []
-          const chainDrawsByVault: { [vaultAddress: Address]: DrawWithTimestamps[] } = {}
+          if (
+            !!drawIds &&
+            !!firstDrawOpenedAt &&
+            !!drawPeriod &&
+            !!balanceUpdates &&
+            !!grandPrizePeriodDraws
+          ) {
+            const drawCloseTimestamps = drawIds.map((id) => firstDrawOpenedAt + drawPeriod * id)
 
-          // Looping through every vault with balance updates
-          for (const strVaultAddress in allBalanceUpdates[chainId]) {
-            const vaultAddress = strVaultAddress as Address
-            const balanceUpdates = [...allBalanceUpdates[chainId][vaultAddress]].reverse()
+            const chainDraws: DrawWithTimestamps[] = []
+            const chainDrawsByVault: { [vaultAddress: Address]: DrawWithTimestamps[] } = {}
 
-            const vaultDraws = getVaultEligibleDraws(
-              drawCloseTimestamps,
-              balanceUpdates,
-              drawPeriod,
-              grandPrizePeriodDraws
-            )
+            // Looping through every vault with balance updates
+            for (const strVaultAddress in allBalanceUpdates[chainId]) {
+              const vaultAddress = strVaultAddress as Address
+              const balanceUpdates = [...allBalanceUpdates[chainId][vaultAddress]].reverse()
 
-            vaultDraws.forEach((draw) => {
-              const existingDraw = chainDraws.findIndex((d) => d.id === draw.id)
-              if (existingDraw === -1) {
-                chainDraws.push(draw)
-              }
-            })
+              const vaultDraws = getVaultEligibleDraws(
+                drawCloseTimestamps,
+                balanceUpdates,
+                drawPeriod,
+                grandPrizePeriodDraws
+              )
 
-            chainDrawsByVault[vaultAddress] = vaultDraws
+              vaultDraws.forEach((draw) => {
+                const existingDraw = chainDraws.findIndex((d) => d.id === draw.id)
+                if (existingDraw === -1) {
+                  chainDraws.push(draw)
+                }
+              })
+
+              chainDrawsByVault[vaultAddress] = vaultDraws
+            }
+
+            eligibleDraws[chainId] = chainDraws.sort((a, b) => a.id - b.id)
+            eligibleDrawsByVault[chainId] = chainDrawsByVault
+            totalNumEligibleDraws += chainDraws.length
           }
-
-          eligibleDraws[chainId] = chainDraws.sort((a, b) => a.id - b.id)
-          eligibleDrawsByVault[chainId] = chainDrawsByVault
-          totalNumEligibleDraws += chainDraws.length
         }
       }
 
       return { eligibleDraws, eligibleDrawsByVault, totalNumEligibleDraws }
     }
-  }, [allDrawIds, allBalanceUpdates, isFetched])
+  }, [
+    allDrawIds,
+    allFirstDrawOpenedAt,
+    allDrawPeriods,
+    allBalanceUpdates,
+    allGrandPrizePeriodDraws,
+    isFetched
+  ])
 
   return { data, isFetched }
 }

@@ -7,7 +7,7 @@ import {
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
 import { MODAL_KEYS, useIsModalOpen, useMiscSettings } from '@shared/generic-react-hooks'
-import { AlertIcon, createDepositTxToast } from '@shared/react-components'
+import { createDepositTxToast } from '@shared/react-components'
 import { Modal } from '@shared/ui'
 import { LINKS, lower } from '@shared/utilities'
 import classNames from 'classnames'
@@ -70,7 +70,7 @@ export const DepositModal = (props: DepositModalProps) => {
 
   const [formTokenAddress, setFormTokenAddress] = useAtom(depositFormTokenAddressAtom)
   const setFormTokenAmount = useSetAtom(depositFormTokenAmountAtom)
-  const [formShareAmount, setFormShareAmount] = useAtom(depositFormShareAmountAtom)
+  const setFormShareAmount = useSetAtom(depositFormShareAmountAtom)
 
   const { data: vaultToken } = useVaultTokenData(vault!)
 
@@ -131,7 +131,6 @@ export const DepositModal = (props: DepositModalProps) => {
           hidden: view !== 'main' && view !== 'review'
         })}
       >
-        {view === 'main' && !formShareAmount && <RisksDisclaimer vault={vault} />}
         {isZapping ? (
           <DepositZapTxButton
             vault={vault}
@@ -185,33 +184,6 @@ export const DepositModal = (props: DepositModalProps) => {
   return <></>
 }
 
-interface RisksDisclaimerProps {
-  vault: Vault
-}
-
-const RisksDisclaimer = (props: RisksDisclaimerProps) => {
-  const { vault } = props
-
-  const t_common = useTranslations('Common')
-  const t_modals = useTranslations('TxModals')
-
-  const vaultHref = `/vault/${vault.chainId}/${vault.address}`
-
-  return (
-    <div className='w-full flex flex-col gap-4 p-6 text-pt-purple-100 bg-pt-transparent rounded-lg lg:items-center'>
-      <div className='flex gap-2 items-center'>
-        <AlertIcon className='w-5 h-5' />
-        <span className='text-xs font-semibold lg:text-sm'>{t_common('learnAboutRisks')}</span>
-      </div>
-      <span className='text-xs lg:text-center lg:text-sm'>
-        {t_modals.rich('risksDisclaimer', {
-          vaultLink: (chunks) => <DisclaimerLink href={vaultHref}>{chunks}</DisclaimerLink>
-        })}
-      </span>
-    </div>
-  )
-}
-
 interface DepositDisclaimerProps {
   vault: Vault
 }
@@ -221,29 +193,24 @@ const DepositDisclaimer = (props: DepositDisclaimerProps) => {
 
   const t_modals = useTranslations('TxModals')
 
-  const vaultHref = `/vault/${vault.chainId}/${vault.address}`
-
   return (
     <span className='text-xs text-pt-purple-100 px-6'>
       {t_modals.rich('depositDisclaimer', {
-        tosLink: (chunks) => <DisclaimerLink href={LINKS.termsOfService}>{chunks}</DisclaimerLink>,
-        vaultLink: (chunks) => <DisclaimerLink href={vaultHref}>{chunks}</DisclaimerLink>
+        tosLink: (chunks) => (
+          <a href={LINKS.termsOfService} target='_blank' className='text-pt-purple-300'>
+            {chunks}
+          </a>
+        ),
+        vaultLink: (chunks) => (
+          <a
+            href={`/vault/${vault.chainId}/${vault.address}`}
+            target='_blank'
+            className='text-pt-purple-300'
+          >
+            {chunks}
+          </a>
+        )
       })}
     </span>
-  )
-}
-
-interface DisclaimerLinkProps {
-  href: string
-  children: ReactNode
-}
-
-const DisclaimerLink = (props: DisclaimerLinkProps) => {
-  const { href, children } = props
-
-  return (
-    <a href={href} target='_blank' className='text-pt-purple-300'>
-      {children}
-    </a>
   )
 }

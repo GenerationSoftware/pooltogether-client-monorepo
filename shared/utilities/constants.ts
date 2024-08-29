@@ -71,6 +71,19 @@ export const PRIZE_POOLS: {
   }
 }[] = [
   {
+    chainId: NETWORK.mainnet,
+    address: '0x7865D01da4C9BA2F69B7879e6d2483aB6B354d95',
+    options: {
+      prizeTokenAddress: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+      drawManagerAddress: '0x98305eb9a29D45eC93CE44bA02B315B631c675a7',
+      twabControllerAddress: '0x4D5f2CD31701f3e5dE77b3F89Ee7b80EB87b4Acc',
+      drawPeriodInSeconds: 2_419_200,
+      drawAuctionDurationInSeconds: 86_400,
+      tierShares: 100,
+      reserveShares: 30
+    }
+  },
+  {
     chainId: NETWORK.optimism,
     address: '0xF35fE10ffd0a9672d0095c435fd8767A7fe29B55',
     options: {
@@ -377,6 +390,7 @@ export const WRAPPED_NATIVE_ASSETS: Record<NETWORK, Lowercase<Address> | null> =
  * TWAB rewards addresses
  */
 export const TWAB_REWARDS_ADDRESSES: { [chainId: number]: Address } = {
+  [NETWORK.mainnet]: '0x2589ff8614f74704741ee3b51851b4ae812f1a21',
   [NETWORK.optimism]: '0x90D383dEA4dcE52D3e5D3C93dE75eF36da3Ea9Ea',
   [NETWORK.base]: '0x86f0923d20810441efc593eb0f2825c6bff2dc09',
   [NETWORK.arbitrum]: '0xe21ac38a7e80104c4f6512ce4908a22bc09c59be',
@@ -389,6 +403,7 @@ export const TWAB_REWARDS_ADDRESSES: { [chainId: number]: Address } = {
  * Vault factory addresses
  */
 export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
+  [NETWORK.mainnet]: '0x29c102109d6cb2d866cfec380e0e10e9a287a75f',
   [NETWORK.optimism]: '0xec9f59bD06465b105e719c0b0483A4Ed6A656775',
   [NETWORK.base]: '0xa55a74A457D8a24D68DdA0b5d1E0341746d444Bf',
   [NETWORK.arbitrum]: '0x8020Fb37b21E0eF1707aDa7A914baf44F9045E52',
@@ -401,6 +416,7 @@ export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
  * Liquidation pair factory addresses
  */
 export const LIQUIDATION_PAIR_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
+  [NETWORK.mainnet]: '0xa99b3a8503260ab32753c382eac297acd4a43908',
   [NETWORK.optimism]: '0x80F86691632d9863E6bCaa472e5c34574F77c7D1',
   [NETWORK.base]: '0x8557a9a33b573dc4403708c5a8746a52648374ea',
   [NETWORK.arbitrum]: '0x163402522fc0c0a7863479a069a8470fb22dfd3f',
@@ -413,6 +429,7 @@ export const LIQUIDATION_PAIR_FACTORY_ADDRESSES: { [chainId: number]: Address } 
  * Default claimer addresses
  */
 export const DEFAULT_CLAIMER_ADDRESSES: { [chainId: number]: Address } = {
+  [NETWORK.mainnet]: '0x98cc81798954c35c39b960dfca3d8b170154aa7e',
   [NETWORK.optimism]: '0x220C9398b0Ee07472bF8906e44574Cb9FE3B8D90',
   [NETWORK.base]: '0xcdCE635b774DE77cdF791647601dba64a75547ba',
   [NETWORK.arbitrum]: '0xBEA38368f2A657f00f173764f18F00e841317c73',
@@ -425,6 +442,7 @@ export const DEFAULT_CLAIMER_ADDRESSES: { [chainId: number]: Address } = {
  * Liquidation router addresses
  */
 export const LIQUIDATION_ROUTER_ADDRESSES: { [chainId: number]: Address } = {
+  [NETWORK.mainnet]: '0x7c210be12bcef8090610914189a0de43e2192ea0',
   [NETWORK.optimism]: '0x7766b5E6839a1a218Fc861b0810C504490876136',
   [NETWORK.base]: '0xa9c937a0d1d22ad79099aea10efa62a270dfc22c',
   [NETWORK.arbitrum]: '0x7b4a60964994422bf19ae48a90fbff806767db73',
@@ -437,6 +455,7 @@ export const LIQUIDATION_ROUTER_ADDRESSES: { [chainId: number]: Address } = {
  * Subgraph API URLs
  */
 export const SUBGRAPH_API_URLS = {
+  [NETWORK.mainnet]: 'https://api.studio.thegraph.com/query/63100/pt-v5-ethereum/version/latest',
   [NETWORK.optimism]: 'https://api.studio.thegraph.com/query/63100/pt-v5-optimism/version/latest',
   [NETWORK.base]: 'https://api.studio.thegraph.com/query/41211/pt-v5-base/version/latest',
   [NETWORK.arbitrum]: 'https://api.studio.thegraph.com/query/63100/pt-v5-arbitrum/version/latest',

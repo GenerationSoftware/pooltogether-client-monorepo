@@ -6,7 +6,7 @@ import {
   useVaultTokenAddress
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { useMiscSettings } from '@shared/generic-react-hooks'
-import { PrizePoolBadge } from '@shared/react-components'
+import { AlertIcon, PrizePoolBadge } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import { DOLPHIN_ADDRESS, getNiceNetworkNameByChainId, lower } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
@@ -20,7 +20,6 @@ import {
   depositFormShareAmountAtom,
   depositFormTokenAddressAtom
 } from '../DepositForm'
-import { LpSource } from '../LpSource'
 
 interface MainViewProps {
   vault: Vault
@@ -92,14 +91,47 @@ export const MainView = (props: MainViewProps) => {
       {!!vaultExchangeRate && (
         <>
           <DepositForm vault={vault} showInputInfoRows={true} />
-          {!!formShareAmount && (
+          {!!formShareAmount ? (
             <div className='flex flex-col gap-4 mx-auto md:flex-row md:gap-9'>
               <Odds vault={vault} prizePool={prizePool} />
               <NetworkFees vault={vault} show={feesToShow} />
             </div>
+          ) : (
+            <RisksDisclaimer vault={vault} />
           )}
         </>
       )}
+    </div>
+  )
+}
+
+interface RisksDisclaimerProps {
+  vault: Vault
+}
+
+const RisksDisclaimer = (props: RisksDisclaimerProps) => {
+  const { vault } = props
+
+  const t_common = useTranslations('Common')
+  const t_modals = useTranslations('TxModals')
+
+  const vaultHref = `/vault/${vault.chainId}/${vault.address}`
+
+  return (
+    <div className='w-full flex flex-col gap-4 p-6 text-pt-purple-100 bg-pt-transparent rounded-lg lg:items-center'>
+      <div className='flex gap-2 items-center'>
+        <AlertIcon className='w-5 h-5' />
+        <span className='text-xs font-semibold lg:text-sm'>{t_common('learnAboutRisks')}</span>
+      </div>
+      <span className='text-xs lg:text-center lg:text-sm'>
+        {t_modals.rich('risksDisclaimer', {
+          vaultLink: (chunks) => (
+            <a href={vaultHref} target='_blank' className='text-pt-purple-300'>
+              {chunks}
+            </a>
+          )
+        })}
+      </span>
     </div>
   )
 }

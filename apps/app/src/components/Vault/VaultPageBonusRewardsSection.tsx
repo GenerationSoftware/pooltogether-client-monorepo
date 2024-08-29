@@ -17,11 +17,12 @@ import { VaultPageCard } from './VaultPageCard'
 interface VaultPageBonusRewardsSectionProps {
   vault: Vault
   prizePool: PrizePool
+  maxNumDraws?: number
   className?: string
 }
 
 export const VaultPageBonusRewardsSection = (props: VaultPageBonusRewardsSectionProps) => {
-  const { vault, prizePool, className } = props
+  const { vault, prizePool, maxNumDraws, className } = props
 
   const t_common = useTranslations('Common')
   const t_vault = useTranslations('Vault')
@@ -37,7 +38,7 @@ export const VaultPageBonusRewardsSection = (props: VaultPageBonusRewardsSection
 
   const validPromotions = useMemo(() => {
     if (!!vaultPromotions && !!drawPeriod) {
-      const maxTimestamp = currentTimestamp + 7 * drawPeriod // TODO: avoid hardcoding N
+      const maxTimestamp = currentTimestamp + (maxNumDraws ?? 7) * drawPeriod
 
       return Object.values(vaultPromotions).filter(
         (p) =>
