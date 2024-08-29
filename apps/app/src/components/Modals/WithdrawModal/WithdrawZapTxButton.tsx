@@ -1,6 +1,7 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useSendGenericApproveTransaction,
+  useSendWithdrawZapTransaction,
   useToken,
   useTokenAllowance,
   useTokenBalance,
@@ -14,13 +15,12 @@ import {
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { ApprovalTooltip, TransactionButton } from '@shared/react-components'
 import { Button } from '@shared/ui'
+import { ZAP_SETTINGS } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
 import { isAddress, parseUnits, TransactionReceipt } from 'viem'
 import { useAccount } from 'wagmi'
-import { ZAP_SETTINGS } from '@constants/config'
-import { useSendWithdrawZapTransaction } from '@hooks/zaps/useSendWithdrawZapTransaction'
 import { WithdrawModalView } from '.'
 import { isValidFormInput } from '../TxFormInput'
 import { withdrawFormShareAmountAtom, withdrawFormTokenAddressAtom } from './WithdrawForm'

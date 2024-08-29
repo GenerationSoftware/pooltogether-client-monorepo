@@ -1,11 +1,6 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import {
-  useGasAmountEstimate,
-  useTokenAllowance
-} from '@generationsoftware/hyperstructure-react-hooks'
-import { calculatePercentageOfBigInt } from '@shared/utilities'
+import { calculatePercentageOfBigInt, ZAP_SETTINGS, zapRouterABI } from '@shared/utilities'
 import { useEffect } from 'react'
-import { isDolphinAddress } from 'src/zapUtils'
 import { Address, isAddress, TransactionReceipt } from 'viem'
 import {
   useAccount,
@@ -13,20 +8,20 @@ import {
   useWaitForTransactionReceipt,
   useWriteContract
 } from 'wagmi'
-import { ZAP_SETTINGS } from '@constants/config'
-import { zapRouterABI } from '@constants/zapRouterABI'
-import { useDepositZapArgs } from './useDepositZapArgs'
+import { useGasAmountEstimate, useTokenAllowance, useZapArgs } from '..'
 
 /**
- * Prepares and submits a zap transaction that includes swapping and depositing into a vault
- * @param inputToken the token the user is providing
- * @param vault the vault to deposit into
+ * Prepares and submits a zap transaction that includes withdrawing from a vault and swapping
+ * @param outputToken the token the user expects to receive
+ * @param vault the vault to withdraw from
+ * @param amount the amount of shares the user wants to withdraw
  * @param options optional callbacks
  * @returns
  */
-export const useSendDepositZapTransaction = (
-  inputToken: { address: Address; decimals: number; amount: bigint },
+export const useSendWithdrawZapTransaction = (
+  outputToken: { address: Address; decimals: number },
   vault: Vault,
+  amount: bigint,
   options?: {
     onSend?: (txHash: `0x${string}`) => void
     onSuccess?: (txReceipt: TransactionReceipt) => void
@@ -39,7 +34,7 @@ export const useSendDepositZapTransaction = (
   isError: boolean
   txHash?: Address
   txReceipt?: TransactionReceipt
-  sendDepositZapTransaction?: () => void
+  sendWithdrawZapTransaction?: () => void
   amountOut?: { expected: bigint; min: bigint }
   isFetchedZapArgs: boolean
   isFetchingZapArgs: boolean
@@ -52,7 +47,7 @@ export const useSendDepositZapTransaction = (
     vault?.chainId,
     userAddress!,
     zapTokenManager,
-    inputToken?.address
+    vault?.address
   )
 
   const {
@@ -60,13 +55,17 @@ export const useSendDepositZapTransaction = (
     amountOut,
     isFetched: isFetchedZapArgs,
     isFetching: isFetchingZapArgs
-  } = useDepositZapArgs({ inputToken, vault })
+  } = useZapArgs(
+    vault.chainId,
+    { address: vault.address, decimals: vault.decimals!, amount },
+    outputToken
+  )
 
   const enabled =
-    !!inputToken?.address &&
-    inputToken.decimals !== undefined &&
-    !!inputToken.amount &&
+    !!outputToken?.address &&
+    outputToken.decimals !== undefined &&
     !!vault &&
+    !!amount &&
     !!userAddress &&
     isAddress(userAddress) &&
     chain?.id === vault.chainId &&
@@ -74,7 +73,7 @@ export const useSendDepositZapTransaction = (
     !!zapTokenManager &&
     isFetchedAllowance &&
     allowance !== undefined &&
-    (isDolphinAddress(inputToken.address) || allowance >= inputToken.amount)
+    allowance >= amount
 
   const { data: gasEstimate } = useGasAmountEstimate(
     vault?.chainId,
@@ -83,7 +82,7 @@ export const useSendDepositZapTransaction = (
       abi: [zapRouterABI['15']],
       functionName: 'executeOrder',
       args: zapArgs!,
-      value: isDolphinAddress(inputToken?.address) ? inputToken.amount : 0n,
+      value: 0n,
       account: userAddress
     },
     { enabled: enabled && !!zapArgs }
@@ -95,7 +94,7 @@ export const useSendDepositZapTransaction = (
     abi: [zapRouterABI['15']],
     functionName: 'executeOrder',
     args: zapArgs,
-    value: isDolphinAddress(inputToken?.address) ? inputToken.amount : 0n,
+    value: 0n,
     gas: !!gasEstimate ? calculatePercentageOfBigInt(gasEstimate, 1.2) : undefined,
     query: { enabled: enabled && !!zapArgs }
   })
@@ -105,11 +104,11 @@ export const useSendDepositZapTransaction = (
     isPending: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
-    writeContract: _sendDepositZapTransaction
+    writeContract: _sendWithdrawZapTransaction
   } = useWriteContract()
 
-  const sendDepositZapTransaction = !!data
-    ? () => _sendDepositZapTransaction(data.request)
+  const sendWithdrawZapTransaction = !!data
+    ? () => _sendWithdrawZapTransaction(data.request)
     : undefined
 
   useEffect(() => {
@@ -146,7 +145,7 @@ export const useSendDepositZapTransaction = (
     isError,
     txHash,
     txReceipt,
-    sendDepositZapTransaction,
+    sendWithdrawZapTransaction,
     amountOut,
     isFetchedZapArgs,
     isFetchingZapArgs

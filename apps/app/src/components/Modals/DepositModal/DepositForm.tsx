@@ -1,6 +1,8 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
+  useBeefyVault,
   useSelectedVaults,
+  useSendDepositZapTransaction,
   useToken,
   useTokenBalance,
   useTokenPrices,
@@ -24,7 +26,8 @@ import {
   getAssetsFromShares,
   getSharesFromAssets,
   getVaultId,
-  lower
+  lower,
+  ZAP_SETTINGS
 } from '@shared/utilities'
 import classNames from 'classnames'
 import { atom, useAtom, useSetAtom } from 'jotai'
@@ -34,10 +37,8 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { getRoundedDownFormattedTokenAmount } from 'src/utils'
 import { Address, formatUnits, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
-import { ZAP_PRIORITIES, ZAP_SETTINGS } from '@constants/config'
-import { useBeefyVault } from '@hooks/zaps/useBeefyVault'
-import { useSendDepositZapTransaction } from '@hooks/zaps/useSendDepositZapTransaction'
-import { useZapTokenOptions } from '@hooks/zaps/useZapTokenOptions'
+import { ZAP_PRIORITIES } from '@constants/config'
+import { useZapTokenOptions } from '@hooks/useZapTokenOptions'
 import { isValidFormInput, TxFormInput, TxFormValues } from '../TxFormInput'
 
 export const depositFormTokenAddressAtom = atom<Address | undefined>(undefined)

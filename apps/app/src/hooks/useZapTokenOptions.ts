@@ -1,6 +1,7 @@
 import {
   useAllUserVaultBalances,
   useAllVaultSharePrices,
+  useBeefyVault,
   useCachedVaultLists,
   useSelectedVault,
   useTokenBalance,
@@ -12,12 +13,9 @@ import {
 import { TokenWithAmount, TokenWithLogo, TokenWithPrice } from '@shared/types'
 import { DOLPHIN_ADDRESS, getVaultId, lower, NETWORK } from '@shared/utilities'
 import { useMemo } from 'react'
-import { isDolphinAddress } from 'src/zapUtils'
 import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
-import { useBeefyVault } from './useBeefyVault'
 
-// TODO: should not hardcode token options (fetch from some existing tokenlist - paraswap would be ideal)
 const zapTokenOptions: { [chainId: number]: Address[] } = {
   [NETWORK.optimism]: [
     DOLPHIN_ADDRESS, // ETH
@@ -121,7 +119,7 @@ export const useZapTokenOptions = (
 
     if (!!tokens) {
       Object.values(tokens).forEach((token) => {
-        if (options?.includeNativeAsset || !isDolphinAddress(token.address)) {
+        if (options?.includeNativeAsset || lower(token.address) !== DOLPHIN_ADDRESS) {
           const amount = tokenBalances?.[token.address]?.amount ?? 0n
           const price = tokenPrices?.[lower(token.address)] ?? 0
           const value = parseFloat(formatUnits(amount, token.decimals)) * price

@@ -167,6 +167,20 @@ export * from './vaults/useVaultTwabController'
 export * from './vaults/useVaultYieldSource'
 
 /**
+ * Zap Hooks
+ */
+export * from './zaps/useBeefyVault'
+export * from './zaps/useCurveAddLiquidityOutput'
+export * from './zaps/useIsCurveLp'
+export * from './zaps/useIsVelodromeLp'
+export * from './zaps/useLpToken'
+export * from './zaps/useSendDepositZapTransaction'
+export * from './zaps/useSendWithdrawZapTransaction'
+export * from './zaps/useSwapTx'
+export * from './zaps/useZapArgs'
+export * from './zaps/useZapTokenInfo'
+
+/**
  * Utils
  */
 export * from './utils/populateCachePerId'

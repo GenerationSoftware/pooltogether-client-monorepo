@@ -2,18 +2,22 @@
  * ABIs
  */
 export * from './abis/claimer'
+export * from './abis/curveLpToken'
 export * from './abis/drawManager'
 export * from './abis/erc20-oldPermit'
 export * from './abis/erc20'
 export * from './abis/liquidationPair'
 export * from './abis/liquidationPairFactory'
 export * from './abis/liquidationRouter'
+export * from './abis/lpToken'
 export * from './abis/opGasOracle'
 export * from './abis/prizePool'
 export * from './abis/twabController'
 export * from './abis/twabRewards'
 export * from './abis/vault'
 export * from './abis/vaultFactory'
+export * from './abis/zapRouter'
+export * from './abis/zapTokenManager'
 
 /**
  * Utils
@@ -42,6 +46,7 @@ export * from './utils/validation'
 export * from './utils/vaultLists'
 export * from './utils/vaults'
 export * from './utils/web'
+export * from './utils/zaps'
 
 /**
  * Constants

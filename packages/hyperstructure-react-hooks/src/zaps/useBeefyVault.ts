@@ -1,14 +1,11 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
-import {
-  useVaultTokenAddress,
-  useVaultYieldSource
-} from '@generationsoftware/hyperstructure-react-hooks'
 import { NO_REFETCH } from '@shared/generic-react-hooks'
 import { TokenWithLogo } from '@shared/types'
 import { erc20ABI, getSimpleMulticallResults, lower } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
+import { useVaultTokenAddress, useVaultYieldSource } from '..'
 
 /**
  * Returns basic data of a vault's underlying beefy mooToken (if any)
