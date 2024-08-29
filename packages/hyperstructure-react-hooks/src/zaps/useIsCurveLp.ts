@@ -1,9 +1,8 @@
 import { NO_REFETCH } from '@shared/generic-react-hooks'
-import { getSimpleMulticallResults } from '@shared/utilities'
+import { curveLpTokenABI, getSimpleMulticallResults } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
-import { curveLpTokenABI } from '@constants/curveLpTokenABI'
 
 // TODO: enable this to be more general once `useLpToken` supports curve lps with 3+ tokens
 /**

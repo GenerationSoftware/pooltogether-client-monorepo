@@ -1,6 +1,7 @@
 import {
   useAllUserVaultBalances,
   useAllVaultSharePrices,
+  useBeefyVault,
   useCachedVaultLists,
   useSelectedVault,
   useTokenBalance,
@@ -14,7 +15,6 @@ import { DOLPHIN_ADDRESS, getVaultId, lower, NETWORK } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
-import { useBeefyVault } from './useBeefyVault'
 
 const zapTokenOptions: { [chainId: number]: Address[] } = {
   [NETWORK.optimism]: [

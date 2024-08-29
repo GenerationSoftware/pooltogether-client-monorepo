@@ -1,5 +1,6 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
+  useBeefyVault,
   useSelectedVaults,
   useToken,
   useTokenPermitSupport,
@@ -24,7 +25,6 @@ import { useMemo } from 'react'
 import { walletSupportsPermit } from 'src/utils'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
-import { useBeefyVault } from '@hooks/zaps/useBeefyVault'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
 import {

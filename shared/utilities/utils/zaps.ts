@@ -1,23 +1,45 @@
+import { TokenWithAmount, TokenWithSupply } from '@shared/types'
 import {
   calculatePercentageOfBigInt,
+  curveLpTokenABI,
   divideBigInts,
-  getAssetsFromShares,
   getSecondsSinceEpoch,
   NETWORK,
   vaultABI,
   WRAPPED_NATIVE_ASSETS
 } from '@shared/utilities'
 import { Address, encodeFunctionData } from 'viem'
-import { curveLpTokenABI } from '@constants/curveLpTokenABI'
-import { useLpToken } from '@hooks/zaps/useLpToken'
-import { useSendDepositZapTransaction } from '@hooks/zaps/useSendDepositZapTransaction'
-import { useSwapTx } from '@hooks/zaps/useSwapTx'
 
+/**
+ * Returns the expected amount out for a zap into a prize vault with an underlying LP token
+ * @param inputToken the zap's input token
+ * @param lpVaultToken the LP token being zapped into
+ * @param firstLpSwap swap data for the first token in the LP
+ * @param secondLpSwap swap data for the second token in the LP
+ * @returns
+ */
 export const getLpSwapAmountOut = (
-  inputToken: Parameters<typeof useSendDepositZapTransaction>['0'],
-  lpVaultToken: NonNullable<ReturnType<typeof useLpToken>['data']>,
-  firstLpSwap: { tx: ReturnType<typeof useSwapTx>['data']; isNecessary: boolean },
-  secondLpSwap: { tx: ReturnType<typeof useSwapTx>['data']; isNecessary: boolean }
+  inputToken: { address: Address; decimals: number; amount: bigint },
+  lpVaultToken: TokenWithSupply & {
+    token0: TokenWithSupply & TokenWithAmount
+    token1: TokenWithSupply & TokenWithAmount
+  },
+  firstLpSwap: {
+    tx?: {
+      tx: { target: Address; value: bigint; data: `0x${string}` }
+      amountOut: { expected: bigint; min: bigint }
+      allowanceProxy: Address
+    }
+    isNecessary: boolean
+  },
+  secondLpSwap: {
+    tx?: {
+      tx: { target: Address; value: bigint; data: `0x${string}` }
+      amountOut: { expected: bigint; min: bigint }
+      allowanceProxy: Address
+    }
+    isNecessary: boolean
+  }
 ) => {
   const expectedHalfOutput = inputToken.amount / 2n
   const minHalfOutput = calculatePercentageOfBigInt(inputToken.amount / 2n, 0.99)
@@ -72,6 +94,12 @@ export const getLpSwapAmountOut = (
   }
 }
 
+/**
+ * Returns basic TX data for a `deposit` call on a wrapped native asset contract
+ * @param chainId chain ID for the transaction to take place in
+ * @param amount the amount of tokens to be wrapped
+ * @returns
+ */
 export const getWrapTx = (chainId: number, amount: bigint) => {
   return {
     target: WRAPPED_NATIVE_ASSETS[chainId as NETWORK]!,
@@ -93,6 +121,12 @@ export const getWrapTx = (chainId: number, amount: bigint) => {
   }
 }
 
+/**
+ * Returns basic TX data for a `withdraw` call on a wrapped native asset contract
+ * @param chainId chain ID for the transaction to take place in
+ * @param amount the amount of tokens to be unwrapped
+ * @returns
+ */
 export const getUnwrapTx = (chainId: number, amount: bigint) => {
   return {
     target: WRAPPED_NATIVE_ASSETS[chainId as NETWORK]!,
@@ -115,6 +149,15 @@ export const getUnwrapTx = (chainId: number, amount: bigint) => {
   }
 }
 
+/**
+ * Returns basic TX data for a `addLiquidity` call on a velodrome-like LP contract
+ * @param routerAddress the velodrome-like router address
+ * @param tokenA the first token in the LP
+ * @param tokenB the second token in the LP
+ * @param to the recipient address of the resulting LP tokens
+ * @param options optional settings
+ * @returns
+ */
 export const getVelodromeAddLiquidityTx = (
   routerAddress: Address,
   tokenA: { address: Address; amount: { expected: bigint; min: bigint } },
@@ -165,6 +208,13 @@ export const getVelodromeAddLiquidityTx = (
   }
 }
 
+/**
+ * Returns basic TX data for a `add_liquidity` call on a curve LP contract
+ * @param lpTokenAddress the curve LP address
+ * @param underlyingTokenAmounts the amounts of each token to deposit into the LP
+ * @param minOutput the transaction's minimum output
+ * @returns
+ */
 export const getCurveAddLiquidityTx = (
   lpTokenAddress: Address,
   underlyingTokenAmounts: [bigint, bigint],
@@ -181,6 +231,12 @@ export const getCurveAddLiquidityTx = (
   }
 }
 
+/**
+ * Returns basic TX data for a `withdraw` call to a Beefy vault contract
+ * @param mooTokenAddress the Beefy vault contract to withdraw from
+ * @param amount the amount to withdraw
+ * @returns
+ */
 export const getBeefyWithdrawTx = (mooTokenAddress: Address, amount: bigint) => {
   return {
     target: mooTokenAddress,
@@ -201,34 +257,47 @@ export const getBeefyWithdrawTx = (mooTokenAddress: Address, amount: bigint) => 
   }
 }
 
-export const getDepositTx = (vaultAddress: Address, zapRouterAddress: Address) => {
+/**
+ * Returns basic TX data for a `deposit` call to a prize vault
+ * @param vaultAddress the prize vault address to deposit into
+ * @param reciever the address to receive the resulting shares
+ * @returns
+ */
+export const getDepositTx = (vaultAddress: Address, receiver: Address) => {
   return {
     target: vaultAddress,
     value: 0n,
     data: encodeFunctionData({
       abi: vaultABI,
       functionName: 'deposit',
-      args: [0n, zapRouterAddress]
+      args: [0n, receiver]
     })
   }
 }
 
+/**
+ * Returns basic TX data for a `redeem` call to a prize vault
+ * @param vaultAddress the prize vault address to redeem from
+ * @param owner the address holding the shares being redeemed
+ * @param amount the amount of shares to redeem
+ * @param minAssets the minimum amount of assets to receive
+ * @param options optional settings
+ * @returns
+ */
 export const getRedeemTx = (
   vaultAddress: Address,
-  zapRouterAddress: Address,
+  owner: Address,
   amount: bigint,
-  exchangeRate: bigint,
-  decimals: number
+  minAssets: bigint,
+  options?: { receiver?: Address }
 ) => {
-  const minAssets = getAssetsFromShares(amount, exchangeRate, decimals)
-
   return {
     target: vaultAddress,
     value: 0n,
     data: encodeFunctionData({
       abi: vaultABI,
       functionName: 'redeem',
-      args: [amount, zapRouterAddress, zapRouterAddress, minAssets]
+      args: [amount, options?.receiver ?? owner, owner, minAssets]
     })
   }
 }

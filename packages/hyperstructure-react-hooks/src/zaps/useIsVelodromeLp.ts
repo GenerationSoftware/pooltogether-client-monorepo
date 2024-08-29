@@ -1,9 +1,8 @@
 import { NO_REFETCH } from '@shared/generic-react-hooks'
-import { lower } from '@shared/utilities'
+import { lower, VELODROME_ADDRESSES } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
-import { VELODROME_ADDRESSES } from '@constants/config'
 
 /**
  * Returns `true` or `false` depending on whether a token is a recognized velodrome-like LP token

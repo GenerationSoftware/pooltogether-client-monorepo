@@ -3,29 +3,26 @@ import {
   calculatePercentageOfBigInt,
   DOLPHIN_ADDRESS,
   getAssetsFromShares,
-  getSharesFromAssets,
-  lower,
-  NETWORK,
-  WRAPPED_NATIVE_ASSETS
-} from '@shared/utilities'
-import { useMemo } from 'react'
-import {
   getBeefyWithdrawTx,
   getCurveAddLiquidityTx,
   getDepositTx,
   getLpSwapAmountOut,
   getRedeemTx,
+  getSharesFromAssets,
   getUnwrapTx,
   getVelodromeAddLiquidityTx,
-  getWrapTx
-} from 'src/zapUtils'
+  getWrapTx,
+  lower,
+  NETWORK,
+  VELODROME_ADDRESSES,
+  WRAPPED_NATIVE_ASSETS,
+  ZAP_SETTINGS,
+  zapRouterABI
+} from '@shared/utilities'
+import { useMemo } from 'react'
 import { Address, ContractFunctionArgs, zeroAddress } from 'viem'
 import { useAccount } from 'wagmi'
-import { VELODROME_ADDRESSES, ZAP_SETTINGS } from '@constants/config'
-import { zapRouterABI } from '@constants/zapRouterABI'
-import { useCurveAddLiquidityOutput } from './useCurveAddLiquidityOutput'
-import { useSwapTx } from './useSwapTx'
-import { useZapTokenInfo } from './useZapTokenInfo'
+import { useCurveAddLiquidityOutput, useSwapTx, useZapTokenInfo } from '..'
 
 type ZapConfig = ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>[0]
 type ZapRoute = Mutable<ContractFunctionArgs<typeof zapRouterABI, 'payable', 'executeOrder'>[1]>
@@ -432,8 +429,7 @@ export const useZapArgs = (
             inputToken.address,
             zapRouterAddress,
             inputToken.amount,
-            inputTokenInfo.exchangeRate,
-            inputToken.decimals
+            getAssetsFromShares(inputToken.amount, inputTokenInfo.exchangeRate, inputToken.decimals)
           ),
           tokens: [{ token: inputToken.address, index: -1 }]
         })

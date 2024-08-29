@@ -198,3 +198,16 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useVaultTokenPrice`
 - `useVaultTotalSupplyTwab`
 - `useVaultYieldSource`
+
+### Zap Hooks
+
+- `useBeefyVault`
+- `useCurveAddLiquidityOutput`
+- `useIsCurveLp`
+- `useIsVelodromeLp`
+- `useLpToken`
+- `useSendDepositZapTransaction`
+- `useSendWithdrawZapTransaction`
+- `useSwapTx`
+- `useZapArgs`
+- `useZapTokenInfo`

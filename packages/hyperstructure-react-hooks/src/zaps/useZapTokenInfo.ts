@@ -1,15 +1,15 @@
-import {
-  useSelectedVaults,
-  useVaultExchangeRate,
-  useVaultTokenData
-} from '@generationsoftware/hyperstructure-react-hooks'
 import { TokenWithSupply } from '@shared/types'
 import { lower, NETWORK } from '@shared/utilities'
 import { Address } from 'viem'
-import { useBeefyVault } from './useBeefyVault'
-import { useIsCurveLp } from './useIsCurveLp'
-import { useIsVelodromeLp } from './useIsVelodromeLp'
-import { useLpToken } from './useLpToken'
+import {
+  useBeefyVault,
+  useIsCurveLp,
+  useIsVelodromeLp,
+  useLpToken,
+  useSelectedVaults,
+  useVaultExchangeRate,
+  useVaultTokenData
+} from '..'
 
 export const useZapTokenInfo = (chainId: NETWORK, address: Address) => {
   const {

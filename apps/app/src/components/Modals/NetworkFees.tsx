@@ -11,14 +11,14 @@ import {
   PRIZE_POOLS,
   sToMs,
   twabControllerABI,
-  vaultABI
+  vaultABI,
+  ZAP_SETTINGS,
+  zapRouterABI
 } from '@shared/utilities'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { zeroAddress } from 'viem'
 import { useAccount } from 'wagmi'
-import { ZAP_SETTINGS } from '@constants/config'
-import { zapRouterABI } from '@constants/zapRouterABI'
 
 export interface NetworkFeesProps {
   vault: Vault

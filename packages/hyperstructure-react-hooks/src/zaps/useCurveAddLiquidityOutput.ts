@@ -1,8 +1,8 @@
 import { NO_REFETCH } from '@shared/generic-react-hooks'
+import { curveLpTokenABI } from '@shared/utilities'
 import { useQuery } from '@tanstack/react-query'
 import { Address } from 'viem'
 import { usePublicClient } from 'wagmi'
-import { curveLpTokenABI } from '@constants/curveLpTokenABI'
 
 /**
  * Returns the expected output in LP tokens of a curve `add_liquidity` call

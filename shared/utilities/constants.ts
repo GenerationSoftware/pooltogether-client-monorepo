@@ -676,6 +676,53 @@ export const TOKEN_DATA_REDIRECTS: {
 }
 
 /**
+ * Zap settings
+ */
+export const ZAP_SETTINGS: {
+  [chainId: number]: { zapRouter: Address; zapTokenManager: Address }
+} = {
+  [NETWORK.optimism]: {
+    zapRouter: '0xE82343A116d2179F197111D92f9B53611B43C01c',
+    zapTokenManager: '0x5a32F67C5eD74dc1b2e031b1bc2c3E965073424F'
+  },
+  [NETWORK.base]: {
+    zapRouter: '0x6F19Da51d488926C007B9eBaa5968291a2eC6a63',
+    zapTokenManager: '0x3fBD1da78369864c67d62c242d30983d6900c0f0'
+  },
+  [NETWORK.arbitrum]: {
+    zapRouter: '0xf49F7bB6F4F50d272A0914a671895c4384696E5A',
+    zapTokenManager: '0x3395BDAE49853Bc7Ab9377d2A93f42BC3A18680e'
+  }
+}
+
+/**
+ * Velodrome addresses
+ */
+export const VELODROME_ADDRESSES: {
+  [chainId: number]: { router: Address; lpFactories: Lowercase<Address>[] }
+} = {
+  [NETWORK.optimism]: {
+    router: '0xa062aE8A9c5e11aaA026fc2670B0D65cCc8B2858',
+    lpFactories: [
+      '0xf1046053aa5682b4f9a81b5481394da16be5ff5a',
+      '0x25cbddb98b35ab1ff77413456b31ec81a6b6b746',
+      '0x548118c7e0b865c2cfa94d15ec86b666468ac758'
+    ]
+  },
+  [NETWORK.base]: {
+    router: '0xcF77a3Ba9A5CA399B7c97c74d54e5b1Beb874E43',
+    lpFactories: [
+      '0x420dd381b31aef6683db6b902084cb0ffece40da',
+      '0x5e7bb104d84c7cb9b682aac2f3d509f5f406809a'
+    ]
+  },
+  [NETWORK.arbitrum]: {
+    router: '0xAAA87963EFeB6f7E0a2711F397663105Acb1805e',
+    lpFactories: ['0xaaa20d08e59f6561f242b08513d36266c5a29415']
+  }
+}
+
+/**
  * Domains
  */
 export const DOMAINS = {

@@ -1,5 +1,6 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
+  useSendDepositZapTransaction,
   useSendGenericApproveTransaction,
   useToken,
   useTokenAllowance,
@@ -12,14 +13,12 @@ import {
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { ApprovalTooltip, TransactionButton } from '@shared/react-components'
 import { Button } from '@shared/ui'
-import { DOLPHIN_ADDRESS, lower } from '@shared/utilities'
+import { DOLPHIN_ADDRESS, lower, ZAP_SETTINGS } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
 import { Address, isAddress, parseUnits, TransactionReceipt } from 'viem'
 import { useAccount } from 'wagmi'
-import { ZAP_SETTINGS } from '@constants/config'
-import { useSendDepositZapTransaction } from '@hooks/zaps/useSendDepositZapTransaction'
 import { DepositModalView } from '.'
 import { isValidFormInput } from '../TxFormInput'
 import { depositFormTokenAddressAtom, depositFormTokenAmountAtom } from './DepositForm'
