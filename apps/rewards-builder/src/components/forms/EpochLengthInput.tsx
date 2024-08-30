@@ -1,5 +1,5 @@
 import { Button } from '@shared/ui'
-import { SECONDS_PER_DAY, SECONDS_PER_HOUR, SECONDS_PER_WEEK } from '@shared/utilities'
+import { SECONDS_PER_DAY, SECONDS_PER_HOUR, SECONDS_PER_MONTH, SECONDS_PER_WEEK } from '@shared/utilities'
 import classNames from 'classnames'
 import { useFormContext, useWatch } from 'react-hook-form'
 
@@ -64,7 +64,7 @@ export const CustomEpochLengthInput = (props: CustomEpochLengthInputProps) => {
         })}
         type='range'
         min={!!promotionEpochLength ? SECONDS_PER_HOUR : 0}
-        max={SECONDS_PER_WEEK}
+        max={SECONDS_PER_MONTH}
         step={SECONDS_PER_HOUR}
         value={promotionEpochLength ?? 0}
       />
