@@ -25,6 +25,7 @@ export const QUERY_KEYS = {
   historicalTokenPrices: 'historicalTokenPrices',
   lastAwardedDrawId: 'lastAwardedDrawId',
   lastAwardedDrawTimestamps: 'lastAwardedDrawTimestamps',
+  lastDrawWinners: 'lastDrawWinners',
   liquidationEvents: 'liquidationEvents',
   manualContributionEvents: 'manualContributionEvents',
   prizeBackstopEvents: 'prizeBackstopEvents',

@@ -1,8 +1,12 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { DrawWithTimestamps, SubgraphDraw } from '@shared/types'
+import { DrawWithTimestamps } from '@shared/types'
 import { useMemo } from 'react'
 import { Address } from 'viem'
-import { useAllPrizeDrawWinners, useAllUserEligibleDraws, useLastCheckedPrizesTimestamps } from '..'
+import {
+  useAllLastPrizeDrawWinners,
+  useAllUserEligibleDraws,
+  useLastCheckedPrizesTimestamps
+} from '..'
 
 /**
  * Returns info on draws to check for prizes based on eligibility and last checked timestamps
@@ -16,10 +20,11 @@ export const useDrawsToCheckForPrizes = (prizePools: PrizePool[], userAddress: A
   const { data: allUserEligibleDraws, isFetched: isFetchedAllUserEligibleDraws } =
     useAllUserEligibleDraws(prizePools, userAddress)
 
-  const { data: allWinners, isFetched: isFetchedAllWinners } = useAllPrizeDrawWinners(prizePools)
+  const { data: allLastWinners, isFetched: isFetchedAllLastWinners } =
+    useAllLastPrizeDrawWinners(prizePools)
 
   const drawsToCheck = useMemo(() => {
-    if (!!allUserEligibleDraws && !!Object.keys(allWinners).length) {
+    if (!!allUserEligibleDraws && !!Object.keys(allLastWinners).length) {
       const draws: { [chainId: number]: DrawWithTimestamps[] } = {}
 
       let totalCount = 0
@@ -29,13 +34,13 @@ export const useDrawsToCheckForPrizes = (prizePools: PrizePool[], userAddress: A
       for (const chainId in allUserEligibleDraws.eligibleDraws) {
         const chainDraws: DrawWithTimestamps[] = []
 
-        const chainDrawWinners = allWinners[chainId]
+        const chainLastDrawWinners = allLastWinners[chainId]
         const eligibleDraws = allUserEligibleDraws.eligibleDraws[chainId]
         const lastCheckedPrizesTimestamp = lastCheckedPrizesTimestamps[chainId] ?? 0
 
-        if (!!chainDrawWinners) {
+        if (!!chainLastDrawWinners) {
           eligibleDraws.forEach((draw) => {
-            const drawWinners = chainDrawWinners.find((d) => d.id === draw.id)
+            const drawWinners = chainLastDrawWinners.find((d) => d.id === draw.id)
             if (!!drawWinners && !!drawWinners.prizeClaims.length) {
               const lastClaim = drawWinners.prizeClaims[drawWinners.prizeClaims.length - 1]
               if (lastClaim.timestamp > lastCheckedPrizesTimestamp) {
@@ -48,14 +53,14 @@ export const useDrawsToCheckForPrizes = (prizePools: PrizePool[], userAddress: A
         const sortedDraws = chainDraws.sort((a, b) => a.id - b.id)
 
         if (sortedDraws.length > 0) {
-          const firstDraw = chainDrawWinners.find((d) => d.id === sortedDraws[0].id) as SubgraphDraw
-          const lastDraw = chainDrawWinners.find(
+          const firstDraw = chainLastDrawWinners.find((d) => d.id === sortedDraws[0].id)!
+          const lastDraw = chainLastDrawWinners.find(
             (d) => d.id === sortedDraws[sortedDraws.length - 1].id
-          ) as SubgraphDraw
+          )!
 
           const firstClaimToCheck = firstDraw.prizeClaims.find(
             (claim) => claim.timestamp > lastCheckedPrizesTimestamp
-          ) as SubgraphDraw['prizeClaims'][0]
+          )!
           const lastClaimToCheck = lastDraw.prizeClaims[lastDraw.prizeClaims.length - 1]
 
           totalCount += sortedDraws.length
@@ -74,9 +79,9 @@ export const useDrawsToCheckForPrizes = (prizePools: PrizePool[], userAddress: A
 
       return { draws, totalCount, timestamps: { start: startTimestamp, end: endTimestamp } }
     }
-  }, [userAddress, lastCheckedPrizesTimestamps, allUserEligibleDraws, allWinners])
+  }, [userAddress, lastCheckedPrizesTimestamps, allUserEligibleDraws, allLastWinners])
 
-  const isFetched = isFetchedAllUserEligibleDraws && isFetchedAllWinners && !!drawsToCheck
+  const isFetched = isFetchedAllUserEligibleDraws && isFetchedAllLastWinners && !!drawsToCheck
 
   return { data: drawsToCheck, isFetched }
 }

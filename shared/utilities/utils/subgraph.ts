@@ -19,7 +19,8 @@ export const getSubgraphDraws = async (
     numPrizes?: number
     offsetDraws?: number
     offsetPrizes?: number
-    orderDirection?: 'asc' | 'desc'
+    drawOrderDirection?: 'asc' | 'desc'
+    prizeOrderDirection?: 'asc' | 'desc'
   }
 ): Promise<SubgraphDraw[]> => {
   if (chainId in SUBGRAPH_API_URLS) {
@@ -28,8 +29,8 @@ export const getSubgraphDraws = async (
     const headers = { 'Content-Type': 'application/json' }
 
     const body = JSON.stringify({
-      query: `query($numDraws: Int, $numPrizes: Int, $offsetDraws: Int, $offsetPrizes: Int, $orderDirection: OrderDirection, $orderBy: Draw_orderBy, $prizeOrderDirection: OrderDirection, $prizeOrderBy: PrizeClaim_orderBy) {
-        draws(first: $numDraws, skip: $offsetDraws, orderDirection: $orderDirection, orderBy: $orderBy) {
+      query: `query($numDraws: Int, $numPrizes: Int, $offsetDraws: Int, $offsetPrizes: Int, $drawOrderDirection: OrderDirection, $drawOrderBy: Draw_orderBy, $prizeOrderDirection: OrderDirection, $prizeOrderBy: PrizeClaim_orderBy) {
+        draws(first: $numDraws, skip: $offsetDraws, orderDirection: $drawOrderDirection, orderBy: $drawOrderBy) {
           drawId
           prizeClaims(first: $numPrizes, skip: $offsetPrizes, orderDirection: $prizeOrderDirection, orderBy: $prizeOrderBy) {
             id
@@ -51,9 +52,9 @@ export const getSubgraphDraws = async (
         numPrizes: options?.numPrizes ?? 1_000,
         offsetDraws: options?.offsetDraws ?? 0,
         offsetPrizes: options?.offsetPrizes ?? 0,
-        orderDirection: options?.orderDirection ?? 'desc',
-        orderBy: 'drawId',
-        prizeOrderDirection: 'asc',
+        drawOrderDirection: options?.drawOrderDirection ?? 'desc',
+        prizeOrderDirection: options?.prizeOrderDirection ?? 'asc',
+        drawOrderBy: 'drawId',
         prizeOrderBy: 'timestamp'
       }
     })
@@ -110,7 +111,7 @@ export const getSubgraphDraws = async (
  */
 export const getPaginatedSubgraphDraws = async (
   chainId: number,
-  options?: { pageSize?: number }
+  options?: { pageSize?: number; onlyLastPrizeClaim?: boolean }
 ) => {
   const draws: SubgraphDraw[] = []
   const drawIds: number[] = []
@@ -125,10 +126,11 @@ export const getPaginatedSubgraphDraws = async (
 
       const newPage = await getSubgraphDraws(chainId, {
         numDraws: pageSize,
-        numPrizes: pageSize,
+        numPrizes: options?.onlyLastPrizeClaim ? 1 : pageSize,
         offsetDraws: drawsPage * pageSize,
         offsetPrizes: prizesPage * pageSize,
-        orderDirection: 'asc'
+        drawOrderDirection: 'asc',
+        prizeOrderDirection: options?.onlyLastPrizeClaim ? 'desc' : 'asc'
       })
 
       newPage.forEach((draw) => {

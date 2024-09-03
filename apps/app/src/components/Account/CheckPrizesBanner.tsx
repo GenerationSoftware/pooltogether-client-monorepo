@@ -9,7 +9,6 @@ import { getSimpleDate } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
-import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useDrawsTotalEligiblePrizeAmount } from '@hooks/useDrawsTotalEligiblePrizeAmount'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
@@ -33,11 +32,15 @@ export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
   // TODO: this assumes every prize pool is using the same prize token - not ideal
   const { data: prizeToken } = usePrizeTokenData(prizePoolsArray[0])
 
-  const { data: drawsToCheck } = useDrawsToCheckForPrizes(prizePoolsArray, userAddress as Address)
+  const { data: drawsToCheck, isFetched: isFetchedDrawsToCheck } = useDrawsToCheckForPrizes(
+    prizePoolsArray,
+    userAddress!
+  )
 
-  const { data: totalPrizeAmount } = useDrawsTotalEligiblePrizeAmount(userAddress as Address)
+  const { data: totalPrizeAmount, isFetched: isFetchedTotalPrizeAmount } =
+    useDrawsTotalEligiblePrizeAmount(userAddress!)
 
-  if (!!drawsToCheck && !!totalPrizeAmount) {
+  if (!!drawsToCheck && isFetchedDrawsToCheck && !!totalPrizeAmount) {
     return (
       <div
         className={classNames(
@@ -54,7 +57,7 @@ export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
         </div>
         <div className='inset-0 flex flex-col gap-x-2 items-center justify-center text-sm -z-10 md:absolute md:flex-row lg:text-base'>
           <span>{t('totalPrizes.beforeValue')}</span>
-          {!!prizeToken ? (
+          {!!prizeToken && isFetchedTotalPrizeAmount ? (
             <span className='text-2xl md:text-3xl lg:text-5xl text-pt-teal'>
               <TokenValue token={{ ...prizeToken, amount: totalPrizeAmount }} hideZeroes={true} />
             </span>

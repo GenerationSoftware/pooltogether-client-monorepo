@@ -91,6 +91,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useAllFirstDrawOpenedAt`
 - `useAllGrandPrizePeriodDraws`
 - `useAllLastAwardedDrawIds`
+- `useAllLastPrizeDrawWinners`
 - `useAllPrizeDrawWinners`
 - `useAllPrizeInfo`
 - `useAllPrizeTokenData`
@@ -111,6 +112,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useLargestGrandPrize`
 - `useLastAwardedDrawId`
 - `useLastAwardedDrawTimestamps`
+- `useLastPrizeDrawWinners`
 - `usePrizeDrawWinners`
 - `usePrizeOdds`
 - `usePrizePools`
