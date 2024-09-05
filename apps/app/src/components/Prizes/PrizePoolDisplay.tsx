@@ -53,6 +53,7 @@ const PrizePoolCarousel = (props: PrizePoolCarouselProps) => {
 
   const searchParams = useSearchParams()
 
+  // TODO: should ideally highlight the largest prize pool if no network is set by searchParams
   const [prizePoolIndex, setPrizePoolIndex] = useState<number>(0)
 
   const prizePools = useSupportedPrizePools()
