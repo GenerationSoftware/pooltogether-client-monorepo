@@ -1,7 +1,7 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { useLiquidationEvents } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
-import { MAX_UINT_256, SECONDS_PER_HOUR } from '@shared/utilities'
+import { getNiceNetworkNameByChainId, MAX_UINT_256, SECONDS_PER_HOUR } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import Image from 'next/image'
@@ -66,7 +66,7 @@ export const LiquidationsTable = (props: LiquidationsTableProps) => {
   if (validLiquidationEvents.length === 0) {
     return (
       <span className='flex gap-2 items-center'>
-        No recent liquidations...{' '}
+        No recent liquidations on {getNiceNetworkNameByChainId(prizePool.chainId)}...{' '}
         <Image src='/thinkies.png' width={24} height={24} alt='thinkies' />
       </span>
     )

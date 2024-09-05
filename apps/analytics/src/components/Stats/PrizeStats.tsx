@@ -3,7 +3,7 @@ import {
   usePrizeDrawWinners,
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { formatNumberForDisplay } from '@shared/utilities'
+import { formatNumberForDisplay, getNiceNetworkNameByChainId } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import { formatUnits } from 'viem'
@@ -49,7 +49,7 @@ export const PrizeStats = (props: PrizeStatsProps) => {
 
   return (
     <div className={classNames('w-full flex flex-col items-center gap-4', className)}>
-      <CategoryHeader name='Prizes' />
+      <CategoryHeader name={`${getNiceNetworkNameByChainId(prizePool.chainId)} Prizes`} />
       <StatCards
         cards={[
           {

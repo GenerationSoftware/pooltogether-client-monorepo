@@ -1,5 +1,5 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { formatNumberForDisplay } from '@shared/utilities'
+import { formatNumberForDisplay, getNiceNetworkNameByChainId } from '@shared/utilities'
 import classNames from 'classnames'
 import { TVLByTokenChart } from '@components/Charts/TVLByToken'
 import { TVLOverTimeChart } from '@components/Charts/TVLOverTimeChart'
@@ -19,7 +19,7 @@ export const TVLStats = (props: TVLStatsProps) => {
 
   return (
     <div className={classNames('w-full flex flex-col items-center gap-4', className)}>
-      <CategoryHeader name='Deposits' />
+      <CategoryHeader name={`${getNiceNetworkNameByChainId(prizePool.chainId)} Deposits`} />
       <div className='w-full grid grid-cols-1 gap-6 px-4 py-6 bg-pt-transparent rounded-2xl md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]'>
         <TVLOverTimeChart prizePool={prizePool} />
         <TVLByTokenChart prizePool={prizePool} />

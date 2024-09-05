@@ -3,7 +3,7 @@ import {
   usePrizeDrawWinners,
   useWalletAddresses
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { lower } from '@shared/utilities'
+import { getNiceNetworkNameByChainId, lower } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import { Address } from 'viem'
@@ -39,7 +39,7 @@ export const UserStats = (props: UserStatsProps) => {
 
   return (
     <div className={classNames('w-full flex flex-col items-center gap-4', className)}>
-      <CategoryHeader name='Users' />
+      <CategoryHeader name={`${getNiceNetworkNameByChainId(prizePool.chainId)} Users`} />
       <StatCards
         cards={[
           {

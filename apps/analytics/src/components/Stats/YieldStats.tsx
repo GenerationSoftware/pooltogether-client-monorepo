@@ -1,6 +1,6 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
 import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
-import { formatNumberForDisplay } from '@shared/utilities'
+import { formatNumberForDisplay, getNiceNetworkNameByChainId } from '@shared/utilities'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import { PPCOverTimeChart } from '@components/Charts/PPCOverTimeChart'
@@ -30,7 +30,7 @@ export const YieldStats = (props: YieldStatsProps) => {
 
   return (
     <div className={classNames('w-full flex flex-col items-center gap-4', className)}>
-      <CategoryHeader name='Yield' />
+      <CategoryHeader name={`${getNiceNetworkNameByChainId(prizePool.chainId)} Yield`} />
       <div className='w-full px-4 py-6 bg-pt-transparent rounded-2xl'>
         <PPCOverTimeChart prizePool={prizePool} hideFirstDraws={3} />
       </div>
