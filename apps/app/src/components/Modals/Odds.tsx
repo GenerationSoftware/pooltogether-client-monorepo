@@ -11,6 +11,7 @@ import {
   calculateUnionProbability,
   formatNumberForDisplay,
   getVaultId,
+  SECONDS_PER_MONTH,
   SECONDS_PER_WEEK
 } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
@@ -69,13 +70,13 @@ export const Odds = (props: OddsProps) => {
 
   const { data: drawPeriod } = useDrawPeriod(prizePool)
 
-  const weeklyChance = useMemo(() => {
+  const chance = useMemo(() => {
     if (!!outputPrizeOdds && !!drawPeriod) {
       const input = !!inputPrizeOdds
-        ? t_txModals('oneInXChance', { number: calculateWeeklyChanceX(inputPrizeOdds, drawPeriod) })
+        ? t_txModals('oneInXChance', { number: calculateOneInXChance(inputPrizeOdds, drawPeriod) })
         : undefined
       const output = t_txModals('oneInXChance', {
-        number: calculateWeeklyChanceX(outputPrizeOdds, drawPeriod)
+        number: calculateOneInXChance(outputPrizeOdds, drawPeriod)
       })
       return { input, output }
     }
@@ -84,28 +85,30 @@ export const Odds = (props: OddsProps) => {
   return (
     <div className='flex flex-col items-center font-semibold'>
       <span className='mb-2 text-xs text-pt-purple-100 md:text-sm'>
-        {t_txModals('weeklyChances')}
+        {!!drawPeriod && drawPeriod > SECONDS_PER_WEEK
+          ? t_txModals('monthlyChances')
+          : t_txModals('weeklyChances')}
       </span>
-      {!!weeklyChance ? (
+      {!!chance ? (
         <>
-          {!!weeklyChance.input ? (
+          {!!chance.input ? (
             <>
               <div className='flex gap-2 items-center'>
                 <span className='text-xs text-pt-purple-100'>{t_common('before')}</span>
                 <span className='text-pt-purple-50 md:text-xl'>
-                  {formTokenAmount !== '0' ? weeklyChance.input : '-'}
+                  {formTokenAmount !== '0' ? chance.input : '-'}
                 </span>
               </div>
               <div className='flex gap-2 items-center'>
                 <span className='text-xs text-pt-purple-100'>{t_common('after')}</span>
                 <span className='text-pt-purple-50 md:text-xl'>
-                  {formTokenAmount !== '0' ? weeklyChance.output : '-'}
+                  {formTokenAmount !== '0' ? chance.output : '-'}
                 </span>
               </div>
             </>
           ) : (
             <span className='text-pt-purple-50 md:text-xl'>
-              {formTokenAmount !== '0' ? weeklyChance.output : '-'}
+              {formTokenAmount !== '0' ? chance.output : '-'}
             </span>
           )}
         </>
@@ -116,12 +119,13 @@ export const Odds = (props: OddsProps) => {
   )
 }
 
-const calculateWeeklyChanceX = (
+const calculateOneInXChance = (
   odds: NonNullable<ReturnType<typeof usePrizeOdds>['data']>,
   drawPeriod: number
 ) => {
-  const drawsPerWeek = SECONDS_PER_WEEK / drawPeriod
-  const events = Array<number>(drawsPerWeek).fill(odds.percent)
+  const timeframe = drawPeriod > SECONDS_PER_WEEK ? SECONDS_PER_MONTH : SECONDS_PER_WEEK
+  const numEvents = Math.floor(timeframe / drawPeriod)
+  const events = Array<number>(numEvents).fill(odds.percent)
   const value = 1 / calculateUnionProbability(events)
   return formatNumberForDisplay(value, { maximumSignificantDigits: 3 })
 }

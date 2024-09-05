@@ -3,7 +3,7 @@ import {
   useAllUserPrizeOdds
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
-import { formatNumberForDisplay } from '@shared/utilities'
+import { formatNumberForDisplay, SECONDS_PER_MONTH } from '@shared/utilities'
 import { calculateUnionProbability, SECONDS_PER_WEEK } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -44,11 +44,18 @@ export const AccountOdds = (props: AccountOddsProps) => {
     for (const prizePoolId in userPrizeOdds) {
       const odds = userPrizeOdds[prizePoolId]
       const drawPeriod = drawPeriods[prizePoolId]
+
       if (!!odds && !!drawPeriod) {
-        const drawsPerWeek = SECONDS_PER_WEEK / drawPeriod
-        const draws = Array<number>(drawsPerWeek).fill(odds)
+        const timeframe = drawPeriod > SECONDS_PER_WEEK ? SECONDS_PER_MONTH : SECONDS_PER_WEEK
+        const numEvents = Math.floor(timeframe / drawPeriod)
+        const draws = Array<number>(numEvents).fill(odds)
         const prizePoolChance = calculateUnionProbability(draws)
-        events.push(prizePoolChance)
+
+        if (drawPeriod > SECONDS_PER_WEEK) {
+          events.push(prizePoolChance * (SECONDS_PER_WEEK / SECONDS_PER_MONTH))
+        } else {
+          events.push(prizePoolChance)
+        }
       }
     }
 

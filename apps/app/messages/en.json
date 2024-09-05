@@ -219,6 +219,7 @@
     },
     "dailyChances": "Daily Chance of Winning",
     "weeklyChances": "Weekly Chance of Winning",
+    "monthlyChances": "Monthly Chance of Winning",
     "oneInXChance": "1 in {number}",
     "max": "Max",
     "balance": "Balance:",
