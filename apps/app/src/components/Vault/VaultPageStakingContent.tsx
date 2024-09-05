@@ -105,11 +105,14 @@ export const VaultPagePoolStakingContent = (props: VaultPagePoolStakingContentPr
               highlight: (chunks) => <span className='text-pt-purple-300'>{chunks}</span>
             })}
           </span>
-          <span>
-            {t_vault.rich('poolStaking.reserveDescription', {
-              highlight: (chunks) => <span className='text-pt-teal-light'>{chunks}</span>
-            })}
-          </span>
+          {!!prizeToken && (
+            <span>
+              {t_vault.rich('poolStaking.reserveDescription', {
+                token: prizeToken.symbol,
+                highlight: (chunks) => <span className='text-pt-teal-light'>{chunks}</span>
+              })}
+            </span>
+          )}
         </div>
         <div className='w-full flex grow items-center justify-center'>
           {!!prizeToken && !!vaultContributions ? (

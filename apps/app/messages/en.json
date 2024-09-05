@@ -138,7 +138,7 @@
     "poolStaking": {
       "reserveRate": "POOL Reserve Rate",
       "wherePrizesComeFrom": "Where <highlight>Prize POOL</highlight> prizes come from",
-      "reserveDescription": "The <highlight>POOL reserve</highlight> goes to this vault and is distributed as prizes!",
+      "reserveDescription": "The {token} in the <highlight>POOL reserve</highlight> goes to this vault and is distributed as prizes!",
       "percentageOfYield": "{number}% of yield",
       "nDayNetworkYield": "{number}D Network Yield",
       "nDayPoolReserve": "{number}D POOL Reserve",
