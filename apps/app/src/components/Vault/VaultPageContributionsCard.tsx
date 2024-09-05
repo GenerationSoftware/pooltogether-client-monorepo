@@ -28,7 +28,7 @@ export const VaultPageContributionsCard = (props: VaultPageContributionsCardProp
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
-  const [numDays, setNumDays] = useState<number | undefined>(7)
+  const [numDraws, setNumDraws] = useState<number | undefined>(7)
 
   return (
     <Card className='gap-4' wrapperClassName={classNames('w-full', className)}>
@@ -38,37 +38,36 @@ export const VaultPageContributionsCard = (props: VaultPageContributionsCardProp
           <VaultContributionsTooltip tokenSymbol={prizeToken?.symbol ?? '?'} intl={t_tooltips} />
         </span>
         <div className='flex items-center gap-2'>
-          <NumDaysOptionButton onClick={setNumDays} numDays={numDays} option={7} />
-          <NumDaysOptionButton onClick={setNumDays} numDays={numDays} option={30} />
-          <NumDaysOptionButton onClick={setNumDays} numDays={numDays} />
+          <NumDrawsOptionButton onClick={setNumDraws} numDraws={numDraws} option={7} />
+          <NumDrawsOptionButton onClick={setNumDraws} numDraws={numDraws} option={30} />
+          <NumDrawsOptionButton onClick={setNumDraws} numDraws={numDraws} />
         </div>
       </div>
-      <ContributionsChart vault={vault} prizePool={prizePool} numDays={numDays} />
+      <ContributionsChart vault={vault} prizePool={prizePool} numDraws={numDraws} />
     </Card>
   )
 }
 
-interface NumDaysOptionButtonProps {
+interface NumDrawsOptionButtonProps {
   onClick: (val?: number) => void
-  numDays: number | undefined
+  numDraws: number | undefined
   option?: number
 }
 
-const NumDaysOptionButton = (props: NumDaysOptionButtonProps) => {
-  const { onClick, numDays, option } = props
+const NumDrawsOptionButton = (props: NumDrawsOptionButtonProps) => {
+  const { onClick, numDraws, option } = props
 
   const t_common = useTranslations('Common')
-  const t_abbr = useTranslations('Abbreviations')
 
   return (
     <button
       onClick={() => onClick(option)}
       className={classNames('p-2 text-lg rounded-lg border hover:bg-pt-transparent md:text-xl', {
-        'text-pt-purple-50 bg-pt-transparent border-pt-transparent': numDays === option,
-        'border-transparent': numDays !== option
+        'text-pt-purple-50 bg-pt-transparent border-pt-transparent': numDraws === option,
+        'border-transparent': numDraws !== option
       })}
     >
-      {!!option ? `${option} ${t_abbr('days')}` : t_common('allTime')}
+      {!!option ? `${option} ${t_common('draws').toLowerCase()}` : t_common('allTime')}
     </button>
   )
 }
@@ -76,12 +75,12 @@ const NumDaysOptionButton = (props: NumDaysOptionButtonProps) => {
 interface ContributionsChartProps {
   vault: Vault
   prizePool: PrizePool
-  numDays?: number
+  numDraws?: number
   className?: string
 }
 
 const ContributionsChart = (props: ContributionsChartProps) => {
-  const { vault, prizePool, numDays, className } = props
+  const { vault, prizePool, numDraws, className } = props
 
   const t_vault = useTranslations('Vault')
 
@@ -94,7 +93,6 @@ const ContributionsChart = (props: ContributionsChartProps) => {
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
-  // TODO: if draw lasts longer than 1 day, split data into opentimestamp day, opentimestamp day + 1, etc.
   const chartData = useMemo(() => {
     if (
       !!contributions &&
@@ -119,9 +117,9 @@ const ContributionsChart = (props: ContributionsChartProps) => {
         data.push({ name, amount })
       })
 
-      return !!numDays ? data.slice(Math.max(0, data.length - numDays)) : data
+      return !!numDraws ? data.slice(Math.max(0, data.length - numDraws)) : data
     }
-  }, [contributions, firstDrawOpenTimestamp, drawPeriod, prizeToken, numDays])
+  }, [contributions, firstDrawOpenTimestamp, drawPeriod, prizeToken, numDraws])
 
   return (
     <div

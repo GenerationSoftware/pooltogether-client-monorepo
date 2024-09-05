@@ -38,7 +38,8 @@
     "distribution": "Distribution",
     "nextClaim": "Next Claim",
     "date": "Date",
-    "allTime": "All Time"
+    "allTime": "All Time",
+    "draws": "Draws"
   },
   "Navigation": {
     "home": "Home",
