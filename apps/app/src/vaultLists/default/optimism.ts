@@ -37,7 +37,7 @@ export const optimismVaults: VaultList['tokens'] = [
       yieldSource: {
         name: 'Aave',
         appURI:
-          'https://app.aave.com/reserve-overview/?underlyingAsset=0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85&marketName=proto_optimism_v3'
+          'https://app.aave.com/reserve-overview/?underlyingAsset=0x0b2c639c533813f4aa9d7837caf62653d097ff85&marketName=proto_optimism_v3'
       }
     }
   },
