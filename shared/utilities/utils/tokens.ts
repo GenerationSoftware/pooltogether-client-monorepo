@@ -12,7 +12,13 @@ import {
 } from 'viem'
 import { erc20ABI } from '../abis/erc20'
 import { erc20OldPermitABI } from '../abis/erc20-oldPermit'
-import { DOLPHIN_ADDRESS, NATIVE_ASSETS, NETWORK, TOKEN_DATA_REDIRECTS } from '../constants'
+import {
+  DOLPHIN_ADDRESS,
+  NATIVE_ASSETS,
+  NETWORK,
+  POOL_TOKEN_ADDRESSES,
+  TOKEN_DATA_REDIRECTS
+} from '../constants'
 import { lower } from './addresses'
 import { getMulticallResults } from './multicall'
 
@@ -272,7 +278,10 @@ export const getTokenPermitSupport = async (
   options?: { domain?: TypedDataDomain }
 ): Promise<'eip2612' | 'daiPermit' | 'none'> => {
   if (lower(tokenAddress) === DOLPHIN_ADDRESS) return 'none'
-  
+
+  // TODO: figure out why signatures aren't working for POOL on mainnet
+  if (lower(tokenAddress) === lower(POOL_TOKEN_ADDRESSES[NETWORK.mainnet])) return 'none'
+
   if (!!options?.domain?.chainId && !!options?.domain?.name && !!options?.domain?.version) {
     try {
       const domainSeparator = await publicClient.readContract({
