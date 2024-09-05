@@ -319,6 +319,9 @@
   },
   "Frequency": {
     "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
     "everyXdays": "Every {number} days",
     "everyXweeks": "Every {number} weeks",
     "everyXmonths": "Every {number} months",

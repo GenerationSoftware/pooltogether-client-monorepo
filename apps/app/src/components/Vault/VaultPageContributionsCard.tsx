@@ -94,6 +94,7 @@ const ContributionsChart = (props: ContributionsChartProps) => {
 
   const { data: prizeToken } = usePrizeTokenData(prizePool)
 
+  // TODO: if draw lasts longer than 1 day, split data into opentimestamp day, opentimestamp day + 1, etc.
   const chartData = useMemo(() => {
     if (
       !!contributions &&

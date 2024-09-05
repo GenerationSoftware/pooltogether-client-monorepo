@@ -4,6 +4,8 @@ import {
   SECONDS_PER_DAY,
   SECONDS_PER_HOUR,
   SECONDS_PER_MINUTE,
+  SECONDS_PER_MONTH,
+  SECONDS_PER_WEEK,
   SECONDS_PER_YEAR
 } from '../constants'
 import { formatNumberForDisplay } from './formatting'
@@ -206,15 +208,13 @@ export const getSecondsSinceEpoch = () => Number((Date.now() / 1_000).toFixed(0)
 /**
  * Converts a daily event count into a frequency (every X days/weeks/months/years) with the most relevant unit of time
  * @param dailyCount Number count of times an event takes place in any given day
-
- * 0 means the event never takes place
- * 
- * 1 means it happens once a day
- * 
- * 2 means it happens twice a day, etc.
+ * @param options optional settings
  * @returns
  */
-export const formatDailyCountToFrequency = (dailyCount: number) => {
+export const formatDailyCountToFrequency = (
+  dailyCount: number,
+  options?: { minTimespan?: number }
+) => {
   const result: { frequency: number; unit: TimeUnit } = {
     frequency: 0,
     unit: TimeUnit.day
@@ -226,12 +226,12 @@ export const formatDailyCountToFrequency = (dailyCount: number) => {
     const months = days / (365 / 12)
     const years = days / 365
 
-    if (weeks < 1.5) {
+    if (weeks < 1.5 && (!options?.minTimespan || options.minTimespan <= SECONDS_PER_DAY)) {
       result.frequency = days
-    } else if (months < 1.5) {
+    } else if (months < 1.5 && (!options?.minTimespan || options.minTimespan <= SECONDS_PER_WEEK)) {
       result.frequency = weeks
       result.unit = TimeUnit.week
-    } else if (years < 1.5) {
+    } else if (years < 1.5 && (!options?.minTimespan || options.minTimespan <= SECONDS_PER_MONTH)) {
       result.frequency = months
       result.unit = TimeUnit.month
     } else {
@@ -255,6 +255,9 @@ export const getPrizeTextFromFrequency = (
   format: 'everyXdays' | 'daily',
   intl?: Intl<
     | 'daily'
+    | 'weekly'
+    | 'monthly'
+    | 'yearly'
     | 'everyXdays'
     | 'everyXweeks'
     | 'everyXmonths'
@@ -269,12 +272,14 @@ export const getPrizeTextFromFrequency = (
   if (format === 'everyXdays' || format === undefined) {
     if (data.frequency !== 0) {
       const x = Math.round(data.frequency)
+
+      const prizesPerTimespan = Math.round(1 / data.frequency)
+      const formattedMultiplier = `${formatNumberForDisplay(prizesPerTimespan)}x`
+
       if (data.unit === TimeUnit.day) {
         if (data.frequency < 1.5) {
-          const prizesDaily = Math.round(1 / data.frequency)
-          if (prizesDaily > 1) {
-            const formattedMultiplier = `${formatNumberForDisplay(prizesDaily)}x`
-            return `${formattedMultiplier} ${intl?.('daily')}` ?? `${formattedMultiplier} Daily`
+          if (prizesPerTimespan > 1) {
+            return `${formattedMultiplier} ${intl?.('daily') ?? 'Daily'}`
           } else {
             return intl?.('daily') ?? `Daily`
           }
@@ -282,11 +287,35 @@ export const getPrizeTextFromFrequency = (
           return intl?.('everyXdays', { number: x }) ?? `Every ${x} days`
         }
       } else if (data.unit === TimeUnit.week) {
-        return intl?.('everyXweeks', { number: x }) ?? `Every ${x} weeks`
+        if (data.frequency < 1.5) {
+          if (prizesPerTimespan > 1) {
+            return `${formattedMultiplier} ${intl?.('weekly') ?? 'Weekly'}`
+          } else {
+            return intl?.('weekly') ?? `Weekly`
+          }
+        } else {
+          return intl?.('everyXweeks', { number: x }) ?? `Every ${x} weeks`
+        }
       } else if (data.unit === TimeUnit.month) {
-        return intl?.('everyXmonths', { number: x }) ?? `Every ${x} months`
+        if (data.frequency < 1.5) {
+          if (prizesPerTimespan > 1) {
+            return `${formattedMultiplier} ${intl?.('monthly') ?? 'Monthly'}`
+          } else {
+            return intl?.('monthly') ?? `Monthly`
+          }
+        } else {
+          return intl?.('everyXmonths', { number: x }) ?? `Every ${x} months`
+        }
       } else {
-        return intl?.('everyXyears', { number: x }) ?? `Every ${x} years`
+        if (data.frequency < 1.5) {
+          if (prizesPerTimespan > 1) {
+            return `${formattedMultiplier} ${intl?.('yearly') ?? 'Yearly'}`
+          } else {
+            return intl?.('yearly') ?? `Yearly`
+          }
+        } else {
+          return intl?.('everyXyears', { number: x }) ?? `Every ${x} years`
+        }
       }
     }
   }

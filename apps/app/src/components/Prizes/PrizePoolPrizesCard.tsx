@@ -1,5 +1,9 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
-import { useAllPrizeInfo, usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useAllPrizeInfo,
+  useDrawPeriod,
+  usePrizeTokenData
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { NetworkBadge, TokenAmount, TokenValue } from '@shared/react-components'
 import { Card, Spinner } from '@shared/ui'
 import { formatDailyCountToFrequency, getPrizeTextFromFrequency } from '@shared/utilities'
@@ -32,6 +36,7 @@ export const PrizePoolPrizesCard = (props: PrizePoolPrizesCardProps) => {
 
   const { data: allPrizeInfo, isFetched: isFetchedAllPrizeInfo } = useAllPrizeInfo([prizePool])
   const { data: tokenData, isFetched: isFetchedTokenData } = usePrizeTokenData(prizePool)
+  const { data: drawPeriod } = useDrawPeriod(prizePool)
 
   return (
     <Card
@@ -55,12 +60,14 @@ export const PrizePoolPrizesCard = (props: PrizePoolPrizesCardProps) => {
         <span className='flex-grow pl-8 text-left md:pl-16'>{t_prizes('prize')}</span>
         <span className='flex-grow pr-8 text-right md:pr-16'>{t_prizes('frequency')}</span>
       </div>
-      {isFetchedAllPrizeInfo && isFetchedTokenData && !!tokenData ? (
+      {isFetchedAllPrizeInfo && isFetchedTokenData && !!tokenData && !!drawPeriod ? (
         <div className='w-full flex flex-col gap-3'>
           {Object.values(allPrizeInfo)[0]
             .slice(0, -2)
             .map((prize, i) => {
-              const frequency = formatDailyCountToFrequency(prize.dailyFrequency)
+              const frequency = formatDailyCountToFrequency(prize.dailyFrequency, {
+                minTimespan: drawPeriod
+              })
 
               return (
                 <div
