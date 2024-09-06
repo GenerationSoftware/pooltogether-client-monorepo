@@ -34,7 +34,9 @@ const tokenLogoUrls = {
   reth: 'https://assets.coingecko.com/coins/images/20764/standard/reth.png',
   snx: 'https://assets.coingecko.com/coins/images/3406/standard/SNX.png',
   crv: 'https://assets.coingecko.com/coins/images/12124/standard/Curve.png',
-  based: 'https://basescan.org/token/images/basedtoken_32.png'
+  based: 'https://basescan.org/token/images/basedtoken_32.png',
+  uni: 'https://assets.coingecko.com/coins/images/12504/standard/uniswap-logo.png',
+  ldo: 'https://assets.coingecko.com/coins/images/13573/standard/Lido_DAO.png'
 } as const
 
 /**
@@ -55,7 +57,10 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0xb1f1ee126e9c96231cc3d3fad7c08b4cf873b1f1': tokenLogoUrls.bifi,
     '0xae78736cd615f374d3085123a210448e74fc6393': tokenLogoUrls.reth,
     '0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f': tokenLogoUrls.snx,
-    '0xd533a949740bb3306d119cc777fa900ba034cd52': tokenLogoUrls.crv
+    '0xd533a949740bb3306d119cc777fa900ba034cd52': tokenLogoUrls.crv,
+    '0xdac17f958d2ee523a2206206994597c13d831ec7': tokenLogoUrls.usdt,
+    '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984': tokenLogoUrls.uni,
+    '0x5a98fcbea516cf06857215779fd812ca3bef1b32': tokenLogoUrls.ldo
   },
   [NETWORK.sepolia]: {
     [DOLPHIN_ADDRESS]: tokenLogoUrls.eth
