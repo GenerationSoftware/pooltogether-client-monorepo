@@ -403,7 +403,7 @@ export const TWAB_REWARDS_ADDRESSES: { [chainId: number]: Address } = {
  * Vault factory addresses
  */
 export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
-  [NETWORK.mainnet]: '0x29c102109d6cb2d866cfec380e0e10e9a287a75f',
+  [NETWORK.mainnet]: '0xd499ccf3e93f4cfb335ac388e3c896d59cdde7c3',
   [NETWORK.optimism]: '0xec9f59bD06465b105e719c0b0483A4Ed6A656775',
   [NETWORK.base]: '0xa55a74A457D8a24D68DdA0b5d1E0341746d444Bf',
   [NETWORK.arbitrum]: '0x8020Fb37b21E0eF1707aDa7A914baf44F9045E52',
@@ -429,7 +429,7 @@ export const LIQUIDATION_PAIR_FACTORY_ADDRESSES: { [chainId: number]: Address } 
  * Default claimer addresses
  */
 export const DEFAULT_CLAIMER_ADDRESSES: { [chainId: number]: Address } = {
-  [NETWORK.mainnet]: '0x98cc81798954c35c39b960dfca3d8b170154aa7e',
+  [NETWORK.mainnet]: '0x54aa02cbc223Fc834949FB1fd8C855e4dA126c7D',
   [NETWORK.optimism]: '0x220C9398b0Ee07472bF8906e44574Cb9FE3B8D90',
   [NETWORK.base]: '0xcdCE635b774DE77cdF791647601dba64a75547ba',
   [NETWORK.arbitrum]: '0xBEA38368f2A657f00f173764f18F00e841317c73',
