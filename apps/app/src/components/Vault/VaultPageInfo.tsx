@@ -1,4 +1,4 @@
-import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   usePrizeTokenData,
   useSelectedVaultLists,
@@ -73,8 +73,8 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
   const { data: shareData, isFetched: isFetchedShareData } = useVaultShareData(vault)
   const { data: tokenData, isFetched: isFetchedTokenData } = useVaultTokenData(vault)
 
-  const { data: shareBalance } = useUserVaultShareBalance(vault, userAddress as Address)
-  const { data: delegationBalance } = useUserVaultDelegationBalance(vault, userAddress as Address)
+  const { data: shareBalance } = useUserVaultShareBalance(vault, userAddress!)
+  const { data: delegationBalance } = useUserVaultDelegationBalance(vault, userAddress!)
 
   const { data: vaultOwner, isFetched: isFetchedVaultOwner } = useVaultOwner(vault)
 
@@ -86,16 +86,11 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
   const prizePool =
     !!vault && Object.values(prizePools).find((prizePool) => prizePool.chainId === vault.chainId)
 
-  const { data: prizeToken } = usePrizeTokenData(prizePool as PrizePool)
+  const { data: prizeToken } = usePrizeTokenData(prizePool!)
 
   const tokenAddresses = !!vault ? TWAB_REWARDS_SETTINGS[vault.chainId].tokenAddresses : []
   const fromBlock = !!vault ? TWAB_REWARDS_SETTINGS[vault.chainId].fromBlock : undefined
-  const { data: vaultPromotionsApr } = useVaultPromotionsApr(
-    vault,
-    prizePool as PrizePool,
-    tokenAddresses,
-    { fromBlock }
-  )
+  const { data: vaultPromotionsApr } = useVaultPromotionsApr(vault, tokenAddresses, { fromBlock })
 
   const vaultListEntries = useMemo(() => {
     const entries: VaultInfo[] = []

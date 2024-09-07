@@ -1,39 +1,30 @@
-import { PrizePool, Vaults } from '@generationsoftware/hyperstructure-client-js'
+import { Vaults } from '@generationsoftware/hyperstructure-client-js'
 import { TokenWithPrice } from '@shared/types'
-import { getSecondsSinceEpoch, SECONDS_PER_YEAR } from '@shared/utilities'
+import { getSecondsSinceEpoch, lower, SECONDS_PER_YEAR } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
-import {
-  useAllVaultPromotions,
-  useAllVaultSharePrices,
-  useDrawPeriod,
-  useTokenPrices,
-  useTokens
-} from '..'
+import { useAllVaultPromotions, useAllVaultSharePrices, useTokenPrices, useTokens } from '..'
 
 /**
  * Returns each vault's bonus rewards APR
- *
- * NOTE: `numDraws` looks ahead towards the future
+ * @param chainId the chain ID to query promotion info on
  * @param vaults instance of the `Vaults` class
- * @param prizePool instance of the `PrizePool` class
  * @param tokenAddresses reward token addresses to consider
  * @param options optional settings
  * @returns
  */
 export const useAllVaultPromotionsApr = (
+  chainId: number,
   vaults: Vaults,
-  prizePool: PrizePool,
   tokenAddresses: Address[],
   options?: {
-    numDraws?: number
     fromBlock?: bigint
     twabRewardsAddress?: Address
   }
 ) => {
-  const promotionOptions = !!prizePool
+  const promotionOptions = !!chainId
     ? {
-        [prizePool.chainId]: {
+        [chainId]: {
           tokenAddresses,
           fromBlock: options?.fromBlock,
           twabRewardsAddress: options?.twabRewardsAddress
@@ -46,8 +37,6 @@ export const useAllVaultPromotionsApr = (
     refetch: refetchAllVaultPromotions
   } = useAllVaultPromotions(vaults, promotionOptions)
 
-  const { data: drawPeriod, isFetched: isFetchedDrawPeriod } = useDrawPeriod(prizePool)
-
   const {
     data: allShareTokens,
     isFetched: isFetchedAllShareTokens,
@@ -55,11 +44,11 @@ export const useAllVaultPromotionsApr = (
   } = useAllVaultSharePrices(vaults)
 
   const { data: rewardTokenPrices, isFetched: isFetchedRewardTokenPrices } = useTokenPrices(
-    prizePool?.chainId,
+    chainId,
     tokenAddresses
   )
   const { data: rewardTokenData, isFetched: isFetchedRewardTokenData } = useTokens(
-    prizePool?.chainId,
+    chainId,
     tokenAddresses
   )
 
@@ -67,86 +56,83 @@ export const useAllVaultPromotionsApr = (
     const vaultPromotionAprs: { [vaultId: string]: number } = {}
 
     if (
-      !!prizePool &&
-      !!allVaultPromotions?.[prizePool.chainId] &&
-      !!drawPeriod &&
+      !!chainId &&
+      !!allVaultPromotions?.[chainId] &&
       !!allShareTokens &&
       !!rewardTokenPrices &&
       !!rewardTokenData
     ) {
-      const yearlyDraws = SECONDS_PER_YEAR / drawPeriod
-      const numDraws = options?.numDraws ?? 7
       const currentTimestamp = getSecondsSinceEpoch()
-      const maxTimestamp = currentTimestamp + numDraws * drawPeriod
 
       Object.values(vaults.vaults)
-        .filter((vault) => vault.chainId === prizePool.chainId)
+        .filter((vault) => vault.chainId === chainId)
         .forEach((vault) => {
           const shareToken = allShareTokens[vault.id]
-          let futureRewards = 0
 
           if (shareToken?.totalSupply === 0n || shareToken?.price === 0) {
             vaultPromotionAprs[vault.id] = 0
           } else if (!!shareToken?.price) {
+            const tvl =
+              parseFloat(formatUnits(shareToken.totalSupply, shareToken.decimals)) *
+              shareToken.price
+
             tokenAddresses.forEach((address) => {
               const rewardToken: TokenWithPrice = {
                 ...rewardTokenData[address],
-                price: rewardTokenPrices[address.toLowerCase() as Address]
+                price: rewardTokenPrices[lower(address)]
               }
 
               if (!!rewardToken.price && rewardToken.decimals !== undefined) {
                 const promotions = Object.values(allVaultPromotions[vault.chainId]).filter(
                   (promotion) =>
-                    promotion.token.toLowerCase() === rewardToken.address.toLowerCase() &&
-                    promotion.vault.toLowerCase() === vault.address.toLowerCase()
+                    lower(promotion.token) === lower(rewardToken.address) &&
+                    lower(promotion.vault) === lower(vault.address)
                 )
 
                 promotions.forEach((promotion) => {
                   const startsAt = Number(promotion.startTimestamp)
                   const numberOfEpochs = promotion.numberOfEpochs ?? 0
-                  const epochDuration = promotion.epochDuration
-                  const endsAt = startsAt + numberOfEpochs * epochDuration
-                  const tokensPerEpoch = promotion.tokensPerEpoch
+                  const endsAt = startsAt + numberOfEpochs * promotion.epochDuration
 
                   if (
                     !!startsAt &&
-                    startsAt < maxTimestamp &&
-                    endsAt > currentTimestamp &&
-                    startsAt !== endsAt
+                    !!numberOfEpochs &&
+                    !!endsAt &&
+                    startsAt < currentTimestamp &&
+                    endsAt > currentTimestamp
                   ) {
-                    let numValidEpochs = 0
-
                     for (let i = 0; i < numberOfEpochs; i++) {
-                      const epochEndsAt = startsAt + epochDuration * (i + 1)
-                      if (epochEndsAt > currentTimestamp && epochEndsAt < maxTimestamp) {
-                        numValidEpochs++
+                      const epochStartsAt = startsAt + promotion.epochDuration * i
+                      const epochEndsAt = epochStartsAt + promotion.epochDuration
+
+                      if (epochStartsAt < currentTimestamp && epochEndsAt > currentTimestamp) {
+                        const tokenRewards = parseFloat(
+                          formatUnits(promotion.tokensPerEpoch, rewardToken.decimals)
+                        )
+                        const tokenRewardsValue = tokenRewards * (rewardToken.price ?? 0)
+                        const yearlyRewardsValue =
+                          tokenRewardsValue * (SECONDS_PER_YEAR / promotion.epochDuration)
+
+                        if (vaultPromotionAprs[vault.id] === undefined) {
+                          vaultPromotionAprs[vault.id] = 0
+                        }
+
+                        vaultPromotionAprs[vault.id] += (yearlyRewardsValue / tvl) * 100
                       }
                     }
-
-                    const tokenRewards =
-                      parseFloat(formatUnits(tokensPerEpoch, rewardToken.decimals)) * numValidEpochs
-                    futureRewards += tokenRewards * (rewardToken.price ?? 0)
                   }
                 })
               }
             })
-
-            const yearlyRewards = futureRewards * (yearlyDraws / numDraws)
-            const tvl =
-              parseFloat(formatUnits(shareToken.totalSupply, shareToken.decimals)) *
-              shareToken.price
-
-            vaultPromotionAprs[vault.id] = (yearlyRewards / tvl) * 100
           }
         })
     }
 
     return vaultPromotionAprs
-  }, [allVaultPromotions, drawPeriod, allShareTokens, rewardTokenPrices, rewardTokenData])
+  }, [allVaultPromotions, allShareTokens, rewardTokenPrices, rewardTokenData])
 
   const isFetched =
     isFetchedAllVaultPromotions &&
-    isFetchedDrawPeriod &&
     isFetchedAllShareTokens &&
     isFetchedRewardTokenPrices &&
     isFetchedRewardTokenData

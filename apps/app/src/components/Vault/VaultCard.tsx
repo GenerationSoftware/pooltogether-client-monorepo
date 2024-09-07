@@ -1,4 +1,4 @@
-import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
+import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { useVaultPromotionsApr } from '@generationsoftware/hyperstructure-react-hooks'
 import {
   BonusRewardsTooltip,
@@ -12,7 +12,6 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { POOL_STAKING_VAULTS, TWAB_REWARDS_SETTINGS } from '@constants/config'
-import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { useVaultImportedListSrcs } from '@hooks/useVaultImportedListSrcs'
 import { VaultBonusRewards } from './VaultBonusRewards'
 import { VaultButtons } from './VaultButtons'
@@ -33,18 +32,9 @@ export const VaultCard = (props: VaultCardProps) => {
 
   const importedSrcs = useVaultImportedListSrcs(vault)
 
-  const prizePools = useSupportedPrizePools()
-  const prizePool =
-    !!vault && Object.values(prizePools).find((pool) => pool.chainId === vault.chainId)
-
   const tokenAddresses = !!vault ? TWAB_REWARDS_SETTINGS[vault.chainId].tokenAddresses : []
   const fromBlock = !!vault ? TWAB_REWARDS_SETTINGS[vault.chainId].fromBlock : undefined
-  const { data: vaultPromotionsApr } = useVaultPromotionsApr(
-    vault,
-    prizePool as PrizePool,
-    tokenAddresses,
-    { fromBlock }
-  )
+  const { data: vaultPromotionsApr } = useVaultPromotionsApr(vault, tokenAddresses, { fromBlock })
 
   const isPoolStakingVault = POOL_STAKING_VAULTS[vault.chainId] === lower(vault.address)
 

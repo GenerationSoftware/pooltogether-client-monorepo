@@ -8,7 +8,6 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { ReactNode } from 'react'
 import { TWAB_REWARDS_SETTINGS } from '@constants/config'
-import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 
 interface VaultBonusRewardsProps {
   vault: Vault
@@ -33,14 +32,11 @@ export const VaultBonusRewards = (props: VaultBonusRewardsProps) => {
     tokensClassName
   } = props
 
-  const prizePoolsArray = Object.values(useSupportedPrizePools())
-  const prizePool = prizePoolsArray.find((prizePool) => prizePool.chainId === vault?.chainId)
-
   const tokenAddresses = !!vault ? TWAB_REWARDS_SETTINGS[vault.chainId].tokenAddresses : []
   const fromBlock = !!vault ? TWAB_REWARDS_SETTINGS[vault.chainId].fromBlock : undefined
 
   const { data: vaultPromotionsApr, isFetched: isFetchedVaultPromotionsApr } =
-    useVaultPromotionsApr(vault, prizePool!, tokenAddresses, { fromBlock })
+    useVaultPromotionsApr(vault, tokenAddresses, { fromBlock })
 
   if (
     (!!vault && TWAB_REWARDS_ADDRESSES[vault.chainId] === undefined) ||

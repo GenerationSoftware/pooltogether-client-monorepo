@@ -83,8 +83,9 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
 
   const prizePoolsArray = Object.values(useSupportedPrizePools())
   const prizePool = prizePoolsArray.find((prizePool) => prizePool.chainId === vault?.chainId)
+
   const tokenAddresses = !!vault ? TWAB_REWARDS_SETTINGS[vault.chainId].tokenAddresses : []
-  const { data: vaultPromotionsApr } = useVaultPromotionsApr(vault!, prizePool!, tokenAddresses, {
+  const { data: vaultPromotionsApr } = useVaultPromotionsApr(vault!, tokenAddresses, {
     fromBlock: !!vault ? TWAB_REWARDS_SETTINGS[vault.chainId].fromBlock : undefined
   })
 
