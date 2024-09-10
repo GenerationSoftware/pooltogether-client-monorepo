@@ -4,9 +4,11 @@ import {
   arbitrumSepolia,
   base,
   baseSepolia,
+  gnosisChiado,
   mainnet,
   optimism,
-  optimismSepolia
+  optimismSepolia,
+  scrollSepolia
 } from 'viem/chains'
 
 /**
@@ -14,7 +16,13 @@ import {
  */
 export const SUPPORTED_NETWORKS = {
   mainnets: [NETWORK.mainnet, NETWORK.optimism, NETWORK.base, NETWORK.arbitrum],
-  testnets: [NETWORK.optimism_sepolia, NETWORK.arbitrum_sepolia, NETWORK.base_sepolia]
+  testnets: [
+    NETWORK.optimism_sepolia,
+    NETWORK.arbitrum_sepolia,
+    NETWORK.base_sepolia,
+    NETWORK.scroll_sepolia,
+    NETWORK.gnosis_chiado
+  ]
 } as const
 
 /**
@@ -27,7 +35,9 @@ export const WAGMI_CHAINS = {
   [NETWORK.base]: base,
   [NETWORK.optimism_sepolia]: optimismSepolia,
   [NETWORK.arbitrum_sepolia]: arbitrumSepolia,
-  [NETWORK.base_sepolia]: baseSepolia
+  [NETWORK.base_sepolia]: baseSepolia,
+  [NETWORK.scroll_sepolia]: scrollSepolia,
+  [NETWORK.gnosis_chiado]: gnosisChiado
 } as const
 
 /**
@@ -40,7 +50,9 @@ export const RPC_URLS = {
   [NETWORK.base]: process.env.NEXT_PUBLIC_BASE_RPC_URL,
   [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL,
-  [NETWORK.base_sepolia]: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL
+  [NETWORK.base_sepolia]: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL,
+  [NETWORK.scroll_sepolia]: process.env.NEXT_PUBLIC_SCROLL_SEPOLIA_RPC_URL,
+  [NETWORK.gnosis_chiado]: process.env.NEXT_PUBLIC_GNOSIS_CHIADO_RPC_URL
 } as const
 
 /**
@@ -53,7 +65,9 @@ export const QUERY_START_BLOCK: { [chainId: number]: bigint } = {
   [NETWORK.base]: 14_506_800n,
   [NETWORK.optimism_sepolia]: 10_793_300n,
   [NETWORK.arbitrum_sepolia]: 48_888_900n,
-  [NETWORK.base_sepolia]: 10_578_500n
+  [NETWORK.base_sepolia]: 10_578_500n,
+  [NETWORK.scroll_sepolia]: 6_429_500n,
+  [NETWORK.gnosis_chiado]: 11_555_000n
 }
 
 /**
@@ -66,5 +80,7 @@ export const DRAW_RESULTS_URL: { [chainId: number]: string } = {
   [NETWORK.base]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-winners/main/winners/vaultAccounts/${NETWORK.base}`,
   [NETWORK.optimism_sepolia]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-winners/main/winners/vaultAccounts/${NETWORK.optimism_sepolia}`,
   [NETWORK.arbitrum_sepolia]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-winners/main/winners/vaultAccounts/${NETWORK.arbitrum_sepolia}`,
-  [NETWORK.base_sepolia]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-winners/main/winners/vaultAccounts/${NETWORK.base_sepolia}`
+  [NETWORK.base_sepolia]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-winners/main/winners/vaultAccounts/${NETWORK.base_sepolia}`,
+  [NETWORK.scroll_sepolia]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-winners/main/winners/vaultAccounts/${NETWORK.scroll_sepolia}`,
+  [NETWORK.gnosis_chiado]: `https://raw.githubusercontent.com/GenerationSoftware/pt-v5-winners/main/winners/vaultAccounts/${NETWORK.gnosis_chiado}`
 }
