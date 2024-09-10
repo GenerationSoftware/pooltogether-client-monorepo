@@ -26,7 +26,7 @@ export const arbitrumSepoliaVaults: VaultList['tokens'] = [
     name: 'Prize DAI',
     decimals: 18,
     symbol: 'pDAI',
-    logoURI: 'https://assets.coingecko.com/coins/images/9956/small/4943.png?1636636734',
+    logoURI: 'https://assets.coingecko.com/coins/images/9956/small/4943.png',
     extensions: {
       underlyingAsset: {
         address: '0xFE045BEEfdA06606fc5f441ccCa2fE8C903e9725',

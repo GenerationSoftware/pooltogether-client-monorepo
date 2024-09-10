@@ -1,17 +1,17 @@
 import { VaultList } from '@shared/types'
 import { NETWORK } from '@shared/utilities'
 
-export const baseSepoliaVaults: VaultList['tokens'] = [
+export const gnosisChiadoVaults: VaultList['tokens'] = [
   {
-    chainId: NETWORK.base_sepolia,
-    address: '0x8Ec8328d3281F8275d6b44ffAdA9DF002B928AEa',
+    chainId: NETWORK.gnosis_chiado,
+    address: '0x7c44c6dd009a36ef393dba89d9d1e1528648cb51',
     name: 'Prize POOL',
     decimals: 18,
     symbol: 'pPOOL',
     logoURI: 'https://etherscan.io/token/images/pooltogether_32.png',
     extensions: {
       underlyingAsset: {
-        address: '0x50Ac98a0CA373a3935069A8755D895663d2F4A16',
+        address: '0xA83A315BeD18b36308A518c7F77a2464E9F7286C',
         symbol: 'POOL',
         name: 'PoolTogether'
       },
@@ -21,45 +21,45 @@ export const baseSepoliaVaults: VaultList['tokens'] = [
     }
   },
   {
-    chainId: NETWORK.base_sepolia,
-    address: '0x513cd9e4d06e86acfda1c5e7b93c4a3400d240d7',
-    name: 'Prize DAI',
+    chainId: NETWORK.gnosis_chiado,
+    address: '0xf7270b6f75dc1f8b8efa003c0096a39c71f16f9b',
+    name: 'Prize WXDAI',
     decimals: 18,
-    symbol: 'pDAI',
-    logoURI: 'https://assets.coingecko.com/coins/images/9956/small/4943.png',
+    symbol: 'pWXDAI',
+    logoURI: 'https://gnosisscan.io/token/images/wrappedxdai_32.png',
     extensions: {
       underlyingAsset: {
-        address: '0xe4B4A71923AecB4b8924bDA8C31941a8Ab50FF86',
-        symbol: 'DAI',
-        name: 'Dai Stablecoin'
+        address: '0xb2D0d7aD1D4b2915390Dc7053b9421F735A723E7',
+        symbol: 'WXDAI',
+        name: 'Wrapped xDai Stablecoin'
       }
     }
   },
   {
-    chainId: NETWORK.base_sepolia,
-    address: '0xb974ba187814913d0415d1d0feda77febd3f2b32',
+    chainId: NETWORK.gnosis_chiado,
+    address: '0xcb7c7b047f2f43e74ef40953f27e6a905711f2a8',
     name: 'Prize USDC',
     decimals: 6,
     symbol: 'pUSDC',
     logoURI: 'https://etherscan.io/token/images/centre-usdc_28.png',
     extensions: {
       underlyingAsset: {
-        address: '0x034109D90E70B972617e96b33295E724FfF5887a',
+        address: '0xFC535B2407Bb2C8b4f4a4FaabBb9981FF031b7Ca',
         symbol: 'USDC',
         name: 'USD Coin'
       }
     }
   },
   {
-    chainId: NETWORK.base_sepolia,
-    address: '0xb948ad19895b36833c52ba1da5a77320d040ddbd',
+    chainId: NETWORK.gnosis_chiado,
+    address: '0x6e675d67d6472a3b081f5ef22f90662645343843',
     name: 'Prize WETH',
     decimals: 18,
     symbol: 'pWETH',
     logoURI: 'https://etherscan.io/token/images/weth_28.png',
     extensions: {
       underlyingAsset: {
-        address: '0x019Aa44D02715e4042b1BA3b4D2FA9bCEF33c002',
+        address: '0x6b629bB304017D3D985D140599d8E6fC9942B9a7',
         symbol: 'WETH',
         name: 'Wrapped Ether'
       }

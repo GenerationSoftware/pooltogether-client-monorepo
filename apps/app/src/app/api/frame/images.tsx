@@ -35,15 +35,26 @@ export const winsViewImg = async (data: { userName: string | null; userAddress: 
 
   const winsToDisplay = wins.filter((win) => win.payout > 0n).slice(0, 5)
 
-  // TODO: should not assume all prize pools have WETH as the prize token
+  // TODO: should have a less hardcoded approach to different prize tokens
   const getPrizeToken = (chainId: NETWORK): TokenWithLogo => {
-    return {
-      chainId,
-      address: WRAPPED_NATIVE_ASSETS[chainId] as Address,
-      symbol: 'WETH',
-      name: 'Wrapped Ether',
-      decimals: 18,
-      logoURI: 'https://etherscan.io/token/images/weth_28.png'
+    if (chainId === NETWORK.gnosis) {
+      return {
+        chainId,
+        address: WRAPPED_NATIVE_ASSETS[chainId]!,
+        symbol: 'WXDAI',
+        name: 'Wrapped xDai Stablecoin',
+        decimals: 18,
+        logoURI: 'https://gnosisscan.io/token/images/wrappedxdai_32.png'
+      }
+    } else {
+      return {
+        chainId,
+        address: WRAPPED_NATIVE_ASSETS[chainId]!,
+        symbol: 'WETH',
+        name: 'Wrapped Ether',
+        decimals: 18,
+        logoURI: 'https://etherscan.io/token/images/weth_28.png'
+      }
     }
   }
 

@@ -22,8 +22,7 @@ import {
   DOLPHIN_ADDRESS,
   NETWORK,
   POOL_TOKEN_ADDRESSES,
-  USDC_TOKEN_ADDRESSES,
-  WRAPPED_NATIVE_ASSETS
+  USDC_TOKEN_ADDRESSES
 } from '@shared/utilities'
 import defaultVaultList from '@vaultLists/default'
 import memeVaultList from '@vaultLists/meme'
@@ -33,9 +32,11 @@ import {
   arbitrumSepolia,
   base,
   baseSepolia,
+  gnosisChiado,
   mainnet,
   optimism,
-  optimismSepolia
+  optimismSepolia,
+  scrollSepolia
 } from 'viem/chains'
 
 /**
@@ -43,7 +44,13 @@ import {
  */
 export const SUPPORTED_NETWORKS = {
   mainnets: [NETWORK.mainnet, NETWORK.optimism, NETWORK.base, NETWORK.arbitrum],
-  testnets: [NETWORK.optimism_sepolia, NETWORK.arbitrum_sepolia, NETWORK.base_sepolia]
+  testnets: [
+    NETWORK.optimism_sepolia,
+    NETWORK.arbitrum_sepolia,
+    NETWORK.base_sepolia,
+    NETWORK.scroll_sepolia,
+    NETWORK.gnosis_chiado
+  ]
 } as const
 
 /**
@@ -56,7 +63,9 @@ export const WAGMI_CHAINS = {
   [NETWORK.base]: base,
   [NETWORK.optimism_sepolia]: optimismSepolia,
   [NETWORK.arbitrum_sepolia]: arbitrumSepolia,
-  [NETWORK.base_sepolia]: baseSepolia
+  [NETWORK.base_sepolia]: baseSepolia,
+  [NETWORK.scroll_sepolia]: scrollSepolia,
+  [NETWORK.gnosis_chiado]: gnosisChiado
 } as const
 
 /**
@@ -91,7 +100,9 @@ export const RPC_URLS = {
   [NETWORK.base]: process.env.NEXT_PUBLIC_BASE_RPC_URL,
   [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL,
-  [NETWORK.base_sepolia]: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL
+  [NETWORK.base_sepolia]: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL,
+  [NETWORK.scroll_sepolia]: process.env.NEXT_PUBLIC_SCROLL_SEPOLIA_RPC_URL,
+  [NETWORK.gnosis_chiado]: process.env.NEXT_PUBLIC_GNOSIS_CHIADO_RPC_URL
 } as const
 
 /**
@@ -112,7 +123,9 @@ export const POOL_STAKING_VAULTS: { [chainId: number]: Lowercase<Address> } = {
   [NETWORK.base]: '0x6b5a5c55e9dd4bb502ce25bbfbaa49b69cf7e4dd',
   [NETWORK.optimism_sepolia]: '0x95849a4c2e58f4f8bf868adef10b05747a24ee71',
   [NETWORK.arbitrum_sepolia]: '0xb608c0f9d37b14bdfefc654b1fc8f38b34541a01',
-  [NETWORK.base_sepolia]: '0x8ec8328d3281f8275d6b44ffada9df002b928aea'
+  [NETWORK.base_sepolia]: '0x8ec8328d3281f8275d6b44ffada9df002b928aea',
+  [NETWORK.scroll_sepolia]: '0xff44f114daa9a7e75c998a2bb9a1bb55bc25240b',
+  [NETWORK.gnosis_chiado]: '0x7c44c6dd009a36ef393dba89d9d1e1528648cb51'
 }
 
 /**
@@ -125,7 +138,9 @@ export const QUERY_START_BLOCK = {
   [NETWORK.base]: 14_506_800n,
   [NETWORK.optimism_sepolia]: 10_793_300n,
   [NETWORK.arbitrum_sepolia]: 48_888_900n,
-  [NETWORK.base_sepolia]: 10_578_500n
+  [NETWORK.base_sepolia]: 10_578_500n,
+  [NETWORK.scroll_sepolia]: 6_429_500n,
+  [NETWORK.gnosis_chiado]: 11_555_000n
 } as const satisfies { [chainId: number]: bigint }
 
 /**
@@ -197,6 +212,20 @@ export const TWAB_REWARDS_SETTINGS: {
       POOL_TOKEN_ADDRESSES[NETWORK.base_sepolia]
     ],
     fromBlock: QUERY_START_BLOCK[NETWORK.base_sepolia]
+  },
+  [NETWORK.scroll_sepolia]: {
+    tokenAddresses: [
+      USDC_TOKEN_ADDRESSES[NETWORK.scroll_sepolia],
+      POOL_TOKEN_ADDRESSES[NETWORK.scroll_sepolia]
+    ],
+    fromBlock: QUERY_START_BLOCK[NETWORK.scroll_sepolia]
+  },
+  [NETWORK.gnosis_chiado]: {
+    tokenAddresses: [
+      USDC_TOKEN_ADDRESSES[NETWORK.gnosis_chiado],
+      POOL_TOKEN_ADDRESSES[NETWORK.gnosis_chiado]
+    ],
+    fromBlock: QUERY_START_BLOCK[NETWORK.gnosis_chiado]
   }
 }
 
@@ -215,11 +244,7 @@ export const WALLET_NAMES: { [address: Lowercase<Address>]: { name: string; chai
  */
 export const ZAP_PRIORITIES: {
   [chainId: number]: { [vaultAddress: Lowercase<Address>]: Address }
-} = {
-  [NETWORK.optimism]: {
-    '0x8c2f27b7819eb1bb7e3b5c407c5e1839186d5aba': WRAPPED_NATIVE_ASSETS[NETWORK.optimism]!
-  }
-}
+} = {}
 
 /**
  * Zap token options

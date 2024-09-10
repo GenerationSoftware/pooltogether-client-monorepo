@@ -1,14 +1,14 @@
 import {
+  useAllPrizeTokenPrices,
   useAllUserPrizePoolWins,
-  useLastCheckedPrizesTimestamps,
-  usePrizeTokenPrice
+  useLastCheckedPrizesTimestamps
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
 import { useSupportedPrizePools } from './useSupportedPrizePools'
 
 /**
- * Returns a user's total prize winnings in ETH
+ * Returns a user's total prize winnings (in ETH)
  * @param userAddress user address to get total winnings for
  * @param options optional settings
  * @returns
@@ -26,10 +26,8 @@ export const useUserTotalWinnings = (
     refetch: refetchWins
   } = useAllUserPrizePoolWins(prizePoolsArray, userAddress)
 
-  // TODO: this assumes every prize pool is using the same prize token - not ideal
-  const { data: prizeToken, isFetched: isFetchedPrizeToken } = usePrizeTokenPrice(
-    prizePoolsArray[0]
-  )
+  const { data: prizeTokens, isFetched: isFetchedPrizeTokens } =
+    useAllPrizeTokenPrices(prizePoolsArray)
 
   const { lastCheckedPrizesTimestamps } = useLastCheckedPrizesTimestamps(userAddress)
 
@@ -55,26 +53,25 @@ export const useUserTotalWinnings = (
   }, [wins, lastCheckedPrizesTimestamps, userAddress, options])
 
   return useMemo(() => {
-    const isFetched =
-      isFetchedWins &&
-      isFetchedPrizeToken &&
-      !!wins &&
-      !!prizeToken &&
-      prizeToken.price !== undefined &&
-      !!totalTokensWonByChain
+    const isFetched = isFetchedWins && isFetchedPrizeTokens && !!totalTokensWonByChain
 
     let totalWinnings = 0
 
     if (isFetched) {
       for (const key in totalTokensWonByChain) {
         const chainId = parseInt(key)
-        const tokenAmount = parseFloat(
-          formatUnits(totalTokensWonByChain[chainId], prizeToken.decimals)
-        )
-        totalWinnings += tokenAmount * (prizeToken.price ?? 0)
+        const prizePoolId = prizePoolsArray.find((pool) => pool.chainId === chainId)?.id
+        const prizeToken = !!prizePoolId ? prizeTokens[prizePoolId] : undefined
+
+        if (!!prizeToken) {
+          const tokenAmount = parseFloat(
+            formatUnits(totalTokensWonByChain[chainId], prizeToken.decimals)
+          )
+          totalWinnings += tokenAmount * (prizeToken.price ?? 0)
+        }
       }
     }
 
     return { isFetched, refetch: refetchWins, data: isFetched ? totalWinnings : undefined }
-  }, [totalTokensWonByChain, prizeToken])
+  }, [totalTokensWonByChain, prizeTokens])
 }

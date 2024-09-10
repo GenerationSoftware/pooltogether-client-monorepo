@@ -26,7 +26,7 @@ export const optimismSepoliaVaults: VaultList['tokens'] = [
     name: 'Prize DAI',
     decimals: 18,
     symbol: 'pDAI',
-    logoURI: 'https://assets.coingecko.com/coins/images/9956/small/4943.png?1636636734',
+    logoURI: 'https://assets.coingecko.com/coins/images/9956/small/4943.png',
     extensions: {
       underlyingAsset: {
         address: '0xeF38f21EC5477f6E3D4b7e9f0DEa44A788C669b0',
@@ -56,8 +56,7 @@ export const optimismSepoliaVaults: VaultList['tokens'] = [
     name: 'Prize GUSD',
     decimals: 2,
     symbol: 'pGUSD',
-    logoURI:
-      'https://assets.coingecko.com/coins/images/5992/small/gemini-dollar-gusd.png?1536745278',
+    logoURI: 'https://assets.coingecko.com/coins/images/5992/small/gemini-dollar-gusd.png',
     extensions: {
       underlyingAsset: {
         address: '0x68F92539f64E486f2853BB2892933a21b54829E5',

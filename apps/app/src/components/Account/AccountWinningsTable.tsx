@@ -1,13 +1,17 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
-import { usePublicClientsByChain } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useAllPrizeTokenPrices,
+  usePublicClientsByChain
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { SortIcon, VaultBadge } from '@shared/react-components'
 import { Win } from '@shared/types'
 import { Table, TableProps } from '@shared/ui'
-import { getSimpleDate, sortByBigIntDesc } from '@shared/utilities'
+import { getSimpleDate } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { ReactNode, useMemo, useState } from 'react'
+import { formatUnits } from 'viem'
 import { AccountWinAmount } from './AccountWinAmount'
 import { AccountWinButtons } from './AccountWinButtons'
 
@@ -23,6 +27,8 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
     props
 
   const publicClients = usePublicClientsByChain()
+
+  const { data: prizeTokens } = useAllPrizeTokenPrices(prizePools)
 
   const t_common = useTranslations('Common')
   const t_account = useTranslations('Account')
@@ -43,20 +49,26 @@ export const AccountWinningsTable = (props: AccountWinningsTableProps) => {
   }
 
   const getDirection = (id: SortId) => {
-    if (sortBy === id) {
-      return sortDirection
-    }
+    if (sortBy === id) return sortDirection
+  }
+
+  const getWinValue = (win: Win) => {
+    const prizePoolId = prizePools.find((pool) => pool.chainId === win.chainId)?.id
+    const prizeToken = !!prizePoolId ? prizeTokens[prizePoolId] : undefined
+
+    if (!prizeToken?.price) return 0
+
+    return parseFloat(formatUnits(win.payout, prizeToken.decimals)) * prizeToken.price
   }
 
   const sortedWins = useMemo(() => {
     if (sortBy === 'amount') {
-      // TODO: this assumes the prize token is always the same - not ideal
-      const sortedByAmount = [...wins].sort((a, b) => sortByBigIntDesc(a.payout, b.payout))
+      const sortedByAmount = [...wins].sort((a, b) => getWinValue(b) - getWinValue(a))
       return sortDirection === 'desc' ? sortedByAmount : sortedByAmount.reverse()
     } else {
       return sortDirection === 'desc' ? wins : [...wins].reverse()
     }
-  }, [wins, sortBy, sortDirection])
+  }, [wins, prizeTokens, sortBy, sortDirection])
 
   const tableData: TableProps['data'] = {
     headers: {

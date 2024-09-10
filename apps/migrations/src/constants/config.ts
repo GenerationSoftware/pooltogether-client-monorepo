@@ -197,7 +197,7 @@ export const OLD_V5_VAULTS: {
         decimals: 18,
         symbol: 'pDAI',
         tags: ['canary'],
-        logoURI: 'https://assets.coingecko.com/coins/images/9956/small/4943.png?1636636734'
+        logoURI: 'https://assets.coingecko.com/coins/images/9956/small/4943.png'
       },
       migrateTo: MIGRATION_DESTINATIONS.opDaiVault
     },

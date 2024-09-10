@@ -1,11 +1,8 @@
-import {
-  useDrawsToCheckForPrizes,
-  usePrizeTokenData
-} from '@generationsoftware/hyperstructure-react-hooks'
+import { useDrawsToCheckForPrizes } from '@generationsoftware/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { TokenValue } from '@shared/react-components'
 import { Button, Spinner } from '@shared/ui'
-import { getSimpleDate } from '@shared/utilities'
+import { getSimpleDate, NATIVE_ASSETS, NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -28,9 +25,6 @@ export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
 
   const prizePools = useSupportedPrizePools()
   const prizePoolsArray = Object.values(prizePools)
-
-  // TODO: this assumes every prize pool is using the same prize token - not ideal
-  const { data: prizeToken } = usePrizeTokenData(prizePoolsArray[0])
 
   const { data: drawsToCheck, isFetched: isFetchedDrawsToCheck } = useDrawsToCheckForPrizes(
     prizePoolsArray,
@@ -57,9 +51,12 @@ export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
         </div>
         <div className='inset-0 flex flex-col gap-x-2 items-center justify-center text-sm -z-10 md:absolute md:flex-row lg:text-base'>
           <span>{t('totalPrizes.beforeValue')}</span>
-          {!!prizeToken && isFetchedTotalPrizeAmount ? (
+          {isFetchedTotalPrizeAmount ? (
             <span className='text-2xl md:text-3xl lg:text-5xl text-pt-teal'>
-              <TokenValue token={{ ...prizeToken, amount: totalPrizeAmount }} hideZeroes={true} />
+              <TokenValue
+                token={{ ...NATIVE_ASSETS[NETWORK.mainnet], amount: totalPrizeAmount }}
+                hideZeroes={true}
+              />
             </span>
           ) : (
             <Spinner />
