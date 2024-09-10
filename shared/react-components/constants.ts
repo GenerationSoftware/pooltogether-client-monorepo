@@ -38,7 +38,8 @@ const tokenLogoUrls = {
   uni: 'https://assets.coingecko.com/coins/images/12504/standard/uniswap-logo.png',
   ldo: 'https://assets.coingecko.com/coins/images/13573/standard/Lido_DAO.png',
   aero: 'https://assets.coingecko.com/coins/images/31745/standard/token.png',
-  cbeth: 'https://assets.coingecko.com/coins/images/27008/standard/cbeth.png'
+  cbeth: 'https://assets.coingecko.com/coins/images/27008/standard/cbeth.png',
+  xdai: 'https://gnosisscan.io/token/images/wrappedxdai_32.png'
 } as const
 
 /**
@@ -69,7 +70,6 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   },
   [NETWORK.bsc]: {},
   [NETWORK.bsc_testnet]: {},
-  [NETWORK.xdai]: {},
   [NETWORK.polygon]: {
     [POOL_TOKEN_ADDRESSES[NETWORK.polygon].toLowerCase()]: tokenLogoUrls.pool,
     '0x2791bca1f2de4661ed88a30c99a7a9449aa84174': tokenLogoUrls.usdc,
@@ -158,6 +158,37 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     [USDC_TOKEN_ADDRESSES[NETWORK.base_sepolia]]: tokenLogoUrls.usdc,
     '0xe4b4a71923aecb4b8924bda8c31941a8ab50ff86': tokenLogoUrls.dai,
     '0x019aa44d02715e4042b1ba3b4d2fa9bcef33c002': tokenLogoUrls.weth
+  },
+  [NETWORK.scroll]: {
+    [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,
+    '0x06efdbff2a14a7c8e15944d1f4a48f9f95f663a4': tokenLogoUrls.usdc,
+    '0x5300000000000000000000000000000000000004': tokenLogoUrls.weth,
+    '0xca77eb3fefe3725dc33bccb54edefc3d9f764f97': tokenLogoUrls.dai
+  },
+  [NETWORK.scroll_sepolia]: {
+    [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,
+    [POOL_TOKEN_ADDRESSES[NETWORK.scroll_sepolia].toLowerCase()]: tokenLogoUrls.pool,
+    [USDC_TOKEN_ADDRESSES[NETWORK.scroll_sepolia]]: tokenLogoUrls.usdc,
+    '0xc024e95cf6bb2efc424c9035db4647a12d8dcac9': tokenLogoUrls.dai,
+    '0x23dbacc4e588fadc2d3eed3d1eddb8daa57714ba': tokenLogoUrls.gusd,
+    '0x6b0877bcb4720f094bc13187f5e16bdbf730693a': tokenLogoUrls.weth,
+    '0xa15316214d52d907712d751987d4593972cf3b8b': tokenLogoUrls.wbtc
+  },
+  [NETWORK.gnosis]: {
+    [DOLPHIN_ADDRESS]: tokenLogoUrls.xdai,
+    '0xddafbb505ad214d7b80b1f830fccc89b60fb7a83': tokenLogoUrls.usdc,
+    '0x2a22f9c3b484c3629090feed35f17ff8f88f76f0': tokenLogoUrls.usdc,
+    '0x6a023ccd1ff6f2045c3309768ead9e68f978f6e1': tokenLogoUrls.weth,
+    '0xe91d153e0b41518a2ce8dd3d7944fa863463a97d': tokenLogoUrls.xdai
+  },
+  [NETWORK.gnosis_chiado]: {
+    [DOLPHIN_ADDRESS]: tokenLogoUrls.dai,
+    [POOL_TOKEN_ADDRESSES[NETWORK.gnosis_chiado].toLowerCase()]: tokenLogoUrls.pool,
+    [USDC_TOKEN_ADDRESSES[NETWORK.gnosis_chiado]]: tokenLogoUrls.usdc,
+    '0xb2d0d7ad1d4b2915390dc7053b9421f735a723e7': tokenLogoUrls.dai,
+    '0xbe9a62939f82e12f4a48912078a4420f1a5fc2e0': tokenLogoUrls.gusd,
+    '0x6b629bb304017d3d985d140599d8e6fc9942b9a7': tokenLogoUrls.weth,
+    '0x3e9c64afc24c551cc8e11f52fedecdacf7362559': tokenLogoUrls.wbtc
   }
 }
 

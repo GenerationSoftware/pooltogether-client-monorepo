@@ -25,9 +25,6 @@ export const getNiceNetworkNameByChainId = (chainId: number): string => {
     case NETWORK.bsc: {
       return 'Binance Smart Chain'
     }
-    case NETWORK.xdai: {
-      return 'xDai'
-    }
     case NETWORK.optimism_sepolia: {
       return 'Optimism Sepolia'
     }
@@ -42,6 +39,12 @@ export const getNiceNetworkNameByChainId = (chainId: number): string => {
     }
     case NETWORK.celo_testnet: {
       return 'Celo Testnet'
+    }
+    case NETWORK.scroll_sepolia: {
+      return 'Scroll Sepolia'
+    }
+    case NETWORK.gnosis_chiado: {
+      return 'Gnosis Chiado'
     }
     default: {
       const niceName = getNetworkNameByChainId(chainId)
@@ -61,7 +64,6 @@ export const isTestnet = (chainId: number) => {
     [NETWORK.sepolia]: true,
     [NETWORK.bsc]: false,
     [NETWORK.bsc_testnet]: true,
-    [NETWORK.xdai]: false,
     [NETWORK.polygon]: false,
     [NETWORK.mumbai]: true,
     [NETWORK.optimism]: false,
@@ -73,7 +75,11 @@ export const isTestnet = (chainId: number) => {
     [NETWORK.arbitrum]: false,
     [NETWORK.arbitrum_sepolia]: true,
     [NETWORK.base]: false,
-    [NETWORK.base_sepolia]: true
+    [NETWORK.base_sepolia]: true,
+    [NETWORK.scroll]: false,
+    [NETWORK.scroll_sepolia]: true,
+    [NETWORK.gnosis]: false,
+    [NETWORK.gnosis_chiado]: true
   }
 
   return values[chainId as NETWORK] ?? false
@@ -90,7 +96,6 @@ export const isOpStack = (chainId: number) => {
     [NETWORK.sepolia]: false,
     [NETWORK.bsc]: false,
     [NETWORK.bsc_testnet]: false,
-    [NETWORK.xdai]: false,
     [NETWORK.polygon]: false,
     [NETWORK.mumbai]: false,
     [NETWORK.optimism]: true,
@@ -102,7 +107,11 @@ export const isOpStack = (chainId: number) => {
     [NETWORK.arbitrum]: false,
     [NETWORK.arbitrum_sepolia]: false,
     [NETWORK.base]: true,
-    [NETWORK.base_sepolia]: true
+    [NETWORK.base_sepolia]: true,
+    [NETWORK.scroll]: false,
+    [NETWORK.scroll_sepolia]: false,
+    [NETWORK.gnosis]: false,
+    [NETWORK.gnosis_chiado]: false
   }
 
   return values[chainId as NETWORK] ?? false

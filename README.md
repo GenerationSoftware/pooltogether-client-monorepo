@@ -103,11 +103,13 @@ This Turborepo has some additional tools already setup:
 
 ### Adding New Network
 
-1. Update the `constants.ts` file in `utilities` with values and addresses for the new network.
-2. Make sure the `usePublicClients` and `usePublicClientsByChain` hooks in `hyperstructure-react-hooks` include the new network.
-3. Update the `config.ts` and `.env` files for any app you want to use this new network on.
-4. Update the `config.ts` and `wrangler.env` files for any worker you want to use this new network on.
-5. Optionally add any token logo overrides in the `constants.ts` file in the `react-components` package.
+1. Update `shared/utilities/constants.ts` with values and addresses for the new network.
+2. Update `shared/utilities/utils/networks.ts` with values for the new network.
+3. Update `shared/react-components/constants.ts` with values for the new network.
+4. Update `shared/react-components/components/Icons/NetworkIcon.tsx` with a logo for the new network.
+5. Update `packages/hyperstructure-react-hooks/src/blockchain/useClients.ts` with the new network.
+6. Update the `config.ts` and `.env` files for any app you want to use this new network on.
+7. Update the `config.ts` and `wrangler.env` files for any worker you want to use this new network on.
 
 ---
 
