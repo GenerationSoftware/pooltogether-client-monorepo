@@ -182,10 +182,10 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0xe91d153e0b41518a2ce8dd3d7944fa863463a97d': tokenLogoUrls.xdai
   },
   [NETWORK.gnosis_chiado]: {
-    [DOLPHIN_ADDRESS]: tokenLogoUrls.dai,
+    [DOLPHIN_ADDRESS]: tokenLogoUrls.xdai,
     [POOL_TOKEN_ADDRESSES[NETWORK.gnosis_chiado].toLowerCase()]: tokenLogoUrls.pool,
     [USDC_TOKEN_ADDRESSES[NETWORK.gnosis_chiado]]: tokenLogoUrls.usdc,
-    '0xb2d0d7ad1d4b2915390dc7053b9421f735a723e7': tokenLogoUrls.dai,
+    '0xb2d0d7ad1d4b2915390dc7053b9421f735a723e7': tokenLogoUrls.xdai,
     '0xbe9a62939f82e12f4a48912078a4420f1a5fc2e0': tokenLogoUrls.gusd,
     '0x6b629bb304017d3d985d140599d8e6fc9942b9a7': tokenLogoUrls.weth,
     '0x3e9c64afc24c551cc8e11f52fedecdacf7362559': tokenLogoUrls.wbtc
