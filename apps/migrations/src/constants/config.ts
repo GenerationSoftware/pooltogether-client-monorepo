@@ -84,11 +84,14 @@ export const RPC_URLS = {
  * Migration Destinations
  */
 export const MIGRATION_DESTINATIONS = {
-  wethVault: { chainId: NETWORK.optimism, address: '0x2998c1685e308661123f64b333767266035f5020' },
-  usdcVault: { chainId: NETWORK.optimism, address: '0x03d3ce84279cb6f54f5e6074ff0f8319d830dafe' },
-  daiVault: { chainId: NETWORK.optimism, address: '0x3e8dbe51da479f7e8ac46307af99ad5b4b5b41dc' },
-  lusdVault: { chainId: NETWORK.optimism, address: '0x1f16d3ccf568e96019cedc8a2c79d2ca6257894e' },
-  poolVault: { chainId: NETWORK.optimism, address: '0xa52e38a9147f5ea9e0c5547376c21c9e3f3e5e1f' }
+  wethVault: { chainId: NETWORK.mainnet, address: '0x3acd377da549010a197b9ed0f271e1f621e4b62e' },
+  usdcVault: { chainId: NETWORK.mainnet, address: '0x96fe7b5762bd4405149a9a313473e68a8e870f6c' },
+  poolVault: { chainId: NETWORK.mainnet, address: '0x9ee31e845ff1358bf6b1f914d3918c6223c75573' },
+  opWethVault: { chainId: NETWORK.optimism, address: '0x2998c1685e308661123f64b333767266035f5020' },
+  opUsdcVault: { chainId: NETWORK.optimism, address: '0x03d3ce84279cb6f54f5e6074ff0f8319d830dafe' },
+  opDaiVault: { chainId: NETWORK.optimism, address: '0x3e8dbe51da479f7e8ac46307af99ad5b4b5b41dc' },
+  opLusdVault: { chainId: NETWORK.optimism, address: '0x1f16d3ccf568e96019cedc8a2c79d2ca6257894e' },
+  opPoolVault: { chainId: NETWORK.optimism, address: '0xa52e38a9147f5ea9e0c5547376c21c9e3f3e5e1f' }
 } as const satisfies Record<string, { chainId: SupportedNetwork; address: Lowercase<Address> }>
 
 /**
@@ -124,7 +127,7 @@ export const OLD_V5_VAULTS: {
         tags: ['beta'],
         logoURI: 'https://etherscan.io/token/images/centre-usdc_28.png'
       },
-      migrateTo: MIGRATION_DESTINATIONS.usdcVault
+      migrateTo: MIGRATION_DESTINATIONS.opUsdcVault
     },
     {
       vault: {
@@ -136,7 +139,7 @@ export const OLD_V5_VAULTS: {
         tags: ['beta'],
         logoURI: 'https://etherscan.io/token/images/weth_28.png'
       },
-      migrateTo: MIGRATION_DESTINATIONS.wethVault
+      migrateTo: MIGRATION_DESTINATIONS.opWethVault
     },
     {
       vault: {
@@ -148,7 +151,7 @@ export const OLD_V5_VAULTS: {
         tags: ['canary'],
         logoURI: 'https://etherscan.io/token/images/weth_28.png'
       },
-      migrateTo: MIGRATION_DESTINATIONS.wethVault
+      migrateTo: MIGRATION_DESTINATIONS.opWethVault
     },
     {
       vault: {
@@ -160,7 +163,7 @@ export const OLD_V5_VAULTS: {
         tags: ['canary'],
         logoURI: 'https://etherscan.io/token/images/weth_28.png'
       },
-      migrateTo: MIGRATION_DESTINATIONS.wethVault
+      migrateTo: MIGRATION_DESTINATIONS.opWethVault
     },
     {
       vault: {
@@ -172,7 +175,7 @@ export const OLD_V5_VAULTS: {
         tags: ['canary'],
         logoURI: 'https://etherscan.io/token/images/centre-usdc_28.png'
       },
-      migrateTo: MIGRATION_DESTINATIONS.usdcVault
+      migrateTo: MIGRATION_DESTINATIONS.opUsdcVault
     },
     {
       vault: {
@@ -184,7 +187,7 @@ export const OLD_V5_VAULTS: {
         tags: ['canary'],
         logoURI: 'https://etherscan.io/token/images/centre-usdc_28.png'
       },
-      migrateTo: MIGRATION_DESTINATIONS.usdcVault
+      migrateTo: MIGRATION_DESTINATIONS.opUsdcVault
     },
     {
       vault: {
@@ -196,7 +199,7 @@ export const OLD_V5_VAULTS: {
         tags: ['canary'],
         logoURI: 'https://assets.coingecko.com/coins/images/9956/small/4943.png?1636636734'
       },
-      migrateTo: MIGRATION_DESTINATIONS.daiVault
+      migrateTo: MIGRATION_DESTINATIONS.opDaiVault
     },
     {
       vault: {
@@ -208,7 +211,7 @@ export const OLD_V5_VAULTS: {
         tags: ['canary'],
         logoURI: 'https://etherscan.io/token/images/pooltogether_32.png'
       },
-      migrateTo: MIGRATION_DESTINATIONS.poolVault
+      migrateTo: MIGRATION_DESTINATIONS.opPoolVault
     },
     {
       vault: {
@@ -220,7 +223,7 @@ export const OLD_V5_VAULTS: {
         tags: ['canary'],
         logoURI: 'https://etherscan.io/token/images/liquitylusd_32.png'
       },
-      migrateTo: MIGRATION_DESTINATIONS.lusdVault
+      migrateTo: MIGRATION_DESTINATIONS.opLusdVault
     }
   ]
 }
@@ -285,7 +288,7 @@ export const V4_POOLS: {
       logoURI: 'https://raw.githubusercontent.com/pooltogether/v4-ui/production/public/ptausdc.png'
     },
     underlyingTokenAddress: '0x7f5c764cbc14f9669b88837ca1490cca17c31607',
-    migrateTo: MIGRATION_DESTINATIONS.usdcVault
+    migrateTo: MIGRATION_DESTINATIONS.opUsdcVault
   },
   [NETWORK.polygon]: {
     address: '0x19de635fb3678d8b8154e37d8c9cdf182fe84e60',
@@ -298,7 +301,7 @@ export const V4_POOLS: {
       logoURI: 'https://raw.githubusercontent.com/pooltogether/v4-ui/production/public/ptausdc.png'
     },
     underlyingTokenAddress: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-    migrateTo: MIGRATION_DESTINATIONS.usdcVault
+    migrateTo: MIGRATION_DESTINATIONS.opUsdcVault
   },
   [NETWORK.avalanche]: {
     address: '0xf830f5cb2422d555ec34178e27094a816c8f95ec',
@@ -311,7 +314,7 @@ export const V4_POOLS: {
       logoURI: 'https://raw.githubusercontent.com/pooltogether/v4-ui/production/public/ptausdc.png'
     },
     underlyingTokenAddress: '0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664',
-    migrateTo: MIGRATION_DESTINATIONS.usdcVault
+    migrateTo: MIGRATION_DESTINATIONS.opUsdcVault
   }
 }
 
@@ -378,7 +381,7 @@ export const V3_POOLS: Record<
       address: '0xebfb47a7ad0fd6e57323c8a42b2e5a6a4f68fc1a',
       ticketAddress: '0x334cbb5858417aee161b53ee0d5349ccf54514cf',
       tokenAddress: '0x6b175474e89094c44da98b954eedeac495271d0f',
-      migrateTo: MIGRATION_DESTINATIONS.daiVault,
+      migrateTo: MIGRATION_DESTINATIONS.usdcVault,
       podAddress: '0x2f994e2e4f3395649eee8a89092e63ca526da829'
     },
     {
@@ -437,7 +440,7 @@ export const V3_POOLS: Record<
       address: '0xf6d6b30d31077db8590fe1bea7a293e1515f8152',
       ticketAddress: '0xfdd99dd78fec6abb94f4c2435886de9f8359ae60',
       tokenAddress: '0x03ab458634910aad20ef5f1c8ee96f1d6ac54919',
-      migrateTo: MIGRATION_DESTINATIONS.daiVault
+      migrateTo: MIGRATION_DESTINATIONS.usdcVault
     },
     {
       address: '0xeab695a8f5a44f583003a8bc97d677880d528248',
@@ -458,25 +461,25 @@ export const V3_POOLS: Record<
       address: '0xee06abe9e2af61cabcb13170e01266af2defa946',
       ticketAddress: '0x473e484c722ef9ec6f63b509b07bb9cfb258820b',
       tokenAddress: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-      migrateTo: MIGRATION_DESTINATIONS.usdcVault
+      migrateTo: MIGRATION_DESTINATIONS.opUsdcVault
     },
     {
       address: '0x887e17d791dcb44bfdda3023d26f7a04ca9c7ef4',
       ticketAddress: '0x9ecb26631098973834925eb453de1908ea4bdd4e',
       tokenAddress: '0xc2132d05d31c914a87c6611c10748aeb04b58e8f',
-      migrateTo: MIGRATION_DESTINATIONS.usdcVault
+      migrateTo: MIGRATION_DESTINATIONS.opUsdcVault
     },
     {
       address: '0x60764c6be24ddab70d9ae1dbf7436533cc073c21',
       ticketAddress: '0x0bc114a3163a0bc72abf0ab964eef0dc52495703',
       tokenAddress: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
-      migrateTo: MIGRATION_DESTINATIONS.daiVault
+      migrateTo: MIGRATION_DESTINATIONS.opDaiVault
     },
     {
       address: '0x2ac049f07d56ed04f84ff80022a71a1a2d8ce19b',
       ticketAddress: '0xd80eaa761ccfdc8698999d73c96cec39fbb1fc48',
       tokenAddress: '0x25788a1a171ec66da6502f9975a15b609ff54cf6',
-      migrateTo: MIGRATION_DESTINATIONS.poolVault
+      migrateTo: MIGRATION_DESTINATIONS.opPoolVault
     }
   ],
   [NETWORK.avalanche]: [],
@@ -485,13 +488,13 @@ export const V3_POOLS: Record<
       address: '0x6f634f531ed0043b94527f68ec7861b4b1ab110d',
       ticketAddress: '0xa45ba19df569d536251ce65dd3120bf7873e14ec',
       tokenAddress: '0x765de816845861e75a25fca122bb6898b8b1282a',
-      migrateTo: MIGRATION_DESTINATIONS.usdcVault
+      migrateTo: MIGRATION_DESTINATIONS.opUsdcVault
     },
     {
       address: '0xbe55435bda8f0a2a20d2ce98cc21b0af5bfb7c83',
       ticketAddress: '0xddbdbe029f9800f7c49764f15a1a1e55755648e4',
       tokenAddress: '0xd8763cba276a3738e6de85b4b3bf5fded6d6ca73',
-      migrateTo: MIGRATION_DESTINATIONS.usdcVault
+      migrateTo: MIGRATION_DESTINATIONS.opUsdcVault
     }
   ]
 }

@@ -1,3 +1,4 @@
+import { calculatePercentageOfBigInt } from '@shared/utilities'
 import { useEffect } from 'react'
 import { Address, isAddress, TransactionReceipt } from 'viem'
 import {
@@ -51,7 +52,7 @@ export const useSendV3PoolWithdrawTransaction = (
     address: poolAddress,
     abi: v3PoolABI,
     functionName: 'withdrawInstantlyFrom',
-    args: [userAddress as Address, amount, tokenAddress, 0n],
+    args: [userAddress as Address, amount, tokenAddress, calculatePercentageOfBigInt(amount, 0.01)],
     query: { enabled }
   })
 

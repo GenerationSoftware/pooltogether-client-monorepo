@@ -7,7 +7,12 @@ import {
 import { ArrowUturnLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/outline'
 import { CurrencyValue, NetworkBadge, TokenIcon } from '@shared/react-components'
 import { Button, Spinner } from '@shared/ui'
-import { formatBigIntForDisplay, lower, sToMs } from '@shared/utilities'
+import {
+  calculatePercentageOfBigInt,
+  formatBigIntForDisplay,
+  lower,
+  sToMs
+} from '@shared/utilities'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
@@ -212,7 +217,12 @@ const WithdrawContent = (props: WithdrawContentProps) => {
       functionName: migration.type === 'pool' ? 'withdrawInstantlyFrom' : 'withdraw',
       args:
         migration.type === 'pool'
-          ? [userAddress, migration.token.amount, migration.token.address, 0n]
+          ? [
+              userAddress,
+              migration.token.amount,
+              migration.token.address,
+              calculatePercentageOfBigInt(migration.token.amount, 0.01)
+            ]
           : [migration.token.amount, 0n],
       account: userAddress
     },
