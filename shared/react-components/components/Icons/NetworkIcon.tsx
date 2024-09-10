@@ -288,6 +288,7 @@ const GnosisIcon = (props: { className?: string }) => (
     fill='none'
     className={props.className}
   >
+    <rect width='75' height='75' fill='#f0ebde' />
     <g clipPath='url(#clip0_2909_1369)'>
       <path
         d='M12.32 33.08C12.2859 30.9109 12.9912 28.7948 14.32 27.08L27.96 40.72C26.2408 42.0404 24.1277 42.7447 21.96 42.72C19.4066 42.7095 16.9608 41.6905 15.1552 39.8849C13.3496 38.0793 12.3306 35.6335 12.32 33.08Z'
