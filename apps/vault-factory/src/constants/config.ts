@@ -30,9 +30,11 @@ import {
   arbitrumSepolia,
   base,
   baseSepolia,
+  gnosisChiado,
   mainnet,
   optimism,
-  optimismSepolia
+  optimismSepolia,
+  scrollSepolia
 } from 'viem/chains'
 
 /**
@@ -45,7 +47,9 @@ export const SUPPORTED_NETWORKS = [
   NETWORK.base,
   NETWORK.optimism_sepolia,
   NETWORK.arbitrum_sepolia,
-  NETWORK.base_sepolia
+  NETWORK.base_sepolia,
+  NETWORK.scroll_sepolia,
+  NETWORK.gnosis_chiado
 ] as const
 
 /**
@@ -58,7 +62,9 @@ export const WAGMI_CHAINS = {
   [NETWORK.base]: base,
   [NETWORK.optimism_sepolia]: optimismSepolia,
   [NETWORK.arbitrum_sepolia]: arbitrumSepolia,
-  [NETWORK.base_sepolia]: baseSepolia
+  [NETWORK.base_sepolia]: baseSepolia,
+  [NETWORK.scroll_sepolia]: scrollSepolia,
+  [NETWORK.gnosis_chiado]: gnosisChiado
 } as const
 
 /**
@@ -93,7 +99,9 @@ export const RPC_URLS = {
   [NETWORK.base]: process.env.NEXT_PUBLIC_BASE_RPC_URL,
   [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL,
-  [NETWORK.base_sepolia]: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL
+  [NETWORK.base_sepolia]: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL,
+  [NETWORK.scroll_sepolia]: process.env.NEXT_PUBLIC_SCROLL_SEPOLIA_RPC_URL,
+  [NETWORK.gnosis_chiado]: process.env.NEXT_PUBLIC_GNOSIS_CHIADO_RPC_URL
 } as const
 
 /**
@@ -231,6 +239,44 @@ export const NETWORK_CONFIG: Record<
           { address: '0x1E72B8abA9ef584a6E68e0128F7e05b453e96d43', tags: ['stablecoin'] },
           { address: '0xBF8D45B7b07cD0AEAE37ba4369Be1768aaC23569', tags: ['stablecoin'] },
           { address: '0xbbbEDC3689aA47D5410e247135fa817AB9754106' }
+        ]
+      }
+    ]
+  },
+  [NETWORK.scroll_sepolia]: {
+    description: 'Sepolia testnet for the Scroll network.',
+    prizePool: '0xfe2402c48cea2a8a115a1555129046c48a59f835',
+    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.scroll_sepolia],
+    lp: { targetAuctionPeriod: SECONDS_PER_HOUR * 6, targetAuctionPriceUsd: 10 },
+    yieldSources: [
+      {
+        id: 'aave',
+        name: 'Faux Aave',
+        href: 'https://aave.com/',
+        description: 'Lending and borrowing protocol',
+        vaults: [
+          { address: '0x64dc7544c0da701cdf74abf4937bed7f6abb9386', tags: ['stablecoin'] },
+          { address: '0x89db94bdf64edad2b04f1e031b8354f7917ce58f', tags: ['stablecoin'] },
+          { address: '0xfc2ba55cfd10c872d0adb5e6ed3018ad999e6295' }
+        ]
+      }
+    ]
+  },
+  [NETWORK.gnosis_chiado]: {
+    description: 'Chiado testnet for the Gnosis network.',
+    prizePool: '0x678b5a8b958e1582b2677dc21f7fdef4476d9bd7',
+    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.gnosis_chiado],
+    lp: { targetAuctionPeriod: SECONDS_PER_HOUR * 6, targetAuctionPriceUsd: 10 },
+    yieldSources: [
+      {
+        id: 'aave',
+        name: 'Faux Aave',
+        href: 'https://aave.com/',
+        description: 'Lending and borrowing protocol',
+        vaults: [
+          { address: '0x49651e4eda17bbf33631ac2076e83f008d18329c', tags: ['stablecoin'] },
+          { address: '0xd24aa5dee5d9d132ce3af9d2f410be9aa147b3bb', tags: ['stablecoin'] },
+          { address: '0x1e9a05e410c81dd4fedb41b8a724f68c916e9de5' }
         ]
       }
     ]
