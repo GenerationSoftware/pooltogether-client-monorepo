@@ -53,7 +53,7 @@ export const PrizePoolWinners = (props: PrizePoolWinnersProps) => {
   const drawsToDisplay = useMemo(() => {
     if (!!draws?.length) {
       return [...draws]
-        .filter((draw) => draw.prizeClaims.length > 0)
+        .filter((draw) => draw.prizeClaims.filter((claim) => !!claim.payout).length > 0)
         .reverse()
         .slice(isLastDrawOngoing ? 1 : 0, isLastDrawOngoing ? 4 : 3)
     }
