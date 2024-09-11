@@ -26,7 +26,7 @@ import {
 } from '@shared/utilities'
 import defaultVaultList from '@vaultLists/default'
 import memeVaultList from '@vaultLists/meme'
-import { Address, parseUnits } from 'viem'
+import { Address, parseEther } from 'viem'
 import {
   arbitrum,
   arbitrumSepolia,
@@ -36,6 +36,7 @@ import {
   mainnet,
   optimism,
   optimismSepolia,
+  scroll,
   scrollSepolia
 } from 'viem/chains'
 
@@ -43,7 +44,7 @@ import {
  * Supported networks
  */
 export const SUPPORTED_NETWORKS = {
-  mainnets: [NETWORK.mainnet, NETWORK.optimism, NETWORK.base, NETWORK.arbitrum],
+  mainnets: [NETWORK.mainnet, NETWORK.optimism, NETWORK.base, NETWORK.arbitrum, NETWORK.scroll],
   testnets: [
     NETWORK.optimism_sepolia,
     NETWORK.arbitrum_sepolia,
@@ -61,6 +62,7 @@ export const WAGMI_CHAINS = {
   [NETWORK.optimism]: optimism,
   [NETWORK.arbitrum]: arbitrum,
   [NETWORK.base]: base,
+  [NETWORK.scroll]: scroll,
   [NETWORK.optimism_sepolia]: optimismSepolia,
   [NETWORK.arbitrum_sepolia]: arbitrumSepolia,
   [NETWORK.base_sepolia]: baseSepolia,
@@ -98,6 +100,7 @@ export const RPC_URLS = {
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
   [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
   [NETWORK.base]: process.env.NEXT_PUBLIC_BASE_RPC_URL,
+  [NETWORK.scroll]: process.env.NEXT_PUBLIC_SCROLL_RPC_URL,
   [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL,
   [NETWORK.base_sepolia]: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL,
@@ -121,6 +124,7 @@ export const POOL_STAKING_VAULTS: { [chainId: number]: Lowercase<Address> } = {
   [NETWORK.optimism]: '0xa52e38a9147f5ea9e0c5547376c21c9e3f3e5e1f',
   [NETWORK.arbitrum]: '0x97a9c02cfbbf0332d8172331461ab476df1e8c95',
   [NETWORK.base]: '0x6b5a5c55e9dd4bb502ce25bbfbaa49b69cf7e4dd',
+  [NETWORK.scroll]: '0x29499e2eb8ff1d076a35c275aeddd613afb1fa9b',
   [NETWORK.optimism_sepolia]: '0x95849a4c2e58f4f8bf868adef10b05747a24ee71',
   [NETWORK.arbitrum_sepolia]: '0xb608c0f9d37b14bdfefc654b1fc8f38b34541a01',
   [NETWORK.base_sepolia]: '0x8ec8328d3281f8275d6b44ffada9df002b928aea',
@@ -136,6 +140,7 @@ export const QUERY_START_BLOCK = {
   [NETWORK.optimism]: 118_900_000n,
   [NETWORK.arbitrum]: 216_345_400n,
   [NETWORK.base]: 14_506_800n,
+  [NETWORK.scroll]: 9_181_500n,
   [NETWORK.optimism_sepolia]: 10_793_300n,
   [NETWORK.arbitrum_sepolia]: 48_888_900n,
   [NETWORK.base_sepolia]: 10_578_500n,
@@ -192,6 +197,15 @@ export const TWAB_REWARDS_SETTINGS: {
     ],
     fromBlock: QUERY_START_BLOCK[NETWORK.base]
   },
+  [NETWORK.scroll]: {
+    tokenAddresses: [
+      '0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4', // USDC
+      '0x5300000000000000000000000000000000000004', // WETH
+      '0xcA77eB3fEFe3725Dc33bccB54eDEFc3D9f764f97', // DAI
+      '0xF9Af83FC41e0cc2af2fba93644D542Df6eA0F2b7' // POOL
+    ],
+    fromBlock: QUERY_START_BLOCK[NETWORK.scroll]
+  },
   [NETWORK.optimism_sepolia]: {
     tokenAddresses: [
       USDC_TOKEN_ADDRESSES[NETWORK.optimism_sepolia],
@@ -236,7 +250,8 @@ export const WALLET_NAMES: { [address: Lowercase<Address>]: { name: string; chai
   '0x6be9c23aa3c2cfeff92d884e20d1ec9e134ab076': { name: 'GP Booster', chainId: NETWORK.mainnet },
   '0x327b2ea9668a552fe5dec8e3c6e47e540a0a58c6': { name: 'GP Booster', chainId: NETWORK.base },
   '0x1dcfb8b47c2f05ce86c21580c167485de1202e12': { name: 'GP Booster', chainId: NETWORK.arbitrum },
-  '0xdeef914a2ee2f2014ce401dcb4e13f6540d20ba7': { name: 'GP Booster', chainId: NETWORK.optimism }
+  '0xdeef914a2ee2f2014ce401dcb4e13f6540d20ba7': { name: 'GP Booster', chainId: NETWORK.optimism },
+  '0x2d3ad415198d7156e8c112a508b8306699f6e4cc': { name: 'GP Booster', chainId: NETWORK.scroll }
 }
 
 /**
@@ -303,6 +318,14 @@ export const ZAP_TOKEN_OPTIONS: { [chainId: number]: Address[] } = {
     '0x0000206329b97DB379d5E1Bf586BbDB969C63274', // USDA
     '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8', // USDC.e
     '0x912CE59144191C1204E64559FE8253a0e49E6548' // ARB
+  ],
+  [NETWORK.scroll]: [
+    DOLPHIN_ADDRESS, // ETH
+    '0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4', // USDC
+    '0xcA77eB3fEFe3725Dc33bccB54eDEFc3D9f764f97', // DAI
+    '0x5300000000000000000000000000000000000004', // WETH
+    '0xF9Af83FC41e0cc2af2fba93644D542Df6eA0F2b7', // POOL
+    '0xf55BEC9cafDbE8730f096Aa55dad6D22d44099Df' // USDT
   ]
 }
 
@@ -310,10 +333,11 @@ export const ZAP_TOKEN_OPTIONS: { [chainId: number]: Address[] } = {
  * Amount of native assets to suggest not spending (for gas purposes)
  */
 export const NATIVE_ASSET_IGNORE_AMOUNT: { [chainId: number]: bigint } = {
-  [NETWORK.mainnet]: parseUnits('0.01', 18),
-  [NETWORK.optimism]: parseUnits('0.002', 18),
-  [NETWORK.base]: parseUnits('0.002', 18),
-  [NETWORK.arbitrum]: parseUnits('0.002', 18)
+  [NETWORK.mainnet]: parseEther('0.01'),
+  [NETWORK.optimism]: parseEther('0.002'),
+  [NETWORK.base]: parseEther('0.002'),
+  [NETWORK.arbitrum]: parseEther('0.002'),
+  [NETWORK.scroll]: parseEther('0.002')
 }
 
 /**
