@@ -161,6 +161,7 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   },
   [NETWORK.scroll]: {
     [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,
+    [POOL_TOKEN_ADDRESSES[NETWORK.scroll].toLowerCase()]: tokenLogoUrls.pool,
     '0x06efdbff2a14a7c8e15944d1f4a48f9f95f663a4': tokenLogoUrls.usdc,
     '0x5300000000000000000000000000000000000004': tokenLogoUrls.weth,
     '0xca77eb3fefe3725dc33bccb54edefc3d9f764f97': tokenLogoUrls.dai
