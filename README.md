@@ -108,8 +108,8 @@ This Turborepo has some additional tools already setup:
 3. Update `shared/react-components/constants.ts` with values for the new network.
 4. Update `shared/react-components/components/Icons/NetworkIcon.tsx` with a logo for the new network.
 5. Update `packages/hyperstructure-react-hooks/src/blockchain/useClients.ts` with the new network.
-6. Update the `config.ts` and `.env` files for any app you want to use this new network on.
-7. Update the `config.ts` and `wrangler.env` files for any worker you want to use this new network on.
+6. Update the `config.ts`, `wrangler.toml` and `wrangler.example.toml` files for any worker you want to use this new network on.
+7. Update the `config.ts`, `.env` and `.env.example` files for any app you want to use this new network on.
 
 ---
 

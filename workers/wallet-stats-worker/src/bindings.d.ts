@@ -7,4 +7,5 @@ declare global {
   const OPTIMISM_RPC_URL: string
   const BASE_RPC_URL: string
   const ARBITRUM_RPC_URL: string
+  const SCROLL_RPC_URL: string
 }

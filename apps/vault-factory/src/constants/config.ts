@@ -34,6 +34,7 @@ import {
   mainnet,
   optimism,
   optimismSepolia,
+  scroll,
   scrollSepolia
 } from 'viem/chains'
 
@@ -45,6 +46,7 @@ export const SUPPORTED_NETWORKS = [
   NETWORK.optimism,
   NETWORK.arbitrum,
   NETWORK.base,
+  NETWORK.scroll,
   NETWORK.optimism_sepolia,
   NETWORK.arbitrum_sepolia,
   NETWORK.base_sepolia,
@@ -60,6 +62,7 @@ export const WAGMI_CHAINS = {
   [NETWORK.optimism]: optimism,
   [NETWORK.arbitrum]: arbitrum,
   [NETWORK.base]: base,
+  [NETWORK.scroll]: scroll,
   [NETWORK.optimism_sepolia]: optimismSepolia,
   [NETWORK.arbitrum_sepolia]: arbitrumSepolia,
   [NETWORK.base_sepolia]: baseSepolia,
@@ -97,6 +100,7 @@ export const RPC_URLS = {
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
   [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
   [NETWORK.base]: process.env.NEXT_PUBLIC_BASE_RPC_URL,
+  [NETWORK.scroll]: process.env.NEXT_PUBLIC_SCROLL_RPC_URL,
   [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL,
   [NETWORK.base_sepolia]: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL,
@@ -183,6 +187,14 @@ export const NETWORK_CONFIG: Record<
       }
     ],
     contributor: '0x4e30c0a8cce76940d87ae62eb12f3ac536a996f4'
+  },
+  [NETWORK.scroll]: {
+    description: `A zkEVM rollup on Ethereum.`,
+    prizePool: '0xA6ecd65C3EECdb59C2F74956DDF251Ab5D899845',
+    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.scroll],
+    lp: { targetAuctionPeriod: SECONDS_PER_HOUR * 6, targetAuctionPriceUsd: 10 },
+    yieldSources: [],
+    contributor: '0xbDf6bD9BDe192861BD8e0e0a11dAD71f178A34c8'
   },
   [NETWORK.optimism_sepolia]: {
     description: 'Sepolia testnet for the Optimism network.',

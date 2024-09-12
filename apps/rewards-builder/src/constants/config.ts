@@ -28,6 +28,7 @@ import {
   mainnet,
   optimism,
   optimismSepolia,
+  scroll,
   scrollSepolia
 } from 'viem/chains'
 
@@ -39,6 +40,7 @@ export const SUPPORTED_NETWORKS = [
   NETWORK.optimism,
   NETWORK.arbitrum,
   NETWORK.base,
+  NETWORK.scroll,
   NETWORK.optimism_sepolia,
   NETWORK.arbitrum_sepolia,
   NETWORK.base_sepolia,
@@ -54,6 +56,7 @@ export const WAGMI_CHAINS = {
   [NETWORK.optimism]: optimism,
   [NETWORK.arbitrum]: arbitrum,
   [NETWORK.base]: base,
+  [NETWORK.scroll]: scroll,
   [NETWORK.optimism_sepolia]: optimismSepolia,
   [NETWORK.arbitrum_sepolia]: arbitrumSepolia,
   [NETWORK.base_sepolia]: baseSepolia,
@@ -91,6 +94,7 @@ export const RPC_URLS = {
   [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL,
   [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
   [NETWORK.base]: process.env.NEXT_PUBLIC_BASE_RPC_URL,
+  [NETWORK.scroll]: process.env.NEXT_PUBLIC_SCROLL_RPC_URL,
   [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL,
   [NETWORK.base_sepolia]: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL,
@@ -108,6 +112,7 @@ export const PROMOTION_FILTERS: {
   [NETWORK.optimism]: { fromBlock: 118_900_000n },
   [NETWORK.arbitrum]: { fromBlock: 216_345_400n },
   [NETWORK.base]: { fromBlock: 14_506_800n },
+  [NETWORK.scroll]: { fromBlock: 9_181_500n },
   [NETWORK.optimism_sepolia]: { fromBlock: 10_793_300n },
   [NETWORK.arbitrum_sepolia]: { fromBlock: 48_888_900n },
   [NETWORK.base_sepolia]: { fromBlock: 10_578_500n },
