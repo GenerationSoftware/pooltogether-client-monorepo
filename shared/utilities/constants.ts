@@ -39,6 +39,7 @@ export const POOL_TOKEN_ADDRESSES = {
   [NETWORK.arbitrum]: '0xCF934E2402A5e072928a39a956964eb8F2B5B79C',
   [NETWORK.base]: '0xd652C5425aea2Afd5fb142e120FeCf79e18fafc3',
   [NETWORK.scroll]: '0xF9Af83FC41e0cc2af2fba93644D542Df6eA0F2b7',
+  [NETWORK.gnosis]: '0x216a7d520992eD198593A16e0b17c784c9cdc660',
   [NETWORK.optimism_sepolia]: '0x24Ffb8Ca3DeA588B267A15F1d94766dCbA034aE6',
   [NETWORK.arbitrum_sepolia]: '0x02A32F041C16158bcC1CaA90e22B230958eD5c4b',
   [NETWORK.base_sepolia]: '0x50Ac98a0CA373a3935069A8755D895663d2F4A16',
@@ -139,6 +140,19 @@ export const PRIZE_POOLS: {
       prizeTokenAddress: '0x5300000000000000000000000000000000000004',
       drawManagerAddress: '0xa75474749055F71560eB5dCff33605766c69DDf2',
       twabControllerAddress: '0x5ec48e749768Aea9956CB38542A9837ec714537d',
+      drawPeriodInSeconds: 86_400,
+      drawAuctionDurationInSeconds: 10_800,
+      tierShares: 100,
+      reserveShares: 30
+    }
+  },
+  {
+    chainId: NETWORK.gnosis,
+    address: '0x0c08c2999e1a14569554eddbcda9da5e1918120f',
+    options: {
+      prizeTokenAddress: '0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d',
+      drawManagerAddress: '0x146efC8D651DC015225cc2E74707d87aa4d09067',
+      twabControllerAddress: '0x84090aeA5370565B88108c4FfED378672A8AfDE6',
       drawPeriodInSeconds: 86_400,
       drawAuctionDurationInSeconds: 10_800,
       tierShares: 100,
@@ -486,6 +500,7 @@ export const TWAB_REWARDS_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.base]: '0x86f0923d20810441efc593eb0f2825c6bff2dc09',
   [NETWORK.arbitrum]: '0xe21ac38a7e80104c4f6512ce4908a22bc09c59be',
   [NETWORK.scroll]: '0x0e71a9a2bd4546e7fc2af47a015747daeb48780d',
+  [NETWORK.gnosis]: '0x1742157e6ef6e0cf7e49904f2c0d0fe38a276942',
   [NETWORK.optimism_sepolia]: '0x505E334544689C7A4BF4c6A0CF8d52A5fB6F0A4A',
   [NETWORK.arbitrum_sepolia]: '0x6f38ebc8587e2e6b2f79d9f8d045abf44a3bfd13',
   [NETWORK.base_sepolia]: '0x3af156d5eae4bb67afbe9e96e646371f7ba37d18',
@@ -502,6 +517,7 @@ export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.base]: '0xa55a74A457D8a24D68DdA0b5d1E0341746d444Bf',
   [NETWORK.arbitrum]: '0x8020Fb37b21E0eF1707aDa7A914baf44F9045E52',
   [NETWORK.scroll]: '0x3fdd8bfdf2f589c10c58457cdae989c7943a30a5',
+  [NETWORK.gnosis]: '0xc3aE3FE36A2645a93b2Fe350D81E80A14831e2A6',
   [NETWORK.optimism_sepolia]: '0x5ecc83b1a0ba255713b69154451826a937702435',
   [NETWORK.arbitrum_sepolia]: '0x8895efb4299bce2c7e4a5c434c49534bb357bdbc',
   [NETWORK.base_sepolia]: '0xf0346c7889061b29977e66034f284bfb5c761d29',
@@ -518,6 +534,7 @@ export const LIQUIDATION_PAIR_FACTORY_ADDRESSES: { [chainId: number]: Address } 
   [NETWORK.base]: '0x8557a9a33b573dc4403708c5a8746a52648374ea',
   [NETWORK.arbitrum]: '0x163402522fc0c0a7863479a069a8470fb22dfd3f',
   [NETWORK.scroll]: '0xf17d29f1c30da928bf98a73904681c12176de152',
+  [NETWORK.gnosis]: '0xbddd23fdd9fe824d58814ca6d898af518676368a',
   [NETWORK.optimism_sepolia]: '0x99e05e2346885D1c1Ce714c9e794A7ca6E3634b4',
   [NETWORK.arbitrum_sepolia]: '0xe098c4340329f0b0b72eb25e193a70eadb2499f7',
   [NETWORK.base_sepolia]: '0x6e4b2dd17a0b0db73f34a5edabda9ec22c70bce8',
@@ -534,6 +551,7 @@ export const DEFAULT_CLAIMER_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.base]: '0xcdCE635b774DE77cdF791647601dba64a75547ba',
   [NETWORK.arbitrum]: '0xBEA38368f2A657f00f173764f18F00e841317c73',
   [NETWORK.scroll]: '0xb04d5c80a3f6da11532d3a67184bb7be11f00285',
+  [NETWORK.gnosis]: '0x0cffb70cdd335cc5380cb58166699edaa2b0bbfa',
   [NETWORK.optimism_sepolia]: '0xac2be4D9C0d8841c1f0Af43A564BDF2EF3Df3954',
   [NETWORK.arbitrum_sepolia]: '0x24ad9015e48951f74f33dc071af34a6db14e95d9',
   [NETWORK.base_sepolia]: '0xdc5e799a3e57f7642210feb9ebb0d1a38cf4fe84',
@@ -550,6 +568,7 @@ export const LIQUIDATION_ROUTER_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.base]: '0xa9c937a0d1d22ad79099aea10efa62a270dfc22c',
   [NETWORK.arbitrum]: '0x7b4a60964994422bf19ae48a90fbff806767db73',
   [NETWORK.scroll]: '0x6f0b0ad2047f349594c8755ac080de9288d6ef7b',
+  [NETWORK.gnosis]: '0x1664485e6b51ee1a4d4dd35dbec79544a5d006c9',
   [NETWORK.optimism_sepolia]: '0x4694F3CD7fedD269aaF2a168e12C544f829a6b50',
   [NETWORK.arbitrum_sepolia]: '0xb420f83c5936762e6fe0ceef16440df83479d3b7',
   [NETWORK.base_sepolia]: '0x86692766da4cca2f9581729d74da36d180643f8f',
@@ -566,6 +585,7 @@ export const SUBGRAPH_API_URLS = {
   [NETWORK.base]: 'https://api.studio.thegraph.com/query/41211/pt-v5-base/version/latest',
   [NETWORK.arbitrum]: 'https://api.studio.thegraph.com/query/63100/pt-v5-arbitrum/version/latest',
   [NETWORK.scroll]: 'https://api.studio.thegraph.com/query/63100/pt-v5-scroll/version/latest',
+  [NETWORK.gnosis]: 'https://api.studio.thegraph.com/query/63100/pt-v5-gnosis/version/latest',
   [NETWORK.optimism_sepolia]:
     'https://api.studio.thegraph.com/query/63100/pt-v5-op-sepolia/version/latest',
   [NETWORK.arbitrum_sepolia]:
@@ -592,7 +612,8 @@ export const TOKEN_PRICE_API_SUPPORTED_NETWORKS: NETWORK[] = [
   NETWORK.polygon,
   NETWORK.arbitrum,
   NETWORK.base,
-  NETWORK.scroll
+  NETWORK.scroll,
+  NETWORK.gnosis
 ]
 
 /**
@@ -679,6 +700,13 @@ export const TOKEN_PRICE_REDIRECTS: {
   [NETWORK.scroll]: {
     /* POOL */
     [POOL_TOKEN_ADDRESSES[NETWORK.scroll].toLowerCase()]: {
+      chainId: NETWORK.mainnet,
+      address: lower(POOL_TOKEN_ADDRESSES[NETWORK.mainnet])
+    }
+  },
+  [NETWORK.gnosis]: {
+    /* POOL */
+    [POOL_TOKEN_ADDRESSES[NETWORK.gnosis].toLowerCase()]: {
       chainId: NETWORK.mainnet,
       address: lower(POOL_TOKEN_ADDRESSES[NETWORK.mainnet])
     }
