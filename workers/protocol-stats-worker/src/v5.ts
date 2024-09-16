@@ -81,13 +81,15 @@ const getPrizesAwarded = async (chainId: (typeof V5_NETWORKS)[number]) => {
   const prizeData = await getPaginatedV5SubgraphPrizeData(chainId)
 
   if (!!prizeData.length) {
+    const prizeTokenPriceRef = V5_PRIZE_TOKEN_PRICE_REF[chainId]
+
     const prizeTokenPrice = (
-      await getTokenPrices(V5_PRIZE_TOKEN_PRICE_REF.chainId, [V5_PRIZE_TOKEN_PRICE_REF.address])
-    )?.[V5_PRIZE_TOKEN_PRICE_REF.address]
+      await getTokenPrices(prizeTokenPriceRef.chainId, [prizeTokenPriceRef.address])
+    )?.[prizeTokenPriceRef.address]
 
     if (!!prizeTokenPrice) {
       prizeData.forEach((prize) => {
-        const prizeAmount = parseFloat(formatUnits(prize.payout, V5_PRIZE_TOKEN_PRICE_REF.decimals))
+        const prizeAmount = parseFloat(formatUnits(prize.payout, prizeTokenPriceRef.decimals))
         totalPrizesAwarded += prizeAmount * prizeTokenPrice
       })
     }

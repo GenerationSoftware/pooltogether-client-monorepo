@@ -1,14 +1,15 @@
-import { arbitrum, base, Chain, mainnet, optimism, scroll } from 'viem/chains'
+import { arbitrum, base, Chain, gnosis, mainnet, optimism, scroll } from 'viem/chains'
 import { Network } from './types'
 
-export const NETWORKS = [mainnet.id, optimism.id, base.id, arbitrum.id, scroll.id]
+export const NETWORKS = [mainnet.id, optimism.id, base.id, arbitrum.id, scroll.id, gnosis.id]
 
 export const VIEM_CHAINS: Record<Network, Chain> = {
   [mainnet.id]: mainnet,
   [optimism.id]: optimism,
   [base.id]: base,
   [arbitrum.id]: arbitrum,
-  [scroll.id]: scroll
+  [scroll.id]: scroll,
+  [gnosis.id]: gnosis
 }
 
 export const RPC_URLS: Record<Network, string> = {
@@ -16,7 +17,8 @@ export const RPC_URLS: Record<Network, string> = {
   [optimism.id]: OPTIMISM_RPC_URL,
   [base.id]: BASE_RPC_URL,
   [arbitrum.id]: ARBITRUM_RPC_URL,
-  [scroll.id]: SCROLL_RPC_URL
+  [scroll.id]: SCROLL_RPC_URL,
+  [gnosis.id]: GNOSIS_RPC_URL
 }
 
 export const TOKEN_PRICES_API_URL = 'https://token-prices.api.cabana.fi'

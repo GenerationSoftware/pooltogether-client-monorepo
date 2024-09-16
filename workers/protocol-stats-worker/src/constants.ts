@@ -1,5 +1,5 @@
 import type { Chain } from 'viem'
-import { arbitrum, base, mainnet, optimism, scroll } from 'viem/chains'
+import { arbitrum, base, gnosis, mainnet, optimism, scroll } from 'viem/chains'
 
 export const DEFAULT_HEADERS = {
   headers: {
@@ -23,7 +23,8 @@ export enum NETWORK {
   optimism = 10,
   arbitrum = 42161,
   base = 8453,
-  scroll = 534352
+  scroll = 534352,
+  gnosis = 100
 }
 
 export const VIEM_CHAINS: Record<NETWORK, Chain> = {
@@ -31,7 +32,8 @@ export const VIEM_CHAINS: Record<NETWORK, Chain> = {
   [NETWORK.optimism]: optimism,
   [NETWORK.arbitrum]: arbitrum,
   [NETWORK.base]: base,
-  [NETWORK.scroll]: scroll
+  [NETWORK.scroll]: scroll,
+  [NETWORK.gnosis]: gnosis
 }
 
 export const V5_NETWORKS = [
@@ -39,7 +41,8 @@ export const V5_NETWORKS = [
   NETWORK.optimism,
   NETWORK.base,
   NETWORK.arbitrum,
-  NETWORK.scroll
+  NETWORK.scroll,
+  NETWORK.gnosis
 ] as const satisfies NETWORK[]
 
 export const RPC_URLS: Record<(typeof V5_NETWORKS)[number], string> = {
@@ -47,7 +50,8 @@ export const RPC_URLS: Record<(typeof V5_NETWORKS)[number], string> = {
   [NETWORK.optimism]: OPTIMISM_RPC_URL,
   [NETWORK.base]: BASE_RPC_URL,
   [NETWORK.arbitrum]: ARBITRUM_RPC_URL,
-  [NETWORK.scroll]: SCROLL_RPC_URL
+  [NETWORK.scroll]: SCROLL_RPC_URL,
+  [NETWORK.gnosis]: GNOSIS_RPC_URL
 }
 
 export const V5_SUBGRAPH_API_URLS: Record<(typeof V5_NETWORKS)[number], `https://${string}`> = {
@@ -55,14 +59,45 @@ export const V5_SUBGRAPH_API_URLS: Record<(typeof V5_NETWORKS)[number], `https:/
   [NETWORK.optimism]: 'https://api.studio.thegraph.com/query/63100/pt-v5-optimism/version/latest',
   [NETWORK.base]: 'https://api.studio.thegraph.com/query/41211/pt-v5-base/version/latest',
   [NETWORK.arbitrum]: 'https://api.studio.thegraph.com/query/63100/pt-v5-arbitrum/version/latest',
-  [NETWORK.scroll]: 'https://api.studio.thegraph.com/query/63100/pt-v5-scroll/version/latest'
+  [NETWORK.scroll]: 'https://api.studio.thegraph.com/query/63100/pt-v5-scroll/version/latest',
+  [NETWORK.gnosis]: 'https://api.studio.thegraph.com/query/63100/pt-v5-gnosis/version/latest'
 }
 
-export const V5_PRIZE_TOKEN_PRICE_REF = {
-  chainId: NETWORK.mainnet,
-  address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-  decimals: 18
-} as const satisfies { chainId: NETWORK; address: Lowercase<`0x${string}`>; decimals: number }
+export const V5_PRIZE_TOKEN_PRICE_REF: Record<
+  (typeof V5_NETWORKS)[number],
+  { chainId: NETWORK; address: Lowercase<`0x${string}`>; decimals: number }
+> = {
+  [NETWORK.mainnet]: {
+    chainId: NETWORK.mainnet,
+    address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+    decimals: 18
+  },
+  [NETWORK.optimism]: {
+    chainId: NETWORK.mainnet,
+    address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+    decimals: 18
+  },
+  [NETWORK.base]: {
+    chainId: NETWORK.mainnet,
+    address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+    decimals: 18
+  },
+  [NETWORK.arbitrum]: {
+    chainId: NETWORK.mainnet,
+    address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+    decimals: 18
+  },
+  [NETWORK.scroll]: {
+    chainId: NETWORK.mainnet,
+    address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+    decimals: 18
+  },
+  [NETWORK.gnosis]: {
+    chainId: NETWORK.gnosis,
+    address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+    decimals: 18
+  }
+}
 
 export const USD_PRICE_REF = {
   chainId: NETWORK.mainnet,

@@ -10,4 +10,5 @@ declare global {
   const ARBITRUM_RPC_URL: string
   const BASE_RPC_URL: string
   const SCROLL_RPC_URL: string
+  const GNOSIS_RPC_URL: string
 }
