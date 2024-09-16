@@ -87,7 +87,7 @@ The dependencies for these libraries are picked up from the root `package.json` 
 - `token-prices-worker`: Caching token prices.
 - `wallet-stats-worker`: Caching basic stats regarding wallet software usage (metamask, rainbow, etc.).
 
-**Repo Links:** [Protocol Stats](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/workers/protocol-stats-worker) | [Token Prices](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/workers/token-prices-worker)
+**Repo Links:** [Protocol Stats](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/workers/protocol-stats-worker) | [Token Prices](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/workers/token-prices-worker) | [Wallet Stats](https://github.com/GenerationSoftware/pooltogether-client-monorepo/tree/main/workers/wallet-stats-worker)
 
 ---
 
