@@ -32,6 +32,7 @@ import {
   arbitrumSepolia,
   base,
   baseSepolia,
+  gnosis,
   gnosisChiado,
   mainnet,
   optimism,
@@ -44,7 +45,14 @@ import {
  * Supported networks
  */
 export const SUPPORTED_NETWORKS = {
-  mainnets: [NETWORK.mainnet, NETWORK.optimism, NETWORK.base, NETWORK.arbitrum, NETWORK.scroll],
+  mainnets: [
+    NETWORK.mainnet,
+    NETWORK.optimism,
+    NETWORK.base,
+    NETWORK.arbitrum,
+    NETWORK.scroll,
+    NETWORK.gnosis
+  ],
   testnets: [
     NETWORK.optimism_sepolia,
     NETWORK.arbitrum_sepolia,
@@ -63,6 +71,7 @@ export const WAGMI_CHAINS = {
   [NETWORK.arbitrum]: arbitrum,
   [NETWORK.base]: base,
   [NETWORK.scroll]: scroll,
+  [NETWORK.gnosis]: gnosis,
   [NETWORK.optimism_sepolia]: optimismSepolia,
   [NETWORK.arbitrum_sepolia]: arbitrumSepolia,
   [NETWORK.base_sepolia]: baseSepolia,
@@ -101,6 +110,7 @@ export const RPC_URLS = {
   [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
   [NETWORK.base]: process.env.NEXT_PUBLIC_BASE_RPC_URL,
   [NETWORK.scroll]: process.env.NEXT_PUBLIC_SCROLL_RPC_URL,
+  [NETWORK.gnosis]: process.env.NEXT_PUBLIC_GNOSIS_RPC_URL,
   [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL,
   [NETWORK.base_sepolia]: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL,
@@ -125,6 +135,7 @@ export const POOL_STAKING_VAULTS: { [chainId: number]: Lowercase<Address> } = {
   [NETWORK.arbitrum]: '0x97a9c02cfbbf0332d8172331461ab476df1e8c95',
   [NETWORK.base]: '0x6b5a5c55e9dd4bb502ce25bbfbaa49b69cf7e4dd',
   [NETWORK.scroll]: '0x29499e2eb8ff1d076a35c275aeddd613afb1fa9b',
+  [NETWORK.gnosis]: '0xb75af20ecadabed9049cc2f50e38bad2768b35cf',
   [NETWORK.optimism_sepolia]: '0x95849a4c2e58f4f8bf868adef10b05747a24ee71',
   [NETWORK.arbitrum_sepolia]: '0xb608c0f9d37b14bdfefc654b1fc8f38b34541a01',
   [NETWORK.base_sepolia]: '0x8ec8328d3281f8275d6b44ffada9df002b928aea',
@@ -141,6 +152,7 @@ export const QUERY_START_BLOCK = {
   [NETWORK.arbitrum]: 216_345_400n,
   [NETWORK.base]: 14_506_800n,
   [NETWORK.scroll]: 9_181_500n,
+  [NETWORK.gnosis]: 35_938_500n,
   [NETWORK.optimism_sepolia]: 10_793_300n,
   [NETWORK.arbitrum_sepolia]: 48_888_900n,
   [NETWORK.base_sepolia]: 10_578_500n,
@@ -206,6 +218,14 @@ export const TWAB_REWARDS_SETTINGS: {
     ],
     fromBlock: QUERY_START_BLOCK[NETWORK.scroll]
   },
+  [NETWORK.gnosis]: {
+    tokenAddresses: [
+      '0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d', // WXDAI
+      '0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1', // WETH
+      '0x216a7d520992eD198593A16e0b17c784c9cdc660' // POOL
+    ],
+    fromBlock: QUERY_START_BLOCK[NETWORK.gnosis]
+  },
   [NETWORK.optimism_sepolia]: {
     tokenAddresses: [
       USDC_TOKEN_ADDRESSES[NETWORK.optimism_sepolia],
@@ -251,7 +271,8 @@ export const WALLET_NAMES: { [address: Lowercase<Address>]: { name: string; chai
   '0x327b2ea9668a552fe5dec8e3c6e47e540a0a58c6': { name: 'GP Booster', chainId: NETWORK.base },
   '0x1dcfb8b47c2f05ce86c21580c167485de1202e12': { name: 'GP Booster', chainId: NETWORK.arbitrum },
   '0xdeef914a2ee2f2014ce401dcb4e13f6540d20ba7': { name: 'GP Booster', chainId: NETWORK.optimism },
-  '0x2d3ad415198d7156e8c112a508b8306699f6e4cc': { name: 'GP Booster', chainId: NETWORK.scroll }
+  '0x2d3ad415198d7156e8c112a508b8306699f6e4cc': { name: 'GP Booster', chainId: NETWORK.scroll },
+  '0x65f3aea2594d82024b7ee98ddcf08f991ab1c626': { name: 'GP Booster', chainId: NETWORK.gnosis }
 }
 
 /**
@@ -326,6 +347,13 @@ export const ZAP_TOKEN_OPTIONS: { [chainId: number]: Address[] } = {
     '0x5300000000000000000000000000000000000004', // WETH
     '0xF9Af83FC41e0cc2af2fba93644D542Df6eA0F2b7', // POOL
     '0xf55BEC9cafDbE8730f096Aa55dad6D22d44099Df' // USDT
+  ],
+  [NETWORK.gnosis]: [
+    DOLPHIN_ADDRESS, // XDAI
+    '0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83', // USDC
+    '0x2a22f9c3b484c3629090FeED35F17Ff8F88f76F0', // USDC.e
+    '0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1', // WETH
+    '0x216a7d520992eD198593A16e0b17c784c9cdc660' // POOL
   ]
 }
 
@@ -337,7 +365,8 @@ export const NATIVE_ASSET_IGNORE_AMOUNT: { [chainId: number]: bigint } = {
   [NETWORK.optimism]: parseEther('0.002'),
   [NETWORK.base]: parseEther('0.002'),
   [NETWORK.arbitrum]: parseEther('0.002'),
-  [NETWORK.scroll]: parseEther('0.002')
+  [NETWORK.scroll]: parseEther('0.002'),
+  [NETWORK.gnosis]: parseEther('5')
 }
 
 /**

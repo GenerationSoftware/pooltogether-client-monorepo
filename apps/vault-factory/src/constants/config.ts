@@ -30,6 +30,7 @@ import {
   arbitrumSepolia,
   base,
   baseSepolia,
+  gnosis,
   gnosisChiado,
   mainnet,
   optimism,
@@ -47,6 +48,7 @@ export const SUPPORTED_NETWORKS = [
   NETWORK.arbitrum,
   NETWORK.base,
   NETWORK.scroll,
+  NETWORK.gnosis,
   NETWORK.optimism_sepolia,
   NETWORK.arbitrum_sepolia,
   NETWORK.base_sepolia,
@@ -63,6 +65,7 @@ export const WAGMI_CHAINS = {
   [NETWORK.arbitrum]: arbitrum,
   [NETWORK.base]: base,
   [NETWORK.scroll]: scroll,
+  [NETWORK.gnosis]: gnosis,
   [NETWORK.optimism_sepolia]: optimismSepolia,
   [NETWORK.arbitrum_sepolia]: arbitrumSepolia,
   [NETWORK.base_sepolia]: baseSepolia,
@@ -101,6 +104,7 @@ export const RPC_URLS = {
   [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL,
   [NETWORK.base]: process.env.NEXT_PUBLIC_BASE_RPC_URL,
   [NETWORK.scroll]: process.env.NEXT_PUBLIC_SCROLL_RPC_URL,
+  [NETWORK.gnosis]: process.env.NEXT_PUBLIC_GNOSIS_RPC_URL,
   [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL,
   [NETWORK.base_sepolia]: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL,
@@ -194,6 +198,22 @@ export const NETWORK_CONFIG: Record<
     claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.scroll],
     lp: { targetAuctionPeriod: SECONDS_PER_HOUR * 6, targetAuctionPriceUsd: 10 },
     yieldSources: [],
+    contributor: '0xbDf6bD9BDe192861BD8e0e0a11dAD71f178A34c8'
+  },
+  [NETWORK.gnosis]: {
+    description: `A community-owned rollup on Ethereum.`,
+    prizePool: '0x0c08c2999e1a14569554eddbcda9da5e1918120f',
+    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.gnosis],
+    lp: { targetAuctionPeriod: SECONDS_PER_HOUR * 6, targetAuctionPriceUsd: 10 },
+    yieldSources: [
+      {
+        id: 'dai',
+        name: 'DAI Savings Rate',
+        href: 'https://summer.fi/earn/dsr',
+        description: 'Native DAI yield',
+        vaults: [{ address: '0xaf204776c7245bF4147c2612BF6e5972Ee483701', tags: ['stablecoin'] }]
+      }
+    ],
     contributor: '0xbDf6bD9BDe192861BD8e0e0a11dAD71f178A34c8'
   },
   [NETWORK.optimism_sepolia]: {
