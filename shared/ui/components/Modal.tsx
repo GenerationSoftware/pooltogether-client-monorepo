@@ -243,13 +243,7 @@ const ModalContent = (props: ModalContentProps) => {
           {headerContent}
         </ModalHeader>
       )}
-      <ModalBody
-        className={classNames(
-          'md:overflow-y-auto',
-          { 'overflow-y-auto': mobileStyle !== 'cover' },
-          bodyClassName
-        )}
-      >
+      <ModalBody className={classNames('overflow-y-auto md:overflow-y-auto', bodyClassName)}>
         {bodyContent}
       </ModalBody>
       {!!footerContent && <ModalFooter className={footerClassName}>{footerContent}</ModalFooter>}
