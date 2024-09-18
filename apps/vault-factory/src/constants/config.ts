@@ -214,7 +214,7 @@ export const NETWORK_CONFIG: Record<
         vaults: [{ address: '0xaf204776c7245bF4147c2612BF6e5972Ee483701', tags: ['stablecoin'] }]
       }
     ],
-    contributor: '0xbDf6bD9BDe192861BD8e0e0a11dAD71f178A34c8'
+    contributor: '0x69fc8095b949c0ff703ead99bf7d6620843c37ef'
   },
   [NETWORK.optimism_sepolia]: {
     description: 'Sepolia testnet for the Optimism network.',
