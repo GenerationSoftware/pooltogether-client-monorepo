@@ -20,8 +20,8 @@ import {
 import {
   DEFAULT_CLAIMER_ADDRESSES,
   NETWORK,
-  SECONDS_PER_DAY,
-  SECONDS_PER_HOUR
+  SECONDS_PER_HOUR,
+  SECONDS_PER_WEEK
 } from '@shared/utilities'
 import { SupportedNetwork, YieldSourceVaultTag } from 'src/types'
 import { Address } from 'viem'
@@ -136,7 +136,7 @@ export const NETWORK_CONFIG: Record<
     description: 'The settlement layer for the internet.',
     prizePool: '0x7865D01da4C9BA2F69B7879e6d2483aB6B354d95',
     claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.mainnet],
-    lp: { targetAuctionPeriod: SECONDS_PER_DAY, targetAuctionPriceUsd: 100 },
+    lp: { targetAuctionPeriod: SECONDS_PER_WEEK, targetAuctionPriceUsd: 100 },
     yieldSources: [],
     contributor: '0x84882eb46da981d1ad2f154359061942ca1c062f'
   },
