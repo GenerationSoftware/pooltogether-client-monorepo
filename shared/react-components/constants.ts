@@ -181,6 +181,7 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
   },
   [NETWORK.gnosis]: {
     [DOLPHIN_ADDRESS]: tokenLogoUrls.xdai,
+    [POOL_TOKEN_ADDRESSES[NETWORK.gnosis].toLowerCase()]: tokenLogoUrls.pool,
     '0xddafbb505ad214d7b80b1f830fccc89b60fb7a83': tokenLogoUrls.usdc,
     '0x2a22f9c3b484c3629090feed35f17ff8f88f76f0': tokenLogoUrls.usdc,
     '0x6a023ccd1ff6f2045c3309768ead9e68f978f6e1': tokenLogoUrls.weth,
