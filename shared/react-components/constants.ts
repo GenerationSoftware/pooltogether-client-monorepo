@@ -39,7 +39,9 @@ const tokenLogoUrls = {
   ldo: 'https://assets.coingecko.com/coins/images/13573/standard/Lido_DAO.png',
   aero: 'https://assets.coingecko.com/coins/images/31745/standard/token.png',
   cbeth: 'https://assets.coingecko.com/coins/images/27008/standard/cbeth.png',
-  xdai: 'https://gnosisscan.io/token/images/wrappedxdai_32.png'
+  xdai: 'https://gnosisscan.io/token/images/wrappedxdai_32.png',
+  usds: 'https://assets.coingecko.com/coins/images/39926/standard/usds.webp',
+  superOETH: 'https://assets.coingecko.com/coins/images/39828/standard/Super_OETH.png'
 } as const
 
 /**
@@ -63,7 +65,8 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0xd533a949740bb3306d119cc777fa900ba034cd52': tokenLogoUrls.crv,
     '0xdac17f958d2ee523a2206206994597c13d831ec7': tokenLogoUrls.usdt,
     '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984': tokenLogoUrls.uni,
-    '0x5a98fcbea516cf06857215779fd812ca3bef1b32': tokenLogoUrls.ldo
+    '0x5a98fcbea516cf06857215779fd812ca3bef1b32': tokenLogoUrls.ldo,
+    '0xdc035d45d973e3ec169d2276ddab16f1e407384f': tokenLogoUrls.usds
   },
   [NETWORK.sepolia]: {
     [DOLPHIN_ADDRESS]: tokenLogoUrls.eth
@@ -150,7 +153,8 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x0578d8a44db98b23bf096a382e016e29a5ce0ffe': tokenLogoUrls.higher,
     '0xa88594d404727625a9437c3f886c7643872296ae': tokenLogoUrls.well,
     '0x940181a94a35a4569e4529a3cdfb74e38fd98631': tokenLogoUrls.aero,
-    '0x2ae3f1ec7f1f5012cfeab0185bfc7aa3cf0dec22': tokenLogoUrls.cbeth
+    '0x2ae3f1ec7f1f5012cfeab0185bfc7aa3cf0dec22': tokenLogoUrls.cbeth,
+    '0xdbfefd2e8460a6ee4955a68582f85708baea60a3': tokenLogoUrls.superOETH
   },
   [NETWORK.base_sepolia]: {
     [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,

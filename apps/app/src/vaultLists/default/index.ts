@@ -4,6 +4,7 @@ import { arbitrumVaults } from './arbitrum'
 import { arbitrumSepoliaVaults } from './arbitrumSepolia'
 import { baseVaults } from './base'
 import { baseSepoliaVaults } from './baseSepolia'
+import { gnosisVaults } from './gnosis'
 import { gnosisChiadoVaults } from './gnosisChiado'
 import { mainnetVaults } from './mainnet'
 import { optimismVaults } from './optimism'
@@ -13,9 +14,19 @@ import { scrollSepoliaVaults } from './scrollSepolia'
 
 const defaultVaultList: VaultList = {
   name: 'Cabana Vault List',
-  keywords: ['pooltogether', 'cabana', 'g9', 'ethereum', 'optimism', 'base', 'arbitrum', 'scroll'],
-  version: { major: 2, minor: 14, patch: 0 },
-  timestamp: '2024-09-11T18:52:33Z',
+  keywords: [
+    'pooltogether',
+    'cabana',
+    'g9',
+    'ethereum',
+    'optimism',
+    'base',
+    'arbitrum',
+    'scroll',
+    'gnosis'
+  ],
+  version: { major: 2, minor: 15, patch: 0 },
+  timestamp: '2024-09-19T18:06:33Z',
   logoURI: `${DOMAINS.app}/favicon.png`,
   tokens: [
     ...mainnetVaults,
@@ -23,6 +34,7 @@ const defaultVaultList: VaultList = {
     ...baseVaults,
     ...arbitrumVaults,
     ...scrollVaults,
+    ...gnosisVaults,
     ...optimismSepoliaVaults,
     ...baseSepoliaVaults,
     ...arbitrumSepoliaVaults,

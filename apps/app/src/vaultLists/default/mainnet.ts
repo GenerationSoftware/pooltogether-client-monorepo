@@ -61,5 +61,24 @@ export const mainnetVaults: VaultList['tokens'] = [
           'https://app.aave.com/reserve-overview/?underlyingAsset=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&marketName=proto_lido_v3'
       }
     }
+  },
+  {
+    chainId: NETWORK.mainnet,
+    address: '0x8aB157b779C72e2348364b5F8148cC45f63a8724',
+    name: 'Prize USDS',
+    decimals: 18,
+    symbol: 'przUSDS',
+    tags: ['dsr'],
+    extensions: {
+      underlyingAsset: {
+        address: '0xdC035D45d973E3EC169d2276DDab16f1e407384F',
+        symbol: 'USDS',
+        name: 'USDS Stablecoin'
+      },
+      yieldSource: {
+        name: 'Sky',
+        appURI: 'https://app.sky.money/'
+      }
+    }
   }
 ]

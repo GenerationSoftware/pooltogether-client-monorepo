@@ -624,6 +624,13 @@ export const TOKEN_PRICE_REDIRECTS: {
     [address: Lowercase<Address>]: { chainId: number; address: Lowercase<Address> }
   }
 } = {
+  [NETWORK.mainnet]: {
+    /* USDS */
+    '0xdc035d45d973e3ec169d2276ddab16f1e407384f': {
+      chainId: NETWORK.mainnet,
+      address: '0x6b175474e89094c44da98b954eedeac495271d0f'
+    }
+  },
   [NETWORK.optimism]: {
     /* POOL */
     [POOL_TOKEN_ADDRESSES[NETWORK.optimism].toLowerCase()]: {
