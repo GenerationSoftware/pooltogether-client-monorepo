@@ -9,6 +9,7 @@ import {
   getVaultExchangeRates,
   getVaultId,
   getVaultsByChainId,
+  getVaultTotalDelegateSupplies,
   getVaultUnderlyingTokenAddresses,
   validateAddress,
   validateClientNetwork
@@ -436,5 +437,43 @@ export class Vaults {
     this.underlyingTokenAddresses = tokenAddresses
 
     return this.underlyingTokenAddresses
+  }
+
+  /**
+   * Returns each vault's total delegate supply (total supply - sponsored supply)
+   * @returns
+   */
+  async getTotalDelegateSupplies(): Promise<{ [vaultId: string]: bigint }> {
+    const totalDelegateSupplies: { [vaultId: string]: bigint } = {}
+
+    await Promise.allSettled(
+      this.chainIds.map((chainId) =>
+        (async () => {
+          const vaultAddresses = this.vaultAddresses[chainId]
+          if (!!vaultAddresses?.length) {
+            const client = this.publicClients[chainId]
+            if (!!client) {
+              const source = `Vaults [getTotalDelegateSupplies] [${chainId}]`
+              await validateClientNetwork(chainId, client, source)
+              const chainVaults = getVaultsByChainId(chainId, this.allVaultInfo)
+              const twabControllerAddress = await this.vaults[
+                getVaultId({ chainId, address: vaultAddresses[0] })
+              ].getTWABController()
+              const chainTotalDelegateSupplies = await getVaultTotalDelegateSupplies(
+                client,
+                chainVaults,
+                twabControllerAddress
+              )
+
+              Object.keys(chainTotalDelegateSupplies).forEach((vaultId) => {
+                totalDelegateSupplies[vaultId] = chainTotalDelegateSupplies[vaultId]
+              })
+            }
+          }
+        })()
+      )
+    )
+
+    return totalDelegateSupplies
   }
 }

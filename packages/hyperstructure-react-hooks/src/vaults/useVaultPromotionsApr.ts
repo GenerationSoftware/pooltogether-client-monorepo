@@ -3,7 +3,13 @@ import { TokenWithPrice } from '@shared/types'
 import { getSecondsSinceEpoch, lower, SECONDS_PER_YEAR } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
-import { useTokenPrices, useTokens, useVaultPromotions, useVaultSharePrice } from '..'
+import {
+  useTokenPrices,
+  useTokens,
+  useVaultPromotions,
+  useVaultSharePrice,
+  useVaultTotalDelegateSupply
+} from '..'
 
 /**
  * Returns a vault's bonus rewards APR
@@ -45,21 +51,27 @@ export const useVaultPromotionsApr = (
     tokenAddresses
   )
 
+  const {
+    data: totalDelegateSupply,
+    isFetched: isFetchedTotalDelegateSupply,
+    refetch: refetchTotalDelegateSupply
+  } = useVaultTotalDelegateSupply(vault)
+
   const data = useMemo(() => {
-    if (shareToken?.totalSupply === 0n || shareToken?.price === 0) {
+    if (totalDelegateSupply === 0n || shareToken?.price === 0) {
       return { apr: 0, tokens: [] }
     }
 
     if (
       !!vaultPromotions &&
-      !!shareToken &&
-      !!shareToken.price &&
+      !!shareToken?.price &&
       !!rewardTokenPrices &&
-      !!rewardTokenData
+      !!rewardTokenData &&
+      !!totalDelegateSupply
     ) {
       const currentTimestamp = getSecondsSinceEpoch()
       const tvl =
-        parseFloat(formatUnits(shareToken.totalSupply, shareToken.decimals)) * shareToken.price
+        parseFloat(formatUnits(totalDelegateSupply, shareToken.decimals)) * shareToken.price
 
       const relevantTokenAddresses = new Set<Address>()
       let apr = 0
@@ -116,17 +128,19 @@ export const useVaultPromotionsApr = (
 
       return { apr, tokens: promotionTokens }
     }
-  }, [vaultPromotions, shareToken, rewardTokenPrices, rewardTokenData])
+  }, [vaultPromotions, shareToken, rewardTokenPrices, rewardTokenData, totalDelegateSupply])
 
   const isFetched =
     isFetchedVaultPromotions &&
     isFetchedShareToken &&
     isFetchedRewardTokenPrices &&
-    isFetchedRewardTokenData
+    isFetchedRewardTokenData &&
+    isFetchedTotalDelegateSupply
 
   const refetch = () => {
     refetchVaultPromotions()
     refetchShareToken()
+    refetchTotalDelegateSupply()
   }
 
   return { data, isFetched, refetch }

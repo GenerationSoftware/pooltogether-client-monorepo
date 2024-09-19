@@ -3,7 +3,13 @@ import { TokenWithPrice } from '@shared/types'
 import { getSecondsSinceEpoch, lower, SECONDS_PER_YEAR } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
-import { useAllVaultPromotions, useAllVaultSharePrices, useTokenPrices, useTokens } from '..'
+import {
+  useAllVaultPromotions,
+  useAllVaultSharePrices,
+  useAllVaultTotalDelegateSupplies,
+  useTokenPrices,
+  useTokens
+} from '..'
 
 /**
  * Returns each vault's bonus rewards APR
@@ -52,6 +58,12 @@ export const useAllVaultPromotionsApr = (
     tokenAddresses
   )
 
+  const {
+    data: allTotalDelegateSupplies,
+    isFetched: isFetchedAllTotalDelegateSupplies,
+    refetch: refetchAllTotalDelegateSupplies
+  } = useAllVaultTotalDelegateSupplies(vaults)
+
   const data = useMemo(() => {
     const vaultPromotionAprs: { [vaultId: string]: number } = {}
 
@@ -60,7 +72,8 @@ export const useAllVaultPromotionsApr = (
       !!allVaultPromotions?.[chainId] &&
       !!allShareTokens &&
       !!rewardTokenPrices &&
-      !!rewardTokenData
+      !!rewardTokenData &&
+      !!allTotalDelegateSupplies
     ) {
       const currentTimestamp = getSecondsSinceEpoch()
 
@@ -68,13 +81,13 @@ export const useAllVaultPromotionsApr = (
         .filter((vault) => vault.chainId === chainId)
         .forEach((vault) => {
           const shareToken = allShareTokens[vault.id]
+          const totalDelegateSupply = allTotalDelegateSupplies[vault.id]
 
-          if (shareToken?.totalSupply === 0n || shareToken?.price === 0) {
+          if (totalDelegateSupply === 0n || shareToken?.price === 0) {
             vaultPromotionAprs[vault.id] = 0
-          } else if (!!shareToken?.price) {
+          } else if (!!totalDelegateSupply && !!shareToken?.price) {
             const tvl =
-              parseFloat(formatUnits(shareToken.totalSupply, shareToken.decimals)) *
-              shareToken.price
+              parseFloat(formatUnits(totalDelegateSupply, shareToken.decimals)) * shareToken.price
 
             tokenAddresses.forEach((address) => {
               const rewardToken: TokenWithPrice = {
@@ -129,17 +142,25 @@ export const useAllVaultPromotionsApr = (
     }
 
     return vaultPromotionAprs
-  }, [allVaultPromotions, allShareTokens, rewardTokenPrices, rewardTokenData])
+  }, [
+    allVaultPromotions,
+    allShareTokens,
+    rewardTokenPrices,
+    rewardTokenData,
+    allTotalDelegateSupplies
+  ])
 
   const isFetched =
     isFetchedAllVaultPromotions &&
     isFetchedAllShareTokens &&
     isFetchedRewardTokenPrices &&
-    isFetchedRewardTokenData
+    isFetchedRewardTokenData &&
+    isFetchedAllTotalDelegateSupplies
 
   const refetch = () => {
     refetchAllVaultPromotions()
     refetchAllShareTokens()
+    refetchAllTotalDelegateSupplies()
   }
 
   return { data, isFetched, refetch }

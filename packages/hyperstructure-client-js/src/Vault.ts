@@ -486,6 +486,26 @@ export class Vault {
     return this.owner
   }
 
+  /**
+   * Returns the vault's total delegate supply (total supply - sponsored supply)
+   * @returns
+   */
+  async getTotalDelegateSupply(): Promise<bigint> {
+    const source = 'Vault [getTotalDelegateSupply]'
+    await validateClientNetwork(this.chainId, this.publicClient, source)
+
+    const twabControllerAddress = await this.getTWABController()
+
+    const totalDelegateSupply = await this.publicClient.readContract({
+      address: twabControllerAddress,
+      abi: twabControllerABI,
+      functionName: 'totalSupplyDelegateBalance',
+      args: [this.address]
+    })
+
+    return totalDelegateSupply
+  }
+
   /* ============================== Write Functions ============================== */
 
   /**

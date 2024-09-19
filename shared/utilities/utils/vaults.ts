@@ -346,3 +346,46 @@ export const getVaultUnderlyingTokenAddresses = async (
 
   return tokenAddresses
 }
+
+/**
+ * Returns each vault's total delegate supply (total supply - sponsored supply)
+ * @param publicClient a public Viem client for the chain that should be queried
+ * @param vaults vaults to query through
+ * @param twabController the address of the TWAB controller to query through
+ * @returns
+ */
+export const getVaultTotalDelegateSupplies = async (
+  publicClient: PublicClient,
+  vaults: VaultInfo[],
+  twabController: Address
+): Promise<{
+  [vaultId: string]: bigint
+}> => {
+  const vaultTotalDelegateSupplies: { [vaultId: string]: bigint } = {}
+  const chainId = await publicClient.getChainId()
+  const filteredVaults = !!chainId
+    ? vaults.filter((vault) => vault.chainId === chainId && vault.decimals !== undefined)
+    : []
+
+  if (filteredVaults.length > 0) {
+    const calls = filteredVaults.map(({ address }) => ({
+      functionName: 'totalSupplyDelegateBalance',
+      args: [address]
+    }))
+
+    const multicallResults = await getSimpleMulticallResults(
+      publicClient,
+      twabController,
+      twabControllerABI,
+      calls
+    )
+
+    filteredVaults.forEach((vaultInfo, i) => {
+      const result = multicallResults[i]
+      const vaultId = getVaultId(vaultInfo)
+      vaultTotalDelegateSupplies[vaultId] = result
+    })
+  }
+
+  return vaultTotalDelegateSupplies
+}
