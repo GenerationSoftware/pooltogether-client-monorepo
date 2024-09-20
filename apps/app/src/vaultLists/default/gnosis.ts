@@ -34,8 +34,8 @@ export const gnosisVaults: VaultList['tokens'] = [
         name: 'Wrapped XDAI'
       },
       yieldSource: {
-        name: 'Agave',
-        appURI: 'https://agavefinance.eth.limo/sdai/'
+        name: 'Spark',
+        appURI: 'https://app.spark.fi/savings'
       }
     }
   }
