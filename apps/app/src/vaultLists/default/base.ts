@@ -164,5 +164,24 @@ export const baseVaults: VaultList['tokens'] = [
           'https://aerodrome.finance/deposit?token0=0x4200000000000000000000000000000000000006&token1=0xA88594D404727625A9437C3f886C7643872296AE&type=-1'
       }
     }
+  },
+  {
+    chainId: NETWORK.base,
+    address: '0x78adc13c9ab327c79d10cab513b7c6bd3b346858',
+    name: 'Prize Super OETH',
+    decimals: 18,
+    symbol: 'przSuperOETHb',
+    tags: ['origin'],
+    extensions: {
+      underlyingAsset: {
+        address: '0xDBFeFD2e8460a6Ee4955A68582F85708BAEA60A3',
+        symbol: 'superOETHb',
+        name: 'Super OETH'
+      },
+      yieldSource: {
+        name: 'Origin',
+        appURI: 'https://originprotocol.eth.limo/#/super'
+      }
+    }
   }
 ]
