@@ -1,9 +1,15 @@
 import { Selection, SelectionItem, Spinner } from '@shared/ui'
 import classNames from 'classnames'
-import { useAtom, useAtomValue } from 'jotai'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useEffect, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { vaultChainIdAtom, vaultYieldSourceAddressAtom, vaultYieldSourceIdAtom } from 'src/atoms'
+import {
+  vaultChainIdAtom,
+  vaultNameAtom,
+  vaultSymbolAtom,
+  vaultYieldSourceAddressAtom,
+  vaultYieldSourceIdAtom
+} from 'src/atoms'
 import { YieldSourceVaultTag } from 'src/types'
 import { Address } from 'viem'
 import { NextButton } from '@components/buttons/NextButton'
@@ -29,6 +35,9 @@ export const YieldVaultForm = (props: YieldVaultFormProps) => {
   const vaultYieldSourceId = useAtomValue(vaultYieldSourceIdAtom)
   const [vaultYieldSourceAddress, setVaultYieldSourceAddress] = useAtom(vaultYieldSourceAddressAtom)
 
+  const setVaultName = useSetAtom(vaultNameAtom)
+  const setVaultSymbol = useSetAtom(vaultSymbolAtom)
+
   const { nextStep } = useVaultCreationSteps()
 
   const [filterId, setFilterId] = useState<'all' | YieldSourceVaultTag>('all')
@@ -41,7 +50,14 @@ export const YieldVaultForm = (props: YieldVaultFormProps) => {
   }, [])
 
   const onSubmit = (data: YieldVaultFormValues) => {
-    setVaultYieldSourceAddress(data.vaultYieldSourceAddress.trim() as Address)
+    const selectedYieldSourceAddress = data.vaultYieldSourceAddress.trim() as Address
+
+    if (selectedYieldSourceAddress !== vaultYieldSourceAddress) {
+      setVaultName(undefined)
+      setVaultSymbol(undefined)
+    }
+
+    setVaultYieldSourceAddress(selectedYieldSourceAddress)
     nextStep()
   }
 

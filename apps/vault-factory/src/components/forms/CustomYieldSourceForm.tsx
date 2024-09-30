@@ -5,6 +5,8 @@ import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import {
   isUsingCustomYieldSourceAtom,
+  vaultNameAtom,
+  vaultSymbolAtom,
   vaultYieldSourceAddressAtom,
   vaultYieldSourceNameAtom
 } from 'src/atoms'
@@ -33,6 +35,9 @@ export const CustomYieldSourceForm = (props: CustomYieldSourceFormProps) => {
   const [vaultYieldSourceAddress, setVaultYieldSourceAddress] = useAtom(vaultYieldSourceAddressAtom)
   const setIsUsingCustomYieldSource = useSetAtom(isUsingCustomYieldSourceAtom)
 
+  const setVaultName = useSetAtom(vaultNameAtom)
+  const setVaultSymbol = useSetAtom(vaultSymbolAtom)
+
   const { step, setStep } = useVaultCreationSteps()
 
   useEffect(() => {
@@ -45,8 +50,16 @@ export const CustomYieldSourceForm = (props: CustomYieldSourceFormProps) => {
   }, [])
 
   const onSubmit = (data: CustomYieldSourceFormValues) => {
-    setVaultYieldSourceName(data.vaultYieldSourceName.trim())
-    setVaultYieldSourceAddress(data.vaultYieldSourceAddress.trim() as Address)
+    const selectedYieldSourceName = data.vaultYieldSourceName.trim()
+    const selectedYieldSourceAddress = data.vaultYieldSourceAddress.trim() as Address
+
+    if (selectedYieldSourceAddress !== vaultYieldSourceAddress) {
+      setVaultName(undefined)
+      setVaultSymbol(undefined)
+    }
+
+    setVaultYieldSourceName(selectedYieldSourceName)
+    setVaultYieldSourceAddress(selectedYieldSourceAddress)
     setStep(step + 2)
   }
 
