@@ -156,7 +156,9 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
             'vaultOwner',
             'vaultFee',
             'vaultFeeRecipient',
-            'lpSourceURI'
+            'lpSourceURI',
+            'sponsoredTvl',
+            'sponsoredTvlMultiplier'
           ]}
           className={maxWidthClassName}
         />

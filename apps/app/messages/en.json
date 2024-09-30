@@ -109,6 +109,8 @@
       "prizeYield": "Prize Yield",
       "bonusRewards": "Bonus Rewards",
       "tvl": "TVL",
+      "sponsoredTvl": "Sponsored TVL",
+      "sponsoredTvlMultiplier": "Effective Sponsored Multiplier",
       "totalDeposited": "Total Deposited",
       "contributions": "Prize Pool Contributions",
       "depositToken": "Deposit Token",

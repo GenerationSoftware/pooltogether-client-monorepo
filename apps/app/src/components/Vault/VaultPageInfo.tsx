@@ -8,7 +8,8 @@ import {
   useVaultOwner,
   useVaultPromotionsApr,
   useVaultShareData,
-  useVaultTokenData
+  useVaultTokenData,
+  useVaultTotalDelegateSupply
 } from '@generationsoftware/hyperstructure-react-hooks'
 import {
   BonusRewardsTooltip,
@@ -38,6 +39,7 @@ import { VaultBonusRewards } from './VaultBonusRewards'
 import { VaultContributions } from './VaultContributions'
 import { VaultFeePercentage } from './VaultFeePercentage'
 import { VaultPrizeYield } from './VaultPrizeYield'
+import { VaultSponsoredDeposits } from './VaultSponsoredDeposits'
 import { VaultTotalDeposits } from './VaultTotalDeposits'
 
 interface VaultPageInfoProps {
@@ -49,6 +51,8 @@ interface VaultPageInfoProps {
     | 'prizeYield'
     | 'bonusRewards'
     | 'tvl'
+    | 'sponsoredTvl'
+    | 'sponsoredTvlMultiplier'
     | 'vaultContributions'
     | 'depositToken'
     | 'prizeToken'
@@ -72,6 +76,8 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
 
   const { data: shareData, isFetched: isFetchedShareData } = useVaultShareData(vault)
   const { data: tokenData, isFetched: isFetchedTokenData } = useVaultTokenData(vault)
+
+  const { data: totalDelegateSupply } = useVaultTotalDelegateSupply(vault)
 
   const { data: shareBalance } = useUserVaultShareBalance(vault, userAddress!)
   const { data: delegationBalance } = useUserVaultDelegationBalance(vault, userAddress!)
@@ -317,6 +323,30 @@ export const VaultPageInfo = (props: VaultPageInfoProps) => {
           )}
         </>
       )}
+      {!!shareData?.totalSupply &&
+        !!totalDelegateSupply &&
+        shareData.totalSupply > totalDelegateSupply && (
+          <>
+            {show.includes('sponsoredTvl') && (
+              <VaultInfoRow
+                name={t_vault('headers.sponsoredTvl')}
+                data={
+                  <VaultSponsoredDeposits
+                    vault={vault}
+                    className='!flex-row gap-1'
+                    valueClassName='!text-base md:!text-lg'
+                  />
+                }
+              />
+            )}
+            {show.includes('sponsoredTvlMultiplier') && (
+              <VaultInfoRow
+                name={t_vault('headers.sponsoredTvlMultiplier')}
+                data={<VaultSponsoredDeposits vault={vault} onlyShowMultiplier={true} />}
+              />
+            )}
+          </>
+        )}
     </div>
   )
 }
