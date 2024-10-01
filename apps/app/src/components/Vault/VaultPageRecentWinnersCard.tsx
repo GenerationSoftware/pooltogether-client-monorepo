@@ -86,17 +86,25 @@ export const VaultPageRecentWinnersCard = (props: VaultPageRecentWinnersCardProp
     }
   }
 
+  const initialSortedByTimestamp = useMemo(() => {
+    const recentWins = [...wins].sort((a, b) => b.timestamp - a.timestamp)
+    return recentWins
+  }, [wins])
+
   const sortedWins = useMemo(() => {
+    const sortedByTimestamp = [...initialSortedByTimestamp.slice(0, 6)]
+
     if (sortBy === 'timestamp') {
-      const sortedByTimestamp = [...wins].sort((a, b) => b.timestamp - a.timestamp)
       return sortDirection === 'desc' ? sortedByTimestamp : sortedByTimestamp.reverse()
     } else if (sortBy === 'amount') {
-      const sortedByAmount = [...wins].sort((a, b) => sortByBigIntDesc(a.amount, b.amount))
+      const sortedByAmount = [...sortedByTimestamp].sort((a, b) =>
+        sortByBigIntDesc(a.amount, b.amount)
+      )
       return sortDirection === 'desc' ? sortedByAmount : sortedByAmount.reverse()
     } else {
-      return wins
+      return sortedByTimestamp
     }
-  }, [wins, sortBy, sortDirection])
+  }, [initialSortedByTimestamp, sortBy, sortDirection])
 
   const isFetched = !!isFetchedPrizeToken && !!prizeToken && !!isFetchedDraws && !!draws
 
@@ -125,7 +133,7 @@ export const VaultPageRecentWinnersCard = (props: VaultPageRecentWinnersCardProp
                 {t_prizes('prize')}
               </SortableHeader>
             </div>
-            {sortedWins.slice(0, 6).map((win) => (
+            {sortedWins.map((win) => (
               <WinnerRow
                 key={`prize-${win.winner}-${win.timestamp}`}
                 {...win}
