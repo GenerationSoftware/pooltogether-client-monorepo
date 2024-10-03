@@ -22,9 +22,6 @@ export const getNiceNetworkNameByChainId = (chainId: number): string => {
     case NETWORK.mainnet: {
       return 'Ethereum'
     }
-    case NETWORK.bsc: {
-      return 'Binance Smart Chain'
-    }
     case NETWORK.optimism_sepolia: {
       return 'Optimism Sepolia'
     }
@@ -34,9 +31,6 @@ export const getNiceNetworkNameByChainId = (chainId: number): string => {
     case NETWORK.base_sepolia: {
       return 'Base Sepolia'
     }
-    case NETWORK.bsc_testnet: {
-      return 'BSC Testnet'
-    }
     case NETWORK.celo_testnet: {
       return 'Celo Testnet'
     }
@@ -45,6 +39,9 @@ export const getNiceNetworkNameByChainId = (chainId: number): string => {
     }
     case NETWORK.gnosis_chiado: {
       return 'Gnosis Chiado'
+    }
+    case NETWORK.world_sepolia: {
+      return 'World Sepolia'
     }
     default: {
       const niceName = getNetworkNameByChainId(chainId)
@@ -62,8 +59,6 @@ export const isTestnet = (chainId: number) => {
   const values: Record<NETWORK, boolean> = {
     [NETWORK.mainnet]: false,
     [NETWORK.sepolia]: true,
-    [NETWORK.bsc]: false,
-    [NETWORK.bsc_testnet]: true,
     [NETWORK.polygon]: false,
     [NETWORK.mumbai]: true,
     [NETWORK.optimism]: false,
@@ -79,7 +74,9 @@ export const isTestnet = (chainId: number) => {
     [NETWORK.scroll]: false,
     [NETWORK.scroll_sepolia]: true,
     [NETWORK.gnosis]: false,
-    [NETWORK.gnosis_chiado]: true
+    [NETWORK.gnosis_chiado]: true,
+    [NETWORK.world]: false,
+    [NETWORK.world_sepolia]: true
   }
 
   return values[chainId as NETWORK] ?? false
@@ -94,8 +91,6 @@ export const isOpStack = (chainId: number) => {
   const values: Record<NETWORK, boolean> = {
     [NETWORK.mainnet]: false,
     [NETWORK.sepolia]: false,
-    [NETWORK.bsc]: false,
-    [NETWORK.bsc_testnet]: false,
     [NETWORK.polygon]: false,
     [NETWORK.mumbai]: false,
     [NETWORK.optimism]: true,
@@ -111,7 +106,9 @@ export const isOpStack = (chainId: number) => {
     [NETWORK.scroll]: false,
     [NETWORK.scroll_sepolia]: false,
     [NETWORK.gnosis]: false,
-    [NETWORK.gnosis_chiado]: false
+    [NETWORK.gnosis_chiado]: false,
+    [NETWORK.world]: true,
+    [NETWORK.world_sepolia]: true
   }
 
   return values[chainId as NETWORK] ?? false

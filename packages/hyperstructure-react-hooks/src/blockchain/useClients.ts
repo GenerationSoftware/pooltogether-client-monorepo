@@ -24,7 +24,8 @@ export const usePublicClients = (options?: { useAll?: boolean }): PublicClient[]
       usePublicClient({ chainId: NETWORK.avalanche }),
       usePublicClient({ chainId: NETWORK.celo }),
       usePublicClient({ chainId: NETWORK.scroll }),
-      usePublicClient({ chainId: NETWORK.gnosis })
+      usePublicClient({ chainId: NETWORK.gnosis }),
+      usePublicClient({ chainId: NETWORK.world })
     ],
     testnets: [
       usePublicClient({ chainId: NETWORK.sepolia }),
@@ -32,7 +33,8 @@ export const usePublicClients = (options?: { useAll?: boolean }): PublicClient[]
       usePublicClient({ chainId: NETWORK.arbitrum_sepolia }),
       usePublicClient({ chainId: NETWORK.base_sepolia }),
       usePublicClient({ chainId: NETWORK.scroll_sepolia }),
-      usePublicClient({ chainId: NETWORK.gnosis_chiado })
+      usePublicClient({ chainId: NETWORK.gnosis_chiado }),
+      usePublicClient({ chainId: NETWORK.world_sepolia })
     ]
   }
 
@@ -74,7 +76,8 @@ export const usePublicClientsByChain = (options?: {
       [NETWORK.avalanche]: usePublicClient({ chainId: NETWORK.avalanche }),
       [NETWORK.celo]: usePublicClient({ chainId: NETWORK.celo }),
       [NETWORK.scroll]: usePublicClient({ chainId: NETWORK.scroll }),
-      [NETWORK.gnosis]: usePublicClient({ chainId: NETWORK.gnosis })
+      [NETWORK.gnosis]: usePublicClient({ chainId: NETWORK.gnosis }),
+      [NETWORK.world]: usePublicClient({ chainId: NETWORK.world })
     },
     testnets: {
       [NETWORK.sepolia]: usePublicClient({ chainId: NETWORK.sepolia }),
@@ -82,7 +85,8 @@ export const usePublicClientsByChain = (options?: {
       [NETWORK.arbitrum_sepolia]: usePublicClient({ chainId: NETWORK.arbitrum_sepolia }),
       [NETWORK.base_sepolia]: usePublicClient({ chainId: NETWORK.base_sepolia }),
       [NETWORK.scroll_sepolia]: usePublicClient({ chainId: NETWORK.scroll_sepolia }),
-      [NETWORK.gnosis_chiado]: usePublicClient({ chainId: NETWORK.gnosis_chiado })
+      [NETWORK.gnosis_chiado]: usePublicClient({ chainId: NETWORK.gnosis_chiado }),
+      [NETWORK.world_sepolia]: usePublicClient({ chainId: NETWORK.world_sepolia })
     }
   }
 
