@@ -34,8 +34,8 @@
     "tslib": "^2.6.0",
     "turbo": "1.13.4",
     "typescript": "^5.0.4",
-    "viem": "2.13.2",
-    "wagmi": "2.9.8"
+    "viem": "2.21.16",
+    "wagmi": "2.12.16"
   },
   "packageManager": "pnpm@8.12.1"
 }

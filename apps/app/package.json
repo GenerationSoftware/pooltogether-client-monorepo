@@ -11,7 +11,6 @@
     "@generationsoftware/hyperstructure-client-js": "workspace:*",
     "@generationsoftware/hyperstructure-react-hooks": "workspace:*",
     "@heroicons/react": "^2.0.16",
-    "@highlight-run/next": "^7.5.3",
     "@rainbow-me/rainbowkit": "2.1.1",
     "@tanstack/react-query": "^5.20.5",
     "axios": "^1.4.0",
@@ -30,8 +29,8 @@
     "react-hook-form": "^7.43.2",
     "recharts": "2.8.0",
     "sonner": "^0.4.0",
-    "viem": "2.13.2",
-    "wagmi": "2.9.8"
+    "viem": "2.21.16",
+    "wagmi": "2.12.16"
   },
   "devDependencies": {
     "@types/node": "^17.0.45",

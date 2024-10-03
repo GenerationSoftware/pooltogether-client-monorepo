@@ -26,7 +26,7 @@ export const getDepositEvents = async (
       name: 'Deposit',
       type: 'event'
     },
-    args: { sender: options?.sender, owner: options?.owner },
+    args: { sender: options?.sender ?? null, owner: options?.owner ?? null },
     fromBlock: options?.fromBlock,
     toBlock: options?.toBlock ?? 'latest',
     strict: true
@@ -64,7 +64,11 @@ export const getWithdrawEvents = async (
       name: 'Withdraw',
       type: 'event'
     },
-    args: { sender: options?.sender, receiver: options?.receiver, owner: options?.owner },
+    args: {
+      sender: options?.sender ?? null,
+      receiver: options?.receiver ?? null,
+      owner: options?.owner ?? null
+    },
     fromBlock: options?.fromBlock,
     toBlock: options?.toBlock ?? 'latest',
     strict: true
@@ -287,7 +291,7 @@ export const getVaultContributionEvents = async (
       name: 'ContributePrizeTokens',
       type: 'event'
     },
-    args: { vault: options?.vaultAddress },
+    args: { vault: options?.vaultAddress ?? null },
     fromBlock: options?.fromBlock,
     toBlock: options?.toBlock ?? 'latest',
     strict: true
@@ -371,8 +375,8 @@ export const getTokenTransferEvents = async (
       type: 'event'
     },
     args: {
-      from: options?.from,
-      to: options?.to
+      from: options?.from ?? null,
+      to: options?.to ?? null
     },
     fromBlock: options?.fromBlock,
     toBlock: options?.toBlock ?? 'latest',
@@ -422,9 +426,9 @@ export const getPromotionCreatedEvents = async (
       type: 'event'
     },
     args: {
-      promotionId: options?.promotionIds,
-      vault: options?.vaultAddresses,
-      token: options?.tokenAddresses
+      promotionId: options?.promotionIds ?? null,
+      vault: options?.vaultAddresses ?? null,
+      token: options?.tokenAddresses ?? null
     },
     fromBlock: options?.fromBlock,
     toBlock: options?.toBlock ?? 'latest',
@@ -470,8 +474,8 @@ export const getPromotionRewardsClaimedEvents = async (
       type: 'event'
     },
     args: {
-      promotionId: options?.promotionIds,
-      user: options?.userAddresses
+      promotionId: options?.promotionIds ?? null,
+      user: options?.userAddresses ?? null
     },
     fromBlock: options?.fromBlock,
     toBlock: options?.toBlock ?? 'latest',
