@@ -624,8 +624,9 @@ export const SUBGRAPH_API_URLS = {
   [NETWORK.scroll_sepolia]:
     'https://api.studio.thegraph.com/query/63100/pt-v5-scroll-sepolia/version/latest',
   [NETWORK.gnosis_chiado]:
-    'https://api.studio.thegraph.com/query/63100/pt-v5-gnosis-chiado/version/latest'
-  // TODO: add url for world sepolia
+    'https://api.studio.thegraph.com/query/63100/pt-v5-gnosis-chiado/version/latest',
+  [NETWORK.world_sepolia]:
+    'https://subgraph.satsuma-prod.com/632659a063b5/charless-team--719469/pt-v5-world-sepolia/api'
 } as const satisfies { [chainId: number]: `https://${string}` }
 
 /**
