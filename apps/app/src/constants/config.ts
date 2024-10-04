@@ -38,7 +38,8 @@ import {
   optimism,
   optimismSepolia,
   scroll,
-  scrollSepolia
+  scrollSepolia,
+  worldchainSepolia
 } from 'viem/chains'
 
 /**
@@ -58,7 +59,8 @@ export const SUPPORTED_NETWORKS = {
     NETWORK.arbitrum_sepolia,
     NETWORK.base_sepolia,
     NETWORK.scroll_sepolia,
-    NETWORK.gnosis_chiado
+    NETWORK.gnosis_chiado,
+    NETWORK.world_sepolia
   ]
 } as const
 
@@ -76,7 +78,8 @@ export const WAGMI_CHAINS = {
   [NETWORK.arbitrum_sepolia]: arbitrumSepolia,
   [NETWORK.base_sepolia]: baseSepolia,
   [NETWORK.scroll_sepolia]: scrollSepolia,
-  [NETWORK.gnosis_chiado]: gnosisChiado
+  [NETWORK.gnosis_chiado]: gnosisChiado,
+  [NETWORK.world_sepolia]: worldchainSepolia
 } as const
 
 /**
@@ -115,7 +118,8 @@ export const RPC_URLS = {
   [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL,
   [NETWORK.base_sepolia]: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL,
   [NETWORK.scroll_sepolia]: process.env.NEXT_PUBLIC_SCROLL_SEPOLIA_RPC_URL,
-  [NETWORK.gnosis_chiado]: process.env.NEXT_PUBLIC_GNOSIS_CHIADO_RPC_URL
+  [NETWORK.gnosis_chiado]: process.env.NEXT_PUBLIC_GNOSIS_CHIADO_RPC_URL,
+  [NETWORK.world_sepolia]: process.env.NEXT_PUBLIC_WORLD_SEPOLIA_RPC_URL
 } as const
 
 /**
@@ -140,7 +144,8 @@ export const POOL_STAKING_VAULTS: { [chainId: number]: Lowercase<Address> } = {
   [NETWORK.arbitrum_sepolia]: '0xb608c0f9d37b14bdfefc654b1fc8f38b34541a01',
   [NETWORK.base_sepolia]: '0x8ec8328d3281f8275d6b44ffada9df002b928aea',
   [NETWORK.scroll_sepolia]: '0xff44f114daa9a7e75c998a2bb9a1bb55bc25240b',
-  [NETWORK.gnosis_chiado]: '0x7c44c6dd009a36ef393dba89d9d1e1528648cb51'
+  [NETWORK.gnosis_chiado]: '0x7c44c6dd009a36ef393dba89d9d1e1528648cb51',
+  [NETWORK.world_sepolia]: '0xff8719561871fe862a4af87d3dfef0c34303ed0c'
 }
 
 /**
@@ -157,7 +162,8 @@ export const QUERY_START_BLOCK = {
   [NETWORK.arbitrum_sepolia]: 48_888_900n,
   [NETWORK.base_sepolia]: 10_578_500n,
   [NETWORK.scroll_sepolia]: 6_429_500n,
-  [NETWORK.gnosis_chiado]: 11_555_000n
+  [NETWORK.gnosis_chiado]: 11_555_000n,
+  [NETWORK.world_sepolia]: 3_666_100n
 } as const satisfies { [chainId: number]: bigint }
 
 /**
@@ -260,6 +266,13 @@ export const TWAB_REWARDS_SETTINGS: {
       POOL_TOKEN_ADDRESSES[NETWORK.gnosis_chiado]
     ],
     fromBlock: QUERY_START_BLOCK[NETWORK.gnosis_chiado]
+  },
+  [NETWORK.world_sepolia]: {
+    tokenAddresses: [
+      USDC_TOKEN_ADDRESSES[NETWORK.world_sepolia],
+      POOL_TOKEN_ADDRESSES[NETWORK.world_sepolia]
+    ],
+    fromBlock: QUERY_START_BLOCK[NETWORK.world_sepolia]
   }
 }
 

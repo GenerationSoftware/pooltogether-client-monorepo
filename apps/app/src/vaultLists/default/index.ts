@@ -11,6 +11,7 @@ import { optimismVaults } from './optimism'
 import { optimismSepoliaVaults } from './optimismSepolia'
 import { scrollVaults } from './scroll'
 import { scrollSepoliaVaults } from './scrollSepolia'
+import { worldSepoliaVaults } from './worldSepolia'
 
 const defaultVaultList: VaultList = {
   name: 'Cabana Vault List',
@@ -23,10 +24,11 @@ const defaultVaultList: VaultList = {
     'base',
     'arbitrum',
     'scroll',
-    'gnosis'
+    'gnosis',
+    'world'
   ],
-  version: { major: 2, minor: 15, patch: 2 },
-  timestamp: '2024-09-27T22:09:12Z',
+  version: { major: 2, minor: 15, patch: 3 },
+  timestamp: '2024-10-04T18:53:17Z',
   logoURI: `${DOMAINS.app}/favicon.png`,
   tokens: [
     ...mainnetVaults,
@@ -39,7 +41,8 @@ const defaultVaultList: VaultList = {
     ...baseSepoliaVaults,
     ...arbitrumSepoliaVaults,
     ...scrollSepoliaVaults,
-    ...gnosisChiadoVaults
+    ...gnosisChiadoVaults,
+    ...worldSepoliaVaults
   ]
 }
 
