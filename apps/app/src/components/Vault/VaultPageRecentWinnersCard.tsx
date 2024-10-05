@@ -3,9 +3,10 @@ import {
   usePrizeDrawWinners,
   usePrizeTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline'
 import { SortIcon } from '@shared/react-components'
 import { Token } from '@shared/types'
-import { Spinner } from '@shared/ui'
+import { Button, Spinner } from '@shared/ui'
 import {
   formatBigIntForDisplay,
   getSimpleDate,
@@ -70,6 +71,7 @@ export const VaultPageRecentWinnersCard = (props: VaultPageRecentWinnersCardProp
 
   const [sortBy, setSortBy] = useState<SortId>('timestamp')
   const [sortDirection, setSortDirection] = useState<'desc' | 'asc'>('desc')
+  const [showMore, setShowMore] = useState(false)
 
   const handleHeaderClick = (id: SortId) => {
     if (sortBy === id) {
@@ -86,29 +88,45 @@ export const VaultPageRecentWinnersCard = (props: VaultPageRecentWinnersCardProp
     }
   }
 
+  const initialSortedByTimestamp = useMemo(() => {
+    const recentWins = [...wins].sort((a, b) => b.timestamp - a.timestamp)
+    return recentWins
+  }, [wins])
+
   const sortedWins = useMemo(() => {
+    const sortedByTimestamp = [...initialSortedByTimestamp]
+    let finalSortedWins
     if (sortBy === 'timestamp') {
-      const sortedByTimestamp = [...wins].sort((a, b) => b.timestamp - a.timestamp)
-      return sortDirection === 'desc' ? sortedByTimestamp : sortedByTimestamp.reverse()
+      finalSortedWins = sortDirection === 'desc' ? sortedByTimestamp : sortedByTimestamp.reverse()
     } else if (sortBy === 'amount') {
-      const sortedByAmount = [...wins].sort((a, b) => sortByBigIntDesc(a.amount, b.amount))
-      return sortDirection === 'desc' ? sortedByAmount : sortedByAmount.reverse()
+      const sortedByAmount = [...sortedByTimestamp].sort((a, b) =>
+        sortByBigIntDesc(a.amount, b.amount)
+      )
+      finalSortedWins = sortDirection === 'desc' ? sortedByAmount : sortedByAmount.reverse()
     } else {
-      return wins
+      finalSortedWins = sortedByTimestamp
     }
-  }, [wins, sortBy, sortDirection])
+
+    if (!showMore) finalSortedWins = finalSortedWins.slice(0, 6)
+    return finalSortedWins
+  }, [initialSortedByTimestamp, sortBy, sortDirection, showMore])
 
   const isFetched = !!isFetchedPrizeToken && !!prizeToken && !!isFetchedDraws && !!draws
 
   return (
     <VaultPageCard
       title={t_prizes('recentWinners')}
-      wrapperClassName={classNames('w-full aspect-[4/3] md:aspect-[7/3] md:px-16', className)}
+      wrapperClassName={classNames('w-full  h-auto min-h-[300px] md:px-16', className)}
     >
       {isFetched ? (
         sortedWins.length ? (
           <div className='w-full grow flex flex-col gap-2'>
-            <div className='w-full grid grid-cols-3 font-semibold text-pt-purple-300'>
+            <div
+              className={classNames(
+                'w-full grid grid-cols-3 font-semibold text-pt-purple-300 transition-all duration-700 ease-in-out',
+                showMore && 'pr-6'
+              )}
+            >
               <span className='text-left'>{t_prizes('drawModal.winner')}</span>
               <SortableHeader
                 onClick={() => handleHeaderClick('timestamp')}
@@ -120,18 +138,43 @@ export const VaultPageRecentWinnersCard = (props: VaultPageRecentWinnersCardProp
               <SortableHeader
                 onClick={() => handleHeaderClick('amount')}
                 direction={getDirection('amount')}
-                className='justify-end text-right'
+                className={`justify-end text-right`}
               >
                 {t_prizes('prize')}
               </SortableHeader>
             </div>
-            {sortedWins.slice(0, 6).map((win) => (
-              <WinnerRow
-                key={`prize-${win.winner}-${win.timestamp}`}
-                {...win}
-                prizeToken={prizeToken}
-              />
-            ))}
+
+            <div
+              className={classNames(
+                'flex flex-col gap-2 flex-1 max overflow-y-auto transition-all duration-700 ease-in-out max-h-80',
+                showMore && 'pr-2'
+              )}
+            >
+              {sortedWins.map((win) => (
+                <WinnerRow
+                  key={`prize-${win.winner}-${win.timestamp}`}
+                  {...win}
+                  prizeToken={prizeToken}
+                />
+              ))}
+            </div>
+            <Button
+              size='sm'
+              onClick={() => setShowMore(!showMore)}
+              className='w-fit mt-2 mx-auto flex gap-1 justify-self-end'
+            >
+              {showMore ? (
+                <>
+                  <span className='flex-1'>{t_common('showLess')}</span>
+                  <ChevronUpIcon className='w-4 h-4' />
+                </>
+              ) : (
+                <>
+                  <span className='flex-1'>{t_common('showMore')}</span>
+                  <ChevronDownIcon className='w-4 h-4' />
+                </>
+              )}
+            </Button>
           </div>
         ) : (
           <span className='text-sm text-pt-purple-100 md:text-base'>{t_vault('noWinnersYet')}</span>
