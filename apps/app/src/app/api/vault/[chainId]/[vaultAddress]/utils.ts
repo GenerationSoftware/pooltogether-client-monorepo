@@ -473,29 +473,31 @@ const getBonusRewardsInfo = async (
 const getVaultPromotions = async (vault: Vault) => {
   const promotions: { [id: string]: PartialPromotionInfo } = {}
 
-  const promotionCreatedEvents = await getPromotionCreatedEvents(vault.publicClient, {
-    vaultAddresses: [vault.address],
-    tokenAddresses: TWAB_REWARDS_SETTINGS[vault.chainId]?.tokenAddresses,
-    fromBlock: TWAB_REWARDS_SETTINGS[vault.chainId]?.fromBlock
-  })
+  try {
+    const promotionCreatedEvents = await getPromotionCreatedEvents(vault.publicClient, {
+      vaultAddresses: [vault.address],
+      tokenAddresses: TWAB_REWARDS_SETTINGS[vault.chainId]?.tokenAddresses,
+      fromBlock: TWAB_REWARDS_SETTINGS[vault.chainId]?.fromBlock
+    })
 
-  const allPromotionInfo = await getPromotions(
-    vault.publicClient,
-    promotionCreatedEvents.map((e) => e.args.promotionId)
-  )
+    const allPromotionInfo = await getPromotions(
+      vault.publicClient,
+      promotionCreatedEvents.map((e) => e.args.promotionId)
+    )
 
-  promotionCreatedEvents?.forEach((promotionCreatedEvent) => {
-    const id = promotionCreatedEvent.args.promotionId.toString()
-    promotions[id] = {
-      startTimestamp: promotionCreatedEvent.args.startTimestamp,
-      vault: promotionCreatedEvent.args.vault,
-      epochDuration: promotionCreatedEvent.args.epochDuration,
-      createdAtBlockNumber: promotionCreatedEvent.blockNumber,
-      token: promotionCreatedEvent.args.token,
-      tokensPerEpoch: promotionCreatedEvent.args.tokensPerEpoch,
-      ...allPromotionInfo[id]
-    }
-  })
+    promotionCreatedEvents?.forEach((promotionCreatedEvent) => {
+      const id = promotionCreatedEvent.args.promotionId.toString()
+      promotions[id] = {
+        startTimestamp: promotionCreatedEvent.args.startTimestamp,
+        vault: promotionCreatedEvent.args.vault,
+        epochDuration: promotionCreatedEvent.args.epochDuration,
+        createdAtBlockNumber: promotionCreatedEvent.blockNumber,
+        token: promotionCreatedEvent.args.token,
+        tokensPerEpoch: promotionCreatedEvent.args.tokensPerEpoch,
+        ...allPromotionInfo[id]
+      }
+    })
+  } catch {}
 
   return promotions
 }

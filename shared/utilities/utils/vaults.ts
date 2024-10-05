@@ -1,11 +1,11 @@
 import { VaultInfo } from '@shared/types'
 import {
   Address,
+  ContractFunctionParameters,
   formatUnits,
   isAddress,
   parseUnits,
-  PublicClient,
-  ReadContractParameters
+  PublicClient
 } from 'viem'
 import { twabControllerABI } from '../abis/twabController'
 import { vaultABI } from '../abis/vault'
@@ -275,7 +275,7 @@ export const getVaultAddressesFromFactories = async (
     }
   })
 
-  const contracts: ReadContractParameters<typeof vaultFactoryABI>[] = []
+  const contracts: ContractFunctionParameters<typeof vaultFactoryABI, 'view', 'allVaults'>[] = []
   Object.entries(vaultIndexes).forEach(([address, indexes]) => {
     indexes.forEach((index) => {
       contracts.push({
