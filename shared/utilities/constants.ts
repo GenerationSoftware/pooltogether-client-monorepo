@@ -338,6 +338,11 @@ export const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead'
 export const OP_GAS_ORACLE_ADDRESS = '0x420000000000000000000000000000000000000f'
 
 /**
+ * Optimism multicall address
+ */
+export const OP_MULTICALL_ADDRESS = '0xca11bde05977b3631167028862be2a173976ca11'
+
+/**
  * Native assets' info
  */
 export const NATIVE_ASSETS: Record<NETWORK, Token> = {

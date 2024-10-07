@@ -1,4 +1,4 @@
-import { NETWORK } from '@shared/utilities'
+import { NETWORK, OP_MULTICALL_ADDRESS } from '@shared/utilities'
 import {
   arbitrum,
   arbitrumSepolia,
@@ -51,7 +51,11 @@ export const WAGMI_CHAINS = {
   [NETWORK.base_sepolia]: baseSepolia,
   [NETWORK.scroll_sepolia]: scrollSepolia,
   [NETWORK.gnosis_chiado]: gnosisChiado,
-  [NETWORK.world_sepolia]: worldchainSepolia
+  // TODO: this is not necessary once the multicall address for world is included in viem
+  [NETWORK.world_sepolia]: {
+    ...worldchainSepolia,
+    contracts: { multicall3: { address: OP_MULTICALL_ADDRESS } }
+  }
 } as const
 
 /**
