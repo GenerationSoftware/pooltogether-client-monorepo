@@ -77,7 +77,10 @@ const TokenFlipper = (props: { className?: string }) => {
       if (
         !isTestnet(vaultInfo.chainId) &&
         !!tokenAddress &&
-        !ignoreList[vaultInfo.chainId]?.includes(lower(tokenAddress))
+        !ignoreList[vaultInfo.chainId]?.includes(lower(tokenAddress)) &&
+        vaultTokens.find(
+          (t) => t.chainId === vaultInfo.chainId && lower(t.address) === lower(tokenAddress)
+        ) === undefined
       ) {
         vaultTokens.push({
           chainId: vaultInfo.chainId,
