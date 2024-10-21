@@ -68,6 +68,9 @@ export const VaultPageRecentWinnersCard = (props: VaultPageRecentWinnersCardProp
     return groupedWins
   }, [vault, draws])
 
+  const baseNumWinners = 6
+  const [isExpanded, setIsExpanded] = useState(false)
+
   const [sortBy, setSortBy] = useState<SortId>('timestamp')
   const [sortDirection, setSortDirection] = useState<'desc' | 'asc'>('desc')
 
@@ -98,47 +101,73 @@ export const VaultPageRecentWinnersCard = (props: VaultPageRecentWinnersCardProp
     }
   }, [wins, sortBy, sortDirection])
 
+  // TODO: instead of limiting to 100 entries after sorting, apply lazy loading to avoid performance issues
+  const winsToDisplay = sortedWins.slice(0, isExpanded ? 100 : baseNumWinners)
+
   const isFetched = !!isFetchedPrizeToken && !!prizeToken && !!isFetchedDraws && !!draws
 
   return (
     <VaultPageCard
       title={t_prizes('recentWinners')}
-      wrapperClassName={classNames('w-full aspect-[4/3] md:aspect-[7/3] md:px-16', className)}
+      className='grow'
+      wrapperClassName={classNames('w-full h-auto min-h-[20rem] md:px-16', className)}
     >
-      {isFetched ? (
-        sortedWins.length ? (
-          <div className='w-full grow flex flex-col gap-2'>
-            <div className='w-full grid grid-cols-3 font-semibold text-pt-purple-300'>
-              <span className='text-left'>{t_prizes('drawModal.winner')}</span>
-              <SortableHeader
-                onClick={() => handleHeaderClick('timestamp')}
-                direction={getDirection('timestamp')}
-                className='justify-center'
+      <div className='w-full grow flex flex-col gap-2 items-center justify-center'>
+        {isFetched ? (
+          sortedWins.length ? (
+            <>
+              <div
+                className={classNames('w-full grid grid-cols-3 font-semibold text-pt-purple-300', {
+                  'md:pr-8': isExpanded
+                })}
               >
-                {t_common('date')}
-              </SortableHeader>
-              <SortableHeader
-                onClick={() => handleHeaderClick('amount')}
-                direction={getDirection('amount')}
-                className='justify-end text-right'
+                <span className='text-left'>{t_prizes('drawModal.winner')}</span>
+                <SortableHeader
+                  onClick={() => handleHeaderClick('timestamp')}
+                  direction={getDirection('timestamp')}
+                  className='justify-center'
+                >
+                  {t_common('date')}
+                </SortableHeader>
+                <SortableHeader
+                  onClick={() => handleHeaderClick('amount')}
+                  direction={getDirection('amount')}
+                  className='justify-end text-right'
+                >
+                  {t_prizes('prize')}
+                </SortableHeader>
+              </div>
+              <div
+                className={classNames('w-full flex flex-col gap-2', {
+                  'max-h-80 overflow-auto md:pr-4': isExpanded
+                })}
               >
-                {t_prizes('prize')}
-              </SortableHeader>
-            </div>
-            {sortedWins.slice(0, 6).map((win) => (
-              <WinnerRow
-                key={`prize-${win.winner}-${win.timestamp}`}
-                {...win}
-                prizeToken={prizeToken}
-              />
-            ))}
-          </div>
+                {winsToDisplay.map((win) => (
+                  <WinnerRow
+                    key={`prize-${win.winner}-${win.timestamp}`}
+                    {...win}
+                    prizeToken={prizeToken}
+                  />
+                ))}
+              </div>
+              {!isExpanded && sortedWins.length > baseNumWinners && (
+                <span
+                  className='w-full flex justify-center text-pt-purple-300 cursor-pointer'
+                  onClick={() => setIsExpanded(true)}
+                >
+                  {t_common('showMore')}
+                </span>
+              )}
+            </>
+          ) : (
+            <span className='text-sm text-pt-purple-100 md:text-base'>
+              {t_vault('noWinnersYet')}
+            </span>
+          )
         ) : (
-          <span className='text-sm text-pt-purple-100 md:text-base'>{t_vault('noWinnersYet')}</span>
-        )
-      ) : (
-        <Spinner />
-      )}
+          <Spinner />
+        )}
+      </div>
     </VaultPageCard>
   )
 }
