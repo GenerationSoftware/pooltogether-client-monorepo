@@ -685,6 +685,11 @@ export const TOKEN_PRICE_REDIRECTS: {
     '0xa61beb4a3d02decb01039e378237032b351125b4': {
       chainId: NETWORK.mainnet,
       address: '0x1a7e4e63778b4f12a199c062f3efdd288afcbce8'
+    },
+    /* LUSD */
+    '0x368181499736d0c0cc614dbb145e2ec1ac86b8c6': {
+      chainId: NETWORK.mainnet,
+      address: '0x5f98805a4e8be255a32880fdec7f6728c6568ba0'
     }
   },
   [NETWORK.polygon]: {

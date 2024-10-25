@@ -167,6 +167,30 @@ export const baseVaults: VaultList['tokens'] = [
   },
   {
     chainId: NETWORK.base,
+    address: '0x850ec48D2605aaD9c3de345A6a357A9A14b8cf1B',
+    name: 'Prize POOL/LUSD',
+    decimals: 18,
+    symbol: 'przPOOL/LUSD',
+    logoURI: `${DOMAINS.app}/icons/przAERO.svg`,
+    tags: ['beefy', 'lp', 'aerodrome'],
+    extensions: {
+      underlyingAsset: {
+        address: '0x0b15b1d434f86eCaa83d14398C8Db6d162F3921e',
+        symbol: 'vAMM-LUSD/POOL',
+        name: 'Volatile AMM - LUSD/POOL'
+      },
+      yieldSource: {
+        name: 'Beefy',
+        appURI: 'https://app.beefy.com/vault/aerodrome-lusd-pool'
+      },
+      lp: {
+        appURI:
+          'https://aerodrome.finance/deposit?token0=0x368181499736d0c0CC614DBB145E2EC1AC86b8c6&token1=0xd652C5425aea2Afd5fb142e120FeCf79e18fafc3&type=-1'
+      }
+    }
+  },
+  {
+    chainId: NETWORK.base,
     address: '0x78adc13c9ab327c79d10cab513b7c6bd3b346858',
     name: 'Prize Super OETH',
     decimals: 18,

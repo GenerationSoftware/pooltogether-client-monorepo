@@ -68,7 +68,10 @@ const TokenFlipper = (props: { className?: string }) => {
         '0x894d6ea97767ebecefe01c9410f6bd67935aa952',
         '0x1dc5c0f8668a9f54ed922171d578011850ca0341'
       ],
-      [NETWORK.base]: ['0x89d0f320ac73dd7d9513ffc5bc58d1161452a657']
+      [NETWORK.base]: [
+        '0x89d0f320ac73dd7d9513ffc5bc58d1161452a657',
+        '0x0b15b1d434f86ecaa83d14398c8db6d162f3921e'
+      ]
     }
 
     defaultVaultList.tokens.forEach((vaultInfo) => {
