@@ -124,7 +124,7 @@ export const optimismVaults: VaultList['tokens'] = [
       },
       lp: {
         appURI:
-          'https://velodrome.finance/deposit?token0=0x395Ae52bB17aef68C2888d941736A71dC6d4e125&token1=0x4200000000000000000000000000000000000006&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a'
+          'https://velodrome.finance/deposit?token0=0x395Ae52bB17aef68C2888d941736A71dC6d4e125&token1=0x4200000000000000000000000000000000000006&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a&chain=10'
       }
     }
   },
@@ -148,7 +148,7 @@ export const optimismVaults: VaultList['tokens'] = [
       },
       lp: {
         appURI:
-          'https://velodrome.finance/deposit?token0=0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb&token1=0x4200000000000000000000000000000000000006&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a'
+          'https://velodrome.finance/deposit?token0=0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb&token1=0x4200000000000000000000000000000000000006&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a&chain=10'
       }
     }
   },
@@ -192,7 +192,7 @@ export const optimismVaults: VaultList['tokens'] = [
       },
       lp: {
         appURI:
-          'https://velodrome.finance/deposit?token0=0x4200000000000000000000000000000000000006&token1=0xc55E93C62874D8100dBd2DfE307EDc1036ad5434&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a'
+          'https://velodrome.finance/deposit?token0=0x4200000000000000000000000000000000000006&token1=0xc55E93C62874D8100dBd2DfE307EDc1036ad5434&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a&chain=10'
       }
     }
   },
@@ -236,7 +236,7 @@ export const optimismVaults: VaultList['tokens'] = [
       },
       lp: {
         appURI:
-          'https://velodrome.finance/deposit?token0=0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85&token1=0x4200000000000000000000000000000000000042&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a'
+          'https://velodrome.finance/deposit?token0=0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85&token1=0x4200000000000000000000000000000000000042&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a&chain=10'
       }
     }
   },
@@ -260,7 +260,7 @@ export const optimismVaults: VaultList['tokens'] = [
       },
       lp: {
         appURI:
-          'https://velodrome.finance/deposit?token0=0x4200000000000000000000000000000000000006&token1=0x6c84a8f1c29108F47a79964b5Fe888D4f4D0dE40&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a'
+          'https://velodrome.finance/deposit?token0=0x4200000000000000000000000000000000000006&token1=0x6c84a8f1c29108F47a79964b5Fe888D4f4D0dE40&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a&chain=10'
       }
     }
   },
@@ -284,7 +284,7 @@ export const optimismVaults: VaultList['tokens'] = [
       },
       lp: {
         appURI:
-          'https://velodrome.finance/deposit?token0=0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85&token1=0x9560e827aF36c94D2Ac33a39bCE1Fe78631088Db&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a'
+          'https://velodrome.finance/deposit?token0=0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85&token1=0x9560e827aF36c94D2Ac33a39bCE1Fe78631088Db&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a&chain=10'
       }
     }
   },
@@ -308,7 +308,7 @@ export const optimismVaults: VaultList['tokens'] = [
       },
       lp: {
         appURI:
-          'https://velodrome.finance/deposit?token0=0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85&token1=0x8700dAec35aF8Ff88c16BdF0418774CB3D7599B4&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a'
+          'https://velodrome.finance/deposit?token0=0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85&token1=0x8700dAec35aF8Ff88c16BdF0418774CB3D7599B4&type=-1&factory=0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a&chain=10'
       }
     }
   },
