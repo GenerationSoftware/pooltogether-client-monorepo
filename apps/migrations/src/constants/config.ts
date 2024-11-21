@@ -480,6 +480,12 @@ export const V3_POOLS: Record<
       ticketAddress: '0xd80eaa761ccfdc8698999d73c96cec39fbb1fc48',
       tokenAddress: '0x25788a1a171ec66da6502f9975a15b609ff54cf6',
       migrateTo: MIGRATION_DESTINATIONS.opPoolVault
+    },
+    {
+      address: '0xe7282754040cc3771f872637936d5b844294aaf3',
+      ticketAddress: '0x7c141013a2e0a966b11f73308dd0fca824636609',
+      tokenAddress: '0xe0b22e0037b130a9f56bbb537684e6fa18192341',
+      migrateTo: MIGRATION_DESTINATIONS.opDaiVault
     }
   ],
   [NETWORK.avalanche]: [],
