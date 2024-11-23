@@ -355,5 +355,25 @@ export const optimismVaults: VaultList['tokens'] = [
           'https://app.aave.com/reserve-overview/?underlyingAsset=0x0b2c639c533813f4aa9d7837caf62653d097ff85&marketName=proto_optimism_v3'
       }
     }
+  },
+  {
+    chainId: NETWORK.optimism,
+    address: '0xdAaF4b68B1299Fb9b05AE578cb3D06C8528138D4',
+    name: 'Prize wstETH',
+    decimals: 18,
+    symbol: 'przWSTETH',
+    logoURI: `${DOMAINS.app}/icons/przSTETH.svg`,
+    tags: ['moonwell'],
+    extensions: {
+      underlyingAsset: {
+        address: '0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb',
+        symbol: 'wstETH',
+        name: 'Wrapped liquid staked Ether 2.0'
+      },
+      yieldSource: {
+        name: 'Moonwell',
+        appURI: 'https://moonwell.fi/markets/supply/optimism/wsteth'
+      }
+    }
   }
 ]
