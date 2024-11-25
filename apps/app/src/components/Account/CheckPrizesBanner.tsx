@@ -1,13 +1,11 @@
 import { useDrawsToCheckForPrizes } from '@generationsoftware/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
-import { TokenValue } from '@shared/react-components'
-import { Button, Spinner } from '@shared/ui'
-import { getSimpleDate, NATIVE_ASSETS, NETWORK } from '@shared/utilities'
+import { Button } from '@shared/ui'
+import { getSimpleDate } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { useAccount } from 'wagmi'
-import { useDrawsTotalEligiblePrizeAmount } from '@hooks/useDrawsTotalEligiblePrizeAmount'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 
 interface CheckPrizesBannerProps {
@@ -31,10 +29,7 @@ export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
     userAddress!
   )
 
-  const { data: totalPrizeAmount, isFetched: isFetchedTotalPrizeAmount } =
-    useDrawsTotalEligiblePrizeAmount(userAddress!)
-
-  if (!!drawsToCheck && isFetchedDrawsToCheck && !!totalPrizeAmount) {
+  if (!!drawsToCheck?.totalCount && isFetchedDrawsToCheck) {
     return (
       <div
         className={classNames(
@@ -45,23 +40,7 @@ export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
       >
         <div className='flex flex-col text-center text-sm md:text-start lg:text-base'>
           <span>{t('eligibleDraws', { number: drawsToCheck.totalCount })}</span>
-          {!!drawsToCheck && (
-            <DateRange timestamps={drawsToCheck.timestamps} className='text-pt-purple-100' />
-          )}
-        </div>
-        <div className='inset-0 flex flex-col gap-x-2 items-center justify-center text-sm -z-10 md:absolute md:flex-row lg:text-base'>
-          <span>{t('totalPrizes.beforeValue')}</span>
-          {isFetchedTotalPrizeAmount ? (
-            <span className='text-2xl md:text-3xl lg:text-5xl text-pt-teal'>
-              <TokenValue
-                token={{ ...NATIVE_ASSETS[NETWORK.mainnet], amount: totalPrizeAmount }}
-                hideZeroes={true}
-              />
-            </span>
-          ) : (
-            <Spinner />
-          )}
-          <span>{t('totalPrizes.afterValue')}</span>
+          <DateRange timestamps={drawsToCheck.timestamps} className='text-pt-purple-100' />
         </div>
         <Button onClick={() => setIsModalOpen(true)}>
           <span className='text-xs lg:text-sm'>{t('checkPrizes')}</span>
