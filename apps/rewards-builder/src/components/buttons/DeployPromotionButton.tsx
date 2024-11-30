@@ -22,8 +22,6 @@ import {
   promotionTokenAmountAtom,
   promotionVaultAddressAtom
 } from 'src/atoms'
-import { SupportedNetwork } from 'src/types'
-import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { PROMOTION_FILTERS } from '@constants/config'
 import { useSendApproveTransaction } from '@hooks/useSendApproveTransaction'
@@ -46,7 +44,7 @@ export const DeployPromotionButton = (props: DeployPromotionButtonProps) => {
   const numEpochs = useAtomValue(promotionEpochsAtom)
   const epochDuration = useAtomValue(promotionEpochLengthAtom)
   const rewardTokenAddress = useAtomValue(promotionTokenAddressAtom)
-  const rewardTokenAmount = useAtomValue(promotionTokenAmountAtom)
+  const _rewardTokenAmount = useAtomValue(promotionTokenAmountAtom)
 
   const { openConnectModal } = useConnectModal()
   const { openChainModal } = useChainModal()
@@ -58,16 +56,22 @@ export const DeployPromotionButton = (props: DeployPromotionButtonProps) => {
     }
   }, [chainId, vaultAddress, publicClients])
 
-  const rewardTokensPerEpoch = useMemo(() => {
-    if (!!numEpochs && !!rewardTokenAmount) {
-      return calculatePercentageOfBigInt(rewardTokenAmount, 1 / numEpochs)
-    }
-  }, [numEpochs, rewardTokenAmount])
+  const { data: rewardToken } = useToken(chainId!, rewardTokenAddress!)
 
-  const { data: rewardToken } = useToken(chainId as SupportedNetwork, rewardTokenAddress as Address)
+  const rewardTokenAmount = useMemo(() => {
+    if (!!numEpochs && !!_rewardTokenAmount && !!rewardToken) {
+      const perEpoch = calculatePercentageOfBigInt(
+        _rewardTokenAmount,
+        Math.floor((1 / numEpochs) * 1e8) / 1e8
+      )
+      const total = perEpoch * BigInt(numEpochs)
+
+      return { perEpoch, total }
+    }
+  }, [numEpochs, _rewardTokenAmount, rewardToken])
 
   const { refetch: refetchPromotionCreatedEvents } = usePromotionCreatedEvents(
-    chainId as SupportedNetwork,
+    chainId!,
     !!chainId ? PROMOTION_FILTERS[chainId] : undefined
   )
 
@@ -76,12 +80,7 @@ export const DeployPromotionButton = (props: DeployPromotionButtonProps) => {
     data: allowance,
     isFetched: isFetchedAllowance,
     refetch: refetchTokenAllowance
-  } = useTokenAllowance(
-    chainId as SupportedNetwork,
-    userAddress as Address,
-    twabRewardsAddress as Address,
-    rewardTokenAddress as Address
-  )
+  } = useTokenAllowance(chainId!, userAddress!, twabRewardsAddress!, rewardTokenAddress!)
 
   const {
     isWaiting: isWaitingApproval,
@@ -89,19 +88,16 @@ export const DeployPromotionButton = (props: DeployPromotionButtonProps) => {
     isSuccess: isSuccessfulApproval,
     txHash: approvalTxHash,
     sendApproveTransaction
-  } = useSendApproveTransaction(
-    chainId as SupportedNetwork,
-    rewardTokenAddress as Address,
-    rewardTokenAmount as bigint,
-    { onSuccess: () => refetchTokenAllowance() }
-  )
+  } = useSendApproveTransaction(chainId!, rewardTokenAddress!, rewardTokenAmount?.total!, {
+    onSuccess: () => refetchTokenAllowance()
+  })
 
   const { isWaiting, isConfirming, isSuccess, txHash, sendCreatePromotionTransaction } =
     useSendCreatePromotionTransaction(
-      vault as Vault,
-      rewardTokenAddress as Address,
-      numEpochs as number,
-      rewardTokensPerEpoch as bigint,
+      vault!,
+      rewardTokenAddress!,
+      numEpochs!,
+      rewardTokenAmount?.perEpoch!,
       {
         startTimestamp,
         epochDuration,
@@ -117,21 +113,21 @@ export const DeployPromotionButton = (props: DeployPromotionButtonProps) => {
     )
 
   const approvalEnabled =
-    !!chainId && !!rewardTokenAddress && !!rewardTokenAmount && !!sendApproveTransaction
+    !!chainId && !!rewardTokenAddress && !!rewardTokenAmount?.total && !!sendApproveTransaction
 
   const deployPromotionEnabled =
     !!vault &&
     !!numEpochs &&
     !!epochDuration &&
     !!rewardToken &&
-    !!rewardTokensPerEpoch &&
+    !!rewardTokenAmount?.perEpoch &&
     !!sendCreatePromotionTransaction
 
   if (!chainId || !rewardTokenAmount) {
     return <></>
   }
 
-  if (isFetchedAllowance && allowance !== undefined && allowance < rewardTokenAmount) {
+  if (isFetchedAllowance && allowance !== undefined && allowance < rewardTokenAmount.total) {
     return (
       <TransactionButton
         chainId={chainId}
