@@ -115,7 +115,7 @@ export const getPaginatedSubgraphDraws = async (
 ) => {
   const draws: SubgraphDraw[] = []
   const drawIds: number[] = []
-  const pageSize = options?.pageSize ?? 1_000
+  const pageSize = options?.pageSize ?? 100
   let drawsPage = 0
 
   while (true) {
