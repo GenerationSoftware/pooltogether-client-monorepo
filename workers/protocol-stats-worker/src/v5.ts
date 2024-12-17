@@ -56,8 +56,8 @@ const getTvl = async (chainId: (typeof V5_NETWORKS)[number]) => {
   const tokenData = await getV5VaultTokenData(chainId, vaultAddresses)
 
   const tokenAddresses = tokenData
-    .map((token) => token?.address)
-    .filter((address) => !!address) as `0x${string}`[]
+    .filter((token) => !!token?.address && !!token.balance)
+    .map((token) => token!.address)
   const tokenPrices = await getTokenPrices(chainId, tokenAddresses)
 
   tokenData.forEach((token) => {

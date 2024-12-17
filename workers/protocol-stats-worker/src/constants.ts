@@ -55,12 +55,18 @@ export const RPC_URLS: Record<(typeof V5_NETWORKS)[number], string> = {
 }
 
 export const V5_SUBGRAPH_API_URLS: Record<(typeof V5_NETWORKS)[number], `https://${string}`> = {
-  [NETWORK.mainnet]: 'https://api.studio.thegraph.com/query/63100/pt-v5-ethereum/version/latest',
-  [NETWORK.optimism]: 'https://api.studio.thegraph.com/query/63100/pt-v5-optimism/version/latest',
-  [NETWORK.base]: 'https://api.studio.thegraph.com/query/41211/pt-v5-base/version/latest',
-  [NETWORK.arbitrum]: 'https://api.studio.thegraph.com/query/63100/pt-v5-arbitrum/version/latest',
-  [NETWORK.scroll]: 'https://api.studio.thegraph.com/query/63100/pt-v5-scroll/version/latest',
-  [NETWORK.gnosis]: 'https://api.studio.thegraph.com/query/63100/pt-v5-gnosis/version/latest'
+  [NETWORK.mainnet]:
+    'https://api.goldsky.com/api/public/project_cm3xb1e8iup5601yx9mt5caat/subgraphs/pt-v5-ethereum/v0.0.2/gn',
+  [NETWORK.optimism]:
+    'https://api.goldsky.com/api/public/project_cm3xb1e8iup5601yx9mt5caat/subgraphs/pt-v5-optimism/v0.0.4/gn',
+  [NETWORK.base]:
+    'https://api.goldsky.com/api/public/project_cm3xb1e8iup5601yx9mt5caat/subgraphs/pt-v5-base/v0.0.1/gn',
+  [NETWORK.arbitrum]:
+    'https://api.goldsky.com/api/public/project_cm3xb1e8iup5601yx9mt5caat/subgraphs/pt-v5-arbitrum-one/v0.0.1/gn',
+  [NETWORK.scroll]:
+    'https://api.goldsky.com/api/public/project_cm3xb1e8iup5601yx9mt5caat/subgraphs/pt-v5-scroll/v0.0.1/gn',
+  [NETWORK.gnosis]:
+    'https://api.goldsky.com/api/public/project_cm3xb1e8iup5601yx9mt5caat/subgraphs/pt-v5-gnosis/v0.0.1/gn'
 }
 
 export const V5_PRIZE_TOKEN_PRICE_REF: Record<
