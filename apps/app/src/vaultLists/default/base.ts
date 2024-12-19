@@ -207,5 +207,67 @@ export const baseVaults: VaultList['tokens'] = [
         appURI: 'https://originprotocol.eth.limo/#/super'
       }
     }
+  },
+  {
+    chainId: NETWORK.base,
+    address: '0xada66220fe59c7374ea6a93bd211829d5d0af75d',
+    name: 'Prize USDC',
+    decimals: 6,
+    symbol: 'przUSDC',
+    logoURI: `${DOMAINS.app}/icons/przUSDC.svg`,
+    tags: ['morpho'],
+    extensions: {
+      underlyingAsset: {
+        address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+        symbol: 'USDC',
+        name: 'USD Coin'
+      },
+      yieldSource: {
+        name: 'Morpho',
+        appURI:
+          'https://app.morpho.org/vault?vault=0xc1256Ae5FF1cf2719D4937adb3bbCCab2E00A2Ca&network=base'
+      }
+    }
+  },
+  {
+    chainId: NETWORK.base,
+    address: '0xdd5e858c0aa9311c4b49bc8d35951f7f069ff46a',
+    name: 'Prize EURC',
+    decimals: 6,
+    symbol: 'przEURC',
+    tags: ['morpho'],
+    extensions: {
+      underlyingAsset: {
+        address: '0x60a3E35Cc302bFA44Cb288Bc5a4F316Fdb1adb42',
+        symbol: 'EURC',
+        name: 'EURC'
+      },
+      yieldSource: {
+        name: 'Morpho',
+        appURI:
+          'https://app.morpho.org/vault?vault=0xf24608E0CCb972b0b0f4A6446a0BBf58c701a026&network=base'
+      }
+    }
+  },
+  {
+    chainId: NETWORK.base,
+    address: '0xd56f6f32473d6321512956a1351d4bcec07914cb',
+    name: 'Prize WETH',
+    decimals: 18,
+    symbol: 'przWETH',
+    logoURI: `${DOMAINS.app}/icons/przWETH.svg`,
+    tags: ['morpho'],
+    extensions: {
+      underlyingAsset: {
+        address: '0x4200000000000000000000000000000000000006',
+        symbol: 'WETH',
+        name: 'Wrapped Ether'
+      },
+      yieldSource: {
+        name: 'Morpho',
+        appURI:
+          'https://app.morpho.org/vault?vault=0xa0E430870c4604CcfC7B38Ca7845B1FF653D0ff1&network=base'
+      }
+    }
   }
 ]
