@@ -316,10 +316,7 @@ export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
 
   const tvl = asset?.amount !== undefined ? asset.amount * (asset.price ?? 0) : undefined
 
-  const bonusRewards =
-    !!drawPeriod && tvl !== undefined
-      ? await getBonusRewardsInfo(vault, drawPeriod, prices, tvl)
-      : undefined
+  const bonusRewards = await getBonusRewardsInfo(vault, share, prices)
 
   const yieldSource: { address: Address; name?: string; appURI?: string } | undefined =
     !!yieldSourceAddress
@@ -392,25 +389,29 @@ export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
 
 const getBonusRewardsInfo = async (
   vault: Vault,
-  drawPeriod: number,
-  prices: Awaited<ReturnType<typeof getTokenPrices>>,
-  tvl: number
+  share: { decimals?: number; price?: number },
+  prices: Awaited<ReturnType<typeof getTokenPrices>>
 ): Promise<{ apr: number; tokens: TokenWithPrice[] }> => {
   const tokenAddresses = TWAB_REWARDS_SETTINGS[vault.chainId]?.tokenAddresses ?? []
 
-  if (!tvl || !tokenAddresses.length) return { apr: 0, tokens: [] }
+  if (share.decimals === undefined || !share.price || !tokenAddresses.length)
+    return { apr: 0, tokens: [] }
 
   const promotions = await getVaultPromotions(vault)
 
+  if (!Object.keys(promotions).length) return { apr: 0, tokens: [] }
+
   const rewardTokens = await getTokenInfo(vault.publicClient, tokenAddresses)
 
-  const yearlyDraws = SECONDS_PER_YEAR / drawPeriod
-  const numDraws = 7
-  const currentTimestamp = getSecondsSinceEpoch()
-  const maxTimestamp = currentTimestamp + numDraws * drawPeriod
+  if (!Object.keys(rewardTokens).length) return { apr: 0, tokens: [] }
 
-  const allTokenRewardsValue: { [tokenAddress: Address]: number } = {}
-  let futureRewards = 0
+  const totalDelegateSupply = await vault.getTotalDelegateSupply()
+
+  const currentTimestamp = getSecondsSinceEpoch()
+  const tvl = parseFloat(formatUnits(totalDelegateSupply, share.decimals)) * share.price
+
+  const relevantTokenAddresses = new Set<Address>()
+  let apr = 0
 
   const getToken = (address: Address): TokenWithPrice => ({
     chainId: rewardTokens[address].chainId,
@@ -432,44 +433,37 @@ const getBonusRewardsInfo = async (
       matchingPromotions.forEach((promotion) => {
         const startsAt = Number(promotion.startTimestamp)
         const numberOfEpochs = promotion.numberOfEpochs ?? 0
-        const epochDuration = promotion.epochDuration
-        const endsAt = startsAt + numberOfEpochs * epochDuration
-        const tokensPerEpoch = promotion.tokensPerEpoch
+        const endsAt = startsAt + numberOfEpochs * promotion.epochDuration
 
         if (
           !!startsAt &&
-          startsAt < maxTimestamp &&
-          endsAt > currentTimestamp &&
-          startsAt !== endsAt
+          !!numberOfEpochs &&
+          !!endsAt &&
+          startsAt < currentTimestamp &&
+          endsAt > currentTimestamp
         ) {
-          let numValidEpochs = 0
-
           for (let i = 0; i < numberOfEpochs; i++) {
-            const epochEndsAt = startsAt + epochDuration * (i + 1)
-            if (epochEndsAt > currentTimestamp && epochEndsAt < maxTimestamp) {
-              numValidEpochs++
+            const epochStartsAt = startsAt + promotion.epochDuration * i
+            const epochEndsAt = epochStartsAt + promotion.epochDuration
+
+            if (epochStartsAt < currentTimestamp && epochEndsAt > currentTimestamp) {
+              const tokenRewards = parseFloat(
+                formatUnits(promotion.tokensPerEpoch, rewardToken.decimals)
+              )
+              const tokenRewardsValue = tokenRewards * (rewardToken.price ?? 0)
+              const yearlyRewardsValue =
+                tokenRewardsValue * (SECONDS_PER_YEAR / promotion.epochDuration)
+
+              apr += (yearlyRewardsValue / tvl) * 100
+              relevantTokenAddresses.add(rewardToken.address)
             }
           }
-
-          const tokenRewards =
-            parseFloat(formatUnits(tokensPerEpoch, rewardToken.decimals)) * numValidEpochs
-          const tokenRewardsValue = tokenRewards * (rewardToken.price ?? 0)
-
-          allTokenRewardsValue[tokenAddress] = tokenRewardsValue
-          futureRewards += tokenRewardsValue
         }
       })
     }
   })
 
-  const yearlyRewards = futureRewards * (yearlyDraws / numDraws)
-  const apr = (yearlyRewards / tvl) * 100
-
-  const promotionTokenAddresses = Object.entries(allTokenRewardsValue)
-    .filter((entry) => !!entry[1])
-    .sort((a, b) => b[1] - a[1])
-    .map((entry) => entry[0] as Address)
-  const promotionTokens = promotionTokenAddresses.map((tokenAddress) => getToken(tokenAddress))
+  const promotionTokens = [...relevantTokenAddresses].map((tokenAddress) => getToken(tokenAddress))
 
   return { apr, tokens: promotionTokens }
 }
