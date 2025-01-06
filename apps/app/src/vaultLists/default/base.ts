@@ -204,7 +204,7 @@ export const baseVaults: VaultList['tokens'] = [
       },
       yieldSource: {
         name: 'Origin',
-        appURI: 'https://originprotocol.eth.limo/#/super'
+        appURI: 'https://app.originprotocol.com/#/super'
       }
     }
   },
