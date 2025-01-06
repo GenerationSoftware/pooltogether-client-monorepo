@@ -102,5 +102,45 @@ export const arbitrumVaults: VaultList['tokens'] = [
         appURI: 'https://angle.money/stusd'
       }
     }
+  },
+  {
+    chainId: NETWORK.arbitrum,
+    address: '0x482CC95BC6c92D6254529DC2d45095663Ae726A2',
+    name: 'Prize USDC',
+    decimals: 6,
+    symbol: 'przUSDC',
+    logoURI: `${DOMAINS.app}/icons/przUSDC.svg`,
+    tags: ['yearn'],
+    extensions: {
+      underlyingAsset: {
+        address: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
+        symbol: 'USDC.e',
+        name: 'Bridged USDC'
+      },
+      yieldSource: {
+        name: 'Yearn',
+        appURI: 'https://yearn.fi/vaults/42161/0x482CC95BC6c92D6254529DC2d45095663Ae726A2'
+      }
+    }
+  },
+  {
+    chainId: NETWORK.arbitrum,
+    address: '0x801c26fCfD916719631E0cf7D36ca1e049DF0373',
+    name: 'Prize USDT',
+    decimals: 6,
+    symbol: 'przUSDT',
+    logoURI: `${DOMAINS.app}/icons/przUSDT.svg`,
+    tags: ['yearn'],
+    extensions: {
+      underlyingAsset: {
+        address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
+        symbol: 'USDT',
+        name: 'Tether USD'
+      },
+      yieldSource: {
+        name: 'Yearn',
+        appURI: 'https://yearn.fi/vaults/42161/0x801c26fCfD916719631E0cf7D36ca1e049DF0373'
+      }
+    }
   }
 ]

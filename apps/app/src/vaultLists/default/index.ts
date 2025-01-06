@@ -25,8 +25,8 @@ const defaultVaultList: VaultList = {
     'scroll',
     'gnosis'
   ],
-  version: { major: 2, minor: 16, patch: 1 },
-  timestamp: '2025-01-06T12:16:16Z',
+  version: { major: 2, minor: 17, patch: 0 },
+  timestamp: '2025-01-06T12:37:17Z',
   logoURI: `${DOMAINS.app}/favicon.png`,
   tokens: [
     ...mainnetVaults,

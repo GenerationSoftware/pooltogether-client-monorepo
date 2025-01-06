@@ -80,5 +80,45 @@ export const mainnetVaults: VaultList['tokens'] = [
         appURI: 'https://app.sky.money/'
       }
     }
+  },
+  {
+    chainId: NETWORK.mainnet,
+    address: '0x4147cB38FAe27a737ECd55551d3315fEc11c28d2',
+    name: 'Prize DAI',
+    decimals: 18,
+    symbol: 'przDAI',
+    logoURI: `${DOMAINS.app}/icons/przDAI.svg`,
+    tags: ['yearn'],
+    extensions: {
+      underlyingAsset: {
+        address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+        symbol: 'DAI',
+        name: 'Dai Stablecoin'
+      },
+      yieldSource: {
+        name: 'Yearn',
+        appURI: 'https://yearn.fi/vaults/1/0x4147cB38FAe27a737ECd55551d3315fEc11c28d2'
+      }
+    }
+  },
+  {
+    chainId: NETWORK.mainnet,
+    address: '0x3A49f5a6A8aF9B2103D882278193112Cf9F73a25',
+    name: 'Prize USDC',
+    decimals: 6,
+    symbol: 'przUSDC',
+    logoURI: `${DOMAINS.app}/icons/przUSDC.svg`,
+    tags: ['yearn'],
+    extensions: {
+      underlyingAsset: {
+        address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+        symbol: 'USDC',
+        name: 'USD Coin'
+      },
+      yieldSource: {
+        name: 'Yearn',
+        appURI: 'https://yearn.fi/vaults/1/0x3A49f5a6A8aF9B2103D882278193112Cf9F73a25'
+      }
+    }
   }
 ]
