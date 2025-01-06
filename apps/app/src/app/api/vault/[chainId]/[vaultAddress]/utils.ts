@@ -19,6 +19,7 @@ import { NextRequest } from 'next/server'
 import {
   Address,
   createPublicClient,
+  fallback,
   formatEther,
   formatUnits,
   http,
@@ -68,7 +69,10 @@ export const getPublicClient = (
 
   return createPublicClient({
     chain: WAGMI_CHAINS[chainId],
-    transport: http(RPC_URLS[chainId], httpTransportConfig)
+    transport: fallback([
+      http(RPC_URLS[chainId], httpTransportConfig),
+      http(undefined, httpTransportConfig)
+    ])
   }) as PublicClient
 }
 
