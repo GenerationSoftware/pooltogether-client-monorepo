@@ -269,5 +269,24 @@ export const baseVaults: VaultList['tokens'] = [
           'https://app.morpho.org/vault?vault=0xa0E430870c4604CcfC7B38Ca7845B1FF653D0ff1&network=base'
       }
     }
+  },
+  {
+    chainId: NETWORK.base,
+    address: '0x48c773aA0023980c3123Acd4Ae1d59753F812067',
+    name: 'Prize Giveth',
+    decimals: 18,
+    symbol: 'przSuperOETHgiv',
+    tags: ['origin'],
+    extensions: {
+      underlyingAsset: {
+        address: '0xDBFeFD2e8460a6Ee4955A68582F85708BAEA60A3',
+        symbol: 'superOETHb',
+        name: 'Super OETH'
+      },
+      yieldSource: {
+        name: 'Origin',
+        appURI: 'https://app.originprotocol.com/#/super'
+      }
+    }
   }
 ]
