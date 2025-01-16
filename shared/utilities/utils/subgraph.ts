@@ -1,6 +1,6 @@
 import { SubgraphDraw, SubgraphObservation, SubgraphPrize } from '@shared/types'
 import { Address } from 'viem'
-import { lower } from '..'
+import { getNetworkNameByChainId, lower } from '..'
 import { SUBGRAPH_API_URLS } from '../constants'
 
 // TODO: this will break the "skip" limit with over 6000 draws or over 6000 prizes per draw (9 tiers)
@@ -111,11 +111,16 @@ export const getSubgraphDraws = async (
  */
 export const getPaginatedSubgraphDraws = async (
   chainId: number,
-  options?: { pageSize?: number; onlyLastPrizeClaim?: boolean }
+  options?: {
+    pageSize?: number
+    onlyLastPrizeClaim?: boolean
+    maxRetries?: number
+  }
 ) => {
   const draws: SubgraphDraw[] = []
   const drawIds: number[] = []
-  const pageSize = options?.pageSize ?? 100
+  const pageSize = options?.pageSize ?? 75
+  const maxRetries = options?.maxRetries ?? 3
   let drawsPage = 0
 
   while (true) {
@@ -124,30 +129,53 @@ export const getPaginatedSubgraphDraws = async (
     while (true) {
       let needsNewPrizesPage = false
 
-      const newPage = await getSubgraphDraws(chainId, {
-        numDraws: pageSize,
-        numPrizes: options?.onlyLastPrizeClaim ? 1 : pageSize,
-        offsetDraws: drawsPage * pageSize,
-        offsetPrizes: prizesPage * pageSize,
-        drawOrderDirection: 'asc',
-        prizeOrderDirection: options?.onlyLastPrizeClaim ? 'desc' : 'asc'
-      })
+      let isSuccess = false
+      let retryCount = 0
+      let retryDelay = 2_000
 
-      newPage.forEach((draw) => {
-        if (drawIds.includes(draw.id)) {
-          if (draw.prizeClaims.length > 0) {
-            const drawIndex = draws.findIndex((d) => d.id === draw.id)
-            draws[drawIndex].prizeClaims.push(...draw.prizeClaims)
+      while (!isSuccess && retryCount < maxRetries) {
+        try {
+          const newPage = await getSubgraphDraws(chainId, {
+            numDraws: pageSize,
+            numPrizes: options?.onlyLastPrizeClaim ? 1 : pageSize,
+            offsetDraws: drawsPage * pageSize,
+            offsetPrizes: prizesPage * pageSize,
+            drawOrderDirection: 'asc',
+            prizeOrderDirection: options?.onlyLastPrizeClaim ? 'desc' : 'asc'
+          })
+
+          newPage.forEach((draw) => {
+            if (drawIds.includes(draw.id)) {
+              if (draw.prizeClaims.length > 0) {
+                const drawIndex = draws.findIndex((d) => d.id === draw.id)
+                draws[drawIndex].prizeClaims.push(...draw.prizeClaims)
+              }
+            } else {
+              draws.push(draw)
+              drawIds.push(draw.id)
+            }
+
+            if (draw.prizeClaims.length >= pageSize) {
+              needsNewPrizesPage = true
+            }
+          })
+
+          isSuccess = true
+        } catch {
+          if (retryCount < maxRetries - 1) {
+            await new Promise((resolve) => setTimeout(resolve, retryDelay))
+          } else {
+            console.warn(
+              `Could not query subgraph draws on ${getNetworkNameByChainId(chainId)}: Draws ${
+                drawsPage * pageSize
+              }+`
+            )
           }
-        } else {
-          draws.push(draw)
-          drawIds.push(draw.id)
-        }
 
-        if (draw.prizeClaims.length >= pageSize) {
-          needsNewPrizesPage = true
+          retryCount++
+          retryDelay *= 2
         }
-      })
+      }
 
       if (needsNewPrizesPage) {
         prizesPage++
