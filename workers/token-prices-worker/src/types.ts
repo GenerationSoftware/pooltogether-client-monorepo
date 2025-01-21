@@ -11,12 +11,6 @@ export interface ChainTokenPrices {
 
 export type SUPPORTED_NETWORK = (typeof SUPPORTED_NETWORKS)[number]
 
-export interface CovalentPricingApiResponse {
-  contract_address: Address
-  quote_currency: string
-  prices: { date: string; price: number | null }[]
-}
-
 export interface LpTokens {
   [address: Lowercase<Address>]:
     | { isLp: false }

@@ -2,7 +2,7 @@ import { Address } from 'viem'
 import { NETWORK_KEYS, SUPPORTED_NETWORKS } from './constants'
 import { ChainTokenPrices } from './types'
 import { updateHandler } from './updateHandler'
-import { calcLpTokenPrices, getCovalentTokenPrices, getLpTokenInfo } from './utils'
+import { calcLpTokenPrices, getLpTokenInfo, getOnchainTokenPrices } from './utils'
 
 export const updateTokenPrices = async (event: FetchEvent | ScheduledEvent) => {
   try {
@@ -24,8 +24,8 @@ const getAllChainTokenPrices = async () => {
         )
         if (!!cachedTokenAddresses) {
           const tokenAddresses = new Set(cachedTokenAddresses.split(',') as Address[])
-          // TODO: check for least recent token price and use `from` appropriately to only query needed data
-          const tokenPrices = await getCovalentTokenPrices(chainId, Array.from(tokenAddresses))
+          // TODO: should not query known lp tokens
+          const tokenPrices = await getOnchainTokenPrices(chainId, Array.from(tokenAddresses))
 
           for (const strAddress in tokenPrices) {
             const address = strAddress as Address

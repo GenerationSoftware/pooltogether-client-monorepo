@@ -1,3 +1,4 @@
+import { DSKit } from 'dskit-eth'
 import {
   Address,
   ContractFunctionParameters,
@@ -9,46 +10,88 @@ import {
 } from 'viem'
 import { curveLpABI } from './abis/curveLpABI'
 import { lpABI } from './abis/lpABI'
-import { COVALENT_API_URL, NETWORK_KEYS, RPC_URLS, START_DATE, VIEM_CHAINS } from './constants'
-import {
-  ChainTokenPrices,
-  CovalentPricingApiResponse,
-  LpTokens,
-  SUPPORTED_NETWORK,
-  UnderlyingToken
-} from './types'
+import { NETWORK_KEYS, RPC_URLS, TOKEN_PRICE_REDIRECTS, VIEM_CHAINS } from './constants'
+import { ChainTokenPrices, LpTokens, SUPPORTED_NETWORK, UnderlyingToken } from './types'
 
-export const getCovalentTokenPrices = async (
+export const getOnchainTokenPrices = async (
   chainId: SUPPORTED_NETWORK,
-  tokenAddresses: Address[],
-  options?: { from?: string }
+  tokenAddresses: Address[]
 ) => {
-  try {
-    const strTokenAddresses = tokenAddresses.join(',')
-    const url = new URL(
-      `${COVALENT_API_URL}/pricing/historical_by_addresses_v2/${chainId}/eth/${strTokenAddresses}/`
-    )
-    url.searchParams.set('key', COVALENT_API_KEY)
-    url.searchParams.set('from', options?.from ?? START_DATE)
-    const response = await fetch(url.toString())
-    const tokenPricesArray = (await response.json<{ data: CovalentPricingApiResponse[] }>()).data
-    const tokenPrices: ChainTokenPrices = {}
-    tokenPricesArray.forEach((token) => {
-      const tokenAddress = token.contract_address.toLowerCase() as Address
-      token.prices.forEach((day) => {
-        if (day.price !== null) {
-          if (tokenPrices[tokenAddress] === undefined) {
-            tokenPrices[tokenAddress] = []
+  const tokenPrices: ChainTokenPrices = {}
+
+  const tokenPriceQueries: { [chainId: number]: Set<Lowercase<Address>> } = {}
+  const querySource: {
+    [chainId: number]: { [targetAddress: Lowercase<Address>]: Lowercase<Address> }
+  } = {}
+
+  tokenAddresses.forEach((address) => {
+    const tokenAddress = address.toLowerCase() as Lowercase<Address>
+
+    const redirect = TOKEN_PRICE_REDIRECTS[chainId][tokenAddress]
+    const queryTarget = {
+      chainId: redirect?.chainId ?? chainId,
+      address: redirect?.address ?? tokenAddress
+    }
+
+    if (tokenPriceQueries[queryTarget.chainId] === undefined) {
+      tokenPriceQueries[queryTarget.chainId] = new Set<Lowercase<Address>>()
+    }
+    tokenPriceQueries[queryTarget.chainId].add(queryTarget.address)
+
+    if (querySource[queryTarget.chainId] === undefined) {
+      querySource[queryTarget.chainId] = {}
+    }
+    querySource[queryTarget.chainId][queryTarget.address] = tokenAddress
+  })
+
+  const date = getCurrentDate()
+
+  await Promise.allSettled(
+    Object.entries(tokenPriceQueries).map(([strChainId, _tokenAddresses]) =>
+      (async () => {
+        const chainId = parseInt(strChainId) as SUPPORTED_NETWORK
+        const tokenAddressesArray = [..._tokenAddresses]
+
+        const tokens: { address: Address; decimals: number }[] = []
+
+        const publicClient = createPublicClient({
+          chain: VIEM_CHAINS[chainId],
+          transport: http(RPC_URLS[chainId])
+        })
+
+        const multicall = await publicClient.multicall({
+          contracts: tokenAddressesArray.map((address) => ({
+            address,
+            abi: erc20Abi,
+            functionName: 'decimals'
+          }))
+        })
+
+        multicall.forEach((entry, i) => {
+          if (entry.status === 'success' && typeof entry.result === 'number') {
+            tokens.push({ address: tokenAddressesArray[i], decimals: entry.result })
           }
-          tokenPrices[tokenAddress].push({ date: day.date, price: day.price })
+        })
+
+        const dskit = new DSKit({ rpcUrl: RPC_URLS[chainId] })
+
+        for (const token of tokens) {
+          try {
+            const price = await dskit.price.ofToken({ token })
+            const sourceTokenAddress = querySource[chainId][token.address as Lowercase<Address>]
+
+            if (!!price && !!sourceTokenAddress) {
+              tokenPrices[sourceTokenAddress] = [{ date, price }]
+            }
+          } catch (e) {
+            console.error(e)
+          }
         }
-      })
-    })
-    return tokenPrices
-  } catch (e) {
-    console.error(e)
-    return {}
-  }
+      })()
+    )
+  )
+
+  return tokenPrices
 }
 
 export const sortTokenPricesByDate = (

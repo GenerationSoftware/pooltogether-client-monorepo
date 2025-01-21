@@ -2,7 +2,7 @@ import { Address } from 'viem'
 import { NETWORK_KEYS } from './constants'
 import { ChainTokenPrices, LpTokens, SUPPORTED_NETWORK } from './types'
 import { updateCachedLpTokens, updateHandler } from './updateHandler'
-import { calcLpTokenPrices, getCovalentTokenPrices, getLpTokenInfo } from './utils'
+import { calcLpTokenPrices, getLpTokenInfo, getOnchainTokenPrices } from './utils'
 
 export const fetchTokenPrices = async (
   event: FetchEvent,
@@ -41,7 +41,8 @@ export const fetchTokenPrices = async (
 
       // Querying missing tokens' prices
       if (tokenSet.size > 0) {
-        const missingTokenPrices = await getCovalentTokenPrices(chainId, Array.from(tokenSet))
+        // TODO: should not query known lp tokens
+        const missingTokenPrices = await getOnchainTokenPrices(chainId, Array.from(tokenSet))
         for (const strAddress in missingTokenPrices) {
           const address = strAddress as Address
           chainTokenPrices[address] = options?.includeHistory

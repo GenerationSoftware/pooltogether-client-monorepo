@@ -630,105 +630,13 @@ export const TOKEN_PRICE_REDIRECTS: {
     [address: Lowercase<Address>]: { chainId: number; address: Lowercase<Address> }
   }
 } = {
-  [NETWORK.mainnet]: {
-    /* USDS */
-    '0xdc035d45d973e3ec169d2276ddab16f1e407384f': {
-      chainId: NETWORK.mainnet,
-      address: '0x6b175474e89094c44da98b954eedeac495271d0f'
-    }
-  },
-  [NETWORK.optimism]: {
-    /* POOL */
-    [POOL_TOKEN_ADDRESSES[NETWORK.optimism].toLowerCase()]: {
-      chainId: NETWORK.mainnet,
-      address: lower(POOL_TOKEN_ADDRESSES[NETWORK.mainnet])
-    },
-    /* USDA */
-    '0x0000206329b97db379d5e1bf586bbdb969c63274': {
-      chainId: NETWORK.mainnet,
-      address: '0x0000206329b97db379d5e1bf586bbdb969c63274'
-    },
-    /* EURA */
-    '0x9485aca5bbbe1667ad97c7fe7c4531a624c8b1ed': {
-      chainId: NETWORK.mainnet,
-      address: '0x1a7e4e63778b4f12a199c062f3efdd288afcbce8'
-    }
-  },
-  [NETWORK.arbitrum]: {
-    /* POOL */
-    [POOL_TOKEN_ADDRESSES[NETWORK.arbitrum].toLowerCase()]: {
-      chainId: NETWORK.mainnet,
-      address: lower(POOL_TOKEN_ADDRESSES[NETWORK.mainnet])
-    },
-    /* USDA */
-    '0x0000206329b97db379d5e1bf586bbdb969c63274': {
-      chainId: NETWORK.mainnet,
-      address: '0x0000206329b97db379d5e1bf586bbdb969c63274'
-    },
-    /* EURA */
-    '0xfa5ed56a203466cbbc2430a43c66b9d8723528e7': {
-      chainId: NETWORK.mainnet,
-      address: '0x1a7e4e63778b4f12a199c062f3efdd288afcbce8'
-    }
-  },
-  [NETWORK.base]: {
-    /* POOL */
-    [POOL_TOKEN_ADDRESSES[NETWORK.base].toLowerCase()]: {
-      chainId: NETWORK.mainnet,
-      address: lower(POOL_TOKEN_ADDRESSES[NETWORK.mainnet])
-    },
-    /* wstETH */
-    '0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452': {
-      chainId: NETWORK.mainnet,
-      address: '0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0'
-    },
-    /* USDA */
-    '0x0000206329b97db379d5e1bf586bbdb969c63274': {
-      chainId: NETWORK.mainnet,
-      address: '0x0000206329b97db379d5e1bf586bbdb969c63274'
-    },
-    /* EURA */
-    '0xa61beb4a3d02decb01039e378237032b351125b4': {
-      chainId: NETWORK.mainnet,
-      address: '0x1a7e4e63778b4f12a199c062f3efdd288afcbce8'
-    },
-    /* LUSD */
-    '0x368181499736d0c0cc614dbb145e2ec1ac86b8c6': {
-      chainId: NETWORK.mainnet,
-      address: '0x5f98805a4e8be255a32880fdec7f6728c6568ba0'
-    }
-  },
-  [NETWORK.polygon]: {
-    /* MATIC */
-    [DOLPHIN_ADDRESS]: {
-      chainId: NETWORK.polygon,
-      address: '0x0000000000000000000000000000000000001010'
-    },
-    /* USDA */
-    '0x0000206329b97db379d5e1bf586bbdb969c63274': {
-      chainId: NETWORK.mainnet,
-      address: '0x0000206329b97db379d5e1bf586bbdb969c63274'
-    },
-    /* EURA */
-    '0xe0b52e49357fd4daf2c15e02058dce6bc0057db4': {
-      chainId: NETWORK.mainnet,
-      address: '0x1a7e4e63778b4f12a199c062f3efdd288afcbce8'
-    }
-  },
-  [NETWORK.scroll]: {
-    /* POOL */
-    [POOL_TOKEN_ADDRESSES[NETWORK.scroll].toLowerCase()]: {
-      chainId: NETWORK.mainnet,
-      address: lower(POOL_TOKEN_ADDRESSES[NETWORK.mainnet])
-    }
-  },
-  [NETWORK.gnosis]: {
-    /* POOL */
-    [POOL_TOKEN_ADDRESSES[NETWORK.gnosis].toLowerCase()]: {
-      chainId: NETWORK.mainnet,
-      address: lower(POOL_TOKEN_ADDRESSES[NETWORK.mainnet])
-    }
-  },
+  [NETWORK.mainnet]: {},
+  [NETWORK.optimism]: {},
+  [NETWORK.arbitrum]: {},
+  [NETWORK.base]: {},
+  [NETWORK.polygon]: {},
+  [NETWORK.scroll]: {},
+  [NETWORK.gnosis]: {},
   [NETWORK.optimism_sepolia]: {
     /* ETH */
     [DOLPHIN_ADDRESS]: {
