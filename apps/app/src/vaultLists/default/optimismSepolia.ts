@@ -4,14 +4,14 @@ import { NETWORK } from '@shared/utilities'
 export const optimismSepoliaVaults: VaultList['tokens'] = [
   {
     chainId: NETWORK.optimism_sepolia,
-    address: '0x95849a4C2E58F4f8Bf868ADEf10B05747A24eE71',
+    address: '0xc72df1091fBc6904E580B399a45EFa1943532e98',
     name: 'Prize POOL',
     decimals: 18,
     symbol: 'pPOOL',
     logoURI: 'https://etherscan.io/token/images/pooltogether_32.png',
     extensions: {
       underlyingAsset: {
-        address: '0x24Ffb8Ca3DeA588B267A15F1d94766dCbA034aE6',
+        address: '0x858EE6f08f4C501FB6CB8D7c14B599CaeCbdf964',
         symbol: 'POOL',
         name: 'PoolTogether'
       },
@@ -22,14 +22,14 @@ export const optimismSepoliaVaults: VaultList['tokens'] = [
   },
   {
     chainId: NETWORK.optimism_sepolia,
-    address: '0xE039683D5f9717d6f74D252722546cFedAB32250',
+    address: '0x15908259161f52dFF2a25f08EE4d32074ED563c8',
     name: 'Prize DAI',
     decimals: 18,
     symbol: 'pDAI',
     logoURI: 'https://assets.coingecko.com/coins/images/9956/small/4943.png',
     extensions: {
       underlyingAsset: {
-        address: '0xeF38f21EC5477f6E3D4b7e9f0DEa44A788C669b0',
+        address: '0xfcB9742207F3f5aEcdA6c19277844Bd6d477d494',
         symbol: 'DAI',
         name: 'Dai Stablecoin'
       }
@@ -37,14 +37,14 @@ export const optimismSepoliaVaults: VaultList['tokens'] = [
   },
   {
     chainId: NETWORK.optimism_sepolia,
-    address: '0xCC255d71c57A5D5f92183a66b7fC5589151aDcD0',
+    address: '0x3A1a6A3FD893f1e302fEb406148A6647b30F92a3',
     name: 'Prize USDC',
     decimals: 6,
     symbol: 'pUSDC',
     logoURI: 'https://etherscan.io/token/images/centre-usdc_28.png',
     extensions: {
       underlyingAsset: {
-        address: '0xdED96a50515f1a4620a3C5244fAe15eD7D216d4a',
+        address: '0x50db04090C1FEE4beD694E13637881e4dD2177F3',
         symbol: 'USDC',
         name: 'USD Coin'
       }
@@ -52,14 +52,14 @@ export const optimismSepoliaVaults: VaultList['tokens'] = [
   },
   {
     chainId: NETWORK.optimism_sepolia,
-    address: '0xE1498d24A398b588b5e3F2c5d230991304203AD9',
+    address: '0xbdC33d890daa931C5656C972765DEa18122be365',
     name: 'Prize GUSD',
     decimals: 2,
     symbol: 'pGUSD',
     logoURI: 'https://assets.coingecko.com/coins/images/5992/small/gemini-dollar-gusd.png',
     extensions: {
       underlyingAsset: {
-        address: '0x68F92539f64E486f2853BB2892933a21b54829E5',
+        address: '0x449B806EbC00466dd1B4b62Dc7d975C02514374c',
         symbol: 'GUSD',
         name: 'Gemini Dollar'
       }
@@ -67,14 +67,14 @@ export const optimismSepoliaVaults: VaultList['tokens'] = [
   },
   {
     chainId: NETWORK.optimism_sepolia,
-    address: '0x02dda5914b78f0751FdF5BBe2050eFABD95DfF46',
+    address: '0xD2B1C965374316a33d1808F4aEDAF7320dD1B4f0',
     name: 'Prize WBTC',
     decimals: 8,
     symbol: 'pWBTC',
     logoURI: 'https://etherscan.io/token/images/wbtc_28.png?v=1',
     extensions: {
       underlyingAsset: {
-        address: '0x6c6a62B0861d8F2B946456Ba9dCD0F3BAeC54147',
+        address: '0x4595Dc675B99d17Bd8aC0284D2A4e8456310267C',
         symbol: 'WBTC',
         name: 'Wrapped Bitcoin'
       }
@@ -82,14 +82,14 @@ export const optimismSepoliaVaults: VaultList['tokens'] = [
   },
   {
     chainId: NETWORK.optimism_sepolia,
-    address: '0xEd2f166aD10b247f67C3FcE7a4C8e0C5E54247ea',
+    address: '0x86D3B87a8B08D8F2747d5F72575D8e7A943370b6',
     name: 'Prize WETH',
     decimals: 18,
     symbol: 'pWETH',
     logoURI: 'https://etherscan.io/token/images/weth_28.png',
     extensions: {
       underlyingAsset: {
-        address: '0x4a61B6f54157840E80e0C47f1A628C0B3744a739',
+        address: '0x9B5A493D7AEb87583b392B599Fb62E4e9E3aa7a9',
         symbol: 'WETH',
         name: 'Wrapped Ether'
       }
