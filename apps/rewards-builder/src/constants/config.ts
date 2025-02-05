@@ -118,7 +118,7 @@ export const PROMOTION_FILTERS: {
   [NETWORK.base]: { fromBlock: 14_506_800n },
   [NETWORK.scroll]: { fromBlock: 9_181_500n },
   [NETWORK.gnosis]: { fromBlock: 35_938_500n },
-  [NETWORK.optimism_sepolia]: { fromBlock: 10_793_300n },
+  [NETWORK.optimism_sepolia]: { fromBlock: 22_876_300n },
   [NETWORK.arbitrum_sepolia]: { fromBlock: 48_888_900n },
   [NETWORK.base_sepolia]: { fromBlock: 10_578_500n },
   [NETWORK.scroll_sepolia]: { fromBlock: 6_589_700n },

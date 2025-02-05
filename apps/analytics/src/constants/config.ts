@@ -78,7 +78,7 @@ export const QUERY_START_BLOCK: { [chainId: number]: bigint } = {
   [NETWORK.base]: 14_506_800n,
   [NETWORK.scroll]: 9_181_500n,
   [NETWORK.gnosis]: 35_938_500n,
-  [NETWORK.optimism_sepolia]: 10_793_300n,
+  [NETWORK.optimism_sepolia]: 22_876_300n,
   [NETWORK.arbitrum_sepolia]: 48_888_900n,
   [NETWORK.base_sepolia]: 10_578_500n,
   [NETWORK.scroll_sepolia]: 6_429_500n,
