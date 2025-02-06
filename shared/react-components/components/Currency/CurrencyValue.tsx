@@ -11,8 +11,7 @@ import {
   formatCurrencyNumberForDisplay,
   lower,
   NETWORK,
-  POOL_TOKEN_ADDRESSES,
-  USDC_TOKEN_ADDRESSES
+  POOL_TOKEN_ADDRESSES
 } from '@shared/utilities'
 import { useMemo, useState } from 'react'
 
@@ -48,19 +47,14 @@ export const CurrencyValue = (props: CurrencyValueProps) => {
 
   const { data: extraTokenPrices, isFetched: isFetchedExtraTokenPrices } = useTokenPrices(
     NETWORK.mainnet,
-    [USDC_TOKEN_ADDRESSES[NETWORK.mainnet], POOL_TOKEN_ADDRESSES[NETWORK.mainnet]]
+    [POOL_TOKEN_ADDRESSES[NETWORK.mainnet]]
   )
 
   const exchangeRates = useMemo(() => {
     const rates = { ...coingeckoExchangeRates }
 
     if (!!rates.eth && !!extraTokenPrices) {
-      const usdcPrice = extraTokenPrices[USDC_TOKEN_ADDRESSES[NETWORK.mainnet]]
       const poolPrice = extraTokenPrices[lower(POOL_TOKEN_ADDRESSES[NETWORK.mainnet])]
-
-      if (!!rates.usd && !!usdcPrice) {
-        rates.usd.value = rates.eth.value / usdcPrice
-      }
 
       if (!!poolPrice) {
         rates.pool = {
