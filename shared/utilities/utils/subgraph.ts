@@ -3,11 +3,10 @@ import { Address } from 'viem'
 import { getNetworkNameByChainId, lower } from '..'
 import { SUBGRAPH_API_URLS } from '../constants'
 
-// TODO: this will break the "skip" limit with over 6000 draws or over 6000 prizes per draw (9 tiers)
 /**
  * Returns past draws from the given network's subgraph
  *
- * NOTE: By default queries the last 1k draws, with a max of 1k prizes in each
+ * NOTE: By default queries the last 50 draws, with a max of 100 prizes in each
  * @param chainId the network's chain ID
  * @param options optional parameters
  * @returns
@@ -48,8 +47,8 @@ export const getSubgraphDraws = async (
         }
       }`,
       variables: {
-        numDraws: options?.numDraws ?? 1_000,
-        numPrizes: options?.numPrizes ?? 1_000,
+        numDraws: options?.numDraws ?? 50,
+        numPrizes: options?.numPrizes ?? 100,
         offsetDraws: options?.offsetDraws ?? 0,
         offsetPrizes: options?.offsetPrizes ?? 0,
         drawOrderDirection: options?.drawOrderDirection ?? 'desc',
@@ -58,6 +57,14 @@ export const getSubgraphDraws = async (
         prizeOrderBy: 'timestamp'
       }
     })
+
+    // TODO: temporary band-aid for huge queries that go over skip limit (6k):
+    if (
+      (!!options?.offsetDraws && options.offsetDraws > 5_500) ||
+      (!!options?.offsetPrizes && options.offsetPrizes > 5_500)
+    ) {
+      return []
+    }
 
     const result = await fetch(subgraphUrl, { method: 'POST', headers, body })
     const jsonData = await result.json()
@@ -112,14 +119,17 @@ export const getSubgraphDraws = async (
 export const getPaginatedSubgraphDraws = async (
   chainId: number,
   options?: {
-    pageSize?: number
+    pageSize?: { draws?: number; prizes?: number }
     onlyLastPrizeClaim?: boolean
     maxRetries?: number
   }
 ) => {
   const draws: SubgraphDraw[] = []
   const drawIds: number[] = []
-  const pageSize = options?.pageSize ?? 75
+  const pageSize = {
+    draws: options?.pageSize?.draws ?? 50,
+    prizes: options?.pageSize?.prizes ?? 100
+  }
   const maxRetries = options?.maxRetries ?? 3
   let drawsPage = 0
 
@@ -136,10 +146,10 @@ export const getPaginatedSubgraphDraws = async (
       while (!isSuccess && retryCount < maxRetries) {
         try {
           const newPage = await getSubgraphDraws(chainId, {
-            numDraws: pageSize,
-            numPrizes: options?.onlyLastPrizeClaim ? 1 : pageSize,
-            offsetDraws: drawsPage * pageSize,
-            offsetPrizes: prizesPage * pageSize,
+            numDraws: pageSize.draws,
+            numPrizes: options?.onlyLastPrizeClaim ? 1 : pageSize.prizes,
+            offsetDraws: drawsPage * pageSize.draws,
+            offsetPrizes: prizesPage * pageSize.prizes,
             drawOrderDirection: 'asc',
             prizeOrderDirection: options?.onlyLastPrizeClaim ? 'desc' : 'asc'
           })
@@ -155,7 +165,7 @@ export const getPaginatedSubgraphDraws = async (
               drawIds.push(draw.id)
             }
 
-            if (draw.prizeClaims.length >= pageSize) {
+            if (draw.prizeClaims.length >= pageSize.prizes) {
               needsNewPrizesPage = true
             }
           })
@@ -167,7 +177,7 @@ export const getPaginatedSubgraphDraws = async (
           } else {
             console.warn(
               `Could not query subgraph draws on ${getNetworkNameByChainId(chainId)}: Draws ${
-                drawsPage * pageSize
+                drawsPage * pageSize.draws
               }+`
             )
           }
@@ -184,7 +194,7 @@ export const getPaginatedSubgraphDraws = async (
       }
     }
 
-    if (draws.length < (drawsPage + 1) * pageSize) {
+    if (draws.length < (drawsPage + 1) * pageSize.draws) {
       break
     } else {
       drawsPage++

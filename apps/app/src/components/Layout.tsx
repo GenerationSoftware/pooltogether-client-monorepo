@@ -137,7 +137,8 @@ export const Layout = (props: LayoutProps) => {
 
       <DelegateModal onSuccessfulDelegation={() => fathom.trackEvent(FATHOM_EVENTS.delegated)} />
 
-      <DrawModal />
+      {/* TODO: enable once data can be more efficiently fetched */}
+      {/* <DrawModal /> */}
 
       <CheckPrizesModal
         onWin={() => fathom.trackEvent(FATHOM_EVENTS.checkedPrizes, { _value: 1 })}

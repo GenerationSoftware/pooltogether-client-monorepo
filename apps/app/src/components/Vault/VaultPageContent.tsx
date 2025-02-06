@@ -140,13 +140,14 @@ export const VaultPageContent = (props: VaultPageContentProps) => {
       ) : (
         <ErrorState chainId={rawChainId} tokenAddress={vaultTokenAddress} />
       )}
-      {!!vault && !!prizePool && (
+      {/* TODO: enable once data can be more efficiently fetched */}
+      {/* {!!vault && !!prizePool && (
         <VaultPageRecentWinnersCard
           vault={vault}
           prizePool={prizePool}
           className={maxWidthClassName}
         />
-      )}
+      )} */}
       {!!vault && !!prizePool && !!vaultTokenAddress && (
         <VaultPageInfo
           vault={vault}

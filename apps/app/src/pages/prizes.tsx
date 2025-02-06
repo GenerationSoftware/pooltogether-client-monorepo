@@ -34,7 +34,8 @@ export default function PrizesPage() {
         <Button>{t('depositToWin')}</Button>
       </Link>
       <PrizePoolDisplay className='mt-8' />
-      <PrizePoolWinners className='mt-8' />
+      {/* TODO: enable once data can be more efficiently fetched */}
+      {/* <PrizePoolWinners className='mt-8' /> */}
     </Layout>
   )
 }
