@@ -1,3 +1,4 @@
+import { DSKit } from 'dskit-eth'
 import { Address, PublicClient } from 'viem'
 import { LIQUIDATION_ROUTER_ADDRESSES, TWAB_REWARDS_ADDRESSES } from '../constants'
 import { getLiquidationPairAddresses } from './liquidations'
@@ -209,8 +210,13 @@ export const getLiquidationEvents = async (
 
   const lpAddresses = await getLiquidationPairAddresses(publicClient)
 
+  // TODO: improve typing from dskit (remove ts-ignores)
+  // @ts-ignore
+  const dskit = new DSKit({ viemPublicClient: publicClient })
+
   const lpEvents = !!lpAddresses.length
-    ? await publicClient.getLogs({
+    ? await dskit.event.query({
+        // @ts-ignore
         address: lpAddresses,
         event: {
           inputs: [
@@ -224,17 +230,19 @@ export const getLiquidationEvents = async (
           name: 'SwappedExactAmountOut',
           type: 'event'
         },
-        fromBlock: options?.fromBlock,
+        fromBlock: options?.fromBlock ?? 1n,
         toBlock: options?.toBlock ?? 'latest',
         strict: true
       })
     : []
 
   const filteredLpEvents = lpEvents.filter(
+    // @ts-ignore
     (lpEvent) => lpEvent.args.sender.toLowerCase() !== liqRouterContractAddress.toLowerCase()
   )
   const formattedLpEvents = filteredLpEvents.map((lpEvent) => ({
     ...lpEvent,
+    // @ts-ignore
     args: { ...lpEvent.args, liquidationPair: lpEvent.address }
   }))
 

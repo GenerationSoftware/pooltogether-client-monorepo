@@ -41,6 +41,9 @@ importers:
       classnames:
         specifier: ^2.3.2
         version: 2.3.2
+      dskit-eth:
+        specifier: 0.2.2
+        version: 0.2.2(typescript@5.0.4)
       flowbite:
         specifier: 2.2.1
         version: 2.2.1
@@ -5338,7 +5341,6 @@ packages:
     dependencies:
       '@noble/hashes': 1.4.0
       '@scure/base': 1.1.9
-    dev: false
 
   /@scure/bip39@1.4.0:
     resolution: {integrity: sha512-BEEm6p8IueV/ZTfQLp/0vhw4NPnT9oWf5+28nvmeUICjP99f4vr2d+qc7AVGDDtwRep6ifR43Yed9ERVmiITzw==}
@@ -9350,7 +9352,6 @@ packages:
       - typescript
       - utf-8-validate
       - zod
-    dev: false
 
   /duplexify@4.1.2:
     resolution: {integrity: sha512-fz3OjcNCHmRP12MJoZMPglx8m4rrFP8rovnk4vT8Fs+aonZoCwGg10dSsQsfP/E62eZcPTMSMP6686fu9Qlqtw==}
@@ -15759,7 +15760,6 @@ packages:
       - bufferutil
       - utf-8-validate
       - zod
-    dev: false
 
   /viem@2.21.16(typescript@5.0.4):
     resolution: {integrity: sha512-SvhaPzTj3a+zR/5OmtJ0acjA6oGDrgPg4vtO8KboXtvbjksXEkz+oFaNjZDgxpkqbps2SLi8oPCjdpRm6WgDmw==}
