@@ -4,17 +4,19 @@ import { Spinner } from '@shared/ui'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
+import { useUserClaimablePoolWidePromotions } from '@hooks/useUserClaimablePoolWidePromotions'
 import { useUserClaimablePromotions } from '@hooks/useUserClaimablePromotions'
 
 interface AccountPromotionClaimableRewardsProps {
   chainId: number
   promotionId: bigint
   address?: Address
+  isPoolWide?: boolean
   className?: string
 }
 
 export const AccountPromotionClaimableRewards = (props: AccountPromotionClaimableRewardsProps) => {
-  const { chainId, promotionId, address, className } = props
+  const { chainId, promotionId, address, isPoolWide, className } = props
 
   const { address: _userAddress } = useAccount()
   const userAddress = address ?? _userAddress
@@ -23,15 +25,18 @@ export const AccountPromotionClaimableRewards = (props: AccountPromotionClaimabl
     userAddress as Address
   )
 
+  const { data: allPoolWideClaimable, isFetched: isFetchedAllPoolWideClaimable } =
+    useUserClaimablePoolWidePromotions(userAddress as Address)
+
   const claimable = useMemo(() => {
-    return allClaimable.find(
+    return (isPoolWide ? allPoolWideClaimable : allClaimable).find(
       (promotion) => promotion.chainId === chainId && promotion.promotionId === promotionId
     )
-  }, [allClaimable])
+  }, [isPoolWide, allClaimable, allPoolWideClaimable])
 
   const { data: tokenData } = useToken(chainId, claimable?.token as Address)
 
-  if (!isFetchedAllClaimable || (!!claimable && !tokenData)) {
+  if (!isFetchedAllClaimable || !isFetchedAllPoolWideClaimable || (!!claimable && !tokenData)) {
     return <Spinner />
   }
 

@@ -509,6 +509,13 @@ export const TWAB_REWARDS_ADDRESSES: { [chainId: number]: Address } = {
 }
 
 /**
+ * Pool-Wide TWAB rewards addresses
+ */
+export const POOL_WIDE_TWAB_REWARDS_ADDRESSES: { [chainId: number]: Address } = {
+  [NETWORK.optimism_sepolia]: '0x7092D49975B262d1d0e92E858c98998620f9A71A'
+}
+
+/**
  * Vault factory addresses
  */
 export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
@@ -670,6 +677,11 @@ export const TOKEN_PRICE_REDIRECTS: {
     },
     /* POOL */
     [POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia].toLowerCase()]: {
+      chainId: NETWORK.mainnet,
+      address: lower(POOL_TOKEN_ADDRESSES[NETWORK.mainnet])
+    },
+    /* Test Reward Token */
+    '0xce5de3de8f65464fd84ac06a38a157232a873531': {
       chainId: NETWORK.mainnet,
       address: lower(POOL_TOKEN_ADDRESSES[NETWORK.mainnet])
     }

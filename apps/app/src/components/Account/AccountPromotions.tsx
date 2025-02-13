@@ -1,7 +1,9 @@
 import classNames from 'classnames'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
+import { useUserClaimablePoolWidePromotions } from '@hooks/useUserClaimablePoolWidePromotions'
 import { useUserClaimablePromotions } from '@hooks/useUserClaimablePromotions'
+import { useUserClaimedPoolWidePromotions } from '@hooks/useUserClaimedPoolWidePromotions'
 import { useUserClaimedPromotions } from '@hooks/useUserClaimedPromotions'
 import { AccountPromotionCards } from './AccountPromotionCards'
 import { AccountPromotionsHeader } from './AccountPromotionsHeader'
@@ -21,7 +23,11 @@ export const AccountPromotions = (props: AccountPromotionsProps) => {
   const { data: claimed } = useUserClaimedPromotions(userAddress as Address)
   const { data: claimable } = useUserClaimablePromotions(userAddress as Address)
 
-  const isNotEmpty = !!claimable.length || !!claimed.length
+  const { data: poolWideClaimed } = useUserClaimedPoolWidePromotions(userAddress as Address)
+  const { data: poolWideClaimable } = useUserClaimablePoolWidePromotions(userAddress as Address)
+
+  const isNotEmpty =
+    !!claimable.length || !!claimed.length || !!poolWideClaimed || !!poolWideClaimable
 
   if (typeof window !== 'undefined' && !!userAddress && isNotEmpty) {
     return (

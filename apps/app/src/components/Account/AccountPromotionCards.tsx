@@ -3,7 +3,9 @@ import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
+import { useUserClaimablePoolWidePromotions } from '@hooks/useUserClaimablePoolWidePromotions'
 import { useUserClaimablePromotions } from '@hooks/useUserClaimablePromotions'
+import { useUserClaimedPoolWidePromotions } from '@hooks/useUserClaimedPoolWidePromotions'
 import { useUserClaimedPromotions } from '@hooks/useUserClaimedPromotions'
 import { AccountPromotionCard } from './AccountPromotionCard'
 
@@ -23,14 +25,17 @@ export const AccountPromotionCards = (props: AccountPromotionCardsProps) => {
   const { address: _userAddress } = useAccount()
   const userAddress = address ?? _userAddress
 
-  const { data: claimed } = useUserClaimedPromotions(userAddress as Address)
-  const { data: claimable } = useUserClaimablePromotions(userAddress as Address)
+  const { data: claimed } = useUserClaimedPromotions(userAddress!)
+  const { data: claimable } = useUserClaimablePromotions(userAddress!)
+
+  const { data: poolWideClaimed } = useUserClaimedPoolWidePromotions(userAddress!)
+  const { data: poolWideClaimable } = useUserClaimablePoolWidePromotions(userAddress!)
 
   const promotions = useMemo(() => {
     const promotions: { [id: string]: { startTimestamp: number; claimable: boolean } } = {}
 
     claimed.forEach((promotion) => {
-      const id = `${promotion.chainId}-${promotion.promotionId}`
+      const id = `${promotion.chainId}-${promotion.promotionId}-0`
 
       if (promotions[id] === undefined) {
         promotions[id] = { startTimestamp: Number(promotion.startTimestamp), claimable: false }
@@ -38,7 +43,25 @@ export const AccountPromotionCards = (props: AccountPromotionCardsProps) => {
     })
 
     claimable.forEach((promotion) => {
-      const id = `${promotion.chainId}-${promotion.promotionId}`
+      const id = `${promotion.chainId}-${promotion.promotionId}-0`
+
+      if (promotions[id] === undefined) {
+        promotions[id] = { startTimestamp: Number(promotion.startTimestamp), claimable: true }
+      } else if (!promotions[id].claimable) {
+        promotions[id].claimable = true
+      }
+    })
+
+    poolWideClaimed.forEach((promotion) => {
+      const id = `${promotion.chainId}-${promotion.promotionId}-1`
+
+      if (promotions[id] === undefined) {
+        promotions[id] = { startTimestamp: Number(promotion.startTimestamp), claimable: false }
+      }
+    })
+
+    poolWideClaimable.forEach((promotion) => {
+      const id = `${promotion.chainId}-${promotion.promotionId}-1`
 
       if (promotions[id] === undefined) {
         promotions[id] = { startTimestamp: Number(promotion.startTimestamp), claimable: true }
@@ -58,6 +81,7 @@ export const AccountPromotionCards = (props: AccountPromotionCardsProps) => {
       {promotions.slice(0, numCards).map((promotion) => {
         const chainId = parseInt(promotion.split('-')[0])
         const promotionId = BigInt(promotion.split('-')[1])
+        const isPoolWide = promotion.split('-')[2] === '1'
 
         return (
           <AccountPromotionCard
@@ -65,6 +89,7 @@ export const AccountPromotionCards = (props: AccountPromotionCardsProps) => {
             chainId={chainId}
             promotionId={promotionId}
             address={userAddress}
+            isPoolWide={isPoolWide}
           />
         )
       })}

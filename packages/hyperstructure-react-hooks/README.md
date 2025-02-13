@@ -77,6 +77,8 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useDrawStartedEvents`
 - `useLiquidationEvents`
 - `useManualContributionEvents`
+- `usePoolWidePromotionCreatedEvents`
+- `usePoolWidePromotionRewardsClaimedEvents`
 - `usePrizeBackstopEvents`
 - `usePromotionCreatedEvents`
 - `usePromotionRewardsClaimedEvents`
@@ -148,6 +150,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useSendDepositTransaction`
 - `useSendDepositWithPermitTransaction`
 - `useSendGenericApproveTransaction`
+- `useSendPoolWideClaimRewardsTransaction`
 - `useSendRedeemTransaction`
 - `useSendSetClaimerTransaction`
 - `useSendSetLiquidationPairTransaction`
@@ -155,6 +158,8 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 
 ### Vault Hooks
 
+- `useAllPoolWideVaultPromotions`
+- `useAllUserClaimablePoolWideRewards`
 - `useAllUserClaimableRewards`
 - `useAllUserVaultBalances`
 - `useAllUserVaultDelegates`
@@ -175,6 +180,7 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useAllVaultTokenPrices`
 - `useAllVaultTotalDelegateSupplies`
 - `useAllVaultTotalSupplyTwabs`
+- `usePoolWideVaultPromotions`
 - `useSortedVaults`
 - `useUserClaimableRewards`
 - `useUserVaultDelegate`

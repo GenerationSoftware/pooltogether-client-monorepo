@@ -61,6 +61,9 @@ export const AccountPromotionsHeader = (props: AccountPromotionsHeaderProps) => 
   )
 }
 
+// TODO: the "claim all" button should ideally encompass the pool-wide TWAB promotions as well
+// use `claimRewards`, `claimTwabRewards` and `multicall` pass-through on pool-wide twab rewards contract to claim any number of promotions from any contract
+
 interface ClaimAllRewardsButtonProps {
   chainId: number
   userAddress: Address

@@ -6,7 +6,9 @@ import Link from 'next/link'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
+import { useUserClaimablePoolWidePromotions } from '@hooks/useUserClaimablePoolWidePromotions'
 import { useUserClaimablePromotions } from '@hooks/useUserClaimablePromotions'
+import { useUserClaimedPoolWidePromotions } from '@hooks/useUserClaimedPoolWidePromotions'
 import { useUserClaimedPromotions } from '@hooks/useUserClaimedPromotions'
 import { AccountPromotionClaimableRewards } from './AccountPromotionClaimableRewards'
 import { AccountPromotionClaimActions } from './AccountPromotionClaimActions'
@@ -17,10 +19,11 @@ interface AccountPromotionCardProps {
   chainId: number
   promotionId: bigint
   address?: Address
+  isPoolWide?: boolean
 }
 
 export const AccountPromotionCard = (props: AccountPromotionCardProps) => {
-  const { chainId, promotionId, address } = props
+  const { chainId, promotionId, address, isPoolWide } = props
 
   const t = useTranslations('Account.bonusRewardHeaders')
 
@@ -33,17 +36,20 @@ export const AccountPromotionCard = (props: AccountPromotionCardProps) => {
     return !!address && address.toLowerCase() !== _userAddress?.toLowerCase()
   }, [address, _userAddress])
 
-  const { data: allClaimed } = useUserClaimedPromotions(userAddress as Address)
-  const { data: allClaimable } = useUserClaimablePromotions(userAddress as Address)
+  const { data: allClaimed } = useUserClaimedPromotions(userAddress!)
+  const { data: allClaimable } = useUserClaimablePromotions(userAddress!)
+
+  const { data: allPoolWideClaimed } = useUserClaimedPoolWidePromotions(userAddress!)
+  const { data: allPoolWideClaimable } = useUserClaimablePoolWidePromotions(userAddress!)
 
   const claimed = useMemo(() => {
-    return allClaimed.find(
+    return (isPoolWide ? allPoolWideClaimed : allClaimed).find(
       (promotion) => promotion.chainId === chainId && promotion.promotionId === promotionId
     )
   }, [allClaimed])
 
   const claimable = useMemo(() => {
-    return allClaimable.find(
+    return (isPoolWide ? allPoolWideClaimable : allClaimable).find(
       (promotion) => promotion.chainId === chainId && promotion.promotionId === promotionId
     )
   }, [allClaimable])
@@ -72,6 +78,7 @@ export const AccountPromotionCard = (props: AccountPromotionCardProps) => {
                 chainId={chainId}
                 promotionId={promotionId}
                 address={userAddress}
+                isPoolWide={isPoolWide}
                 className='!flex-row gap-1'
               />
             </div>
@@ -83,6 +90,7 @@ export const AccountPromotionCard = (props: AccountPromotionCardProps) => {
                 chainId={chainId}
                 promotionId={promotionId}
                 address={userAddress}
+                isPoolWide={isPoolWide}
                 className='!flex-row gap-1'
               />
             </div>
@@ -93,6 +101,7 @@ export const AccountPromotionCard = (props: AccountPromotionCardProps) => {
             chainId={chainId}
             promotionId={promotionId}
             address={userAddress}
+            isPoolWide={isPoolWide}
             fullSized={true}
             className='w-full justify-center'
           />
