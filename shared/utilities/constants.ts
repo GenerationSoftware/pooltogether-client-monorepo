@@ -512,7 +512,7 @@ export const TWAB_REWARDS_ADDRESSES: { [chainId: number]: Address } = {
  * Pool-Wide TWAB rewards addresses
  */
 export const POOL_WIDE_TWAB_REWARDS_ADDRESSES: { [chainId: number]: Address } = {
-  [NETWORK.optimism_sepolia]: '0x7092D49975B262d1d0e92E858c98998620f9A71A'
+  [NETWORK.optimism_sepolia]: '0x1B7070eb6f871ba0d77470918502F8D788978FA3'
 }
 
 /**
