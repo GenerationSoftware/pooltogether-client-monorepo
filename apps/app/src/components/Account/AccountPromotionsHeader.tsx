@@ -37,7 +37,7 @@ export const AccountPromotionsHeader = (props: AccountPromotionsHeaderProps) => 
     return !!userAddress && userAddress.toLowerCase() !== _userAddress?.toLowerCase()
   }, [userAddress, _userAddress])
 
-  const { data: totalRewards } = useUserTotalPromotionRewards(userAddress!, {
+  const { data: totalRewards } = useUserTotalPromotionRewards((userAddress ?? _userAddress)!, {
     includeUnclaimed: true
   })
 
@@ -187,7 +187,7 @@ const ClaimAllRewardsButton = (props: ClaimAllRewardsButtonProps) => {
     }
   )
 
-  if (Object.keys(epochsToClaim).length + Object.keys(poolWidePromotionsToClaim).length > 0) {
+  if (Object.keys(epochsToClaim).length + Object.keys(poolWidePromotionsToClaim).length > 1) {
     const network = getNiceNetworkNameByChainId(chainId)
 
     const isEnabled = !!Object.keys(epochsToClaim).length

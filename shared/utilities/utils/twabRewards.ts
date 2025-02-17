@@ -268,11 +268,18 @@ export const getPoolWideClaimableRewards = async (
 
     const promotionIds = Object.keys(promotionEpochs)
     if (vaultAddresses.length > 0 && promotionIds.length > 0) {
-      const callArgs: [Address, Address, bigint, number[]][] = []
+      const calculateRewardsCallArgs: [Address, Address, bigint, number[]][] = []
+      const claimedEpochsCallArgs: [bigint, Address, Address][] = []
 
       vaultAddresses.forEach((vaultAddress) => {
         promotionIds.forEach((id) => {
-          callArgs.push([vaultAddress, userAddress, BigInt(id), promotionEpochs[id]])
+          calculateRewardsCallArgs.push([
+            vaultAddress,
+            userAddress,
+            BigInt(id),
+            promotionEpochs[id]
+          ])
+          claimedEpochsCallArgs.push([BigInt(id), vaultAddress, userAddress])
         })
       })
 
@@ -280,15 +287,27 @@ export const getPoolWideClaimableRewards = async (
         publicClient,
         POOL_WIDE_TWAB_REWARDS_ADDRESSES[chainId],
         poolWideTwabRewardsABI,
-        callArgs.map((args) => ({ functionName: 'calculateRewards', args }))
+        [
+          ...calculateRewardsCallArgs.map((args) => ({ functionName: 'calculateRewards', args })),
+          ...claimedEpochsCallArgs.map((args) => ({ functionName: 'claimedEpochs', args }))
+        ]
       )
 
       vaultAddresses.forEach((vaultAddress, i) => {
         promotionIds.forEach((id, j) => {
-          const result: bigint[] | undefined = multicallResults[i * promotionIds.length + j]
-          const epochRewards = typeof result === 'object' ? result : undefined
+          const calculateRewardsResult: bigint[] | undefined =
+            multicallResults[i * promotionIds.length + j]
+          const claimedEpochsResult: `0x${string}` | undefined =
+            multicallResults[i * promotionIds.length + j + calculateRewardsCallArgs.length]
 
-          if (!!epochRewards) {
+          const epochRewards =
+            typeof calculateRewardsResult === 'object' ? calculateRewardsResult : undefined
+          const claimedEpochIds =
+            typeof claimedEpochsResult === 'string'
+              ? decodePoolWideRewardsClaimFlags(claimedEpochsResult)
+              : undefined
+
+          if (!!epochRewards && !!claimedEpochIds) {
             const newRewards: {
               promotionId: number
               vaultAddress: Address
@@ -296,7 +315,7 @@ export const getPoolWideClaimableRewards = async (
             } = { promotionId: Number(id), vaultAddress, epochRewards: {} }
 
             promotionEpochs[id].forEach((epochId, k) => {
-              if (epochRewards[k] > 0n) {
+              if (epochRewards[k] > 0n && !claimedEpochIds.includes(epochId)) {
                 newRewards.epochRewards[epochId] = epochRewards[k]
               }
             })
@@ -444,7 +463,7 @@ export const decodePoolWideRewardsClaimFlags = (claimFlags: `0x${string}`) => {
 
   const parsedValue = hexToBigInt(claimFlags)
 
-  for (let epochId = 1n; epochId < 256n; epochId++) {
+  for (let epochId = 0n; epochId < 256n; ++epochId) {
     if (((parsedValue >> epochId) & 1n) === 1n) {
       epochIds.push(Number(epochId))
     }
