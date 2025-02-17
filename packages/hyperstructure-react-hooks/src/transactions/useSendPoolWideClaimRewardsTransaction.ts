@@ -11,17 +11,15 @@ import {
 /**
  * Prepares and submits a `claimRewards` or `multicall` transaction to a pool-wide TWAB rewards contract
  * @param chainId the chain ID these rewards are to be claimed on
- * @param vaultAddress the vault address to claim rewards for
  * @param userAddress the user address to claim rewards for
- * @param epochsToClaim the epochs to claim for each promotion ID
+ * @param promotionsToClaim data on the promotions' epochs to claim
  * @param options optional settings or callbacks
  * @returns
  */
 export const useSendPoolWideClaimRewardsTransaction = (
   chainId: number,
-  vaultAddress: Address,
   userAddress: Address,
-  epochsToClaim: { [id: string]: number[] },
+  promotionsToClaim: { [id: string]: { vaultAddress: Address; epochs: number[] } },
   options?: {
     onSend?: (txHash: `0x${string}`) => void
     onSuccess?: (txReceipt: TransactionReceipt) => void
@@ -41,23 +39,23 @@ export const useSendPoolWideClaimRewardsTransaction = (
   const enabled =
     !!chainId &&
     chainId === chain?.id &&
-    !!vaultAddress &&
-    isAddress(vaultAddress) &&
     !!userAddress &&
     isAddress(userAddress) &&
-    !!epochsToClaim &&
-    Object.values(epochsToClaim).some((entry) => !!entry?.length) &&
+    !!promotionsToClaim &&
+    Object.values(promotionsToClaim).some(
+      (entry) => !!entry?.vaultAddress && !!entry.epochs?.length
+    ) &&
     !!POOL_WIDE_TWAB_REWARDS_ADDRESSES[chainId]
 
   const claimRewardsArgs = useMemo((): [Address, Address, bigint, number[]] | undefined => {
     if (enabled) {
-      const promotion = Object.entries(epochsToClaim).find((entry) => !!entry[1].length)
+      const promotion = Object.entries(promotionsToClaim).find((entry) => !!entry[1].epochs.length)
 
       if (!!promotion) {
-        return [vaultAddress, userAddress, BigInt(promotion[0]), promotion[1]]
+        return [promotion[1].vaultAddress, userAddress, BigInt(promotion[0]), promotion[1].epochs]
       }
     }
-  }, [vaultAddress, userAddress, epochsToClaim])
+  }, [userAddress, promotionsToClaim])
 
   const { data } = useSimulateContract({
     chainId,
@@ -77,20 +75,22 @@ export const useSendPoolWideClaimRewardsTransaction = (
   } = useWriteContract()
 
   const isMulticall = useMemo(() => {
-    const numValidPromotions = Object.values(epochsToClaim).filter(
-      (epochs) => !!epochs.length
+    const numValidPromotions = Object.values(promotionsToClaim).filter(
+      (entry) => !!entry.vaultAddress && !!entry.epochs?.length
     ).length
     return numValidPromotions > 1
-  }, [epochsToClaim])
+  }, [promotionsToClaim])
 
   const multicallArgs = useMemo((): [`0x${string}`[]] | undefined => {
     if (enabled && isMulticall) {
-      const validPromotions = Object.entries(epochsToClaim).filter((entry) => !!entry[1].length)
+      const validPromotions = Object.entries(promotionsToClaim).filter(
+        (entry) => !!entry[1].vaultAddress && !!entry[1].epochs?.length
+      )
 
       const args = validPromotions.map((promotion) => {
         const callData = encodeFunctionData({
           abi: poolWideTwabRewardsABI,
-          args: [vaultAddress, userAddress, BigInt(promotion[0]), promotion[1]],
+          args: [promotion[1].vaultAddress, userAddress, BigInt(promotion[0]), promotion[1].epochs],
           functionName: 'claimRewards'
         })
         return callData
@@ -98,7 +98,7 @@ export const useSendPoolWideClaimRewardsTransaction = (
 
       return [args]
     }
-  }, [vaultAddress, userAddress, epochsToClaim])
+  }, [userAddress, promotionsToClaim])
 
   const { data: multicallData } = useSimulateContract({
     chainId,

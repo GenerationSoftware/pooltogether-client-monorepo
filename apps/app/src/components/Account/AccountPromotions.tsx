@@ -10,26 +10,27 @@ import { AccountPromotionsHeader } from './AccountPromotionsHeader'
 import { AccountPromotionsTable } from './AccountPromotionsTable'
 
 interface AccountPromotionsProps {
-  address?: Address
+  userAddress?: Address
   className?: string
 }
 
 export const AccountPromotions = (props: AccountPromotionsProps) => {
-  const { address, className } = props
+  const { userAddress, className } = props
 
   const { address: _userAddress } = useAccount()
-  const userAddress = address ?? _userAddress
 
-  const { data: claimed } = useUserClaimedPromotions(userAddress as Address)
-  const { data: claimable } = useUserClaimablePromotions(userAddress as Address)
+  const { data: claimed } = useUserClaimedPromotions((userAddress ?? _userAddress)!)
+  const { data: claimable } = useUserClaimablePromotions((userAddress ?? _userAddress)!)
 
-  const { data: poolWideClaimed } = useUserClaimedPoolWidePromotions(userAddress as Address)
-  const { data: poolWideClaimable } = useUserClaimablePoolWidePromotions(userAddress as Address)
+  const { data: poolWideClaimed } = useUserClaimedPoolWidePromotions((userAddress ?? _userAddress)!)
+  const { data: poolWideClaimable } = useUserClaimablePoolWidePromotions(
+    (userAddress ?? _userAddress)!
+  )
 
   const isNotEmpty =
     !!claimable.length || !!claimed.length || !!poolWideClaimed || !!poolWideClaimable
 
-  if (typeof window !== 'undefined' && !!userAddress && isNotEmpty) {
+  if (typeof window !== 'undefined' && !!(userAddress ?? _userAddress) && isNotEmpty) {
     return (
       <div
         className={classNames(
@@ -37,9 +38,15 @@ export const AccountPromotions = (props: AccountPromotionsProps) => {
           className
         )}
       >
-        <AccountPromotionsHeader address={userAddress} />
-        <AccountPromotionsTable address={userAddress} className='hidden mt-8 lg:block' />
-        <AccountPromotionCards address={userAddress} className='mt-4 lg:hidden' />
+        <AccountPromotionsHeader userAddress={userAddress} />
+        <AccountPromotionsTable
+          userAddress={userAddress ?? _userAddress}
+          className='hidden mt-8 lg:block'
+        />
+        <AccountPromotionCards
+          userAddress={userAddress ?? _userAddress}
+          className='mt-4 lg:hidden'
+        />
       </div>
     )
   }

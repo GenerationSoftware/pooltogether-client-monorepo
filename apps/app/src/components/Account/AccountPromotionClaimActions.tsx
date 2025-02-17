@@ -5,7 +5,7 @@ import {
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { TokenAmount, TransactionButton } from '@shared/react-components'
-import { getSecondsSinceEpoch } from '@shared/utilities'
+import { getSecondsSinceEpoch, lower } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -19,24 +19,26 @@ import { useUserClaimedPromotions } from '@hooks/useUserClaimedPromotions'
 interface AccountPromotionClaimActionsProps {
   chainId: number
   promotionId: bigint
-  address?: Address
+  userAddress?: Address
+  vaultAddress?: Address
   isPoolWide?: boolean
   fullSized?: boolean
   className?: string
 }
 
 export const AccountPromotionClaimActions = (props: AccountPromotionClaimActionsProps) => {
-  const { chainId, promotionId, address, isPoolWide, fullSized, className } = props
+  const { chainId, promotionId, userAddress, vaultAddress, isPoolWide, fullSized, className } =
+    props
 
   const { address: _userAddress } = useAccount()
-  const userAddress = address ?? _userAddress
 
   if (!!userAddress) {
     return (
       <ClaimRewardsButton
         chainId={chainId}
         promotionId={promotionId}
-        userAddress={userAddress}
+        userAddress={userAddress ?? _userAddress}
+        vaultAddress={vaultAddress}
         isPoolWide={isPoolWide}
         fullSized={fullSized}
         className={className}
@@ -51,13 +53,15 @@ interface ClaimRewardsButtonProps {
   chainId: number
   promotionId: bigint
   userAddress: Address
+  vaultAddress?: Address
   isPoolWide?: boolean
   fullSized?: boolean
   className?: string
 }
 
 const ClaimRewardsButton = (props: ClaimRewardsButtonProps) => {
-  const { chainId, promotionId, userAddress, isPoolWide, fullSized, className } = props
+  const { chainId, promotionId, userAddress, vaultAddress, isPoolWide, fullSized, className } =
+    props
 
   const t_common = useTranslations('Common')
   const t_account = useTranslations('Account')
@@ -83,9 +87,12 @@ const ClaimRewardsButton = (props: ClaimRewardsButtonProps) => {
 
   const promotion = useMemo(() => {
     return (isPoolWide ? allPoolWideClaimable : allClaimable).find(
-      (promotion) => promotion.chainId === chainId && promotion.promotionId === promotionId
+      (promotion) =>
+        promotion.chainId === chainId &&
+        promotion.promotionId === promotionId &&
+        (!vaultAddress || lower(promotion.vault) === lower(vaultAddress))
     )
-  }, [isPoolWide, allClaimable, allPoolWideClaimable])
+  }, [isPoolWide, allClaimable, allPoolWideClaimable, chainId, promotionId, vaultAddress])
 
   const { data: token } = useToken(chainId, promotion?.token!)
 
@@ -120,9 +127,8 @@ const ClaimRewardsButton = (props: ClaimRewardsButtonProps) => {
     sendPoolWideClaimRewardsTransaction
   } = useSendPoolWideClaimRewardsTransaction(
     chainId,
-    promotion?.vault!,
     userAddress,
-    { [promotionId.toString()]: epochsToClaim },
+    { [promotionId.toString()]: { vaultAddress: promotion?.vault!, epochs: epochsToClaim } },
     {
       onSuccess: () => {
         refetchPoolWideClaimed()

@@ -127,18 +127,19 @@ export const useAllVaultPromotionsApr = (
                   vaultPromotionAprs[vault.id] += promotionApr
                 })
 
-                const poolWidePromotions = Object.values(
-                  allPoolWideVaultPromotions[vault.chainId]
-                ).filter(
+                const poolWidePromotions = allPoolWideVaultPromotions[vault.chainId].filter(
                   (promotion) =>
-                    lower(promotion.token) === lower(rewardToken.address) &&
-                    lower(promotion.vault) === lower(vault.address)
+                    lower(promotion.info.token) === lower(rewardToken.address) &&
+                    lower(promotion.info.vault) === lower(vault.address)
                 )
 
                 poolWidePromotions.forEach((promotion) => {
-                  const promotionApr = calculatePoolWideRewardsApr(promotion, rewardToken, tvl, {
-                    currentTimestamp
-                  })
+                  const promotionApr = calculatePoolWideRewardsApr(
+                    promotion.info,
+                    rewardToken,
+                    tvl,
+                    { currentTimestamp }
+                  )
 
                   if (vaultPromotionAprs[vault.id] === undefined) {
                     vaultPromotionAprs[vault.id] = 0

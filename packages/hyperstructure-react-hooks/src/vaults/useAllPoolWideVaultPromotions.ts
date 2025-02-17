@@ -70,7 +70,7 @@ export const useAllPoolWideVaultPromotions = (
       return {
         queryKey,
         queryFn: async () => {
-          const promotions: { [id: string]: PartialPoolWidePromotionInfo } = {}
+          const promotions: { promotionId: number; info: PartialPoolWidePromotionInfo }[] = []
 
           if (!!POOL_WIDE_TWAB_REWARDS_ADDRESSES[chainId]) {
             const allPromotionInfo = await getPoolWidePromotions(publicClient, poolWidePromotionIds)
@@ -87,16 +87,19 @@ export const useAllPoolWideVaultPromotions = (
                   poolWidePromotionCreatedEvents?.[chainId]?.forEach((promotionCreatedEvent) => {
                     const id = promotionCreatedEvent.args.promotionId.toString()
 
-                    promotions[id] = {
-                      startTimestamp: BigInt(promotionCreatedEvent.args.startTimestamp),
-                      vault: vaultAddress,
-                      epochDuration: promotionCreatedEvent.args.epochDuration,
-                      createdAtBlockNumber: promotionCreatedEvent.blockNumber,
-                      token: promotionCreatedEvent.args.token,
-                      tokensPerEpoch: promotionCreatedEvent.args.tokensPerEpoch,
-                      vaultTokensPerEpoch: allVaultTokensPerEpoch[id],
-                      ...allPromotionInfo[id]
-                    }
+                    promotions.push({
+                      promotionId: Number(id),
+                      info: {
+                        startTimestamp: BigInt(promotionCreatedEvent.args.startTimestamp),
+                        vault: vaultAddress,
+                        epochDuration: promotionCreatedEvent.args.epochDuration,
+                        createdAtBlockNumber: promotionCreatedEvent.blockNumber,
+                        token: promotionCreatedEvent.args.token,
+                        tokensPerEpoch: promotionCreatedEvent.args.tokensPerEpoch,
+                        vaultTokensPerEpoch: allVaultTokensPerEpoch[id],
+                        ...allPromotionInfo[id]
+                      }
+                    })
                   })
                 })()
               )
@@ -116,7 +119,9 @@ export const useAllPoolWideVaultPromotions = (
     const isFetching = results?.some((result) => result.isFetching)
     const refetch = () => results?.forEach((result) => result.refetch())
 
-    const data: { [chainId: number]: { [id: string]: PartialPoolWidePromotionInfo } } = {}
+    const data: {
+      [chainId: number]: { promotionId: number; info: PartialPoolWidePromotionInfo }[]
+    } = {}
     results.forEach((result, i) => {
       if (!!result.data) {
         data[vaults.chainIds[i]] = result.data

@@ -49,7 +49,7 @@ export const useAllUserClaimablePoolWideRewards = (
                 vaultAddresses[chainId],
                 promotions[chainId]
               )
-            : {},
+            : [],
         enabled: !!chainId && !!publicClient && !!userAddress && !!vaultAddresses?.[chainId],
         ...NO_REFETCH
       }
@@ -61,7 +61,14 @@ export const useAllUserClaimablePoolWideRewards = (
     const isFetching = results?.some((result) => result.isFetching)
     const refetch = () => results?.forEach((result) => result.refetch())
 
-    const data: { [chainId: number]: { [id: string]: { [epochId: number]: bigint } } } = {}
+    const data: {
+      [chainId: number]: {
+        promotionId: number
+        vaultAddress: Address
+        epochRewards: { [epochId: number]: bigint }
+      }[]
+    } = {}
+
     results.forEach((result, i) => {
       if (!!result.data) {
         data[chainIds[i]] = result.data

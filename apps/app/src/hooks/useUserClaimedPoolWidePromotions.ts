@@ -4,7 +4,7 @@ import {
   useSelectedVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { PartialPoolWidePromotionInfo } from '@shared/types'
-import { decodePoolWideRewardsClaimFlags } from '@shared/utilities'
+import { decodePoolWideRewardsClaimFlags, lower } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { TWAB_REWARDS_SETTINGS } from '@constants/config'
@@ -36,7 +36,7 @@ export const useUserClaimedPoolWidePromotions = (userAddress: Address) => {
       chainIds.forEach((chainId) => {
         options[chainId] = {
           promotionIds: !!allPoolWidePromotions[chainId]
-            ? Object.keys(allPoolWidePromotions[chainId]).map(BigInt)
+            ? allPoolWidePromotions[chainId].map((entry) => BigInt(entry.promotionId))
             : [],
           userAddresses: [userAddress],
           fromBlock: TWAB_REWARDS_SETTINGS[chainId]?.fromBlock
@@ -69,15 +69,22 @@ export const useUserClaimedPoolWidePromotions = (userAddress: Address) => {
 
       allClaimEvents[chainId].forEach((claimEvent) => {
         const promotionId = claimEvent.args.promotionId
+        const vaultAddress = lower(claimEvent.args.vault)
         const epochIds = decodePoolWideRewardsClaimFlags(claimEvent.args.epochClaimFlags)
         const amountClaimed = claimEvent.args.amount
 
         const existingEntryIndex = claimedPromotions.findIndex(
-          (entry) => entry.chainId === chainId && entry.promotionId === promotionId
+          (entry) =>
+            entry.chainId === chainId &&
+            entry.promotionId === promotionId &&
+            lower(entry.vault) === vaultAddress
         )
 
         if (existingEntryIndex === -1) {
-          const promotionInfo = allPoolWidePromotions[chainId]?.[promotionId.toString()]
+          const promotionInfo = allPoolWidePromotions[chainId]?.find(
+            (entry) =>
+              entry.promotionId === Number(promotionId) && lower(entry.info.vault) === vaultAddress
+          )?.info
 
           if (!!promotionInfo) {
             claimedPromotions.push({

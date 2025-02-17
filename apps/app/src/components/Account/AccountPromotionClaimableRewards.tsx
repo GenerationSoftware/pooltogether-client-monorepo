@@ -1,6 +1,7 @@
 import { useToken } from '@generationsoftware/hyperstructure-react-hooks'
 import { TokenValueAndAmount } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
+import { lower } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
@@ -10,31 +11,34 @@ import { useUserClaimablePromotions } from '@hooks/useUserClaimablePromotions'
 interface AccountPromotionClaimableRewardsProps {
   chainId: number
   promotionId: bigint
-  address?: Address
+  userAddress?: Address
+  vaultAddress?: Address
   isPoolWide?: boolean
   className?: string
 }
 
 export const AccountPromotionClaimableRewards = (props: AccountPromotionClaimableRewardsProps) => {
-  const { chainId, promotionId, address, isPoolWide, className } = props
+  const { chainId, promotionId, userAddress, vaultAddress, isPoolWide, className } = props
 
   const { address: _userAddress } = useAccount()
-  const userAddress = address ?? _userAddress
 
   const { data: allClaimable, isFetched: isFetchedAllClaimable } = useUserClaimablePromotions(
-    userAddress as Address
+    (userAddress ?? _userAddress)!
   )
 
   const { data: allPoolWideClaimable, isFetched: isFetchedAllPoolWideClaimable } =
-    useUserClaimablePoolWidePromotions(userAddress as Address)
+    useUserClaimablePoolWidePromotions((userAddress ?? _userAddress)!)
 
   const claimable = useMemo(() => {
     return (isPoolWide ? allPoolWideClaimable : allClaimable).find(
-      (promotion) => promotion.chainId === chainId && promotion.promotionId === promotionId
+      (promotion) =>
+        promotion.chainId === chainId &&
+        promotion.promotionId === promotionId &&
+        (!vaultAddress || lower(promotion.vault) === lower(vaultAddress))
     )
-  }, [isPoolWide, allClaimable, allPoolWideClaimable])
+  }, [isPoolWide, allClaimable, allPoolWideClaimable, chainId, promotionId, vaultAddress])
 
-  const { data: tokenData } = useToken(chainId, claimable?.token as Address)
+  const { data: tokenData } = useToken(chainId, claimable?.token!)
 
   if (!isFetchedAllClaimable || !isFetchedAllPoolWideClaimable || (!!claimable && !tokenData)) {
     return <Spinner />

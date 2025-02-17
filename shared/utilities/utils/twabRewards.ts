@@ -249,7 +249,11 @@ export const getPoolWideClaimableRewards = async (
     [id: string]: { startTimestamp?: bigint; numberOfEpochs?: number; epochDuration?: number }
   }
 ) => {
-  const claimableRewards: { [id: string]: { [epochId: number]: bigint } } = {}
+  const claimableRewards: {
+    promotionId: number
+    vaultAddress: Address
+    epochRewards: { [epochId: number]: bigint }
+  }[] = []
   const promotionEpochs: { [id: string]: number[] } = {}
 
   const chainId = await publicClient.getChainId()
@@ -279,20 +283,27 @@ export const getPoolWideClaimableRewards = async (
         callArgs.map((args) => ({ functionName: 'calculateRewards', args }))
       )
 
-      vaultAddresses.forEach((_vaultAddress, i) => {
+      vaultAddresses.forEach((vaultAddress, i) => {
         promotionIds.forEach((id, j) => {
           const result: bigint[] | undefined = multicallResults[i * promotionIds.length + j]
           const epochRewards = typeof result === 'object' ? result : undefined
 
           if (!!epochRewards) {
+            const newRewards: {
+              promotionId: number
+              vaultAddress: Address
+              epochRewards: { [epochId: number]: bigint }
+            } = { promotionId: Number(id), vaultAddress, epochRewards: {} }
+
             promotionEpochs[id].forEach((epochId, k) => {
               if (epochRewards[k] > 0n) {
-                if (claimableRewards[id] === undefined) {
-                  claimableRewards[id] = {}
-                }
-                claimableRewards[id][epochId] = epochRewards[k]
+                newRewards.epochRewards[epochId] = epochRewards[k]
               }
             })
+
+            if (!!Object.keys(newRewards.epochRewards).length) {
+              claimableRewards.push(newRewards)
+            }
           }
         })
       })

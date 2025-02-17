@@ -101,6 +101,7 @@ export * from './tokens/useTokens'
 /**
  * Transaction Hooks
  */
+export * from './transactions/useSendAggregateClaimRewardsTransaction'
 export * from './transactions/useSendApproveTransaction'
 export * from './transactions/useSendClaimRewardsTransaction'
 export * from './transactions/useSendClaimVaultFeesTransaction'
