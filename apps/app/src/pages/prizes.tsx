@@ -3,6 +3,7 @@ import { SECONDS_PER_DAY } from '@shared/utilities'
 import { GetStaticProps } from 'next'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
+import { useState } from 'react'
 import { getMessages } from 'src/utils'
 import { CheckPrizesBanner } from '@components/Account/CheckPrizesBanner'
 import { Layout } from '@components/Layout'
@@ -26,14 +27,16 @@ export const getStaticProps: GetStaticProps<PrizesPageProps> = async ({ locale }
 export default function PrizesPage() {
   const t = useTranslations('Common')
 
+  const [network, setNetwork] = useState<number | undefined>(undefined)
+
   return (
     <Layout className='gap-8'>
       <CheckPrizesBanner />
       <PrizesHeader />
-      <Link href='/vaults' passHref={true}>
+      <Link href={`/vaults${!!network ? `?network=${network}` : ''}`} passHref={true}>
         <Button>{t('depositToWin')}</Button>
       </Link>
-      <PrizePoolDisplay className='mt-8' />
+      <PrizePoolDisplay onNetworkChange={setNetwork} className='mt-8' />
       {/* TODO: enable once data can be more efficiently fetched */}
       {/* <PrizePoolWinners className='mt-8' /> */}
     </Layout>
