@@ -80,7 +80,7 @@ export const useUserClaimedPromotions = (userAddress: Address) => {
         if (existingEntryIndex === -1) {
           const promotionInfo = allPromotions[chainId]?.[promotionId.toString()]
 
-          if (!!promotionInfo) {
+          if (!!promotionInfo && !!amountClaimed) {
             claimedPromotions.push({
               chainId,
               promotionId,

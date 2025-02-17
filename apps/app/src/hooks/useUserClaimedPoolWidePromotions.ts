@@ -86,7 +86,7 @@ export const useUserClaimedPoolWidePromotions = (userAddress: Address) => {
               entry.promotionId === Number(promotionId) && lower(entry.info.vault) === vaultAddress
           )?.info
 
-          if (!!promotionInfo) {
+          if (!!promotionInfo && !!amountClaimed) {
             claimedPromotions.push({
               chainId,
               promotionId,
