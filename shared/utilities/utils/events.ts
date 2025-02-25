@@ -210,13 +210,11 @@ export const getLiquidationEvents = async (
 
   const lpAddresses = await getLiquidationPairAddresses(publicClient)
 
-  // TODO: improve typing from dskit (remove ts-ignores)
   // @ts-ignore
   const dskit = new DSKit({ viemPublicClient: publicClient })
 
   const lpEvents = !!lpAddresses.length
     ? await dskit.event.query({
-        // @ts-ignore
         address: lpAddresses,
         event: {
           inputs: [
@@ -231,18 +229,15 @@ export const getLiquidationEvents = async (
           type: 'event'
         },
         fromBlock: options?.fromBlock ?? 1n,
-        toBlock: options?.toBlock ?? 'latest',
-        strict: true
+        toBlock: options?.toBlock ?? 'latest'
       })
     : []
 
   const filteredLpEvents = lpEvents.filter(
-    // @ts-ignore
     (lpEvent) => lpEvent.args.sender.toLowerCase() !== liqRouterContractAddress.toLowerCase()
   )
   const formattedLpEvents = filteredLpEvents.map((lpEvent) => ({
     ...lpEvent,
-    // @ts-ignore
     args: { ...lpEvent.args, liquidationPair: lpEvent.address }
   }))
 

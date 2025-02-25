@@ -25,7 +25,7 @@
     ]
   },
   "dependencies": {
-    "dskit-eth": "0.2.2",
+    "dskit-eth": "0.2.4",
     "viem": "2.21.16"
   },
   "devDependencies": {
