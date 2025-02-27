@@ -40,6 +40,7 @@ export const useRecentWins = (
       const body = JSON.stringify({
         query: `query($numWins: Int, $fromTimestamp: Int, $vaultAddress: Bytes, $orderBy: PrizeClaim_orderBy, $orderDirection: OrderDirection) {
           prizeClaims(first: $numWins, where: { payout_gt: 0, timestamp_gt: $fromTimestamp, prizeVault_contains: $vaultAddress } orderBy: $orderBy, orderDirection: $orderDirection) {
+            id
             winner
             payout
             timestamp
@@ -56,10 +57,11 @@ export const useRecentWins = (
 
       const result = await fetch(subgraphUrl, { method: 'POST', headers, body })
       const jsonData = await result.json()
-      const wins: { winner: string; payout: string; timestamp: string }[] =
+      const wins: { id: string; winner: string; payout: string; timestamp: string }[] =
         jsonData?.data?.prizeClaims ?? []
 
       const formattedWins = wins.map((win) => ({
+        id: win.id,
         winner: win.winner as Address,
         payout: BigInt(win.payout),
         timestamp: parseInt(win.timestamp)

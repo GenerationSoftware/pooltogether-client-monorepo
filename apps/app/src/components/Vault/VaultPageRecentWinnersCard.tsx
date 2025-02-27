@@ -116,11 +116,7 @@ export const VaultPageRecentWinnersCard = (props: VaultPageRecentWinnersCardProp
                 })}
               >
                 {winsToDisplay.map((win) => (
-                  <WinnerRow
-                    key={`prize-${win.winner}-${win.timestamp}`}
-                    {...win}
-                    prizeToken={prizeToken}
-                  />
+                  <WinnerRow key={`win-${win.id}`} {...win} prizeToken={prizeToken} />
                 ))}
               </div>
               {!isExpanded && sortedWins.length > baseNumWinners && (
