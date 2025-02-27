@@ -1,6 +1,6 @@
 import { useDrawsToCheckForPrizes } from '@generationsoftware/hyperstructure-react-hooks'
 import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
-import { Button } from '@shared/ui'
+import { Button, Spinner } from '@shared/ui'
 import { getSimpleDate } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -29,27 +29,46 @@ export const CheckPrizesBanner = (props: CheckPrizesBannerProps) => {
     userAddress!
   )
 
-  if (!!drawsToCheck?.totalCount && isFetchedDrawsToCheck) {
-    return (
-      <div
-        className={classNames(
-          'relative w-full flex flex-col gap-4 items-center justify-between px-8 py-6 text-pt-purple-300 bg-pt-purple-700 font-medium rounded-md isolate',
-          'md:flex-row',
-          className
-        )}
-      >
-        <div className='flex flex-col text-center text-sm md:text-start lg:text-base'>
-          <span>{t('eligibleDraws', { number: drawsToCheck.totalCount })}</span>
-          <DateRange timestamps={drawsToCheck.timestamps} className='text-pt-purple-100' />
-        </div>
-        <Button onClick={() => setIsModalOpen(true)}>
-          <span className='text-xs lg:text-sm'>{t('checkPrizes')}</span>
-        </Button>
-      </div>
-    )
+  if (!userAddress) {
+    return <></>
   }
 
-  return <></>
+  return (
+    <div
+      className={classNames(
+        'relative w-full flex flex-col gap-4 items-center justify-between px-8 py-6 text-pt-purple-300 bg-pt-purple-700 font-medium rounded-md isolate',
+        'md:flex-row',
+        className
+      )}
+    >
+      <div className='flex flex-col text-center text-sm md:text-start lg:text-base'>
+        {isFetchedDrawsToCheck ? (
+          !!drawsToCheck?.totalCount ? (
+            <>
+              <span>{t('eligibleDraws', { number: drawsToCheck.totalCount })}</span>
+              <DateRange timestamps={drawsToCheck.timestamps} className='text-pt-purple-100' />
+            </>
+          ) : (
+            <>
+              <span>{t('caughtUp')}</span>
+              <span className='text-pt-purple-100'>{t('noNewDraws')}</span>
+            </>
+          )
+        ) : (
+          <>
+            <span>{t('checkingEligibleDraws')}</span>
+            <Spinner className='mx-auto mt-1 md:ml-0' />
+          </>
+        )}
+      </div>
+      <Button
+        onClick={() => setIsModalOpen(true)}
+        disabled={!isFetchedDrawsToCheck || !drawsToCheck?.totalCount}
+      >
+        <span className='text-xs lg:text-sm'>{t('checkPrizes')}</span>
+      </Button>
+    </div>
+  )
 }
 
 interface DateRangeProps {

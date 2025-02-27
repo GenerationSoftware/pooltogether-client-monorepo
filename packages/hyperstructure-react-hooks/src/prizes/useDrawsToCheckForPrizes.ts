@@ -77,6 +77,10 @@ export const useDrawsToCheckForPrizes = (prizePools: PrizePool[], userAddress: A
         draws[chainId] = sortedDraws
       }
 
+      if (endTimestamp === 0) {
+        startTimestamp = 0
+      }
+
       return { draws, totalCount, timestamps: { start: startTimestamp, end: endTimestamp } }
     }
   }, [userAddress, lastCheckedPrizesTimestamps, allUserEligibleDraws, allLastWinners])
