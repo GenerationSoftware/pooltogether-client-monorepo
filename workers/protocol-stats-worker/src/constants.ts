@@ -1,4 +1,4 @@
-import type { Chain } from 'viem'
+import type { Address, Chain } from 'viem'
 import { arbitrum, base, gnosis, mainnet, optimism, scroll } from 'viem/chains'
 
 export const DEFAULT_HEADERS = {
@@ -45,6 +45,43 @@ export const V5_NETWORKS = [
   NETWORK.gnosis
 ] as const satisfies NETWORK[]
 
+export const V5_PRIZE_POOLS: Record<
+  (typeof V5_NETWORKS)[number],
+  {
+    address: Lowercase<Address>
+    prizeToken: {
+      address: Lowercase<Address>
+      decimals: number
+      priceRef?: { chainId: NETWORK; address: Lowercase<Address>; decimals: number }
+    }
+  }
+> = {
+  [NETWORK.mainnet]: {
+    address: '0x7865d01da4c9ba2f69b7879e6d2483ab6b354d95',
+    prizeToken: { address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', decimals: 18 }
+  },
+  [NETWORK.optimism]: {
+    address: '0xf35fe10ffd0a9672d0095c435fd8767a7fe29b55',
+    prizeToken: { address: '0x4200000000000000000000000000000000000006', decimals: 18 }
+  },
+  [NETWORK.base]: {
+    address: '0x45b2010d8a4f08b53c9fa7544c51dfd9733732cb',
+    prizeToken: { address: '0x4200000000000000000000000000000000000006', decimals: 18 }
+  },
+  [NETWORK.arbitrum]: {
+    address: '0x52e7910c4c287848c8828e8b17b8371f4ebc5d42',
+    prizeToken: { address: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1', decimals: 18 }
+  },
+  [NETWORK.scroll]: {
+    address: '0xa6ecd65c3eecdb59c2f74956ddf251ab5d899845',
+    prizeToken: { address: '0x5300000000000000000000000000000000000004', decimals: 18 }
+  },
+  [NETWORK.gnosis]: {
+    address: '0x0c08c2999e1a14569554eddbcda9da5e1918120f',
+    prizeToken: { address: '0xe91d153e0b41518a2ce8dd3d7944fa863463a97d', decimals: 18 }
+  }
+}
+
 export const RPC_URLS: Record<(typeof V5_NETWORKS)[number], string> = {
   [NETWORK.mainnet]: MAINNET_RPC_URL,
   [NETWORK.optimism]: OPTIMISM_RPC_URL,
@@ -69,46 +106,10 @@ export const V5_SUBGRAPH_API_URLS: Record<(typeof V5_NETWORKS)[number], `https:/
     'https://api.goldsky.com/api/public/project_cm3xb1e8iup5601yx9mt5caat/subgraphs/pt-v5-gnosis/v0.0.1/gn'
 }
 
-export const V5_PRIZE_TOKEN_PRICE_REF: Record<
-  (typeof V5_NETWORKS)[number],
-  { chainId: NETWORK; address: Lowercase<`0x${string}`>; decimals: number }
-> = {
-  [NETWORK.mainnet]: {
-    chainId: NETWORK.mainnet,
-    address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-    decimals: 18
-  },
-  [NETWORK.optimism]: {
-    chainId: NETWORK.mainnet,
-    address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-    decimals: 18
-  },
-  [NETWORK.base]: {
-    chainId: NETWORK.mainnet,
-    address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-    decimals: 18
-  },
-  [NETWORK.arbitrum]: {
-    chainId: NETWORK.mainnet,
-    address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-    decimals: 18
-  },
-  [NETWORK.scroll]: {
-    chainId: NETWORK.mainnet,
-    address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-    decimals: 18
-  },
-  [NETWORK.gnosis]: {
-    chainId: NETWORK.gnosis,
-    address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-    decimals: 18
-  }
-}
-
 export const USD_PRICE_REF = {
   chainId: NETWORK.mainnet,
   address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
-} as const satisfies { chainId: NETWORK; address: Lowercase<`0x${string}`> }
+} as const satisfies { chainId: NETWORK; address: Lowercase<Address> }
 
 export const TOKEN_PRICES_API_URL = 'https://token-prices.api.cabana.fi'
 export const USE_TOKEN_PRICES_BOUND_WORKER = true

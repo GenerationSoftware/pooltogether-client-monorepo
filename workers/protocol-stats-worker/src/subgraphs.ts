@@ -1,5 +1,5 @@
 import { NETWORK, V5_SUBGRAPH_API_URLS } from './constants'
-import { V5SubgraphPrizeData, V5SubgraphUserData, V5SubgraphVaultData } from './types'
+import { V5SubgraphUserData, V5SubgraphVaultData } from './types'
 
 export const getV5SubgraphUserData = async (
   chainId: NETWORK,
@@ -119,69 +119,6 @@ export const getPaginatedV5SubgraphVaultData = async (
       break
     } else {
       lastVaultId = newPage[newPage.length - 1].id
-    }
-  }
-
-  return data
-}
-
-export const getV5SubgraphPrizeData = async (
-  chainId: NETWORK,
-  options: { maxPrizesPerPage: number; lastPrizeId?: string }
-) => {
-  if (chainId in V5_SUBGRAPH_API_URLS) {
-    const subgraphUrl = V5_SUBGRAPH_API_URLS[chainId as keyof typeof V5_SUBGRAPH_API_URLS]
-
-    const result = await fetch(subgraphUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        query: `query($maxPrizesPerPage: Int, $lastPrizeId: Bytes) {
-          prizeClaims(first: $maxPrizesPerPage, where: { id_gt: $lastPrizeId }) {
-            id
-            payout
-          }
-        }`,
-        variables: {
-          maxPrizesPerPage: options.maxPrizesPerPage,
-          lastPrizeId: options.lastPrizeId ?? ''
-        }
-      })
-    })
-
-    const data =
-      (await result.json<{ data?: { prizeClaims?: { id: string; payout: string }[] } }>())?.data
-        ?.prizeClaims ?? []
-
-    const formattedData: V5SubgraphPrizeData[] = data.map((entry) => ({
-      id: entry.id,
-      payout: BigInt(entry.payout)
-    }))
-
-    return formattedData
-  } else {
-    return []
-  }
-}
-
-export const getPaginatedV5SubgraphPrizeData = async (
-  chainId: NETWORK,
-  options?: { maxPageSize?: number }
-) => {
-  const data: V5SubgraphPrizeData[] = []
-  let lastPrizeId = ''
-
-  const maxPrizesPerPage = options?.maxPageSize ?? 1_000
-
-  while (true) {
-    const newPage = await getV5SubgraphPrizeData(chainId, { maxPrizesPerPage, lastPrizeId })
-
-    data.push(...newPage)
-
-    if (newPage.length < maxPrizesPerPage) {
-      break
-    } else {
-      lastPrizeId = newPage[newPage.length - 1].id
     }
   }
 
