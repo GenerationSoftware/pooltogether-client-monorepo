@@ -36,7 +36,7 @@ export const useDrawsToCheckForPrizes = (prizePools: PrizePool[], userAddress: A
       for (const chainId in allUserEligibleDraws.eligibleDraws) {
         const lastWinningDraw = allLastWinners[chainId]?.[0]
 
-        if (!!lastWinningDraw) {
+        if (!!lastWinningDraw?.prizeClaims[0]) {
           const chainDraws: DrawWithTimestamps[] = []
 
           const eligibleDraws = allUserEligibleDraws.eligibleDraws[chainId]
