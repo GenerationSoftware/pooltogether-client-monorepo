@@ -20,11 +20,6 @@ export interface V5SubgraphVaultData {
   balance: bigint
 }
 
-export interface V5SubgraphPrizeData {
-  id: string
-  payout: bigint
-}
-
 export interface TokenPricesApiResponse {
   [address: `0x${string}`]: [{ date: string; price: number }]
 }

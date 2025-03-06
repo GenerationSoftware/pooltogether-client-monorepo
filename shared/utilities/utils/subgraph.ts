@@ -120,6 +120,7 @@ export const getPaginatedSubgraphDraws = async (
   chainId: number,
   options?: {
     pageSize?: { draws?: number; prizes?: number }
+    onlyLastDraw?: boolean
     onlyLastPrizeClaim?: boolean
     maxRetries?: number
   }
@@ -146,11 +147,11 @@ export const getPaginatedSubgraphDraws = async (
       while (!isSuccess && retryCount < maxRetries) {
         try {
           const newPage = await getSubgraphDraws(chainId, {
-            numDraws: pageSize.draws,
+            numDraws: options?.onlyLastDraw ? 1 : pageSize.draws,
             numPrizes: options?.onlyLastPrizeClaim ? 1 : pageSize.prizes,
             offsetDraws: drawsPage * pageSize.draws,
             offsetPrizes: prizesPage * pageSize.prizes,
-            drawOrderDirection: 'asc',
+            drawOrderDirection: options?.onlyLastDraw ? 'desc' : 'asc',
             prizeOrderDirection: options?.onlyLastPrizeClaim ? 'desc' : 'asc'
           })
 
@@ -194,7 +195,7 @@ export const getPaginatedSubgraphDraws = async (
       }
     }
 
-    if (draws.length < (drawsPage + 1) * pageSize.draws) {
+    if (draws.length < (drawsPage + 1) * pageSize.draws || !!options?.onlyLastDraw) {
       break
     } else {
       drawsPage++

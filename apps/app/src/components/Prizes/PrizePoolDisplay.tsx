@@ -10,11 +10,12 @@ import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { PrizePoolPrizesCard } from './PrizePoolPrizesCard'
 
 interface PrizePoolDisplayProps {
+  onNetworkChange?: (chainId: NETWORK) => void
   className?: string
 }
 
 export const PrizePoolDisplay = (props: PrizePoolDisplayProps) => {
-  const { className } = props
+  const { onNetworkChange, className } = props
 
   const t = useTranslations('Prizes')
 
@@ -23,7 +24,7 @@ export const PrizePoolDisplay = (props: PrizePoolDisplayProps) => {
       <span className='text-2xl font-grotesk text-pt-teal-dark font-medium md:text-4xl'>
         {t('currentPrizes')}
       </span>
-      <PrizePoolCarousel className='mt-8 mb-4' />
+      <PrizePoolCarousel onNetworkChange={onNetworkChange} className='mt-8 mb-4' />
       <span>
         *
         {t.rich('learnMore', {
@@ -44,12 +45,13 @@ export const PrizePoolDisplay = (props: PrizePoolDisplayProps) => {
 }
 
 interface PrizePoolCarouselProps {
+  onNetworkChange?: (chainId: NETWORK) => void
   className?: string
 }
 
 // TODO: animate between different prize pools
 const PrizePoolCarousel = (props: PrizePoolCarouselProps) => {
-  const { className } = props
+  const { onNetworkChange, className } = props
 
   const searchParams = useSearchParams()
 
@@ -67,6 +69,7 @@ const PrizePoolCarousel = (props: PrizePoolCarouselProps) => {
       const vaultsArray = Object.values(vaults.vaults)
       const firstVaultInChain = vaultsArray.find((vault) => vault.chainId === chainId)
       !!firstVaultInChain && setSelectedVaultById(firstVaultInChain.id)
+      onNetworkChange?.(chainId)
     }
   }
 

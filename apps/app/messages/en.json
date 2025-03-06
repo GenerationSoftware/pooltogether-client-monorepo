@@ -187,7 +187,10 @@
       "claims": "Claims"
     },
     "prizeChecking": {
+      "checkingEligibleDraws": "Checking for eligible draws...",
       "eligibleDraws": "You were eligible for {number, plural, one {# draw} other {# draws}}",
+      "caughtUp": "All caught up!",
+      "noNewDraws": "No new eligible draws to check.",
       "totalPrizes": {
         "beforeValue": "Totalling",
         "afterValue": "in Prizes"
