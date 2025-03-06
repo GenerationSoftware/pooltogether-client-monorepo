@@ -21,21 +21,21 @@ export const handleRequest = async (event: FetchEvent): Promise<Response> => {
       }
     }
 
-    if (url.pathname.startsWith('/update')) {
-      const updates = await updateStats(event)
+    // if (url.pathname.startsWith('/update')) {
+    //   const updates = await updateStats(event)
 
-      if (!!updates) {
-        return new Response(JSON.stringify(updates), {
-          ...DEFAULT_HEADERS,
-          status: 200
-        })
-      } else {
-        return new Response(JSON.stringify(updates), {
-          ...DEFAULT_HEADERS,
-          status: 500
-        })
-      }
-    }
+    //   if (!!updates) {
+    //     return new Response(JSON.stringify(updates), {
+    //       ...DEFAULT_HEADERS,
+    //       status: 200
+    //     })
+    //   } else {
+    //     return new Response(JSON.stringify(updates), {
+    //       ...DEFAULT_HEADERS,
+    //       status: 500
+    //     })
+    //   }
+    // }
 
     return new Response(JSON.stringify({ message: `Invalid request.` }), {
       ...DEFAULT_HEADERS,

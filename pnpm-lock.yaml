@@ -42,8 +42,8 @@ importers:
         specifier: ^2.3.2
         version: 2.3.2
       dskit-eth:
-        specifier: 0.2.2
-        version: 0.2.2(typescript@5.0.4)
+        specifier: 0.2.4
+        version: 0.2.4(typescript@5.0.4)
       flowbite:
         specifier: 2.2.1
         version: 2.2.1
@@ -1009,8 +1009,8 @@ importers:
   workers/token-prices-worker:
     dependencies:
       dskit-eth:
-        specifier: 0.2.2
-        version: 0.2.2(typescript@5.0.4)
+        specifier: 0.2.4
+        version: 0.2.4(typescript@5.0.4)
       viem:
         specifier: 2.21.16
         version: 2.21.16(typescript@5.0.4)
@@ -9343,8 +9343,8 @@ packages:
       unidragger: 3.0.1
     dev: false
 
-  /dskit-eth@0.2.2(typescript@5.0.4):
-    resolution: {integrity: sha512-OkhbjdyejkbkNstsigclPzB8Ru0D6zyQ6AS9eyeK+VR6KFH0iYBX9IGNOyj1egUaxv0YwMKXWmBH0OzQFi1gGg==}
+  /dskit-eth@0.2.4(typescript@5.0.4):
+    resolution: {integrity: sha512-L6gy8TgJ08Fl7JsisS6xb1PcKOSLj12kJthWow+YXxesIoNTjturJBAW1J40o0Mio4lTegpovhGq9tT80TcFqQ==}
     dependencies:
       viem: 2.20.0(typescript@5.0.4)
     transitivePeerDependencies:

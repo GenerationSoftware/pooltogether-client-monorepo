@@ -1,8 +1,5 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
-import {
-  usePrizeDrawWinners,
-  usePrizeTokenData
-} from '@generationsoftware/hyperstructure-react-hooks'
+import { usePrizeTokenData } from '@generationsoftware/hyperstructure-react-hooks'
 import { SortIcon } from '@shared/react-components'
 import { Token } from '@shared/types'
 import { Spinner } from '@shared/ui'
@@ -19,6 +16,7 @@ import Link from 'next/link'
 import { ReactNode, useMemo, useState } from 'react'
 import { Address } from 'viem'
 import { WALLET_NAMES } from '@constants/config'
+import { useRecentWins } from '@hooks/useRecentWins'
 import { VaultPageCard } from './VaultPageCard'
 
 type SortId = 'timestamp' | 'amount'
@@ -38,35 +36,9 @@ export const VaultPageRecentWinnersCard = (props: VaultPageRecentWinnersCardProp
 
   const { data: prizeToken, isFetched: isFetchedPrizeToken } = usePrizeTokenData(prizePool)
 
-  const { data: draws, isFetched: isFetchedDraws } = usePrizeDrawWinners(prizePool)
-
-  const wins = useMemo(() => {
-    const groupedWins: { winner: Lowercase<Address>; timestamp: number; amount: bigint }[] = []
-
-    draws?.forEach((draw) => {
-      const validPrizeClaims = draw.prizeClaims.filter(
-        (claim) => !!claim.payout && lower(claim.vaultAddress) === lower(vault.address)
-      )
-
-      validPrizeClaims.forEach((win) => {
-        const existingWinIndex = groupedWins.findIndex(
-          (w) => w.winner === lower(win.winner) && w.timestamp === win.timestamp
-        )
-
-        if (existingWinIndex !== -1) {
-          groupedWins[existingWinIndex].amount += win.payout
-        } else {
-          groupedWins.push({
-            winner: lower(win.winner),
-            timestamp: win.timestamp,
-            amount: win.payout
-          })
-        }
-      })
-    })
-
-    return groupedWins
-  }, [vault, draws])
+  const { data: recentWins, isFetched: isFetchedRecentWins } = useRecentWins(prizePool, {
+    vaultAddress: vault.address
+  })
 
   const baseNumWinners = 6
   const [isExpanded, setIsExpanded] = useState(false)
@@ -90,21 +62,22 @@ export const VaultPageRecentWinnersCard = (props: VaultPageRecentWinnersCardProp
   }
 
   const sortedWins = useMemo(() => {
+    if (recentWins === undefined) return []
+
     if (sortBy === 'timestamp') {
-      const sortedByTimestamp = [...wins].sort((a, b) => b.timestamp - a.timestamp)
+      const sortedByTimestamp = [...recentWins].sort((a, b) => b.timestamp - a.timestamp)
       return sortDirection === 'desc' ? sortedByTimestamp : sortedByTimestamp.reverse()
     } else if (sortBy === 'amount') {
-      const sortedByAmount = [...wins].sort((a, b) => sortByBigIntDesc(a.amount, b.amount))
+      const sortedByAmount = [...recentWins].sort((a, b) => sortByBigIntDesc(a.payout, b.payout))
       return sortDirection === 'desc' ? sortedByAmount : sortedByAmount.reverse()
     } else {
-      return wins
+      return recentWins
     }
-  }, [wins, sortBy, sortDirection])
+  }, [recentWins, sortBy, sortDirection])
 
-  // TODO: instead of limiting to 100 entries after sorting, apply lazy loading to avoid performance issues
-  const winsToDisplay = sortedWins.slice(0, isExpanded ? 100 : baseNumWinners)
+  const winsToDisplay = sortedWins.slice(0, isExpanded ? sortedWins.length : baseNumWinners)
 
-  const isFetched = !!isFetchedPrizeToken && !!prizeToken && !!isFetchedDraws && !!draws
+  const isFetched = !!isFetchedPrizeToken && !!prizeToken && !!isFetchedRecentWins && !!recentWins
 
   return (
     <VaultPageCard
@@ -114,7 +87,7 @@ export const VaultPageRecentWinnersCard = (props: VaultPageRecentWinnersCardProp
     >
       <div className='w-full grow flex flex-col gap-2 items-center justify-center'>
         {isFetched ? (
-          sortedWins.length ? (
+          !!sortedWins.length ? (
             <>
               <div
                 className={classNames('w-full grid grid-cols-3 font-semibold text-pt-purple-300', {
@@ -143,11 +116,7 @@ export const VaultPageRecentWinnersCard = (props: VaultPageRecentWinnersCardProp
                 })}
               >
                 {winsToDisplay.map((win) => (
-                  <WinnerRow
-                    key={`prize-${win.winner}-${win.timestamp}`}
-                    {...win}
-                    prizeToken={prizeToken}
-                  />
+                  <WinnerRow key={`win-${win.id}`} {...win} prizeToken={prizeToken} />
                 ))}
               </div>
               {!isExpanded && sortedWins.length > baseNumWinners && (
@@ -196,15 +165,15 @@ const SortableHeader = (props: SortableHeaderProps) => {
 interface WinnerRowProps {
   winner: Address
   timestamp: number
-  amount: bigint
+  payout: bigint
   prizeToken: Token
 }
 
 const WinnerRow = (props: WinnerRowProps) => {
-  const { winner, timestamp, amount, prizeToken } = props
+  const { winner, timestamp, payout, prizeToken } = props
 
   const formattedWinner = WALLET_NAMES[lower(winner)]?.name ?? shorten(winner)
-  const formattedPrize = formatBigIntForDisplay(amount, prizeToken.decimals, {
+  const formattedPrize = formatBigIntForDisplay(payout, prizeToken.decimals, {
     minimumFractionDigits: 4,
     maximumFractionDigits: 4
   })

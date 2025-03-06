@@ -9,15 +9,22 @@ import { QUERY_KEYS } from '../constants'
 /**
  * Returns all historical draws and the last winners on each, for any given prize pools
  * @param prizePools instances of `PrizePool`
+ * @param options optional settings
  * @returns
  */
-export const useAllLastPrizeDrawWinners = (prizePools: PrizePool[]) => {
+export const useAllLastPrizeDrawWinners = (
+  prizePools: PrizePool[],
+  options?: { onlyLastDraw?: boolean }
+) => {
   const results = useQueries({
     queries: prizePools.map((prizePool) => {
       return {
-        queryKey: [QUERY_KEYS.lastDrawWinners, prizePool?.chainId],
+        queryKey: [QUERY_KEYS.lastDrawWinners, prizePool?.chainId, !!options?.onlyLastDraw],
         queryFn: async () =>
-          await getPaginatedSubgraphDraws(prizePool.chainId, { onlyLastPrizeClaim: true }),
+          await getPaginatedSubgraphDraws(prizePool.chainId, {
+            onlyLastDraw: options?.onlyLastDraw,
+            onlyLastPrizeClaim: true
+          }),
         staleTime: Infinity,
         enabled: !!prizePool,
         ...NO_REFETCH

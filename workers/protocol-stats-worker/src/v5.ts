@@ -3,16 +3,12 @@ import {
   RPC_URLS,
   USD_PRICE_REF,
   V5_NETWORKS,
-  V5_PRIZE_TOKEN_PRICE_REF,
+  V5_PRIZE_POOLS,
   V5_VAULT_ABI,
   VIEM_CHAINS
 } from './constants'
 import { getTokenPrices } from './prices'
-import {
-  getPaginatedV5SubgraphPrizeData,
-  getPaginatedV5SubgraphUserData,
-  getPaginatedV5SubgraphVaultData
-} from './subgraphs'
+import { getPaginatedV5SubgraphUserData, getPaginatedV5SubgraphVaultData } from './subgraphs'
 import { ProtocolStats } from './types'
 
 export const getV5Stats = async (): Promise<ProtocolStats> => {
@@ -76,26 +72,41 @@ const getTvl = async (chainId: (typeof V5_NETWORKS)[number]) => {
 }
 
 const getPrizesAwarded = async (chainId: (typeof V5_NETWORKS)[number]) => {
-  let totalPrizesAwarded = 0
+  const prizePool = V5_PRIZE_POOLS[chainId]
 
-  const prizeData = await getPaginatedV5SubgraphPrizeData(chainId)
+  const publicClient = createPublicClient({
+    chain: VIEM_CHAINS[chainId],
+    transport: http(RPC_URLS[chainId])
+  })
 
-  if (!!prizeData.length) {
-    const prizeTokenPriceRef = V5_PRIZE_TOKEN_PRICE_REF[chainId]
+  /**
+   * @dev this is a slight over-estimate since contributions to przPOOL are considered but not yet awarded as prizes
+   */
+  const totalPrizesAwarded = await publicClient.readContract({
+    address: prizePool.address,
+    abi: [
+      {
+        inputs: [],
+        name: 'totalWithdrawn',
+        outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+        stateMutability: 'view',
+        type: 'function'
+      }
+    ],
+    functionName: 'totalWithdrawn'
+  })
 
-    const prizeTokenPrice = (
-      await getTokenPrices(prizeTokenPriceRef.chainId, [prizeTokenPriceRef.address])
-    )?.[prizeTokenPriceRef.address]
+  const prizeTokenAmount = parseFloat(
+    formatUnits(totalPrizesAwarded, prizePool.prizeToken.decimals)
+  )
 
-    if (!!prizeTokenPrice) {
-      prizeData.forEach((prize) => {
-        const prizeAmount = parseFloat(formatUnits(prize.payout, prizeTokenPriceRef.decimals))
-        totalPrizesAwarded += prizeAmount * prizeTokenPrice
-      })
-    }
-  }
+  const prizeTokenPrice = (
+    await getTokenPrices(prizePool.prizeToken.priceRef?.chainId ?? chainId, [
+      prizePool.prizeToken.priceRef?.address ?? prizePool.prizeToken.address
+    ])
+  )?.[prizePool.prizeToken.priceRef?.address ?? prizePool.prizeToken.address]
 
-  return totalPrizesAwarded
+  return prizeTokenAmount * prizeTokenPrice
 }
 
 const getV5VaultTokenData = async (

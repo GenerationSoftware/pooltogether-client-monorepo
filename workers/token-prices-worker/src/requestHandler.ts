@@ -33,7 +33,7 @@ export const handleRequest = async (event: FetchEvent): Promise<Response> => {
         const tokenPrices = await fetchTokenPrices(
           event,
           chainId as SUPPORTED_NETWORK,
-          [singleToken],
+          [singleToken.toLowerCase() as Address],
           { includeHistory: true }
         )
         if (!!tokenPrices) {
