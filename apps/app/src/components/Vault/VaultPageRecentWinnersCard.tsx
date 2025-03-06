@@ -43,7 +43,7 @@ export const VaultPageRecentWinnersCard = (props: VaultPageRecentWinnersCardProp
   const baseNumWinners = 6
   const [isExpanded, setIsExpanded] = useState(false)
 
-  const [sortBy, setSortBy] = useState<SortId>('timestamp')
+  const [sortBy, setSortBy] = useState<SortId>('amount')
   const [sortDirection, setSortDirection] = useState<'desc' | 'asc'>('desc')
 
   const handleHeaderClick = (id: SortId) => {
