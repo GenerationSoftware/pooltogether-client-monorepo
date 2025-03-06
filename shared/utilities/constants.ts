@@ -512,6 +512,12 @@ export const TWAB_REWARDS_ADDRESSES: { [chainId: number]: Address } = {
  * Pool-Wide TWAB rewards addresses
  */
 export const POOL_WIDE_TWAB_REWARDS_ADDRESSES: { [chainId: number]: Address } = {
+  [NETWORK.mainnet]: '0x3341DAC0912B630F1A8c237b64F6861e9fa11d79',
+  [NETWORK.optimism]: '0x36bE31E7acD4B0D755BCc7858ef04848A3eC66c6',
+  [NETWORK.base]: '0xF4c47dacFda99bE38793181af9Fd1A2Ec7576bBF',
+  [NETWORK.arbitrum]: '0x0D51a33975024E8aFc55fde9F6b070c10AA71Dd9',
+  [NETWORK.scroll]: '0x0D51a33975024E8aFc55fde9F6b070c10AA71Dd9',
+  [NETWORK.gnosis]: '0x0D51a33975024E8aFc55fde9F6b070c10AA71Dd9',
   [NETWORK.optimism_sepolia]: '0x1B7070eb6f871ba0d77470918502F8D788978FA3'
 }
 
