@@ -1,37 +1,46 @@
 import { useToken } from '@generationsoftware/hyperstructure-react-hooks'
 import { TokenValueAndAmount } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
+import { lower } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
+import { useUserClaimedPoolWidePromotions } from '@hooks/useUserClaimedPoolWidePromotions'
 import { useUserClaimedPromotions } from '@hooks/useUserClaimedPromotions'
 
 interface AccountPromotionClaimedRewardsProps {
   chainId: number
   promotionId: bigint
-  address?: Address
+  userAddress?: Address
+  vaultAddress?: Address
+  isPoolWide?: boolean
   className?: string
 }
 
 export const AccountPromotionClaimedRewards = (props: AccountPromotionClaimedRewardsProps) => {
-  const { chainId, promotionId, address, className } = props
+  const { chainId, promotionId, userAddress, vaultAddress, isPoolWide, className } = props
 
   const { address: _userAddress } = useAccount()
-  const userAddress = address ?? _userAddress
 
   const { data: allClaimed, isFetched: isFetchedAllClaimed } = useUserClaimedPromotions(
-    userAddress as Address
+    (userAddress ?? _userAddress)!
   )
 
+  const { data: allPoolWideClaimed, isFetched: isFetchedAllPoolWideClaimed } =
+    useUserClaimedPoolWidePromotions((userAddress ?? _userAddress)!)
+
   const claimed = useMemo(() => {
-    return allClaimed.find(
-      (promotion) => promotion.chainId === chainId && promotion.promotionId === promotionId
+    return (isPoolWide ? allPoolWideClaimed : allClaimed).find(
+      (promotion) =>
+        promotion.chainId === chainId &&
+        promotion.promotionId === promotionId &&
+        (!vaultAddress || lower(promotion.vault) === lower(vaultAddress))
     )
-  }, [allClaimed])
+  }, [isPoolWide, allClaimed, allPoolWideClaimed, chainId, promotionId, vaultAddress])
 
-  const { data: tokenData } = useToken(chainId, claimed?.token as Address)
+  const { data: tokenData } = useToken(chainId, claimed?.token!)
 
-  if (!isFetchedAllClaimed || (!!claimed && !tokenData)) {
+  if (!isFetchedAllClaimed || !isFetchedAllPoolWideClaimed || (!!claimed && !tokenData)) {
     return <Spinner />
   }
 

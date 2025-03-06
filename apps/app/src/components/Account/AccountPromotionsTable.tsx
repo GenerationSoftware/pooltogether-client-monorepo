@@ -2,13 +2,16 @@ import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { usePublicClientsByChain } from '@generationsoftware/hyperstructure-react-hooks'
 import { VaultBadge } from '@shared/react-components'
 import { Table, TableProps } from '@shared/ui'
+import { lower } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
+import { useUserClaimablePoolWidePromotions } from '@hooks/useUserClaimablePoolWidePromotions'
 import { useUserClaimablePromotions } from '@hooks/useUserClaimablePromotions'
+import { useUserClaimedPoolWidePromotions } from '@hooks/useUserClaimedPoolWidePromotions'
 import { useUserClaimedPromotions } from '@hooks/useUserClaimedPromotions'
 import { AccountPromotionClaimableRewards } from './AccountPromotionClaimableRewards'
 import { AccountPromotionClaimActions } from './AccountPromotionClaimActions'
@@ -16,11 +19,11 @@ import { AccountPromotionClaimedRewards } from './AccountPromotionClaimedRewards
 import { AccountPromotionToken } from './AccountPromotionToken'
 
 interface AccountPromotionsTableProps extends Omit<TableProps, 'data' | 'keyPrefix'> {
-  address?: Address
+  userAddress?: Address
 }
 
 export const AccountPromotionsTable = (props: AccountPromotionsTableProps) => {
-  const { address, className, innerClassName, headerClassName, rowClassName, ...rest } = props
+  const { userAddress, className, innerClassName, headerClassName, rowClassName, ...rest } = props
 
   const t_common = useTranslations('Common')
   const t_headers = useTranslations('Account.bonusRewardHeaders')
@@ -31,14 +34,18 @@ export const AccountPromotionsTable = (props: AccountPromotionsTableProps) => {
   const publicClients = usePublicClientsByChain()
 
   const { address: _userAddress } = useAccount()
-  const userAddress = address ?? _userAddress
 
   const isExternalUser = useMemo(() => {
-    return !!address && address.toLowerCase() !== _userAddress?.toLowerCase()
-  }, [address, _userAddress])
+    return !!userAddress && userAddress.toLowerCase() !== _userAddress?.toLowerCase()
+  }, [userAddress, _userAddress])
 
-  const { data: claimed } = useUserClaimedPromotions(userAddress as Address)
-  const { data: claimable } = useUserClaimablePromotions(userAddress as Address)
+  const { data: claimed } = useUserClaimedPromotions((userAddress ?? _userAddress)!)
+  const { data: claimable } = useUserClaimablePromotions((userAddress ?? _userAddress)!)
+
+  const { data: poolWideClaimed } = useUserClaimedPoolWidePromotions((userAddress ?? _userAddress)!)
+  const { data: poolWideClaimable } = useUserClaimablePoolWidePromotions(
+    (userAddress ?? _userAddress)!
+  )
 
   const tableHeaders = useMemo(() => {
     const headers: TableProps['data']['headers'] = {
@@ -69,7 +76,7 @@ export const AccountPromotionsTable = (props: AccountPromotionsTableProps) => {
     const promotions: { [id: string]: { startTimestamp: number; claimable: boolean } } = {}
 
     claimed.forEach((promotion) => {
-      const id = `${promotion.chainId}-${promotion.promotionId}`
+      const id = `${promotion.chainId}-${promotion.promotionId}-${lower(promotion.vault)}-0`
 
       if (promotions[id] === undefined) {
         promotions[id] = { startTimestamp: Number(promotion.startTimestamp), claimable: false }
@@ -77,7 +84,25 @@ export const AccountPromotionsTable = (props: AccountPromotionsTableProps) => {
     })
 
     claimable.forEach((promotion) => {
-      const id = `${promotion.chainId}-${promotion.promotionId}`
+      const id = `${promotion.chainId}-${promotion.promotionId}-${lower(promotion.vault)}-0`
+
+      if (promotions[id] === undefined) {
+        promotions[id] = { startTimestamp: Number(promotion.startTimestamp), claimable: true }
+      } else if (!promotions[id].claimable) {
+        promotions[id].claimable = true
+      }
+    })
+
+    poolWideClaimed.forEach((promotion) => {
+      const id = `${promotion.chainId}-${promotion.promotionId}-${lower(promotion.vault)}-1`
+
+      if (promotions[id] === undefined) {
+        promotions[id] = { startTimestamp: Number(promotion.startTimestamp), claimable: false }
+      }
+    })
+
+    poolWideClaimable.forEach((promotion) => {
+      const id = `${promotion.chainId}-${promotion.promotionId}-${lower(promotion.vault)}-1`
 
       if (promotions[id] === undefined) {
         promotions[id] = { startTimestamp: Number(promotion.startTimestamp), claimable: true }
@@ -94,14 +119,24 @@ export const AccountPromotionsTable = (props: AccountPromotionsTableProps) => {
     sortedPromotions.forEach((uniquePromotionId) => {
       const chainId = parseInt(uniquePromotionId.split('-')[0])
       const promotionId = BigInt(uniquePromotionId.split('-')[1])
+      const vaultAddress = uniquePromotionId.split('-')[2]
+      const isPoolWide = uniquePromotionId.split('-')[3] === '1'
 
-      const promotionInfo =
-        claimed.find(
-          (promotion) => promotion.chainId === chainId && promotion.promotionId === promotionId
-        ) ??
-        claimable.find(
-          (promotion) => promotion.chainId === chainId && promotion.promotionId === promotionId
-        )
+      const promotionInfo = isPoolWide
+        ? poolWideClaimed.find(
+            (p) =>
+              p.chainId === chainId &&
+              p.promotionId === promotionId &&
+              lower(p.vault) === vaultAddress
+          ) ??
+          poolWideClaimable.find(
+            (p) =>
+              p.chainId === chainId &&
+              p.promotionId === promotionId &&
+              lower(p.vault) === vaultAddress
+          )
+        : claimed.find((p) => p.chainId === chainId && p.promotionId === promotionId) ??
+          claimable.find((p) => p.chainId === chainId && p.promotionId === promotionId)
 
       if (!!promotionInfo) {
         const vault = new Vault(chainId, promotionInfo.vault, publicClients[chainId])
@@ -126,7 +161,9 @@ export const AccountPromotionsTable = (props: AccountPromotionsTableProps) => {
               <AccountPromotionClaimedRewards
                 chainId={chainId}
                 promotionId={promotionId}
-                address={userAddress}
+                userAddress={userAddress ?? _userAddress}
+                vaultAddress={promotionInfo.vault}
+                isPoolWide={isPoolWide}
               />
             ),
             position: 'center'
@@ -136,7 +173,9 @@ export const AccountPromotionsTable = (props: AccountPromotionsTableProps) => {
               <AccountPromotionClaimableRewards
                 chainId={chainId}
                 promotionId={promotionId}
-                address={userAddress}
+                userAddress={userAddress ?? _userAddress}
+                vaultAddress={promotionInfo.vault}
+                isPoolWide={isPoolWide}
               />
             ),
             position: 'center'
@@ -146,7 +185,9 @@ export const AccountPromotionsTable = (props: AccountPromotionsTableProps) => {
               <AccountPromotionClaimActions
                 chainId={chainId}
                 promotionId={promotionId}
-                address={userAddress}
+                userAddress={userAddress ?? _userAddress}
+                vaultAddress={promotionInfo.vault}
+                isPoolWide={isPoolWide}
               />
             ),
             position: 'right'
@@ -158,7 +199,7 @@ export const AccountPromotionsTable = (props: AccountPromotionsTableProps) => {
     })
 
     return rows
-  }, [claimed, claimable])
+  }, [claimed, claimable, poolWideClaimed, poolWideClaimable])
 
   return (
     <div

@@ -1,28 +1,27 @@
 import {
-  useAllVaultPromotions,
-  usePromotionRewardsClaimedEventsAcrossChains,
+  useAllPoolWideVaultPromotions,
+  usePoolWidePromotionRewardsClaimedEventsAcrossChains,
   useSelectedVaults
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { PartialPromotionInfo } from '@shared/types'
+import { PartialPoolWidePromotionInfo } from '@shared/types'
+import { decodePoolWideRewardsClaimFlags, lower } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { TWAB_REWARDS_SETTINGS } from '@constants/config'
 
 /**
- * Returns promotions user has claimed rewards for
+ * Returns pool-wide promotions user has claimed rewards for
  * @param userAddress user address to get claimed rewards for
  * @returns
  */
-export const useUserClaimedPromotions = (userAddress: Address) => {
+export const useUserClaimedPoolWidePromotions = (userAddress: Address) => {
   const { vaults } = useSelectedVaults()
 
-  const { data: allPromotions, isFetched: isFetchedAllPromotions } = useAllVaultPromotions(
-    vaults,
-    TWAB_REWARDS_SETTINGS
-  )
+  const { data: allPoolWidePromotions, isFetched: isFetchedAllPoolWidePromotions } =
+    useAllPoolWideVaultPromotions(vaults, TWAB_REWARDS_SETTINGS)
 
   const eventQueryOptions = useMemo(() => {
-    const chainIds = Object.keys(allPromotions).map((k) => parseInt(k))
+    const chainIds = Object.keys(allPoolWidePromotions).map((k) => parseInt(k))
 
     if (!!userAddress && chainIds.length > 0) {
       const options: {
@@ -36,8 +35,8 @@ export const useUserClaimedPromotions = (userAddress: Address) => {
 
       chainIds.forEach((chainId) => {
         options[chainId] = {
-          promotionIds: !!allPromotions[chainId]
-            ? Object.keys(allPromotions[chainId]).map(BigInt)
+          promotionIds: !!allPoolWidePromotions[chainId]
+            ? allPoolWidePromotions[chainId].map((entry) => BigInt(entry.promotionId))
             : [],
           userAddresses: [userAddress],
           fromBlock: TWAB_REWARDS_SETTINGS[chainId]?.fromBlock
@@ -46,15 +45,15 @@ export const useUserClaimedPromotions = (userAddress: Address) => {
 
       return options
     }
-  }, [userAddress, allPromotions])
+  }, [userAddress, allPoolWidePromotions])
 
   const {
     data: allClaimEvents,
     isFetched: isFetchedAllClaimEvents,
     refetch: refetchAllClaimEvents
-  } = usePromotionRewardsClaimedEventsAcrossChains(vaults.chainIds, eventQueryOptions)
+  } = usePoolWidePromotionRewardsClaimedEventsAcrossChains(vaults.chainIds, eventQueryOptions)
 
-  const isFetched = isFetchedAllPromotions && isFetchedAllClaimEvents
+  const isFetched = isFetchedAllPoolWidePromotions && isFetchedAllClaimEvents
   const refetch = refetchAllClaimEvents
 
   const data = useMemo(() => {
@@ -63,22 +62,29 @@ export const useUserClaimedPromotions = (userAddress: Address) => {
       promotionId: bigint
       epochIds: number[]
       totalClaimed: bigint
-    } & PartialPromotionInfo)[] = []
+    } & PartialPoolWidePromotionInfo)[] = []
 
     Object.keys(allClaimEvents).forEach((key) => {
       const chainId = parseInt(key)
 
       allClaimEvents[chainId].forEach((claimEvent) => {
         const promotionId = claimEvent.args.promotionId
-        const epochIds = [...claimEvent.args.epochIds]
+        const vaultAddress = lower(claimEvent.args.vault)
+        const epochIds = decodePoolWideRewardsClaimFlags(claimEvent.args.epochClaimFlags)
         const amountClaimed = claimEvent.args.amount
 
         const existingEntryIndex = claimedPromotions.findIndex(
-          (entry) => entry.chainId === chainId && entry.promotionId === promotionId
+          (entry) =>
+            entry.chainId === chainId &&
+            entry.promotionId === promotionId &&
+            lower(entry.vault) === vaultAddress
         )
 
         if (existingEntryIndex === -1) {
-          const promotionInfo = allPromotions[chainId]?.[promotionId.toString()]
+          const promotionInfo = allPoolWidePromotions[chainId]?.find(
+            (entry) =>
+              entry.promotionId === Number(promotionId) && lower(entry.info.vault) === vaultAddress
+          )?.info
 
           if (!!promotionInfo && !!amountClaimed) {
             claimedPromotions.push({
@@ -97,7 +103,7 @@ export const useUserClaimedPromotions = (userAddress: Address) => {
     })
 
     return claimedPromotions
-  }, [isFetched, allPromotions, allClaimEvents])
+  }, [isFetched, allPoolWidePromotions, allClaimEvents])
 
   return { data, isFetched, refetch }
 }

@@ -2,9 +2,12 @@ import {
   useTokenPricesAcrossChains,
   useTokensAcrossChains
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { lower } from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
+import { useUserClaimablePoolWidePromotions } from './useUserClaimablePoolWidePromotions'
 import { useUserClaimablePromotions } from './useUserClaimablePromotions'
+import { useUserClaimedPoolWidePromotions } from './useUserClaimedPoolWidePromotions'
 import { useUserClaimedPromotions } from './useUserClaimedPromotions'
 
 /**
@@ -20,6 +23,11 @@ export const useUserTotalPromotionRewards = (
   const { data: claimed, isFetched: isFetchedClaimed } = useUserClaimedPromotions(userAddress)
   const { data: claimable, isFetched: isFetchedClaimable } = useUserClaimablePromotions(userAddress)
 
+  const { data: poolWideClaimed, isFetched: isFetchedPoolWideClaimed } =
+    useUserClaimedPoolWidePromotions(userAddress)
+  const { data: poolWideClaimable, isFetched: isFetchedPoolWideClaimable } =
+    useUserClaimablePoolWidePromotions(userAddress)
+
   const tokenAddresses = useMemo(() => {
     const addresses: { [chainId: number]: Address[] } = {}
     const addressSets: { [chainId: number]: Set<Address> } = {}
@@ -33,13 +41,33 @@ export const useUserTotalPromotionRewards = (
       })
     }
 
-    if (options?.includeUnclaimed && isFetchedClaimable && !!claimable) {
-      claimable.forEach((promotion) => {
+    if (isFetchedPoolWideClaimed && !!poolWideClaimed) {
+      poolWideClaimed.forEach((promotion) => {
         if (addressSets[promotion.chainId] === undefined) {
           addressSets[promotion.chainId] = new Set<Address>()
         }
         addressSets[promotion.chainId].add(promotion.token)
       })
+    }
+
+    if (options?.includeUnclaimed) {
+      if (isFetchedClaimable && !!claimable) {
+        claimable.forEach((promotion) => {
+          if (addressSets[promotion.chainId] === undefined) {
+            addressSets[promotion.chainId] = new Set<Address>()
+          }
+          addressSets[promotion.chainId].add(promotion.token)
+        })
+      }
+
+      if (isFetchedPoolWideClaimable && !!poolWideClaimable) {
+        poolWideClaimable.forEach((promotion) => {
+          if (addressSets[promotion.chainId] === undefined) {
+            addressSets[promotion.chainId] = new Set<Address>()
+          }
+          addressSets[promotion.chainId].add(promotion.token)
+        })
+      }
     }
 
     Object.entries(addressSets).forEach(([key, addressSet]) => {
@@ -48,7 +76,17 @@ export const useUserTotalPromotionRewards = (
     })
 
     return addresses
-  }, [claimed, isFetchedClaimed, claimable, isFetchedClaimable, options])
+  }, [
+    claimed,
+    isFetchedClaimed,
+    claimable,
+    isFetchedClaimable,
+    poolWideClaimed,
+    isFetchedPoolWideClaimed,
+    poolWideClaimable,
+    isFetchedPoolWideClaimable,
+    options
+  ])
 
   const { data: allTokenPrices, isFetched: isFetchedAllTokenPrices } =
     useTokenPricesAcrossChains(tokenAddresses)
@@ -60,42 +98,66 @@ export const useUserTotalPromotionRewards = (
     const isFetched =
       isFetchedClaimed &&
       isFetchedClaimable &&
+      isFetchedPoolWideClaimed &&
+      isFetchedPoolWideClaimable &&
       isFetchedAllTokenPrices &&
       isFetchedAllTokenData &&
       !!claimed &&
-      (!options?.includeUnclaimed || !!claimable) &&
+      !!poolWideClaimed &&
+      (!options?.includeUnclaimed || (!!claimable && !!poolWideClaimable)) &&
       !!allTokenPrices &&
       !!allTokenData
 
     let totalRewards = 0
 
     if (isFetched) {
-      claimed.forEach((promotion) => {
-        const tokenPrice =
-          allTokenPrices[promotion.chainId]?.[promotion.token.toLowerCase() as Address]
-        const tokenData = allTokenData[promotion.chainId]?.[promotion.token]
+      const getTokenRewards = (chainId: number, tokenAddress: Address, amount: bigint) => {
+        const tokenPrice = allTokenPrices[chainId]?.[lower(tokenAddress)]
+        const tokenData = allTokenData[chainId]?.[tokenAddress]
 
         if (!!tokenPrice && !!tokenData) {
-          const tokenAmount = parseFloat(formatUnits(promotion.totalClaimed, tokenData.decimals))
-          totalRewards += tokenAmount * tokenPrice
+          const tokenAmount = parseFloat(formatUnits(amount, tokenData.decimals))
+          return tokenAmount * tokenPrice
+        } else {
+          return 0
         }
+      }
+
+      claimed.forEach((promotion) => {
+        totalRewards += getTokenRewards(promotion.chainId, promotion.token, promotion.totalClaimed)
+      })
+
+      poolWideClaimed.forEach((promotion) => {
+        totalRewards += getTokenRewards(promotion.chainId, promotion.token, promotion.totalClaimed)
       })
 
       if (options?.includeUnclaimed) {
         claimable.forEach((promotion) => {
-          const tokenPrice =
-            allTokenPrices[promotion.chainId]?.[promotion.token.toLowerCase() as Address]
-          const tokenData = allTokenData[promotion.chainId]?.[promotion.token]
+          totalRewards += getTokenRewards(
+            promotion.chainId,
+            promotion.token,
+            Object.values(promotion.epochRewards).reduce((a, b) => a + b, 0n)
+          )
+        })
 
-          if (!!tokenPrice && !!tokenData) {
-            const rawTokenAmount = Object.values(promotion.epochRewards).reduce((a, b) => a + b, 0n)
-            const tokenAmount = parseFloat(formatUnits(rawTokenAmount, tokenData.decimals))
-            totalRewards += tokenAmount * tokenPrice
-          }
+        poolWideClaimable.forEach((promotion) => {
+          totalRewards += getTokenRewards(
+            promotion.chainId,
+            promotion.token,
+            Object.values(promotion.epochRewards).reduce((a, b) => a + b, 0n)
+          )
         })
       }
     }
 
     return { isFetched, data: isFetched ? totalRewards : undefined }
-  }, [claimed, claimable, allTokenPrices, allTokenData, options])
+  }, [
+    claimed,
+    claimable,
+    poolWideClaimed,
+    poolWideClaimable,
+    allTokenPrices,
+    allTokenData,
+    options
+  ])
 }

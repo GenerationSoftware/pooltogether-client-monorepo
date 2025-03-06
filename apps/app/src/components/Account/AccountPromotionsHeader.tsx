@@ -1,4 +1,8 @@
-import { useSendClaimRewardsTransaction } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useSendAggregateClaimRewardsTransaction,
+  useSendClaimRewardsTransaction,
+  useSendPoolWideClaimRewardsTransaction
+} from '@generationsoftware/hyperstructure-react-hooks'
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { CurrencyValue, TransactionButton } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
@@ -9,30 +13,31 @@ import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useNetworks } from '@hooks/useNetworks'
+import { useUserClaimablePoolWidePromotions } from '@hooks/useUserClaimablePoolWidePromotions'
 import { useUserClaimablePromotions } from '@hooks/useUserClaimablePromotions'
+import { useUserClaimedPoolWidePromotions } from '@hooks/useUserClaimedPoolWidePromotions'
 import { useUserClaimedPromotions } from '@hooks/useUserClaimedPromotions'
 import { useUserTotalPromotionRewards } from '@hooks/useUserTotalPromotionRewards'
 
 interface AccountPromotionsHeaderProps {
-  address?: Address
+  userAddress?: Address
   className?: string
 }
 
 export const AccountPromotionsHeader = (props: AccountPromotionsHeaderProps) => {
-  const { address, className } = props
+  const { userAddress, className } = props
 
   const t = useTranslations('Common')
 
   const { address: _userAddress } = useAccount()
-  const userAddress = address ?? _userAddress
 
   const networks = useNetworks()
 
   const isExternalUser = useMemo(() => {
-    return !!address && address.toLowerCase() !== _userAddress?.toLowerCase()
-  }, [address, _userAddress])
+    return !!userAddress && userAddress.toLowerCase() !== _userAddress?.toLowerCase()
+  }, [userAddress, _userAddress])
 
-  const { data: totalRewards } = useUserTotalPromotionRewards(userAddress as Address, {
+  const { data: totalRewards } = useUserTotalPromotionRewards((userAddress ?? _userAddress)!, {
     includeUnclaimed: true
   })
 
@@ -40,19 +45,19 @@ export const AccountPromotionsHeader = (props: AccountPromotionsHeaderProps) => 
     <div className={classNames('flex flex-col items-center gap-1 md:gap-2', className)}>
       <span className='text-sm text-pt-purple-100 md:text-base'>{t('bonusRewards')}</span>
       <span className='text-[1.75rem] font-grotesk font-medium md:text-4xl'>
-        {!!userAddress && totalRewards !== undefined ? (
+        {!!(userAddress ?? _userAddress) && totalRewards !== undefined ? (
           <CurrencyValue baseValue={totalRewards} countUp={true} fallback={<Spinner />} />
         ) : (
           <Spinner />
         )}
       </span>
-      {!!userAddress && !isExternalUser && (
+      {!!(userAddress ?? _userAddress) && !isExternalUser && (
         <div className='flex flex-col gap-2 items-center mt-1'>
           {networks.map((network) => (
             <ClaimAllRewardsButton
               key={`claimAllButton-${network}`}
               chainId={network}
-              userAddress={userAddress}
+              userAddress={(userAddress ?? _userAddress)!}
             />
           ))}
         </div>
@@ -85,9 +90,20 @@ const ClaimAllRewardsButton = (props: ClaimAllRewardsButtonProps) => {
     refetch: refetchAllClaimable
   } = useUserClaimablePromotions(userAddress)
 
+  const { refetch: refetchAllPoolWideClaimed } = useUserClaimedPoolWidePromotions(userAddress)
+  const {
+    data: allPoolWideClaimable,
+    isFetched: isFetchedAllPoolWideClaimable,
+    refetch: refetchAllPoolWideClaimable
+  } = useUserClaimablePoolWidePromotions(userAddress)
+
   const claimablePromotions = useMemo(() => {
     return allClaimable.filter((promotion) => promotion.chainId === chainId)
   }, [allClaimable])
+
+  const claimablePoolWidePromotions = useMemo(() => {
+    return allPoolWideClaimable.filter((promotion) => promotion.chainId === chainId)
+  }, [allPoolWideClaimable])
 
   const epochsToClaim = useMemo(() => {
     const epochs: { [id: string]: number[] } = {}
@@ -105,23 +121,111 @@ const ClaimAllRewardsButton = (props: ClaimAllRewardsButtonProps) => {
     return epochs
   }, [claimablePromotions, isFetchedAllClaimable])
 
-  const { isWaiting, isConfirming, isSuccess, txHash, sendClaimRewardsTransaction } =
-    useSendClaimRewardsTransaction(chainId, userAddress, epochsToClaim, {
+  const poolWidePromotionsToClaim = useMemo(() => {
+    const promotions: { [id: string]: { vaultAddress: Address; epochs: number[] } } = {}
+
+    if (isFetchedAllPoolWideClaimable && claimablePoolWidePromotions.length > 0) {
+      claimablePoolWidePromotions.forEach((promotion) => {
+        const epochIds = Object.keys(promotion.epochRewards).map((k) => parseInt(k))
+
+        if (!!epochIds.length) {
+          promotions[promotion.promotionId.toString()] = {
+            vaultAddress: promotion.vault,
+            epochs: epochIds
+          }
+        }
+      })
+    }
+
+    return promotions
+  }, [claimablePoolWidePromotions, isFetchedAllPoolWideClaimable])
+
+  const {
+    isWaiting: isWaitingClaimRewards,
+    isConfirming: isConfirmingClaimRewards,
+    isSuccess: isSuccessClaimRewards,
+    txHash: txHashClaimRewards,
+    sendClaimRewardsTransaction
+  } = useSendClaimRewardsTransaction(chainId, userAddress, epochsToClaim, {
+    onSuccess: () => {
+      refetchAllClaimed()
+      refetchAllClaimable()
+    }
+  })
+
+  const {
+    isWaiting: isWaitingClaimPoolWideRewards,
+    isConfirming: isConfirmingClaimPoolWideRewards,
+    isSuccess: isSuccessClaimPoolWideRewards,
+    txHash: txHashClaimPoolWideRewards,
+    sendPoolWideClaimRewardsTransaction
+  } = useSendPoolWideClaimRewardsTransaction(chainId, userAddress, poolWidePromotionsToClaim, {
+    onSuccess: () => {
+      refetchAllPoolWideClaimed()
+      refetchAllPoolWideClaimable()
+    }
+  })
+
+  const {
+    isWaiting: isWaitingAggregateClaimRewards,
+    isConfirming: isConfirmingAggregateClaimRewards,
+    isSuccess: isSuccessAggregateClaimRewards,
+    txHash: txHashAggregateClaimRewards,
+    sendAggregateClaimRewardsTransaction
+  } = useSendAggregateClaimRewardsTransaction(
+    chainId,
+    userAddress,
+    epochsToClaim,
+    poolWidePromotionsToClaim,
+    {
       onSuccess: () => {
         refetchAllClaimed()
         refetchAllClaimable()
+        refetchAllPoolWideClaimed()
+        refetchAllPoolWideClaimable()
       }
-    })
+    }
+  )
 
-  if (Object.keys(epochsToClaim).length > 1) {
+  if (Object.keys(epochsToClaim).length + Object.keys(poolWidePromotionsToClaim).length > 1) {
     const network = getNiceNetworkNameByChainId(chainId)
+
+    const isEnabled = !!Object.keys(epochsToClaim).length
+    const isEnabledPoolWide = !!Object.keys(poolWidePromotionsToClaim).length
+    const isEnabledAggregate = isEnabled && isEnabledPoolWide
+
+    const isWaiting = isEnabledAggregate
+      ? isWaitingAggregateClaimRewards
+      : isEnabledPoolWide
+      ? isWaitingClaimPoolWideRewards
+      : isWaitingClaimRewards
+    const isConfirming = isEnabledAggregate
+      ? isConfirmingAggregateClaimRewards
+      : isEnabledPoolWide
+      ? isConfirmingClaimPoolWideRewards
+      : isConfirmingClaimRewards
+    const isSuccess = isEnabledAggregate
+      ? isSuccessAggregateClaimRewards
+      : isEnabledPoolWide
+      ? isSuccessClaimPoolWideRewards
+      : isSuccessClaimRewards
+    const txHash = isEnabledAggregate
+      ? txHashAggregateClaimRewards
+      : isEnabledPoolWide
+      ? txHashClaimPoolWideRewards
+      : txHashClaimRewards
+    const sendTx = isEnabledAggregate
+      ? sendAggregateClaimRewardsTransaction
+      : isEnabledPoolWide
+      ? sendPoolWideClaimRewardsTransaction
+      : sendClaimRewardsTransaction
 
     return (
       <TransactionButton
         chainId={chainId}
         isTxLoading={isWaiting || isConfirming}
         isTxSuccess={isSuccess}
-        write={sendClaimRewardsTransaction}
+        write={sendTx}
         txHash={txHash}
         txDescription={t_account('claimAllRewardsTx', { network })}
         openConnectModal={openConnectModal}

@@ -1,5 +1,10 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
-import { useDrawPeriod, useVaultPromotions } from '@generationsoftware/hyperstructure-react-hooks'
+import {
+  useDrawPeriod,
+  usePoolWideVaultPromotions,
+  useVaultPromotions
+} from '@generationsoftware/hyperstructure-react-hooks'
+import { PartialPromotionInfo } from '@shared/types'
 import {
   formatDailyCountToFrequency,
   getCountdownTextFromTimestamp,
@@ -31,25 +36,32 @@ export const VaultPageBonusRewardsSection = (props: VaultPageBonusRewardsSection
   const tokenAddresses = TWAB_REWARDS_SETTINGS[vault.chainId]?.tokenAddresses
   const fromBlock = TWAB_REWARDS_SETTINGS[vault.chainId]?.fromBlock
   const { data: vaultPromotions } = useVaultPromotions(vault, { tokenAddresses, fromBlock })
+  const { data: poolWideVaultPromotions } = usePoolWideVaultPromotions(vault, {
+    tokenAddresses,
+    fromBlock
+  })
 
   const { data: drawPeriod } = useDrawPeriod(prizePool)
 
   const currentTimestamp = useMemo(() => getSecondsSinceEpoch(), [])
 
   const validPromotions = useMemo(() => {
-    if (!!vaultPromotions && !!drawPeriod) {
+    if (!!vaultPromotions && !!poolWideVaultPromotions && !!drawPeriod) {
       const maxTimestamp = currentTimestamp + (maxNumDraws ?? 7) * drawPeriod
 
-      return Object.values(vaultPromotions).filter(
-        (p) =>
-          !!p.numberOfEpochs &&
-          Number(p.startTimestamp) < maxTimestamp &&
-          Number(p.startTimestamp) + p.numberOfEpochs * p.epochDuration > currentTimestamp
+      const isValid = (promotion: PartialPromotionInfo) =>
+        !!promotion.numberOfEpochs &&
+        Number(promotion.startTimestamp) < maxTimestamp &&
+        Number(promotion.startTimestamp) + promotion.numberOfEpochs * promotion.epochDuration >
+          currentTimestamp
+
+      return [...Object.values(vaultPromotions), ...Object.values(poolWideVaultPromotions)].filter(
+        isValid
       )
     } else {
       return []
     }
-  }, [vaultPromotions, drawPeriod, currentTimestamp])
+  }, [vaultPromotions, poolWideVaultPromotions, drawPeriod, currentTimestamp])
 
   const formattedFrequency = useMemo(() => {
     const minDuration = Math.min(...validPromotions.map((p) => p.epochDuration))

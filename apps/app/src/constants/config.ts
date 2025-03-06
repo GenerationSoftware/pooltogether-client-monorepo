@@ -229,7 +229,8 @@ export const TWAB_REWARDS_SETTINGS: {
   [NETWORK.optimism_sepolia]: {
     tokenAddresses: [
       USDC_TOKEN_ADDRESSES[NETWORK.optimism_sepolia],
-      POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia]
+      POOL_TOKEN_ADDRESSES[NETWORK.optimism_sepolia],
+      '0xcE5De3DE8f65464Fd84aC06a38a157232A873531' // Test Reward Token
     ],
     fromBlock: QUERY_START_BLOCK[NETWORK.optimism_sepolia]
   },

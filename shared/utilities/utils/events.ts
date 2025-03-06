@@ -1,6 +1,10 @@
 import { DSKit } from 'dskit-eth'
 import { Address, PublicClient } from 'viem'
-import { LIQUIDATION_ROUTER_ADDRESSES, TWAB_REWARDS_ADDRESSES } from '../constants'
+import {
+  LIQUIDATION_ROUTER_ADDRESSES,
+  POOL_WIDE_TWAB_REWARDS_ADDRESSES,
+  TWAB_REWARDS_ADDRESSES
+} from '../constants'
 import { getLiquidationPairAddresses } from './liquidations'
 
 /**
@@ -479,6 +483,97 @@ export const getPromotionRewardsClaimedEvents = async (
     args: {
       promotionId: options?.promotionIds ?? null,
       user: options?.userAddresses ?? null
+    },
+    fromBlock: options?.fromBlock,
+    toBlock: options?.toBlock ?? 'latest',
+    strict: true
+  })
+}
+
+/**
+ * Returns pool-wide `PromotionCreated` events
+ * @param publicClient a public Viem client to query through
+ * @param options optional settings
+ * @returns
+ */
+export const getPoolWidePromotionCreatedEvents = async (
+  publicClient: PublicClient,
+  options?: {
+    promotionIds?: bigint[]
+    tokenAddresses?: Address[]
+    fromBlock?: bigint
+    toBlock?: bigint
+  }
+) => {
+  const chainId = await publicClient.getChainId()
+
+  if (!POOL_WIDE_TWAB_REWARDS_ADDRESSES[chainId]) {
+    return []
+  }
+
+  return await publicClient.getLogs({
+    address: POOL_WIDE_TWAB_REWARDS_ADDRESSES[chainId],
+    event: {
+      inputs: [
+        { indexed: true, internalType: 'uint256', name: 'promotionId', type: 'uint256' },
+        { indexed: true, internalType: 'contract IERC20', name: 'token', type: 'address' },
+        { indexed: false, internalType: 'uint40', name: 'startTimestamp', type: 'uint40' },
+        { indexed: false, internalType: 'uint104', name: 'tokensPerEpoch', type: 'uint104' },
+        { indexed: false, internalType: 'uint40', name: 'epochDuration', type: 'uint40' },
+        { indexed: false, internalType: 'uint8', name: 'initialNumberOfEpochs', type: 'uint8' }
+      ],
+      name: 'PromotionCreated',
+      type: 'event'
+    },
+    args: {
+      promotionId: options?.promotionIds ?? null,
+      token: options?.tokenAddresses ?? null
+    },
+    fromBlock: options?.fromBlock,
+    toBlock: options?.toBlock ?? 'latest',
+    strict: true
+  })
+}
+
+/**
+ * Returns pool-wide `RewardsClaimed` events
+ * @param publicClient a public Viem client to query through
+ * @param options optional settings
+ * @returns
+ */
+export const getPoolWidePromotionRewardsClaimedEvents = async (
+  publicClient: PublicClient,
+  options?: {
+    promotionIds?: bigint[]
+    userAddresses?: Address[]
+    vaultAddresses?: Address[]
+    fromBlock?: bigint
+    toBlock?: bigint
+  }
+) => {
+  const chainId = await publicClient.getChainId()
+
+  if (!POOL_WIDE_TWAB_REWARDS_ADDRESSES[chainId]) {
+    return []
+  }
+
+  return await publicClient.getLogs({
+    address: POOL_WIDE_TWAB_REWARDS_ADDRESSES[chainId],
+    event: {
+      inputs: [
+        { indexed: true, internalType: 'uint256', name: 'promotionId', type: 'uint256' },
+        { indexed: false, internalType: 'bytes32', name: 'epochClaimFlags', type: 'bytes32' },
+        { indexed: true, internalType: 'address', name: 'vault', type: 'address' },
+        { indexed: true, internalType: 'address', name: 'user', type: 'address' },
+        { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' }
+      ],
+      name: 'RewardsClaimed',
+      type: 'event'
+    },
+    args: {
+      promotionId: options?.promotionIds ?? null,
+      user: options?.userAddresses ?? null,
+      vault: options?.vaultAddresses ?? null
     },
     fromBlock: options?.fromBlock,
     toBlock: options?.toBlock ?? 'latest',

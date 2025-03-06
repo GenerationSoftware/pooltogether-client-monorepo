@@ -1,12 +1,15 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import { usePublicClientsByChain } from '@generationsoftware/hyperstructure-react-hooks'
 import { VaultBadge } from '@shared/react-components'
+import { lower } from '@shared/utilities'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
+import { useUserClaimablePoolWidePromotions } from '@hooks/useUserClaimablePoolWidePromotions'
 import { useUserClaimablePromotions } from '@hooks/useUserClaimablePromotions'
+import { useUserClaimedPoolWidePromotions } from '@hooks/useUserClaimedPoolWidePromotions'
 import { useUserClaimedPromotions } from '@hooks/useUserClaimedPromotions'
 import { AccountPromotionClaimableRewards } from './AccountPromotionClaimableRewards'
 import { AccountPromotionClaimActions } from './AccountPromotionClaimActions'
@@ -16,37 +19,51 @@ import { AccountPromotionToken } from './AccountPromotionToken'
 interface AccountPromotionCardProps {
   chainId: number
   promotionId: bigint
-  address?: Address
+  userAddress?: Address
+  vaultAddress?: Address
+  isPoolWide?: boolean
 }
 
 export const AccountPromotionCard = (props: AccountPromotionCardProps) => {
-  const { chainId, promotionId, address } = props
+  const { chainId, promotionId, userAddress, vaultAddress, isPoolWide } = props
 
   const t = useTranslations('Account.bonusRewardHeaders')
 
   const publicClients = usePublicClientsByChain()
 
   const { address: _userAddress } = useAccount()
-  const userAddress = address ?? _userAddress
 
   const isExternalUser = useMemo(() => {
-    return !!address && address.toLowerCase() !== _userAddress?.toLowerCase()
-  }, [address, _userAddress])
+    return !!userAddress && userAddress.toLowerCase() !== _userAddress?.toLowerCase()
+  }, [userAddress, _userAddress])
 
-  const { data: allClaimed } = useUserClaimedPromotions(userAddress as Address)
-  const { data: allClaimable } = useUserClaimablePromotions(userAddress as Address)
+  const { data: allClaimed } = useUserClaimedPromotions((userAddress ?? _userAddress)!)
+  const { data: allClaimable } = useUserClaimablePromotions((userAddress ?? _userAddress)!)
+
+  const { data: allPoolWideClaimed } = useUserClaimedPoolWidePromotions(
+    (userAddress ?? _userAddress)!
+  )
+  const { data: allPoolWideClaimable } = useUserClaimablePoolWidePromotions(
+    (userAddress ?? _userAddress)!
+  )
 
   const claimed = useMemo(() => {
-    return allClaimed.find(
-      (promotion) => promotion.chainId === chainId && promotion.promotionId === promotionId
+    return (isPoolWide ? allPoolWideClaimed : allClaimed).find(
+      (promotion) =>
+        promotion.chainId === chainId &&
+        promotion.promotionId === promotionId &&
+        (!vaultAddress || lower(promotion.vault) === lower(vaultAddress))
     )
-  }, [allClaimed])
+  }, [isPoolWide, allClaimed, allPoolWideClaimed, chainId, promotionId, vaultAddress])
 
   const claimable = useMemo(() => {
-    return allClaimable.find(
-      (promotion) => promotion.chainId === chainId && promotion.promotionId === promotionId
+    return (isPoolWide ? allPoolWideClaimable : allClaimable).find(
+      (promotion) =>
+        promotion.chainId === chainId &&
+        promotion.promotionId === promotionId &&
+        (!vaultAddress || lower(promotion.vault) === lower(vaultAddress))
     )
-  }, [allClaimable])
+  }, [isPoolWide, allClaimable, allPoolWideClaimable, chainId, promotionId, vaultAddress])
 
   const promotionInfo = claimed ?? claimable
 
@@ -71,7 +88,9 @@ export const AccountPromotionCard = (props: AccountPromotionCardProps) => {
               <AccountPromotionClaimedRewards
                 chainId={chainId}
                 promotionId={promotionId}
-                address={userAddress}
+                userAddress={userAddress ?? _userAddress}
+                vaultAddress={promotionInfo.vault}
+                isPoolWide={isPoolWide}
                 className='!flex-row gap-1'
               />
             </div>
@@ -82,7 +101,9 @@ export const AccountPromotionCard = (props: AccountPromotionCardProps) => {
               <AccountPromotionClaimableRewards
                 chainId={chainId}
                 promotionId={promotionId}
-                address={userAddress}
+                userAddress={userAddress ?? _userAddress}
+                vaultAddress={promotionInfo.vault}
+                isPoolWide={isPoolWide}
                 className='!flex-row gap-1'
               />
             </div>
@@ -92,7 +113,9 @@ export const AccountPromotionCard = (props: AccountPromotionCardProps) => {
           <AccountPromotionClaimActions
             chainId={chainId}
             promotionId={promotionId}
-            address={userAddress}
+            userAddress={userAddress ?? _userAddress}
+            vaultAddress={promotionInfo.vault}
+            isPoolWide={isPoolWide}
             fullSized={true}
             className='w-full justify-center'
           />

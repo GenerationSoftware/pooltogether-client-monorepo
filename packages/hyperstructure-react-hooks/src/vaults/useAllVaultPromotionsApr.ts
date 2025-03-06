@@ -1,9 +1,15 @@
 import { Vaults } from '@generationsoftware/hyperstructure-client-js'
 import { TokenWithPrice } from '@shared/types'
-import { getSecondsSinceEpoch, lower, SECONDS_PER_YEAR } from '@shared/utilities'
+import {
+  calculatePoolWideRewardsApr,
+  calculateRewardsApr,
+  getSecondsSinceEpoch,
+  lower
+} from '@shared/utilities'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
 import {
+  useAllPoolWideVaultPromotions,
   useAllVaultPromotions,
   useAllVaultSharePrices,
   useAllVaultTotalDelegateSupplies,
@@ -37,11 +43,18 @@ export const useAllVaultPromotionsApr = (
         }
       }
     : undefined
+
   const {
     data: allVaultPromotions,
     isFetched: isFetchedAllVaultPromotions,
     refetch: refetchAllVaultPromotions
   } = useAllVaultPromotions(vaults, promotionOptions)
+
+  const {
+    data: allPoolWideVaultPromotions,
+    isFetched: isFetchedAllPoolWideVaultPromotions,
+    refetch: refetchAllPoolWideVaultPromotions
+  } = useAllPoolWideVaultPromotions(vaults, promotionOptions)
 
   const {
     data: allShareTokens,
@@ -70,6 +83,7 @@ export const useAllVaultPromotionsApr = (
     if (
       !!chainId &&
       !!allVaultPromotions?.[chainId] &&
+      !!allPoolWideVaultPromotions?.[chainId] &&
       !!allShareTokens &&
       !!rewardTokenPrices &&
       !!rewardTokenData &&
@@ -103,37 +117,34 @@ export const useAllVaultPromotionsApr = (
                 )
 
                 promotions.forEach((promotion) => {
-                  const startsAt = Number(promotion.startTimestamp)
-                  const numberOfEpochs = promotion.numberOfEpochs ?? 0
-                  const endsAt = startsAt + numberOfEpochs * promotion.epochDuration
+                  const promotionApr = calculateRewardsApr(promotion, rewardToken, tvl, {
+                    currentTimestamp
+                  })
 
-                  if (
-                    !!startsAt &&
-                    !!numberOfEpochs &&
-                    !!endsAt &&
-                    startsAt < currentTimestamp &&
-                    endsAt > currentTimestamp
-                  ) {
-                    for (let i = 0; i < numberOfEpochs; i++) {
-                      const epochStartsAt = startsAt + promotion.epochDuration * i
-                      const epochEndsAt = epochStartsAt + promotion.epochDuration
-
-                      if (epochStartsAt < currentTimestamp && epochEndsAt > currentTimestamp) {
-                        const tokenRewards = parseFloat(
-                          formatUnits(promotion.tokensPerEpoch, rewardToken.decimals)
-                        )
-                        const tokenRewardsValue = tokenRewards * (rewardToken.price ?? 0)
-                        const yearlyRewardsValue =
-                          tokenRewardsValue * (SECONDS_PER_YEAR / promotion.epochDuration)
-
-                        if (vaultPromotionAprs[vault.id] === undefined) {
-                          vaultPromotionAprs[vault.id] = 0
-                        }
-
-                        vaultPromotionAprs[vault.id] += (yearlyRewardsValue / tvl) * 100
-                      }
-                    }
+                  if (vaultPromotionAprs[vault.id] === undefined) {
+                    vaultPromotionAprs[vault.id] = 0
                   }
+                  vaultPromotionAprs[vault.id] += promotionApr
+                })
+
+                const poolWidePromotions = allPoolWideVaultPromotions[vault.chainId].filter(
+                  (promotion) =>
+                    lower(promotion.info.token) === lower(rewardToken.address) &&
+                    lower(promotion.info.vault) === lower(vault.address)
+                )
+
+                poolWidePromotions.forEach((promotion) => {
+                  const promotionApr = calculatePoolWideRewardsApr(
+                    promotion.info,
+                    rewardToken,
+                    tvl,
+                    { currentTimestamp }
+                  )
+
+                  if (vaultPromotionAprs[vault.id] === undefined) {
+                    vaultPromotionAprs[vault.id] = 0
+                  }
+                  vaultPromotionAprs[vault.id] += promotionApr
                 })
               }
             })
@@ -144,6 +155,7 @@ export const useAllVaultPromotionsApr = (
     return vaultPromotionAprs
   }, [
     allVaultPromotions,
+    allPoolWideVaultPromotions,
     allShareTokens,
     rewardTokenPrices,
     rewardTokenData,
@@ -152,6 +164,7 @@ export const useAllVaultPromotionsApr = (
 
   const isFetched =
     isFetchedAllVaultPromotions &&
+    isFetchedAllPoolWideVaultPromotions &&
     isFetchedAllShareTokens &&
     isFetchedRewardTokenPrices &&
     isFetchedRewardTokenData &&
@@ -159,6 +172,7 @@ export const useAllVaultPromotionsApr = (
 
   const refetch = () => {
     refetchAllVaultPromotions()
+    refetchAllPoolWideVaultPromotions()
     refetchAllShareTokens()
     refetchAllTotalDelegateSupplies()
   }
