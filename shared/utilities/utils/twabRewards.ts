@@ -5,14 +5,17 @@ import {
   PromotionInfo,
   TokenWithPrice
 } from '@shared/types'
-import { Address, formatUnits, hexToBigInt, PublicClient } from 'viem'
+import { Address, formatEther, formatUnits, hexToBigInt, PublicClient } from 'viem'
 import { poolWideTwabRewardsABI } from '../abis/poolWideTwabRewards'
+import { prizePoolABI } from '../abis/prizePool'
 import { twabRewardsABI } from '../abis/twabRewards'
 import {
   POOL_WIDE_TWAB_REWARDS_ADDRESSES,
+  PRIZE_POOLS,
   SECONDS_PER_YEAR,
   TWAB_REWARDS_ADDRESSES
 } from '../constants'
+import { calculatePercentageOfBigInt } from './math'
 import { getSimpleMulticallResults } from './multicall'
 import { getSecondsSinceEpoch } from './time'
 
@@ -111,7 +114,12 @@ export const getPoolWidePromotionVaultTokensPerEpoch = async (
   vaultAddress: Address,
   promotions: {
     [id: string]:
-      | { startTimestamp?: bigint; numberOfEpochs?: number; epochDuration?: number }
+      | {
+          startTimestamp?: bigint
+          numberOfEpochs?: number
+          epochDuration?: number
+          tokensPerEpoch?: bigint
+        }
       | undefined
   }
 ) => {
@@ -158,6 +166,55 @@ export const getPoolWidePromotionVaultTokensPerEpoch = async (
         }
         allVaultTokensPerEpoch[promotionId].push(epochRewards)
       })
+    }
+
+    /** @dev this adds an estimated APR for newly created promotions, based on a vault's past performance */
+    const currentTimestamp = getSecondsSinceEpoch()
+    const missingNewPromotions = Object.entries(promotions).filter(
+      ([id, info]) =>
+        !promotionIds.includes(id) &&
+        !!info?.startTimestamp &&
+        !!info.epochDuration &&
+        Number(info.startTimestamp) < currentTimestamp &&
+        Number(info.startTimestamp) + info.epochDuration > currentTimestamp
+    )
+    if (missingNewPromotions.length > 0) {
+      const prizePool = PRIZE_POOLS.find((p) => p.chainId === chainId)
+
+      if (!!prizePool) {
+        const lastAwardedDrawId = await publicClient.readContract({
+          address: prizePool.address,
+          abi: prizePoolABI,
+          functionName: 'getLastAwardedDrawId'
+        })
+
+        if (!!lastAwardedDrawId) {
+          const pastContributionPercentage = parseFloat(
+            formatEther(
+              await publicClient.readContract({
+                address: prizePool.address,
+                abi: prizePoolABI,
+                functionName: 'getVaultPortion',
+                args: [
+                  vaultAddress,
+                  7 > lastAwardedDrawId ? 1 : lastAwardedDrawId - 6,
+                  lastAwardedDrawId
+                ]
+              })
+            )
+          )
+
+          if (pastContributionPercentage > 0) {
+            missingNewPromotions.forEach(([id, info]) => {
+              if (!!info!.tokensPerEpoch) {
+                allVaultTokensPerEpoch[id] = [
+                  calculatePercentageOfBigInt(info!.tokensPerEpoch, pastContributionPercentage)
+                ]
+              }
+            })
+          }
+        }
+      }
     }
   } else {
     console.warn(`No pool-wide TWAB rewards contract set for chain ID ${chainId}`)
