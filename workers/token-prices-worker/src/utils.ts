@@ -20,8 +20,8 @@ export const getOnchainTokenPrices = async (
   const tokenPrices: ChainTokenPrices = {}
 
   const tokenPriceQueries: { [chainId: number]: Set<Lowercase<Address>> } = {}
-  const querySource: {
-    [chainId: number]: { [targetAddress: Lowercase<Address>]: Lowercase<Address> }
+  const querySources: {
+    [chainId: number]: { [targetAddress: Lowercase<Address>]: Lowercase<Address>[] }
   } = {}
 
   tokenAddresses.forEach((address) => {
@@ -38,10 +38,13 @@ export const getOnchainTokenPrices = async (
     }
     tokenPriceQueries[queryTarget.chainId].add(queryTarget.address)
 
-    if (querySource[queryTarget.chainId] === undefined) {
-      querySource[queryTarget.chainId] = {}
+    if (querySources[queryTarget.chainId] === undefined) {
+      querySources[queryTarget.chainId] = {}
     }
-    querySource[queryTarget.chainId][queryTarget.address] = tokenAddress
+    if (querySources[queryTarget.chainId][queryTarget.address] === undefined) {
+      querySources[queryTarget.chainId][queryTarget.address] = []
+    }
+    querySources[queryTarget.chainId][queryTarget.address].push(tokenAddress)
   })
 
   const date = getCurrentDate()
@@ -78,10 +81,12 @@ export const getOnchainTokenPrices = async (
         for (const token of tokens) {
           try {
             const price = await dskit.price.ofToken({ token })
-            const sourceTokenAddress = querySource[chainId][token.address as Lowercase<Address>]
+            const sourceTokenAddresses = querySources[chainId][token.address as Lowercase<Address>]
 
-            if (!!price && !!sourceTokenAddress) {
-              tokenPrices[sourceTokenAddress] = [{ date, price }]
+            if (!!price && !!sourceTokenAddresses) {
+              sourceTokenAddresses.forEach((sourceTokenAddress) => {
+                tokenPrices[sourceTokenAddress] = [{ date, price }]
+              })
             }
           } catch (e) {
             console.error(e)

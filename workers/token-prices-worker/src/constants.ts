@@ -189,7 +189,7 @@ export const TOKEN_PRICE_REDIRECTS: Record<
     /* WETH */
     '0x6a023ccd1ff6f2045c3309768ead9e68f978f6e1': {
       chainId: NETWORK.mainnet,
-      address: dolphinAddress
+      address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
     },
     /* USDC.e */
     '0x2a22f9c3b484c3629090feed35f17ff8f88f76f0': {
