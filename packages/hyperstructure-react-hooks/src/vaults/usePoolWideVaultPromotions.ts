@@ -67,7 +67,7 @@ export const usePoolWideVaultPromotions = (
             createdAtBlockNumber: promotionCreatedEvent.blockNumber,
             token: promotionCreatedEvent.args.token,
             tokensPerEpoch: promotionCreatedEvent.args.tokensPerEpoch,
-            vaultTokensPerEpoch: allVaultTokensPerEpoch[id],
+            vaultTokensPerEpoch: allVaultTokensPerEpoch[id] ?? [],
             ...allPromotionInfo[id]
           }
         })
