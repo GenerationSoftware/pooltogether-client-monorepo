@@ -15,6 +15,7 @@ interface VaultBonusRewardsProps {
   append?: ReactNode
   hideUnlessPresent?: boolean
   showTokens?: boolean
+  minApr?: number
   className?: string
   valueClassName?: string
   tokensClassName?: string
@@ -27,6 +28,7 @@ export const VaultBonusRewards = (props: VaultBonusRewardsProps) => {
     append,
     hideUnlessPresent,
     showTokens,
+    minApr,
     className,
     valueClassName,
     tokensClassName
@@ -40,7 +42,8 @@ export const VaultBonusRewards = (props: VaultBonusRewardsProps) => {
 
   if (
     (!!vault && TWAB_REWARDS_ADDRESSES[vault.chainId] === undefined) ||
-    vaultPromotionsApr?.apr === 0
+    vaultPromotionsApr?.apr === 0 ||
+    (!!minApr && !!vaultPromotionsApr?.apr && vaultPromotionsApr.apr < minApr)
   ) {
     return hideUnlessPresent ? <></> : <>-</>
   }
@@ -53,10 +56,13 @@ export const VaultBonusRewards = (props: VaultBonusRewardsProps) => {
     return hideUnlessPresent ? <></> : <>?</>
   }
 
-  const formattedApr = `${formatNumberForDisplay(vaultPromotionsApr.apr, {
-    minimumFractionDigits: 1,
-    maximumFractionDigits: 1
-  })}%`
+  const formattedApr =
+    vaultPromotionsApr.apr >= 0.01
+      ? `${formatNumberForDisplay(vaultPromotionsApr.apr, {
+          minimumFractionDigits: 1,
+          maximumFractionDigits: vaultPromotionsApr.apr >= 0.1 ? 1 : 2
+        })}%`
+      : '< 0.01%'
 
   return (
     <div className={classNames('flex items-center gap-1', className)}>

@@ -83,6 +83,7 @@ export const VaultCard = (props: VaultCardProps) => {
               vault={vault}
               prepend={<span className='text-xs'>+</span>}
               append={<span className='text-xs text-pt-purple-200'>{t_common('apr')}</span>}
+              minApr={0.01}
               valueClassName='text-sm'
             />
           </div>

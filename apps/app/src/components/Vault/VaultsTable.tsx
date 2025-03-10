@@ -139,6 +139,7 @@ export const VaultsTable = (props: VaultsTableProps) => {
                   append={<span className='text-pt-purple-200'>{t_common('apr')}</span>}
                   hideUnlessPresent={true}
                   showTokens={true}
+                  minApr={0.01}
                   className='text-sm'
                   tokensClassName='text-pt-purple-200'
                 />
