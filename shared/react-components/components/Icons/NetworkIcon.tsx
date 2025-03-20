@@ -306,6 +306,71 @@ const GnosisIcon = (props: { className?: string }) => (
   </svg>
 )
 
+const WorldIcon = (props: { className?: string }) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    viewBox='0 0 620 620'
+    fill='none'
+    className={props.className}
+  >
+    <circle cx='310' cy='310' r='306' fill='white' />
+    <g clipPath='url(#clip0_34_27)'>
+      <mask
+        id='mask0_34_27'
+        style={{ maskType: 'luminance' }}
+        maskUnits='userSpaceOnUse'
+        x='-57'
+        y='-57'
+        width='734'
+        height='734'
+      >
+        <path d='M676.837 -56.6019H-56.3662V676.602H676.837V-56.6019Z' fill='white' />
+      </mask>
+      <g mask='url(#mask0_34_27)'>
+        <mask
+          id='mask1_34_27'
+          style={{ maskType: 'luminance' }}
+          maskUnits='userSpaceOnUse'
+          x='-669'
+          y='-670'
+          width='1959'
+          height='1960'
+        >
+          <path d='M-668.866 -669.293H1289.72V1289.29H-668.866V-669.293Z' fill='white' />
+        </mask>
+        <g mask='url(#mask1_34_27)'>
+          <path
+            d='M521.818 181.168L307.505 181.507C236.542 181.507 179.011 239.037 179.011 310C179.011 380.963 236.542 438.493 307.505 438.493H513.883'
+            stroke='black'
+            strokeWidth='50'
+            strokeMiterlimit='10'
+            strokeLinecap='round'
+          />
+          <path
+            d='M64.1763 310H559.225'
+            stroke='black'
+            strokeWidth='50'
+            strokeMiterlimit='10'
+            strokeLinecap='round'
+          />
+          <path
+            d='M310 60.7753C447.643 60.7753 559.225 172.357 559.225 310C559.225 447.643 447.643 559.225 310 559.225C172.357 559.225 60.7754 447.643 60.7754 310C60.7754 172.357 172.357 60.7753 310 60.7753Z'
+            stroke='black'
+            strokeWidth='50'
+            strokeMiterlimit='10'
+            strokeLinecap='round'
+          />
+        </g>
+      </g>
+    </g>
+    <defs>
+      <clipPath id='clip0_34_27'>
+        <rect width='550' height='550' fill='white' transform='translate(35 35)' />
+      </clipPath>
+    </defs>
+  </svg>
+)
+
 /* ================================ Icon Mapping ================================ */
 
 const icons = {
@@ -326,5 +391,12 @@ const icons = {
   [NETWORK.scroll]: { svgIcon: ScrollIcon, iconBgColor: '#ffeeda' },
   [NETWORK.scroll_sepolia]: { svgIcon: ScrollIcon, iconBgColor: '#ffeeda' },
   [NETWORK.gnosis]: { svgIcon: GnosisIcon, iconBgColor: '#f0ebde' },
-  [NETWORK.gnosis_chiado]: { svgIcon: GnosisIcon, iconBgColor: '#f0ebde' }
+  [NETWORK.gnosis_chiado]: { svgIcon: GnosisIcon, iconBgColor: '#f0ebde' },
+  [NETWORK.world]: { svgIcon: WorldIcon, iconBgColor: '#ffffff' },
+  [NETWORK.world_sepolia]: { svgIcon: WorldIcon, iconBgColor: '#ffffff' }
+} satisfies {
+  [chainId: number]: {
+    svgIcon: (props: { className?: string }) => JSX.Element
+    iconBgColor: `#${string}`
+  }
 }
