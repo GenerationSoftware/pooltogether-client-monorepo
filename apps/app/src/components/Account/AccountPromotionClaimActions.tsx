@@ -128,7 +128,7 @@ const ClaimRewardsButton = (props: ClaimRewardsButtonProps) => {
   } = useSendPoolWideClaimRewardsTransaction(
     chainId,
     userAddress,
-    { [promotionId.toString()]: { vaultAddress: promotion?.vault!, epochs: epochsToClaim } },
+    [{ id: promotionId.toString(), vaultAddress: promotion?.vault!, epochs: epochsToClaim }],
     {
       onSuccess: () => {
         refetchPoolWideClaimed()

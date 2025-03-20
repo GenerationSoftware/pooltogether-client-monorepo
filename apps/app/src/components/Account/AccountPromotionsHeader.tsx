@@ -122,17 +122,18 @@ const ClaimAllRewardsButton = (props: ClaimAllRewardsButtonProps) => {
   }, [claimablePromotions, isFetchedAllClaimable])
 
   const poolWidePromotionsToClaim = useMemo(() => {
-    const promotions: { [id: string]: { vaultAddress: Address; epochs: number[] } } = {}
+    const promotions: { id: string; vaultAddress: Address; epochs: number[] }[] = []
 
     if (isFetchedAllPoolWideClaimable && claimablePoolWidePromotions.length > 0) {
       claimablePoolWidePromotions.forEach((promotion) => {
         const epochIds = Object.keys(promotion.epochRewards).map((k) => parseInt(k))
 
         if (!!epochIds.length) {
-          promotions[promotion.promotionId.toString()] = {
+          promotions.push({
+            id: promotion.promotionId.toString(),
             vaultAddress: promotion.vault,
             epochs: epochIds
-          }
+          })
         }
       })
     }
@@ -187,11 +188,11 @@ const ClaimAllRewardsButton = (props: ClaimAllRewardsButtonProps) => {
     }
   )
 
-  if (Object.keys(epochsToClaim).length + Object.keys(poolWidePromotionsToClaim).length > 1) {
+  if (Object.keys(epochsToClaim).length + poolWidePromotionsToClaim.length > 1) {
     const network = getNiceNetworkNameByChainId(chainId)
 
     const isEnabled = !!Object.keys(epochsToClaim).length
-    const isEnabledPoolWide = !!Object.keys(poolWidePromotionsToClaim).length
+    const isEnabledPoolWide = !!poolWidePromotionsToClaim.length
     const isEnabledAggregate = isEnabled && isEnabledPoolWide
 
     const isWaiting = isEnabledAggregate

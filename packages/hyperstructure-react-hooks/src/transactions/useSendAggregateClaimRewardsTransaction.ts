@@ -25,7 +25,7 @@ export const useSendAggregateClaimRewardsTransaction = (
   chainId: number,
   userAddress: Address,
   epochsToClaim: { [id: string]: number[] },
-  poolWidePromotionsToClaim: { [id: string]: { vaultAddress: Address; epochs: number[] } },
+  poolWidePromotionsToClaim: { id: string; vaultAddress: Address; epochs: number[] }[],
   options?: {
     twabRewardsAddress?: Address
     onSend?: (txHash: `0x${string}`) => void
@@ -55,9 +55,7 @@ export const useSendAggregateClaimRewardsTransaction = (
     !!epochsToClaim &&
     Object.values(epochsToClaim).some((entry) => !!entry?.length) &&
     !!poolWidePromotionsToClaim &&
-    Object.values(poolWidePromotionsToClaim).some(
-      (entry) => !!entry?.vaultAddress && !!entry.epochs?.length
-    ) &&
+    poolWidePromotionsToClaim.some((entry) => !!entry?.vaultAddress && !!entry.epochs?.length) &&
     !!twabRewardsAddress &&
     !!POOL_WIDE_TWAB_REWARDS_ADDRESSES[chainId]
 
@@ -85,13 +83,13 @@ export const useSendAggregateClaimRewardsTransaction = (
     const calldata: `0x${string}`[] = []
 
     if (enabled) {
-      Object.entries(poolWidePromotionsToClaim).forEach(([id, promotion]) => {
+      poolWidePromotionsToClaim.forEach((promotion) => {
         if (!!promotion.vaultAddress && !!promotion.epochs?.length) {
           calldata.push(
             encodeFunctionData({
               abi: poolWideTwabRewardsABI,
               functionName: 'claimRewards',
-              args: [promotion.vaultAddress, userAddress, BigInt(id), promotion.epochs]
+              args: [promotion.vaultAddress, userAddress, BigInt(promotion.id), promotion.epochs]
             })
           )
         }

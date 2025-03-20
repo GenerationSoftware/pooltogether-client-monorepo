@@ -19,7 +19,7 @@ import {
 export const useSendPoolWideClaimRewardsTransaction = (
   chainId: number,
   userAddress: Address,
-  promotionsToClaim: { [id: string]: { vaultAddress: Address; epochs: number[] } },
+  promotionsToClaim: { id: string; vaultAddress: Address; epochs: number[] }[],
   options?: {
     onSend?: (txHash: `0x${string}`) => void
     onSuccess?: (txReceipt: TransactionReceipt) => void
@@ -42,17 +42,17 @@ export const useSendPoolWideClaimRewardsTransaction = (
     !!userAddress &&
     isAddress(userAddress) &&
     !!promotionsToClaim &&
-    Object.values(promotionsToClaim).some(
-      (entry) => !!entry?.vaultAddress && !!entry.epochs?.length
-    ) &&
+    promotionsToClaim.some((entry) => !!entry?.vaultAddress && !!entry.epochs?.length) &&
     !!POOL_WIDE_TWAB_REWARDS_ADDRESSES[chainId]
 
   const claimRewardsArgs = useMemo((): [Address, Address, bigint, number[]] | undefined => {
     if (enabled) {
-      const promotion = Object.entries(promotionsToClaim).find((entry) => !!entry[1].epochs.length)
+      const promotion = promotionsToClaim.find(
+        (entry) => !!entry.vaultAddress && !!entry.epochs.length
+      )
 
       if (!!promotion) {
-        return [promotion[1].vaultAddress, userAddress, BigInt(promotion[0]), promotion[1].epochs]
+        return [promotion.vaultAddress, userAddress, BigInt(promotion.id), promotion.epochs]
       }
     }
   }, [userAddress, promotionsToClaim])
@@ -75,7 +75,7 @@ export const useSendPoolWideClaimRewardsTransaction = (
   } = useWriteContract()
 
   const isMulticall = useMemo(() => {
-    const numValidPromotions = Object.values(promotionsToClaim).filter(
+    const numValidPromotions = promotionsToClaim.filter(
       (entry) => !!entry.vaultAddress && !!entry.epochs?.length
     ).length
     return numValidPromotions > 1
@@ -83,14 +83,14 @@ export const useSendPoolWideClaimRewardsTransaction = (
 
   const multicallArgs = useMemo((): [`0x${string}`[]] | undefined => {
     if (enabled && isMulticall) {
-      const validPromotions = Object.entries(promotionsToClaim).filter(
-        (entry) => !!entry[1].vaultAddress && !!entry[1].epochs?.length
+      const validPromotions = promotionsToClaim.filter(
+        (entry) => !!entry.vaultAddress && !!entry.epochs?.length
       )
 
       const args = validPromotions.map((promotion) => {
         const callData = encodeFunctionData({
           abi: poolWideTwabRewardsABI,
-          args: [promotion[1].vaultAddress, userAddress, BigInt(promotion[0]), promotion[1].epochs],
+          args: [promotion.vaultAddress, userAddress, BigInt(promotion.id), promotion.epochs],
           functionName: 'claimRewards'
         })
         return callData
