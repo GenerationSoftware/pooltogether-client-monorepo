@@ -1,7 +1,15 @@
-import { arbitrum, base, Chain, gnosis, mainnet, optimism, scroll } from 'viem/chains'
+import { arbitrum, base, Chain, gnosis, mainnet, optimism, scroll, worldchain } from 'viem/chains'
 import { Network } from './types'
 
-export const NETWORKS = [mainnet.id, optimism.id, base.id, arbitrum.id, scroll.id, gnosis.id]
+export const NETWORKS = [
+  mainnet.id,
+  optimism.id,
+  base.id,
+  arbitrum.id,
+  scroll.id,
+  gnosis.id,
+  worldchain.id
+]
 
 export const VIEM_CHAINS: Record<Network, Chain> = {
   [mainnet.id]: mainnet,
@@ -9,7 +17,14 @@ export const VIEM_CHAINS: Record<Network, Chain> = {
   [base.id]: base,
   [arbitrum.id]: arbitrum,
   [scroll.id]: scroll,
-  [gnosis.id]: gnosis
+  [gnosis.id]: gnosis,
+  [worldchain.id]: {
+    ...worldchain,
+    contracts: {
+      multicall3: { address: '0xca11bde05977b3631167028862be2a173976ca11' }, // TODO: can remove once viem is updated to include this
+      ...worldchain.contracts
+    }
+  }
 }
 
 export const RPC_URLS: Record<Network, string> = {
@@ -18,7 +33,8 @@ export const RPC_URLS: Record<Network, string> = {
   [base.id]: BASE_RPC_URL,
   [arbitrum.id]: ARBITRUM_RPC_URL,
   [scroll.id]: SCROLL_RPC_URL,
-  [gnosis.id]: GNOSIS_RPC_URL
+  [gnosis.id]: GNOSIS_RPC_URL,
+  [worldchain.id]: WORLD_RPC_URL
 }
 
 export const TOKEN_PRICES_API_URL = 'https://token-prices.api.cabana.fi'

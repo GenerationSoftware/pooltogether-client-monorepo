@@ -1,5 +1,5 @@
 import type { Address, Chain } from 'viem'
-import { arbitrum, base, gnosis, mainnet, optimism, scroll } from 'viem/chains'
+import { arbitrum, base, gnosis, mainnet, optimism, scroll, worldchain } from 'viem/chains'
 
 export const DEFAULT_HEADERS = {
   headers: {
@@ -24,7 +24,8 @@ export enum NETWORK {
   arbitrum = 42161,
   base = 8453,
   scroll = 534352,
-  gnosis = 100
+  gnosis = 100,
+  world = 480
 }
 
 export const VIEM_CHAINS: Record<NETWORK, Chain> = {
@@ -33,7 +34,14 @@ export const VIEM_CHAINS: Record<NETWORK, Chain> = {
   [NETWORK.arbitrum]: arbitrum,
   [NETWORK.base]: base,
   [NETWORK.scroll]: scroll,
-  [NETWORK.gnosis]: gnosis
+  [NETWORK.gnosis]: gnosis,
+  [NETWORK.world]: {
+    ...worldchain,
+    contracts: {
+      multicall3: { address: '0xca11bde05977b3631167028862be2a173976ca11' }, // TODO: can remove once viem is updated to include this
+      ...worldchain.contracts
+    }
+  }
 }
 
 export const V5_NETWORKS = [
@@ -42,7 +50,8 @@ export const V5_NETWORKS = [
   NETWORK.base,
   NETWORK.arbitrum,
   NETWORK.scroll,
-  NETWORK.gnosis
+  NETWORK.gnosis,
+  NETWORK.world
 ] as const satisfies NETWORK[]
 
 export const V5_PRIZE_POOLS: Record<
@@ -79,6 +88,10 @@ export const V5_PRIZE_POOLS: Record<
   [NETWORK.gnosis]: {
     address: '0x0c08c2999e1a14569554eddbcda9da5e1918120f',
     prizeToken: { address: '0xe91d153e0b41518a2ce8dd3d7944fa863463a97d', decimals: 18 }
+  },
+  [NETWORK.world]: {
+    address: '0x99ffb0a6c0cd543861c8de84dd40e059fd867dcf',
+    prizeToken: { address: '0x2cfc85d8e48f8eab294be644d9e25c3030863003', decimals: 18 }
   }
 }
 
@@ -88,7 +101,8 @@ export const RPC_URLS: Record<(typeof V5_NETWORKS)[number], string> = {
   [NETWORK.base]: BASE_RPC_URL,
   [NETWORK.arbitrum]: ARBITRUM_RPC_URL,
   [NETWORK.scroll]: SCROLL_RPC_URL,
-  [NETWORK.gnosis]: GNOSIS_RPC_URL
+  [NETWORK.gnosis]: GNOSIS_RPC_URL,
+  [NETWORK.world]: WORLD_RPC_URL
 }
 
 export const V5_SUBGRAPH_API_URLS: Record<(typeof V5_NETWORKS)[number], `https://${string}`> = {
@@ -103,7 +117,9 @@ export const V5_SUBGRAPH_API_URLS: Record<(typeof V5_NETWORKS)[number], `https:/
   [NETWORK.scroll]:
     'https://api.goldsky.com/api/public/project_cm3xb1e8iup5601yx9mt5caat/subgraphs/pt-v5-scroll/v0.0.1/gn',
   [NETWORK.gnosis]:
-    'https://api.goldsky.com/api/public/project_cm3xb1e8iup5601yx9mt5caat/subgraphs/pt-v5-gnosis/v0.0.1/gn'
+    'https://api.goldsky.com/api/public/project_cm3xb1e8iup5601yx9mt5caat/subgraphs/pt-v5-gnosis/v0.0.1/gn',
+  [NETWORK.world]:
+    'https://subgraph.satsuma-prod.com/17063947abe2/g9-software-inc--666267/pt-v5-world/api'
 }
 
 export const USD_PRICE_REF = {
