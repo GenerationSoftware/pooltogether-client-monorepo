@@ -36,7 +36,8 @@ import {
   optimism,
   optimismSepolia,
   scroll,
-  scrollSepolia
+  scrollSepolia,
+  worldchain
 } from 'viem/chains'
 
 /**
@@ -49,6 +50,7 @@ export const SUPPORTED_NETWORKS = [
   NETWORK.base,
   NETWORK.scroll,
   NETWORK.gnosis,
+  NETWORK.world,
   NETWORK.optimism_sepolia,
   NETWORK.arbitrum_sepolia,
   NETWORK.base_sepolia,
@@ -66,6 +68,13 @@ export const WAGMI_CHAINS = {
   [NETWORK.base]: base,
   [NETWORK.scroll]: scroll,
   [NETWORK.gnosis]: gnosis,
+  [NETWORK.world]: {
+    ...worldchain,
+    contracts: {
+      multicall3: { address: '0xca11bde05977b3631167028862be2a173976ca11' }, // TODO: can remove once viem is updated to include this
+      ...worldchain.contracts
+    }
+  },
   [NETWORK.optimism_sepolia]: optimismSepolia,
   [NETWORK.arbitrum_sepolia]: arbitrumSepolia,
   [NETWORK.base_sepolia]: baseSepolia,
@@ -105,6 +114,7 @@ export const RPC_URLS = {
   [NETWORK.base]: process.env.NEXT_PUBLIC_BASE_RPC_URL,
   [NETWORK.scroll]: process.env.NEXT_PUBLIC_SCROLL_RPC_URL,
   [NETWORK.gnosis]: process.env.NEXT_PUBLIC_GNOSIS_RPC_URL,
+  [NETWORK.world]: process.env.NEXT_PUBLIC_WORLD_RPC_URL,
   [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL,
   [NETWORK.base_sepolia]: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL,
@@ -215,6 +225,14 @@ export const NETWORK_CONFIG: Record<
       }
     ],
     contributor: '0x69fc8095b949c0ff703ead99bf7d6620843c37ef'
+  },
+  [NETWORK.world]: {
+    description: `The human-centric optimistic rollup on Ethereum.`,
+    prizePool: '0x99ffb0A6c0CD543861c8dE84dd40E059FD867dcF',
+    claimer: DEFAULT_CLAIMER_ADDRESSES[NETWORK.world],
+    lp: { targetAuctionPeriod: SECONDS_PER_HOUR * 6, targetAuctionPriceUsd: 10 },
+    yieldSources: [],
+    contributor: '0x8fa49ebd94A68272579AAa71b41fE3A3Bf110fE0'
   },
   [NETWORK.optimism_sepolia]: {
     description: 'Sepolia testnet for the Optimism network.',
