@@ -1,8 +1,16 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
-import { PartialPromotionInfo, TokenWithLogo, TokenWithPrice } from '@shared/types'
+import {
+  PartialPoolWidePromotionInfo,
+  PartialPromotionInfo,
+  TokenWithLogo,
+  TokenWithPrice
+} from '@shared/types'
 import {
   erc20ABI,
   getAssetsFromShares,
+  getPoolWidePromotionCreatedEvents,
+  getPoolWidePromotions,
+  getPoolWidePromotionVaultTokensPerEpoch,
   getPromotionCreatedEvents,
   getPromotions,
   getSecondsSinceEpoch,
@@ -394,16 +402,22 @@ const getBonusRewardsInfo = async (
 ): Promise<{ apr: number; tokens: TokenWithPrice[] }> => {
   const tokenAddresses = TWAB_REWARDS_SETTINGS[vault.chainId]?.tokenAddresses ?? []
 
-  if (share.decimals === undefined || !share.price || !tokenAddresses.length)
+  if (share.decimals === undefined || !share.price || !tokenAddresses.length) {
     return { apr: 0, tokens: [] }
+  }
 
   const promotions = await getVaultPromotions(vault)
+  const poolWidePromotions = await getPoolWideVaultPromotions(vault)
 
-  if (!Object.keys(promotions).length) return { apr: 0, tokens: [] }
+  if (!Object.keys(promotions).length && !Object.keys(poolWidePromotions).length) {
+    return { apr: 0, tokens: [] }
+  }
 
   const rewardTokens = await getTokenInfo(vault.publicClient, tokenAddresses)
 
-  if (!Object.keys(rewardTokens).length) return { apr: 0, tokens: [] }
+  if (!Object.keys(rewardTokens).length) {
+    return { apr: 0, tokens: [] }
+  }
 
   const totalDelegateSupply = await vault.getTotalDelegateSupply()
 
@@ -431,33 +445,26 @@ const getBonusRewardsInfo = async (
       )
 
       matchingPromotions.forEach((promotion) => {
-        const startsAt = Number(promotion.startTimestamp)
-        const numberOfEpochs = promotion.numberOfEpochs ?? 0
-        const endsAt = startsAt + numberOfEpochs * promotion.epochDuration
+        const rewardsApr = calculateRewardsApr(promotion, rewardToken, tvl, { currentTimestamp })
 
-        if (
-          !!startsAt &&
-          !!numberOfEpochs &&
-          !!endsAt &&
-          startsAt < currentTimestamp &&
-          endsAt > currentTimestamp
-        ) {
-          for (let i = 0; i < numberOfEpochs; i++) {
-            const epochStartsAt = startsAt + promotion.epochDuration * i
-            const epochEndsAt = epochStartsAt + promotion.epochDuration
+        if (!!rewardsApr) {
+          apr += rewardsApr
+          relevantTokenAddresses.add(rewardToken.address)
+        }
+      })
 
-            if (epochStartsAt < currentTimestamp && epochEndsAt > currentTimestamp) {
-              const tokenRewards = parseFloat(
-                formatUnits(promotion.tokensPerEpoch, rewardToken.decimals)
-              )
-              const tokenRewardsValue = tokenRewards * (rewardToken.price ?? 0)
-              const yearlyRewardsValue =
-                tokenRewardsValue * (SECONDS_PER_YEAR / promotion.epochDuration)
+      const matchingPoolWidePromotions = Object.values(poolWidePromotions).filter(
+        (promotion) => lower(promotion.token) === lower(rewardToken.address)
+      )
 
-              apr += (yearlyRewardsValue / tvl) * 100
-              relevantTokenAddresses.add(rewardToken.address)
-            }
-          }
+      matchingPoolWidePromotions.forEach((promotion) => {
+        const rewardsApr = calculatePoolWideRewardsApr(promotion, rewardToken, tvl, {
+          currentTimestamp
+        })
+
+        if (!!rewardsApr) {
+          apr += rewardsApr
+          relevantTokenAddresses.add(rewardToken.address)
         }
       })
     }
@@ -485,6 +492,7 @@ const getVaultPromotions = async (vault: Vault) => {
 
     promotionCreatedEvents?.forEach((promotionCreatedEvent) => {
       const id = promotionCreatedEvent.args.promotionId.toString()
+
       promotions[id] = {
         startTimestamp: promotionCreatedEvent.args.startTimestamp,
         vault: promotionCreatedEvent.args.vault,
@@ -498,4 +506,124 @@ const getVaultPromotions = async (vault: Vault) => {
   } catch {}
 
   return promotions
+}
+
+const getPoolWideVaultPromotions = async (vault: Vault) => {
+  const promotions: { [id: string]: PartialPoolWidePromotionInfo } = {}
+
+  try {
+    const poolWidePromotionCreatedEvents = await getPoolWidePromotionCreatedEvents(
+      vault.publicClient,
+      {
+        tokenAddresses: TWAB_REWARDS_SETTINGS[vault.chainId]?.tokenAddresses,
+        fromBlock: TWAB_REWARDS_SETTINGS[vault.chainId]?.fromBlock
+      }
+    )
+
+    const allPromotionInfo = await getPoolWidePromotions(
+      vault.publicClient,
+      poolWidePromotionCreatedEvents.map((e) => e.args.promotionId)
+    )
+
+    const allVaultTokensPerEpoch = await getPoolWidePromotionVaultTokensPerEpoch(
+      vault.publicClient,
+      vault.address,
+      allPromotionInfo
+    )
+
+    poolWidePromotionCreatedEvents?.forEach((promotionCreatedEvent) => {
+      const id = promotionCreatedEvent.args.promotionId.toString()
+      const vaultTokensPerEpoch = allVaultTokensPerEpoch[id] ?? []
+
+      if (vaultTokensPerEpoch.some((entry) => !!entry)) {
+        promotions[id] = {
+          startTimestamp: BigInt(promotionCreatedEvent.args.startTimestamp),
+          vault: vault.address,
+          epochDuration: promotionCreatedEvent.args.epochDuration,
+          createdAtBlockNumber: promotionCreatedEvent.blockNumber,
+          token: promotionCreatedEvent.args.token,
+          tokensPerEpoch: promotionCreatedEvent.args.tokensPerEpoch,
+          vaultTokensPerEpoch: allVaultTokensPerEpoch[id] ?? [],
+          ...allPromotionInfo[id]
+        }
+      }
+    })
+  } catch {}
+
+  return promotions
+}
+
+const calculateRewardsApr = (
+  promotion: PartialPromotionInfo,
+  rewardToken: TokenWithPrice,
+  tvl: number,
+  options?: { currentTimestamp?: number }
+) => {
+  const startsAt = Number(promotion.startTimestamp)
+  const numberOfEpochs = promotion.numberOfEpochs ?? 0
+  const endsAt = startsAt + numberOfEpochs * promotion.epochDuration
+
+  const currentTimestamp = options?.currentTimestamp ?? getSecondsSinceEpoch()
+
+  if (
+    !!startsAt &&
+    !!numberOfEpochs &&
+    !!endsAt &&
+    startsAt < currentTimestamp &&
+    endsAt > currentTimestamp
+  ) {
+    for (let i = 0; i < numberOfEpochs; i++) {
+      const epochStartsAt = startsAt + promotion.epochDuration * i
+      const epochEndsAt = epochStartsAt + promotion.epochDuration
+
+      if (epochStartsAt < currentTimestamp && epochEndsAt > currentTimestamp) {
+        const tokenRewards = parseFloat(formatUnits(promotion.tokensPerEpoch, rewardToken.decimals))
+
+        const tokenRewardsValue = tokenRewards * (rewardToken.price ?? 0)
+        const yearlyRewardsValue = tokenRewardsValue * (SECONDS_PER_YEAR / promotion.epochDuration)
+
+        return (yearlyRewardsValue / tvl) * 100
+      }
+    }
+  }
+
+  return 0
+}
+
+const calculatePoolWideRewardsApr = (
+  promotion: PartialPoolWidePromotionInfo,
+  rewardToken: TokenWithPrice,
+  tvl: number,
+  options?: { currentTimestamp?: number }
+) => {
+  const startsAt = Number(promotion.startTimestamp)
+  const numberOfEpochs = promotion.numberOfEpochs ?? 0
+  const endsAt = startsAt + numberOfEpochs * promotion.epochDuration
+
+  const currentTimestamp = options?.currentTimestamp ?? getSecondsSinceEpoch()
+
+  if (
+    !!startsAt &&
+    !!numberOfEpochs &&
+    !!endsAt &&
+    startsAt < currentTimestamp &&
+    endsAt > currentTimestamp
+  ) {
+    // TODO: consider a limited timespan to avoid lagging apr during long-lasting promotions
+    const tokenRewards = parseFloat(
+      formatUnits(
+        promotion.vaultTokensPerEpoch.reduce((a, b) => a + b),
+        rewardToken.decimals
+      )
+    )
+
+    const tokenRewardsValue = tokenRewards * (rewardToken.price ?? 0)
+    const yearlyRewardsValue =
+      tokenRewardsValue *
+      (SECONDS_PER_YEAR / (promotion.epochDuration * promotion.vaultTokensPerEpoch.length))
+
+    return (yearlyRewardsValue / tvl) * 100
+  }
+
+  return 0
 }
