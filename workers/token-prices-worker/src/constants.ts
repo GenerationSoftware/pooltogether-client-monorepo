@@ -1,6 +1,6 @@
 import { dolphinAddress } from 'dskit-eth'
 import { Address, Chain } from 'viem'
-import { arbitrum, base, gnosis, mainnet, optimism, polygon, scroll } from 'viem/chains'
+import { arbitrum, base, gnosis, mainnet, optimism, polygon, scroll, worldchain } from 'viem/chains'
 import { SUPPORTED_NETWORK } from './types'
 
 export const DEFAULT_HEADERS = {
@@ -21,7 +21,8 @@ export enum NETWORK {
   arbitrum = 42161,
   base = 8453,
   scroll = 534352,
-  gnosis = 100
+  gnosis = 100,
+  world = 480
 }
 
 export const SUPPORTED_NETWORKS = [
@@ -31,7 +32,8 @@ export const SUPPORTED_NETWORKS = [
   NETWORK.arbitrum,
   NETWORK.base,
   NETWORK.scroll,
-  NETWORK.gnosis
+  NETWORK.gnosis,
+  NETWORK.world
 ] as const
 
 export const NETWORK_KEYS = {
@@ -41,7 +43,8 @@ export const NETWORK_KEYS = {
   [NETWORK.arbitrum]: 'arbitrum',
   [NETWORK.base]: 'base',
   [NETWORK.scroll]: 'scroll',
-  [NETWORK.gnosis]: 'gnosis'
+  [NETWORK.gnosis]: 'gnosis',
+  [NETWORK.world]: 'world'
 } as const satisfies Record<NETWORK, string>
 
 export const VIEM_CHAINS: Record<NETWORK, Chain> = {
@@ -51,7 +54,14 @@ export const VIEM_CHAINS: Record<NETWORK, Chain> = {
   [NETWORK.arbitrum]: arbitrum,
   [NETWORK.base]: base,
   [NETWORK.scroll]: scroll,
-  [NETWORK.gnosis]: gnosis
+  [NETWORK.gnosis]: gnosis,
+  [NETWORK.world]: {
+    ...worldchain,
+    contracts: {
+      multicall3: { address: '0xca11bde05977b3631167028862be2a173976ca11' }, // TODO: can remove once viem is updated to include this
+      ...worldchain.contracts
+    }
+  }
 }
 
 export const RPC_URLS: Record<SUPPORTED_NETWORK, string> = {
@@ -61,7 +71,8 @@ export const RPC_URLS: Record<SUPPORTED_NETWORK, string> = {
   [NETWORK.arbitrum]: ARBITRUM_RPC_URL,
   [NETWORK.base]: BASE_RPC_URL,
   [NETWORK.scroll]: SCROLL_RPC_URL,
-  [NETWORK.gnosis]: GNOSIS_RPC_URL
+  [NETWORK.gnosis]: GNOSIS_RPC_URL,
+  [NETWORK.world]: WORLD_RPC_URL
 }
 
 export const TOKEN_PRICE_REDIRECTS: Record<
@@ -195,6 +206,33 @@ export const TOKEN_PRICE_REDIRECTS: Record<
     '0x2a22f9c3b484c3629090feed35f17ff8f88f76f0': {
       chainId: NETWORK.mainnet,
       address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+    }
+  },
+  [NETWORK.world]: {
+    /* ETH */
+    [dolphinAddress]: {
+      chainId: NETWORK.mainnet,
+      address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
+    },
+    /* WETH */
+    '0x4200000000000000000000000000000000000006': {
+      chainId: NETWORK.mainnet,
+      address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
+    },
+    /* USDC */
+    '0x79a02482a880bce3f13e09da970dc34db4cd24d1': {
+      chainId: NETWORK.mainnet,
+      address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+    },
+    /* WLD */
+    '0x2cfc85d8e48f8eab294be644d9e25c3030863003': {
+      chainId: NETWORK.mainnet,
+      address: '0x163f8c2467924be0ae7b5347228cabf260318753'
+    },
+    /* POOL */
+    '0x7077c71b4af70737a08287e279b717dcf64fdc57': {
+      chainId: NETWORK.mainnet,
+      address: '0x0cec1a9154ff802e7934fc916ed7ca50bde6844e'
     }
   }
 }

@@ -41,7 +41,8 @@ const tokenLogoUrls = {
   cbeth: 'https://assets.coingecko.com/coins/images/27008/standard/cbeth.png',
   xdai: 'https://gnosisscan.io/token/images/wrappedxdai_32.png',
   usds: 'https://assets.coingecko.com/coins/images/39926/standard/usds.webp',
-  superOETH: 'https://assets.coingecko.com/coins/images/39828/standard/Super_OETH.png'
+  superOETH: 'https://assets.coingecko.com/coins/images/39828/standard/Super_OETH.png',
+  wld: 'https://assets.coingecko.com/coins/images/31069/standard/worldcoin.jpeg'
 } as const
 
 /**
@@ -66,7 +67,8 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0xdac17f958d2ee523a2206206994597c13d831ec7': tokenLogoUrls.usdt,
     '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984': tokenLogoUrls.uni,
     '0x5a98fcbea516cf06857215779fd812ca3bef1b32': tokenLogoUrls.ldo,
-    '0xdc035d45d973e3ec169d2276ddab16f1e407384f': tokenLogoUrls.usds
+    '0xdc035d45d973e3ec169d2276ddab16f1e407384f': tokenLogoUrls.usds,
+    '0x163f8c2467924be0ae7b5347228cabf260318753': tokenLogoUrls.wld
   },
   [NETWORK.sepolia]: {
     [DOLPHIN_ADDRESS]: tokenLogoUrls.eth
@@ -102,7 +104,8 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0x9bcef72be871e61ed4fbbc7630889bee758eb81d': tokenLogoUrls.reth,
     '0x67cde7af920682a29fcfea1a179ef0f30f48df3e': tokenLogoUrls.reth,
     '0x8700daec35af8ff88c16bdf0418774cb3d7599b4': tokenLogoUrls.snx,
-    '0x0994206dfe8de6ec6920ff4d779b0d950605fb53': tokenLogoUrls.crv
+    '0x0994206dfe8de6ec6920ff4d779b0d950605fb53': tokenLogoUrls.crv,
+    '0xdc6ff44d5d932cbd77b52e5612ba0529dc6226f1': tokenLogoUrls.wld
   },
   [NETWORK.optimism_sepolia]: {
     [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,
@@ -195,6 +198,16 @@ export const TOKEN_LOGO_OVERRIDES: Record<NETWORK, { [address: Lowercase<string>
     '0xbe9a62939f82e12f4a48912078a4420f1a5fc2e0': tokenLogoUrls.gusd,
     '0x6b629bb304017d3d985d140599d8e6fc9942b9a7': tokenLogoUrls.weth,
     '0x3e9c64afc24c551cc8e11f52fedecdacf7362559': tokenLogoUrls.wbtc
+  },
+  [NETWORK.world]: {
+    [DOLPHIN_ADDRESS]: tokenLogoUrls.eth,
+    [POOL_TOKEN_ADDRESSES[NETWORK.world].toLowerCase()]: tokenLogoUrls.pool,
+    '0x4200000000000000000000000000000000000006': tokenLogoUrls.weth,
+    '0x79a02482a880bce3f13e09da970dc34db4cd24d1': tokenLogoUrls.usdc,
+    '0x2cfc85d8e48f8eab294be644d9e25c3030863003': tokenLogoUrls.wld
+  },
+  [NETWORK.world_sepolia]: {
+    [DOLPHIN_ADDRESS]: tokenLogoUrls.eth
   }
 }
 

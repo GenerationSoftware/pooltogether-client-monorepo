@@ -30,7 +30,8 @@ import {
   optimism,
   optimismSepolia,
   scroll,
-  scrollSepolia
+  scrollSepolia,
+  worldchain
 } from 'viem/chains'
 
 /**
@@ -43,6 +44,7 @@ export const SUPPORTED_NETWORKS = [
   NETWORK.base,
   NETWORK.scroll,
   NETWORK.gnosis,
+  NETWORK.world,
   NETWORK.optimism_sepolia,
   NETWORK.arbitrum_sepolia,
   NETWORK.base_sepolia,
@@ -60,6 +62,13 @@ export const WAGMI_CHAINS = {
   [NETWORK.base]: base,
   [NETWORK.scroll]: scroll,
   [NETWORK.gnosis]: gnosis,
+  [NETWORK.world]: {
+    ...worldchain,
+    contracts: {
+      multicall3: { address: '0xca11bde05977b3631167028862be2a173976ca11' }, // TODO: can remove once viem is updated to include this
+      ...worldchain.contracts
+    }
+  },
   [NETWORK.optimism_sepolia]: optimismSepolia,
   [NETWORK.arbitrum_sepolia]: arbitrumSepolia,
   [NETWORK.base_sepolia]: baseSepolia,
@@ -99,6 +108,7 @@ export const RPC_URLS = {
   [NETWORK.base]: process.env.NEXT_PUBLIC_BASE_RPC_URL,
   [NETWORK.scroll]: process.env.NEXT_PUBLIC_SCROLL_RPC_URL,
   [NETWORK.gnosis]: process.env.NEXT_PUBLIC_GNOSIS_RPC_URL,
+  [NETWORK.world]: process.env.NEXT_PUBLIC_WORLD_RPC_URL,
   [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL,
   [NETWORK.base_sepolia]: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL,
@@ -118,6 +128,7 @@ export const PROMOTION_FILTERS: {
   [NETWORK.base]: { fromBlock: 14_506_800n },
   [NETWORK.scroll]: { fromBlock: 9_181_500n },
   [NETWORK.gnosis]: { fromBlock: 35_938_500n },
+  [NETWORK.world]: { fromBlock: 11_542_400n },
   [NETWORK.optimism_sepolia]: { fromBlock: 22_876_300n },
   [NETWORK.arbitrum_sepolia]: { fromBlock: 48_888_900n },
   [NETWORK.base_sepolia]: { fromBlock: 10_578_500n },

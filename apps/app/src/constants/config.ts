@@ -38,7 +38,8 @@ import {
   optimism,
   optimismSepolia,
   scroll,
-  scrollSepolia
+  scrollSepolia,
+  worldchain
 } from 'viem/chains'
 
 /**
@@ -51,7 +52,8 @@ export const SUPPORTED_NETWORKS = {
     NETWORK.base,
     NETWORK.arbitrum,
     NETWORK.scroll,
-    NETWORK.gnosis
+    NETWORK.gnosis,
+    NETWORK.world
   ],
   testnets: [
     NETWORK.optimism_sepolia,
@@ -72,6 +74,13 @@ export const WAGMI_CHAINS = {
   [NETWORK.base]: base,
   [NETWORK.scroll]: scroll,
   [NETWORK.gnosis]: gnosis,
+  [NETWORK.world]: {
+    ...worldchain,
+    contracts: {
+      multicall3: { address: '0xca11bde05977b3631167028862be2a173976ca11' }, // TODO: can remove once viem is updated to include this
+      ...worldchain.contracts
+    }
+  },
   [NETWORK.optimism_sepolia]: optimismSepolia,
   [NETWORK.arbitrum_sepolia]: arbitrumSepolia,
   [NETWORK.base_sepolia]: baseSepolia,
@@ -111,6 +120,7 @@ export const RPC_URLS = {
   [NETWORK.base]: process.env.NEXT_PUBLIC_BASE_RPC_URL,
   [NETWORK.scroll]: process.env.NEXT_PUBLIC_SCROLL_RPC_URL,
   [NETWORK.gnosis]: process.env.NEXT_PUBLIC_GNOSIS_RPC_URL,
+  [NETWORK.world]: process.env.NEXT_PUBLIC_WORLD_RPC_URL,
   [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL,
   [NETWORK.base_sepolia]: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL,
@@ -136,6 +146,7 @@ export const POOL_STAKING_VAULTS: { [chainId: number]: Lowercase<Address> } = {
   [NETWORK.base]: '0x6b5a5c55e9dd4bb502ce25bbfbaa49b69cf7e4dd',
   [NETWORK.scroll]: '0x29499e2eb8ff1d076a35c275aeddd613afb1fa9b',
   [NETWORK.gnosis]: '0xb75af20ecadabed9049cc2f50e38bad2768b35cf',
+  [NETWORK.world]: '0x0045cc66ecf34da9d8d89ad5b36cb82061c0907c',
   [NETWORK.optimism_sepolia]: '0xc72df1091fbc6904e580b399a45efa1943532e98',
   [NETWORK.arbitrum_sepolia]: '0xb608c0f9d37b14bdfefc654b1fc8f38b34541a01',
   [NETWORK.base_sepolia]: '0x8ec8328d3281f8275d6b44ffada9df002b928aea',
@@ -153,6 +164,7 @@ export const QUERY_START_BLOCK = {
   [NETWORK.base]: 14_506_800n,
   [NETWORK.scroll]: 9_181_500n,
   [NETWORK.gnosis]: 35_938_500n,
+  [NETWORK.world]: 11_542_400n,
   [NETWORK.optimism_sepolia]: 22_876_300n,
   [NETWORK.arbitrum_sepolia]: 48_888_900n,
   [NETWORK.base_sepolia]: 10_578_500n,
@@ -225,6 +237,15 @@ export const TWAB_REWARDS_SETTINGS: {
       '0x216a7d520992eD198593A16e0b17c784c9cdc660' // POOL
     ],
     fromBlock: QUERY_START_BLOCK[NETWORK.gnosis]
+  },
+  [NETWORK.world]: {
+    tokenAddresses: [
+      '0x79A02482A880bCE3F13e09Da970dC34db4CD24d1', // USDC
+      '0x4200000000000000000000000000000000000006', // WETH
+      '0x2cFc85d8E48F8EAB294be644d9E25C3030863003', // WLD
+      '0x7077C71B4AF70737a08287E279B717Dcf64fdC57' // POOL
+    ],
+    fromBlock: QUERY_START_BLOCK[NETWORK.world]
   },
   [NETWORK.optimism_sepolia]: {
     tokenAddresses: [
@@ -355,6 +376,13 @@ export const ZAP_TOKEN_OPTIONS: { [chainId: number]: Address[] } = {
     '0x2a22f9c3b484c3629090FeED35F17Ff8F88f76F0', // USDC.e
     '0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1', // WETH
     '0x216a7d520992eD198593A16e0b17c784c9cdc660' // POOL
+  ],
+  [NETWORK.world]: [
+    DOLPHIN_ADDRESS, // ETH
+    '0x4200000000000000000000000000000000000006', // WETH
+    '0x79A02482A880bCE3F13e09Da970dC34db4CD24d1', // USDC
+    '0x2cFc85d8E48F8EAB294be644d9E25C3030863003', // WLD
+    '0x7077C71B4AF70737a08287E279B717Dcf64fdC57' // POOL
   ]
 }
 
@@ -367,7 +395,8 @@ export const NATIVE_ASSET_IGNORE_AMOUNT: { [chainId: number]: bigint } = {
   [NETWORK.base]: parseEther('0.002'),
   [NETWORK.arbitrum]: parseEther('0.002'),
   [NETWORK.scroll]: parseEther('0.002'),
-  [NETWORK.gnosis]: parseEther('5')
+  [NETWORK.gnosis]: parseEther('5'),
+  [NETWORK.world]: parseEther('0.002')
 }
 
 /**

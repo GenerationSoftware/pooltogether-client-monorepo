@@ -25,7 +25,9 @@ export enum NETWORK {
   scroll = 534352,
   scroll_sepolia = 534351,
   gnosis = 100,
-  gnosis_chiado = 10200
+  gnosis_chiado = 10200,
+  world = 480,
+  world_sepolia = 4801
 }
 export type NETWORK_NAME = keyof typeof NETWORK
 
@@ -40,6 +42,7 @@ export const POOL_TOKEN_ADDRESSES = {
   [NETWORK.base]: '0xd652C5425aea2Afd5fb142e120FeCf79e18fafc3',
   [NETWORK.scroll]: '0xF9Af83FC41e0cc2af2fba93644D542Df6eA0F2b7',
   [NETWORK.gnosis]: '0x216a7d520992eD198593A16e0b17c784c9cdc660',
+  [NETWORK.world]: '0x7077C71B4AF70737a08287E279B717Dcf64fdC57',
   [NETWORK.optimism_sepolia]: '0x858EE6f08f4C501FB6CB8D7c14B599CaeCbdf964',
   [NETWORK.arbitrum_sepolia]: '0x02A32F041C16158bcC1CaA90e22B230958eD5c4b',
   [NETWORK.base_sepolia]: '0x50Ac98a0CA373a3935069A8755D895663d2F4A16',
@@ -58,6 +61,7 @@ export const USDC_TOKEN_ADDRESSES: { [chainId: number]: Lowercase<Address> } = {
   [NETWORK.base]: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
   [NETWORK.scroll]: '0x06efdbff2a14a7c8e15944d1f4a48f9f95f663a4',
   [NETWORK.gnosis]: '0xddafbb505ad214d7b80b1f830fccc89b60fb7a83',
+  [NETWORK.world]: '0x79a02482a880bce3f13e09da970dc34db4cd24d1',
   [NETWORK.optimism_sepolia]: '0x50db04090c1fee4bed694e13637881e4dd2177f3',
   [NETWORK.arbitrum_sepolia]: '0x7b2e0bd66ef04d26db132391b5600af3887e9f9f',
   [NETWORK.base_sepolia]: '0x034109d90e70b972617e96b33295e724fff5887a',
@@ -153,6 +157,19 @@ export const PRIZE_POOLS: {
       prizeTokenAddress: '0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d',
       drawManagerAddress: '0x146efC8D651DC015225cc2E74707d87aa4d09067',
       twabControllerAddress: '0x84090aeA5370565B88108c4FfED378672A8AfDE6',
+      drawPeriodInSeconds: 86_400,
+      drawAuctionDurationInSeconds: 10_800,
+      tierShares: 100,
+      reserveShares: 30
+    }
+  },
+  {
+    chainId: NETWORK.world,
+    address: '0x99ffb0A6c0CD543861c8dE84dd40E059FD867dcF',
+    options: {
+      prizeTokenAddress: '0x2cFc85d8E48F8EAB294be644d9E25C3030863003',
+      drawManagerAddress: '0x62800f9bd164eA909224e19B7fDFA33a0f3f6373',
+      twabControllerAddress: '0xA13d89cF3e7f59bA1a2B5B5c260bDfc64DD1044C',
       drawPeriodInSeconds: 86_400,
       drawAuctionDurationInSeconds: 10_800,
       tierShares: 100,
@@ -301,7 +318,11 @@ export const STABLECOINS: Record<NETWORK, { [address: Lowercase<Address>]: strin
     '0xfc535b2407bb2c8b4f4a4faabbb9981ff031b7ca': 'usd', // USDC
     '0xbe9a62939f82e12f4a48912078a4420f1a5fc2e0': 'usd', // GUSD
     '0xb2d0d7ad1d4b2915390dc7053b9421f735a723e7': 'usd' // WXDAI
-  }
+  },
+  [NETWORK.world]: {
+    '0x79a02482a880bce3f13e09da970dc34db4cd24d1': 'usd' // USDC
+  },
+  [NETWORK.world_sepolia]: {}
 }
 
 /**
@@ -462,6 +483,20 @@ export const NATIVE_ASSETS: Record<NETWORK, Token> = {
     symbol: 'XDAI',
     name: 'XDAI',
     decimals: 18
+  },
+  [NETWORK.world]: {
+    chainId: NETWORK.world,
+    address: DOLPHIN_ADDRESS,
+    symbol: 'ETH',
+    name: 'Ether',
+    decimals: 18
+  },
+  [NETWORK.world_sepolia]: {
+    chainId: NETWORK.world,
+    address: DOLPHIN_ADDRESS,
+    symbol: 'ETH',
+    name: 'Ether',
+    decimals: 18
   }
 }
 
@@ -488,7 +523,9 @@ export const WRAPPED_NATIVE_ASSETS: Record<NETWORK, Lowercase<Address> | null> =
   [NETWORK.scroll]: '0x5300000000000000000000000000000000000004',
   [NETWORK.scroll_sepolia]: null,
   [NETWORK.gnosis]: '0xe91d153e0b41518a2ce8dd3d7944fa863463a97d',
-  [NETWORK.gnosis_chiado]: null
+  [NETWORK.gnosis_chiado]: null,
+  [NETWORK.world]: '0x4200000000000000000000000000000000000006',
+  [NETWORK.world_sepolia]: null
 }
 
 /**
@@ -501,6 +538,7 @@ export const TWAB_REWARDS_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.arbitrum]: '0xe21ac38a7e80104c4f6512ce4908a22bc09c59be',
   [NETWORK.scroll]: '0x0e71a9a2bd4546e7fc2af47a015747daeb48780d',
   [NETWORK.gnosis]: '0x1742157e6ef6e0cf7e49904f2c0d0fe38a276942',
+  [NETWORK.world]: '0x18e9e34cfccadcac465a8b6eaf337546b0980897',
   [NETWORK.optimism_sepolia]: '0x3FF7A54024E4db58F9682a637CeA7E72237B9e69',
   [NETWORK.arbitrum_sepolia]: '0x6f38ebc8587e2e6b2f79d9f8d045abf44a3bfd13',
   [NETWORK.base_sepolia]: '0x3af156d5eae4bb67afbe9e96e646371f7ba37d18',
@@ -531,6 +569,7 @@ export const VAULT_FACTORY_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.arbitrum]: '0x8020Fb37b21E0eF1707aDa7A914baf44F9045E52',
   [NETWORK.scroll]: '0x3fdd8bfdf2f589c10c58457cdae989c7943a30a5',
   [NETWORK.gnosis]: '0xc3aE3FE36A2645a93b2Fe350D81E80A14831e2A6',
+  [NETWORK.world]: '0x08f8ebc3afc32371d40ef59a951cb7b2da425159',
   [NETWORK.optimism_sepolia]: '0xe0D1033BAaB5FeE08ffCf3cB120Db953a60A05E4',
   [NETWORK.arbitrum_sepolia]: '0x8895efb4299bce2c7e4a5c434c49534bb357bdbc',
   [NETWORK.base_sepolia]: '0xf0346c7889061b29977e66034f284bfb5c761d29',
@@ -548,6 +587,7 @@ export const LIQUIDATION_PAIR_FACTORY_ADDRESSES: { [chainId: number]: Address } 
   [NETWORK.arbitrum]: '0x163402522fc0c0a7863479a069a8470fb22dfd3f',
   [NETWORK.scroll]: '0xf17d29f1c30da928bf98a73904681c12176de152',
   [NETWORK.gnosis]: '0xbddd23fdd9fe824d58814ca6d898af518676368a',
+  [NETWORK.world]: '0x646c7a994e775cbe638ec91fd2625eea77df777e',
   [NETWORK.optimism_sepolia]: '0x966A8C9BC98c385C98751eCE749F3FB570890dd4',
   [NETWORK.arbitrum_sepolia]: '0xe098c4340329f0b0b72eb25e193a70eadb2499f7',
   [NETWORK.base_sepolia]: '0x6e4b2dd17a0b0db73f34a5edabda9ec22c70bce8',
@@ -565,6 +605,7 @@ export const DEFAULT_CLAIMER_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.arbitrum]: '0xBEA38368f2A657f00f173764f18F00e841317c73',
   [NETWORK.scroll]: '0xb04d5c80a3f6da11532d3a67184bb7be11f00285',
   [NETWORK.gnosis]: '0x0cffb70cdd335cc5380cb58166699edaa2b0bbfa',
+  [NETWORK.world]: '0x9035072fe640d5ef80edc41aef47b1a793809070',
   [NETWORK.optimism_sepolia]: '0xA6095e14Da0DFDC6C0C6C03715Fe613dcb3b3560',
   [NETWORK.arbitrum_sepolia]: '0x24ad9015e48951f74f33dc071af34a6db14e95d9',
   [NETWORK.base_sepolia]: '0xdc5e799a3e57f7642210feb9ebb0d1a38cf4fe84',
@@ -582,6 +623,7 @@ export const LIQUIDATION_ROUTER_ADDRESSES: { [chainId: number]: Address } = {
   [NETWORK.arbitrum]: '0x7b4a60964994422bf19ae48a90fbff806767db73',
   [NETWORK.scroll]: '0x6f0b0ad2047f349594c8755ac080de9288d6ef7b',
   [NETWORK.gnosis]: '0x1664485e6b51ee1a4d4dd35dbec79544a5d006c9',
+  [NETWORK.world]: '0xfde1b3202ae55349bd4fecd38ca886fd1ed38e62',
   [NETWORK.optimism_sepolia]: '0x3F4dA404973D2d7DDbFCFD05FFdE9361eE8895B1',
   [NETWORK.arbitrum_sepolia]: '0xb420f83c5936762e6fe0ceef16440df83479d3b7',
   [NETWORK.base_sepolia]: '0x86692766da4cca2f9581729d74da36d180643f8f',
@@ -605,6 +647,8 @@ export const SUBGRAPH_API_URLS = {
     'https://api.goldsky.com/api/public/project_cm3xb1e8iup5601yx9mt5caat/subgraphs/pt-v5-scroll/v0.0.1/gn',
   [NETWORK.gnosis]:
     'https://api.goldsky.com/api/public/project_cm3xb1e8iup5601yx9mt5caat/subgraphs/pt-v5-gnosis/v0.0.1/gn',
+  [NETWORK.world]:
+    'https://subgraph.satsuma-prod.com/17063947abe2/g9-software-inc--666267/pt-v5-world/api',
   [NETWORK.optimism_sepolia]:
     'https://api.studio.thegraph.com/query/63100/pt-v5-op-sepolia/version/latest',
   [NETWORK.arbitrum_sepolia]:
@@ -632,7 +676,8 @@ export const TOKEN_PRICE_API_SUPPORTED_NETWORKS: NETWORK[] = [
   NETWORK.arbitrum,
   NETWORK.base,
   NETWORK.scroll,
-  NETWORK.gnosis
+  NETWORK.gnosis,
+  NETWORK.world
 ]
 
 /**
@@ -1004,7 +1049,9 @@ export const BLOCK_EXPLORERS: Record<NETWORK, { name: string; url: string }> = {
   [NETWORK.scroll]: { name: 'Scrollscan', url: 'https://scrollscan.com/' },
   [NETWORK.scroll_sepolia]: { name: 'Scrollscan', url: 'https://sepolia.scrollscan.com/' },
   [NETWORK.gnosis]: { name: 'Gnosisscan', url: 'https://gnosisscan.io/' },
-  [NETWORK.gnosis_chiado]: { name: 'Gnosisscan', url: 'https://gnosis-chiado.blockscout.com/' }
+  [NETWORK.gnosis_chiado]: { name: 'Gnosisscan', url: 'https://gnosis-chiado.blockscout.com/' },
+  [NETWORK.world]: { name: 'Worldscan', url: 'https://worldscan.org/' },
+  [NETWORK.world_sepolia]: { name: 'Worldscan', url: 'https://sepolia.worldscan.org/' }
 }
 
 /**
@@ -1052,7 +1099,9 @@ export const COINGECKO_NATIVE_TOKEN_IDS: Record<NETWORK, string> = {
   [NETWORK.scroll]: 'weth',
   [NETWORK.scroll_sepolia]: 'weth',
   [NETWORK.gnosis]: 'xdai',
-  [NETWORK.gnosis_chiado]: 'xdai'
+  [NETWORK.gnosis_chiado]: 'xdai',
+  [NETWORK.world]: 'world-chain',
+  [NETWORK.world_sepolia]: 'world-chain'
 }
 
 /**

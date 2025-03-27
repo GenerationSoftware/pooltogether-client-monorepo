@@ -46,6 +46,9 @@ export const getNiceNetworkNameByChainId = (chainId: number): string => {
     case NETWORK.gnosis_chiado: {
       return 'Gnosis Chiado'
     }
+    case NETWORK.world_sepolia: {
+      return 'World Sepolia'
+    }
     default: {
       const niceName = getNetworkNameByChainId(chainId)
       return niceName ? niceName.charAt(0).toUpperCase() + niceName.slice(1) : '--'
@@ -79,7 +82,9 @@ export const isTestnet = (chainId: number) => {
     [NETWORK.scroll]: false,
     [NETWORK.scroll_sepolia]: true,
     [NETWORK.gnosis]: false,
-    [NETWORK.gnosis_chiado]: true
+    [NETWORK.gnosis_chiado]: true,
+    [NETWORK.world]: false,
+    [NETWORK.world_sepolia]: true
   }
 
   return values[chainId as NETWORK] ?? false
@@ -111,7 +116,9 @@ export const isOpStack = (chainId: number) => {
     [NETWORK.scroll]: false,
     [NETWORK.scroll_sepolia]: false,
     [NETWORK.gnosis]: false,
-    [NETWORK.gnosis_chiado]: false
+    [NETWORK.gnosis_chiado]: false,
+    [NETWORK.world]: true,
+    [NETWORK.world_sepolia]: true
   }
 
   return values[chainId as NETWORK] ?? false
