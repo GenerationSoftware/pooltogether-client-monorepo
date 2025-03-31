@@ -1,5 +1,3 @@
-import FrameSDK from '@farcaster/frame-sdk'
-import frameConnector, { farcasterFrame } from '@farcaster/frame-wagmi-connector'
 import { connectorsForWallets, WalletList } from '@rainbow-me/rainbowkit'
 import { getInitialCustomRPCs } from '@shared/generic-react-hooks'
 import { formatNumberForDisplay, NETWORK, parseQueryParam } from '@shared/utilities'
@@ -208,17 +206,21 @@ export const getRoundedDownFormattedTokenAmount = (amount: bigint, decimals: num
  * Connects to a Farcaster wallet if available
  */
 export const connectFarcasterWallet = async () => {
-  const farcasterContext = await FrameSDK.context
+  const frameSdk = (await import('@farcaster/frame-sdk')).default
+
+  const farcasterContext = await frameSdk.context
 
   if (!!farcasterContext?.client?.clientFid) {
+    const frameConnector = (
+      await import('@farcaster/frame-wagmi-connector')
+    ).default() as CreateConnectorFn
+
     const networks = [...SUPPORTED_NETWORKS.mainnets, ...SUPPORTED_NETWORKS.testnets]
     const frameWagmiConfig = createCustomWagmiConfig(networks, {
-      connectors: [frameConnector() as CreateConnectorFn],
+      connectors: [frameConnector],
       useCustomRPCs: true
     })
 
-    connect(frameWagmiConfig, { connector: farcasterFrame() as CreateConnectorFn }).then(() =>
-      FrameSDK.actions.ready()
-    )
+    connect(frameWagmiConfig, { connector: frameConnector }).then(() => frameSdk.actions.ready())
   }
 }
