@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { AppProps } from 'next/app'
 import { ReactNode, useEffect, useState } from 'react'
 import { connectFarcasterWallet } from 'src/utils'
+import { useConnect } from 'wagmi'
 import { CustomAppProps } from '@pages/_app'
 import { AccountFrame } from './Frames/AccountFrame'
 import { DefaultFrame } from './Frames/DefaultFrame'
@@ -32,11 +33,13 @@ export const AppContainer = (props: AppProps & CustomAppProps) => {
     }
   }, [])
 
-  // useEffect(() => {
-  //   if (isReady) {
-  //     connectFarcasterWallet()
-  //   }
-  // }, [isReady])
+  const { connect } = useConnect()
+
+  useEffect(() => {
+    if (isReady && !!connect) {
+      connectFarcasterWallet(connect)
+    }
+  }, [isReady])
 
   const pageFrames: { [href: string]: ReactNode } = {
     account: <AccountFrame user={serverProps.params['user']} />,

@@ -3,15 +3,9 @@ import { getInitialCustomRPCs } from '@shared/generic-react-hooks'
 import { formatNumberForDisplay, NETWORK, parseQueryParam } from '@shared/utilities'
 import deepmerge from 'deepmerge'
 import { Chain, formatUnits, http, Transport } from 'viem'
-import { createConfig, CreateConnectorFn, fallback } from 'wagmi'
-import { connect } from 'wagmi/actions'
-import {
-  RPC_URLS,
-  SUPPORTED_NETWORKS,
-  WAGMI_CHAINS,
-  WALLET_STATS_API_URL,
-  WALLETS
-} from '@constants/config'
+import { Config, createConfig, CreateConnectorFn, fallback } from 'wagmi'
+import { ConnectMutate } from 'wagmi/query'
+import { RPC_URLS, WAGMI_CHAINS, WALLET_STATS_API_URL, WALLETS } from '@constants/config'
 
 /**
  * Returns a Wagmi config with the given networks and RPCs
@@ -205,7 +199,7 @@ export const getRoundedDownFormattedTokenAmount = (amount: bigint, decimals: num
 /**
  * Connects to a Farcaster wallet if available
  */
-export const connectFarcasterWallet = async () => {
+export const connectFarcasterWallet = async (connect: ConnectMutate<Config, unknown>) => {
   const frameSdk = (await import('@farcaster/frame-sdk')).default
 
   const farcasterContext = await frameSdk.context
@@ -215,12 +209,7 @@ export const connectFarcasterWallet = async () => {
       await import('@farcaster/frame-wagmi-connector')
     ).default() as CreateConnectorFn
 
-    const networks = [...SUPPORTED_NETWORKS.mainnets, ...SUPPORTED_NETWORKS.testnets]
-    const frameWagmiConfig = createCustomWagmiConfig(networks, {
-      connectors: [frameConnector],
-      useCustomRPCs: true
-    })
-
-    connect(frameWagmiConfig, { connector: frameConnector }).then(() => frameSdk.actions.ready())
+    connect({ connector: frameConnector })
+    frameSdk.actions.ready()
   }
 }
