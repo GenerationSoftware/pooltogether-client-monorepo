@@ -3,6 +3,7 @@ import { Flowbite, Toaster } from '@shared/ui'
 import { NextIntlClientProvider } from 'next-intl'
 import { AppProps } from 'next/app'
 import { ReactNode, useEffect, useState } from 'react'
+import { connectFarcasterWallet } from 'src/utils'
 import { CustomAppProps } from '@pages/_app'
 import { AccountFrame } from './Frames/AccountFrame'
 import { DefaultFrame } from './Frames/DefaultFrame'
@@ -29,6 +30,10 @@ export const AppContainer = (props: AppProps & CustomAppProps) => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js')
     }
+  }, [])
+
+  useEffect(() => {
+    connectFarcasterWallet()
   }, [])
 
   const pageFrames: { [href: string]: ReactNode } = {

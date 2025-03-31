@@ -1,10 +1,19 @@
+import FrameSDK from '@farcaster/frame-sdk'
+import frameConnector, { farcasterFrame } from '@farcaster/frame-wagmi-connector'
 import { connectorsForWallets, WalletList } from '@rainbow-me/rainbowkit'
 import { getInitialCustomRPCs } from '@shared/generic-react-hooks'
 import { formatNumberForDisplay, NETWORK, parseQueryParam } from '@shared/utilities'
 import deepmerge from 'deepmerge'
 import { Chain, formatUnits, http, Transport } from 'viem'
-import { createConfig, fallback } from 'wagmi'
-import { RPC_URLS, WAGMI_CHAINS, WALLET_STATS_API_URL, WALLETS } from '@constants/config'
+import { createConfig, CreateConnectorFn, fallback } from 'wagmi'
+import { connect } from 'wagmi/actions'
+import {
+  RPC_URLS,
+  SUPPORTED_NETWORKS,
+  WAGMI_CHAINS,
+  WALLET_STATS_API_URL,
+  WALLETS
+} from '@constants/config'
 
 /**
  * Returns a Wagmi config with the given networks and RPCs
@@ -14,7 +23,7 @@ import { RPC_URLS, WAGMI_CHAINS, WALLET_STATS_API_URL, WALLETS } from '@constant
  */
 export const createCustomWagmiConfig = (
   networks: NETWORK[],
-  options?: { useCustomRPCs?: boolean }
+  options?: { connectors?: CreateConnectorFn[]; useCustomRPCs?: boolean }
 ) => {
   const supportedNetworks = Object.values(WAGMI_CHAINS).filter(
     (chain) => networks.includes(chain.id) && !!RPC_URLS[chain.id]
@@ -22,7 +31,7 @@ export const createCustomWagmiConfig = (
 
   return createConfig({
     chains: supportedNetworks,
-    connectors: getWalletConnectors(),
+    connectors: options?.connectors ?? getWalletConnectors(),
     transports: getNetworkTransports(
       supportedNetworks.map((network) => network.id),
       { useCustomRPCs: options?.useCustomRPCs }
@@ -193,4 +202,23 @@ export const getRoundedDownFormattedTokenAmount = (amount: bigint, decimals: num
     Math.floor(parseFloat(shiftedAmount) * roundingMultiplier) / roundingMultiplier
 
   return formatNumberForDisplay(roundedAmount, { maximumFractionDigits })
+}
+
+/**
+ * Connects to a Farcaster wallet if available
+ */
+export const connectFarcasterWallet = async () => {
+  const farcasterContext = await FrameSDK.context
+
+  if (!!farcasterContext?.client?.clientFid) {
+    const networks = [...SUPPORTED_NETWORKS.mainnets, ...SUPPORTED_NETWORKS.testnets]
+    const frameWagmiConfig = createCustomWagmiConfig(networks, {
+      connectors: [frameConnector() as CreateConnectorFn],
+      useCustomRPCs: true
+    })
+
+    connect(frameWagmiConfig, { connector: farcasterFrame() as CreateConnectorFn }).then(() =>
+      FrameSDK.actions.ready()
+    )
+  }
 }

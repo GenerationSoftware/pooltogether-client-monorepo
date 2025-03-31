@@ -9,6 +9,7 @@ class MyDocument extends Document {
       'pooltogether prize savings win save protocol blockchain vault vaultlist 4626 ethereum'
     const ogImage = `${DOMAINS.app}/facebook-share-image-1200-630.png`
     const twitterImage = `${DOMAINS.app}/twitter-share-image-1200-675.png`
+    const farcasterImage = `${DOMAINS.app}/twitter-share-image-1200-675.png`
 
     return (
       <Html className='bg-pt-bg-purple-darker text-pt-purple-50 overflow-x-hidden dark'>
@@ -35,10 +36,28 @@ class MyDocument extends Document {
           <meta property='twitter:title' content={title} />
           <meta property='twitter:description' content={description} />
           <meta property='twitter:card' content='summary_large_image' />
-          <meta property='twitter:site' content={'@g9software'} />
+          <meta property='twitter:site' content='@g9software' />
           <meta property='twitter:image:src' content={twitterImage} />
           <meta property='twitter:url' content={DOMAINS.app} />
-          <meta property='twitter:creator' content={'@g9software'} />
+          <meta property='twitter:creator' content='@g9software' />
+
+          <meta
+            name='fc:frame'
+            content={`{
+            "version": "next",
+            "imageUrl": "${farcasterImage}",
+            "button": {
+              "title": "Launch Cabana",
+              "actions": {
+                "type": "launch_frame",
+                "name": "Cabana",
+                "url": "${DOMAINS.app}",
+                "splashImageUrl": "${DOMAINS.app}/favicon.png",
+                "splashBackgroundColor": "#21064e"
+              }
+            }
+          }`}
+          />
         </Head>
         <body>
           <Main />
