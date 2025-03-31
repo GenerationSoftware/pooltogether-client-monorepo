@@ -3,7 +3,8 @@ import { getInitialCustomRPCs } from '@shared/generic-react-hooks'
 import { formatNumberForDisplay, NETWORK, parseQueryParam } from '@shared/utilities'
 import deepmerge from 'deepmerge'
 import { Chain, formatUnits, http, Transport } from 'viem'
-import { createConfig, fallback } from 'wagmi'
+import { Config, createConfig, CreateConnectorFn, fallback } from 'wagmi'
+import { ConnectMutate } from 'wagmi/query'
 import { RPC_URLS, WAGMI_CHAINS, WALLET_STATS_API_URL, WALLETS } from '@constants/config'
 
 /**
@@ -14,7 +15,7 @@ import { RPC_URLS, WAGMI_CHAINS, WALLET_STATS_API_URL, WALLETS } from '@constant
  */
 export const createCustomWagmiConfig = (
   networks: NETWORK[],
-  options?: { useCustomRPCs?: boolean }
+  options?: { connectors?: CreateConnectorFn[]; useCustomRPCs?: boolean }
 ) => {
   const supportedNetworks = Object.values(WAGMI_CHAINS).filter(
     (chain) => networks.includes(chain.id) && !!RPC_URLS[chain.id]
@@ -22,7 +23,7 @@ export const createCustomWagmiConfig = (
 
   return createConfig({
     chains: supportedNetworks,
-    connectors: getWalletConnectors(),
+    connectors: options?.connectors ?? getWalletConnectors(),
     transports: getNetworkTransports(
       supportedNetworks.map((network) => network.id),
       { useCustomRPCs: options?.useCustomRPCs }
@@ -193,4 +194,22 @@ export const getRoundedDownFormattedTokenAmount = (amount: bigint, decimals: num
     Math.floor(parseFloat(shiftedAmount) * roundingMultiplier) / roundingMultiplier
 
   return formatNumberForDisplay(roundedAmount, { maximumFractionDigits })
+}
+
+/**
+ * Connects to a Farcaster wallet if available
+ */
+export const connectFarcasterWallet = async (connect: ConnectMutate<Config, unknown>) => {
+  const frameSdk = (await import('@farcaster/frame-sdk')).default
+
+  const farcasterContext = await frameSdk.context
+
+  if (!!farcasterContext?.client?.clientFid) {
+    const frameConnector = (
+      await import('@farcaster/frame-wagmi-connector')
+    ).default() as CreateConnectorFn
+
+    connect({ connector: frameConnector })
+    frameSdk.actions.ready()
+  }
 }

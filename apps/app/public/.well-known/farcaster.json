@@ -1,0 +1,17 @@
+{
+  "accountAssociation": {
+    "header": "eyJmaWQiOjIxNzEzLCJ0eXBlIjoiY3VzdG9keSIsImtleSI6IjB4NTliZGU0NUIxOWUzRURjMWEzZTFEQUE3N0JFNURFZjhiOGNGMjQ5MSJ9",
+    "payload": "eyJkb21haW4iOiJhcHAuY2FiYW5hLmZpIn0",
+    "signature": "MHg5OTI1MjhhMjBmZWY5MjM3YmUxOTlkNTAyYTFjNDFjMWZiOTczN2MyYjI4NDFiMzliOWZjNzAxZjAzMGQ2YmJmNTk1ZjVlZDVkZmE4NmZiMTY3MDJkYjM1MDUwZTBlMzFmZjk1OWRlZTM3MWY5ZmE3MTBhNWNiMGY3NDA3ODUyZTFi"
+  },
+  "frame": {
+    "version": "1",
+    "name": "Cabana",
+    "iconUrl": "https://app.cabana.fi/favicon.png",
+    "homeUrl": "https://app.cabana.fi/",
+    "imageUrl": "https://app.cabana.fi/twitter-share-image-1200-675.png",
+    "buttonTitle": "Launch Cabana",
+    "splashImageUrl": "https://app.cabana.fi/favicon.png",
+    "splashBackgroundColor": "#21064e"
+  }
+}
