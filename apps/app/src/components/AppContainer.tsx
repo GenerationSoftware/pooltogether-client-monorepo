@@ -32,11 +32,11 @@ export const AppContainer = (props: AppProps & CustomAppProps) => {
     }
   }, [])
 
-  useEffect(() => {
-    if (isReady) {
-      connectFarcasterWallet()
-    }
-  }, [isReady])
+  // useEffect(() => {
+  //   if (isReady) {
+  //     connectFarcasterWallet()
+  //   }
+  // }, [isReady])
 
   const pageFrames: { [href: string]: ReactNode } = {
     account: <AccountFrame user={serverProps.params['user']} />,
