@@ -7,6 +7,7 @@ import { connectFarcasterWallet } from 'src/utils'
 import { useConnect } from 'wagmi'
 import { CustomAppProps } from '@pages/_app'
 import { AccountFrame } from './Frames/AccountFrame'
+import { DefaultFrame } from './Frames/DefaultFrame'
 import { VaultFrame } from './Frames/VaultFrame'
 
 export const AppContainer = (props: AppProps & CustomAppProps) => {
@@ -50,11 +51,11 @@ export const AppContainer = (props: AppProps & CustomAppProps) => {
     )
   }
 
-  const pageFrame = pageFrames[pathname.split('/')[1]] ?? <></>
+  const pageFrame = pageFrames[pathname.split('/')[1]]
 
   return (
     <>
-      {pageFrame}
+      {pageFrame ?? <DefaultFrame />}
       <Flowbite>
         <Toaster expand={false} />
         <NextIntlClientProvider locale={locale} messages={pageProps.messages}>
