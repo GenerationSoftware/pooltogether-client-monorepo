@@ -25,6 +25,11 @@ export * from './blockchain/useTxReceipt'
 export * from './blockchain/useTxReceipts'
 
 /**
+ * EIP 5792 Hooks
+ */
+export * from './eip5792/useSend5792DepositTransaction'
+
+/**
  * Event Hooks
  */
 export * from './events/useDepositEvents'

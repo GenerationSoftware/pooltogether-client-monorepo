@@ -69,6 +69,10 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useTxReceipt`
 - `useTxReceipts`
 
+### EIP 5792 Hooks
+
+- `useSend5792DepositTransaction`
+
 ### Event Hooks
 
 - `useDepositEvents`
