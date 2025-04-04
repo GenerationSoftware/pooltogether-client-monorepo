@@ -71,7 +71,12 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 
 ### EIP 5792 Hooks
 
+- `useSend5792AggregateClaimRewardsTransaction`
+- `useSend5792Calls`
+- `useSend5792ClaimRewardsTransaction`
+- `useSend5792DelegateTransaction`
 - `useSend5792DepositTransaction`
+- `useSend5792RedeemTransaction`
 
 ### Event Hooks
 
