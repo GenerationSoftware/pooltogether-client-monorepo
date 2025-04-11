@@ -24,8 +24,8 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.2",
     "sonner": "^0.4.0",
-    "viem": "2.21.16",
-    "wagmi": "2.12.16"
+    "viem": "2.25.0",
+    "wagmi": "2.14.16"
   },
   "devDependencies": {
     "@types/node": "^17.0.45",
@@ -35,6 +35,6 @@
     "postcss": "^8.4.21",
     "tailwindcss": "^3.3.1",
     "tslib": "^2.6.0",
-    "typescript": "^5.0.4"
+    "typescript": "^5.4.0"
   }
 }

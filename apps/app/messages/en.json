@@ -315,6 +315,10 @@
     "permitApprovals": {
       "enabled": "Permit approvals are enabled",
       "disabled": "Permit approvals are disabled"
+    },
+    "eip5792": {
+      "enabled": "EIP 5792 transactions are enabled",
+      "disabled": "EIP 5792 transactions are disabled"
     }
   },
   "Abbreviations": {

@@ -1,5 +1,6 @@
 import { getAssetsFromShares, Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
+  useSend5792RedeemTransaction,
   useSendRedeemTransaction,
   useTokenBalance,
   useUserVaultDelegationBalance,
@@ -10,6 +11,7 @@ import {
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
+import { useMiscSettings } from '@shared/generic-react-hooks'
 import { TransactionButton } from '@shared/react-components'
 import { Button } from '@shared/ui'
 import { useAtomValue } from 'jotai'
@@ -17,6 +19,7 @@ import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
 import { Address, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
+import { useCapabilities } from 'wagmi/experimental'
 import { WithdrawModalView } from '.'
 import { isValidFormInput } from '../TxFormInput'
 import { withdrawFormShareAmountAtom } from './WithdrawForm'
@@ -90,13 +93,7 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
       ? getAssetsFromShares(withdrawAmount, vaultExchangeRate, decimals as number)
       : 0n
 
-  const {
-    isWaiting: isWaitingWithdrawal,
-    isConfirming: isConfirmingWithdrawal,
-    isSuccess: isSuccessfulWithdrawal,
-    txHash: withdrawTxHash,
-    sendRedeemTransaction
-  } = useSendRedeemTransaction(withdrawAmount, vault, {
+  const dataTx = useSendRedeemTransaction(withdrawAmount, vault, {
     minAssets: expectedAssetAmount,
     onSend: () => {
       setModalView('waiting')
@@ -114,6 +111,40 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
       setModalView('error')
     }
   })
+
+  const { data: walletCapabilities } = useCapabilities()
+  const { isActive: isEip5792Disabled } = useMiscSettings('eip5792Disabled')
+  const isUsingEip5792 =
+    Object.values(walletCapabilities?.[vault.chainId] ?? {}).some((c) => !!c.supported) &&
+    !isEip5792Disabled
+
+  const data5792Tx = useSend5792RedeemTransaction(withdrawAmount, vault, {
+    minAssets: expectedAssetAmount,
+    onSend: () => {
+      setModalView('waiting')
+    },
+    onSuccess: () => {
+      refetchUserTokenBalance()
+      refetchUserVaultTokenBalance()
+      refetchUserVaultDelegationBalance()
+      refetchVaultBalance()
+      refetchUserBalances?.()
+      onSuccessfulWithdrawal?.()
+      setModalView('success')
+    },
+    onError: () => {
+      setModalView('error')
+    },
+    enabled: isUsingEip5792
+  })
+
+  const sendTx = isUsingEip5792
+    ? data5792Tx.send5792RedeemTransaction
+    : dataTx.sendRedeemTransaction
+  const isWaitingWithdrawal = isUsingEip5792 ? data5792Tx.isWaiting : dataTx.isWaiting
+  const isConfirmingWithdrawal = isUsingEip5792 ? data5792Tx.isConfirming : dataTx.isConfirming
+  const isSuccessfulWithdrawal = isUsingEip5792 ? data5792Tx.isSuccess : dataTx.isSuccess
+  const withdrawTxHash = isUsingEip5792 ? data5792Tx.txHashes?.at(-1) : dataTx.txHash
 
   useEffect(() => {
     if (
@@ -136,7 +167,7 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
     isValidFormShareAmount &&
     !!withdrawAmount &&
     userVaultShareBalance.amount >= withdrawAmount &&
-    !!sendRedeemTransaction
+    !!sendTx
 
   if (withdrawAmount === 0n) {
     return (
@@ -156,7 +187,7 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
         chainId={vault.chainId}
         isTxLoading={isWaitingWithdrawal || isConfirmingWithdrawal}
         isTxSuccess={isSuccessfulWithdrawal}
-        write={sendRedeemTransaction}
+        write={sendTx}
         txHash={withdrawTxHash}
         txDescription={t_modals('withdrawTx', { symbol: tokenData?.symbol ?? '?' })}
         fullSized={true}

@@ -25,13 +25,13 @@
     ]
   },
   "dependencies": {
-    "viem": "2.21.16"
+    "viem": "2.25.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230518.0",
     "@types/node": "^17.0.45",
     "tslib": "^2.6.0",
     "tsup": "^6.6.3",
-    "typescript": "^5.0.4"
+    "typescript": "^5.4.0"
   }
 }

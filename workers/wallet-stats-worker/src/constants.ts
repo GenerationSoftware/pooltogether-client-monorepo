@@ -18,13 +18,7 @@ export const VIEM_CHAINS: Record<Network, Chain> = {
   [arbitrum.id]: arbitrum,
   [scroll.id]: scroll,
   [gnosis.id]: gnosis,
-  [worldchain.id]: {
-    ...worldchain,
-    contracts: {
-      multicall3: { address: '0xca11bde05977b3631167028862be2a173976ca11' }, // TODO: can remove once viem is updated to include this
-      ...worldchain.contracts
-    }
-  }
+  [worldchain.id]: worldchain
 }
 
 export const RPC_URLS: Record<Network, string> = {

@@ -8,7 +8,6 @@ import { getMessages } from 'src/utils'
 import { CheckPrizesBanner } from '@components/Account/CheckPrizesBanner'
 import { Layout } from '@components/Layout'
 import { PrizePoolDisplay } from '@components/Prizes/PrizePoolDisplay'
-import { PrizePoolWinners } from '@components/Prizes/PrizePoolWinners'
 import { PrizesHeader } from '@components/Prizes/PrizesHeader'
 
 interface PrizesPageProps {
@@ -37,8 +36,6 @@ export default function PrizesPage() {
         <Button>{t('depositToWin')}</Button>
       </Link>
       <PrizePoolDisplay onNetworkChange={setNetwork} className='mt-8' />
-      {/* TODO: enable once data can be more efficiently fetched */}
-      {/* <PrizePoolWinners className='mt-8' /> */}
     </Layout>
   )
 }

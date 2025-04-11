@@ -12,6 +12,7 @@ import { useGasAmountEstimate } from '..'
 
 /**
  * Prepares and submits a `delegate` transaction to a TwabController
+ * @param twabController the relvant twab controller to update delegation in
  * @param address the new address to delegate to
  * @param vault the vault to update delegation for
  * @param options optional callbacks

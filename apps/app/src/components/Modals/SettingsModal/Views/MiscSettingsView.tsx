@@ -9,6 +9,9 @@ export const MiscSettingsView = () => {
   const { isActive: isPermitDepositsDisabled, set: setIsPermitDepositsDisabled } =
     useMiscSettings('permitDepositsDisabled')
 
+  const { isActive: isEip5792Disabled, set: setIsEip5792Disabled } =
+    useMiscSettings('eip5792Disabled')
+
   return (
     <div className='flex flex-col items-center gap-6'>
       <span className='text-lg font-semibold text-pt-purple-50 md:text-xl'>
@@ -20,6 +23,12 @@ export const MiscSettingsView = () => {
         checkedContent={t('permitApprovals.enabled')}
         uncheckedContent={t('permitApprovals.disabled')}
         isChecked={!isPermitDepositsDisabled}
+      />
+      <SettingToggle
+        onChange={(checked) => setIsEip5792Disabled(!checked)}
+        checkedContent={t('eip5792.enabled')}
+        uncheckedContent={t('eip5792.disabled')}
+        isChecked={!isEip5792Disabled}
       />
     </div>
   )

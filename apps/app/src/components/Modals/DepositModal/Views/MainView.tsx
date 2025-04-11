@@ -13,6 +13,7 @@ import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { walletSupportsPermit } from 'src/utils'
 import { useAccount } from 'wagmi'
+import { useCapabilities } from 'wagmi/experimental'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
 import {
@@ -42,11 +43,21 @@ export const MainView = (props: MainViewProps) => {
 
   const tokenAddress = formTokenAddress ?? vaultTokenAddress
 
-  const { data: tokenPermitSupport } = useTokenPermitSupport(vault.chainId, tokenAddress!)
-
   const { data: vaultExchangeRate } = useVaultExchangeRate(vault)
 
+  const { data: walletCapabilities } = useCapabilities()
+  const { isActive: isEip5792Disabled } = useMiscSettings('eip5792Disabled')
+  const isUsingEip5792 =
+    Object.values(walletCapabilities?.[vault.chainId] ?? {}).some((c) => !!c.supported) &&
+    !isEip5792Disabled
+
+  const { data: tokenPermitSupport } = useTokenPermitSupport(vault.chainId, tokenAddress!)
   const { isActive: isPermitDepositsDisabled } = useMiscSettings('permitDepositsDisabled')
+  const isUsingPermits =
+    !isUsingEip5792 &&
+    tokenPermitSupport === 'eip2612' &&
+    walletSupportsPermit(connector?.id) &&
+    !isPermitDepositsDisabled
 
   const vaultName = vault.name ?? share?.name
   const networkName = getNiceNetworkNameByChainId(vault.chainId)
@@ -60,9 +71,7 @@ export const MainView = (props: MainViewProps) => {
     ? lower(formTokenAddress) === DOLPHIN_ADDRESS
       ? ['depositWithZap', 'withdraw']
       : ['approve', 'depositWithZap', 'withdraw']
-    : tokenPermitSupport === 'eip2612' &&
-      walletSupportsPermit(connector?.id) &&
-      !isPermitDepositsDisabled
+    : isUsingPermits
     ? ['depositWithPermit', 'withdraw']
     : ['approve', 'deposit', 'withdraw']
 

@@ -69,6 +69,18 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useTxReceipt`
 - `useTxReceipts`
 
+### EIP 5792 Hooks
+
+- `useSend5792AggregateClaimRewardsTransaction`
+- `useSend5792Calls`
+- `useSend5792ClaimRewardsTransaction`
+- `useSend5792DelegateTransaction`
+- `useSend5792DepositTransaction`
+- `useSend5792DepositZapTransaction`
+- `useSend5792PoolWideClaimRewardsTransaction`
+- `useSend5792RedeemTransaction`
+- `useSend5792WithdrawZapTransaction`
+
 ### Event Hooks
 
 - `useDepositEvents`
