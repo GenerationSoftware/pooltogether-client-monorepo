@@ -113,25 +113,17 @@ export const Layout = (props: LayoutProps) => {
       <DepositModal
         refetchUserBalances={refetchUserBalances}
         onSuccessfulApproval={() => fathom.trackEvent(FATHOM_EVENTS.approvedExact)}
-        onSuccessfulDeposit={(chainId, txReceipt) => {
+        onSuccessfulDeposit={(chainId, txHash) => {
           fathom.trackEvent(FATHOM_EVENTS.deposited)
-          !!walletId && trackDeposit(chainId, txReceipt.transactionHash, walletId)
+          !!walletId && trackDeposit(chainId, txHash, walletId)
         }}
-        onSuccessfulDepositWithPermit={(chainId, txReceipt) => {
+        onSuccessfulDepositWithPermit={(chainId, txHash) => {
           fathom.trackEvent(FATHOM_EVENTS.depositedWithPermit)
-          !!walletId && trackDeposit(chainId, txReceipt.transactionHash, walletId)
+          !!walletId && trackDeposit(chainId, txHash, walletId)
         }}
-        onSuccessfulDepositWithZap={(chainId, txReceipt) => {
+        onSuccessfulDepositWithZap={(chainId, txHash) => {
           fathom.trackEvent(FATHOM_EVENTS.depositedWithZap)
-          !!walletId && trackDeposit(chainId, txReceipt.transactionHash, walletId)
-        }}
-        onSuccessfulDepositWithEip5792={(chainId, txReceipt) => {
-          fathom.trackEvent(FATHOM_EVENTS.depositedWithEip5792)
-          !!walletId && trackDeposit(chainId, txReceipt.transactionHash, walletId)
-        }}
-        onSuccessfulDepositWithEip5792AndZap={(chainId, txReceipt) => {
-          fathom.trackEvent(FATHOM_EVENTS.depositedWithEip5792AndZap)
-          !!walletId && trackDeposit(chainId, txReceipt.transactionHash, walletId)
+          !!walletId && trackDeposit(chainId, txHash, walletId)
         }}
       />
 
@@ -140,12 +132,6 @@ export const Layout = (props: LayoutProps) => {
         onSuccessfulApproval={() => fathom.trackEvent(FATHOM_EVENTS.approvedExact)}
         onSuccessfulWithdrawal={() => fathom.trackEvent(FATHOM_EVENTS.redeemed)}
         onSuccessfulWithdrawalWithZap={() => fathom.trackEvent(FATHOM_EVENTS.redeemedWithZap)}
-        onSuccessfulWithdrawalWithEip5792={() =>
-          fathom.trackEvent(FATHOM_EVENTS.redeemedWithEip5792)
-        }
-        onSuccessfulWithdrawalWithEip5792AndZap={() =>
-          fathom.trackEvent(FATHOM_EVENTS.redeemedWithEip5792AndZap)
-        }
       />
 
       <DelegateModal onSuccessfulDelegation={() => fathom.trackEvent(FATHOM_EVENTS.delegated)} />

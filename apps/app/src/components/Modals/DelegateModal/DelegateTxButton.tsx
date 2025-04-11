@@ -1,16 +1,19 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
+  useSend5792DelegateTransaction,
   useSendDelegateTransaction,
   useUserVaultDelegate,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
+import { useMiscSettings } from '@shared/generic-react-hooks'
 import { TransactionButton } from '@shared/react-components'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
-import { Address, isAddress, TransactionReceipt } from 'viem'
+import { Address, isAddress } from 'viem'
 import { useAccount } from 'wagmi'
+import { useCapabilities } from 'wagmi/experimental'
 import { DelegateModalView } from '.'
 import { delegateFormNewDelegateAddressAtom } from './DelegateForm'
 
@@ -19,7 +22,7 @@ interface DelegateTxButtonProps {
   vault: Vault
   setModalView: (view: DelegateModalView) => void
   setDelegateTxHash: (txHash: string) => void
-  onSuccessfulDelegation?: (chainId: number, txReceipt: TransactionReceipt) => void
+  onSuccessfulDelegation?: () => void
 }
 
 export const DelegateTxButton = (props: DelegateTxButtonProps) => {
@@ -44,25 +47,48 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
     { refetchOnWindowFocus: true }
   )
 
-  const {
-    isWaiting: isWaitingDelegation,
-    isConfirming: isConfirmingDelegation,
-    isSuccess: isSuccessfulDelegation,
-    txHash: delegateTxHash,
-    sendDelegateTransaction
-  } = useSendDelegateTransaction(twabController, newDelegateAddress, vault, {
+  const dataTx = useSendDelegateTransaction(twabController, newDelegateAddress, vault, {
     onSend: () => {
       setModalView('waiting')
     },
-    onSuccess: (txReceipt) => {
+    onSuccess: () => {
       refetchUserVaultDelegate()
-      onSuccessfulDelegation?.(vault.chainId, txReceipt)
+      onSuccessfulDelegation?.()
       setModalView('main')
     },
     onError: () => {
       setModalView('error')
     }
   })
+
+  const { data: walletCapabilities } = useCapabilities()
+  const { isActive: isEip5792Disabled } = useMiscSettings('eip5792Disabled')
+  const isUsingEip5792 =
+    Object.values(walletCapabilities?.[vault.chainId] ?? {}).some((c) => !!c.supported) &&
+    !isEip5792Disabled
+
+  const data5792Tx = useSend5792DelegateTransaction(twabController, newDelegateAddress, vault, {
+    onSend: () => {
+      setModalView('waiting')
+    },
+    onSuccess: () => {
+      refetchUserVaultDelegate()
+      onSuccessfulDelegation?.()
+      setModalView('main')
+    },
+    onError: () => {
+      setModalView('error')
+    },
+    enabled: isUsingEip5792
+  })
+
+  const sendTx = isUsingEip5792
+    ? data5792Tx.send5792DelegateTransaction
+    : dataTx.sendDelegateTransaction
+  const isWaitingDelegation = isUsingEip5792 ? data5792Tx.isWaiting : dataTx.isWaiting
+  const isConfirmingDelegation = isUsingEip5792 ? data5792Tx.isConfirming : dataTx.isConfirming
+  const isSuccessfulDelegation = isUsingEip5792 ? data5792Tx.isSuccess : dataTx.isSuccess
+  const delegateTxHash = isUsingEip5792 ? data5792Tx.txHashes?.at(-1) : dataTx.txHash
 
   useEffect(() => {
     if (
@@ -86,14 +112,14 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
     !isWaitingDelegation &&
     !isConfirmingDelegation &&
     hasDelegateAddressChanged &&
-    !!sendDelegateTransaction
+    !!sendTx
 
   return (
     <TransactionButton
       chainId={vault.chainId}
       isTxLoading={isWaitingDelegation || isConfirmingDelegation}
       isTxSuccess={isSuccessfulDelegation}
-      write={sendDelegateTransaction}
+      write={sendTx}
       txHash={delegateTxHash}
       txDescription={t_txModals('delegateTx', { symbol: tokenData?.symbol ?? '?' })}
       fullSized={true}

@@ -15,8 +15,9 @@ import { useAtom, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo, useState } from 'react'
 import { walletSupportsPermit } from 'src/utils'
-import { TransactionReceipt } from 'viem'
+import { Hash } from 'viem'
 import { useAccount } from 'wagmi'
+import { useCapabilities } from 'wagmi/experimental'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import {
   depositFormShareAmountAtom,
@@ -39,9 +40,9 @@ export interface DepositModalProps {
   onClose?: () => void
   refetchUserBalances?: () => void
   onSuccessfulApproval?: () => void
-  onSuccessfulDeposit?: (chainId: number, txReceipt: TransactionReceipt) => void
-  onSuccessfulDepositWithPermit?: (chainId: number, txReceipt: TransactionReceipt) => void
-  onSuccessfulDepositWithZap?: (chainId: number, txReceipt: TransactionReceipt) => void
+  onSuccessfulDeposit?: (chainId: number, txHash: Hash) => void
+  onSuccessfulDepositWithPermit?: (chainId: number, txHash: Hash) => void
+  onSuccessfulDepositWithZap?: (chainId: number, txHash: Hash) => void
 }
 
 export const DepositModal = (props: DepositModalProps) => {
@@ -74,14 +75,25 @@ export const DepositModal = (props: DepositModalProps) => {
 
   const { data: vaultToken } = useVaultTokenData(vault!)
 
+  const { data: walletCapabilities } = useCapabilities()
+  const { isActive: isEip5792Disabled } = useMiscSettings('eip5792Disabled')
+  const isUsingEip5792 =
+    !!vault &&
+    Object.values(walletCapabilities?.[vault.chainId] ?? {}).some((c) => !!c.supported) &&
+    !isEip5792Disabled
+
   const { data: tokenPermitSupport } = useTokenPermitSupport(
     vault?.chainId!,
     formTokenAddress ?? vaultToken?.address!
   )
+  const { isActive: isPermitDepositsDisabled } = useMiscSettings('permitDepositsDisabled')
+  const isUsingPermits =
+    !isUsingEip5792 &&
+    tokenPermitSupport === 'eip2612' &&
+    walletSupportsPermit(connector?.id) &&
+    !isPermitDepositsDisabled
 
   const { data: vaultExchangeRate } = useVaultExchangeRate(vault!)
-
-  const { isActive: isPermitDepositsDisabled } = useMiscSettings('permitDepositsDisabled')
 
   const prizePools = useSupportedPrizePools()
 
@@ -141,9 +153,7 @@ export const DepositModal = (props: DepositModalProps) => {
             onSuccessfulApproval={onSuccessfulApproval}
             onSuccessfulDepositWithZap={onSuccessfulDepositWithZap}
           />
-        ) : tokenPermitSupport === 'eip2612' &&
-          walletSupportsPermit(connector?.id) &&
-          !isPermitDepositsDisabled ? (
+        ) : isUsingPermits ? (
           <DepositWithPermitTxButton
             vault={vault}
             modalView={view}

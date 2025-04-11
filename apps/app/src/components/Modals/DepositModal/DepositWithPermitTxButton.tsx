@@ -16,7 +16,7 @@ import { Button } from '@shared/ui'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
-import { parseUnits, TransactionReceipt } from 'viem'
+import { Hash, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { DepositModalView } from '.'
 import { isValidFormInput } from '../TxFormInput'
@@ -28,8 +28,8 @@ interface DepositWithPermitTxButtonProps {
   setModalView: (view: DepositModalView) => void
   setDepositTxHash: (txHash: string) => void
   refetchUserBalances?: () => void
-  onSuccessfulDeposit?: (chainId: number, txReceipt: TransactionReceipt) => void
-  onSuccessfulDepositWithPermit?: (chainId: number, txReceipt: TransactionReceipt) => void
+  onSuccessfulDeposit?: (chainId: number, txHash: Hash) => void
+  onSuccessfulDepositWithPermit?: (chainId: number, txHash: Hash) => void
 }
 
 export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps) => {
@@ -119,7 +119,7 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
       refetchVaultBalance()
       refetchTokenAllowance()
       refetchUserBalances?.()
-      onSuccessfulDepositWithPermit?.(vault.chainId, txReceipt)
+      onSuccessfulDepositWithPermit?.(vault.chainId, txReceipt.transactionHash)
       setModalView('success')
     },
     onError: () => {
@@ -144,7 +144,7 @@ export const DepositWithPermitTxButton = (props: DepositWithPermitTxButtonProps)
       refetchVaultBalance()
       refetchTokenAllowance()
       refetchUserBalances?.()
-      onSuccessfulDeposit?.(vault.chainId, txReceipt)
+      onSuccessfulDeposit?.(vault.chainId, txReceipt.transactionHash)
       setModalView('success')
     },
     onError: () => {

@@ -1,5 +1,6 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
+  useSend5792WithdrawZapTransaction,
   useSendGenericApproveTransaction,
   useSendWithdrawZapTransaction,
   useToken,
@@ -13,14 +14,16 @@ import {
   useVaultTokenAddress
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
+import { useMiscSettings } from '@shared/generic-react-hooks'
 import { ApprovalTooltip, TransactionButton } from '@shared/react-components'
 import { Button } from '@shared/ui'
 import { ZAP_SETTINGS } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
-import { isAddress, parseUnits, TransactionReceipt } from 'viem'
+import { isAddress, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
+import { useCapabilities } from 'wagmi/experimental'
 import { WithdrawModalView } from '.'
 import { isValidFormInput } from '../TxFormInput'
 import { withdrawFormShareAmountAtom, withdrawFormTokenAddressAtom } from './WithdrawForm'
@@ -32,7 +35,7 @@ interface WithdrawZapTxButtonProps {
   setWithdrawTxHash: (txHash: string) => void
   refetchUserBalances?: () => void
   onSuccessfulApproval?: () => void
-  onSuccessfulWithdrawalWithZap?: (chainId: number, txReceipt: TransactionReceipt) => void
+  onSuccessfulWithdrawalWithZap?: () => void
 }
 
 export const WithdrawZapTxButton = (props: WithdrawZapTxButtonProps) => {
@@ -121,34 +124,22 @@ export const WithdrawZapTxButton = (props: WithdrawZapTxButtonProps) => {
     }
   )
 
-  const {
-    isWaiting: isWaitingWithdrawZap,
-    isConfirming: isConfirmingWithdrawZap,
-    isSuccess: isSuccessfulWithdrawZap,
-    txHash: withdrawZapTxHash,
-    sendWithdrawZapTransaction,
-    amountOut,
-    isFetchedZapArgs,
-    isFetchingZapArgs
-  } = useSendWithdrawZapTransaction(
-    {
-      address: outputToken?.address!,
-      decimals: outputToken?.decimals!
-    },
+  const dataTx = useSendWithdrawZapTransaction(
+    { address: outputToken?.address!, decimals: outputToken?.decimals! },
     vault,
     withdrawAmount,
     {
       onSend: () => {
         setModalView('waiting')
       },
-      onSuccess: (txReceipt) => {
+      onSuccess: () => {
         refetchUserOutputTokenBalance()
         refetchUserVaultTokenBalance()
         refetchUserVaultDelegationBalance()
         refetchVaultBalance()
         refetchTokenAllowance()
         refetchUserBalances?.()
-        onSuccessfulWithdrawalWithZap?.(vault.chainId, txReceipt)
+        onSuccessfulWithdrawalWithZap?.()
         setModalView('success')
       },
       onError: () => {
@@ -156,6 +147,48 @@ export const WithdrawZapTxButton = (props: WithdrawZapTxButtonProps) => {
       }
     }
   )
+
+  const { data: walletCapabilities } = useCapabilities()
+  const { isActive: isEip5792Disabled } = useMiscSettings('eip5792Disabled')
+  const isUsingEip5792 =
+    Object.values(walletCapabilities?.[vault.chainId] ?? {}).some((c) => !!c.supported) &&
+    !isEip5792Disabled
+
+  const data5792Tx = useSend5792WithdrawZapTransaction(
+    { address: outputToken?.address!, decimals: outputToken?.decimals! },
+    vault,
+    withdrawAmount,
+    {
+      onSend: () => {
+        setModalView('waiting')
+      },
+      onSuccess: () => {
+        refetchUserOutputTokenBalance()
+        refetchUserVaultTokenBalance()
+        refetchUserVaultDelegationBalance()
+        refetchVaultBalance()
+        refetchTokenAllowance()
+        refetchUserBalances?.()
+        onSuccessfulWithdrawalWithZap?.()
+        setModalView('success')
+      },
+      onError: () => {
+        setModalView('error')
+      },
+      enabled: isUsingEip5792
+    }
+  )
+
+  const sendTx = isUsingEip5792
+    ? data5792Tx.send5792WithdrawZapTransaction
+    : dataTx.sendWithdrawZapTransaction
+  const isWaitingWithdrawZap = isUsingEip5792 ? data5792Tx.isWaiting : dataTx.isWaiting
+  const isConfirmingWithdrawZap = isUsingEip5792 ? data5792Tx.isConfirming : dataTx.isConfirming
+  const isSuccessfulWithdrawZap = isUsingEip5792 ? data5792Tx.isSuccess : dataTx.isSuccess
+  const withdrawZapTxHash = isUsingEip5792 ? data5792Tx.txHashes?.at(-1) : dataTx.txHash
+  const amountOut = isUsingEip5792 ? data5792Tx.amountOut : dataTx.amountOut
+  const isFetchedZapArgs = isUsingEip5792 ? data5792Tx.isFetchedZapArgs : dataTx.isFetchedZapArgs
+  const isFetchingZapArgs = isUsingEip5792 ? data5792Tx.isFetchingZapArgs : dataTx.isFetchingZapArgs
 
   useEffect(() => {
     if (
@@ -192,7 +225,7 @@ export const WithdrawZapTxButton = (props: WithdrawZapTxButtonProps) => {
   const withdrawEnabled =
     isDataFetched &&
     userVaultShareBalance.amount >= withdrawAmount &&
-    allowance >= withdrawAmount &&
+    (isUsingEip5792 || allowance >= withdrawAmount) &&
     isValidFormShareAmount
 
   // No withdraw amount set
@@ -205,7 +238,7 @@ export const WithdrawZapTxButton = (props: WithdrawZapTxButtonProps) => {
   }
 
   // Needs approval
-  if (isDataFetched && allowance < withdrawAmount) {
+  if (isDataFetched && !isUsingEip5792 && allowance < withdrawAmount) {
     return (
       <TransactionButton
         chainId={vault.chainId}
@@ -265,7 +298,7 @@ export const WithdrawZapTxButton = (props: WithdrawZapTxButtonProps) => {
       chainId={vault.chainId}
       isTxLoading={isWaitingWithdrawZap || isConfirmingWithdrawZap}
       isTxSuccess={isSuccessfulWithdrawZap}
-      write={sendWithdrawZapTransaction}
+      write={sendTx}
       txHash={withdrawZapTxHash}
       txDescription={t_modals('withdrawTx', { symbol: share?.symbol ?? '?' })}
       fullSized={true}
