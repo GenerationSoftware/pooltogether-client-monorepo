@@ -405,6 +405,8 @@ export const FATHOM_EVENTS = {
   checkedPrizes: 'CheckedPrizes',
   delegated: 'Delegated',
   deposited: 'Deposited',
+  depositedWithEip5792: 'DepositedWithEip5792',
+  depositedWithEip5792AndZap: 'DepositedWithEip5792AndZap',
   depositedWithPermit: 'DepositedWithPermit',
   depositedWithZap: 'DepositedWithZap',
   importedVaultList: 'ImportedVaultList',
@@ -413,6 +415,8 @@ export const FATHOM_EVENTS = {
   openedDrawModal: 'OpenedDrawModal',
   openedWithdrawModal: 'OpenedWithdrawModal',
   redeemed: 'Redeemed',
+  redeemedWithEip5792: 'redeemedWithEip5792',
+  redeemedWithEip5792AndZap: 'redeemedWithEip5792AndZap',
   redeemedWithZap: 'RedeemedWithZap'
 } as const
 

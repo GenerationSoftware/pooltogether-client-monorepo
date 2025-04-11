@@ -21,7 +21,6 @@ import { Footer } from './Footer'
 import { CheckPrizesModal } from './Modals/CheckPrizesModal'
 import { DelegateModal } from './Modals/DelegateModal'
 import { DepositModal } from './Modals/DepositModal'
-import { DrawModal } from './Modals/DrawModal'
 import { SettingsModal } from './Modals/SettingsModal'
 import { WithdrawModal } from './Modals/WithdrawModal'
 import { Navbar } from './Navbar'
@@ -126,6 +125,14 @@ export const Layout = (props: LayoutProps) => {
           fathom.trackEvent(FATHOM_EVENTS.depositedWithZap)
           !!walletId && trackDeposit(chainId, txReceipt.transactionHash, walletId)
         }}
+        onSuccessfulDepositWithEip5792={(chainId, txReceipt) => {
+          fathom.trackEvent(FATHOM_EVENTS.depositedWithEip5792)
+          !!walletId && trackDeposit(chainId, txReceipt.transactionHash, walletId)
+        }}
+        onSuccessfulDepositWithEip5792AndZap={(chainId, txReceipt) => {
+          fathom.trackEvent(FATHOM_EVENTS.depositedWithEip5792AndZap)
+          !!walletId && trackDeposit(chainId, txReceipt.transactionHash, walletId)
+        }}
       />
 
       <WithdrawModal
@@ -133,12 +140,15 @@ export const Layout = (props: LayoutProps) => {
         onSuccessfulApproval={() => fathom.trackEvent(FATHOM_EVENTS.approvedExact)}
         onSuccessfulWithdrawal={() => fathom.trackEvent(FATHOM_EVENTS.redeemed)}
         onSuccessfulWithdrawalWithZap={() => fathom.trackEvent(FATHOM_EVENTS.redeemedWithZap)}
+        onSuccessfulWithdrawalWithEip5792={() =>
+          fathom.trackEvent(FATHOM_EVENTS.redeemedWithEip5792)
+        }
+        onSuccessfulWithdrawalWithEip5792AndZap={() =>
+          fathom.trackEvent(FATHOM_EVENTS.redeemedWithEip5792AndZap)
+        }
       />
 
       <DelegateModal onSuccessfulDelegation={() => fathom.trackEvent(FATHOM_EVENTS.delegated)} />
-
-      {/* TODO: enable once data can be more efficiently fetched */}
-      {/* <DrawModal /> */}
 
       <CheckPrizesModal
         onWin={() => fathom.trackEvent(FATHOM_EVENTS.checkedPrizes, { _value: 1 })}

@@ -76,7 +76,10 @@ yarn add @generationsoftware/hyperstructure-react-hooks
 - `useSend5792ClaimRewardsTransaction`
 - `useSend5792DelegateTransaction`
 - `useSend5792DepositTransaction`
+- `useSend5792DepositZapTransaction`
+- `useSend5792PoolWideClaimRewardsTransaction`
 - `useSend5792RedeemTransaction`
+- `useSend5792WithdrawZapTransaction`
 
 ### Event Hooks
 

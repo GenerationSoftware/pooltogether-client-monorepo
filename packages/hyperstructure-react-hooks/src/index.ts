@@ -32,7 +32,10 @@ export * from './eip5792/useSend5792Calls'
 export * from './eip5792/useSend5792ClaimRewardsTransaction'
 export * from './eip5792/useSend5792DelegateTransaction'
 export * from './eip5792/useSend5792DepositTransaction'
+export * from './eip5792/useSend5792DepositZapTransaction'
+export * from './eip5792/useSend5792PoolWideClaimRewardsTransaction'
 export * from './eip5792/useSend5792RedeemTransaction'
+export * from './eip5792/useSend5792WithdrawZapTransaction'
 
 /**
  * Event Hooks
