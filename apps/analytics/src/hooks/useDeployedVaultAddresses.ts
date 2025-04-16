@@ -40,6 +40,10 @@ export const useDeployedVaultAddresses = (prizePool: PrizePool) => {
             ]
           }))
         )
+      } else if (prizePool.chainId === NETWORK.world) {
+        vaultAddresses.push('0x8ad5959c9245b64173d4c0c3cd3ff66dac3cab0e')
+
+        vaultAddresses.push(...(await getVaultAddressesFromFactories(prizePool.publicClient)))
       } else {
         vaultAddresses.push(...(await getVaultAddressesFromFactories(prizePool.publicClient)))
       }
