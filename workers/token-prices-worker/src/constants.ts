@@ -152,6 +152,11 @@ export const TOKEN_PRICE_REDIRECTS: Record<
     [dolphinAddress]: {
       chainId: NETWORK.base,
       address: '0x4200000000000000000000000000000000000006'
+    },
+    /* EURC */
+    '0x60a3e35cc302bfa44cb288bc5a4f316fdb1adb42': {
+      chainId: NETWORK.mainnet,
+      address: '0x1abaea1f7c830bd89acc67ec4af516284b1bc33c'
     }
   },
   [NETWORK.scroll]: {
