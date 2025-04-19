@@ -230,6 +230,12 @@ export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
         address: prizePool.address,
         abi: prizePoolABI,
         functionName: 'getContributedBetween',
+        args: [vault.address, Math.max(1, lastDrawId - 89), lastDrawId]
+      },
+      {
+        address: prizePool.address,
+        abi: prizePoolABI,
+        functionName: 'getContributedBetween',
         args: [vault.address, 1, lastDrawId]
       },
       {
@@ -254,6 +260,12 @@ export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
         address: prizePool.address,
         abi: prizePoolABI,
         functionName: 'getVaultUserBalanceAndTotalSupplyTwab',
+        args: [vault.address, zeroAddress, Math.max(1, lastDrawId - 89), lastDrawId]
+      },
+      {
+        address: prizePool.address,
+        abi: prizePoolABI,
+        functionName: 'getVaultUserBalanceAndTotalSupplyTwab',
         args: [vault.address, zeroAddress, 1, lastDrawId]
       }
     ],
@@ -263,11 +275,13 @@ export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
   const dailyContributions = secondMulticallResults[0].result ?? 0n
   const weeklyContributions = secondMulticallResults[1].result ?? 0n
   const monthlyContributions = secondMulticallResults[2].result ?? 0n
-  const allTimeContributions = secondMulticallResults[3].result ?? 0n
-  const dailySupplyTwab = secondMulticallResults[4].result?.[1] ?? 0n
-  const weeklySupplyTwab = secondMulticallResults[5].result?.[1] ?? 0n
-  const monthlySupplyTwab = secondMulticallResults[6].result?.[1] ?? 0n
-  const allTimeSupplyTwab = secondMulticallResults[7].result?.[1] ?? 0n
+  const triMonthlyContributions = secondMulticallResults[3].result ?? 0n
+  const allTimeContributions = secondMulticallResults[4].result ?? 0n
+  const dailySupplyTwab = secondMulticallResults[5].result?.[1] ?? 0n
+  const weeklySupplyTwab = secondMulticallResults[6].result?.[1] ?? 0n
+  const monthlySupplyTwab = secondMulticallResults[7].result?.[1] ?? 0n
+  const triMonthlySupplyTwab = secondMulticallResults[8].result?.[1] ?? 0n
+  const allTimeSupplyTwab = secondMulticallResults[9].result?.[1] ?? 0n
 
   const tokenAddresses: Address[] = [...TWAB_REWARDS_SETTINGS[vault.chainId]?.tokenAddresses]
   !!assetAddress && tokenAddresses.push(assetAddress)
@@ -340,13 +354,16 @@ export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
     recipient: yieldFeeRecipient
   }
 
-  const contributions: { day: number; week: number; month: number; all: number } | undefined =
+  const contributions:
+    | { 'day': number; 'week': number; 'month': number; '90d': number; 'all': number }
+    | undefined =
     prizeAsset.decimals !== undefined
       ? {
-          day: parseFloat(formatUnits(dailyContributions, prizeAsset.decimals)),
-          week: parseFloat(formatUnits(weeklyContributions, prizeAsset.decimals)),
-          month: parseFloat(formatUnits(monthlyContributions, prizeAsset.decimals)),
-          all: parseFloat(formatUnits(allTimeContributions, prizeAsset.decimals))
+          'day': parseFloat(formatUnits(dailyContributions, prizeAsset.decimals)),
+          'week': parseFloat(formatUnits(weeklyContributions, prizeAsset.decimals)),
+          'month': parseFloat(formatUnits(monthlyContributions, prizeAsset.decimals)),
+          '90d': parseFloat(formatUnits(triMonthlyContributions, prizeAsset.decimals)),
+          'all': parseFloat(formatUnits(allTimeContributions, prizeAsset.decimals))
         }
       : undefined
 
@@ -372,11 +389,18 @@ export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
     }
   }
 
-  const prizeYield: { day: number; week: number; month: number; all: number } = {
-    day: getPrizeYield(1, dailyContributions, dailySupplyTwab),
-    week: getPrizeYield(Math.min(7, lastDrawId), weeklyContributions, weeklySupplyTwab),
-    month: getPrizeYield(Math.min(30, lastDrawId), monthlyContributions, monthlySupplyTwab),
-    all: getPrizeYield(lastDrawId, allTimeContributions, allTimeSupplyTwab)
+  const prizeYield: {
+    'day': number
+    'week': number
+    'month': number
+    '90d': number
+    'all': number
+  } = {
+    'day': getPrizeYield(1, dailyContributions, dailySupplyTwab),
+    'week': getPrizeYield(Math.min(7, lastDrawId), weeklyContributions, weeklySupplyTwab),
+    'month': getPrizeYield(Math.min(30, lastDrawId), monthlyContributions, monthlySupplyTwab),
+    '90d': getPrizeYield(Math.min(90, lastDrawId), triMonthlyContributions, triMonthlySupplyTwab),
+    'all': getPrizeYield(lastDrawId, allTimeContributions, allTimeSupplyTwab)
   }
 
   return {
