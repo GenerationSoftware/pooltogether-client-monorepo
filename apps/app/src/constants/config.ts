@@ -420,3 +420,8 @@ export const FATHOM_EVENTS = {
  * Wallet stats API
  */
 export const WALLET_STATS_API_URL = 'https://wallet-stats.api.cabana.fi'
+
+/**
+ * EIP 5792 Paymaster URLs
+ */
+export const PAYMASTER_URL: { [chainId: number]: string } = {}

@@ -20,6 +20,7 @@ import { useEffect } from 'react'
 import { Address, Hash, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { useCapabilities } from 'wagmi/experimental'
+import { PAYMASTER_URL } from '@constants/config'
 import { DepositModalView } from '.'
 import { isValidFormInput } from '../TxFormInput'
 import { depositFormTokenAmountAtom } from './DepositForm'
@@ -135,6 +136,9 @@ export const DepositTxButton = (props: DepositTxButtonProps) => {
     !isEip5792Disabled
 
   const data5792DepositTx = useSend5792DepositTransaction(depositAmount, vault, {
+    paymasterService: !!PAYMASTER_URL[vault.chainId]
+      ? { url: PAYMASTER_URL[vault.chainId], optional: true }
+      : undefined,
     onSend: () => {
       setModalView('waiting')
     },

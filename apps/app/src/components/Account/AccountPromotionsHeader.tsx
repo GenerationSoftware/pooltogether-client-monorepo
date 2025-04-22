@@ -17,6 +17,7 @@ import { useMemo } from 'react'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useCapabilities } from 'wagmi/experimental'
+import { PAYMASTER_URL } from '@constants/config'
 import { useNetworks } from '@hooks/useNetworks'
 import { useUserClaimablePoolWidePromotions } from '@hooks/useUserClaimablePoolWidePromotions'
 import { useUserClaimablePromotions } from '@hooks/useUserClaimablePromotions'
@@ -191,6 +192,9 @@ const ClaimAllRewardsButton = (props: ClaimAllRewardsButtonProps) => {
     userAddress,
     epochsToClaim,
     {
+      paymasterService: !!PAYMASTER_URL[chainId]
+        ? { url: PAYMASTER_URL[chainId], optional: true }
+        : undefined,
       onSuccess: () => {
         refetchAllClaimed()
         refetchAllClaimable()
@@ -204,6 +208,9 @@ const ClaimAllRewardsButton = (props: ClaimAllRewardsButtonProps) => {
     userAddress,
     poolWidePromotionsToClaim,
     {
+      paymasterService: !!PAYMASTER_URL[chainId]
+        ? { url: PAYMASTER_URL[chainId], optional: true }
+        : undefined,
       onSuccess: () => {
         refetchAllPoolWideClaimed()
         refetchAllPoolWideClaimable()
@@ -218,6 +225,9 @@ const ClaimAllRewardsButton = (props: ClaimAllRewardsButtonProps) => {
     epochsToClaim,
     poolWidePromotionsToClaim,
     {
+      paymasterService: !!PAYMASTER_URL[chainId]
+        ? { url: PAYMASTER_URL[chainId], optional: true }
+        : undefined,
       onSuccess: () => {
         refetchAllClaimed()
         refetchAllClaimable()
