@@ -8,8 +8,8 @@ import {
 import { NetworkIcon } from '@shared/react-components'
 import { VaultList } from '@shared/types'
 import { TokenWithAmount } from '@shared/types'
-import { Selection, SelectionItem } from '@shared/ui'
-import { getVaultId, NETWORK, STABLECOINS } from '@shared/utilities'
+import { Selection, SelectionItem, Tooltip } from '@shared/ui'
+import { getNiceNetworkNameByChainId, getVaultId, NETWORK, STABLECOINS } from '@shared/utilities'
 import classNames from 'classnames'
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
@@ -140,7 +140,11 @@ export const VaultFilters = (props: VaultFiltersProps) => {
       ...networks.map((network) => {
         return {
           id: network.toString(),
-          content: <NetworkIcon chainId={network} className='h-5 w-5' />,
+          content: (
+            <Tooltip content={getNiceNetworkNameByChainId(network)}>
+              <NetworkIcon chainId={network} className='h-5 w-5' />
+            </Tooltip>
+          ),
           onClick: () => {
             setFilterId(network.toString())
             handleQueryParamChanges({ network })
