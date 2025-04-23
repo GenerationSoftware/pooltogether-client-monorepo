@@ -31,7 +31,7 @@ export const TVLStats = (props: TVLStatsProps) => {
             title: 'Median Deposit Transaction',
             value:
               deposits !== undefined
-                ? formatNumberForDisplay(deposits.medianValue, { maximumFractionDigits: 4 })
+                ? formatNumberForDisplay(deposits.medianValue, { maximumFractionDigits: 5 })
                 : undefined,
             unit: 'ETH'
           },
@@ -40,7 +40,7 @@ export const TVLStats = (props: TVLStatsProps) => {
             title: 'Average Deposit Transaction',
             value:
               deposits !== undefined
-                ? formatNumberForDisplay(deposits.avgValue, { maximumFractionDigits: 4 })
+                ? formatNumberForDisplay(deposits.avgValue, { maximumFractionDigits: 5 })
                 : undefined,
             unit: 'ETH'
           }

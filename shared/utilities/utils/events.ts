@@ -1,11 +1,22 @@
 import { DSKit } from 'dskit-eth'
-import { Address, PublicClient } from 'viem'
+import { Address, GetLogsReturnType, PublicClient } from 'viem'
 import {
   LIQUIDATION_ROUTER_ADDRESSES,
   POOL_WIDE_TWAB_REWARDS_ADDRESSES,
   TWAB_REWARDS_ADDRESSES
 } from '../constants'
 import { getLiquidationPairAddresses } from './liquidations'
+
+const depositEventABI = {
+  inputs: [
+    { indexed: true, internalType: 'address', name: 'sender', type: 'address' },
+    { indexed: true, internalType: 'address', name: 'owner', type: 'address' },
+    { indexed: false, internalType: 'uint256', name: 'assets', type: 'uint256' },
+    { indexed: false, internalType: 'uint256', name: 'shares', type: 'uint256' }
+  ],
+  name: 'Deposit',
+  type: 'event'
+} as const
 
 /**
  * Returns `Deposit` events
@@ -18,23 +29,16 @@ export const getDepositEvents = async (
   publicClient: PublicClient,
   vaultAddresses: Address[],
   options?: { sender?: Address[]; owner?: Address[]; fromBlock?: bigint; toBlock?: bigint }
-) => {
-  return await publicClient.getLogs({
+): Promise<GetLogsReturnType<typeof depositEventABI, [typeof depositEventABI], true>> => {
+  // @ts-ignore
+  const dskit = new DSKit({ viemPublicClient: publicClient })
+
+  return await dskit.event.query({
     address: vaultAddresses,
-    event: {
-      inputs: [
-        { indexed: true, internalType: 'address', name: 'sender', type: 'address' },
-        { indexed: true, internalType: 'address', name: 'owner', type: 'address' },
-        { indexed: false, internalType: 'uint256', name: 'assets', type: 'uint256' },
-        { indexed: false, internalType: 'uint256', name: 'shares', type: 'uint256' }
-      ],
-      name: 'Deposit',
-      type: 'event'
-    },
+    event: depositEventABI,
     args: { sender: options?.sender ?? null, owner: options?.owner ?? null },
-    fromBlock: options?.fromBlock,
-    toBlock: options?.toBlock ?? 'latest',
-    strict: true
+    fromBlock: options?.fromBlock ?? 1n,
+    toBlock: options?.toBlock ?? 'latest'
   })
 }
 
@@ -245,7 +249,7 @@ export const getLiquidationEvents = async (
     args: { ...lpEvent.args, liquidationPair: lpEvent.address }
   }))
 
-  const routerEvents = await publicClient.getLogs({
+  const routerEvents = await dskit.event.query({
     address: liqRouterContractAddress,
     event: {
       inputs: [
@@ -265,9 +269,8 @@ export const getLiquidationEvents = async (
       name: 'SwappedExactAmountOut',
       type: 'event'
     },
-    fromBlock: options?.fromBlock,
-    toBlock: options?.toBlock ?? 'latest',
-    strict: true
+    fromBlock: options?.fromBlock ?? 1n,
+    toBlock: options?.toBlock ?? 'latest'
   })
 
   return [...routerEvents, ...formattedLpEvents].sort((a, b) =>

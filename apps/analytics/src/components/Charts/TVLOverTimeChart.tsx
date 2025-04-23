@@ -21,8 +21,6 @@ export const TVLOverTimeChart = (props: TVLOverTimeChartProps) => {
   const vaultAddresses = Object.keys(vaultTVLs ?? {}).map(getAddressFromVaultId)
   const { data: tokens } = useTokens(prizePool.chainId, vaultAddresses)
 
-  const { data: prizeToken } = usePrizeTokenData(prizePool)
-
   const chartData = useMemo(() => {
     const data: AreaChartProps['data'] = []
 
@@ -49,7 +47,7 @@ export const TVLOverTimeChart = (props: TVLOverTimeChartProps) => {
     return data
   }, [vaultTVLs])
 
-  const isReady = !!chartData?.length && !!tokens && !!prizeToken
+  const isReady = !!chartData?.length && !!tokens
 
   const lastDrawData = chartData[chartData.length - 1]
   const vaultIds = Object.keys(vaultTVLs ?? {})
@@ -79,7 +77,7 @@ export const TVLOverTimeChart = (props: TVLOverTimeChartProps) => {
 
               const formattedValue = `${formatNumberForDisplay(value, {
                 maximumFractionDigits: 3
-              })} ${prizeToken.symbol}`
+              })} ETH`
               const formattedName =
                 name === 'total'
                   ? 'Total TVL'
