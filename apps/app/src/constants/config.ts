@@ -123,6 +123,19 @@ export const RPC_URLS = {
 } as const
 
 /**
+ * EIP 5792 Paymaster URLs
+ */
+export const PAYMASTER_URLS: { [chainId: number]: string | undefined } = {
+  [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_PAYMASTER_URL,
+  [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_PAYMASTER_URL,
+  [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_PAYMASTER_URL,
+  [NETWORK.base]: process.env.NEXT_PUBLIC_BASE_PAYMASTER_URL,
+  [NETWORK.scroll]: process.env.NEXT_PUBLIC_SCROLL_PAYMASTER_URL,
+  [NETWORK.gnosis]: process.env.NEXT_PUBLIC_GNOSIS_PAYMASTER_URL,
+  [NETWORK.world]: process.env.NEXT_PUBLIC_WORLD_PAYMASTER_URL
+}
+
+/**
  * Default vault lists
  */
 export const DEFAULT_VAULT_LISTS = {
@@ -420,8 +433,3 @@ export const FATHOM_EVENTS = {
  * Wallet stats API
  */
 export const WALLET_STATS_API_URL = 'https://wallet-stats.api.cabana.fi'
-
-/**
- * EIP 5792 Paymaster URLs
- */
-export const PAYMASTER_URL: { [chainId: number]: string } = {}

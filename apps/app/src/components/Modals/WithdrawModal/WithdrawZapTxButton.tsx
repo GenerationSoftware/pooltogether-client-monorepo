@@ -24,7 +24,7 @@ import { useEffect } from 'react'
 import { isAddress, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 import { useCapabilities } from 'wagmi/experimental'
-import { PAYMASTER_URL } from '@constants/config'
+import { PAYMASTER_URLS } from '@constants/config'
 import { WithdrawModalView } from '.'
 import { isValidFormInput } from '../TxFormInput'
 import { withdrawFormShareAmountAtom, withdrawFormTokenAddressAtom } from './WithdrawForm'
@@ -160,8 +160,8 @@ export const WithdrawZapTxButton = (props: WithdrawZapTxButtonProps) => {
     vault,
     withdrawAmount,
     {
-      paymasterService: !!PAYMASTER_URL[vault.chainId]
-        ? { url: PAYMASTER_URL[vault.chainId], optional: true }
+      paymasterService: !!PAYMASTER_URLS[vault.chainId]
+        ? { url: PAYMASTER_URLS[vault.chainId], optional: true }
         : undefined,
       onSend: () => {
         setModalView('waiting')
