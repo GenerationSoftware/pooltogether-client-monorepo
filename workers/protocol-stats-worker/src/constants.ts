@@ -119,7 +119,7 @@ export const V5_SUBGRAPH_API_URLS: Record<(typeof V5_NETWORKS)[number], `https:/
   [NETWORK.gnosis]:
     'https://api.goldsky.com/api/public/project_cm3xb1e8iup5601yx9mt5caat/subgraphs/pt-v5-gnosis/v0.0.1/gn',
   [NETWORK.world]:
-    'https://subgraph.satsuma-prod.com/17063947abe2/g9-software-inc--666267/pt-v5-world/api'
+    'https://api.goldsky.com/api/public/project_cm3xb1e8iup5601yx9mt5caat/subgraphs/pt-v5-world/v0.0.1/gn'
 }
 
 export const USD_PRICE_REF = {

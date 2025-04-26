@@ -648,7 +648,7 @@ export const SUBGRAPH_API_URLS = {
   [NETWORK.gnosis]:
     'https://api.goldsky.com/api/public/project_cm3xb1e8iup5601yx9mt5caat/subgraphs/pt-v5-gnosis/v0.0.1/gn',
   [NETWORK.world]:
-    'https://subgraph.satsuma-prod.com/17063947abe2/g9-software-inc--666267/pt-v5-world/api',
+    'https://api.goldsky.com/api/public/project_cm3xb1e8iup5601yx9mt5caat/subgraphs/pt-v5-world/v0.0.1/gn',
   [NETWORK.optimism_sepolia]:
     'https://api.studio.thegraph.com/query/63100/pt-v5-op-sepolia/version/latest',
   [NETWORK.arbitrum_sepolia]:
