@@ -1,11 +1,39 @@
+import {
+  useAllGrandPrizes,
+  useAllPrizeTokenPrices
+} from '@generationsoftware/hyperstructure-react-hooks'
 import classNames from 'classnames'
 import Link from 'next/link'
+import { useMemo } from 'react'
+import { formatUnits } from 'viem'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import { PrizePoolCard } from './PrizePoolCard'
 
 export const PrizePoolCards = () => {
   const prizePools = useSupportedPrizePools()
-  const numPrizePools = Object.keys(prizePools).length
+  const prizePoolsArray = Object.values(prizePools)
+  const numPrizePools = prizePoolsArray.length
+
+  const { data: allGrandPrizes } = useAllGrandPrizes(prizePoolsArray, {
+    useCurrentPrizeSizes: true
+  })
+
+  const { data: allPrizeTokenPrices } = useAllPrizeTokenPrices(prizePoolsArray)
+
+  const sortedPrizePools = useMemo(() => {
+    return [...prizePoolsArray].sort((a, b) => {
+      const aGP =
+        parseFloat(
+          formatUnits(allGrandPrizes?.[a.id]?.amount ?? 0n, allGrandPrizes?.[a.id]?.decimals ?? 18)
+        ) * (allPrizeTokenPrices[a.id]?.price ?? 0)
+      const bGP =
+        parseFloat(
+          formatUnits(allGrandPrizes?.[b.id]?.amount ?? 0n, allGrandPrizes?.[b.id]?.decimals ?? 18)
+        ) * (allPrizeTokenPrices[b.id]?.price ?? 0)
+
+      return bGP - aGP
+    })
+  }, [prizePoolsArray, allGrandPrizes, allPrizeTokenPrices])
 
   return (
     <div
@@ -18,7 +46,7 @@ export const PrizePoolCards = () => {
         }
       )}
     >
-      {Object.values(prizePools).map((prizePool) => (
+      {sortedPrizePools.map((prizePool) => (
         <Link
           key={`pp-${prizePool.id}`}
           href={`/prizes?network=${prizePool.chainId}`}
