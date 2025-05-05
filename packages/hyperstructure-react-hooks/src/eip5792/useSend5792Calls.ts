@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { Address, Hash, isAddress, WalletCallReceipt } from 'viem'
-import { useAccount } from 'wagmi'
-import { useSendCalls, useWaitForCallsStatus } from 'wagmi/experimental'
+import { useAccount, useSendCalls, useWaitForCallsStatus } from 'wagmi'
 
 /**
  * Prepares and submits [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) calls
@@ -15,7 +14,7 @@ export const useSend5792Calls = (
   chainId: number,
   calls: { to: Address; data: Hash }[],
   options?: {
-    paymasterService?: { url?: string; optional?: boolean }
+    paymasterService?: { url: string; optional?: boolean }
     onSend?: () => void
     onSuccess?: (callReceipts: WalletCallReceipt<bigint, 'success' | 'reverted'>[]) => void
     onError?: () => void
@@ -40,7 +39,7 @@ export const useSend5792Calls = (
     options?.enabled !== false
 
   const {
-    data: callsId,
+    data: callsData,
     isPending: isWaiting,
     isError: isSendingError,
     isSuccess: isSendingSuccess,
@@ -54,12 +53,14 @@ export const useSend5792Calls = (
             chainId,
             account: userAddress,
             calls,
-            capabilities: { paymasterService: options?.paymasterService }
+            capabilities: !!options?.paymasterService
+              ? { paymasterService: { [chainId]: options.paymasterService } }
+              : undefined
           })
       : undefined
 
   useEffect(() => {
-    if (!!callsId && isSendingSuccess) {
+    if (!!callsData?.id && isSendingSuccess) {
       options?.onSend?.()
     }
   }, [isSendingSuccess])
@@ -69,7 +70,7 @@ export const useSend5792Calls = (
     isFetching: isConfirming,
     isSuccess,
     isError: isConfirmingError
-  } = useWaitForCallsStatus({ id: callsId })
+  } = useWaitForCallsStatus({ id: callsData?.id })
 
   useEffect(() => {
     if (!!callsStatus && !!callsStatus.receipts?.length && isSuccess) {

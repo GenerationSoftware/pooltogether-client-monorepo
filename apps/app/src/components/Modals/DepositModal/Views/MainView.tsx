@@ -12,8 +12,7 @@ import { DOLPHIN_ADDRESS, getNiceNetworkNameByChainId, lower } from '@shared/uti
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { walletSupportsPermit } from 'src/utils'
-import { useAccount } from 'wagmi'
-import { useCapabilities } from 'wagmi/experimental'
+import { useAccount, useCapabilities } from 'wagmi'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
 import {

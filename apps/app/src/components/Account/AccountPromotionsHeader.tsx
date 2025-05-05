@@ -15,8 +15,7 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { Address } from 'viem'
-import { useAccount } from 'wagmi'
-import { useCapabilities } from 'wagmi/experimental'
+import { useAccount, useCapabilities } from 'wagmi'
 import { PAYMASTER_URLS } from '@constants/config'
 import { useNetworks } from '@hooks/useNetworks'
 import { useUserClaimablePoolWidePromotions } from '@hooks/useUserClaimablePoolWidePromotions'
@@ -186,15 +185,14 @@ const ClaimAllRewardsButton = (props: ClaimAllRewardsButtonProps) => {
   const isUsingEip5792 =
     Object.values(walletCapabilities?.[chainId] ?? {}).some((c) => !!c.supported) &&
     !isEip5792Disabled
+  const paymasterUrl = PAYMASTER_URLS[chainId]
 
   const data5792ClaimRewardsTx = useSend5792ClaimRewardsTransaction(
     chainId,
     userAddress,
     epochsToClaim,
     {
-      paymasterService: !!PAYMASTER_URLS[chainId]
-        ? { url: PAYMASTER_URLS[chainId], optional: true }
-        : undefined,
+      paymasterService: !!paymasterUrl ? { url: paymasterUrl, optional: true } : undefined,
       onSuccess: () => {
         refetchAllClaimed()
         refetchAllClaimable()
@@ -208,9 +206,7 @@ const ClaimAllRewardsButton = (props: ClaimAllRewardsButtonProps) => {
     userAddress,
     poolWidePromotionsToClaim,
     {
-      paymasterService: !!PAYMASTER_URLS[chainId]
-        ? { url: PAYMASTER_URLS[chainId], optional: true }
-        : undefined,
+      paymasterService: !!paymasterUrl ? { url: paymasterUrl, optional: true } : undefined,
       onSuccess: () => {
         refetchAllPoolWideClaimed()
         refetchAllPoolWideClaimable()
@@ -225,9 +221,7 @@ const ClaimAllRewardsButton = (props: ClaimAllRewardsButtonProps) => {
     epochsToClaim,
     poolWidePromotionsToClaim,
     {
-      paymasterService: !!PAYMASTER_URLS[chainId]
-        ? { url: PAYMASTER_URLS[chainId], optional: true }
-        : undefined,
+      paymasterService: !!paymasterUrl ? { url: paymasterUrl, optional: true } : undefined,
       onSuccess: () => {
         refetchAllClaimed()
         refetchAllClaimable()

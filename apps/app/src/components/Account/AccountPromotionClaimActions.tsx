@@ -13,8 +13,7 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { Address, formatUnits } from 'viem'
-import { useAccount } from 'wagmi'
-import { useCapabilities } from 'wagmi/experimental'
+import { useAccount, useCapabilities } from 'wagmi'
 import { PAYMASTER_URLS } from '@constants/config'
 import { useUserClaimablePoolWidePromotions } from '@hooks/useUserClaimablePoolWidePromotions'
 import { useUserClaimablePromotions } from '@hooks/useUserClaimablePromotions'
@@ -135,15 +134,14 @@ const ClaimRewardsButton = (props: ClaimRewardsButtonProps) => {
   const isUsingEip5792 =
     Object.values(walletCapabilities?.[chainId] ?? {}).some((c) => !!c.supported) &&
     !isEip5792Disabled
+  const paymasterUrl = PAYMASTER_URLS[chainId]
 
   const data5792ClaimRewardsTx = useSend5792ClaimRewardsTransaction(
     chainId,
     userAddress,
     { [promotionId.toString()]: epochsToClaim },
     {
-      paymasterService: !!PAYMASTER_URLS[chainId]
-        ? { url: PAYMASTER_URLS[chainId], optional: true }
-        : undefined,
+      paymasterService: !!paymasterUrl ? { url: paymasterUrl, optional: true } : undefined,
       onSuccess: () => {
         refetchClaimed()
         refetchClaimable()
@@ -157,9 +155,7 @@ const ClaimRewardsButton = (props: ClaimRewardsButtonProps) => {
     userAddress,
     [{ id: promotionId.toString(), vaultAddress: promotion?.vault!, epochs: epochsToClaim }],
     {
-      paymasterService: !!PAYMASTER_URLS[chainId]
-        ? { url: PAYMASTER_URLS[chainId], optional: true }
-        : undefined,
+      paymasterService: !!paymasterUrl ? { url: paymasterUrl, optional: true } : undefined,
       onSuccess: () => {
         refetchPoolWideClaimed()
         refetchPoolWideClaimable()

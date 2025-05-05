@@ -36,8 +36,8 @@
     "react-dom": "^18.2.0",
     "tsup": "^6.6.3",
     "typescript": "^5.4.0",
-    "viem": "2.25.0",
-    "wagmi": "2.14.16"
+    "viem": "2.28.4",
+    "wagmi": "2.15.2"
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5.20.5",

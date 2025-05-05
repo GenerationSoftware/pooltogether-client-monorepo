@@ -16,8 +16,7 @@ import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo, useState } from 'react'
 import { walletSupportsPermit } from 'src/utils'
 import { Hash } from 'viem'
-import { useAccount } from 'wagmi'
-import { useCapabilities } from 'wagmi/experimental'
+import { useAccount, useCapabilities } from 'wagmi'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import {
   depositFormShareAmountAtom,

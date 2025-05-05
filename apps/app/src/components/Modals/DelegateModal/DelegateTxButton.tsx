@@ -12,8 +12,7 @@ import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
 import { Address, isAddress } from 'viem'
-import { useAccount } from 'wagmi'
-import { useCapabilities } from 'wagmi/experimental'
+import { useAccount, useCapabilities } from 'wagmi'
 import { PAYMASTER_URLS } from '@constants/config'
 import { DelegateModalView } from '.'
 import { delegateFormNewDelegateAddressAtom } from './DelegateForm'
@@ -67,11 +66,10 @@ export const DelegateTxButton = (props: DelegateTxButtonProps) => {
   const isUsingEip5792 =
     Object.values(walletCapabilities?.[vault.chainId] ?? {}).some((c) => !!c.supported) &&
     !isEip5792Disabled
+  const paymasterUrl = PAYMASTER_URLS[vault.chainId]
 
   const data5792Tx = useSend5792DelegateTransaction(twabController, newDelegateAddress, vault, {
-    paymasterService: !!PAYMASTER_URLS[vault.chainId]
-      ? { url: PAYMASTER_URLS[vault.chainId], optional: true }
-      : undefined,
+    paymasterService: !!paymasterUrl ? { url: paymasterUrl, optional: true } : undefined,
     onSend: () => {
       setModalView('waiting')
     },
