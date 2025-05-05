@@ -55,6 +55,7 @@
   "Prizes": {
     "winUpTo": "Keep your deposit. Win up to <amount></amount>",
     "currentPrizes": "Current Prizes",
+    "networkPrizes": "{network} Prizes",
     "learnMore": "Prizes and frequencies are estimations. <link>Learn how PoolTogether works</link>",
     "prize": "Prize",
     "frequency": "Frequency",

@@ -1,4 +1,5 @@
 import { PrizePool } from '@generationsoftware/hyperstructure-client-js'
+import { getNiceNetworkNameByChainId } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { PrizePoolPrizesCard } from '@components/Prizes/PrizePoolPrizesCard'
@@ -16,7 +17,7 @@ export const VaultPagePrizesSection = (props: VaultPagePrizesSectionProps) => {
 
   return (
     <VaultPageCard
-      title={t_prizes('currentPrizes')}
+      title={t_prizes('networkPrizes', { network: getNiceNetworkNameByChainId(prizePool.chainId) })}
       className='!p-0'
       wrapperClassName={classNames('bg-transparent shadow-none', className)}
     >
