@@ -18,8 +18,11 @@ interface UserStatsProps {
 export const UserStats = (props: UserStatsProps) => {
   const { prizePool, className } = props
 
-  const { data: allWalletAddresses } = useWalletAddresses(prizePool)
-  const { data: activeWalletAddresses } = useWalletAddresses(prizePool, { activeWalletsOnly: true })
+  const { data: allWalletAddresses } = useWalletAddresses(prizePool, { paginationDelay: 2_000 })
+  const { data: activeWalletAddresses } = useWalletAddresses(prizePool, {
+    activeWalletsOnly: true,
+    paginationDelay: 2_000
+  })
 
   const { data: draws } = usePrizeDrawWinners(prizePool)
 

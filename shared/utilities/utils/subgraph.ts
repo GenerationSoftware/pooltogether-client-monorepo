@@ -525,26 +525,63 @@ export const getSubgraphWalletAddresses = async (
  */
 export const getPaginatedSubgraphWalletAddresses = async (
   chainId: number,
-  options?: { activeWalletsOnly?: boolean; pageSize?: number }
+  options?: {
+    activeWalletsOnly?: boolean
+    pageSize?: number
+    maxRetries?: number
+    paginationDelay?: number
+  }
 ) => {
   const walletAddresses = new Set<Lowercase<Address>>()
   const pageSize = options?.pageSize ?? 1_000
+  const maxRetries = options?.maxRetries ?? 3
+  const paginationDelay = options?.paginationDelay ?? 0
   let lastWalletAddress: Address | undefined = undefined
 
   while (true) {
-    const newPage = await getSubgraphWalletAddresses(chainId, {
-      activeWalletsOnly: options?.activeWalletsOnly,
-      numWallets: pageSize,
-      lastWalletAddress
-    })
+    let needsNewWalletsPage = false
 
-    newPage.forEach((address) => walletAddresses.add(address))
+    let isSuccess = false
+    let retryCount = 0
+    let retryDelay = 2_000
 
-    if (newPage.length < pageSize) {
-      break
-    } else {
-      lastWalletAddress = newPage[newPage.length - 1]
+    if (!!paginationDelay && !!lastWalletAddress) {
+      await new Promise((resolve) => setTimeout(resolve, paginationDelay))
     }
+
+    while (!isSuccess && retryCount < maxRetries) {
+      try {
+        const newPage = await getSubgraphWalletAddresses(chainId, {
+          activeWalletsOnly: options?.activeWalletsOnly,
+          numWallets: pageSize,
+          lastWalletAddress
+        })
+
+        newPage.forEach((address) => walletAddresses.add(address))
+
+        if (newPage.length >= pageSize) {
+          needsNewWalletsPage = true
+          lastWalletAddress = newPage[newPage.length - 1]
+        }
+
+        isSuccess = true
+      } catch {
+        if (retryCount < maxRetries - 1) {
+          await new Promise((resolve) => setTimeout(resolve, paginationDelay + retryDelay))
+        } else {
+          console.warn(
+            `Could not query subgraph wallet addresses on ${getNetworkNameByChainId(
+              chainId
+            )}: ${lastWalletAddress?.slice(0, 6)}...+`
+          )
+        }
+
+        retryCount++
+        retryDelay *= 2
+      }
+    }
+
+    if (!needsNewWalletsPage) break
   }
 
   return [...walletAddresses]
