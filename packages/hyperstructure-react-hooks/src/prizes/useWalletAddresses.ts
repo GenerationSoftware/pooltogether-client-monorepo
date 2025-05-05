@@ -13,12 +13,20 @@ import { QUERY_KEYS } from '../constants'
  */
 export const useWalletAddresses = (
   prizePool: PrizePool,
-  options?: { activeWalletsOnly?: boolean }
+  options?: {
+    activeWalletsOnly?: boolean
+    pageSize?: number
+    maxRetries?: number
+    paginationDelay?: number
+  }
 ): UseQueryResult<Lowercase<Address>[]> => {
   const queryKey = [
     QUERY_KEYS.walletAddresses,
     prizePool?.chainId,
-    options?.activeWalletsOnly ?? false
+    options?.activeWalletsOnly ?? false,
+    options?.pageSize,
+    options?.maxRetries,
+    options?.paginationDelay
   ]
 
   return useQuery({

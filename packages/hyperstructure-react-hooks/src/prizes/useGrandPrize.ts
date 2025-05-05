@@ -33,8 +33,6 @@ export const useGrandPrize = (
           ? grandPrizeAmount.current
           : grandPrizeAmount.estimated
       }
-    } else {
-      return undefined
     }
   }, [allPrizeInfo, prizeToken])
 
