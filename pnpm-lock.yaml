@@ -188,7 +188,7 @@ importers:
         version: 0.0.31(typescript@5.4.2)
       '@farcaster/frame-wagmi-connector':
         specifier: 0.0.19
-        version: 0.0.19(@farcaster/frame-sdk@0.0.31)(@wagmi/core@2.16.7)(viem@2.28.4)
+        version: 0.0.19(@farcaster/frame-sdk@0.0.31)(@wagmi/core@2.17.1)(viem@2.28.4)
       '@generationsoftware/hyperstructure-client-js':
         specifier: workspace:*
         version: link:../../packages/hyperstructure-client-js
@@ -3250,7 +3250,7 @@ packages:
       - zod
     dev: false
 
-  /@farcaster/frame-wagmi-connector@0.0.19(@farcaster/frame-sdk@0.0.31)(@wagmi/core@2.16.7)(viem@2.28.4):
+  /@farcaster/frame-wagmi-connector@0.0.19(@farcaster/frame-sdk@0.0.31)(@wagmi/core@2.17.1)(viem@2.28.4):
     resolution: {integrity: sha512-Ey9lEEk4SudkOiTtqY2eMGVTFZwW1lLMEtnAYqb7dCc/mDQowj3GfxNW9a2bdPoq5UEwAwJxxLiVvdERI+Hy3A==}
     peerDependencies:
       '@farcaster/frame-sdk': ^0.0.31
@@ -3258,7 +3258,7 @@ packages:
       viem: ^2.21.55
     dependencies:
       '@farcaster/frame-sdk': 0.0.31(typescript@5.4.2)
-      '@wagmi/core': 2.16.7(@types/react@18.2.8)(react@18.2.0)(typescript@5.4.2)(viem@2.28.4)
+      '@wagmi/core': 2.17.1(@types/react@18.2.8)(react@18.2.0)(typescript@5.4.2)(use-sync-external-store@1.4.0)(viem@2.28.4)
       viem: 2.28.4(typescript@5.4.2)
     dev: false
 
@@ -7500,30 +7500,6 @@ packages:
       - utf-8-validate
       - zod
 
-  /@wagmi/core@2.16.7(@types/react@18.2.8)(react@18.2.0)(typescript@5.4.2)(viem@2.28.4):
-    resolution: {integrity: sha512-Kpgrw6OXV0VBhDs4toQVKQ0NK5yUO6uxEqnvRGjNjbO85d93Gbfsp5BlxSLeWq6iVMSBFSitdl5i9W7b1miq1g==}
-    peerDependencies:
-      '@tanstack/query-core': '>=5.0.0'
-      typescript: '>=5.0.4'
-      viem: 2.x
-    peerDependenciesMeta:
-      '@tanstack/query-core':
-        optional: true
-      typescript:
-        optional: true
-    dependencies:
-      eventemitter3: 5.0.1
-      mipd: 0.0.7(typescript@5.4.2)
-      typescript: 5.4.2
-      viem: 2.28.4(typescript@5.4.2)
-      zustand: 5.0.0(@types/react@18.2.8)(react@18.2.0)(use-sync-external-store@1.4.0)
-    transitivePeerDependencies:
-      - '@types/react'
-      - immer
-      - react
-      - use-sync-external-store
-    dev: false
-
   /@wagmi/core@2.17.1(@types/react@18.2.8)(react@18.2.0)(typescript@5.4.2)(use-sync-external-store@1.4.0)(viem@2.28.4):
     resolution: {integrity: sha512-tbeNv8HquzrVj2Inv0bv229SejPABnWAmbBNvPJJedYpKStgXlbK4jnRhCf5qG5un3ZO/KYFGQYaghTzWSULGg==}
     peerDependencies:
@@ -9740,10 +9716,6 @@ packages:
     engines: {node: '>=0.11'}
     dependencies:
       '@babel/runtime': 7.27.0
-
-  /dayjs@1.11.10:
-    resolution: {integrity: sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==}
-    dev: false
 
   /dayjs@1.11.13:
     resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
@@ -12053,7 +12025,7 @@ packages:
     hasBin: true
     dependencies:
       ansi-fragments: 0.2.1
-      dayjs: 1.11.10
+      dayjs: 1.11.13
       yargs: 15.4.1
     dev: false
 
