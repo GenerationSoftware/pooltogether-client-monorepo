@@ -33,5 +33,8 @@ module.exports = {
         ]
       }
     ]
+  },
+  experimental: {
+    optimizePackageImports: ['@rainbow-me/rainbowkit', 'flowbite-react', 'framer-motion', 'recharts', 'sonner']
   }
 }
