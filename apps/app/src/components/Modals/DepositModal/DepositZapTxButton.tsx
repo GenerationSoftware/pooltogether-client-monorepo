@@ -1,5 +1,6 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
+  useSend5792DepositZapTransaction,
   useSendDepositZapTransaction,
   useSendGenericApproveTransaction,
   useToken,
@@ -11,14 +12,16 @@ import {
   useVaultTokenAddress
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
+import { useMiscSettings } from '@shared/generic-react-hooks'
 import { ApprovalTooltip, TransactionButton } from '@shared/react-components'
 import { Button } from '@shared/ui'
 import { DOLPHIN_ADDRESS, lower, ZAP_SETTINGS } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
-import { Address, isAddress, parseUnits, TransactionReceipt } from 'viem'
-import { useAccount } from 'wagmi'
+import { Hash, isAddress, parseUnits } from 'viem'
+import { useAccount, useCapabilities } from 'wagmi'
+import { PAYMASTER_URLS } from '@constants/config'
 import { DepositModalView } from '.'
 import { isValidFormInput } from '../TxFormInput'
 import { depositFormTokenAddressAtom, depositFormTokenAmountAtom } from './DepositForm'
@@ -30,7 +33,7 @@ interface DepositZapTxButtonProps {
   setDepositTxHash: (txHash: string) => void
   refetchUserBalances?: () => void
   onSuccessfulApproval?: () => void
-  onSuccessfulDepositWithZap?: (chainId: number, txReceipt: TransactionReceipt) => void
+  onSuccessfulDepositWithZap?: (chainId: number, txHash: Hash) => void
 }
 
 export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
@@ -63,7 +66,7 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
       ? formInputTokenAddress
       : vaultTokenAddress
 
-  const { data: inputToken } = useToken(vault.chainId, inputTokenAddress as Address)
+  const { data: inputToken } = useToken(vault.chainId, inputTokenAddress!)
 
   const zapTokenManagerAddress = ZAP_SETTINGS[vault.chainId]?.zapTokenManager
 
@@ -71,27 +74,19 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
     data: allowance,
     isFetched: isFetchedAllowance,
     refetch: refetchTokenAllowance
-  } = useTokenAllowance(
-    vault.chainId,
-    userAddress as Address,
-    zapTokenManagerAddress,
-    inputToken?.address as Address
-  )
+  } = useTokenAllowance(vault.chainId, userAddress!, zapTokenManagerAddress, inputToken?.address!)
 
   const {
     data: userInputTokenBalance,
     isFetched: isFetchedUserInputTokenBalance,
     refetch: refetchUserInputTokenBalance
-  } = useTokenBalance(vault.chainId, userAddress as Address, inputToken?.address as Address)
+  } = useTokenBalance(vault.chainId, userAddress!, inputToken?.address!)
 
-  const { refetch: refetchUserVaultTokenBalance } = useUserVaultTokenBalance(
-    vault,
-    userAddress as Address
-  )
+  const { refetch: refetchUserVaultTokenBalance } = useUserVaultTokenBalance(vault, userAddress!)
 
   const { refetch: refetchUserVaultDelegationBalance } = useUserVaultDelegationBalance(
     vault,
-    userAddress as Address
+    userAddress!
   )
 
   const { refetch: refetchVaultBalance } = useVaultBalance(vault)
@@ -104,7 +99,7 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
       : false
 
   const depositAmount = isValidFormInputTokenAmount
-    ? parseUnits(formInputTokenAmount, inputToken?.decimals as number)
+    ? parseUnits(formInputTokenAmount, inputToken?.decimals!)
     : 0n
 
   const {
@@ -115,7 +110,7 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
     sendApproveTransaction: sendApproveTransaction
   } = useSendGenericApproveTransaction(
     vault.chainId,
-    inputToken?.address as Address,
+    inputToken?.address!,
     zapTokenManagerAddress,
     depositAmount,
     {
@@ -126,19 +121,10 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
     }
   )
 
-  const {
-    isWaiting: isWaitingDepositZap,
-    isConfirming: isConfirmingDepositZap,
-    isSuccess: isSuccessfulDepositZap,
-    txHash: depositZapTxHash,
-    sendDepositZapTransaction,
-    amountOut,
-    isFetchedZapArgs,
-    isFetchingZapArgs
-  } = useSendDepositZapTransaction(
+  const dataTx = useSendDepositZapTransaction(
     {
-      address: inputToken?.address as Address,
-      decimals: inputToken?.decimals as number,
+      address: inputToken?.address!,
+      decimals: inputToken?.decimals!,
       amount: depositAmount
     },
     vault,
@@ -153,7 +139,7 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
         refetchVaultBalance()
         refetchTokenAllowance()
         refetchUserBalances?.()
-        onSuccessfulDepositWithZap?.(vault.chainId, txReceipt)
+        onSuccessfulDepositWithZap?.(vault.chainId, txReceipt.transactionHash)
         setModalView('success')
       },
       onError: () => {
@@ -161,6 +147,53 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
       }
     }
   )
+
+  const { data: walletCapabilities } = useCapabilities()
+  const { isActive: isEip5792Disabled } = useMiscSettings('eip5792Disabled')
+  const isUsingEip5792 =
+    Object.values(walletCapabilities?.[vault.chainId] ?? {}).some((c) => !!c.supported) &&
+    !isEip5792Disabled
+  const paymasterUrl = PAYMASTER_URLS[vault.chainId]
+
+  const data5792Tx = useSend5792DepositZapTransaction(
+    {
+      address: inputToken?.address!,
+      decimals: inputToken?.decimals!,
+      amount: depositAmount
+    },
+    vault,
+    {
+      paymasterService: !!paymasterUrl ? { url: paymasterUrl, optional: true } : undefined,
+      onSend: () => {
+        setModalView('waiting')
+      },
+      onSuccess: (callReceipts) => {
+        refetchUserInputTokenBalance()
+        refetchUserVaultTokenBalance()
+        refetchUserVaultDelegationBalance()
+        refetchVaultBalance()
+        refetchTokenAllowance()
+        refetchUserBalances?.()
+        onSuccessfulDepositWithZap?.(vault.chainId, callReceipts.at(-1)?.transactionHash!)
+        setModalView('success')
+      },
+      onError: () => {
+        setModalView('error')
+      },
+      enabled: isUsingEip5792
+    }
+  )
+
+  const sendTx = isUsingEip5792
+    ? data5792Tx.send5792DepositZapTransaction
+    : dataTx.sendDepositZapTransaction
+  const isWaitingDepositZap = isUsingEip5792 ? data5792Tx.isWaiting : dataTx.isWaiting
+  const isConfirmingDepositZap = isUsingEip5792 ? data5792Tx.isConfirming : dataTx.isConfirming
+  const isSuccessfulDepositZap = isUsingEip5792 ? data5792Tx.isSuccess : dataTx.isSuccess
+  const depositZapTxHash = isUsingEip5792 ? data5792Tx.txHashes?.at(-1) : dataTx.txHash
+  const amountOut = isUsingEip5792 ? data5792Tx.amountOut : dataTx.amountOut
+  const isFetchedZapArgs = isUsingEip5792 ? data5792Tx.isFetchedZapArgs : dataTx.isFetchedZapArgs
+  const isFetchingZapArgs = isUsingEip5792 ? data5792Tx.isFetchingZapArgs : dataTx.isFetchingZapArgs
 
   useEffect(() => {
     if (
@@ -194,7 +227,9 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
   const depositEnabled =
     isDataFetched &&
     userInputTokenBalance.amount >= depositAmount &&
-    (lower(inputTokenAddress) === DOLPHIN_ADDRESS || allowance >= depositAmount) &&
+    (lower(inputTokenAddress) === DOLPHIN_ADDRESS ||
+      isUsingEip5792 ||
+      allowance >= depositAmount) &&
     isValidFormInputTokenAmount
 
   // No deposit amount set
@@ -207,7 +242,12 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
   }
 
   // Needs approval
-  if (isDataFetched && lower(inputTokenAddress) !== DOLPHIN_ADDRESS && allowance < depositAmount) {
+  if (
+    isDataFetched &&
+    lower(inputTokenAddress) !== DOLPHIN_ADDRESS &&
+    !isUsingEip5792 &&
+    allowance < depositAmount
+  ) {
     return (
       <TransactionButton
         chainId={vault.chainId}
@@ -267,7 +307,7 @@ export const DepositZapTxButton = (props: DepositZapTxButtonProps) => {
       chainId={vault.chainId}
       isTxLoading={isWaitingDepositZap || isConfirmingDepositZap}
       isTxSuccess={isSuccessfulDepositZap}
-      write={sendDepositZapTransaction}
+      write={sendTx}
       txHash={depositZapTxHash}
       txDescription={t_modals('depositTx', { symbol: inputToken?.symbol ?? '?' })}
       fullSized={true}

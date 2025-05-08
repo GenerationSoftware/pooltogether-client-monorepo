@@ -12,7 +12,6 @@ import classNames from 'classnames'
 import { useAtom, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useState } from 'react'
-import { TransactionReceipt } from 'viem'
 import { ConfirmingView } from './Views/ConfirmingView'
 import { ErrorView } from './Views/ErrorView'
 import { MainView } from './Views/MainView'
@@ -34,7 +33,7 @@ export interface WithdrawModalProps {
   refetchUserBalances?: () => void
   onSuccessfulApproval?: () => void
   onSuccessfulWithdrawal?: () => void
-  onSuccessfulWithdrawalWithZap?: (chainId: number, txReceipt: TransactionReceipt) => void
+  onSuccessfulWithdrawalWithZap?: () => void
 }
 
 export const WithdrawModal = (props: WithdrawModalProps) => {

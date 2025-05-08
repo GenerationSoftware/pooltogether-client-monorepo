@@ -316,6 +316,10 @@
     "permitApprovals": {
       "enabled": "Permit approvals are enabled",
       "disabled": "Permit approvals are disabled"
+    },
+    "eip5792": {
+      "enabled": "Gasless transactions are enabled",
+      "disabled": "Gasless transactions are disabled"
     }
   },
   "Abbreviations": {

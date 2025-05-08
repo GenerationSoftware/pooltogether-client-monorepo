@@ -1,9 +1,13 @@
 import {
+  useSend5792AggregateClaimRewardsTransaction,
+  useSend5792ClaimRewardsTransaction,
+  useSend5792PoolWideClaimRewardsTransaction,
   useSendAggregateClaimRewardsTransaction,
   useSendClaimRewardsTransaction,
   useSendPoolWideClaimRewardsTransaction
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
+import { useMiscSettings } from '@shared/generic-react-hooks'
 import { CurrencyValue, TransactionButton } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import { getNiceNetworkNameByChainId } from '@shared/utilities'
@@ -11,7 +15,8 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { Address } from 'viem'
-import { useAccount } from 'wagmi'
+import { useAccount, useCapabilities } from 'wagmi'
+import { PAYMASTER_URLS } from '@constants/config'
 import { useNetworks } from '@hooks/useNetworks'
 import { useUserClaimablePoolWidePromotions } from '@hooks/useUserClaimablePoolWidePromotions'
 import { useUserClaimablePromotions } from '@hooks/useUserClaimablePromotions'
@@ -141,39 +146,26 @@ const ClaimAllRewardsButton = (props: ClaimAllRewardsButtonProps) => {
     return promotions
   }, [claimablePoolWidePromotions, isFetchedAllPoolWideClaimable])
 
-  const {
-    isWaiting: isWaitingClaimRewards,
-    isConfirming: isConfirmingClaimRewards,
-    isSuccess: isSuccessClaimRewards,
-    txHash: txHashClaimRewards,
-    sendClaimRewardsTransaction
-  } = useSendClaimRewardsTransaction(chainId, userAddress, epochsToClaim, {
+  const dataClaimRewardsTx = useSendClaimRewardsTransaction(chainId, userAddress, epochsToClaim, {
     onSuccess: () => {
       refetchAllClaimed()
       refetchAllClaimable()
     }
   })
 
-  const {
-    isWaiting: isWaitingClaimPoolWideRewards,
-    isConfirming: isConfirmingClaimPoolWideRewards,
-    isSuccess: isSuccessClaimPoolWideRewards,
-    txHash: txHashClaimPoolWideRewards,
-    sendPoolWideClaimRewardsTransaction
-  } = useSendPoolWideClaimRewardsTransaction(chainId, userAddress, poolWidePromotionsToClaim, {
-    onSuccess: () => {
-      refetchAllPoolWideClaimed()
-      refetchAllPoolWideClaimable()
+  const dataPoolWideClaimRewardsTx = useSendPoolWideClaimRewardsTransaction(
+    chainId,
+    userAddress,
+    poolWidePromotionsToClaim,
+    {
+      onSuccess: () => {
+        refetchAllPoolWideClaimed()
+        refetchAllPoolWideClaimable()
+      }
     }
-  })
+  )
 
-  const {
-    isWaiting: isWaitingAggregateClaimRewards,
-    isConfirming: isConfirmingAggregateClaimRewards,
-    isSuccess: isSuccessAggregateClaimRewards,
-    txHash: txHashAggregateClaimRewards,
-    sendAggregateClaimRewardsTransaction
-  } = useSendAggregateClaimRewardsTransaction(
+  const dataAggregateClaimRewardsTx = useSendAggregateClaimRewardsTransaction(
     chainId,
     userAddress,
     epochsToClaim,
@@ -188,6 +180,58 @@ const ClaimAllRewardsButton = (props: ClaimAllRewardsButtonProps) => {
     }
   )
 
+  const { data: walletCapabilities } = useCapabilities()
+  const { isActive: isEip5792Disabled } = useMiscSettings('eip5792Disabled')
+  const isUsingEip5792 =
+    Object.values(walletCapabilities?.[chainId] ?? {}).some((c) => !!c.supported) &&
+    !isEip5792Disabled
+  const paymasterUrl = PAYMASTER_URLS[chainId]
+
+  const data5792ClaimRewardsTx = useSend5792ClaimRewardsTransaction(
+    chainId,
+    userAddress,
+    epochsToClaim,
+    {
+      paymasterService: !!paymasterUrl ? { url: paymasterUrl, optional: true } : undefined,
+      onSuccess: () => {
+        refetchAllClaimed()
+        refetchAllClaimable()
+      },
+      enabled: isUsingEip5792
+    }
+  )
+
+  const data5792PoolWideClaimRewardsTx = useSend5792PoolWideClaimRewardsTransaction(
+    chainId,
+    userAddress,
+    poolWidePromotionsToClaim,
+    {
+      paymasterService: !!paymasterUrl ? { url: paymasterUrl, optional: true } : undefined,
+      onSuccess: () => {
+        refetchAllPoolWideClaimed()
+        refetchAllPoolWideClaimable()
+      },
+      enabled: isUsingEip5792
+    }
+  )
+
+  const data5792AggregateClaimRewardsTx = useSend5792AggregateClaimRewardsTransaction(
+    chainId,
+    userAddress,
+    epochsToClaim,
+    poolWidePromotionsToClaim,
+    {
+      paymasterService: !!paymasterUrl ? { url: paymasterUrl, optional: true } : undefined,
+      onSuccess: () => {
+        refetchAllClaimed()
+        refetchAllClaimable()
+        refetchAllPoolWideClaimed()
+        refetchAllPoolWideClaimable()
+      },
+      enabled: isUsingEip5792
+    }
+  )
+
   if (Object.keys(epochsToClaim).length + poolWidePromotionsToClaim.length > 1) {
     const network = getNiceNetworkNameByChainId(chainId)
 
@@ -195,31 +239,39 @@ const ClaimAllRewardsButton = (props: ClaimAllRewardsButtonProps) => {
     const isEnabledPoolWide = !!poolWidePromotionsToClaim.length
     const isEnabledAggregate = isEnabled && isEnabledPoolWide
 
-    const isWaiting = isEnabledAggregate
-      ? isWaitingAggregateClaimRewards
+    const { isWaiting, isConfirming, isSuccess } = isEnabledAggregate
+      ? isUsingEip5792
+        ? data5792AggregateClaimRewardsTx
+        : dataAggregateClaimRewardsTx
       : isEnabledPoolWide
-      ? isWaitingClaimPoolWideRewards
-      : isWaitingClaimRewards
-    const isConfirming = isEnabledAggregate
-      ? isConfirmingAggregateClaimRewards
-      : isEnabledPoolWide
-      ? isConfirmingClaimPoolWideRewards
-      : isConfirmingClaimRewards
-    const isSuccess = isEnabledAggregate
-      ? isSuccessAggregateClaimRewards
-      : isEnabledPoolWide
-      ? isSuccessClaimPoolWideRewards
-      : isSuccessClaimRewards
+      ? isUsingEip5792
+        ? data5792PoolWideClaimRewardsTx
+        : dataPoolWideClaimRewardsTx
+      : isUsingEip5792
+      ? data5792ClaimRewardsTx
+      : dataClaimRewardsTx
     const txHash = isEnabledAggregate
-      ? txHashAggregateClaimRewards
+      ? isUsingEip5792
+        ? data5792AggregateClaimRewardsTx.txHashes?.at(-1)
+        : dataAggregateClaimRewardsTx.txHash
       : isEnabledPoolWide
-      ? txHashClaimPoolWideRewards
-      : txHashClaimRewards
+      ? isUsingEip5792
+        ? data5792PoolWideClaimRewardsTx.txHashes?.at(-1)
+        : dataPoolWideClaimRewardsTx.txHash
+      : isUsingEip5792
+      ? data5792ClaimRewardsTx.txHashes?.at(-1)
+      : dataClaimRewardsTx.txHash
     const sendTx = isEnabledAggregate
-      ? sendAggregateClaimRewardsTransaction
+      ? isUsingEip5792
+        ? data5792AggregateClaimRewardsTx.send5792AggregateClaimRewardsTransaction
+        : dataAggregateClaimRewardsTx.sendAggregateClaimRewardsTransaction
       : isEnabledPoolWide
-      ? sendPoolWideClaimRewardsTransaction
-      : sendClaimRewardsTransaction
+      ? isUsingEip5792
+        ? data5792PoolWideClaimRewardsTx.send5792PoolWideClaimRewardsTransaction
+        : dataPoolWideClaimRewardsTx.sendPoolWideClaimRewardsTransaction
+      : isUsingEip5792
+      ? data5792ClaimRewardsTx.send5792ClaimRewardsTransaction
+      : dataClaimRewardsTx.sendClaimRewardsTransaction
 
     return (
       <TransactionButton

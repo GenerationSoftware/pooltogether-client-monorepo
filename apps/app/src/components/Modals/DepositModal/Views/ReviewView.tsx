@@ -24,7 +24,7 @@ import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { walletSupportsPermit } from 'src/utils'
 import { Address } from 'viem'
-import { useAccount } from 'wagmi'
+import { useAccount, useCapabilities } from 'wagmi'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
 import {
@@ -54,9 +54,19 @@ export const ReviewView = (props: ReviewViewProps) => {
 
   const tokenAddress = formTokenAddress ?? vaultTokenAddress
 
-  const { data: tokenPermitSupport } = useTokenPermitSupport(vault.chainId, tokenAddress!)
+  const { data: walletCapabilities } = useCapabilities()
+  const { isActive: isEip5792Disabled } = useMiscSettings('eip5792Disabled')
+  const isUsingEip5792 =
+    Object.values(walletCapabilities?.[vault.chainId] ?? {}).some((c) => !!c.supported) &&
+    !isEip5792Disabled
 
+  const { data: tokenPermitSupport } = useTokenPermitSupport(vault.chainId, tokenAddress!)
   const { isActive: isPermitDepositsDisabled } = useMiscSettings('permitDepositsDisabled')
+  const isUsingPermits =
+    !isUsingEip5792 &&
+    tokenPermitSupport === 'eip2612' &&
+    walletSupportsPermit(connector?.id) &&
+    !isPermitDepositsDisabled
 
   const isZapping =
     !!vaultTokenAddress &&
@@ -67,9 +77,7 @@ export const ReviewView = (props: ReviewViewProps) => {
     ? lower(formTokenAddress) === DOLPHIN_ADDRESS
       ? ['depositWithZap', 'withdraw']
       : ['approve', 'depositWithZap', 'withdraw']
-    : tokenPermitSupport === 'eip2612' &&
-      walletSupportsPermit(connector?.id) &&
-      !isPermitDepositsDisabled
+    : isUsingPermits
     ? ['depositWithPermit', 'withdraw']
     : ['approve', 'deposit', 'withdraw']
 

@@ -74,13 +74,7 @@ export const WAGMI_CHAINS = {
   [NETWORK.base]: base,
   [NETWORK.scroll]: scroll,
   [NETWORK.gnosis]: gnosis,
-  [NETWORK.world]: {
-    ...worldchain,
-    contracts: {
-      multicall3: { address: '0xca11bde05977b3631167028862be2a173976ca11' }, // TODO: can remove once viem is updated to include this
-      ...worldchain.contracts
-    }
-  },
+  [NETWORK.world]: worldchain,
   [NETWORK.optimism_sepolia]: optimismSepolia,
   [NETWORK.arbitrum_sepolia]: arbitrumSepolia,
   [NETWORK.base_sepolia]: baseSepolia,
@@ -127,6 +121,19 @@ export const RPC_URLS = {
   [NETWORK.scroll_sepolia]: process.env.NEXT_PUBLIC_SCROLL_SEPOLIA_RPC_URL,
   [NETWORK.gnosis_chiado]: process.env.NEXT_PUBLIC_GNOSIS_CHIADO_RPC_URL
 } as const
+
+/**
+ * EIP 5792 Paymaster URLs
+ */
+export const PAYMASTER_URLS: { [chainId: number]: string | undefined } = {
+  [NETWORK.mainnet]: process.env.NEXT_PUBLIC_MAINNET_PAYMASTER_URL,
+  [NETWORK.optimism]: process.env.NEXT_PUBLIC_OPTIMISM_PAYMASTER_URL,
+  [NETWORK.arbitrum]: process.env.NEXT_PUBLIC_ARBITRUM_PAYMASTER_URL,
+  [NETWORK.base]: process.env.NEXT_PUBLIC_BASE_PAYMASTER_URL,
+  [NETWORK.scroll]: process.env.NEXT_PUBLIC_SCROLL_PAYMASTER_URL,
+  [NETWORK.gnosis]: process.env.NEXT_PUBLIC_GNOSIS_PAYMASTER_URL,
+  [NETWORK.world]: process.env.NEXT_PUBLIC_WORLD_PAYMASTER_URL
+}
 
 /**
  * Default vault lists

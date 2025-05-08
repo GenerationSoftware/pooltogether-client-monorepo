@@ -21,7 +21,6 @@ import { Footer } from './Footer'
 import { CheckPrizesModal } from './Modals/CheckPrizesModal'
 import { DelegateModal } from './Modals/DelegateModal'
 import { DepositModal } from './Modals/DepositModal'
-import { DrawModal } from './Modals/DrawModal'
 import { SettingsModal } from './Modals/SettingsModal'
 import { WithdrawModal } from './Modals/WithdrawModal'
 import { Navbar } from './Navbar'
@@ -114,17 +113,17 @@ export const Layout = (props: LayoutProps) => {
       <DepositModal
         refetchUserBalances={refetchUserBalances}
         onSuccessfulApproval={() => fathom.trackEvent(FATHOM_EVENTS.approvedExact)}
-        onSuccessfulDeposit={(chainId, txReceipt) => {
+        onSuccessfulDeposit={(chainId, txHash) => {
           fathom.trackEvent(FATHOM_EVENTS.deposited)
-          !!walletId && trackDeposit(chainId, txReceipt.transactionHash, walletId)
+          !!walletId && trackDeposit(chainId, txHash, walletId)
         }}
-        onSuccessfulDepositWithPermit={(chainId, txReceipt) => {
+        onSuccessfulDepositWithPermit={(chainId, txHash) => {
           fathom.trackEvent(FATHOM_EVENTS.depositedWithPermit)
-          !!walletId && trackDeposit(chainId, txReceipt.transactionHash, walletId)
+          !!walletId && trackDeposit(chainId, txHash, walletId)
         }}
-        onSuccessfulDepositWithZap={(chainId, txReceipt) => {
+        onSuccessfulDepositWithZap={(chainId, txHash) => {
           fathom.trackEvent(FATHOM_EVENTS.depositedWithZap)
-          !!walletId && trackDeposit(chainId, txReceipt.transactionHash, walletId)
+          !!walletId && trackDeposit(chainId, txHash, walletId)
         }}
       />
 
@@ -136,9 +135,6 @@ export const Layout = (props: LayoutProps) => {
       />
 
       <DelegateModal onSuccessfulDelegation={() => fathom.trackEvent(FATHOM_EVENTS.delegated)} />
-
-      {/* TODO: enable once data can be more efficiently fetched */}
-      {/* <DrawModal /> */}
 
       <CheckPrizesModal
         onWin={() => fathom.trackEvent(FATHOM_EVENTS.checkedPrizes, { _value: 1 })}
