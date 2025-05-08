@@ -78,7 +78,7 @@ export const useSend5792WithdrawZapTransaction = (
         data: encodeFunctionData({
           abi: [zapRouterABI['15']],
           functionName: 'executeOrder',
-          args: zapArgs!
+          args: zapArgs
         })
       })
     }

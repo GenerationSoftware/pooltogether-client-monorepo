@@ -38,18 +38,20 @@ export const useSend5792RedeemTransaction = (
 
   const { sendCalls: send5792RedeemTransaction, ...rest } = useSend5792Calls(
     chain?.id!,
-    [
-      {
-        to: vault?.address,
-        data: encodeFunctionData({
-          abi: vaultABI,
-          functionName: 'redeem',
-          args: !!options?.minAssets
-            ? [amount, userAddress!, userAddress!, options.minAssets]
-            : [amount, userAddress!, userAddress!]
-        })
-      }
-    ],
+    enabled
+      ? [
+          {
+            to: vault?.address,
+            data: encodeFunctionData({
+              abi: vaultABI,
+              functionName: 'redeem',
+              args: !!options?.minAssets
+                ? [amount, userAddress, userAddress, options.minAssets]
+                : [amount, userAddress, userAddress]
+            })
+          }
+        ]
+      : [],
     { ...options, enabled }
   )
 

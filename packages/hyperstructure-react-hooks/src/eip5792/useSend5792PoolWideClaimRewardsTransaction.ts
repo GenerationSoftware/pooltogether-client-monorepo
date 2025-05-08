@@ -46,16 +46,18 @@ export const useSend5792PoolWideClaimRewardsTransaction = (
   const { sendCalls: _sendPoolWideClaimRewardsTransaction, ...restPoolWideClaimRewards } =
     useSend5792Calls(
       chainId,
-      [
-        {
-          to: POOL_WIDE_TWAB_REWARDS_ADDRESSES[chainId],
-          data: encodeFunctionData({
-            abi: poolWideTwabRewardsABI,
-            functionName: 'claimRewards',
-            args: claimRewardsArgs!
-          })
-        }
-      ],
+      !!claimRewardsArgs
+        ? [
+            {
+              to: POOL_WIDE_TWAB_REWARDS_ADDRESSES[chainId],
+              data: encodeFunctionData({
+                abi: poolWideTwabRewardsABI,
+                functionName: 'claimRewards',
+                args: claimRewardsArgs
+              })
+            }
+          ]
+        : [],
       { ...options, enabled }
     )
 
@@ -87,16 +89,18 @@ export const useSend5792PoolWideClaimRewardsTransaction = (
 
   const { sendCalls: _sendMulticallTransaction, ...restMulticall } = useSend5792Calls(
     chainId,
-    [
-      {
-        to: POOL_WIDE_TWAB_REWARDS_ADDRESSES[chainId],
-        data: encodeFunctionData({
-          abi: poolWideTwabRewardsABI,
-          functionName: 'multicall',
-          args: multicallArgs!
-        })
-      }
-    ],
+    !!multicallArgs
+      ? [
+          {
+            to: POOL_WIDE_TWAB_REWARDS_ADDRESSES[chainId],
+            data: encodeFunctionData({
+              abi: poolWideTwabRewardsABI,
+              functionName: 'multicall',
+              args: multicallArgs
+            })
+          }
+        ]
+      : [],
     { ...options, enabled: enabled && isMulticall }
   )
 

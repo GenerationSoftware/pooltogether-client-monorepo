@@ -33,16 +33,18 @@ export const useSend5792DelegateTransaction = (
 
   const { sendCalls: send5792DelegateTransaction, ...rest } = useSend5792Calls(
     chain?.id!,
-    [
-      {
-        to: twabController,
-        data: encodeFunctionData({
-          abi: twabControllerABI,
-          functionName: 'delegate',
-          args: [vault.address, address!]
-        })
-      }
-    ],
+    enabled
+      ? [
+          {
+            to: twabController,
+            data: encodeFunctionData({
+              abi: twabControllerABI,
+              functionName: 'delegate',
+              args: [vault.address, address]
+            })
+          }
+        ]
+      : [],
     { ...options, enabled }
   )
 

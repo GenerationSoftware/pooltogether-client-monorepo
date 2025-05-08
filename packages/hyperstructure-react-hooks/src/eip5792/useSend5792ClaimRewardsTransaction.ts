@@ -47,16 +47,18 @@ export const useSend5792ClaimRewardsTransaction = (
 
   const { sendCalls: _sendClaimRewardsTransaction, ...restClaimRewards } = useSend5792Calls(
     chainId,
-    [
-      {
-        to: twabRewardsAddress!,
-        data: encodeFunctionData({
-          abi: twabRewardsABI,
-          functionName: 'claimRewards',
-          args: claimRewardsArgs!
-        })
-      }
-    ],
+    !!claimRewardsArgs
+      ? [
+          {
+            to: twabRewardsAddress!,
+            data: encodeFunctionData({
+              abi: twabRewardsABI,
+              functionName: 'claimRewards',
+              args: claimRewardsArgs
+            })
+          }
+        ]
+      : [],
     { ...options, enabled }
   )
 
@@ -86,16 +88,18 @@ export const useSend5792ClaimRewardsTransaction = (
 
   const { sendCalls: _sendMulticallTransaction, ...restMulticall } = useSend5792Calls(
     chainId,
-    [
-      {
-        to: twabRewardsAddress!,
-        data: encodeFunctionData({
-          abi: twabRewardsABI,
-          functionName: 'multicall',
-          args: multicallArgs!
-        })
-      }
-    ],
+    !!multicallArgs
+      ? [
+          {
+            to: twabRewardsAddress!,
+            data: encodeFunctionData({
+              abi: twabRewardsABI,
+              functionName: 'multicall',
+              args: multicallArgs
+            })
+          }
+        ]
+      : [],
     { ...options, enabled: enabled && isMulticall }
   )
 

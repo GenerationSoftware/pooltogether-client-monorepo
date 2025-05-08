@@ -72,7 +72,7 @@ export const useSend5792DepositZapTransaction = (
         data: encodeFunctionData({
           abi: [zapRouterABI['15']],
           functionName: 'executeOrder',
-          args: zapArgs!
+          args: zapArgs
         }),
         value: lower(inputToken.address) === DOLPHIN_ADDRESS ? inputToken.amount : 0n
       })
