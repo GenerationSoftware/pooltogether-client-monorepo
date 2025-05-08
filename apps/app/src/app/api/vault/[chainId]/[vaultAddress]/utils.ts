@@ -67,8 +67,8 @@ export const getVaultAddressFromParams = (params: VaultApiParams) => {
 }
 
 export const getPublicClient = (
-  chainId: NonNullable<ReturnType<typeof getChainIdFromParams>>,
-  req: NextRequest
+  req: NextRequest,
+  chainId: NonNullable<ReturnType<typeof getChainIdFromParams>>
 ) => {
   const host = req.headers.get('host')
   const httpTransportConfig: HttpTransportConfig | undefined = !!host
@@ -116,7 +116,7 @@ export const getPrizePool = (vault: Vault) => {
   return prizePool
 }
 
-export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
+export const getVaultData = async (req: NextRequest, vault: Vault, prizePool: PrizePool) => {
   const batchSize = 1_024 * 1_024
 
   const firstMulticallResults = await vault.publicClient.multicall({
@@ -287,7 +287,10 @@ export const getVaultData = async (vault: Vault, prizePool: PrizePool) => {
   !!assetAddress && tokenAddresses.push(assetAddress)
   !!prizeAssetAddress && tokenAddresses.push(prizeAssetAddress)
 
-  const prices = await getTokenPrices(vault.chainId, tokenAddresses)
+  const host = req.headers.get('host')
+  const prices = await getTokenPrices(vault.chainId, tokenAddresses, {
+    requestHeaders: { Referer: `https://${host}` }
+  })
 
   const asset: Partial<TokenWithPrice & TokenWithLogo & { amount: number }> | undefined =
     !!assetAddress

@@ -19,8 +19,8 @@ export const getChainIdFromParams = (params: PrizesApiParams) => {
 }
 
 export const getPublicClient = (
-  chainId: NonNullable<ReturnType<typeof getChainIdFromParams>>,
-  req: NextRequest
+  req: NextRequest,
+  chainId: NonNullable<ReturnType<typeof getChainIdFromParams>>
 ) => {
   const host = req.headers.get('host')
   const httpTransportConfig: HttpTransportConfig | undefined = !!host
@@ -45,6 +45,7 @@ export const getPrizePool = (
 }
 
 export const getPrizesData = async (
+  req: NextRequest,
   prizePool: PrizePool,
   options?: { includeCanary?: boolean }
 ) => {
@@ -52,7 +53,10 @@ export const getPrizesData = async (
   const prizeAssetData = await prizePool.getPrizeTokenData()
   const allPrizeInfo = await prizePool.getAllPrizeInfo()
 
-  const prices = await getTokenPrices(prizePool.chainId, [prizeAssetData.address])
+  const host = req.headers.get('host')
+  const prices = await getTokenPrices(prizePool.chainId, [prizeAssetData.address], {
+    requestHeaders: { Referer: `https://${host}` }
+  })
   const prizeAssetPrice = prices[lower(prizeAssetData.address)]
 
   const formatPrizeAsset = (amount: bigint) =>

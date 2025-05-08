@@ -29,10 +29,10 @@ export async function GET(
   }
 
   try {
-    const publicClient = getPublicClient(chainId, req)
+    const publicClient = getPublicClient(req, chainId)
     const vault = getVault(chainId, vaultAddress, publicClient)
     const prizePool = getPrizePool(vault)
-    const vaultData = await getVaultData(vault, prizePool)
+    const vaultData = await getVaultData(req, vault, prizePool)
 
     return NextResponse.json(vaultData, { status: 200 })
   } catch {

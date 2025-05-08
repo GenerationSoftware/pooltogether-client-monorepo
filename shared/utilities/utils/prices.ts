@@ -14,7 +14,8 @@ import { lower } from './addresses'
  */
 export const getTokenPrices = async (
   chainId: number,
-  tokenAddresses?: string[]
+  tokenAddresses?: string[],
+  options?: { requestHeaders?: Record<string, string> }
 ): Promise<{ [address: Address]: number }> => {
   try {
     if (TOKEN_PRICE_API_SUPPORTED_NETWORKS.includes(chainId)) {
@@ -25,7 +26,10 @@ export const getTokenPrices = async (
         url.searchParams.set('tokens', tokenAddresses.join(','))
       }
 
-      const response = await fetch(url.toString())
+      const response = await fetch(
+        url.toString(),
+        !!options?.requestHeaders ? { headers: options.requestHeaders } : undefined
+      )
       const rawTokenPrices: { [address: Address]: { date: string; price: number }[] } =
         await response.json()
       Object.keys(rawTokenPrices).forEach((address) => {
@@ -68,7 +72,8 @@ export const getTokenPrices = async (
  */
 export const getHistoricalTokenPrices = async (
   chainId: number,
-  tokenAddress: string
+  tokenAddress: string,
+  options?: { requestHeaders?: Record<string, string> }
 ): Promise<{ [address: Address]: { date: string; price: number }[] }> => {
   if (!isAddress(tokenAddress)) return {}
 
@@ -76,7 +81,10 @@ export const getHistoricalTokenPrices = async (
     if (TOKEN_PRICE_API_SUPPORTED_NETWORKS.includes(chainId)) {
       const url = new URL(`${TOKEN_PRICES_API_URL}/${chainId}/${tokenAddress}`)
 
-      const response = await fetch(url.toString())
+      const response = await fetch(
+        url.toString(),
+        !!options?.requestHeaders ? { headers: options.requestHeaders } : undefined
+      )
       const tokenPrices: { [address: Address]: { date: string; price: number }[] } =
         await response.json()
 

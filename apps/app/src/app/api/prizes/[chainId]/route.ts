@@ -16,9 +16,9 @@ export async function GET(
   }
 
   try {
-    const publicClient = getPublicClient(chainId, req)
+    const publicClient = getPublicClient(req, chainId)
     const prizePool = getPrizePool(chainId, publicClient)
-    const prizesData = await getPrizesData(prizePool)
+    const prizesData = await getPrizesData(req, prizePool)
 
     return NextResponse.json(prizesData, { status: 200 })
   } catch {
