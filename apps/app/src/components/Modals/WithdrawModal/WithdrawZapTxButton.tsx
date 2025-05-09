@@ -17,7 +17,7 @@ import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbo
 import { useMiscSettings } from '@shared/generic-react-hooks'
 import { ApprovalTooltip, TransactionButton } from '@shared/react-components'
 import { Button } from '@shared/ui'
-import { ZAP_SETTINGS } from '@shared/utilities'
+import { supportsEip5792, ZAP_SETTINGS } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
@@ -151,8 +151,7 @@ export const WithdrawZapTxButton = (props: WithdrawZapTxButtonProps) => {
   const { data: walletCapabilities } = useCapabilities()
   const { isActive: isEip5792Disabled } = useMiscSettings('eip5792Disabled')
   const isUsingEip5792 =
-    Object.values(walletCapabilities?.[vault.chainId] ?? {}).some((c) => !!c.supported) &&
-    !isEip5792Disabled
+    supportsEip5792(walletCapabilities?.[vault.chainId] ?? {}) && !isEip5792Disabled
   const paymasterUrl = PAYMASTER_URLS[vault.chainId]
 
   const data5792Tx = useSend5792WithdrawZapTransaction(
