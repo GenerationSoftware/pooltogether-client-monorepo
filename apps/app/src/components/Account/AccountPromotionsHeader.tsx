@@ -10,7 +10,7 @@ import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbo
 import { useMiscSettings } from '@shared/generic-react-hooks'
 import { CurrencyValue, TransactionButton } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
-import { getNiceNetworkNameByChainId } from '@shared/utilities'
+import { getNiceNetworkNameByChainId, supportsEip5792 } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -182,9 +182,7 @@ const ClaimAllRewardsButton = (props: ClaimAllRewardsButtonProps) => {
 
   const { data: walletCapabilities } = useCapabilities()
   const { isActive: isEip5792Disabled } = useMiscSettings('eip5792Disabled')
-  const isUsingEip5792 =
-    Object.values(walletCapabilities?.[chainId] ?? {}).some((c) => !!c.supported) &&
-    !isEip5792Disabled
+  const isUsingEip5792 = supportsEip5792(walletCapabilities?.[chainId] ?? {}) && !isEip5792Disabled
   const paymasterUrl = PAYMASTER_URLS[chainId]
 
   const data5792ClaimRewardsTx = useSend5792ClaimRewardsTransaction(

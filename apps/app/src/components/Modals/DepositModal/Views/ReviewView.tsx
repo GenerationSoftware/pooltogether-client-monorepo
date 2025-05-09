@@ -16,7 +16,8 @@ import {
   formatBigIntForDisplay,
   formatNumberForDisplay,
   getVaultId,
-  lower
+  lower,
+  supportsEip5792
 } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
@@ -57,8 +58,7 @@ export const ReviewView = (props: ReviewViewProps) => {
   const { data: walletCapabilities } = useCapabilities()
   const { isActive: isEip5792Disabled } = useMiscSettings('eip5792Disabled')
   const isUsingEip5792 =
-    Object.values(walletCapabilities?.[vault.chainId] ?? {}).some((c) => !!c.supported) &&
-    !isEip5792Disabled
+    supportsEip5792(walletCapabilities?.[vault.chainId] ?? {}) && !isEip5792Disabled
 
   const { data: tokenPermitSupport } = useTokenPermitSupport(vault.chainId, tokenAddress!)
   const { isActive: isPermitDepositsDisabled } = useMiscSettings('permitDepositsDisabled')

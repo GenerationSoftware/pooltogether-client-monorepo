@@ -9,7 +9,7 @@ import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
 import { MODAL_KEYS, useIsModalOpen, useMiscSettings } from '@shared/generic-react-hooks'
 import { createDepositTxToast } from '@shared/react-components'
 import { Modal } from '@shared/ui'
-import { LINKS, lower } from '@shared/utilities'
+import { LINKS, lower, supportsEip5792 } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtom, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
@@ -77,9 +77,7 @@ export const DepositModal = (props: DepositModalProps) => {
   const { data: walletCapabilities } = useCapabilities()
   const { isActive: isEip5792Disabled } = useMiscSettings('eip5792Disabled')
   const isUsingEip5792 =
-    !!vault &&
-    Object.values(walletCapabilities?.[vault.chainId] ?? {}).some((c) => !!c.supported) &&
-    !isEip5792Disabled
+    !!vault && supportsEip5792(walletCapabilities?.[vault.chainId] ?? {}) && !isEip5792Disabled
 
   const { data: tokenPermitSupport } = useTokenPermitSupport(
     vault?.chainId!,
