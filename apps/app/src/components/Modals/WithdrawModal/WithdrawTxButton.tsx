@@ -14,7 +14,7 @@ import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbo
 import { useMiscSettings } from '@shared/generic-react-hooks'
 import { TransactionButton } from '@shared/react-components'
 import { Button } from '@shared/ui'
-import { supportsEip5792 } from '@shared/utilities'
+import { supportsEip5792, supportsEip7677 } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
@@ -114,14 +114,19 @@ export const WithdrawTxButton = (props: WithdrawTxButtonProps) => {
   })
 
   const { data: walletCapabilities } = useCapabilities()
+  const chainWalletCapabilities = walletCapabilities?.[vault.chainId] ?? {}
+
   const { isActive: isEip5792Disabled } = useMiscSettings('eip5792Disabled')
-  const isUsingEip5792 =
-    supportsEip5792(walletCapabilities?.[vault.chainId] ?? {}) && !isEip5792Disabled
+  const isUsingEip5792 = supportsEip5792(chainWalletCapabilities) && !isEip5792Disabled
+
+  const { isActive: isEip7677Disabled } = useMiscSettings('eip7677Disabled')
   const paymasterUrl = PAYMASTER_URLS[vault.chainId]
+  const isUsingEip7677 =
+    !!paymasterUrl && supportsEip7677(chainWalletCapabilities) && !isEip7677Disabled
 
   const data5792Tx = useSend5792RedeemTransaction(withdrawAmount, vault, {
     minAssets: expectedAssetAmount,
-    paymasterService: !!paymasterUrl ? { url: paymasterUrl, optional: true } : undefined,
+    paymasterService: isUsingEip7677 ? { url: paymasterUrl, optional: true } : undefined,
     onSend: () => {
       setModalView('waiting')
     },

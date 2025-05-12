@@ -318,6 +318,10 @@
       "disabled": "Permit approvals are disabled"
     },
     "eip5792": {
+      "enabled": "Batched transactions are enabled",
+      "disabled": "Batched transactions are disabled"
+    },
+    "eip7677": {
       "enabled": "Gasless transactions are enabled",
       "disabled": "Gasless transactions are disabled"
     }
