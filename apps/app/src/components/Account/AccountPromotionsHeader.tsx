@@ -10,7 +10,7 @@ import { useAddRecentTransaction, useChainModal, useConnectModal } from '@rainbo
 import { useMiscSettings } from '@shared/generic-react-hooks'
 import { CurrencyValue, TransactionButton } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
-import { getNiceNetworkNameByChainId, supportsEip5792 } from '@shared/utilities'
+import { getNiceNetworkNameByChainId, supportsEip5792, supportsEip7677 } from '@shared/utilities'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -181,16 +181,22 @@ const ClaimAllRewardsButton = (props: ClaimAllRewardsButtonProps) => {
   )
 
   const { data: walletCapabilities } = useCapabilities()
+  const chainWalletCapabilities = walletCapabilities?.[chainId] ?? {}
+
   const { isActive: isEip5792Disabled } = useMiscSettings('eip5792Disabled')
-  const isUsingEip5792 = supportsEip5792(walletCapabilities?.[chainId] ?? {}) && !isEip5792Disabled
+  const isUsingEip5792 = supportsEip5792(chainWalletCapabilities) && !isEip5792Disabled
+
+  const { isActive: isEip7677Disabled } = useMiscSettings('eip7677Disabled')
   const paymasterUrl = PAYMASTER_URLS[chainId]
+  const isUsingEip7677 =
+    !!paymasterUrl && supportsEip7677(chainWalletCapabilities) && !isEip7677Disabled
 
   const data5792ClaimRewardsTx = useSend5792ClaimRewardsTransaction(
     chainId,
     userAddress,
     epochsToClaim,
     {
-      paymasterService: !!paymasterUrl ? { url: paymasterUrl, optional: true } : undefined,
+      paymasterService: isUsingEip7677 ? { url: paymasterUrl, optional: true } : undefined,
       onSuccess: () => {
         refetchAllClaimed()
         refetchAllClaimable()
@@ -204,7 +210,7 @@ const ClaimAllRewardsButton = (props: ClaimAllRewardsButtonProps) => {
     userAddress,
     poolWidePromotionsToClaim,
     {
-      paymasterService: !!paymasterUrl ? { url: paymasterUrl, optional: true } : undefined,
+      paymasterService: isUsingEip7677 ? { url: paymasterUrl, optional: true } : undefined,
       onSuccess: () => {
         refetchAllPoolWideClaimed()
         refetchAllPoolWideClaimable()
@@ -219,7 +225,7 @@ const ClaimAllRewardsButton = (props: ClaimAllRewardsButtonProps) => {
     epochsToClaim,
     poolWidePromotionsToClaim,
     {
-      paymasterService: !!paymasterUrl ? { url: paymasterUrl, optional: true } : undefined,
+      paymasterService: isUsingEip7677 ? { url: paymasterUrl, optional: true } : undefined,
       onSuccess: () => {
         refetchAllClaimed()
         refetchAllClaimable()
