@@ -63,7 +63,7 @@ export const PrizePoolDropdown = (props: PrizePoolDropdownProps) => {
       items={dropdownItems}
       header={
         <span className='block p-3 text-sm font-semibold text-pt-purple-50 md:text-pt-purple-700'>
-          {`${intl?.switchPrizePool}:` ?? 'Switch prize pool:'}
+          {intl?.switchPrizePool ?? 'Switch prize pool'}
         </span>
       }
       inline={true}
