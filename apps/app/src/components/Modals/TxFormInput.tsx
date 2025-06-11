@@ -32,6 +32,25 @@ export interface TxFormInputProps {
   disabledCoverClassName?: string
 }
 
+const TokenBadge = (props: {
+  token: Partial<TokenWithLogo>
+  fallbackLogoToken?: Partial<TokenWithLogo>
+  className?: string
+}) => {
+  const { token, fallbackLogoToken } = props
+
+  return (
+    <div className={classNames('flex shrink-0 items-center gap-1', props.className)}>
+      <TokenIcon token={token} fallbackToken={fallbackLogoToken} />
+      <span className='text-lg font-semibold md:text-2xl'>
+        {token.symbol && token.symbol?.length > 17
+          ? `${token.symbol?.slice(0, 15)}...`
+          : token.symbol}
+      </span>
+    </div>
+  )
+}
+
 export const TxFormInput = (props: TxFormInputProps) => {
   const {
     token,
@@ -108,15 +127,6 @@ export const TxFormInput = (props: TxFormInputProps) => {
     onChange?.(formattedAmount)
   }
 
-  const TokenBadge = (props: { className?: string }) => (
-    <div className={classNames('flex shrink-0 items-center gap-1', props.className)}>
-      <TokenIcon token={token} fallbackToken={fallbackLogoToken} />
-      <span className='text-lg font-semibold md:text-2xl'>
-        {token.symbol.length > 17 ? `${token.symbol.slice(0, 15)}...` : token.symbol}
-      </span>
-    </div>
-  )
-
   const formattedPriceImpact =
     priceImpact !== undefined &&
     `${priceImpact > 0 ? '+' : ''}${formatNumberForDisplay(priceImpact, {
@@ -155,7 +165,7 @@ export const TxFormInput = (props: TxFormInputProps) => {
         {showTokenPicker && !!tokenPickerOptions?.length ? (
           <div className='relative shrink-0'>
             <Dropdown
-              label={<TokenBadge />}
+              label={<TokenBadge token={token} fallbackLogoToken={fallbackLogoToken} />}
               items={tokenPickerOptions}
               inline={true}
               className='pl-1 pr-1 border-0 rounded-lg hover:bg-pt-transparent'
@@ -163,7 +173,7 @@ export const TxFormInput = (props: TxFormInputProps) => {
             />
           </div>
         ) : (
-          <TokenBadge />
+          <TokenBadge token={token} fallbackLogoToken={fallbackLogoToken} />
         )}
       </div>
       {showInfoRow && (
