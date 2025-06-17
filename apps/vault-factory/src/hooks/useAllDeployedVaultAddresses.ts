@@ -22,7 +22,18 @@ export const useAllDeployedVaultAddresses = () => {
         queryFn: async () => {
           let vaultAddresses: Lowercase<Address>[] = []
 
-          if (chainId === NETWORK.optimism) {
+          if (chainId === NETWORK.mainnet) {
+            vaultAddresses.push(
+              ...(await getVaultAddressesFromFactories(publicClient, {
+                factoryAddresses: [
+                  VAULT_FACTORY_ADDRESSES[chainId],
+                  '0x29c102109D6cb2D866CFEc380E0E10E9a287A75f'
+                ]
+              }))
+            )
+          } else if (chainId === NETWORK.optimism) {
+            vaultAddresses.push('0xa52e38a9147f5ea9e0c5547376c21c9e3f3e5e1f')
+
             vaultAddresses.push(
               ...(await getVaultAddressesFromFactories(publicClient, {
                 factoryAddresses: [
