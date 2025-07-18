@@ -24,7 +24,7 @@ export const FaqSection = (props: FaqSectionProps) => {
       question: 'Can I still win prizes on V3 or V4?',
       answer: (
         <span>
-          Both V3 and V4 prize pools have not had active draws for some time, and some of it's
+          Both V3 and V4 prize pools have not had active draws for some time, and some of its
           leftover yield has been directed to grow prizes in V5. This means any prizes being awarded
           in older versions is very unlikely if not impossible.
         </span>
