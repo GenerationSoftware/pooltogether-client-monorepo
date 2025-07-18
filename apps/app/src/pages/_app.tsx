@@ -8,7 +8,6 @@ import { WagmiProvider } from 'wagmi'
 import { AppContainer } from '@components/AppContainer'
 import { SUPPORTED_NETWORKS } from '@constants/config'
 import { ptRainbowTheme } from '@constants/theme'
-import { useFathom } from '@hooks/useFathom'
 import '../styles/globals.css'
 import { createCustomWagmiConfig } from '../utils'
 
@@ -25,8 +24,6 @@ export interface CustomAppProps {
 }
 
 export default function MyApp(props: AppProps & CustomAppProps) {
-  useFathom()
-
   return (
     <WagmiProvider config={wagmiConfig} reconnectOnMount={true}>
       <QueryClientProvider client={queryClient}>

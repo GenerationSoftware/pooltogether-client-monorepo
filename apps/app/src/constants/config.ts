@@ -408,28 +408,6 @@ export const NATIVE_ASSET_IGNORE_AMOUNT: { [chainId: number]: bigint } = {
 }
 
 /**
- * Fathom events
- */
-export const FATHOM_EVENTS = {
-  approvedExact: 'ApprovedExact',
-  changedCurrency: 'ChangedCurrency',
-  changedLanguage: 'ChangedLanguage',
-  changedRPC: 'ChangedRPC',
-  checkedPrizes: 'CheckedPrizes',
-  delegated: 'Delegated',
-  deposited: 'Deposited',
-  depositedWithPermit: 'DepositedWithPermit',
-  depositedWithZap: 'DepositedWithZap',
-  importedVaultList: 'ImportedVaultList',
-  openedDelegateModal: 'OpenedDelegateModal',
-  openedDepositModal: 'OpenedDepositModal',
-  openedDrawModal: 'OpenedDrawModal',
-  openedWithdrawModal: 'OpenedWithdrawModal',
-  redeemed: 'Redeemed',
-  redeemedWithZap: 'RedeemedWithZap'
-} as const
-
-/**
  * Wallet stats API
  */
 export const WALLET_STATS_API_URL = 'https://wallet-stats.api.cabana.fi'

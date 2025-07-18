@@ -7,7 +7,6 @@ import { CaptchaModal } from '@shared/react-components'
 import { toast } from '@shared/ui'
 import { getDiscordInvite } from '@shared/utilities'
 import classNames from 'classnames'
-import * as fathom from 'fathom-client'
 import { useTranslations } from 'next-intl'
 import Head from 'next/head'
 import { useSearchParams } from 'next/navigation'
@@ -15,7 +14,6 @@ import { useRouter } from 'next/router'
 import { ReactNode, useEffect, useState } from 'react'
 import { trackDeposit } from 'src/utils'
 import { useAccount } from 'wagmi'
-import { FATHOM_EVENTS } from '@constants/config'
 import { useWalletId } from '@hooks/useWalletId'
 import { Footer } from './Footer'
 import { CheckPrizesModal } from './Modals/CheckPrizesModal'
@@ -102,44 +100,26 @@ export const Layout = (props: LayoutProps) => {
 
       <Navbar />
 
-      <SettingsModal
-        locales={['en', 'de', 'ru', 'ko', 'uk', 'hi', 'es']}
-        onCurrencyChange={() => fathom.trackEvent(FATHOM_EVENTS.changedCurrency)}
-        onLanguageChange={() => fathom.trackEvent(FATHOM_EVENTS.changedLanguage)}
-        onVaultListImport={() => fathom.trackEvent(FATHOM_EVENTS.importedVaultList)}
-        onRpcChange={() => fathom.trackEvent(FATHOM_EVENTS.changedRPC)}
-      />
+      <SettingsModal locales={['en', 'de', 'ru', 'ko', 'uk', 'hi', 'es']} />
 
       <DepositModal
         refetchUserBalances={refetchUserBalances}
-        onSuccessfulApproval={() => fathom.trackEvent(FATHOM_EVENTS.approvedExact)}
         onSuccessfulDeposit={(chainId, txHash) => {
-          fathom.trackEvent(FATHOM_EVENTS.deposited)
           !!walletId && trackDeposit(chainId, txHash, walletId)
         }}
         onSuccessfulDepositWithPermit={(chainId, txHash) => {
-          fathom.trackEvent(FATHOM_EVENTS.depositedWithPermit)
           !!walletId && trackDeposit(chainId, txHash, walletId)
         }}
         onSuccessfulDepositWithZap={(chainId, txHash) => {
-          fathom.trackEvent(FATHOM_EVENTS.depositedWithZap)
           !!walletId && trackDeposit(chainId, txHash, walletId)
         }}
       />
 
-      <WithdrawModal
-        refetchUserBalances={refetchUserBalances}
-        onSuccessfulApproval={() => fathom.trackEvent(FATHOM_EVENTS.approvedExact)}
-        onSuccessfulWithdrawal={() => fathom.trackEvent(FATHOM_EVENTS.redeemed)}
-        onSuccessfulWithdrawalWithZap={() => fathom.trackEvent(FATHOM_EVENTS.redeemedWithZap)}
-      />
+      <WithdrawModal refetchUserBalances={refetchUserBalances} />
 
-      <DelegateModal onSuccessfulDelegation={() => fathom.trackEvent(FATHOM_EVENTS.delegated)} />
+      <DelegateModal />
 
-      <CheckPrizesModal
-        onWin={() => fathom.trackEvent(FATHOM_EVENTS.checkedPrizes, { _value: 1 })}
-        onNoWin={() => fathom.trackEvent(FATHOM_EVENTS.checkedPrizes, { _value: 0 })}
-      />
+      <CheckPrizesModal />
 
       <CaptchaModal
         hCaptchaSiteKey='11cdabde-af7e-42cb-ba97-76e35b7f7c39'
