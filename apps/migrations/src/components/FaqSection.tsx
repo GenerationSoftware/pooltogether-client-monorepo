@@ -24,13 +24,9 @@ export const FaqSection = (props: FaqSectionProps) => {
       question: 'Can I still win prizes on V3 or V4?',
       answer: (
         <span>
-          While it is still possible for prizes in PoolTogether V3 to be awarded, draws have not
-          been propagated in a long time. On PoolTogether V4, prize pools are in the process of
-          being wound down as described on this{' '}
-          <FaqLink href='https://gov.pooltogether.com/t/ptip-89-sunsetting-pooltogether-v4/3143'>
-            governance proposal
-          </FaqLink>
-          .
+          Both V3 and V4 prize pools have not had active draws for some time, and some of its
+          leftover yield has been directed to grow prizes in V5. This means any prizes being awarded
+          in older versions is very unlikely if not impossible.
         </span>
       )
     },
