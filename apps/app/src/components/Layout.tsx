@@ -107,9 +107,6 @@ export const Layout = (props: LayoutProps) => {
         onSuccessfulDeposit={(chainId, txHash) => {
           !!walletId && trackDeposit(chainId, txHash, walletId)
         }}
-        onSuccessfulDepositWithPermit={(chainId, txHash) => {
-          !!walletId && trackDeposit(chainId, txHash, walletId)
-        }}
         onSuccessfulDepositWithZap={(chainId, txHash) => {
           !!walletId && trackDeposit(chainId, txHash, walletId)
         }}

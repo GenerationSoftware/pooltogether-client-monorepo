@@ -3,11 +3,9 @@ import {
   useBeefyVault,
   useSelectedVaults,
   useToken,
-  useTokenPermitSupport,
   useVaultSharePrice,
   useVaultTokenAddress
 } from '@generationsoftware/hyperstructure-react-hooks'
-import { useMiscSettings } from '@shared/generic-react-hooks'
 import { PrizePoolBadge, TokenIcon } from '@shared/react-components'
 import { Token, TokenWithLogo } from '@shared/types'
 import { Spinner } from '@shared/ui'
@@ -16,16 +14,13 @@ import {
   formatBigIntForDisplay,
   formatNumberForDisplay,
   getVaultId,
-  lower,
-  supportsEip5792
+  lower
 } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
-import { walletSupportsPermit } from 'src/utils'
 import { Address } from 'viem'
-import { useAccount, useCapabilities } from 'wagmi'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
 import {
@@ -47,26 +42,9 @@ export const ReviewView = (props: ReviewViewProps) => {
   const t_common = useTranslations('Common')
   const t_txModals = useTranslations('TxModals')
 
-  const { connector } = useAccount()
-
   const formTokenAddress = useAtomValue(depositFormTokenAddressAtom)
 
   const { data: vaultTokenAddress } = useVaultTokenAddress(vault)
-
-  const tokenAddress = formTokenAddress ?? vaultTokenAddress
-
-  const { data: walletCapabilities } = useCapabilities()
-  const { isActive: isEip5792Disabled } = useMiscSettings('eip5792Disabled')
-  const isUsingEip5792 =
-    supportsEip5792(walletCapabilities?.[vault.chainId] ?? {}) && !isEip5792Disabled
-
-  const { data: tokenPermitSupport } = useTokenPermitSupport(vault.chainId, tokenAddress!)
-  const { isActive: isPermitDepositsDisabled } = useMiscSettings('permitDepositsDisabled')
-  const isUsingPermits =
-    !isUsingEip5792 &&
-    tokenPermitSupport === 'eip2612' &&
-    walletSupportsPermit(connector?.id) &&
-    !isPermitDepositsDisabled
 
   const isZapping =
     !!vaultTokenAddress &&
@@ -77,8 +55,6 @@ export const ReviewView = (props: ReviewViewProps) => {
     ? lower(formTokenAddress) === DOLPHIN_ADDRESS
       ? ['depositWithZap', 'withdraw']
       : ['approve', 'depositWithZap', 'withdraw']
-    : isUsingPermits
-    ? ['depositWithPermit', 'withdraw']
     : ['approve', 'deposit', 'withdraw']
 
   return (
