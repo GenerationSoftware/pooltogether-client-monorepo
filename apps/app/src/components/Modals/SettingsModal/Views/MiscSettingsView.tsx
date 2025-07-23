@@ -6,9 +6,6 @@ import { ReactNode } from 'react'
 export const MiscSettingsView = () => {
   const t = useTranslations('Settings')
 
-  const { isActive: isPermitDepositsDisabled, set: setIsPermitDepositsDisabled } =
-    useMiscSettings('permitDepositsDisabled')
-
   const { isActive: isEip5792Disabled, set: setIsEip5792Disabled } =
     useMiscSettings('eip5792Disabled')
 
@@ -21,12 +18,6 @@ export const MiscSettingsView = () => {
         {t('otherSettings')}
       </span>
 
-      <SettingToggle
-        onChange={(checked) => setIsPermitDepositsDisabled(!checked)}
-        checkedContent={t('permitApprovals.enabled')}
-        uncheckedContent={t('permitApprovals.disabled')}
-        isChecked={!isPermitDepositsDisabled}
-      />
       <SettingToggle
         onChange={(checked) => setIsEip5792Disabled(!checked)}
         checkedContent={t('eip5792.enabled')}

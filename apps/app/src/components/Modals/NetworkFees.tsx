@@ -7,7 +7,6 @@ import { CurrencyValue, TX_GAS_ESTIMATES } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
 import {
   erc20ABI,
-  getSecondsSinceEpoch,
   PRIZE_POOLS,
   sToMs,
   twabControllerABI,
@@ -25,7 +24,6 @@ export interface NetworkFeesProps {
   show?: (
     | 'approve'
     | 'deposit'
-    | 'depositWithPermit'
     | 'depositWithZap'
     | 'withdraw'
     | 'withdrawWithZap'
@@ -77,27 +75,6 @@ export const NetworkFees = (props: NetworkFeesProps) => {
                 account: userAddress
               }}
               gasAmount={TX_GAS_ESTIMATES.deposit}
-            />
-          )}
-          {show?.includes('depositWithPermit') && (
-            <TXFeeEstimate
-              name={t('deposit')}
-              chainId={vault.chainId}
-              tx={{
-                address: vault.address,
-                abi: vaultABI,
-                functionName: 'depositWithPermit',
-                args: [
-                  1n,
-                  vault.address,
-                  getSecondsSinceEpoch(),
-                  28,
-                  '0x6e100a352ec6ad1b70802290e18aeed190704973570f3b8ed42cb9808e2ea6bf',
-                  '0x4a90a229a244495b41890987806fcbd2d5d23fc0dbe5f5256c2613c039d76db8'
-                ],
-                account: userAddress
-              }}
-              gasAmount={TX_GAS_ESTIMATES.depositWithPermit}
             />
           )}
           {show?.includes('depositWithZap') && !!ZAP_SETTINGS[vault.chainId] && (

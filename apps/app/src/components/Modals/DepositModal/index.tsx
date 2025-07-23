@@ -1,22 +1,19 @@
 import { Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useSelectedVault,
-  useTokenPermitSupport,
   useVaultExchangeRate,
   useVaultTokenData
 } from '@generationsoftware/hyperstructure-react-hooks'
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
-import { MODAL_KEYS, useIsModalOpen, useMiscSettings } from '@shared/generic-react-hooks'
+import { MODAL_KEYS, useIsModalOpen } from '@shared/generic-react-hooks'
 import { createDepositTxToast } from '@shared/react-components'
 import { Modal } from '@shared/ui'
-import { LINKS, lower, supportsEip5792 } from '@shared/utilities'
+import { LINKS, lower } from '@shared/utilities'
 import classNames from 'classnames'
 import { useAtom, useSetAtom } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useMemo, useState } from 'react'
-import { walletSupportsPermit } from 'src/utils'
 import { Hash } from 'viem'
-import { useAccount, useCapabilities } from 'wagmi'
 import { useSupportedPrizePools } from '@hooks/useSupportedPrizePools'
 import {
   depositFormShareAmountAtom,
@@ -24,7 +21,6 @@ import {
   depositFormTokenAmountAtom
 } from './DepositForm'
 import { DepositTxButton } from './DepositTxButton'
-import { DepositWithPermitTxButton } from './DepositWithPermitTxButton'
 import { DepositZapTxButton } from './DepositZapTxButton'
 import { ConfirmingView } from './Views/ConfirmingView'
 import { ErrorView } from './Views/ErrorView'
@@ -40,7 +36,6 @@ export interface DepositModalProps {
   refetchUserBalances?: () => void
   onSuccessfulApproval?: () => void
   onSuccessfulDeposit?: (chainId: number, txHash: Hash) => void
-  onSuccessfulDepositWithPermit?: (chainId: number, txHash: Hash) => void
   onSuccessfulDepositWithZap?: (chainId: number, txHash: Hash) => void
 }
 
@@ -50,13 +45,10 @@ export const DepositModal = (props: DepositModalProps) => {
     refetchUserBalances,
     onSuccessfulApproval,
     onSuccessfulDeposit,
-    onSuccessfulDepositWithPermit,
     onSuccessfulDepositWithZap
   } = props
 
   const t_toasts = useTranslations('Toasts.transactions')
-
-  const { connector } = useAccount()
 
   const addRecentTransaction = useAddRecentTransaction()
 
@@ -73,22 +65,6 @@ export const DepositModal = (props: DepositModalProps) => {
   const setFormShareAmount = useSetAtom(depositFormShareAmountAtom)
 
   const { data: vaultToken } = useVaultTokenData(vault!)
-
-  const { data: walletCapabilities } = useCapabilities()
-  const { isActive: isEip5792Disabled } = useMiscSettings('eip5792Disabled')
-  const isUsingEip5792 =
-    !!vault && supportsEip5792(walletCapabilities?.[vault.chainId] ?? {}) && !isEip5792Disabled
-
-  const { data: tokenPermitSupport } = useTokenPermitSupport(
-    vault?.chainId!,
-    formTokenAddress ?? vaultToken?.address!
-  )
-  const { isActive: isPermitDepositsDisabled } = useMiscSettings('permitDepositsDisabled')
-  const isUsingPermits =
-    !isUsingEip5792 &&
-    tokenPermitSupport === 'eip2612' &&
-    walletSupportsPermit(connector?.id) &&
-    !isPermitDepositsDisabled
 
   const { data: vaultExchangeRate } = useVaultExchangeRate(vault!)
 
@@ -149,16 +125,6 @@ export const DepositModal = (props: DepositModalProps) => {
             refetchUserBalances={refetchUserBalances}
             onSuccessfulApproval={onSuccessfulApproval}
             onSuccessfulDepositWithZap={onSuccessfulDepositWithZap}
-          />
-        ) : isUsingPermits ? (
-          <DepositWithPermitTxButton
-            vault={vault}
-            modalView={view}
-            setModalView={setView}
-            setDepositTxHash={setDepositTxHash}
-            refetchUserBalances={refetchUserBalances}
-            onSuccessfulDeposit={onSuccessfulDeposit}
-            onSuccessfulDepositWithPermit={onSuccessfulDepositWithPermit}
           />
         ) : (
           <DepositTxButton

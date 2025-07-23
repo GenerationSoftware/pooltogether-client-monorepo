@@ -153,15 +153,6 @@ export const trackDeposit = async (chainId: number, txHash: `0x${string}`, walle
 }
 
 /**
- * Returns whether or not the current wallet connector supports ERC-2612 permits
- * @param connectorId the current wallet connector ID
- * @returns
- */
-export const walletSupportsPermit = (connectorId?: string) => {
-  return !connectorId?.toLowerCase().includes('coinbase')
-}
-
-/**
  * Returns a clean, concise URI for display purposes
  * @param uri a URI to clean up
  * @returns
