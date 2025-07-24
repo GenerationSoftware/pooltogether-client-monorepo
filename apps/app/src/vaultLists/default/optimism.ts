@@ -375,5 +375,25 @@ export const optimismVaults: VaultList['tokens'] = [
         appURI: 'https://moonwell.fi/markets/supply/optimism/wsteth'
       }
     }
+  },
+  {
+    chainId: NETWORK.optimism,
+    address: '0x449b6A60501015C1a8fda6CD97147280F5eb33D7',
+    name: 'Prize OP',
+    decimals: 18,
+    symbol: 'przOP',
+    logoURI: `${DOMAINS.app}/icons/przOP.svg`,
+    tags: ['moonwell'],
+    extensions: {
+      underlyingAsset: {
+        address: '0x4200000000000000000000000000000000000042',
+        symbol: 'OP',
+        name: 'Optimism'
+      },
+      yieldSource: {
+        name: 'Moonwell',
+        appURI: 'https://moonwell.fi/markets/supply/optimism/op'
+      }
+    }
   }
 ]
