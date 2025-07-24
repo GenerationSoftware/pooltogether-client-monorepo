@@ -2,7 +2,7 @@ import { getTimeBreakdown, msToS, sToMs } from '@shared/utilities'
 import { useEffect, useState } from 'react'
 
 /**
- * Returns days, hours, minutes and seconds until a given epoch timestamp
+ * Returns years, days, hours, minutes and seconds until a given epoch timestamp
  * @param targetEpochTimestampInSeconds epoch timestamp in seconds
  * @returns
  */
