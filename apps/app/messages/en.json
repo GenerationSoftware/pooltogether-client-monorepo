@@ -60,6 +60,8 @@
     "prize": "Prize",
     "frequency": "Frequency",
     "recentWinners": "Recent Winners",
+    "drawBeingAwarded": "Draw #{drawId} is being awarded...",
+    "drawWillCloseIn": "Draw #{drawId} will close in <countdown></countdown>",
     "drawWinners": {
       "beforeValue": "{numPeople, plural, one {# person} other {# people}} won",
       "afterValue": {

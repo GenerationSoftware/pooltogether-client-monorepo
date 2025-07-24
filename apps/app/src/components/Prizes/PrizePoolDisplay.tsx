@@ -93,6 +93,9 @@ const PrizePoolCarousel = (props: PrizePoolCarouselProps) => {
   const prevPrizePoolIndex = prizePoolIndex === 0 ? prizePoolsArray.length - 1 : prizePoolIndex - 1
   const nextPrizePoolIndex = prizePoolIndex === prizePoolsArray.length - 1 ? 0 : prizePoolIndex + 1
 
+  // TODO: ideally this isn't hardcoded, and matches the number of relevant prize tiers of the largest prize pool
+  const minPrizeRows = 6
+
   return (
     <div
       className={classNames(
@@ -102,14 +105,17 @@ const PrizePoolCarousel = (props: PrizePoolCarouselProps) => {
     >
       <PrizePoolPrizesCard
         prizePool={prizePoolsArray[prevPrizePoolIndex]}
+        minPrizeRows={minPrizeRows}
         className='hidden w-[calc(100vw-4rem)] shrink-0 lg:w-[38rem] lg:flex'
       />
       <PrizePoolPrizesCard
         prizePool={prizePoolsArray[prizePoolIndex]}
+        minPrizeRows={minPrizeRows}
         className='w-[calc(100vw-4rem)] shrink-0 lg:w-[38rem]'
       />
       <PrizePoolPrizesCard
         prizePool={prizePoolsArray[nextPrizePoolIndex]}
+        minPrizeRows={minPrizeRows}
         className='hidden w-[calc(100vw-4rem)] shrink-0 lg:w-[38rem] lg:flex'
       />
       <div className='absolute w-full h-full pointer-events-none lg:bg-[linear-gradient(90deg,#21064E_15%,transparent_35%,transparent_65%,#21064E_85%)]'>
