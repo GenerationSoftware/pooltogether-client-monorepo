@@ -62,10 +62,10 @@ export const PrizePoolPrizesCard = (props: PrizePoolPrizesCardProps) => {
 
   const { years, days, hours, minutes, seconds } = useCountdown(currentDrawClosesAt ?? 0)
   const countdownToCurrentDrawClose = !!currentDrawClosesAt
-    ? { hours: years * 365 * 24 + days * 24 + hours, minutes, seconds }
+    ? { days: years * 365 + days, hours, minutes, seconds }
     : undefined
   const formattedCountdownToCurrentDrawClose = !!countdownToCurrentDrawClose
-    ? `${
+    ? `${!!countdownToCurrentDrawClose.days ? `${countdownToCurrentDrawClose.days}:` : ''}${
         countdownToCurrentDrawClose.hours < 10
           ? '0' + countdownToCurrentDrawClose.hours
           : countdownToCurrentDrawClose.hours
