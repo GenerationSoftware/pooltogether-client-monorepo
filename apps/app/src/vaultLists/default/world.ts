@@ -19,5 +19,23 @@ export const worldVaults: VaultList['tokens'] = [
         name: 'PoolTogether'
       }
     }
+  },
+  {
+    chainId: NETWORK.world,
+    address: '0x4c7e1f64a4b121d2f10d6fbca0db143787bf64bb',
+    name: 'Prize WLD',
+    decimals: 18,
+    symbol: 'przWLD',
+    extensions: {
+      underlyingAsset: {
+        address: '0x2cFc85d8E48F8EAB294be644d9E25C3030863003',
+        symbol: 'WLD',
+        name: 'Worldcoin'
+      },
+      yieldSource: {
+        name: 'Morpho',
+        appURI: 'https://lite.morpho.org/world-chain/earn'
+      }
+    }
   }
 ]
