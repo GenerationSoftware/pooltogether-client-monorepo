@@ -106,8 +106,8 @@ export const useSend5792PoolWideClaimRewardsTransaction = (
 
   const rest = isMulticall ? restMulticall : restPoolWideClaimRewards
   const send5792PoolWideClaimRewardsTransaction = isMulticall
-    ? () => _sendMulticallTransaction
-    : () => _sendPoolWideClaimRewardsTransaction
+    ? _sendMulticallTransaction
+    : _sendPoolWideClaimRewardsTransaction
 
   return { ...rest, send5792PoolWideClaimRewardsTransaction }
 }

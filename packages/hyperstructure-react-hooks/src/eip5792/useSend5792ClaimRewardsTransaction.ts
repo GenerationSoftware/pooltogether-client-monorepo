@@ -105,8 +105,8 @@ export const useSend5792ClaimRewardsTransaction = (
 
   const rest = isMulticall ? restMulticall : restClaimRewards
   const send5792ClaimRewardsTransaction = isMulticall
-    ? () => _sendMulticallTransaction
-    : () => _sendClaimRewardsTransaction
+    ? _sendMulticallTransaction
+    : _sendClaimRewardsTransaction
 
   return { ...rest, send5792ClaimRewardsTransaction }
 }
