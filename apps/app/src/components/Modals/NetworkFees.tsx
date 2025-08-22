@@ -24,6 +24,7 @@ export interface NetworkFeesProps {
   show?: (
     | 'approve'
     | 'deposit'
+    | 'approve+deposit'
     | 'depositWithZap'
     | 'withdraw'
     | 'withdrawWithZap'
@@ -75,6 +76,27 @@ export const NetworkFees = (props: NetworkFeesProps) => {
                 account: userAddress
               }}
               gasAmount={TX_GAS_ESTIMATES.deposit}
+            />
+          )}
+          {(!show || show.includes('approve+deposit')) && (
+            <AggregateTXFeeEstimate
+              name={t('deposit')}
+              chainId={vault.chainId}
+              tx1={{
+                address: tokenAddress,
+                abi: erc20ABI,
+                functionName: 'approve',
+                args: [vault.address, 1n],
+                account: userAddress
+              }}
+              tx2={{
+                address: vault.address,
+                abi: vaultABI,
+                functionName: 'deposit',
+                args: [1n, vault.address],
+                account: userAddress
+              }}
+              gasAmount2={TX_GAS_ESTIMATES.deposit}
             />
           )}
           {show?.includes('depositWithZap') && !!ZAP_SETTINGS[vault.chainId] && (
@@ -230,15 +252,57 @@ const TXFeeEstimate = (props: TXFeeEstimateProps) => {
 
   const txCost = gasEstimates?.totalGasEth
 
+  return <FeeValue name={name} fee={txCost} isFetched={isFetchedGasEstimates} />
+}
+
+interface AggregateTXFeeEstimateProps {
+  name: string
+  chainId: number
+  tx1: Parameters<typeof useGasCostEstimates>[1]
+  tx2: Parameters<typeof useGasCostEstimates>[1]
+  gasAmount1?: bigint
+  gasAmount2?: bigint
+}
+
+const AggregateTXFeeEstimate = (props: AggregateTXFeeEstimateProps) => {
+  const { name, chainId, tx1, tx2, gasAmount1, gasAmount2 } = props
+
+  const { data: gasEstimates1, isFetched: isFetchedGasEstimates1 } = useGasCostEstimates(
+    chainId,
+    tx1,
+    { gasAmount: gasAmount1, refetchInterval: sToMs(10) }
+  )
+
+  const { data: gasEstimates2, isFetched: isFetchedGasEstimates2 } = useGasCostEstimates(
+    chainId,
+    tx2,
+    { gasAmount: gasAmount2, refetchInterval: sToMs(10) }
+  )
+
+  const txCost = (gasEstimates1?.totalGasEth ?? 0) + (gasEstimates2?.totalGasEth ?? 0)
+  const isFetched = isFetchedGasEstimates1 && isFetchedGasEstimates2
+
+  return <FeeValue name={name} fee={txCost} isFetched={isFetched} />
+}
+
+interface FeeValueProps {
+  name: string
+  fee?: number
+  isFetched: boolean
+}
+
+const FeeValue = (props: FeeValueProps) => {
+  const { name, fee, isFetched } = props
+
   return (
     <span className='flex justify-between items-center gap-6'>
       <span className='font-normal text-pt-purple-100'>{name}</span>
       <span className='text-pt-purple-50'>
-        {isFetchedGasEstimates ? (
-          txCost === undefined ? (
+        {isFetched ? (
+          fee === undefined ? (
             <>-</>
           ) : (
-            <CurrencyValue baseValue={txCost} fallback={<>-</>} />
+            <CurrencyValue baseValue={fee} fallback={<>-</>} />
           )
         ) : (
           <Spinner />

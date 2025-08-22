@@ -4,11 +4,18 @@ import {
   useVaultShareData,
   useVaultTokenAddress
 } from '@generationsoftware/hyperstructure-react-hooks'
+import { useMiscSettings } from '@shared/generic-react-hooks'
 import { AlertIcon, PrizePoolBadge } from '@shared/react-components'
 import { Spinner } from '@shared/ui'
-import { DOLPHIN_ADDRESS, getNiceNetworkNameByChainId, lower } from '@shared/utilities'
+import {
+  DOLPHIN_ADDRESS,
+  getNiceNetworkNameByChainId,
+  lower,
+  supportsEip5792
+} from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
+import { useCapabilities } from 'wagmi'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
 import {
@@ -44,10 +51,18 @@ export const MainView = (props: MainViewProps) => {
     !!formTokenAddress &&
     lower(vaultTokenAddress) !== lower(formTokenAddress)
 
+  const { data: walletCapabilities } = useCapabilities()
+  const chainWalletCapabilities = walletCapabilities?.[vault.chainId] ?? {}
+
+  const { isActive: isEip5792Disabled } = useMiscSettings('eip5792Disabled')
+  const isUsingEip5792 = supportsEip5792(chainWalletCapabilities) && !isEip5792Disabled
+
   const feesToShow: NetworkFeesProps['show'] = isZapping
     ? lower(formTokenAddress) === DOLPHIN_ADDRESS
       ? ['depositWithZap', 'withdraw']
       : ['approve', 'depositWithZap', 'withdraw']
+    : isUsingEip5792
+    ? ['approve+deposit', 'withdraw']
     : ['approve', 'deposit', 'withdraw']
 
   return (
