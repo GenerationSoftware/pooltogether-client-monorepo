@@ -1,1 +1,322 @@
-{}
+{
+  "Common": {
+    "depositToWin": "Depositar para ganhar",
+    "prizePool": "Prêmios {network}",
+    "grandPrize": "Prêmio Grande",
+    "joinDiscord": "Junte-se à nossa comunidade do Discord",
+    "showMore": "Mostrar mais",
+    "drawId": "Saque #{id}",
+    "manage": "Administrar",
+    "deposit": "Depositar",
+    "withdraw": "Sacar",
+    "delegate": "Delegar",
+    "learnMore": "Saber mais",
+    "back": "Anterior",
+    "connectWallet": "Conectar Carteira",
+    "viewTx": "Visualizar TX",
+    "viewOn": "Ver em {name}",
+    "close": "Fechar",
+    "learnAboutRisks": "Saiba mais sobre os riscos",
+    "readDocs": "Ler a documentação",
+    "termsOfService": "Termos de Serviço",
+    "bonusRewards": "Recompensas Bônus",
+    "claim": "Reivindicar",
+    "apr": "APR",
+    "warning": "Atenção",
+    "getTokenAt": "Obtenha {token} em",
+    "cabanaPoweredBy": "Cabana é alimentada por",
+    "new": "Novo",
+    "greatMigration": {
+      "joinTitle": "Junte-se à grande migração do <highlight>Pooly</highlight>",
+      "joinButton": "Junte-se à migração",
+      "migrateTo": "Migrar para o novo PoolTogether",
+      "earnUpTo": "e ganhe até <highlight>{apr}% APR</highlight> de Recompensas em OP",
+      "skipForNow": "Pular por enquanto"
+    },
+    "before": "Antes",
+    "after": "Depois",
+    "distribution": "Distribuição",
+    "nextClaim": "Próximo Claim",
+    "date": "Data",
+    "allTime": "Desde Sempre",
+    "draws": "Saques"
+  },
+  "Navigation": {
+    "home": "Principal",
+    "prizes": "Prêmios",
+    "vaults": "Cofres",
+    "vault": "Cofre",
+    "account": "Conta"
+  },
+  "Home": {
+    "winUpTo": "Deposite <token></token> para ganhar até <amount></amount>",
+    "withdrawAnyTime": "Você pode retirar o seu depósito por completo a qualquer momento"
+  },
+  "Prizes": {
+    "winUpTo": "Mantenha seu depósito. Ganhe até <amount></amount>",
+    "currentPrizes": "Prêmios Atuais",
+    "networkPrizes": "Prêmios {network}",
+    "learnMore": "Prêmios e frequências são estimativas. <link>Aprenda como o PoolTogether funciona</link>",
+    "prize": "Prêmio",
+    "frequency": "Frequência",
+    "recentWinners": "Vencedores Recentes",
+    "drawBeingAwarded": "Saque #{drawId} está sendo premiado...",
+    "drawWillCloseIn": "Saque #{drawId} irá fechar em <countdown></countdown>",
+    "drawWinners": {
+      "beforeValue": "{numPeople, plural, one {# pessoa ganhou} other {# pessoas ganharam}}",
+      "afterValue": {
+        "today": "hoje",
+        "yesterday": "ontem",
+        "onXDate": "em {date}"
+      }
+    },
+    "drawModal": {
+      "drawTotal": {
+        "beforeValue": "Esse sorteio teve {numWallets} carteiras únicas ganhando um total de",
+        "afterValue": "em prêmios.",
+        "afterValueOngoing": "em prêmios por enquanto."
+      },
+      "winner": "Ganhador",
+      "prize": "Prêmio",
+      "youWereEligible": "Você foi elegível nesse sorteio."
+    }
+  },
+  "Vaults": {
+    "depositAndWin": "Deposite tokens, <highlight>ganhe prêmios</highlight>. Retire a qualquer momento, <highlight>sem perdas</highlight>",
+    "filter": "Filtrar",
+    "filters": {
+      "showAll": "Mostrar Todos",
+      "inWallet": "Na Sua Carteira",
+      "stablecoins": "Stablecoins",
+      "allVaultLists": "Todas as Listas de Cofres"
+    },
+    "manageVaultLists": "Gerenciar Listas de Cofres",
+    "clearFilters": "Limpar Filtros",
+    "disclaimer": "Novos cofres no PoolTogether podem ser criados por qualquer pessoa. <link>Se informe sobre o que você está usando</link>",
+    "headers": {
+      "prizeVault": "Cofre",
+      "prizeYield": "Rendimento de Prêmios",
+      "bonusRewards": "Recompensas Bônus",
+      "prizes": "Prêmios",
+      "winChance": "Chances de Prêmios",
+      "totalDeposits": "Total de Depósitos",
+      "yourBalance": "Seu Saldo"
+    }
+  },
+  "Vault": {
+    "headers": {
+      "yourBalance": "Seu Saldo",
+      "yourWinChance": "Suas chances de prêmios",
+      "balance": "Saldo",
+      "winChance": "Chances de Prêmios",
+      "prizeYield": "Rendimento de Prêmios",
+      "bonusRewards": "Recompensas Bônus",
+      "tvl": "TVL",
+      "sponsoredTvl": "TVL patrocinado",
+      "sponsoredTvlMultiplier": "Multiplicador Patrocinado Efetivo",
+      "totalDeposited": "Total Depositado",
+      "contributions": "Contribuições para o Prêmio",
+      "depositToken": "Token de Depósito",
+      "prizeToken": "Token de Prêmio",
+      "delegatedToYou": "Delegado para você",
+      "delegatedAmount": "Quantidade delegada",
+      "vaultFee": "Taxa de Cofre",
+      "feeRecipient": "Destinatário da taxa",
+      "yieldSource": "Fonte do Rendimento",
+      "lpSource": "Fonte de Liquidez",
+      "vaultOwner": "Proprietário do Cofre"
+    },
+    "returnToVaults": "Retorne aos Cofres",
+    "learnAboutVault": "Aprenda mais sobre {vaultName}",
+    "smartContractRisk": "PoolTogether é um protocolo decentralizado que qualquer pessoa pode usar para criar cofres. <docsLink>Leia nossa documentação</docsLink> para saber mais. Este cofre expõe você a um risco de contratos inteligentes relacionado ao contrato do <vaultLink>cofre</vaultLink> e seu contrato de rendimento <yieldLink>subjacente</yieldLink>.",
+    "vaultContract": "Contrato de Cofre",
+    "yieldSourceContract": "Contrato da Fonte de Rendimento",
+    "inVaultLists": "Este cofre está nas seguintes listas de cofres que você selecionou:",
+    "notInVaultLists": "Este cofre não está em nenhuma das listas de cofres que você selecionou.",
+    "shortWarningNotInVaultLists": "Atenção! Este cofre não está em nenhuma das suas listas ativas.",
+    "noWinnersYet": "Nenhum vencedor ainda",
+    "noContributionsYet": "Nenhuma contribuição ainda",
+    "rewardsInTokens": {
+      "oneToken": "em <token></token>",
+      "twoTokens": "em <firstToken></firstToken> e <secondToken></secondToken>",
+      "manyTokens": "em <token></token> & {number} outros"
+    },
+    "poolStaking": {
+      "reserveRate": "Taxa de Reserva POOL",
+      "wherePrizesComeFrom": "Onde prêmios do <highlight>Prize POOL</highlight> originam",
+      "reserveDescription": "O {token} na <highlight>reserva POOL</highlight> vai para este cofre, distribuído como prêmios!",
+      "percentageOfYield": "{number}% de rendimento",
+      "nDayNetworkYield": "Rendimento da Rede {number}D",
+      "nDayPoolReserve": "Reserva de POOL {number}D",
+      "lastNDays": "últimos {number} dias",
+      "lastNDraws": "últimos {number} saques"
+    },
+    "addToPersonalVaultList": "Adicionar à lista de cofres pessoal"
+  },
+  "Account": {
+    "connectWallet": "Conecte sua carteira para ver sua conta",
+    "noVaultLists": "Você não tem nenhuma lista de cofres selecionada.",
+    "noPrizeTokens": "Você não tem nenhum depósito.",
+    "depositNow": "Deposite agora.",
+    "yourDeposits": "Seus depósitos",
+    "yourDelegations": "Delegado a você",
+    "yourWinnings": "Seus Prêmios",
+    "delegatedTo": "Delegado a <link>{account}</link>",
+    "sponsoring": "Patrocinando",
+    "externalAccountDeposits": "Depósitos de {account}",
+    "externalAccountDelegations": "Delegações á {account}",
+    "externalAccountWinnings": "Prêmios de {account}",
+    "dailyPrizeOdds": "Probabilidade de Prêmios por dia",
+    "weeklyPrizeOdds": "Probabilidade de Prêmios por semana",
+    "oneInXChance": "1 em {number}",
+    "noPrizesRecently": "Você não ganhou nenhum prêmio recentemente.",
+    "learnHowItWorks": "Aprenda como o PoolTogether funciona",
+    "claimRewardsTx": "Reivindicação de Recompensas {symbol}",
+    "claimAllRewardsTx": "Reivindicação Múltipla em {network}",
+    "claimAllOnNetwork": "Reivindicar tudo em {network}",
+    "claimSoon": "Reivindique logo!",
+    "winHeaders": {
+      "date": "Data",
+      "prizeVault": "Cofre",
+      "winnings": "Prêmios",
+      "moreInfo": "Mais informações"
+    },
+    "bonusRewardHeaders": {
+      "prizeVault": "Cofre",
+      "rewardToken": "Token de Recompensa",
+      "rewardsEarned": "Recompensas Recebidas",
+      "rewardsClaimed": "Recompensas Reivindicadas",
+      "rewardsClaimable": "Recompensas Disponíveis",
+      "claims": "Reivindicações"
+    },
+    "prizeChecking": {
+      "checkingEligibleDraws": "Verificando sorteios elegíveis...",
+      "eligibleDraws": "{number, plural, one {# sorteio} other {# sorteios}} elegíveis",
+      "caughtUp": "Tudo em dia!",
+      "noNewDraws": "Não há novos sorteios elegíveis para verificar.",
+      "totalPrizes": {
+        "beforeValue": "Totalizando",
+        "afterValue": "em Prêmios"
+      },
+      "checkPrizes": "Verificar Prêmios",
+      "checking": "Checando a blockchain...",
+      "noPrizes": "Desculpe, não há prêmios desta vez.",
+      "viewAccount": "Ver Sua Conta",
+      "youWonX": "Você ganhou",
+      "xWon": "Ganhou!"
+    }
+  },
+  "TxModals": {
+    "depositTo": "Depositar á {name} em {network}",
+    "depositToShort": "Depositar á {name}",
+    "withdrawFrom": "Sacar de {name} em {network}",
+    "withdrawFromShort": "Sacar de {name}",
+    "delegateFrom": "Delegar seu {name} em {network}",
+    "delegateFromShort": "Delegar seu {name}",
+    "delegateSelfDescription": "Você está delegando a si mesmo. Qualquer prêmio que o seu depósito {tokens} ganhar irá para a sua carteira.",
+    "delegateDescription": "O endereço delegado recebe todos os prêmios que o seu depósito {tokens} ganhar.",
+    "delegatedAddress": "Endereço Delegado",
+    "changeDelegateAddress": "Alterar endereço delegado",
+    "changeDelegateAddressShort": "Editar Delegação",
+    "updateDelegatedAddress": "Atualizar endereço delegado",
+    "fees": {
+      "approval": "Aprovação"
+    },
+    "dailyChances": "Probabilidade de prêmios por dia",
+    "weeklyChances": "Probabilidade de prêmios por semana",
+    "monthlyChances": "Probabilidade de prêmios por mês",
+    "depositingInto": "Depositando em {vault}",
+    "withdrawingFrom": "Sacando de {vault}",
+    "success": "Sucesso!",
+    "deposited": "Você depositou {tokens}",
+    "gotTokens": "Você recebeu {tokens}",
+    "withdrew": "Você sacou {tokens}",
+    "delegated": "Você delegou {tokens}",
+    "nowEligible": "Você agora está elegível á todos os futuros sorteios neste cofre.",
+    "viewAccount": "Visualizar conta",
+    "uhOh": "Oops!",
+    "failedTx": "Algo deu errado....",
+    "findingZapRoute": "Procurando rota zap...",
+    "noZapRouteFound": "Nenhuma rota zap disponível",
+    "priceImpact": "Impacto de Preço",
+    "minimumReceived": "Mínimo Recebido"
+  },
+  "Footer": {
+    "titles": {
+      "settings": "Configurações"
+    },
+    "devDocs": "Docs para Desenvolvedores",
+    "extensions": "Extensões",
+    "governance": "Governança",
+    "security": "Segurança",
+    "enableTestnets": "Habilitar Rede de Testes",
+    "disableTestnets": "Desabilitar Rede de Testes",
+    "termsAndConditions": "Termos e Condições",
+    "privacyPolicy": "Política de Privacidade"
+  },
+  "Settings": {
+    "setCustomRPCs": "Definir Próprios RPCs",
+    "urlInput": "https:// ou ipfs:// ou nome ENS",
+    "numTestnetVaults": "{number, plural, one {# cofre teste} other {# cofres teste}}",
+    "customRpcDescription": "Roteie as consultas de dados desse aplicativo por sua escolha de RPCs. Esses são armazenados localmente no seu browser.",
+    "otherSettings": "Outras Configurações",
+    "permitApprovals": {
+      "enabled": "Aprovações por assinatura estão habilitadas",
+      "disabled": "Aprovações por assinatura estão desabilitadas"
+    },
+    "eip5792": {
+      "enabled": "Transações em lote estão habilitadas",
+      "disabled": "Transações em lote estão desabilitadas"
+    },
+    "eip7677": {
+      "enabled": "Transações sem gás estão habilitadas",
+      "disabled": "Transações sem gás estão desabilitadas"
+    }
+  },
+  "Abbreviations": {
+    "days": "dias",
+    "hours": "hrs",
+    "minutes": "mins",
+    "seconds": "segs"
+  },
+  "Frequency": {
+    "weekly": "Semanalmente",
+    "monthly": "Mensalmente",
+    "yearly": "Anualmente",
+    "lessThanAnHour": "Em menos de uma hora",
+    "inXhours": "Em {number, plural, one {# hora} other {# horas}}",
+    "inXdays": "Em {number, plural, one {# dia} other {# dias}}",
+    "inXweeks": "Em {number, plural, one {# semana} other {# semanas}}",
+    "inXmonths": "Em {number, plural, one {# mês} other {# meses}}"
+  },
+  "Tooltips": {
+    "relativeWinChance": "Probabilidade relativa de ganhar em um cofre comparado a outros",
+    "winChance": "Sua probabilidade de ganhar um prêmio em qualquer sorteio único",
+    "vaultFee": "A porcentagem de rendimento que não vai para gerar prêmios, determinada pelo proprietário do cofre",
+    "importedVault": "Este cofre é parte das seguintes listas importadas:",
+    "vaultContribution": "A quantidade de {symbol} contribuídos por esse cofre, fazendo com que haja prêmios",
+    "vaultContributionWithDays": "A quantidade de {symbol} contribuídos por esse cofre nos últimos {days} dias, fazendo com que haja prêmios",
+    "wrongPrizePoolVault": "Este cofre está conectado a uma versão do protocolo não suportada.",
+    "delegateDescription": "Por padrão, o titular do depósito no cofre é o endereço delegado. Isso pode ser sobrescrito com uma delegação.",
+    "winChanceChart": {
+      "none": "Sem probabilidade de prêmios",
+      "lowest": "Probabilidade de prêmios muito baixa",
+      "low": "Probabilidade de prêmios baixa",
+      "average": "Probabilidade de prêmios média",
+      "high": "Probabilidade de prêmios alta",
+      "highest": "Probabilidade de prêmios muito alta"
+    }
+  },
+  "Toasts": {
+    "transactions": {
+      "depositingInto": "Depositando em {vault}...",
+      "withdrawingFrom": "Sacando de {vault}...",
+      "depositedInto": "Você depositou em {vault} na rede {network}",
+      "withdrewFrom": "Você sacou de {vault} na rede {network}",
+      "failedTx": "Algo deu errado…"
+    }
+  },
+  "Error": {
+    "vaultEnableTestnets": "Se você estiver procurando ver um cofre teste, habilite as \"Redes de Teste\" nas configurações abaixo."
+  }
+}
