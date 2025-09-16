@@ -1,7 +1,4 @@
-import {
-  useAllDrawPeriods,
-  useAllUserPrizeOdds
-} from '@generationsoftware/hyperstructure-react-hooks'
+import { useAllDrawPeriods, useAllUserGpOdds } from '@generationsoftware/hyperstructure-react-hooks'
 import { Spinner } from '@shared/ui'
 import { formatNumberForDisplay, SECONDS_PER_MONTH } from '@shared/utilities'
 import { calculateUnionProbability, SECONDS_PER_WEEK } from '@shared/utilities'
@@ -29,20 +26,20 @@ export const AccountOdds = (props: AccountOddsProps) => {
   const prizePoolsArray = Object.values(prizePools)
 
   const {
-    data: userPrizeOdds,
-    isFetched: isFetchedUserPrizeOdds,
+    data: userGpOdds,
+    isFetched: isFetchedUserGpOdds,
     isRefetching
-  } = useAllUserPrizeOdds(prizePoolsArray, userAddress as Address, { refetchOnWindowFocus: true })
+  } = useAllUserGpOdds(prizePoolsArray, userAddress as Address, { refetchOnWindowFocus: true })
 
   const { data: drawPeriods, isFetched: isFetchedDrawPeriods } = useAllDrawPeriods(prizePoolsArray)
 
-  const isFetched = isFetchedUserPrizeOdds && isFetchedDrawPeriods
+  const isFetched = isFetchedUserGpOdds && isFetchedDrawPeriods
 
   const weeklyChance = useMemo(() => {
     const events: number[] = []
 
-    for (const prizePoolId in userPrizeOdds) {
-      const odds = userPrizeOdds[prizePoolId]
+    for (const prizePoolId in userGpOdds) {
+      const odds = userGpOdds[prizePoolId]
       const drawPeriod = drawPeriods[prizePoolId]
 
       if (!!odds && !!drawPeriod) {
@@ -61,10 +58,13 @@ export const AccountOdds = (props: AccountOddsProps) => {
 
     if (events.length > 0) {
       const value = 1 / calculateUnionProbability(events)
-      const formattedValue = formatNumberForDisplay(value, { maximumSignificantDigits: 3 })
+      const formattedValue = formatNumberForDisplay(value, {
+        maximumSignificantDigits: 3,
+        shortenMillions: true
+      })
       return t('oneInXChance', { number: formattedValue })
     }
-  }, [userPrizeOdds, drawPeriods])
+  }, [userGpOdds, drawPeriods])
 
   if (isFetched && weeklyChance !== undefined) {
     return (
@@ -75,7 +75,7 @@ export const AccountOdds = (props: AccountOddsProps) => {
           className
         )}
       >
-        <span className='text-xs lg:text-base'>{t('weeklyPrizeOdds')}</span>
+        <span className='text-xs lg:text-base'>{t('weeklyGpOdds')}</span>
         {isRefetching ? <Spinner /> : <span>{weeklyChance}</span>}
       </div>
     )

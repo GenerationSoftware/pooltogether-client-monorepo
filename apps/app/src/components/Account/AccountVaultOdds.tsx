@@ -1,6 +1,6 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
-  usePrizeOdds,
+  useGpOdds,
   useUserVaultDelegate,
   useUserVaultShareBalance
 } from '@generationsoftware/hyperstructure-react-hooks'
@@ -48,7 +48,7 @@ export const AccountVaultOdds = (props: AccountVaultOddsProps) => {
     (prizePool) => prizePool.chainId === vault.chainId
   )
 
-  const { data: prizeOdds, isFetched: isFetchedPrizeOdds } = usePrizeOdds(
+  const { data: gpOdds, isFetched: isFetchedGpOdds } = useGpOdds(
     prizePool as PrizePool,
     vault,
     shareBalance?.amount ?? 0n
@@ -58,7 +58,7 @@ export const AccountVaultOdds = (props: AccountVaultOddsProps) => {
     return <span className={className}>-</span>
   }
 
-  if (!isFetchedShareBalance || !isFetchedDelegate || !isFetchedPrizeOdds) {
+  if (!isFetchedShareBalance || !isFetchedDelegate || !isFetchedGpOdds) {
     return <Spinner className={classNames(className, spinnerClassName)} />
   }
 
@@ -82,14 +82,17 @@ export const AccountVaultOdds = (props: AccountVaultOddsProps) => {
     )
   }
 
-  if (prizeOdds === undefined) {
+  if (gpOdds === undefined) {
     return <span className={className}>?</span>
   }
 
   return (
     <span className={className}>
       {t('oneInXChance', {
-        number: formatNumberForDisplay(prizeOdds.oneInX, { maximumSignificantDigits: 3 })
+        number: formatNumberForDisplay(gpOdds.oneInX, {
+          maximumSignificantDigits: 3,
+          shortenMillions: true
+        })
       })}
     </span>
   )

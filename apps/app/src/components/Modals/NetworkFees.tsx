@@ -48,7 +48,7 @@ export const NetworkFees = (props: NetworkFeesProps) => {
 
   return (
     <div className='flex flex-col items-center gap-2 font-semibold'>
-      <span className='text-xs text-pt-purple-100 md:text-sm'>{t('title')}</span>
+      <span className='text-xs text-pt-purple-100 text-center md:text-sm'>{t('title')}</span>
       {!!vault && !!tokenAddress ? (
         <div className='flex flex-col text-xs'>
           {(!show || show.includes('approve')) && (

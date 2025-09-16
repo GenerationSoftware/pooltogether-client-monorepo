@@ -1,6 +1,7 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
   useDrawPeriod,
+  useGpOdds,
   usePrizeOdds,
   useSelectedVaults,
   useVaultShareData,
@@ -55,13 +56,13 @@ export const Odds = (props: OddsProps) => {
 
   const { data: inputShare } = useVaultShareData(inputVault!)
 
-  const { data: inputPrizeOdds } = usePrizeOdds(
+  const { data: inputGpOdds } = useGpOdds(
     prizePool,
     inputVault!,
     !!inputShare && !!formTokenAmount ? parseUnits(formTokenAmount, inputShare.decimals) : 0n
   )
 
-  const { data: outputPrizeOdds } = usePrizeOdds(
+  const { data: outputGpOdds } = useGpOdds(
     prizePool,
     vault,
     !!share && !!formShareAmount ? parseUnits(formShareAmount, share.decimals) : 0n,
@@ -71,23 +72,23 @@ export const Odds = (props: OddsProps) => {
   const { data: drawPeriod } = useDrawPeriod(prizePool)
 
   const chance = useMemo(() => {
-    if (!!outputPrizeOdds && !!drawPeriod) {
-      const input = !!inputPrizeOdds
-        ? t_txModals('oneInXChance', { number: calculateOneInXChance(inputPrizeOdds, drawPeriod) })
+    if (!!outputGpOdds && !!drawPeriod) {
+      const input = !!inputGpOdds
+        ? t_txModals('oneInXChance', { number: calculateOneInXChance(inputGpOdds, drawPeriod) })
         : undefined
       const output = t_txModals('oneInXChance', {
-        number: calculateOneInXChance(outputPrizeOdds, drawPeriod)
+        number: calculateOneInXChance(outputGpOdds, drawPeriod)
       })
       return { input, output }
     }
-  }, [inputPrizeOdds, outputPrizeOdds, drawPeriod])
+  }, [inputGpOdds, outputGpOdds, drawPeriod])
 
   return (
-    <div className='flex flex-col items-center font-semibold'>
-      <span className='mb-2 text-xs text-pt-purple-100 md:text-sm'>
+    <div className='flex flex-col items-center font-semibold max-w-[50%]'>
+      <span className='mb-2 text-xs text-pt-purple-100 text-center md:text-sm'>
         {!!drawPeriod && drawPeriod > SECONDS_PER_WEEK
-          ? t_txModals('monthlyChances')
-          : t_txModals('weeklyChances')}
+          ? t_txModals('monthlyGpChances')
+          : t_txModals('weeklyGpChances')}
       </span>
       {!!chance ? (
         <>
@@ -127,5 +128,5 @@ const calculateOneInXChance = (
   const numEvents = Math.floor(timeframe / drawPeriod)
   const events = Array<number>(numEvents).fill(odds.percent)
   const value = 1 / calculateUnionProbability(events)
-  return formatNumberForDisplay(value, { maximumSignificantDigits: 3 })
+  return formatNumberForDisplay(value, { maximumSignificantDigits: 3, shortenMillions: true })
 }

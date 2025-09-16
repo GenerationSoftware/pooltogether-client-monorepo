@@ -1,6 +1,6 @@
 import { PrizePool, Vault } from '@generationsoftware/hyperstructure-client-js'
 import {
-  usePrizeOdds,
+  useGpOdds,
   useUserVaultDelegationBalance,
   useUserVaultShareBalance
 } from '@generationsoftware/hyperstructure-react-hooks'
@@ -38,7 +38,7 @@ export const AccountVaultDelegationOdds = (props: AccountVaultDelegationOddsProp
     (prizePool) => prizePool.chainId === vault.chainId
   )
 
-  const { data: prizeOdds, isFetched: isFetchedPrizeOdds } = usePrizeOdds(
+  const { data: gpOdds, isFetched: isFetchedGpOdds } = useGpOdds(
     prizePool as PrizePool,
     vault,
     delegationBalance
@@ -48,18 +48,21 @@ export const AccountVaultDelegationOdds = (props: AccountVaultDelegationOddsProp
     return <>-</>
   }
 
-  if (!isFetchedShareBalance || !isFetchedDelegationBalance || !isFetchedPrizeOdds) {
+  if (!isFetchedShareBalance || !isFetchedDelegationBalance || !isFetchedGpOdds) {
     return <Spinner />
   }
 
-  if (prizeOdds === undefined) {
+  if (gpOdds === undefined) {
     return <>?</>
   }
 
   return (
     <>
       {t('oneInXChance', {
-        number: formatNumberForDisplay(prizeOdds.oneInX, { maximumSignificantDigits: 3 })
+        number: formatNumberForDisplay(gpOdds.oneInX, {
+          maximumSignificantDigits: 3,
+          shortenMillions: true
+        })
       })}
     </>
   )
