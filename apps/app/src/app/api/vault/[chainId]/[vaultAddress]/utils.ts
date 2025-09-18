@@ -218,6 +218,12 @@ export const getVaultData = async (req: NextRequest, vault: Vault, prizePool: Pr
         address: prizePool.address,
         abi: prizePoolABI,
         functionName: 'getContributedBetween',
+        args: [vault.address, Math.max(1, lastDrawId - 2), lastDrawId]
+      },
+      {
+        address: prizePool.address,
+        abi: prizePoolABI,
+        functionName: 'getContributedBetween',
         args: [vault.address, Math.max(1, lastDrawId - 6), lastDrawId]
       },
       {
@@ -248,6 +254,12 @@ export const getVaultData = async (req: NextRequest, vault: Vault, prizePool: Pr
         address: prizePool.address,
         abi: prizePoolABI,
         functionName: 'getVaultUserBalanceAndTotalSupplyTwab',
+        args: [vault.address, zeroAddress, Math.max(1, lastDrawId - 2), lastDrawId]
+      },
+      {
+        address: prizePool.address,
+        abi: prizePoolABI,
+        functionName: 'getVaultUserBalanceAndTotalSupplyTwab',
         args: [vault.address, zeroAddress, Math.max(1, lastDrawId - 6), lastDrawId]
       },
       {
@@ -272,16 +284,18 @@ export const getVaultData = async (req: NextRequest, vault: Vault, prizePool: Pr
     batchSize
   })
 
-  const dailyContributions = secondMulticallResults[0].result ?? 0n
-  const weeklyContributions = secondMulticallResults[1].result ?? 0n
-  const monthlyContributions = secondMulticallResults[2].result ?? 0n
-  const triMonthlyContributions = secondMulticallResults[3].result ?? 0n
-  const allTimeContributions = secondMulticallResults[4].result ?? 0n
-  const dailySupplyTwab = secondMulticallResults[5].result?.[1] ?? 0n
-  const weeklySupplyTwab = secondMulticallResults[6].result?.[1] ?? 0n
-  const monthlySupplyTwab = secondMulticallResults[7].result?.[1] ?? 0n
-  const triMonthlySupplyTwab = secondMulticallResults[8].result?.[1] ?? 0n
-  const allTimeSupplyTwab = secondMulticallResults[9].result?.[1] ?? 0n
+  const lastDrawContributions = secondMulticallResults[0].result ?? 0n
+  const last3DrawContributions = secondMulticallResults[1].result ?? 0n
+  const last7DrawContributions = secondMulticallResults[2].result ?? 0n
+  const last30DrawContributions = secondMulticallResults[3].result ?? 0n
+  const last90DrawContributions = secondMulticallResults[4].result ?? 0n
+  const allTimeContributions = secondMulticallResults[5].result ?? 0n
+  const lastDrawSupplyTwab = secondMulticallResults[6].result?.[1] ?? 0n
+  const last3DrawSupplyTwab = secondMulticallResults[7].result?.[1] ?? 0n
+  const last7DrawSupplyTwab = secondMulticallResults[8].result?.[1] ?? 0n
+  const last30DrawSupplyTwab = secondMulticallResults[9].result?.[1] ?? 0n
+  const last90DrawSupplyTwab = secondMulticallResults[10].result?.[1] ?? 0n
+  const allTimeSupplyTwab = secondMulticallResults[11].result?.[1] ?? 0n
 
   const tokenAddresses: Address[] = [...TWAB_REWARDS_SETTINGS[vault.chainId]?.tokenAddresses]
   !!assetAddress && tokenAddresses.push(assetAddress)
@@ -358,15 +372,18 @@ export const getVaultData = async (req: NextRequest, vault: Vault, prizePool: Pr
   }
 
   const contributions:
-    | { 'day': number; 'week': number; 'month': number; '90d': number; 'all': number }
+    | { lastXDraws: { 1: number; 3: number; 7: number; 30: number; 90: number }; all: number }
     | undefined =
     prizeAsset.decimals !== undefined
       ? {
-          'day': parseFloat(formatUnits(dailyContributions, prizeAsset.decimals)),
-          'week': parseFloat(formatUnits(weeklyContributions, prizeAsset.decimals)),
-          'month': parseFloat(formatUnits(monthlyContributions, prizeAsset.decimals)),
-          '90d': parseFloat(formatUnits(triMonthlyContributions, prizeAsset.decimals)),
-          'all': parseFloat(formatUnits(allTimeContributions, prizeAsset.decimals))
+          lastXDraws: {
+            1: parseFloat(formatUnits(lastDrawContributions, prizeAsset.decimals)),
+            3: parseFloat(formatUnits(last3DrawContributions, prizeAsset.decimals)),
+            7: parseFloat(formatUnits(last7DrawContributions, prizeAsset.decimals)),
+            30: parseFloat(formatUnits(last30DrawContributions, prizeAsset.decimals)),
+            90: parseFloat(formatUnits(last90DrawContributions, prizeAsset.decimals))
+          },
+          all: parseFloat(formatUnits(allTimeContributions, prizeAsset.decimals))
         }
       : undefined
 
@@ -393,17 +410,23 @@ export const getVaultData = async (req: NextRequest, vault: Vault, prizePool: Pr
   }
 
   const prizeYield: {
-    'day': number
-    'week': number
-    'month': number
-    '90d': number
-    'all': number
+    lastXDraws: {
+      1: number
+      3: number
+      7: number
+      30: number
+      90: number
+    }
+    all: number
   } = {
-    'day': getPrizeYield(1, dailyContributions, dailySupplyTwab),
-    'week': getPrizeYield(Math.min(7, lastDrawId), weeklyContributions, weeklySupplyTwab),
-    'month': getPrizeYield(Math.min(30, lastDrawId), monthlyContributions, monthlySupplyTwab),
-    '90d': getPrizeYield(Math.min(90, lastDrawId), triMonthlyContributions, triMonthlySupplyTwab),
-    'all': getPrizeYield(lastDrawId, allTimeContributions, allTimeSupplyTwab)
+    lastXDraws: {
+      1: getPrizeYield(1, lastDrawContributions, lastDrawSupplyTwab),
+      3: getPrizeYield(Math.min(3, lastDrawId), last3DrawContributions, last3DrawSupplyTwab),
+      7: getPrizeYield(Math.min(7, lastDrawId), last7DrawContributions, last7DrawSupplyTwab),
+      30: getPrizeYield(Math.min(30, lastDrawId), last30DrawContributions, last30DrawSupplyTwab),
+      90: getPrizeYield(Math.min(90, lastDrawId), last90DrawContributions, last90DrawSupplyTwab)
+    },
+    all: getPrizeYield(lastDrawId, allTimeContributions, allTimeSupplyTwab)
   }
 
   return {
@@ -415,6 +438,7 @@ export const getVaultData = async (req: NextRequest, vault: Vault, prizePool: Pr
     owner,
     liquidationPair,
     claimer,
+    drawPeriod,
     yieldFees,
     contributions,
     prizeYield,
