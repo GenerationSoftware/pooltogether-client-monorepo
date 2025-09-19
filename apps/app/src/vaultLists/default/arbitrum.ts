@@ -142,5 +142,24 @@ export const arbitrumVaults: VaultList['tokens'] = [
         appURI: 'https://yearn.fi/vaults/42161/0x801c26fCfD916719631E0cf7D36ca1e049DF0373'
       }
     }
+  },
+  {
+    chainId: NETWORK.arbitrum,
+    address: '0x46A979f0F8e24E0e85e6C3A7dEeb4C5Abd355bA2',
+    name: 'Prize USND',
+    decimals: 18,
+    symbol: 'przUSND',
+    tags: ['yearn', 'nerite'],
+    extensions: {
+      underlyingAsset: {
+        address: '0x4ecf61a6c2FaB8A047CEB3B3B263B401763e9D49',
+        symbol: 'USND',
+        name: 'US Nerite Dollar'
+      },
+      yieldSource: {
+        name: 'Yearn',
+        appURI: 'https://yearn.fi/vaults/42161/0x46a979f0f8e24e0e85e6c3a7deeb4c5abd355ba2'
+      }
+    }
   }
 ]
