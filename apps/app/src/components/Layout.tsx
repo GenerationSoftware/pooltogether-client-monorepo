@@ -100,7 +100,7 @@ export const Layout = (props: LayoutProps) => {
 
       <Navbar />
 
-      <SettingsModal locales={['en', 'de', 'ru', 'ko', 'uk', 'hi', 'es']} />
+      <SettingsModal locales={['en', 'de', 'ru', 'ko', 'uk', 'hi', 'es', 'pt']} />
 
       <DepositModal
         refetchUserBalances={refetchUserBalances}
