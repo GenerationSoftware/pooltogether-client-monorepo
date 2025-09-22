@@ -1,6 +1,6 @@
 {
   "Common": {
-    "depositToWin": "Deposite para ganhar",
+    "depositToWin": "Deposite para Ganhar",
     "prizePool": "Prêmios {network}",
     "grandPrize": "Maior Prêmio",
     "joinDiscord": "Junte-se à nossa comunidade do Discord",
@@ -245,6 +245,7 @@
     "delegateTx": "Delegação {symbol}",
     "switchNetwork": "Mudar para {network}",
     "switchingNetwork": "Mudando para {network}...",
+    "confirmNotice": "Confirmar a Transação em sua Carteira",
     "submissionNotice": "Transação Enviada",
     "depositing": "Depositando {tokens}...",
     "depositingInto": "Depositando em {vault}",
@@ -259,10 +260,12 @@
     "nowEligible": "Você agora está elegível á todos os futuros sorteios neste cofre.",
     "shareOn": "Compartilhar no",
     "viewAccount": "Visualizar conta",
+    "waiting": "Aguardando pela Transação",
     "uhOh": "Oops!",
     "failedTx": "Algo deu errado....",
     "tryAgain": "Tente Novamente",
     "risksDisclaimer": "O PoolTogether é um protocolo sem moderação centralizada. Os cofres podem ser introduzidos por qualquer pessoa. Certifique-se de saber onde você está depositando. <vaultLink>Saiba mais sobre estes cofres.</vaultLink>",
+    "depositDisclaimer": "Ao clicar em \"Confirmar Depósito\", você concorda com nossos <tosLink>Termos de Serviço</tosLink>. Clique <vaultLink>aqui</vaultLink> para saber mais sobre o cofre em que você está depositando.",
     "findingZapRoute": "Procurando rota zap...",
     "noZapRouteFound": "Nenhuma rota zap disponível",
     "priceImpact": "Impacto de Preço",
@@ -271,8 +274,11 @@
   "Footer": {
     "titles": {
       "getHelp": "Obtenha Ajuda",
+      "ecosystem": "Ecossistema",
+      "community": "Comunidade",
       "settings": "Configurações"
     },
+    "userDocs": "Documentação do Usuário",
     "faq": "Perguntas Frequentes",
     "devDocs": "Docs para Desenvolvedores",
     "extensions": "Extensões",
@@ -289,12 +295,25 @@
     "customizeLanguage": "Personalizar Idioma",
     "changeCurrency": "Alterar Moeda",
     "changeLanguage": "Alterar Idioma",
+    "viewEcosystem": "Visualizar Ecossistema",
+    "manageVaultLists": "Gerenciar Listas de Cofres",
     "setCustomRPCs": "Definir Próprios RPCs",
     "getHelp": "Obtenha Ajuda",
     "getHelpWithCabana": "Obtenha Ajuda Sobre Cabana",
+    "vaultListsDescription": "Listas de cofres determinam quais cofres são exibidos no aplicativo. Use cuidado ao interagir com listas importadas.",
+    "learnMoreVaultLists": "Saiba mais sobre as listas de cofres",
     "urlInput": "https:// ou ipfs:// ou nome ENS",
+    "addVaultList": "Adicionar Lista de Cofres",
+    "clearImportedVaultLists": "Remover todas as listas de cofres importadas",
+    "numVaults": "{number, plural, one {# cofre} other {# cofres}}",
     "numTestnetVaults": "{number, plural, one {# cofre teste} other {# cofres teste}}",
+    "imported": "Importado",
     "customRpcDescription": "Roteie as consultas de dados desse aplicativo por sua escolha de RPCs. Esses são armazenados localmente no seu browser.",
+    "customNetworkRpc": "RPC {network} Personalizado",
+    "override": "alterar",
+    "default": "Padrão",
+    "set": "Definir",
+    "refreshToUpdateRPCs": "Atualize a página para ver as alterações",
     "otherSettings": "Outras Configurações",
     "permitApprovals": {
       "enabled": "Aprovações por assinatura estão habilitadas",
@@ -337,12 +356,17 @@
   "Tooltips": {
     "prizes": "Prêmios que você pode ganhar se mantiver depósito em um cofre",
     "relativeWinChance": "Probabilidade relativa de ganhar em um cofre comparado a outros",
+    "prizeYield": "Uma média recente de contribuições de um cofre para o conjunto de prêmios",
+    "bonusRewards": "Uma estimativa dos atuais incentivos adicionais para os depositantes",
     "winChance": "Sua probabilidade de ganhar um prêmio em qualquer sorteio único",
+    "approval": "Aprovação para depositar um valor específico de {symbol}",
     "vaultFee": "A porcentagem de rendimento que não vai para gerar prêmios, determinada pelo proprietário do cofre",
     "importedVault": "Este cofre é parte das seguintes listas importadas:",
     "vaultContribution": "A quantidade de {symbol} contribuídos por esse cofre, fazendo com que haja prêmios",
     "vaultContributionWithDays": "A quantidade de {symbol} contribuídos por esse cofre nos últimos {days} dias, fazendo com que haja prêmios",
+    "deprecatedVault": "Este cofre está obsoleto. Ele ainda pode ser elegível para ganhar prêmios, mas encorajamos usuários a migrar para outros cofres.",
     "wrongPrizePoolVault": "Este cofre está conectado a uma versão do protocolo não suportada.",
+    "badPrecisionPerDollar": "Este cofre provavelmente tem erros de arredondamento que podem causar perdas durante saques.",
     "delegateDescription": "Por padrão, o titular do depósito no cofre é o endereço delegado. Isso pode ser sobrescrito com uma delegação.",
     "winChanceChart": {
       "none": "Sem probabilidade de prêmios",
@@ -355,14 +379,60 @@
   },
   "Toasts": {
     "transactions": {
+      "deposit": "Depósito",
+      "withdrawal": "Saque",
+      "delegate": "Delegação",
+      "depositing": "Depositando {tokens}...",
       "depositingInto": "Depositando em {vault}...",
+      "withdrawing": "Sacando {tokens}...",
       "withdrawingFrom": "Sacando de {vault}...",
+      "delegating": "Delegando {tokens}...",
+      "viewOn": "Ver em {name}",
+      "success": "Sucesso!",
+      "deposited": "Você depositou {tokens} em {network}",
       "depositedInto": "Você depositou em {vault} na rede {network}",
+      "withdrew": "Você sacou {tokens} em {network}",
       "withdrewFrom": "Você sacou de {vault} na rede {network}",
-      "failedTx": "Algo deu errado…"
+      "delegated": "Você delegou {tokens} em {network}",
+      "uhOh": "Uh oh!",
+      "failedTx": "Algo deu errado…",
+      "tryAgain": "Tente Novamente"
+    },
+    "vaultListImports": {
+      "importingFrom": "Importando Lista de Cofres de {src}...",
+      "successfulImport": "Lista de cofres importada com sucesso.",
+      "selectedVaultList": "\"{name}\" foi adicionado às suas listas de cofres atualmente selecionadas.",
+      "failedImport": "Algo deu errado ao importar uma lista de cofres de {src}."
     }
   },
   "Error": {
-    "vaultEnableTestnets": "Se você estiver procurando ver um cofre teste, habilite as \"Redes de Teste\" nas configurações abaixo."
+    "oops": "Opa!",
+    "noVaultListsEnabled": "Você não tem nenhuma lista de cofres válida habilitada.",
+    "noVaultsMatchingFilters": "Não há cofres que correspondam aos seus filtros.",
+    "vaultInvalidNetwork": "A rede deste cofre não é suportada.",
+    "vaultEnableTestnets": "Se você estiver procurando ver um cofre teste, habilite as \"Redes de Teste\" nas configurações abaixo.",
+    "vaultDisableTestnets": "Se você estiver procurando ver um cofre não de teste, certifique-se de desabilitar \"Redes de Teste\" nas configurações abaixo.",
+    "vaultInvalidInterface": "Isso não parece ser um endereço de cofre válido.",
+    "vaultQueryError": "Algo deu errado ao consultar os dados deste cofre.",
+    "hmmm": "Hmmm...",
+    "pageNotFound": "Não conseguimos encontrar a página que você está procurando.",
+    "return": "Retornar",
+    "aaveCollateralizationError": {
+      "issue": "Este cofre está enfrentando problemas devido à alta utilização na Aave. <link>Saiba mais</link>",
+      "recommendation": "Não é recomendável sacar no momento",
+      "moreInfo": "Você pode trocar seus tokens pela <uniLink>Uniswap</uniLink>, ou esperar até esse cofre normalizar. Para mais informações, siga nosso <discordLink>Discord</discordLink>"
+    },
+    "formErrors": {
+      "invalidSrc": "URL ou domínio ENS inválido",
+      "invalidVaultList": "Nenhuma lista de cofres válida encontrada",
+      "notEnoughTokens": "Não há {symbol} suficiente na carteira",
+      "invalidNumber": "Digite um número válido",
+      "invalidAddress": "Insira um endereço EVM válido",
+      "sameAsDelegate": "Endereço inserido é o mesmo que o delegado atual",
+      "negativeNumber": "Digite um número positivo",
+      "tooManyDecimals": "Digite menos decimais",
+      "invalidRpcNetwork": "Este RPC não parece ser para a rede {network}",
+      "invalidRpcUrl": "URL de RPC inválido"
+    }
   }
 }
