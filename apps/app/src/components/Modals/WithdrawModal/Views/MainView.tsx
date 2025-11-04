@@ -9,6 +9,7 @@ import { Spinner } from '@shared/ui'
 import { getNiceNetworkNameByChainId, lower } from '@shared/utilities'
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
+import { TemporaryMoonwellWarning } from '@components/TemporaryMoonwellWarning'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { WithdrawForm, withdrawFormTokenAddressAtom } from '../WithdrawForm'
 
@@ -62,6 +63,8 @@ export const MainView = (props: MainViewProps) => {
         intl={t_common}
         className='!py-1 mx-auto'
       />
+      {/* TODO: remove once no longer relevant */}
+      <TemporaryMoonwellWarning vault={vault} />
       {/* TODO: add flow for when exchange rate cannot be found */}
       {!!vaultExchangeRate && (
         <>

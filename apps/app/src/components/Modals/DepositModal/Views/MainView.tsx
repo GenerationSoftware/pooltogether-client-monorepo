@@ -16,6 +16,7 @@ import {
 import { useAtomValue } from 'jotai'
 import { useTranslations } from 'next-intl'
 import { useCapabilities } from 'wagmi'
+import { TemporaryMoonwellWarning } from '@components/TemporaryMoonwellWarning'
 import { NetworkFees, NetworkFeesProps } from '../../NetworkFees'
 import { Odds } from '../../Odds'
 import {
@@ -86,6 +87,8 @@ export const MainView = (props: MainViewProps) => {
         intl={t_common}
         className='!py-1 mx-auto'
       />
+      {/* TODO: remove once no longer relevant */}
+      <TemporaryMoonwellWarning vault={vault} />
       {/* TODO: add flow for when exchange rate cannot be found */}
       {!!vaultExchangeRate && (
         <>
