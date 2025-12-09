@@ -97,7 +97,7 @@ export const useUserClaimedPromotions = (userAddress: Address) => {
     })
 
     return claimedPromotions
-  }, [isFetched, allPromotions, allClaimEvents])
+  }, [allPromotions, allClaimEvents])
 
   return { data, isFetched, refetch }
 }

@@ -40,7 +40,11 @@ export const AccountPromotionClaimedRewards = (props: AccountPromotionClaimedRew
 
   const { data: tokenData } = useToken(chainId, claimed?.token!)
 
-  if (!isFetchedAllClaimed || !isFetchedAllPoolWideClaimed || (!!claimed && !tokenData)) {
+  const isFetchedClaimedData = isPoolWide
+    ? allPoolWideClaimed.some((p) => p.chainId === chainId) ?? isFetchedAllPoolWideClaimed
+    : allClaimed.some((p) => p.chainId === chainId) ?? isFetchedAllClaimed
+
+  if (!isFetchedClaimedData || (!!claimed && !tokenData)) {
     return <Spinner />
   }
 

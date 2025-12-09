@@ -28,7 +28,7 @@ export const AccountPromotions = (props: AccountPromotionsProps) => {
   )
 
   const isNotEmpty =
-    !!claimable.length || !!claimed.length || !!poolWideClaimed || !!poolWideClaimable
+    !!claimed.length || !!claimable.length || !!poolWideClaimed.length || !!poolWideClaimable.length
 
   if (typeof window !== 'undefined' && !!(userAddress ?? _userAddress) && isNotEmpty) {
     return (

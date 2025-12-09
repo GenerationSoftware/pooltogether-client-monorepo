@@ -42,18 +42,23 @@ export const AccountPromotionsHeader = (props: AccountPromotionsHeaderProps) => 
     return !!userAddress && userAddress.toLowerCase() !== _userAddress?.toLowerCase()
   }, [userAddress, _userAddress])
 
-  const { data: totalRewards } = useUserTotalPromotionRewards((userAddress ?? _userAddress)!, {
-    includeUnclaimed: true
-  })
+  const { data: totalRewards, isFetched: isFetchedTotalRewards } = useUserTotalPromotionRewards(
+    (userAddress ?? _userAddress)!,
+    { includeUnclaimed: true }
+  )
 
   return (
     <div className={classNames('flex flex-col items-center gap-1 md:gap-2', className)}>
       <span className='text-sm text-pt-purple-100 md:text-base'>{t('bonusRewards')}</span>
       <span className='text-[1.75rem] font-grotesk font-medium md:text-4xl'>
-        {!!(userAddress ?? _userAddress) && totalRewards !== undefined ? (
+        {!!(userAddress ?? _userAddress) && totalRewards !== undefined && (
           <CurrencyValue baseValue={totalRewards} countUp={true} fallback={<Spinner />} />
-        ) : (
-          <Spinner />
+        )}
+        {totalRewards !== undefined && !isFetchedTotalRewards && (
+          <>
+            {' '}
+            <Spinner />
+          </>
         )}
       </span>
       {!!(userAddress ?? _userAddress) && !isExternalUser && (
@@ -89,18 +94,12 @@ const ClaimAllRewardsButton = (props: ClaimAllRewardsButtonProps) => {
   const addRecentTransaction = useAddRecentTransaction()
 
   const { refetch: refetchAllClaimed } = useUserClaimedPromotions(userAddress)
-  const {
-    data: allClaimable,
-    isFetched: isFetchedAllClaimable,
-    refetch: refetchAllClaimable
-  } = useUserClaimablePromotions(userAddress)
+  const { data: allClaimable, refetch: refetchAllClaimable } =
+    useUserClaimablePromotions(userAddress)
 
   const { refetch: refetchAllPoolWideClaimed } = useUserClaimedPoolWidePromotions(userAddress)
-  const {
-    data: allPoolWideClaimable,
-    isFetched: isFetchedAllPoolWideClaimable,
-    refetch: refetchAllPoolWideClaimable
-  } = useUserClaimablePoolWidePromotions(userAddress)
+  const { data: allPoolWideClaimable, refetch: refetchAllPoolWideClaimable } =
+    useUserClaimablePoolWidePromotions(userAddress)
 
   const claimablePromotions = useMemo(() => {
     return allClaimable.filter((promotion) => promotion.chainId === chainId)
@@ -113,7 +112,7 @@ const ClaimAllRewardsButton = (props: ClaimAllRewardsButtonProps) => {
   const epochsToClaim = useMemo(() => {
     const epochs: { [id: string]: number[] } = {}
 
-    if (isFetchedAllClaimable && claimablePromotions.length > 0) {
+    if (claimablePromotions.length > 0) {
       claimablePromotions.forEach((promotion) => {
         const epochIds = Object.keys(promotion.epochRewards).map((k) => parseInt(k))
 
@@ -124,12 +123,12 @@ const ClaimAllRewardsButton = (props: ClaimAllRewardsButtonProps) => {
     }
 
     return epochs
-  }, [claimablePromotions, isFetchedAllClaimable])
+  }, [claimablePromotions])
 
   const poolWidePromotionsToClaim = useMemo(() => {
     const promotions: { id: string; vaultAddress: Address; epochs: number[] }[] = []
 
-    if (isFetchedAllPoolWideClaimable && claimablePoolWidePromotions.length > 0) {
+    if (claimablePoolWidePromotions.length > 0) {
       claimablePoolWidePromotions.forEach((promotion) => {
         const epochIds = Object.keys(promotion.epochRewards).map((k) => parseInt(k))
 
@@ -144,7 +143,7 @@ const ClaimAllRewardsButton = (props: ClaimAllRewardsButtonProps) => {
     }
 
     return promotions
-  }, [claimablePoolWidePromotions, isFetchedAllPoolWideClaimable])
+  }, [claimablePoolWidePromotions])
 
   const dataClaimRewardsTx = useSendClaimRewardsTransaction(chainId, userAddress, epochsToClaim, {
     onSuccess: () => {

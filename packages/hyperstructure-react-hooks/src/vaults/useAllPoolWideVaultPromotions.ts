@@ -108,7 +108,10 @@ export const useAllPoolWideVaultPromotions = (
 
           return promotions
         },
-        enabled: !!chainId && !!publicClient && isFetchedPoolWidePromotionCreatedEvents,
+        enabled:
+          !!chainId &&
+          !!publicClient &&
+          (!!poolWidePromotionIds.length || isFetchedPoolWidePromotionCreatedEvents),
         ...NO_REFETCH
       }
     })

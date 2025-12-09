@@ -91,7 +91,8 @@ export const useAllVaultPromotions = (
 
           return promotions
         },
-        enabled: !!chainId && !!publicClient && isFetchedPromotionCreatedEvents,
+        enabled:
+          !!chainId && !!publicClient && (!!promotionIds.length || isFetchedPromotionCreatedEvents),
         ...NO_REFETCH
       }
     })

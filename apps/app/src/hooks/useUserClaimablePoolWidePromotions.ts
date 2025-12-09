@@ -31,28 +31,26 @@ export const useUserClaimablePoolWidePromotions = (userAddress: Address) => {
       }
     } = {}
 
-    if (isFetchedAllPoolWidePromotions) {
-      const chainIds = Object.keys(allPoolWidePromotions).map((k) => parseInt(k))
+    const chainIds = Object.keys(allPoolWidePromotions).map((k) => parseInt(k))
 
-      chainIds.forEach((chainId) => {
-        allPoolWidePromotions[chainId].forEach((promotion) => {
-          if (basicInfo[chainId]?.[promotion.promotionId.toString()] === undefined) {
-            if (basicInfo[chainId] === undefined) {
-              basicInfo[chainId] = {}
-            }
-
-            basicInfo[chainId][promotion.promotionId.toString()] = {
-              startTimestamp: promotion.info.startTimestamp,
-              numberOfEpochs: promotion.info.numberOfEpochs,
-              epochDuration: promotion.info.epochDuration
-            }
+    chainIds.forEach((chainId) => {
+      allPoolWidePromotions[chainId].forEach((promotion) => {
+        if (basicInfo[chainId]?.[promotion.promotionId.toString()] === undefined) {
+          if (basicInfo[chainId] === undefined) {
+            basicInfo[chainId] = {}
           }
-        })
+
+          basicInfo[chainId][promotion.promotionId.toString()] = {
+            startTimestamp: promotion.info.startTimestamp,
+            numberOfEpochs: promotion.info.numberOfEpochs,
+            epochDuration: promotion.info.epochDuration
+          }
+        }
       })
-    }
+    })
 
     return basicInfo
-  }, [allPoolWidePromotions, isFetchedAllPoolWidePromotions])
+  }, [allPoolWidePromotions])
 
   const {
     data: allClaimableRewards,
@@ -101,7 +99,7 @@ export const useUserClaimablePoolWidePromotions = (userAddress: Address) => {
     })
 
     return claimablePromotions
-  }, [isFetched, allPoolWidePromotions, allClaimableRewards])
+  }, [allPoolWidePromotions, allClaimableRewards])
 
   return { data, isFetched, refetch }
 }

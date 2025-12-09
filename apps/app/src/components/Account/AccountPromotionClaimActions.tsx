@@ -78,16 +78,9 @@ const ClaimRewardsButton = (props: ClaimRewardsButtonProps) => {
   const { refetch: refetchClaimed } = useUserClaimedPromotions(userAddress)
   const { refetch: refetchPoolWideClaimed } = useUserClaimedPoolWidePromotions(userAddress)
 
-  const {
-    data: allClaimable,
-    isFetched: isFetchedAllClaimable,
-    refetch: refetchClaimable
-  } = useUserClaimablePromotions(userAddress)
-  const {
-    data: allPoolWideClaimable,
-    isFetched: isFetchedAllPoolWideClaimable,
-    refetch: refetchPoolWideClaimable
-  } = useUserClaimablePoolWidePromotions(userAddress)
+  const { data: allClaimable, refetch: refetchClaimable } = useUserClaimablePromotions(userAddress)
+  const { data: allPoolWideClaimable, refetch: refetchPoolWideClaimable } =
+    useUserClaimablePoolWidePromotions(userAddress)
 
   const promotion = useMemo(() => {
     return (isPoolWide ? allPoolWideClaimable : allClaimable).find(
@@ -100,10 +93,9 @@ const ClaimRewardsButton = (props: ClaimRewardsButtonProps) => {
 
   const { data: token } = useToken(chainId, promotion?.token!)
 
-  const epochsToClaim =
-    !!promotion && (isPoolWide ? isFetchedAllPoolWideClaimable : isFetchedAllClaimable)
-      ? Object.keys(promotion.epochRewards).map((k) => parseInt(k))
-      : []
+  const epochsToClaim = !!promotion
+    ? Object.keys(promotion.epochRewards).map((k) => parseInt(k))
+    : []
 
   const dataClaimRewardsTx = useSendClaimRewardsTransaction(
     chainId,

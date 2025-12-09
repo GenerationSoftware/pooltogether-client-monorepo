@@ -103,7 +103,7 @@ export const useUserClaimedPoolWidePromotions = (userAddress: Address) => {
     })
 
     return claimedPromotions
-  }, [isFetched, allPoolWidePromotions, allClaimEvents])
+  }, [allPoolWidePromotions, allClaimEvents])
 
   return { data, isFetched, refetch }
 }
