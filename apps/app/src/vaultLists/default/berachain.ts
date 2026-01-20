@@ -3,7 +3,7 @@ import { VaultList } from '@shared/types'
 export const berachainVaults: VaultList['tokens'] = [
   {
     chainId: 80094,
-    address: '0xD5897440f5133d71f0f21D625C5B99bbBf76a9b1',
+    address: '0x07882Ae1ecB7429a84f1D53048d35c4bB2056877',
     name: 'Prize HONEY',
     decimals: 18,
     symbol: 'przHONEY',
@@ -19,4 +19,3 @@ export const berachainVaults: VaultList['tokens'] = [
     }
   }
 ]
-
