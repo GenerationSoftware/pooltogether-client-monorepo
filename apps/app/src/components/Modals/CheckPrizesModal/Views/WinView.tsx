@@ -9,7 +9,9 @@ import { DrawWithTimestamps, SubgraphPrize, TokenWithAmount } from '@shared/type
 import { Button } from '@shared/ui'
 import { getSimpleDate, NATIVE_ASSETS, NETWORK } from '@shared/utilities'
 import classNames from 'classnames'
-import Lottie from 'lottie-react'
+import dynamic from 'next/dynamic'
+
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false })
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { Address, formatUnits, parseEther } from 'viem'

@@ -1,6 +1,8 @@
 import { Button } from '@shared/ui'
 import classNames from 'classnames'
-import Lottie from 'lottie-react'
+import dynamic from 'next/dynamic'
+
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false })
 import { useTranslations } from 'next-intl'
 import { noWinAnimation } from '../animations'
 
