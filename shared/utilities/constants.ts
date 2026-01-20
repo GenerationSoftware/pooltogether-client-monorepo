@@ -176,6 +176,20 @@ export const PRIZE_POOLS: {
       reserveShares: 30
     }
   },
+  // Berachain DevNet (Tenderly) - local E2E testing
+  {
+    chainId: 80094 as NETWORK,
+    address: '0xe8D2A1E88c91DCd5433208d4152Cc4F399a7e91d',
+    options: {
+      prizeTokenAddress: '0xFCBD14DC51f0A4d49d5E53C2E0950e0bC26d0Dce', // HONEY
+      drawManagerAddress: '0xF8e31cb472bc70500f08Cd84917E5A1912Ec8397',
+      twabControllerAddress: '0x720472c8ce72c2A2D711333e064ABD3E6BbEAdd3',
+      drawPeriodInSeconds: 86_400,
+      drawAuctionDurationInSeconds: 10_800,
+      tierShares: 100,
+      reserveShares: 30
+    }
+  },
   {
     chainId: NETWORK.optimism_sepolia,
     address: '0xFCec514eC34e84E2a7FCf0AE3170f15b7E8a5596',
@@ -649,6 +663,10 @@ export const SUBGRAPH_API_URLS = {
     'https://api.goldsky.com/api/public/project_cm3xb1e8iup5601yx9mt5caat/subgraphs/pt-v5-gnosis/v0.0.1/gn',
   [NETWORK.world]:
     'https://api.goldsky.com/api/public/project_cm3xb1e8iup5601yx9mt5caat/subgraphs/pt-v5-world/v0.0.1/gn',
+  // Berachain DevNet (Tenderly): allow local graph-node via env override
+  [80094]:
+    (process.env.NEXT_PUBLIC_BERACHAIN_SUBGRAPH_URL as string | undefined) ??
+    'http://localhost:8000/subgraphs/name/pt-v5-berachain',
   [NETWORK.optimism_sepolia]:
     'https://api.studio.thegraph.com/query/63100/pt-v5-op-sepolia/version/latest',
   [NETWORK.arbitrum_sepolia]:
@@ -659,7 +677,7 @@ export const SUBGRAPH_API_URLS = {
     'https://api.studio.thegraph.com/query/63100/pt-v5-scroll-sepolia/version/latest',
   [NETWORK.gnosis_chiado]:
     'https://api.studio.thegraph.com/query/63100/pt-v5-gnosis-chiado/version/latest'
-} as const satisfies { [chainId: number]: `https://${string}` }
+} as const satisfies { [chainId: number]: string }
 
 /**
  * Token Prices API URL

@@ -14,11 +14,11 @@ import { RPC_URLS, WAGMI_CHAINS, WALLET_STATS_API_URL, WALLETS } from '@constant
  * @returns
  */
 export const createCustomWagmiConfig = (
-  networks: NETWORK[],
+  networks: number[],
   options?: { connectors?: CreateConnectorFn[]; useCustomRPCs?: boolean }
 ) => {
   const supportedNetworks = Object.values(WAGMI_CHAINS).filter(
-    (chain) => networks.includes(chain.id) && !!RPC_URLS[chain.id]
+    (chain) => networks.includes(chain.id)
   ) as any as [Chain, ...Chain[]]
 
   return createConfig({
@@ -99,7 +99,7 @@ const getWalletConnectors = () => {
  * @returns
  */
 const getNetworkTransports = (
-  networks: (keyof typeof RPC_URLS)[],
+  networks: number[],
   options?: { useCustomRPCs?: boolean }
 ) => {
   const transports: { [chainId: number]: Transport } = {}
@@ -107,12 +107,23 @@ const getNetworkTransports = (
   const customRPCs = !!options?.useCustomRPCs ? getInitialCustomRPCs() : {}
 
   networks.forEach((network) => {
-    const defaultRpcUrl = RPC_URLS[network] as string
+    const chain = WAGMI_CHAINS[network as keyof typeof WAGMI_CHAINS] as Chain | undefined
+    const defaultRpcUrl =
+      (RPC_URLS[network as keyof typeof RPC_URLS] as string | undefined) ??
+      chain?.rpcUrls?.default?.http?.[0]
     const customRpcUrl = customRPCs[network]
 
-    transports[network] = !!customRpcUrl
-      ? fallback([http(customRpcUrl), http(defaultRpcUrl), http()])
-      : fallback([http(defaultRpcUrl), http()])
+    const fallbackTransports: Transport[] = []
+
+    if (!!customRpcUrl) {
+      fallbackTransports.push(http(customRpcUrl))
+    }
+    if (!!defaultRpcUrl) {
+      fallbackTransports.push(http(defaultRpcUrl))
+    }
+    fallbackTransports.push(http())
+
+    transports[network] = fallback(fallbackTransports as [Transport, ...Transport[]])
   })
 
   return transports

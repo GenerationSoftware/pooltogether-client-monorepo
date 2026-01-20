@@ -4,6 +4,7 @@ import { arbitrumVaults } from './arbitrum'
 import { arbitrumSepoliaVaults } from './arbitrumSepolia'
 import { baseVaults } from './base'
 import { baseSepoliaVaults } from './baseSepolia'
+import { berachainVaults } from './berachain'
 import { gnosisVaults } from './gnosis'
 import { gnosisChiadoVaults } from './gnosisChiado'
 import { mainnetVaults } from './mainnet'
@@ -25,7 +26,8 @@ const defaultVaultList: VaultList = {
     'arbitrum',
     'scroll',
     'gnosis',
-    'world'
+    'world',
+    'berachain'
   ],
   version: { major: 2, minor: 20, patch: 1 },
   timestamp: '2025-09-19T18:13:50Z',
@@ -38,6 +40,7 @@ const defaultVaultList: VaultList = {
     ...scrollVaults,
     ...gnosisVaults,
     ...worldVaults,
+    ...berachainVaults,
     ...optimismSepoliaVaults,
     ...baseSepoliaVaults,
     ...arbitrumSepoliaVaults,

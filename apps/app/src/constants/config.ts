@@ -26,7 +26,7 @@ import {
 } from '@shared/utilities'
 import defaultVaultList from '@vaultLists/default'
 import memeVaultList from '@vaultLists/meme'
-import { Address, parseEther } from 'viem'
+import { Address, defineChain, parseEther } from 'viem'
 import {
   arbitrum,
   arbitrumSepolia,
@@ -43,6 +43,21 @@ import {
 } from 'viem/chains'
 
 /**
+ * Berachain DevNet (Tenderly) chainId used in this project.
+ *
+ * NOTE: We intentionally avoid expanding the shared `NETWORK` enum for DevNet-only usage.
+ */
+export const BERACHAIN = 80094 as NETWORK
+
+const berachain = defineChain({
+  id: 80094,
+  name: 'Berachain DevNet',
+  nativeCurrency: { name: 'BERA', symbol: 'BERA', decimals: 18 },
+  rpcUrls: { default: { http: ['http://localhost:8545'] }, public: { http: ['http://localhost:8545'] } },
+  blockExplorers: { default: { name: 'Tenderly', url: 'https://dashboard.tenderly.co/' } }
+})
+
+/**
  * Supported networks
  */
 export const SUPPORTED_NETWORKS = {
@@ -53,7 +68,8 @@ export const SUPPORTED_NETWORKS = {
     NETWORK.arbitrum,
     NETWORK.scroll,
     NETWORK.gnosis,
-    NETWORK.world
+    NETWORK.world,
+    BERACHAIN
   ],
   testnets: [
     NETWORK.optimism_sepolia,
@@ -75,6 +91,7 @@ export const WAGMI_CHAINS = {
   [NETWORK.scroll]: scroll,
   [NETWORK.gnosis]: gnosis,
   [NETWORK.world]: worldchain,
+  [BERACHAIN]: berachain,
   [NETWORK.optimism_sepolia]: optimismSepolia,
   [NETWORK.arbitrum_sepolia]: arbitrumSepolia,
   [NETWORK.base_sepolia]: baseSepolia,
@@ -115,6 +132,7 @@ export const RPC_URLS = {
   [NETWORK.scroll]: process.env.NEXT_PUBLIC_SCROLL_RPC_URL,
   [NETWORK.gnosis]: process.env.NEXT_PUBLIC_GNOSIS_RPC_URL,
   [NETWORK.world]: process.env.NEXT_PUBLIC_WORLD_RPC_URL,
+  [BERACHAIN]: process.env.NEXT_PUBLIC_BERACHAIN_RPC_URL,
   [NETWORK.optimism_sepolia]: process.env.NEXT_PUBLIC_OPTIMISM_SEPOLIA_RPC_URL,
   [NETWORK.arbitrum_sepolia]: process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL,
   [NETWORK.base_sepolia]: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL,
@@ -172,6 +190,7 @@ export const QUERY_START_BLOCK = {
   [NETWORK.scroll]: 9_181_500n,
   [NETWORK.gnosis]: 35_938_500n,
   [NETWORK.world]: 11_542_400n,
+  [BERACHAIN]: 0n,
   [NETWORK.optimism_sepolia]: 22_876_300n,
   [NETWORK.arbitrum_sepolia]: 48_888_900n,
   [NETWORK.base_sepolia]: 10_578_500n,
@@ -253,6 +272,10 @@ export const TWAB_REWARDS_SETTINGS: {
       '0x7077C71B4AF70737a08287E279B717Dcf64fdC57' // POOL
     ],
     fromBlock: QUERY_START_BLOCK[NETWORK.world]
+  },
+  [BERACHAIN]: {
+    tokenAddresses: [],
+    fromBlock: QUERY_START_BLOCK[BERACHAIN]
   },
   [NETWORK.optimism_sepolia]: {
     tokenAddresses: [
