@@ -29,8 +29,8 @@ const defaultVaultList: VaultList = {
     'world',
     'berachain'
   ],
-  version: { major: 2, minor: 20, patch: 1 },
-  timestamp: '2025-09-19T18:13:50Z',
+  version: { major: 2, minor: 20, patch: 2 },
+  timestamp: '2026-01-21T00:00:00Z',
   logoURI: `${DOMAINS.app}/favicon.png`,
   tokens: [
     ...mainnetVaults,

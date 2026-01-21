@@ -54,7 +54,14 @@ const berachain = defineChain({
   name: 'Berachain DevNet',
   nativeCurrency: { name: 'BERA', symbol: 'BERA', decimals: 18 },
   rpcUrls: { default: { http: ['http://localhost:8545'] }, public: { http: ['http://localhost:8545'] } },
-  blockExplorers: { default: { name: 'Tenderly', url: 'https://dashboard.tenderly.co/' } }
+  blockExplorers: { default: { name: 'Tenderly', url: 'https://dashboard.tenderly.co/' } },
+  // Tenderly DevNet has Multicall3 deployed at the standard address
+  contracts: {
+    multicall3: {
+      address: '0xcA11bde05977b3631167028862bE2a173976CA11',
+      blockCreated: 0
+    }
+  }
 })
 
 /**

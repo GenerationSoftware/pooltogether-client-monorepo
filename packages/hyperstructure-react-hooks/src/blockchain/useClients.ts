@@ -3,6 +3,9 @@ import { NETWORK } from '@shared/utilities'
 import { PublicClient } from 'viem'
 import { usePublicClient } from 'wagmi'
 
+// Berachain DevNet (Tenderly) - used for local E2E testing in this repo
+const BERACHAIN_DEVNET_CHAIN_ID = 80094
+
 /**
  * Returns Viem clients
  * @param options optional settings
@@ -25,7 +28,8 @@ export const usePublicClients = (options?: { useAll?: boolean }): PublicClient[]
       usePublicClient({ chainId: NETWORK.celo }),
       usePublicClient({ chainId: NETWORK.scroll }),
       usePublicClient({ chainId: NETWORK.gnosis }),
-      usePublicClient({ chainId: NETWORK.world })
+      usePublicClient({ chainId: NETWORK.world }),
+      usePublicClient({ chainId: BERACHAIN_DEVNET_CHAIN_ID })
     ],
     testnets: [
       usePublicClient({ chainId: NETWORK.sepolia }),
@@ -77,7 +81,8 @@ export const usePublicClientsByChain = (options?: {
       [NETWORK.celo]: usePublicClient({ chainId: NETWORK.celo }),
       [NETWORK.scroll]: usePublicClient({ chainId: NETWORK.scroll }),
       [NETWORK.gnosis]: usePublicClient({ chainId: NETWORK.gnosis }),
-      [NETWORK.world]: usePublicClient({ chainId: NETWORK.world })
+      [NETWORK.world]: usePublicClient({ chainId: NETWORK.world }),
+      [BERACHAIN_DEVNET_CHAIN_ID]: usePublicClient({ chainId: BERACHAIN_DEVNET_CHAIN_ID })
     },
     testnets: {
       [NETWORK.sepolia]: usePublicClient({ chainId: NETWORK.sepolia }),

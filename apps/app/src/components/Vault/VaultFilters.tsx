@@ -91,11 +91,15 @@ export const VaultFilters = (props: VaultFiltersProps) => {
 
   const filterStablecoins = () => {
     filterOnClick(listFilteredVaultsArray, (vaults) =>
-      vaults.filter((vault) =>
-        Object.keys(STABLECOINS[vault.chainId as NETWORK]).includes(
-          vault.tokenAddress?.toLowerCase() ?? '?'
-        )
-      )
+      vaults.filter((vault) => {
+        const stablecoinsByChain = STABLECOINS as unknown as Record<
+          number,
+          { [address: string]: string }
+        >
+        const stablecoins = stablecoinsByChain[vault.chainId] ?? {}
+
+        return Object.keys(stablecoins).includes(vault.tokenAddress?.toLowerCase() ?? '?')
+      })
     )
   }
 
