@@ -288,5 +288,26 @@ export const baseVaults: VaultList['tokens'] = [
         appURI: 'https://app.originprotocol.com/#/super'
       }
     }
+  },
+  {
+    chainId: NETWORK.base,
+    address: '0xa99ec0a1018bf964931c7dc421a5de8bca0e32f1',
+    name: 'Prize USDC',
+    decimals: 6,
+    symbol: 'przUSDC',
+    logoURI: `${DOMAINS.app}/icons/przUSDC.svg`,
+    tags: ['aave'],
+    extensions: {
+      underlyingAsset: {
+        address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+        symbol: 'USDC',
+        name: 'USD Coin'
+      },
+      yieldSource: {
+        name: 'Aave',
+        appURI:
+          'https://app.aave.com/reserve-overview/?underlyingAsset=0x833589fcd6edb6e08f4c7c32d4f71b54bda02913&marketName=proto_base_v3'
+      }
+    }
   }
 ]
