@@ -69,7 +69,7 @@ export const arbitrumVaults: VaultList['tokens'] = [
     decimals: 6,
     symbol: 'przUSDT',
     logoURI: `${DOMAINS.app}/icons/przUSDT.svg`,
-    tags: ['aave'],
+    tags: ['aave', 'deprecated'],
     extensions: {
       underlyingAsset: {
         address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
@@ -90,7 +90,7 @@ export const arbitrumVaults: VaultList['tokens'] = [
     decimals: 18,
     symbol: 'przUSDA',
     logoURI: `${DOMAINS.app}/icons/przUSDA.svg`,
-    tags: ['angle'],
+    tags: ['angle', 'deprecated'],
     extensions: {
       underlyingAsset: {
         address: '0x0000206329b97DB379d5E1Bf586BbDB969C63274',
@@ -110,7 +110,7 @@ export const arbitrumVaults: VaultList['tokens'] = [
     decimals: 6,
     symbol: 'przUSDC',
     logoURI: `${DOMAINS.app}/icons/przUSDC.svg`,
-    tags: ['yearn'],
+    tags: ['yearn', 'deprecated'],
     extensions: {
       underlyingAsset: {
         address: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
@@ -130,7 +130,7 @@ export const arbitrumVaults: VaultList['tokens'] = [
     decimals: 6,
     symbol: 'przUSDT',
     logoURI: `${DOMAINS.app}/icons/przUSDT.svg`,
-    tags: ['yearn'],
+    tags: ['yearn', 'deprecated'],
     extensions: {
       underlyingAsset: {
         address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
@@ -149,7 +149,7 @@ export const arbitrumVaults: VaultList['tokens'] = [
     name: 'Prize USND',
     decimals: 18,
     symbol: 'przUSND',
-    tags: ['yearn', 'nerite'],
+    tags: ['yearn', 'nerite', 'deprecated'],
     extensions: {
       underlyingAsset: {
         address: '0x4ecf61a6c2FaB8A047CEB3B3B263B401763e9D49',

@@ -67,7 +67,7 @@ export const baseVaults: VaultList['tokens'] = [
     decimals: 18,
     symbol: 'przCBETH',
     logoURI: `${DOMAINS.app}/icons/przCBETH.svg`,
-    tags: ['moonwell'],
+    tags: ['moonwell', 'deprecated'],
     extensions: {
       underlyingAsset: {
         address: '0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22',
@@ -87,7 +87,7 @@ export const baseVaults: VaultList['tokens'] = [
     decimals: 18,
     symbol: 'przWSTETH',
     logoURI: `${DOMAINS.app}/icons/przSTETH.svg`,
-    tags: ['moonwell'],
+    tags: ['moonwell', 'deprecated'],
     extensions: {
       underlyingAsset: {
         address: '0xc1CBa3fCea344f92D9239c08C0568f6F2F0ee452',
@@ -107,7 +107,7 @@ export const baseVaults: VaultList['tokens'] = [
     decimals: 18,
     symbol: 'przUSDA',
     logoURI: `${DOMAINS.app}/icons/przUSDA.svg`,
-    tags: ['angle'],
+    tags: ['angle', 'deprecated'],
     extensions: {
       underlyingAsset: {
         address: '0x0000206329b97DB379d5E1Bf586BbDB969C63274',
@@ -148,7 +148,7 @@ export const baseVaults: VaultList['tokens'] = [
     decimals: 18,
     symbol: 'przWELL/WETH',
     logoURI: `${DOMAINS.app}/icons/przAERO.svg`,
-    tags: ['beefy', 'lp', 'aerodrome'],
+    tags: ['beefy', 'lp', 'aerodrome', 'deprecated'],
     extensions: {
       underlyingAsset: {
         address: '0x89D0F320ac73dd7d9513FFC5bc58D1161452a657',

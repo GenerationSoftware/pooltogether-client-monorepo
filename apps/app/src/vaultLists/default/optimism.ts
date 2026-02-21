@@ -135,7 +135,7 @@ export const optimismVaults: VaultList['tokens'] = [
     decimals: 18,
     symbol: 'przWSTETH-ETH',
     logoURI: `${DOMAINS.app}/icons/przVELO.svg`,
-    tags: ['beefy', 'lp', 'velodrome'],
+    tags: ['beefy', 'lp', 'velodrome', 'deprecated'],
     extensions: {
       underlyingAsset: {
         address: '0x6dA98Bde0068d10DDD11b468b197eA97D96F96Bc',
@@ -179,7 +179,7 @@ export const optimismVaults: VaultList['tokens'] = [
     decimals: 18,
     symbol: 'przWETH/mooBIFI',
     logoURI: `${DOMAINS.app}/icons/przVELO.svg`,
-    tags: ['beefy', 'lp', 'velodrome'],
+    tags: ['beefy', 'lp', 'velodrome', 'deprecated'],
     extensions: {
       underlyingAsset: {
         address: '0x6Ed6Df1C23C51cb7Cc67a348cC8d9E6108EA3BFE',
@@ -223,7 +223,7 @@ export const optimismVaults: VaultList['tokens'] = [
     decimals: 18,
     symbol: 'przUSDC/OP',
     logoURI: `${DOMAINS.app}/icons/przVELO.svg`,
-    tags: ['beefy', 'lp', 'velodrome'],
+    tags: ['beefy', 'lp', 'velodrome', 'deprecated'],
     extensions: {
       underlyingAsset: {
         address: '0x67F56Ac099F11aD5F65E2ec804f75F2cEa6ab8C5',
@@ -247,7 +247,7 @@ export const optimismVaults: VaultList['tokens'] = [
     decimals: 18,
     symbol: 'przWETH/tBTC',
     logoURI: `${DOMAINS.app}/icons/przVELO.svg`,
-    tags: ['beefy', 'lp', 'velodrome'],
+    tags: ['beefy', 'lp', 'velodrome', 'deprecated'],
     extensions: {
       underlyingAsset: {
         address: '0xadBB23Bcc3C1B9810491897cb0690Cf645B858b1',
@@ -271,7 +271,7 @@ export const optimismVaults: VaultList['tokens'] = [
     decimals: 18,
     symbol: 'przUSDC/VELO',
     logoURI: `${DOMAINS.app}/icons/przVELO.svg`,
-    tags: ['beefy', 'lp', 'velodrome'],
+    tags: ['beefy', 'lp', 'velodrome', 'deprecated'],
     extensions: {
       underlyingAsset: {
         address: '0xa0A215dE234276CAc1b844fD58901351a50fec8A',
@@ -295,7 +295,7 @@ export const optimismVaults: VaultList['tokens'] = [
     decimals: 18,
     symbol: 'przUSDC/SNX',
     logoURI: `${DOMAINS.app}/icons/przVELO.svg`,
-    tags: ['beefy', 'lp', 'velodrome'],
+    tags: ['beefy', 'lp', 'velodrome', 'deprecated'],
     extensions: {
       underlyingAsset: {
         address: '0x894d6Ea97767EbeCEfE01c9410f6Bd67935AA952',
@@ -319,7 +319,7 @@ export const optimismVaults: VaultList['tokens'] = [
     decimals: 18,
     symbol: 'przTBTC/WBTC',
     logoURI: `${DOMAINS.app}/icons/przCRV.svg`,
-    tags: ['beefy', 'lp', 'curve'],
+    tags: ['beefy', 'lp', 'curve', 'deprecated'],
     extensions: {
       underlyingAsset: {
         address: '0x1Dc5c0f8668a9F54ED922171d578011850ca0341',
@@ -363,7 +363,7 @@ export const optimismVaults: VaultList['tokens'] = [
     decimals: 18,
     symbol: 'przWSTETH',
     logoURI: `${DOMAINS.app}/icons/przSTETH.svg`,
-    tags: ['moonwell'],
+    tags: ['moonwell', 'deprecated'],
     extensions: {
       underlyingAsset: {
         address: '0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb',
