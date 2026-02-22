@@ -294,7 +294,8 @@ export const STABLECOINS: Record<NETWORK, { [address: Lowercase<Address>]: strin
     '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913': 'usd', // USDC
     '0x50c5725949a6f0c72e6c4a641f24049a917db0cb': 'usd', // DAI
     '0x368181499736d0c0cc614dbb145e2ec1ac86b8c6': 'usd', // LUSD
-    '0x0000206329b97db379d5e1bf586bbdb969c63274': 'usd' // USDA
+    '0x0000206329b97db379d5e1bf586bbdb969c63274': 'usd', // USDA
+    '0x60a3e35cc302bfa44cb288bc5a4f316fdb1adb42': 'eur' // EURC
   },
   [NETWORK.base_sepolia]: {
     '0x034109d90e70b972617e96b33295e724fff5887a': 'usd', // USDC
