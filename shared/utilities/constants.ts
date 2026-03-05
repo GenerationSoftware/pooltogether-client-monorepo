@@ -1019,9 +1019,8 @@ export const LINKS = {
   treasury: `https://info.pooltogether.com/treasury`,
   dune_v4: `https://dune.com/sarfang/PoolTogetherV4`,
   grants: `https://poolgrants.org`,
-  hey: `https://hey.xyz/u/pooltogether`,
   mirror: `https://pooltogether.mirror.xyz/`,
-  warpcast: `https://warpcast.com/~/channel/pool-together`,
+  farcaster: `https://farcaster.xyz/~/channel/pool-together`,
   clientJs: `https://www.npmjs.com/package/@generationsoftware/hyperstructure-client-js`,
   clientJs_v4: `https://www.npmjs.com/package/@pooltogether/v4-client-js`,
   reactHooks: `https://www.npmjs.com/package/@generationsoftware/hyperstructure-react-hooks`

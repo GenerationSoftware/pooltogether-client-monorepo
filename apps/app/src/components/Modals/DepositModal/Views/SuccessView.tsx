@@ -100,8 +100,7 @@ const ShareButtons = (props: ShareButtonsProps) => {
     if (!!vaultToken) {
       return {
         twitter: getShareText(vaultToken.symbol, 'twitter'),
-        warpcast: getShareText(vaultToken.symbol, 'warpcast'),
-        hey: getShareText(vaultToken.symbol, 'hey')
+        farcaster: getShareText(vaultToken.symbol, 'farcaster')
       }
     } else {
       return {}
@@ -113,20 +112,18 @@ const ShareButtons = (props: ShareButtonsProps) => {
       <h1 className='py-1 text-sm sm:text-md font-medium'>{t('shareOn')}:</h1>
       <div className='flex flex-col sm:flex-row gap-2'>
         <SocialShareButton platform='twitter' text={text.twitter} hashTags={hashTags} />
-        <SocialShareButton platform='warpcast' text={text.warpcast} />
-        <SocialShareButton platform='hey' text={text.hey} hashTags={hashTags} />
+        <SocialShareButton platform='farcaster' text={text.farcaster} />
       </div>
     </div>
   )
 }
 
-type SharePlatform = 'twitter' | 'warpcast' | 'hey'
+type SharePlatform = 'twitter' | 'farcaster'
 
 const getShareText = (tokenSymbol: string, platform: SharePlatform) => {
   const protocolAccounts: Record<SharePlatform, string> = {
     twitter: '@PoolTogether_',
-    warpcast: 'PoolTogether',
-    hey: '@pooltogether'
+    farcaster: 'PoolTogether'
   }
 
   const pooltogether = protocolAccounts[platform]
