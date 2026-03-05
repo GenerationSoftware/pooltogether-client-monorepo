@@ -26,6 +26,7 @@ export const worldVaults: VaultList['tokens'] = [
     name: 'Prize WLD',
     decimals: 18,
     symbol: 'przWLD',
+    tags: ['morpho', 'deprecated'],
     extensions: {
       underlyingAsset: {
         address: '0x2cFc85d8E48F8EAB294be644d9E25C3030863003',
